@@ -1,0 +1,209 @@
+
+
+% ---------- Package options (language) ----------------------
+\newif\ifcs@french
+\cs@frenchfalse
+\DeclareOption{french}{\cs@frenchtrue}
+\DeclareOption{english}{\cs@frenchfalse}
+\DeclareOption*{\PackageWarning{cheatsheet}{Unknown option `\CurrentOption'}}
+\ProcessOptions\relax
+
+% ---------- Page geometry: tiny margins ---------------------
+\RequirePackage[a4paper,landscape,
+                top=4mm,bottom=4mm,left=4mm,right=4mm,
+                includefoot,footskip=10pt]{geometry}
+
+% ---------- Encoding & language -----------------------------
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\ifcs@french
+  \RequirePackage[french]{babel}
+\else
+  \RequirePackage[english]{babel}
+\fi
+\RequirePackage{lmodern}
+\RequirePackage{microtype}
+
+% ---------- Layout & typography -----------------------------
+\RequirePackage{multicol}
+\RequirePackage{needspace}
+\RequirePackage{etoolbox}
+\RequirePackage{enumitem}
+\RequirePackage{titlesec}
+\RequirePackage{array,booktabs,tabularx}
+\RequirePackage{graphicx}
+
+% ---------- Math --------------------------------------------
+\RequirePackage{amsmath,amssymb,amsthm,mathtools}
+\RequirePackage{bm}
+\RequirePackage{xfrac}
+\RequirePackage{siunitx}
+
+% ---------- Color & boxes -----------------------------------
+\RequirePackage{xcolor}
+\RequirePackage[most]{tcolorbox}
+
+% ---------- Code listings -----------------------------------
+\RequirePackage{listings}
+
+% ---------- Hyperref (load late) ----------------------------
+\RequirePackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue!60!black}
+
+% ---------- Header / footer ---------------------------------
+\RequirePackage{fancyhdr}
+
+% ============================================================
+%                        STYLE DEFINITIONS
+% ============================================================
+
+% ---------- Color palette -----------------------------------
+\definecolor{blueColor}{HTML}{1F4E79}      % deep blue
+\definecolor{greenColor}{HTML}{0B6E4F}     % green
+\definecolor{redColor}{HTML}{B83227}     % red/warning
+\definecolor{soft}{HTML}{F2F2F2}        % light gray bg
+\definecolor{darkgray}{HTML}{3b3b3b}        % dark gray
+% ---------- Section headers ---------------------------------
+% Bypass titlesec for \section (nested colorbox+parbox+#1 trips it).
+\newcounter{cheatsec}
+\renewcommand{\section}[1]{%
+  \par\addvspace{4pt}%
+  \refstepcounter{cheatsec}%
+  \noindent\colorbox{darkgray}{%
+    \parbox{\dimexpr\linewidth-2\fboxsep\relax}{%
+      \color{white}\small\bfseries\strut\thecheatsec\ \ #1%
+    }%
+  }%
+  \par\nobreak\addvspace{2pt}%
+}
+
+\titleformat{\subsection}
+  {\normalfont\footnotesize\bfseries\color{darkgray}}
+  {\thesubsection}{0.4em}{}
+\titlespacing*{\subsection}{0pt}{3pt}{1pt}
+
+\titleformat{\subsubsection}
+  {\normalfont\footnotesize\itshape\color{greenColor}}
+  {}{0pt}{}
+\titlespacing*{\subsubsection}{0pt}{2pt}{0pt}
+
+% Keep subsection/subsubsection headers with following content in multicols
+\AtBeginDocument{%
+  \pretocmd{\subsection}{\needspace{2\baselineskip}}{}{}%
+  \pretocmd{\subsubsection}{\needspace{2\baselineskip}}{}{}%
+}
+
+\setcounter{secnumdepth}{0}    % set to 2 to number subsections too
+
+% ---------- Tight lists -------------------------------------
+\setlist{nosep,leftmargin=*,labelindent=0pt,topsep=1pt,partopsep=0pt,
+         parsep=0pt,itemsep=1pt}
+
+% ---------- Tighter math spacing ----------------------------
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\setlength{\abovedisplayshortskip}{0pt}
+\setlength{\belowdisplayshortskip}{0pt}
+\setlength{\jot}{2pt}
+
+% ---------- Paragraph & column spacing ----------------------
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1pt}
+\setlength{\columnsep}{6pt}
+\setlength{\columnseprule}{0.2pt}
+
+% ---------- Custom boxes ------------------------------------
+\newtcolorbox{prop}[1][]{
+  enhanced jigsaw,colback=soft,colframe=blueColor,
+  boxrule=0.4pt,arc=1pt,left=2pt,right=2pt,top=1pt,bottom=1pt,
+  fonttitle=\bfseries\footnotesize,coltitle=white,
+  colbacktitle=blueColor,titlerule=0pt,
+  title=Prop,#1
+}
+\newtcolorbox{defn}[1][]{
+  enhanced jigsaw,colback=greenColor!8,colframe=greenColor,
+  boxrule=0.4pt,arc=1pt,left=2pt,right=2pt,top=1pt,bottom=1pt,
+  fonttitle=\bfseries\footnotesize,coltitle=white,
+  colbacktitle=greenColor,titlerule=0pt,
+  title=Def,#1
+}
+\newtcolorbox{thm}[1][]{
+  enhanced jigsaw,colback=redColor!8,colframe=redColor,
+  boxrule=0.4pt,arc=1pt,left=2pt,right=2pt,top=1pt,bottom=1pt,
+  fonttitle=\bfseries\footnotesize,coltitle=white,
+  colbacktitle=redColor,titlerule=0pt,
+  title=Thm,#1
+}
+\newtcolorbox{warn}[1][]{
+  enhanced jigsaw,colback=soft,colframe=darkgray,
+  boxrule=0.4pt,arc=1pt,left=2pt,right=2pt,top=1pt,bottom=1pt,
+  fonttitle=\bfseries\footnotesize,coltitle=white,
+  colbacktitle=darkgray,titlerule=0pt,
+  title=!,#1
+}
+\newtcolorbox{ex}[1][]{
+  enhanced jigsaw,colback=white,colframe=black!50,
+  boxrule=0.3pt,arc=1pt,left=2pt,right=2pt,top=1pt,bottom=1pt,
+  fonttitle=\bfseries\footnotesize,coltitle=black,
+  colbacktitle=black!10,titlerule=0pt,
+  title=Ex,#1
+}
+
+% ---------- Math shortcuts ----------------------------------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\PR}{\mathbb{P}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\dd}{\,\mathrm{d}}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+% Compact "key:value" list line
+\newcommand{\kv}[2]{\textbf{#1:}\ #2}
+
+% ---------- Listings (code blocks) --------------------------
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  framesep=2pt,
+  xleftmargin=2pt,xrightmargin=2pt,
+  aboveskip=2pt,belowskip=2pt,
+}
+
+% ---------- Title strip macro -------------------------------
+% Usage: \cheattitle{Course name}{Your Name}{Term}
+% Stores the course name so the footer can reference it.
+\def\cheat@course{Cheat Sheet}
+\newcommand{\cheattitle}[3]{%
+  \gdef\cheat@course{#1}%
+  \begin{tcolorbox}[colback=blueColor,colframe=blueColor,arc=1pt,
+    left=3pt,right=3pt,top=2pt,bottom=2pt,boxrule=0pt]
+    \color{white}\bfseries\small #1%
+    \hfill \color{white}\scriptsize #2\ \textbullet\ \ #3%
+  \end{tcolorbox}%
+}
+
+% ---------- Footer ------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\scriptsize\color{black!60}%
+  \cheat@course\ \textbullet\ \ Page \thepage}
+
+\endinput

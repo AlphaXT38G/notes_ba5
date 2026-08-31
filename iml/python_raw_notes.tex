@@ -1,0 +1,347 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\usepackage{tikz}
+\usepackage{tcolorbox}
+\usepackage{multicol}
+\usepackage{enumitem}
+\geometry{margin=1.2cm}
+\pagestyle{empty}
+
+\begin{document}
+
+% ======================= PAGE 1 =======================
+
+\begin{center}
+    {\LARGE \textbf{Python}}
+\end{center}
+
+\begin{multicols}{3}
+
+\begin{tcolorbox}[title=Conditions]
+if condition :
+
+\hspace*{5mm}...
+
+elif ... :
+
+\hspace*{5mm}...
+
+else :
+
+\hspace*{5mm}...
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Fonctions]
+\texttt{def f(a,b=0,c=0):}
+
+\hspace*{5mm}instruction
+
+\hspace*{5mm}return ...
+
+\vspace{2mm}
+
+\texttt{type(var)} retourne le type de la variable.
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Boucles]
+while ... :
+
+\hspace*{5mm}...
+
+\vspace{2mm}
+
+for x in sequence :
+
+\hspace*{5mm}...
+
+\vspace{2mm}
+
+for x in range(2,7)
+
+range(7) $\rightarrow$ 0 à 6
+
+range(2,7,2)
+
+$\rightarrow$ 2 à 6 step by 2
+
+\vspace{2mm}
+
+enumerate(list)
+
+$\rightarrow$ sequence of tuples
+
+(index, element)
+\end{tcolorbox}
+
+\columnbreak
+
+\begin{tcolorbox}[title=Division]
+/ division
+
+// division entière
+
+\% reste
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Booléens]
+and
+
+or
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Chaînes de caractères]
+"simple quote"
+
+'double quote'
+
+'''triple double quote'''
+
+"""docs"""
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Lists]
+L = [ ]
+
+L = [1, ``txt'']
+
+\vspace{2mm}
+
+list.c = [1]*10
+
+list(range(5))
+
+0 à 4
+
+\vspace{2mm}
+\begin{itemize}[leftmargin=5mm]
+    \item len(list)
+    \item min(list)
+    \item max(list)
+\end{itemize}
+
+if ``...'' in list:
+
+\hspace*{5mm}...
+
+else :
+
+\hspace*{5mm}...
+
+\vspace{2mm}
+
+\textbf{Méthodes :}
+
+\begin{itemize}[leftmargin=5mm]
+    \item len(list)
+    \item list.append(x)
+    \item list.insert(i,x)
+    \item list.extend(list2)
+    \item list.pop()
+    \item list.pop(i)
+    \item list.remove(x)
+\end{itemize}
+\end{tcolorbox}
+
+\columnbreak
+
+\begin{tcolorbox}[title=Extraction d'éléments]
+list[i:start:j-end excluded]
+
+list[i:j:end excluded]
+
+list[i:start:]
+
+list[i:j:step-size]
+
+\vspace{2mm}
+
+On peut aussi faire :
+
+\texttt{a = ["1",2,"("]}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Dictionnaires]
+dict = \{ ... : ... \}
+
+\vspace{2mm}
+
+dict["..."] = ...
+
+\vspace{2mm}
+.keys()\quad .values()
+
+.pop(key)
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Tuples]
+Similaire à lists mais fixed in size and immutable.
+
+\vspace{2mm}
+
+tuple = (...,...)
+
+\vspace{2mm}
+
+On ne peut pas modifier.
+
+Je peux typer une list sans typecast en tuple.
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Fonctions utiles]
+obj = max(...)
+
+return ..., ...
+
+\vspace{2mm}
+
+a,b = min,max(...)
+\end{tcolorbox}
+
+\end{multicols}
+
+\newpage
+
+% ======================= PAGE 2 =======================
+
+\begin{multicols}{2}
+
+\begin{tcolorbox}[title=List comprehension]
+[thing for thing in list]
+
+\vspace{2mm}
+
+Ex :
+
+listA = [1,2,3,4]
+
+listB = [2*elem for elem in listA]
+
+\vspace{2mm}
+
+[thing for thing in list if condition]
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=NumPy]
+import numpy as np
+
+\vspace{2mm}
+
+\textbf{Creating arrays}
+
+Convert normal python arrays :
+
+np.array([...])
+
+\vspace{2mm}
+
+Using built-in functions :
+
+np.zeros((2,3))
+
+np.ones(...)
+
+np.eye(4)
+
+np.arange(5,11)
+
+np. ones like(...)
+
+\vspace{2mm}
+
+np.array([1,0], dtype=np.int32)
+
+astype(np.float32)
+
+\vspace{2mm}
+
+.ndim
+
+.size
+
+.shape
+
+.dtype
+
+\vspace{2mm}
+
+Get elements :
+
+x[2::2, ::2]
+
+\vspace{2mm}
+
+np.concatenate([arr1,arr2], axis=0)
+
+np.stack()
+
+np.sum()
+
+np.min \quad np.max \quad np.argmin
+
+np.random.rand(3,2)
+\end{tcolorbox}
+
+\columnbreak
+
+\begin{tcolorbox}[title=Matplotlib]
+import numpy
+
+import numpy as np
+
+import matplotlib.pyplot as plt
+
+\vspace{2mm}
+
+fig = plt.figure() $\rightarrow$ creates a figure
+
+\vspace{2mm}
+
+plt.plot(x,y, marker='*', color='r')
+
+plt.xlabel("x")
+
+plt.ylabel("y")
+
+plt.title("title")
+
+plt.show() $\rightarrow$ pour afficher
+
+plt.close(fig) $\rightarrow$ close the plot
+
+\vspace{2mm}
+
+On peut avoir plusieurs fonctions sur le graph
+
+en faisant plusieurs plt.plot(...)
+
+\vspace{2mm}
+
+plt.scatter(...) $\rightarrow$ même chose que plot
+
+mais sans les lignes.
+
+\vspace{2mm}
+
+img = plt.imread("img/...jpg")
+
+$\rightarrow$ reads an image
+
+plt.imshow(img)
+
+\vspace{2mm}
+
+Masking :
+
+mask = x > 20
+
+x[mask]
+\end{tcolorbox}
+
+\end{multicols}
+
+\end{document}

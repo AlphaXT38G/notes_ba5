@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Bellman-Ford</title>
+<link rel="stylesheet" href="graph.css">
+</head>
+<body>
+
+<h1>Bellman-Ford Algorithm</h1>
+<div id="main">
+  <canvas id="cv" width="720" height="300"></canvas>
+  <div id="pseudocode"></div>
+</div>
+<div id="status-box"><span class="info">INIT-SINGLE-SOURCE(G, s)</span></div>
+
+<div id="controls">
+  <button id="btn-prev">◀ Préc</button>
+  <button id="btn-play">▶ Play</button>
+  <button id="btn-next">Suiv ▶</button>
+  <button id="btn-reset">↺ Reset</button>
+  <div id="speed-wrap">
+    <span>Vitesse</span>
+    <input type="range" id="speed" min="200" max="2000" value="900" step="100">
+  </div>
+  <div id="progress">— / —</div>
+</div>
+
+<script>
+// ── Pseudocode (affiché à droite, ligne active synchronisée) ─────────────────
+const PSEUDOCODE = [
+  { fn: true,  text: 'BELLMAN-FORD(G, w, s)' },
+  { id: 'init',     indent: 1, text: 'INIT-SINGLE-SOURCE(G, s)' },
+  { id: 'for-i',    indent: 1, text: 'for i = 1 to |G.V| − 1' },
+  { id: 'for-edge', indent: 2, text: 'for each (u, v) ∈ G.E' },
+  { id: 'relax',    indent: 3, text: 'RELAX(u, v, w)' },
+  { fn: true,  text: '' },
+  { fn: true,  text: 'RELAX(u, v, w)' },
+  { id: 'relax-if',     indent: 1, text: 'if v.d > u.d + w(u, v)' },
+  { id: 'relax-update', indent: 2, text: 'v.d = u.d + w(u, v)' },
+  { id: 'relax-pi',     indent: 2, text: 'v.π = u' },
+];
+
+// ── À modifier pour changer d'algorithme ─────────────────────────────────────
+
+const NODES = {
+  s: { x:  65, y: 150 },
+  A: { x: 200, y: 150 },
+  B: { x: 360, y:  65 },
+  C: { x: 360, y: 235 },
+  D: { x: 510, y: 150 },
+  E: { x: 655, y: 150 },
+};
+
+const EDGES = [
+  { u:'s', v:'A', w:  3 },
+  { u:'A', v:'B', w: -1 },
+  { u:'A', v:'C', w:  4 },
+  { u:'B', v:'C', w: -1 },
+  { u:'B', v:'D', w: -2 },
+  { u:'C', v:'D', w:  1 },
+  { u:'D', v:'E', w: -2 },
+  { u:'C', v:'E', w: -4 },
+];
+
+const SOURCE = 's';
+const R = 22;
+
+function runAlgorithm() {
+  const inf = Infinity;
+  const dist = {}, prev = {};
+  for (const n of Object.keys(NODES)) { dist[n] = inf; prev[n] = null; }
+  dist[SOURCE] = 0;
+
+  const snap = (edge, activeOk, label, pseudoLine) => ({
+    label, pseudoLine,
+    nodeLabels:    Object.fromEntries(Object.keys(NODES).map(n => [n, dist[n] === inf ? '∞' : String(dist[n])])),
+    nodeHighlight: activeOk === true && edge ? new Set([edge.v]) : new Set(),
+    treeEdges:     new Set(Object.entries(prev).filter(([, p]) => p).map(([v, p]) => `${p}->${v}`)),
+    activeEdge:    edge ? { u: edge.u, v: edge.v } : null,
+    activeOk,
+  });
+
+  const steps = [];
+  const N = Object.keys(NODES).length;
+
+  // ligne 1 : INIT-SINGLE-SOURCE
+  steps.push(snap(null, null, 'INIT-SINGLE-SOURCE(G, s)', 'init'));
+
+  for (let iter = 1; iter <= N - 1; iter++) {
+    // ligne 2 : for i = 1 to |G.V| − 1
+    steps.push(snap(null, null, `i = ${iter}`, 'for-i'));
+
+    let anyUpdate = false;
+    for (const e of EDGES) {
+      const { u, v, w } = e;
+      const du = dist[u] === inf ? '∞' : dist[u];
+      const dv = dist[v] === inf ? '∞' : dist[v];
+      const willRelax = dist[u] !== inf && dist[u] + w < dist[v];
+
+      // ligne 3 : for each (u, v) ∈ G.E
+      steps.push(snap(e, null, `(${u}, ${v})  —  d[${u}]=${du},  d[${v}]=${dv},  w=${w}`, 'for-edge'));
+
+      // ligne 4 : RELAX(u, v, w)  [appel de la fonction]
+      steps.push(snap(e, null, `RELAX(${u}, ${v}, ${w})`, 'relax'));
+
+      // ligne 5 : if v.d > u.d + w(u, v)
+      steps.push(snap(e, willRelax ? null : false,
+        `d[${v}]=${dv} > d[${u}]=${du} + ${w} ?  ${willRelax ? 'OUI ✓' : 'NON ✗'}`,
+        'relax-if'));
+
+      if (willRelax) {
+        dist[v] = dist[u] + w;
+        prev[v] = u;
+        anyUpdate = true;
+
+        // ligne 6 : v.d = u.d + w(u, v)
+        steps.push(snap(e, true, `d[${v}] := ${dist[v]}`, 'relax-update'));
+
+        // ligne 7 : v.π = u
+        steps.push(snap(e, true, `π[${v}] := ${u}`, 'relax-pi'));
+      }
+    }
+
+    if (!anyUpdate) {
+      steps.push(snap(null, null, `Convergence à l'itération ${iter} — terminé.`, 'for-i'));
+      break;
+    }
+  }
+  return steps;
+}
+</script>
+<script src="engine.js"></script>
+<script>initEngine(runAlgorithm());</script>
+</body>
+</html>

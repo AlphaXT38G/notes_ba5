@@ -1,0 +1,368 @@
+\documentclass[8pt,a4paper,landscape]{extarticle}
+\makeatletter
+\def\input@path{{../_shared/}}
+\makeatother
+\usepackage{cheatsheet}
+\usepackage{graphicx}
+
+\begin{document}
+\begin{multicols*}{4}
+
+\cheattitle{Computer Systems}{}{BA4}
+
+\section{Lecture 5 - Network \& File Syscalls}
+
+\begin{defn}[title=Permission bits]
+    Am I the \textbf{owner}? → use USR bits.\\
+    Am I in the \textbf{group}? → use GRP bits.\\
+    Otherwise → use OTH bits.\\
+    \textit{Only the first matching category applies — even if another gives more rights.}
+\end{defn}
+
+\begin{prop}[title=Syscall success conditions]
+    \begin{tabular}{ll}
+        \texttt{open(O\_RDONLY)} & \texttt{r} on file \\
+        \texttt{open(O\_WRONLY)} & \texttt{w} on file \\
+        \texttt{open(O\_RDWR)}   & \texttt{r}+\texttt{w} on file \\
+        \texttt{open(O\_CREAT)}  & \texttt{w}+\texttt{x} on dir \\
+        \texttt{read(fd,...)}    & fd open, mode=read \\
+        \texttt{write(fd,...)}   & fd open, mode=write \\
+        \texttt{close(fd)}       & fd open \\
+    \end{tabular}
+
+    \textbf{Every dir} in the path needs \texttt{x} to be traversed.\\
+    Any syscall on a \textbf{closed} fd fails immediately.
+\end{prop}
+
+\begin{thm}[title=\texttt{S\_*} flags]
+    Only used with \texttt{O\_CREAT} to set the new file's permissions. \textbf{Ignored} otherwise.
+\end{thm}
+
+\section{Lecture 8 - Forwarding and IP}
+
+Forwarded using the \textbf{longest matching prefix}.
+
+\begin{defn}[title=Broadcast IP address (+1)]
+The \texttt{biggest IP address} an IP subnet. If a packet has this destination, it's destined to \textbf{all the end-systems} and \textbf{routers} in the IP subnet.
+\end{defn}
+
+\begin{prop}[title=Global reachability]
+    Every end-system must be reachable from any other end-system.
+\end{prop}
+ 
+\begin{thm}[title=NAT: Layering violation (but it works)]
+    A router becomes a NAT only when it's configured to translate between private and public addresses.
+    \begin{itemize}
+        \item Requires \textbf{per-connection state} at the border routers of the private IP subnets.
+        \item An end-system inside a private IP subnet is \textbf{unreachable} from the outside world. [trick possible]
+    \end{itemize}
+\end{thm}
+
+\section{Lecture 9 - Routing \& BGP}
+
+\begin{prop}[title=Dijkstra's (Link state: converges faster)]
+    \begin{enumerate}
+        \item At each step, consider a new router starting from "closest" neighbor
+        \item Check whether current paths can be improved
+        \item End when no improvement is possible
+    \end{enumerate}
+\end{prop}
+\begin{prop}[title=Bellman-Ford (Distance vector: less bandwitdh)]
+    \begin{enumerate}
+        \item All neighbors exchange information
+        \item Each router checks whether it can improve current paths by leveraging the new information
+        \item End when no improvement is possible
+    \end{enumerate}
+\end{prop}
+
+\begin{thm}[title=Internet rounting challenges]
+    \begin{itemize}
+        \item \textbf{Admin:} An ISP may want to hide its link costs
+        \item \textbf{Scale:} Too many IP subnets may cause trouble
+    \end{itemize}
+\end{thm}
+
+\begin{prop}[title=Border Gateway Protocol (BGP)]
+    Inter-AS Routing : Not always the SP. Bellman
+    \begin{enumerate}
+        \item All neighbors exchange reachable prefixes
+        \item Each router checks whether it can improve paths
+        \item End when no improvement is possible
+    \end{enumerate}
+\end{prop}
+
+\begin{thm}[title=Internet rounting solutions]
+    \begin{itemize}
+        \item Router $\leftrightarrow$ with \textbf{local} router
+        \item Border router $\leftrightarrow$ with \textbf{external neighbor}
+        \item Router keeps \textbf{forwarding state} for (1) \textbf{local IP subnets} and (2) \textbf{foreign aggregate IP prefixe}
+    \end{itemize}
+\end{thm}
+
+\section{Lecture 10 - Link layer \& Ethernet}
+
+\begin{defn}[title=Address Resolution Protocol (ARP)]
+    Resolves an IP address to a MAC address (to build the L2 frame) via \textit{broadcast} + \textit{caching}.\\
+    Naïve broadcast may cause forwarding loops $\Rightarrow$ use a \textbf{spanning tree} to eliminate cycles.
+\end{defn}
+
+\section{Lecture 11 - File Systems}
+
+\begin{thm}[title=Persistence]
+    State that \textbf{outlives the process that created it} (unlike DRAM, which is volatile).
+\end{thm}
+
+\begin{prop}[title=File System]
+    Abstracts persistent blocks into: \textbf{Name}, \textbf{Organize}, \textbf{Share}, \textbf{Protect}. Built on \textbf{files} and \textbf{directories}.
+\end{prop}
+
+\begin{defn}[title=File]
+    Named array of bytes (untyped) with \textbf{data} + \textbf{metadata} (size, owner, permissions, \ldots).
+\end{defn}
+
+\begin{defn}[title=Inode]
+    Fixed-size on-disk record — one per file: \textbf{metadata} + \textbf{pointers to data blocks}.
+\end{defn}
+
+\begin{defn}[title=Inode Table]
+    Fixed array indexed by inode number.
+\end{defn}
+
+\begin{defn}[title=Directory (special file)]
+    Array of \textbf{\{filename, inode\}} pairs per partition
+\end{defn}
+
+\begin{defn}[title=File Descriptor Table]
+    Per-process. fd $\to$ (\textbf{inode}, \textbf{mode}, \textbf{offset}). \quad \textbf{0}=\texttt{STDIN}, \textbf{1}=\texttt{STDOUT}, \textbf{2}=\texttt{STDERR}.
+\end{defn}
+
+\section{Lecture 12 - Processes and Threads}
+
+\begin{defn}[title=Process]
+    An instance of a running program. Has its own \textbf{isolated memory space} (code, data, heap, stack) and OS resources (file descriptors, etc.).
+\end{defn}
+
+\begin{defn}[title=Thread]
+    A unit of execution \textbf{within} a process. Threads share the process's memory and resources, but each has its own \textbf{stack} and \textbf{program counter}.
+\end{defn}
+
+\begin{thm}[title=Key properties]
+    \begin{itemize}
+        \item \textbf{Identifier}: unique id for processes and threads
+        \item Each Thread/Process has the \textbf{illusion} that is it the only one occupying the CPU/Memory (resp.)
+    \end{itemize}
+\end{thm}
+
+\section{Lecture 13 - Sharing the CPU}
+
+\begin{prop}[title=CPU mode \& instructions]
+    CPU stores a privilege level: \textbf{Kernel mode} (high) or \textbf{User mode} (low).
+    \begin{itemize}
+        \item \textbf{Non-privileged:} executable anytime
+        \item \textbf{Privileged:} only in kernel mode
+    \end{itemize}
+\end{prop}
+
+\begin{thm}[title=Limited direct execution (invoking the kernel)]
+    Syscall / Exception / Interrupt
+\end{thm}
+
+\begin{prop}[title=Process lifecycle]
+    \begin{itemize}
+        \item \texttt{fork}: creates a \textbf{child} process (copy of parent)
+        \item \texttt{exec}: replaces process image with a new program
+        \item \texttt{exit}: terminates the process
+        \item \texttt{wait}: parent waits for child to finish
+    \end{itemize}
+\end{prop}
+
+\begin{prop}[title=Type of system processes]
+    \begin{itemize}
+        \item \textbf{Init}: first process after boot
+        \item \textbf{Idle}: runs when nothing else can
+        \item \textbf{Shell}: spawns new process on command
+        \item \textbf{GUI manager}: spawns new process on click
+    \end{itemize}
+\end{prop}
+
+\section{Lecture 14 - Memory \& Loose Ends}
+
+\begin{prop}[title=End of a process]
+    \texttt{exit()} syscall: kernel destroys memory image but \textbf{keeps exit status} $\Rightarrow$ process becomes a \textbf{zombie} until parent \textbf{reaps} it via \texttt{wait()} to read the exit status.
+\end{prop}
+
+\section{Lecture 15 - CPU Scheduling}
+
+\begin{defn}[title=Scheduling Metrics]
+    \textbf{Turnaround time} = completion - arrival. \\\textbf{Response time} = first run - arrival.
+\end{defn}
+
+\begin{defn}[title=FIFO]
+    Run jobs in arrival order. Suffers from \textbf{convoy effect}: short jobs stuck behind long ones.
+\end{defn}
+
+\begin{defn}[title=SJF (Shortest Job First)]
+    Run shortest job first. Optimal turnaround if all jobs arrive simultaneously. Non-preemptive.
+\end{defn}
+
+\begin{defn}[title=STCF (Shortest Time-to-Completion First)]
+    Preemptive SJF: preempt if a new job has less remaining time. Optimal turnaround.
+\end{defn}
+
+\begin{defn}[title=Round Robin (RR)]
+    Each job runs for a fixed \textbf{quantum}, then preempted. Good response time, poor turnaround.
+\end{defn}
+
+\begin{warn}[title=Tradeoff]
+    SJF/STCF optimizes \textbf{turnaround}. RR optimizes \textbf{response time}. Hard to do both.
+\end{warn}
+
+\begin{defn}[title=MLFQ (Multi-Level Feedback Queue)]
+    Multiple queues; lower priority = longer time slice.
+    \begin{itemize}
+        \item \textbf{R1:} priority(A) $>$ priority(B) $\Rightarrow$ A runs
+        \item \textbf{R2:} priority(A) $=$ priority(B) $\Rightarrow$ RR
+        \item \textbf{R3:} new job starts at \textbf{top} priority
+        \item \textbf{R4:} uses full slice $\Rightarrow$ \textbf{demoted}; blocks early $\Rightarrow$ \textbf{keeps} priority
+        \item \textbf{R5:} periodically move all jobs to top (\textbf{priority boost}) — avoids starvation
+    \end{itemize}
+\end{defn}
+
+\section{Lecture 17/18 - Concurrency}
+\textbf{Concurrency:} how should we manage tasks\\
+\textbf{Parallism:} how to execute tasks in parallel
+
+\begin{defn}[title=Race condition \& Data race]
+    \begin{itemize}
+        \item \textbf{Race cond.:} behavior depends on thread timing
+        \item \textbf{Data race:} unsynchronized concurrent access to shared writable state
+    \end{itemize}
+\end{defn}
+
+\begin{defn}[title=Critical section]
+    Code that will be executed by the threads. Must enforce: \textbf{atomicity} (uninterruptible) and \textbf{mutual exclusion} (one thread at a time).
+\end{defn}
+
+\begin{warn}[title=Synchronization primitives]
+    \begin{itemize}
+        \item \textbf{Lock} $\rightarrow$ prevent concurrent access
+        \item \textbf{Condition var.} $\rightarrow$ wait until a condition holds
+        \item \textbf{Semaphore} $\rightarrow$ count available resources
+    \end{itemize}
+\end{warn}
+
+
+\end{multicols*}
+\begin{multicols*}{3}
+
+{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/net_stack.png}\par}
+{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/io_stack.png}\par}
+{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/lecture05/ls-l-entry-anatomy.png}\par}
+
+\begin{prop}[title=\texttt{open()} flags / permission mode]
+    \begin{tabular}{ll}
+        \texttt{O\_CREAT}  & create file if it doesn't exist \\
+        \texttt{O\_EXCL}   & fail if file already exists \\
+        \texttt{O\_APPEND} & always write at end of file \\
+        \texttt{O\_TRUNC}  & truncate file on open \\
+        \texttt{O\_RDONLY} & read only \\
+        \texttt{O\_WRONLY} & write only \\
+        \hline
+        \texttt{S\_IRUSR} & read by owner \\
+        \texttt{S\_IWUSR} & write by owner \\
+        \texttt{S\_IXUSR} & execute by owner \\
+        \texttt{S\_IRGRP} & read by group \\
+        \texttt{S\_IROTH} & read by others \\
+        \texttt{0}        & no permissions \\
+    \end{tabular}
+\end{prop}
+
+\begin{lstlisting}
+INIT-SINGLE-SOURCE(G, s)
+    s.d = 0
+    for v in G.V: v.d = inf; v.pi = NIL
+
+RELAX(u, v, w)
+    if v.d > u.d + w(u, v)
+        v.d = u.d + w(u, v); v.pi = u
+
+BELLMAN-FORD(G, w, s)
+    INIT-SINGLE-SOURCE(G, s)
+    for i = 1 to |G.V| - 1
+        for (u, v) in G.E: 
+            RELAX(u, v, w)
+
+DIJKSTRA(G, w, s)
+    INIT-SINGLE-SOURCE(G, s)
+    S = {}
+    Q = G.V   // min-priority queue (sorted by d(v))
+    while Q != {}:
+        u = EXTRACT-MIN(Q)
+        S = S U {u}
+        for each vertex v in G.Adj[u]:
+            RELAX(u, v, w)
+\end{lstlisting}
+
+{\centering\includegraphics[width=0.8\linewidth,keepaspectratio]{images/bellman_example.png}\par}
+{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/dijkstra_example.png}\par}
+
+\begin{defn}[title=Powers of ten]
+    \begin{itemize}
+        \item 1 KB (kilobyte) $= 10^3 = 1\,000$ bytes
+        \item 1 MB (megabyte) $= 10^6 = 1\,000\,000$ bytes
+        \item 1 GB (gigabyte) $= 10^9 = 1\,000\,000\,000$ bytes
+    \end{itemize}
+\end{defn}
+
+\begin{defn}[title=Powers of two]
+    \begin{itemize}
+        \item 1 KiB (kibibyte) $= 2^{10} = 1\,024$ bytes
+        \item 1 MiB (mebibyte) $= 2^{20} = 1\,048\,576$ bytes
+        \item 1 GiB (gibibyte) $= 2^{30} = 1\,073\,741\,824$ bytes
+    \end{itemize}
+\end{defn}
+
+\subsection{Process state diagram}
+{\centering\includegraphics[width=0.6\linewidth,keepaspectratio]{images/lecture14/process_fsm.png}\par}
+
+\subsection{Thread state diagram}
+{\centering\includegraphics[width=0.6\linewidth,keepaspectratio]{images/lecture14/thread_fsm.png}\par}
+
+{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/tahoe_reno.png}\par}
+{\centering\includegraphics[width=0.8\linewidth,keepaspectratio]{images/reno_example.png}\par}
+
+{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/multi-level-indexing.png}\par}
+
+
+{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/lecture13/kernel_overview.png}\par}
+
+{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/partition.png}\par}
+{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/read_write_on_disk.png}\par}
+
+\newcolumn
+
+\begin{small}
+\noindent\textbf{Web and DNS}\\
+All web client processes keep caches with the most recently retrieved web objects. All DNS client and DNS server processes keep caches with the most recently retrieved DNS records (e.g., DNS name $\to$ IP address mappings). If the TTL of a retrieved web object or DNS record is not explicitly stated, assume that it is 1 hour. Web processes communicate over TCP. DNS processes communicate over UDP.
+
+\noindent\textbf{TCP}\\
+When a TCP-related question does not mention the receiver window at all, assume that the receiver window is very large and it does not affect the rate at which data is exchanged. When you are given a scenario where Processes A and B exchange data over TCP, assume that they use the same TCP connection for all the data, unless you are explicitly told otherwise. When you are given a scenario where client Process A establishes a TCP connection with server Process B and A sends a request to B; assume that the second segment sent by A to B already carries bytes of data and has SEQ number 1. When computing the amount of time it takes for a data segment to go from Alice to Bob plus the time it takes for an ACK to go from Bob to Alice, when there is no other traffic present (so, no queuing delays): Do take into account the transmission delay experienced by the data segment, but not for the ACK.
+
+\noindent\textbf{Packet Switch Behavior}\\
+All packet switches are store-and-forward packet switches. All packet switches have infinite queues. All packet switches introduce 0 processing delays. All packet switches behave as follows: There is always one queue per link and it stores packets that are going out that link. When a packet arrives, the switch immediately examines the packet, determines the correct outgoing link, and stores the packet in the queue that feeds that link. If two packets arrive at a switch and are put in the same queue at the same time, the order in which they are put in the queue is random. Assume the order that makes the solution simpler. All queues are served following a FIFO (first in first out) policy.
+
+\noindent\textbf{Insignificant Headers \& Transmission delays}\\
+If a problem tells you that ``lower-layer headers are insignificant'': If you need to compute the transmission delay of a packet, and that packet does not carry any application-layer content (e.g., it is a TCP segment that carries an ACK but no data), then this packet experiences transmission delay 0.
+
+\noindent\textbf{IP subnets \& prefixes}\\
+Each network interface of a router has an IP address (and, of course, a MAC address). Network interfaces of L2 switches have no IP or MAC addresses. Each IP subnet has a broadcast IP address (which is the highest IP address in the subnet), but NO network IP address. Each end-system knows the IP address of its default gateway.
+
+\noindent\textbf{File access}\\
+We don't expect you to reason about bitmap accesses. We do expect you to reason about inode and data block accesses. Reading a file does not trigger a write to the file's inode to update the read access time. Closing a file does not trigger any block access. There exists a file system (FS) cache (which is the same thing as a block cache), unless you are explicitly told that it does not exist. The FS/block cache has infinite size unless you are explicitly told otherwise. The FS/block cache is write-through. I.e., when a process makes a write syscall to write N bytes to disk, this causes the FS/block cache to be updated, but it also triggers as many block accesses as necessary to write the N bytes to disk (and to update the inode of the file that's being written). Differently said: The presence of the FS/block cache may remove the need for some read block accesses, but it cannot remove the need for write block accesses.
+
+\noindent\textbf{Scheduling}\\
+If a thread terminates or blocks after running for a fraction of a time tick (e.g., after 0.99 time ticks), assume that ``nothing'' happens during the rest of the current time tick. Differently said: Assume that the OS scheduler can only run at integer time-tick values, e.g., time tick 0, time tick 1, etc.
+\end{small}
+\end{multicols*}
+
+\end{document}

@@ -1,0 +1,123 @@
+
+
+
+
+
+
+
+
+
+NAME_ALGORITHM     Time complexity    Space complexity
+
+
+
+INSERTION SORT Θ(n2)  O(1)
+
+Merge Sort  Θ(n log n)  O(n)
+
+Maximum Subarray Optimized  Θ(n log n)   O(log n)
+
+Maximum Subarray Brute Force Θ(n2)   Θ(n)
+
+Matrix Multiplication Naive O(n3)   O(n2)
+
+Recursive Matrix Multiplication O(n3)  O(n2)
+
+Strassen’s Algorithm   Θ(nlog2 7)  O(n2) 
+
+Karatsuba Multiplication    Θ(nlog2 3)  O(1)
+
+MAX-HEAPIFY Θ(height(i)) = O(log n) O(log n)
+
+Build Heap  O(n) O(1) 
+
+Heapsort  O(n log n)  O(1)
+
+Heap Extract Max    O(log n)    O(1)
+
+Heap Maximum    O(1)     O(1)
+
+Heap Increase Key    O(log n) O(1)
+
+Max Heap Insert      O(log n)   O(1)
+
+Stack Empty     O(1)        O(1)
+
+Stack Push      O(1)    O(1)
+
+Stack Pop       O(1)    O(1)
+
+Enqueue        O(1)    O(1)
+
+Dequeue       O(1)         O(1)
+
+Linked List Search         O(n)     O(1)
+
+Linked List Insert       O(1)     O(1)
+
+Linked List Delete       O(1)       O(1)
+
+Tree Search         O(h)   O(h) 
+
+Tree Minimum         O(h)   O(1)
+
+Tree Maximum      O(h)    O(1)
+
+Tree Successor       O(h)      O(1)
+
+Inorder Tree Walk       O(n)       O(h)
+
+Preorder Tree Walk       O(n) O(h)
+
+Postorder Tree Walk           O(n)        O(h) recursion stack.
+
+Tree Insert       O(h)      O(1)
+
+Tree Delete          O(h)      O(1)
+
+Rod Cutting Algorithm            O(n2)       O(n)
+
+Memoized Cut Rod Aux        O(n2)         O(n)
+
+Bottom-Up Cut Rod        O(n2)      O(n)
+
+Matrix Chain Order        O(n3)       O(n2)
+
+Longest Common Subsequence        O(mn)      O(mn)
+
+Print LCS          O(m + n)   O(m + n) recursion stack.
+
+Bottom-Up Optimal BST       O(n3)       O(n2)
+
+Breadth-First Search          O(V + E) O(V )
+
+Depth-First Search  O(V + E)       O(V ) 
+
+Topological Sort        O(V + E)       O(V )
+
+Strongly Connected Components       O(V + E)    O(V + E)
+
+Maximum Flow - Ford Fulkerson      O(E · |f ∗|)      O(V + E)
+
+Connected Components         O(E · α(V ))     O(V )
+
+MAKE-SET        O(1)       O(1) per elemen
+
+FIND-SET   O(α(n)) amortized     O(1) auxiliary
+
+UNION           O(α(n)) amortized   O(1) auxiliary
+
+LINK        O(1)     O(1) auxiliary
+
+PRIM’S ALGORITHM        O(E log V ) with binary heap
+O(E + V log V ) with Fibonacci heap                O(V )
+
+KRUSKAL’S ALGORITHM      O(E log E) = O(E log V )    O(V )
+
+RELAX            O(1)      O(1)
+
+BELLMAN-FORD         O(V E)        O(V )
+
+DIJKSTRA       O(E log V ) with binary heap
+O(V log V + E) with efficient decrease-key            O(V )
+

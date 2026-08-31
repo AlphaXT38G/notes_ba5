@@ -1,0 +1,24 @@
+# LaTeX build files
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex.gz(busy)
+*.out
+*.toc
+course.pdf
+cheatsheet.pdf
+python_raw_notes.pdf
+algos_condensed.pdf
+
+# Overview files
+_overview/**
+!_overview/**/
+!_overview/**/*.pdf
+
+# AI assistant files
+.claude/
+
+# OS files
+desktop.ini

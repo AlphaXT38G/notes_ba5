@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Dijkstra</title>
+<link rel="stylesheet" href="graph.css">
+</head>
+<body>
+
+<h1>Dijkstra's Algorithm</h1>
+<div id="main">
+  <canvas id="cv" width="760" height="340"></canvas>
+  <div id="pseudocode"></div>
+</div>
+<div id="status-box"><span class="info">INIT-SINGLE-SOURCE(G, s)</span></div>
+
+<div id="controls">
+  <button id="btn-prev">◀ Préc</button>
+  <button id="btn-play">▶ Play</button>
+  <button id="btn-next">Suiv ▶</button>
+  <button id="btn-reset">↺ Reset</button>
+  <div id="speed-wrap">
+    <span>Vitesse</span>
+    <input type="range" id="speed" min="200" max="2000" value="900" step="100">
+  </div>
+  <div id="progress">— / —</div>
+</div>
+
+<script>
+// ── Pseudocode ────────────────────────────────────────────────────────────────
+const PSEUDOCODE = [
+  { fn: true,  text: 'DIJKSTRA(G, w, s)' },
+  { id: 'init',        indent: 1, text: 'INIT-SINGLE-SOURCE(G, s)' },
+  { id: 'init-S',      indent: 1, text: 'S = ∅' },
+  { id: 'init-Q',      indent: 1, text: 'Q = G.V  (min-priority queue)' },
+  { id: 'while',       indent: 1, text: 'while Q ≠ ∅' },
+  { id: 'extract-min', indent: 2, text: 'u = EXTRACT-MIN(Q)' },
+  { id: 'add-to-S',    indent: 2, text: 'S = S ∪ {u}' },
+  { id: 'for-adj',     indent: 2, text: 'for each v ∈ Adj[u]' },
+  { id: 'relax-call',  indent: 3, text: 'RELAX(u, v, w)' },
+  { fn: true,  text: '' },
+  { fn: true,  text: 'RELAX(u, v, w)' },
+  { id: 'relax-if',     indent: 1, text: 'if v.d > u.d + w(u, v)' },
+  { id: 'relax-update', indent: 2, text: 'v.d = u.d + w(u, v)' },
+  { id: 'relax-pi',     indent: 2, text: 'v.π = u' },
+];
+
+const NODES = {
+  s:   { x:  55, y: 190 },
+  n10: { x: 195, y:  90 },
+  n12: { x: 195, y: 290 },
+  n15: { x: 330, y: 235 },
+  n18: { x: 385, y:  90 },
+  n13: { x: 385, y: 290 },
+  n26: { x: 525, y:  90 },
+  n19: { x: 525, y: 290 },
+  n28: { x: 665, y: 190 },
+};
+
+const EDGES = [
+  { u:'s',   v:'n10', w: 10 },
+  { u:'s',   v:'n12', w: 12 },
+  { u:'n10', v:'n12', w:  9 },
+  { u:'n10', v:'n18', w:  8 },
+  { u:'n12', v:'n10', w:  9 },
+  { u:'n12', v:'n15', w:  3 },
+  { u:'n12', v:'n13', w:  1 },
+  { u:'n15', v:'n18', w:  7 },
+  { u:'n15', v:'n13', w:  3 },
+  { u:'n18', v:'n15', w:  7 },
+  { u:'n18', v:'n26', w:  8 },
+  { u:'n18', v:'n19', w:  5 },
+  { u:'n13', v:'n15', w:  3 },
+  { u:'n13', v:'n19', w:  6 },
+  { u:'n26', v:'n19', w:  9 },
+  { u:'n26', v:'n28', w:  2 },
+  { u:'n19', v:'n26', w:  9 },
+  { u:'n19', v:'n28', w: 11 },
+];
+
+const SOURCE = 's';
+const R = 22;
+
+// ── Dijkstra ──────────────────────────────────────────────────────────────────
+function runAlgorithm() {
+  const inf = Infinity;
+  const dist = {}, prev = {};
+  const done = new Set();
+  for (const n of Object.keys(NODES)) { dist[n] = inf; prev[n] = null; }
+  dist[SOURCE] = 0;
+
+  // display name for status messages (strip leading 'n')
+  const nm = n => n === 's' ? 's' : n.slice(1);
+
+  const snap = (edge, activeOk, label, pseudoLine, extracted = null) => ({
+    label, pseudoLine,
+    nodeLabels:    Object.fromEntries(Object.keys(NODES).map(n => [n, dist[n] === inf ? '∞' : String(dist[n])])),
+    nodeHighlight: activeOk === true && edge ? new Set([edge.v]) : new Set(),
+    nodeDone:      new Set(done),
+    nodeExtracted: extracted,
+    treeEdges:     new Set(Object.entries(prev).filter(([, p]) => p).map(([v, p]) => `${p}->${v}`)),
+    activeEdge:    edge ? { u: edge.u, v: edge.v } : null,
+    activeOk,
+  });
+
+  const steps = [];
+  const queue = new Set(Object.keys(NODES));
+
+  steps.push(snap(null, null, 'INIT-SINGLE-SOURCE(G, s)', 'init'));
+  steps.push(snap(null, null, 'S = ∅', 'init-S'));
+  steps.push(snap(null, null, 'Q = G.V  (tous les nœuds)', 'init-Q'));
+
+  while (queue.size > 0) {
+    steps.push(snap(null, null, 'Q ≠ ∅  — boucle suivante', 'while'));
+
+    // EXTRACT-MIN
+    let u = null, minD = inf;
+    for (const n of queue) { if (dist[n] < minD) { minD = dist[n]; u = n; } }
+    if (u === null) break;
+
+    steps.push(snap(null, null,
+      `u = EXTRACT-MIN(Q)  →  ${nm(u)}  (d = ${dist[u]})`, 'extract-min', u));
+
+    queue.delete(u);
+    done.add(u);
+
+    steps.push(snap(null, null, `S = S ∪ { ${nm(u)} }`, 'add-to-S', u));
+
+    // relax neighbors
+    const adj = EDGES.filter(e => e.u === u);
+    for (const e of adj) {
+      const { v, w } = e;
+      const du = dist[u];
+      const dv = dist[v] === inf ? '∞' : dist[v];
+      const willRelax = !done.has(v) && dist[u] + w < dist[v];
+
+      steps.push(snap(e, null,
+        `v = ${nm(v)}  —  d[${nm(u)}]=${du},  d[${nm(v)}]=${dv},  w=${w}`,
+        'for-adj', u));
+
+      steps.push(snap(e, null,
+        `RELAX(${nm(u)}, ${nm(v)}, ${w})`,
+        'relax-call', u));
+
+      steps.push(snap(e, willRelax ? null : false,
+        `d[${nm(v)}]=${dv} > d[${nm(u)}]=${du} + ${w} ?  ${willRelax ? 'OUI ✓' : 'NON ✗'}`,
+        'relax-if', u));
+
+      if (willRelax) {
+        dist[v] = dist[u] + w;
+        prev[v] = u;
+        steps.push(snap(e, true, `d[${nm(v)}] := ${dist[v]}`, 'relax-update', u));
+        steps.push(snap(e, true, `π[${nm(v)}] := ${nm(u)}`,   'relax-pi',     u));
+      }
+    }
+  }
+
+  return steps;
+}
+</script>
+<script src="engine.js"></script>
+<script>initEngine(runAlgorithm());</script>
+</body>
+</html>

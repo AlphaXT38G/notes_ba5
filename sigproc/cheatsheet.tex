@@ -1,0 +1,450 @@
+\documentclass[8pt,a4paper,landscape]{extarticle}
+\makeatletter
+\def\input@path{{../_shared/}}
+\makeatother
+\usepackage{cheatsheet}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\begin{multicols*}{4}
+
+\cheattitle{Signal Processing}{}{BA4}
+
+% ============================================================
+
+\section{Basic things}
+\begin{defn}[title=Unit impulse | Delta]
+$\delta[n] = \begin{cases}1 & n=0\\0 & n\ne 0\end{cases}$, \quad $\delta_m[n] = \delta[n-m]$
+\end{defn}
+
+\begin{defn}[title=Unit step]
+$u[n] = \begin{cases}1 & n\ge 0\\0 & n<0\end{cases}$
+\end{defn}
+
+\begin{defn}[title=Exponential decay]
+$x[n] = a^n u[n]$, \quad $0 < a < 1$
+\end{defn}
+
+\begin{defn}[title=Sinusoidal oscillation]
+$x[n] = A \cos(\omega n + \phi)$, \quad $A\in\R$, $\omega\in\R$, $\phi\in\R$
+\end{defn}
+
+\begin{defn}[title=Complex exponential]
+$x[n] = A\,e^{j(\omega n + \phi)}$, \quad $A\in\R$, $\omega\in\R$, $\phi\in\R$
+\end{defn}
+
+\begin{thm}[title=Energy and Power]
+\begin{itemize}
+  \item $E_x = \|x\|^2$ \quad (sum or integral of $|x|^2$)
+  \item $P_x = \lim_{N\to\infty}\frac{1}{2N+1}\sum_{n=-N}^{N}|x[n]|^2$
+\end{itemize}
+\end{thm}
+
+\begin{defn}[title=Operator combinations]
+\begin{center}
+\begin{tabular}{cc}
+\toprule
+signal & sample at time $n$ \\
+\midrule
+$\mathcal{R}\mathcal{S}^d\mathbf{x}$, \; $\mathcal{S}^{-d}\mathcal{R}\mathbf{x}$ & $x[-n+d]$ \\
+\midrule
+$\mathcal{R}\mathcal{S}^{-d}\mathbf{x}$, \; $\mathcal{S}^d\mathcal{R}\mathbf{x}$ & $x[-n-d]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{defn}
+
+\begin{thm}[title=Sum of a sequence]
+  $\sum_{k=m}^{n} k = \frac{(m+n)(n-m+1)}{2}$\\
+  $\sum_{k=m}^{n} z^{k} = \begin{cases} n-m+1 & z=1 \\ \frac{z^m-z^{n+1}}{1-z} & z\ne 1 \end{cases}$
+\end{thm}
+
+% ============================================================
+
+\section{Signal analysis}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\tiny, >=stealth,
+  node distance=0.42cm and 1.35cm,
+  q/.style={align=center, inner sep=1.5pt, text width=1.25cm},
+  res/.style={font=\tiny\bfseries\color{blueColor!90!black}},
+  yes/.style={->, thick, color=greenColor},
+  no/.style={->, thick, color=redColor},
+]
+  \node[q] (q1) {discr.-time?};
+  \node[q, below=of q1] (q2) {finite len.\ $N$?};
+  \node[q, below=of q2] (q3) {fin.\ energy\\ $\ell^2(\mathbb{Z})$?};
+  \node[q, below=of q3] (q4) {periodic?};
+  \node[q, below=of q4] (q5) {power sig.?};
+  \node[res, below=0.32cm of q5] (r0) {$\nexists$ FT};
+
+  \node[res, right=of q1] (r1) {Continuous time FT (CTFT)};
+  \node[res, right=of q2] (r2) {Discrete FT (DFT)};
+  \node[res, right=of q3] (r3) {Discrete time FT (DTFT)};
+  \node[res, right=of q4] (r4) {Discrete Fourier Series (DFS)};
+  \node[res, right=of q5] (r5) {Generalized DTFT};
+
+  \draw[yes] (q1) -- (q2);
+  \draw[no]  (q2) -- (q3);
+  \draw[no]  (q3) -- (q4);
+  \draw[no]  (q4) -- (q5);
+  \draw[no]  (q5) -- (r0);
+  \draw[no]  (q1) -- (r1);
+  \draw[yes] (q2) -- (r2);
+  \draw[yes] (q3) -- (r3);
+  \draw[yes] (q4) -- (r4);
+  \draw[yes] (q5) -- (r5);
+\end{tikzpicture}
+\end{center}
+
+\section{DFT: $X[k]$}
+
+\begin{thm}[title=Symmetry summary]
+\renewcommand{\arraystretch}{1}
+\begin{tabularx}{\linewidth}{@{}XX@{}}
+\toprule
+\textbf{Time domain} $x[n]$ & \textbf{Freq.\ domain} $X[k]$ \\
+\midrule
+Real & $X[N-k]=X^*[k]$ \\
+\bottomrule
+\end{tabularx}
+\end{thm}
+
+\begin{thm}[title=Dot product in C]
+\[
+  \langle \mathbf{x},\mathbf{y}\rangle = \sum_{n=0}^{N-1} x^*[n]\,y[n].
+\]
+\end{thm}
+
+\begin{prop}[title=DFT matrix form]
+$\mathbf{X} = \mathbf{W}\mathbf{x}$, \quad $\mathbf{x} = \tfrac{1}{N}\mathbf{W}^H\mathbf{X}$, where $W_N = e^{-j\frac{2\pi}{N}}$:
+$\mathbf{W}^H\mathbf{W} = N\mathbf{I}$.\\
+$W_N^n = W_N^{n\,\mathrm{mod}\,N}$ (aliasing property).
+\end{prop}
+
+\[
+  \mathbf{W}_2 = \begin{bmatrix}1&1\\1&-1\end{bmatrix} \quad
+  \mathbf{W}_4 = \begin{bmatrix}1&1&1&1\\1&-j&-1&j\\1&-1&1&-1\\1&j&-1&-j\end{bmatrix}
+\]
+
+% ============================================================
+\section{Properties}
+A signal is \textbf{Hermitian-symmetric} if $x[n]=x^*[N-n]$.\\
+\textbf{DFS} $\equiv$ DFT: same formulas, different interpretation (explicit periodicity).
+
+% ============================================================
+\section{DTFT: $X(e^{j\omega})$}
+
+\begin{thm}[title=Symmetry summary]
+\renewcommand{\arraystretch}{1}
+\begin{tabularx}{\linewidth}{@{}XX@{}}
+\toprule
+\textbf{Time domain} $x[n]$ & \textbf{Freq.\ domain} $X(\omega)$ \\
+\midrule
+Real & $X(-\omega)=X^*(\omega)$ \\
+Real \& even & Real \& even \\
+Real \& odd & Imaginary \& odd \\
+Complex \& even & Complex \& even \\
+Complex \& odd & Complex \& odd \\
+\bottomrule
+\end{tabularx}
+\end{thm}
+
+\subsection{Generalized DTFT (Power Signals)}
+TODO [Explain the difference]
+% ============================================================
+
+\section{FFT}
+TODO [Explain the difference]
+
+% ============================================================
+\section{Spectrograms (STFT)}
+TODO [Explain the difference]
+
+% ============================================================
+
+\newpage
+
+\section{Filtering I - Digital Filters}
+
+\begin{defn}[title=LTI: Linearity \& time-invariance]
+Let $y[n] = \mathcal{H}\{x[n]\}$. \\
+\textbf{Linearity} ($\forall\, \alpha,\beta \in\mathbb{C}$, $\forall\, x_1, x_2$):
+\[
+    \mathcal{H}\{\alpha\, x_1[n] + \beta\, x_2[n]\} \stackrel{?}{=} \alpha\, \mathcal{H}\{x_1[n]\} + \beta\, \mathcal{H}\{x_2[n]\}
+\]
+
+\textbf{Time-Invariance} ($\forall\, n_0 \in \mathbb{Z},\ \forall\, x$):
+\[
+    \underbrace{\mathcal{H}\{x[n - n_0]\}}_{x[\cdot] \,\leftarrow\, x[\cdot - n_0]} \stackrel{?}{=} \underbrace{y[n - n_0]}_{n \,\leftarrow\, n - n_0}
+\]
+\end{defn}
+
+
+\begin{thm}[title=Impulse response]
+$\mathbf{h}=\mathcal{H}\boldsymbol{\delta}$. An LTI system is \emph{fully} described by $\mathbf{h}$.
+\end{thm}
+
+\begin{defn}[title={Convolution $\mathbf{y}=\mathbf{x}*\mathbf{h}$}]
+\[y[n]=\sum_{k=-\infty}^{\infty}x[k]\,h[n-k]\]
+\end{defn}
+
+\begin{prop}[title=Convolution properties]
+\textbf{Commutativity:} $\mathbf{x}*\mathbf{h}=\mathbf{h}*\mathbf{x}$\\
+\textbf{Linearity:} $\mathbf{x}*(\alpha\mathbf{y}+\beta\mathbf{w})=\alpha(\mathbf{x}*\mathbf{y})+\beta(\mathbf{x}*\mathbf{w})$\\
+\textbf{Time-shift:} $\mathbf{x}*(\mathcal{S}^k\mathbf{y})=\mathcal{S}^k(\mathbf{x}*\mathbf{y})$\\
+\textbf{Associativity:} $(\mathbf{x}*\mathbf{h})*\mathbf{w}=\mathbf{x}*(\mathbf{h}*\mathbf{w})$\\
+\textbf{Cascade:} $\mathbf{h}=\mathbf{h}_1*\mathbf{h}_2$; order is irrelevant.
+\end{prop}
+
+% --- 3. FILTER PROPERTIES FROM h ---
+\begin{defn}[title=FIR vs IIR (Finite/Infinite Impulse Response)]
+\begin{itemize}
+  \item \textbf{FIR}: $\mathbf{h}$ finite support. No feedback;
+  \item \textbf{IIR}: $\mathbf{h}$ infinite support.
+\end{itemize}
+\end{defn}
+
+\begin{defn}[title=Definition of causal]
+Only responds to present or past inputs.
+\end{defn}
+
+\begin{thm}[title=BIBO Stability]
+LTI is BIBO stable $\Longleftrightarrow$ $\mathbf{h}$ is absolutely summable
+\end{thm}
+
+% --- 5. FREQUENCY RESPONSE ---
+\begin{thm}[title=Frequency Response]
+We extract from it the magnitude/phase response.
+\[H(\omega)= \mathrm{DTFT}\{\boldsymbol{h}[n]\} \]
+\end{thm}
+
+\begin{prop}[title=Filter types by magnitude response]
+\begin{itemize}
+  \item \textbf{Lowpass}: passes low freqs ($\omega\approx 0$)
+  \item \textbf{Highpass}: passes high freqs
+  \item \textbf{Bandpass}: passes freqs near $\pm\omega_c$
+  \item \textbf{Allpass}: $|H(\omega)|=\text{const}$ — modifies phase only
+\end{itemize}
+Stop Band: 0 \textbf{-} Transition Band \textbf{-} Pass Band: 1.
+\end{prop}
+
+\begin{warn}[title=Unit-circle modulus reflection identity]
+\[
+\left|1 - a\,z^{-1}\right| \;=\; |a| \cdot \left|1 - a^{-1} z^{-1}\right|
+\]
+\end{warn}
+\subsection{Example of filters}
+
+\begin{defn}[title=Moving Average (MA)]
+\[y[n]=\frac{1}{M}\sum_{k=0}^{M-1}x[n-k]\]
+$h[n]=\tfrac{1}{M}$ for $0\le n<M$, else $0$.
+Causal FIR $\Rightarrow$ always BIBO stable. Big cost.
+\end{defn}
+
+\begin{defn}[title=Leaky Integrator (LI)]
+\[y[n]=\lambda\,y[n-1]+(1-\lambda)\,x[n], \quad |\lambda|<1\]
+\[h[n]=(1-\lambda)\lambda^n\,u[n]\quad\text{(causal, exponential decay)}\]
+Causal IIR. Constant cost. Approximates MA of length $M$ with $\lambda=\frac{M-1}{M}$.
+\end{defn}
+
+\section{Filtering II - Filter Design}
+
+\begin{defn}[title=Transfer function $H(z)$]
+\[H(z)  = \frac{B(z)}{A(z)} = b_0\,\frac{\displaystyle\prod_{k=0}^{M-1}(1-z_k z^{-1})}{\displaystyle\prod_{k=0}^{N-1}(1-p_k z^{-1})}\]
+$B(z)$: feedforward (FIR part).\\$A(z)$: feedback (IIR part). FIR: $A(z)=1$.\\
+\textbf{Zeros} $z_k$: roots of $B(z)$, where $|H|=0$.\\
+\textbf{Poles} $p_k$: roots of $A(z)$, where $|H|\to\infty$.
+\end{defn}
+
+\begin{prop}[title=Zero symmetry]
+If $h[n]$ is \textbf{real}: zeros in conjugate pairs.\\
+If $h[n]$ is \textbf{symmetric} (linear phase): zeros in reciprocal pairs $(z_0, 1/z_0^*)$.
+\end{prop}
+
+% --- 4. STABILITY & ROC ---
+\begin{prop}[title=ROC \& causality]
+\[z \in \text{ROC}\{X(z)\} \iff \sum_{n=-\infty}^{\infty} \left|x[n]z^{-n}\right| < \infty\]
+\textbf{Causal IIR}: ROC $= \{|z|>R\}$: $R=\max_k|p_k|$.\\
+\textbf{FIR}: ROC $= \mathbb{C}$.
+\end{prop}
+
+\begin{thm}[title=BIBO stability]
+Stable $\Longleftrightarrow$ unit circle $|z|=1$ lies inside the ROC\\
+$\Longleftrightarrow$ all poles strictly inside the unit circle ($|p_k|<1$).
+\end{thm}
+
+\begin{center}
+{\footnotesize Stable (unit circle in ROC)\hfill Unstable (unit circle not in ROC)}
+\includegraphics[width=0.47\linewidth]{images/roc_causal_stable.png}\hfill
+\includegraphics[width=0.47\linewidth]{images/roc_causal_unstable.png}\\[1pt]
+\end{center}
+
+\section{Filtering III - Stochastic and Adaptive SP}
+
+\begin{defn}[title=Reminder - Proba]
+\textbf{CDF}: $F_X(\alpha) = P(X \leq \alpha)$ \\
+\textbf{PDF}: $f_X(\alpha) = \frac{d}{d\alpha}F_X(\alpha)$\\
+\textbf{Moments:} $E[g(x)] = \int_{-\infty}^{\infty} g(x)\,f_x(x)\,dx$\\
+\textbf{Variance}: $\sigma_x^2 = E[(x-\mu_x)^2]$
+\end{defn}
+
+\begin{defn}[title=Cross-correlation \& Covariance]
+\textbf{Cross-correlation}: $R_{xy} = E[xy]$ \\
+\textbf{Covariance}: $C_{xy} = E[(x-m_x)(y-m_y)]$ \\
+\textbf{Uncorrelated}: $E[xy]=E[x]E[y]=m_x m_y$ \\
+\textbf{Independent}: $f_{xy}(x,y)=f_x(x)f_y(y)$
+\end{defn}
+
+\begin{thm}[title=Cross-Correlation]
+\[ r_{xy}[k] = \langle \mathbf{x}, \mathcal{S}^k \mathbf{y} \rangle = \sum_{n=-\infty}^{\infty} x^*[n]\,y[n+k] \]
+\end{thm}
+
+\begin{prop}[title=White Noise Process]
+\textbf{Zero-mean}: $E[x[n]] = 0$ \\
+\textbf{Uncorr.}: $E[x[n]x[m]] = E[x[n]]E[x[m]]$ for $m \neq n$ \\
+\textbf{Autocorrelation}: $r_x[n] = \sigma_x^2\,\delta[n]$ \\
+\textbf{PSD}: $P_w(\omega) = \sigma_w^2$
+\end{prop}
+
+\begin{defn}[title=Wide-Sense (WSS) stationarity]
+For WSS random processes we only care about the first two moments:
+\begin{itemize}
+  \item $E[x[n]] = m_x$
+  \item $E[x[n]\,x[m]] = r[n-m]$
+\end{itemize}
+\end{defn}
+
+\begin{warn}[title=Autocorrelation (not given)]
+$x[n] = a^n u[n] \;\Rightarrow\; r_x[k] = \dfrac{a^{|k|}}{1 - a^2}$\\
+$\mathrm{DTFT}\{r_x[k]\} = \dfrac{1}{1 + a^2 - 2a\cos\omega}$
+\end{warn}
+
+\begin{prop}[title=Power Spectral Density (PSD)]
+\textbf{Estimator (DFT)}: $P[k] = E\left[|X_N[k]|^2/N\right]$\\
+\textbf{Exact definition (Wiener-Khinchin)}:
+\[ P_x(\omega) = |X(\omega)|^2 = \mathrm{DTFT}\{r_x[k]\} \]
+\textbf{Variance}: $\sigma_x^2 = \dfrac{1}{2\pi}\displaystyle\int_{-\pi}^{\pi} P_x(\omega)\,d\omega = r_x[0]$
+\end{prop}
+
+\begin{thm}[title=Convolution theorem (stochastic)]
+If $y[n] = h[n] * x[n]$, then: $P_y(\omega) = |H(\omega)|^2 P_x(\omega)$
+\end{thm}
+
+% ============================================================
+\newpage \section{A/D I - Interpolation \& Sampling}
+
+\subsection{The Continuous-Time World}
+
+\begin{defn}[title=CT vs.\ DT paradigm]
+\textbf{D:} $x_d[n]\in\ell_2(\mathbb{Z})$, $n\in\mathbb{Z}$, $\omega\in[-\pi,\pi]$, DTFT \newline
+\textbf{A:} $x_c(t)\in L_2(\mathbb{R})$, $t$ $\in\mathbb{R}$ [s], \ $f\in\mathbb{R}$ [Hz], CTFT
+\end{defn}
+
+\begin{prop}[title=Use cases]
+\begin{itemize}
+  \item x(t) → $\textbf{[processing]}$ → y(t)
+  \item x[n] → $\textbf{[processing for synthesis]}$ → y(t)
+  \item x(t) → $\textbf{[processing for analysis]}$ → y[n]
+\end{itemize}
+\end{prop}
+
+\begin{prop}[title=Real-world frequency]
+f = $\#$rep/s = $Hz$ ; $\Omega = 2\pi f$
+\end{prop}
+
+\begin{thm}[title=CTFT (more info in cs)]
+\begin{itemize}
+  \item NOT PERIODIC
+  \item NO LIMIT FREQUENCY
+\end{itemize}
+\end{thm}
+
+\begin{defn}[title=BandLimited (BL) functions]
+A CT signal is $F_S$-BL $\Leftrightarrow$ X(f) for $|f|>F_S/2$
+\end{defn}
+
+\begin{defn}[title=Support of a function]
+The interval where the function is non-trivially zero
+\end{defn}
+
+\begin{thm}[title=Sampling theorem (Shannon--Nyquist)]
+Any signal $x(t)$ whose highest frequency component is $F_N$ Hz can be sampled with \textbf{no loss of information} using a sampling frequency:
+\[F_s \ge 2F_N \quad \left(\text{i.e.\ } T_s \le \tfrac{1}{2F_N}\right)\]
+\end{thm}
+
+\subsection{Interpolation x[n] → x(t)}
+\begin{prop}[title=Interpolation requirement]
+\begin{itemize}
+  \item decide on $T_s$ (sampling period)
+  \item make sure x(n$T_s$) = x[n]
+  \item make sure x(t) is smooth
+\end{itemize}
+\end{prop}
+
+\begin{prop}[title=Interpolations pros and cons]
+\kv{Polynomial}{\textbf{+} $C^\infty$ (max.\ smooth) \ \textbf{--} kernels $L_n^{(N)}$ depend on $N$}\\
+\kv{Local}{\textbf{+} kernel indep.\ of $N$ \ \textbf{--} lacks smoothness}
+\end{prop}
+
+\begin{thm}[title=Remarkable result]
+\[\lim_{N\to\infty} L_n^{(N)}(t) = \mathrm{sinc}(t-n)\]
+\end{thm}
+
+\begin{defn}[title=Sinc interpolation]
+\[x(t)=\sum_{n\in\Z} x[n]\,\mathrm{sinc}(t-n)\]
+$\mathrm{sinc}(m-n)=\delta[m-n]$, $\forall\, m,n\in\Z$\\
+\textbf{CTFT pair} ($T_s=1/F_s$)\textbf{:}
+\[\varphi(t)=\mathrm{sinc}\!\left(\tfrac{t}{T_s}\right)\longleftrightarrow\Phi(f)=\tfrac{1}{F_s}\,\mathrm{rect}\!\left(\tfrac{f}{F_s}\right)\]
+\end{defn}
+
+\section{A/D II - Aliasing}
+
+\begin{defn}[title=Raw Sampling]
+\[x[n] = x(nT_s)\]
+\includegraphics[width=\linewidth]{images/raw_sampling.png}
+\end{defn}
+
+\begin{defn}[title=Sinc Sampling]
+\[x[n] = \left\langle \mathrm{sinc}\!\left(\frac{t - nT_s}{T_s}\right),\, x(t)\right\rangle\]
+\includegraphics[width=\linewidth]{images/sinc_sampling.png}
+\end{defn}
+
+\subsection{Aliasing}
+\begin{defn}[title=Sinc Sampling]
+\includegraphics[width=\linewidth]{images/aliasing.png}
+Map the frequency into [$-F_s/2$ ; $F_s/2$] to make the signal $F_s$-BL.
+\end{defn}
+
+\section{A/D III - Multirate}
+
+\begin{defn}[title=Downsampling by $N$ "DTFT pov"]
+Copier à tout 2 pi/N. Multiplier les indices par N.
+\end{defn}
+
+\begin{defn}[title=Upsampling by $N$ "DTFT pov"]
+Montrer la périodiciter. Diviser les indices par N. 
+\end{defn}
+
+\section{A/D IV - A/D and D/A conversion}
+\begin{defn}[title=Quantization schemes]
+\includegraphics[width=\linewidth]{images/quantization_schemes.png}
+\end{defn}
+
+\begin{defn}[title=Quantization MSE]
+\[ \sigma_e^2 = E\!\left[(x - Q(x))^2\right] \]
+\end{defn}
+
+\begin{prop}[title=Error analysis for uniform quantization]
+\textbf{Error energy}: $\sigma_e^2 = \Delta^2/12$, \quad $\Delta = (B-A)/2^R$ \\
+\textbf{Signal energy}: $\sigma_x^2 = (B-A)^2/12$ \\
+\textbf{SNR}: $\mathrm{SNR} = \sigma_x^2/\sigma_e^2 = 2^{2R}$ \\
+\textbf{SNR\textsubscript{dB}}: $10\log_{10} 2^{2R} \approx 6R\ \mathrm{dB}$ \\
+\textit{A linear filter cannot improve the SNR due to quantization if the quantizer matches the input.}
+\end{prop}
+
+\end{multicols*}
+\end{document}
