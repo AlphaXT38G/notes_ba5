@@ -1,6 +1,6 @@
-# Notes BA4
+# Notes BA5
 
-LaTeX notes for the BA4 IN semester at EPFL.
+LaTeX notes for the BA5 IN semester at EPFL.
 
 ---
 
@@ -21,37 +21,48 @@ python build.py algo iml sigproc
 
 ---
 
-## Exam Instructions (for spring 2026 session)
+## Exam Instructions (for autumn 2026 session)
 
 | Subject | Allowed |
 |---|---|
-| Computer Systems | 4 double-sided A4 sheets, any format |
-| Signal Processing | 2 double-sided A4 sheets, handwritten only |
-| Algorithms I | 1 double-sided A4 sheet, any format |
+| Computer security and privacy| _____ |
+| The software enterprise - from ideas to products | _____ |
+| Algebra | _____ |
+| Modeles stochastiques pour les communications | _____ |
+| Numerical methods for visual computing and ML | _____ |
+| Electronique I | _____ |
+| Responsible software | _____ |
+
 
 ---
 
 ## Subjects
 
-### Computer Systems — `compsys/`
-- [Cheat sheet](_overview/compsys/cheatsheet.pdf)
+### Computer security and privacy — `compsec/`
+- [Cheat sheet](_overview/compsec/cheatsheet.pdf)
 
-### Signal Processing — `sigproc/`
-- [Cheat sheet](_overview/sigproc/cheatsheet.pdf)
+### The software enterprise - from ideas to products — `swent/`
+- [Cheat sheet](_overview/swent/cheatsheet.pdf)
 
-### Algorithms I — `algo/`
-- [Cheat sheet](_overview/algo/cheatsheet.pdf)
-- [Course notes](_overview/algo/course.pdf)
-- [Condensed algos](_overview/algo/algos_condensed.pdf)
+### Algebra — `algebra/`
+- [Cheat sheet](_overview/algebra/cheatsheet.pdf)
+- [Course notes](_overview/algebra/course.pdf)
 
-### Introduction to Machine Learning — `iml/`
-- [Cheat sheet](_overview/iml/cheatsheet.pdf)
-- [Course notes](_overview/iml/course.pdf)
-- [Python notes](_overview/iml/python_raw_notes.pdf)
+### Modeles stochastiques pour les communications — `modstoc/`
+- [Cheat sheet](_overview/modstoc/cheatsheet.pdf)
+- [Course notes](_overview/modstoc/course.pdf)
 
-### Introduction aux sciences du vivant (pour IC) — `isv/`
-- [Course notes](_overview/isv/course.pdf)
-- [Basic non formateed course notes](_overview/isv/SV_notes_basic.pdf)
+### Numerical methods for visual computing and ML — `nummet/`
+- [Cheat sheet](_overview/nummet/cheatsheet.pdf)
+- [Course notes](_overview/nummet/course.pdf)
+
+### Electronique I — `elec/`
+- [Cheat sheet](_overview/elec/cheatsheet.pdf)
+- [Course notes](_overview/elec/course.pdf)
+
+### Responsible software — `respsoft/`
+- [Cheat sheet](_overview/respsoft/cheatsheet.pdf)
+- [Course notes](_overview/respsoft/course.pdf)
 
 
 ---
@@ -66,13 +77,15 @@ python build.py algo iml sigproc
 
 ```
 notes_ba4/
-├── _overview/      # Compiled PDFs, one folder per subject
-├── _shared/        # Shared LaTeX style files
-├── algo/           # Algorithms I course
-├── iml/            # Introduction to machine learning course
-├── sigproc/        # Signal processing course
-├── compsys/        # Computer systems course
-└── isv/            # Intoduction aux sciences du vivant (pour IC) course
+├── _overview/   # Compiled PDFs, one folder per subject
+├── _shared/     # Shared LaTeX style files
+├── compsec/     # Computer security and privacy course
+├── swent/       # The software enterprise - from ideas to products course
+├── algebra/     # Algebra course
+├── modstoc/     # Modeles stochastiques pour les communications course
+├── nummet/      # Numerical methods for visual computing and ML course
+├── elec/        # Electronique I course
+└── respsoft/    # Responsible software course
 ```
 
 Each subject folder contains `.tex` sources; run `build.py` to recompile.
@@ -82,6 +95,6 @@ The `.tex` disponible for each course, for each folder may change but are mainly
 
 ## Authors
 
-<a href="https://github.com/AlphaXT38G/notes_ba4/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=AlphaXT38G/notes_ba4" alt="Contributors">
+<a href="https://github.com/AlphaXT38G/notes_ba5/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=AlphaXT38G/notes_ba5" alt="Contributors">
 </a>
