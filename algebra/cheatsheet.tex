@@ -35,8 +35,20 @@ Then $S=\N$.
 Every nonempty subset of $\N$ has a least element.
 \end{prop}
 
-(c) Euclidean division. Bézout’s theorem
-(d) Euler’s totient function
+\begin{thm}[title=Bézout]
+$a,b\in\Z_+$, $d=\gcd(a,b)$. Run Euclid backwards:
+\begin{itemize}
+  \item $\exists\,x,y\in\Z$: $ax+by=d$.
+  \item $ax+by=c$ solvable in $\Z$ $\iff$ $d\mid c$.
+  \item $a,b$ coprime ($d=1$) $\iff$ $\exists\,x,y$: $ax+by=1$.
+\end{itemize}
+\end{thm}
+
+\begin{defn}[title=Euler's totient $\varphi(n)$]
+$\varphi(n)=\#\{k\in[1,n]:\gcd(n,k)=1\}$;\\
+$\varphi(nm)=\varphi(n)\varphi(m)\iff\gcd(n,m)=1$.
+\end{defn}
+
 \section{Groups}
 
 \section{Rings and fields}
