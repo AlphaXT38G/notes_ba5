@@ -8,16 +8,40 @@
 \begin{document}
 \begin{multicols*}{4}
 
-\cheattitle{Algorithms I}{}{BA4}
+\cheattitle{Algebra}{}{BA5}
 
-\begin{thm}[title=Sum of a sequence]
-  $\sum_{k=m}^{n} k = \frac{(m+n)(n-m+1)}{2}$ ;  $\sum_{i=1}^{n} \frac{1}{i} = \Theta(\log n)$\\
-  $\sum_{k=m}^{n} z^{k} = \begin{cases} n-m+1 & z=1 \\ \frac{z^m-z^{n+1}}{1-z} & z\ne 1 \end{cases}$\\
-  $\log_b n = \frac{\log_2 n}{\log_2 b}$ ; $\log(ab) = \log a + \log b$
-\end{thm}
+\section{Integers}
+\subsection{\texorpdfstring{IP $\Leftrightarrow$ SIP $\Leftrightarrow$ WOP}{IP <=> SIP <=> WOP}}
 
-\section{Sorting}
+\begin{prop}[title=Induction Principle]
+Let $S\subset\N$ such that
+\begin{enumerate}
+  \item $0\in S$;
+  \item if $n\in S$, then $n+1\in S$.
+\end{enumerate}
+Then $S=\N$.
+\end{prop}
 
+\begin{prop}[title=Strong Induction Principle]
+Let $S\subset\N$ such that
+\begin{enumerate}
+  \item $0\in S$;
+  \item \textbf{if} $\bm{\{0,1,\ldots,n\}\subset S}$\textbf{,} then $n+1\in S$.
+\end{enumerate}
+Then $S=\N$.
+\end{prop}
+
+\begin{prop}[title=Well-Ordering Principle]
+Every nonempty subset of $\N$ has a least element.
+\end{prop}
+
+(c) Euclidean division. Bézout’s theorem
+(d) Euler’s totient function
+\section{Groups}
+
+\section{Rings and fields}
+
+\iffalse
 \begin{lstlisting}
 INSERTION-SORT(A, n)
     for j = 2 to n
@@ -272,9 +296,6 @@ $\Theta(V+E)$
 \textcolor{green!60!black}{\textbf{Cross:}} any other edge\\
 \textbf{UDG:} only tree/back edges. | \textbf{DAG:} no back edge.
 \end{defn}
-\begin{center} % A retirer si besoin d'espace
-  \includegraphics[width=0.8\linewidth]{images/classification_of_edges.png}
-\end{center}
 
 \begin{lstlisting}
 TOPOLOGICAL-SORT(G):
@@ -570,6 +591,6 @@ $\mathbb{E}[\text{ALG}]\geq\tfrac{1}{2}\mathbb{E}[\max_i X_i]$. Tight.
 \begin{center}
 \textit{Bon courage.}
 \end{center}
-
+\fi
 \end{multicols*}
 \end{document}
