@@ -22,3 +22,9 @@ _overview/**
 
 # OS files
 desktop.ini
+
+# Security & IDE exclusions
+.idea/
+.vscode/
+.env
+.env/

@@ -1,0 +1,4888 @@
+\documentclass[11pt,a4paper,openany]{book}
+
+\makeatletter\def\input@path{{../_shared/}}\makeatother
+\usepackage{course}
+
+\begin{document}
+\raggedbottom
+
+\coursetitle{Algorithms I}{BA4}{2025--2026}
+
+\tableofcontents
+\clearpage
+
+These notes cover the core algorithmique techniques of the BA4 Algorithms I course:
+asymptotic analysis, sorting, divide-and-conquer, heaps, binary search trees, and
+graph algorithms (max flow, matchings).
+
+% =========================================================
+\chapter{Algorithms Fundamentals}
+% =========================================================
+
+\section{Definition of an Algorithm}
+\begin{defnbox}
+An \textbf{algorithm} is a well-defined computational procedure that takes some value (or
+set of values) as \emph{input} and produces some value (or set of values) as \emph{output}
+in a finite number of steps.
+\end{defnbox}
+
+We analyse algorithms along two axes:
+\begin{itemize}
+  \item \textbf{Correctness} — does it always produce the right answer?
+  \item \textbf{Efficiency} — how many resources (time, space) does it consume?
+\end{itemize}
+
+% ---------------------------------------------------------
+\section{Asymptotic Complexity}
+% ---------------------------------------------------------
+
+\begin{defnbox}[title=Asymptotic notations]
+Let $f, g : \mathbb{N} \to \mathbb{R}^+$.
+\begin{itemize}
+  \item $f \in O(g)$ \textbf{(upper bound)}: $\exists\, c, n_0 > 0$ s.t.\ $f(n) \leq c\,g(n)$ for all $n \geq n_0$
+  \item $f \in \Omega(g)$ \textbf{(lower bound)}: $\exists\, c, n_0 > 0$ s.t.\ $f(n) \geq c\,g(n)$ for all $n \geq n_0$
+  \item $f \in \Theta(g)$ \textbf{(tight bound)}: $f \in O(g)$ and $f \in \Omega(g)$
+  \item $f \in o(g)$ \textbf{(strict upper)}: $\lim_{n\to\infty} f(n)/g(n) = 0 or also f(n) < g(n)$
+  \item $f \in \omega(g)$ \textbf{(strict lower)}: $\lim_{n\to\infty} f(n)/g(n) = \infty or also f(n) > g(n)$
+\end{itemize}
+\end{defnbox}
+
+\begin{propbox}[title=Common growth rates (slowest to fastest)]
+\[
+  O(1) \subset O(\log n) \subset O(n) \subset O(n\log n) \subset O(n^2)
+  \subset O(n^3) \subset O(2^n) \subset O(n!)
+\]
+\end{propbox}
+
+\begin{rembox}
+For the \textbf{Master Theorem}: given $T(n) = a\,T(n/b) + f(n)$ with $a \geq 1$, $b > 1$:
+\begin{itemize}
+  \item if $f(n) = O(n^{\log_b a - \eps})$ then $T(n) = \Theta(n^{\log_b a})$
+  \item if $f(n) = \Theta(n^{\log_b a})$ then $T(n) = \Theta(n^{\log_b a} \log n)$
+  \item if $f(n) = \Omega(n^{\log_b a + \eps})$ then $T(n) = \Theta(f(n))$
+\end{itemize}
+\end{rembox}
+
+
+
+
+
+
+
+
+
+
+% ---------------------------------------------------------
+\chapter{Sorting Algorithms}
+% ---------------------------------------------------------
+
+\section{Insertion Sort}
+
+\begin{propbox}[title=Complexity]
+Time: $\Theta(n^2)$ worst/average, $\Theta(n)$ best (already sorted). \quad Space: $O(1)$ in-place.
+\end{propbox}
+
+\begin{lstlisting}[language=Python]
+def insertion_sort(A):
+    for j in range(1, len(A)):
+        key = A[j]
+        i = j - 1
+        while i >= 0 and A[i] > key:
+            A[i + 1] = A[i]
+            i -= 1
+        A[i + 1] = key
+\end{lstlisting}
+
+\begin{lstlisting}
+Insertion-Sort(A, n)
+    for j = 2 to n
+        key = A[j]
+        // Insert A[j] into the sorted sequence A[1...j - 1].
+        i = j - 1
+        while i > 0 and A[i] > key
+            A[i + 1] = A[i]
+            i = i - 1
+        A[i + 1] = key
+\end{lstlisting}
+
+\textbf{Loop invariant:} at the start of each iteration, \texttt{A[0..j-1]} is sorted. \\
+\textbf{Concept and objective:} Sort an array
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+% ---------------------------------------------------------
+\section{Divide and Conquer principles}
+% ---------------------------------------------------------
+
+\begin{defnbox}[title=Paradigm]
+\textbf{Divide} the problem into subproblems, \textbf{conquer} each recursively, then
+\textbf{combine} the results.
+\end{defnbox}
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+
+
+
+\section{Merge Sort}
+
+\begin{propbox}[title=Complexity]
+Time: $\Theta(n \log n)$ in all cases. \quad Space: $O(n)$ auxiliary.
+\end{propbox}
+
+\begin{lstlisting}[language=Python]
+def merge_sort(A, p, r):
+    if p < r:
+        q = (p + r) // 2
+        merge_sort(A, p, q)
+        merge_sort(A, q + 1, r)
+        merge(A, p, q, r)   # merge two sorted halves
+\end{lstlisting}
+
+\begin{lstlisting}
+MERGE-SORT(A, p, r)
+    if p < r                // check for base case
+        q = rounddown((p + r)/2)     // divide
+        MERGE-SORT(A, p, q) // conquer
+        MERGE-SORT(A, q + 1, r) // conquer
+        MERGE(A, p, q, r)   // combine
+
+MERGE(A,p,q,r)
+	n1 = q-p+1
+	n2 = r-q
+	let L[1...n1 + 1] and R[1 ... n2+1] be new arrays
+	for i = 1 to n1
+		L[i] = A[p+i-1]
+	for j = 1 to n2
+		R[j] = A[q+j]
+	L[,1+1] = 8
+	R[n2+1] = 8
+	i = 1
+	j = 1
+	for k = p to r
+		if L[i] <= R[j]
+			A[k] = L[i]
+			i = i + 1
+		else A[k] = R[j]
+			j = j + 1
+\end{lstlisting}
+
+\textbf{Recurrence:} $T(n) = 2\,T(n/2) + \Theta(n)$ $\Rightarrow$ $T(n) = \Theta(n \log n)$ by Master Theorem (case 2).
+//
+\textbf{Concept and objective:} Sort an array
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+
+\section{Master theorem}
+
+\begin{defnbox}[title=Theorem (Master Theorem)]
+Let $a \geq 1$ and $b > 1$ be constants, let $T(n)$ be defined on the nonnegative integers by the recurrence
+\[
+T(n)=aT(n/b)+f(n).
+\]
+
+Then, $T(n)$ has the following asymptotic bounds:
+
+\begin{itemize}
+    \item If $f(n)=O\!\left(n^{\log_b a-\epsilon}\right)$ for some constant $\epsilon>0$, then
+    \[
+    T(n)=\Theta\!\left(n^{\log_b a}\right).
+    \]
+
+    \item If $f(n)=\Theta\!\left(n^{\log_b a}\right)$, then
+    \[
+    T(n)=\Theta\!\left(n^{\log_b a}\log n\right).
+    \]
+
+    \item If $f(n)=\Omega\!\left(n^{\log_b a+\epsilon}\right)$ for some constant $\epsilon>0$, and if
+    \[
+    a\cdot f(n/b)\leq c\cdot f(n)
+    \]
+    for some constant $c<1$ and all sufficiently large $n$, then
+    \[
+    T(n)=\Theta\!\left(f(n)\right).
+    \]
+\end{itemize}
+\end{defnbox}
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+% ---------------------------------------------------------
+\chapter{Maximum Subarray, Matrix Multiplication and Strassen ect}
+% ---------------------------------------------------------
+
+\section{Maximum Subarray optimized}
+
+Find indices $i \leq j$ maximising $\sum_{k=i}^{j} A[k]$.
+
+\begin{propbox}[title=Complexity]
+$T(n) = 2\,T(n/2) + \Theta(n)$ $\Rightarrow$ $\Theta(n \log n)$.
+(Kadane's linear algorithm also exists: $\Theta(n)$.)
+\end{propbox}
+
+\begin{lstlisting}
+FIND-MAXIMUM-SUBARRAY(A, low, high):
+    if high == low: return (low, high, A[low])
+    mid = (low + high) / 2
+    left  = FIND-MAXIMUM-SUBARRAY(A, low, mid)
+    right = FIND-MAXIMUM-SUBARRAY(A, mid+1, high)
+    cross = FIND-MAX-CROSSING(A, low, mid, high)
+
+    if left-sum >= right-sum and left-sum >= cross-sum
+    return (left-low, left-high, left-sum)
+    elseif right-sum >= left-sum and right-sum >= cross-sum
+        return (right-low, right-high, right-sum)
+    else
+        return (cross-low, cross-high, cross-sum)
+\end{lstlisting}
+
+\begin{lstlisting}
+FIND-MAX-CROSSING(A, low, mid, high)
+
+  // Find a maximum subarray of the form A[i .. mid].
+  left-sum = -8
+  sum = 0
+  for i = mid downto low
+      sum = sum + A[i]
+      if sum > left-sum
+          left-sum = sum
+          max-left = i
+
+  // Find a maximum subarray of the form A[mid + 1 .. j].
+  right-sum = -8
+  sum = 0
+  for j = mid + 1 to high
+      sum = sum + A[j]
+      if sum > right-sum
+          right-sum = sum
+          max-right = j
+
+  // Return the indices and the sum of the two subarrays.
+  return (max-left, max-right, left-sum + right-sum)
+\end{lstlisting}
+//
+\textbf{Concept et objectif :}
+
+L'algorithme \texttt{FIND-MAXIMUM-SUBARRAY} utilise la méthode du \textit{divide and conquer} (diviser pour régner).  
+Son objectif est de trouver la sous-partie continue d'un tableau dont la somme des éléments est maximale, le
+sous-enesemble de nombres qui font que leur somme est maximale. 
+
+Le principe est simple :
+\begin{itemize}
+    \item le tableau est séparé en deux parties,
+    \item l'algorithme cherche récursivement la meilleure sous-partie à gauche,
+    \item puis la meilleure à droite,
+    \item et enfin la meilleure sous-partie qui traverse le milieu.
+\end{itemize}
+
+Parmi ces trois possibilités, il retourne celle ayant la plus grande somme.
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+\section{Maximum Subarray BRUTE FORCE}
+
+
+\begin{lstlisting}
+MAXIMUM-SUBARRAY-SLOW(A[1..n]):
+
+    B.val <- -8
+    B.i <- 1
+    B.j <- n
+
+    for i <- 1 to n
+        tmp <- 0
+
+        for j <- i to n
+            tmp <- tmp + A[j]
+
+            if tmp > B.val
+                B.val <- tmp
+                B.i <- i
+                B.j <- j
+
+    return (B.i, B.j, B.val)
+\end{lstlisting}
+
+\textbf{Running time:}
+
+\[
+\Theta(n^2)
+\]
+
+\textbf{Space usage:}
+
+\[
+\Theta(n)
+\]
+
+(\(\Theta(n)\) for input + \(\Theta(1)\) extra)
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Matrix Multiplication naive}
+
+Standard $O(n^3)$ triple loop, or the recursive divide-and-conquer that splits each
+$n \times n$ matrix into four $n/2 \times n/2$ blocks: $T(n) = 8\,T(n/2) + \Theta(n^2)$,
+giving the same $\Theta(n^3)$ by Master Theorem (case 1).
+
+
+\begin{lstlisting}
+SQUARE-MAT-MULT(A, B, n)
+    let C be a new n x n matrix
+
+    for i = 1 to n
+        for j = 1 to n
+            c_{ij} = 0
+            for k = 1 to n
+                c_{ij} = c_{ij} + a_{ik} * b_{kj}
+
+    return C
+\end{lstlisting}
+
+\textbf{Goal:} Perform Matrix multiplication \\
+\textbf{Time complexity:} $O(n^3)$ \\
+\textbf{Space:} $O(n^2)$
+
+
+
+\vspace{2cm}
+
+
+\section{REC-MAT-MULT - other naive matrix multiplication - divide and conquer logic}
+
+\begin{lstlisting}
+REC-MAT-MULT(A, B, n)
+    let C be a new n x n matrix
+
+    if n == 1
+        c11 = a11 * b11
+
+    else
+        partition A, B, and C into n/2 x n/2 submatrices
+
+        C11 = REC-MAT-MULT(A11, B11, n/2) + REC-MAT-MULT(A12, B21, n/2)
+        C12 = REC-MAT-MULT(A11, B12, n/2) + REC-MAT-MULT(A12, B22, n/2)
+        C21 = REC-MAT-MULT(A21, B11, n/2) + REC-MAT-MULT(A22, B21, n/2)
+        C22 = REC-MAT-MULT(A21, B12, n/2) + REC-MAT-MULT(A22, B22, n/2)
+
+    return C
+\end{lstlisting}
+
+\textbf{Goal:} Perform matrix multiplication but here using divide and conquer logic\\
+\textbf{Time complexity:} $O(n^3)$ \\
+\textbf{Space:} $O(n^2)$
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+\section{Strassen's algorithm - better matrix multiplication}
+\begin{propbox}[title=Complexity]
+$T(n) = 7\,T(n/2) + \Theta(n^2)$ $\Rightarrow$ $\Theta(n^{\log_2 7}) \approx \Theta(n^{2.807})$.
+\end{propbox}
+
+Key idea: compute only 7 products of submatrices (instead of 8) using the following
+auxiliary matrices $M_1, \ldots, M_7$, each a linear combination of blocks of $A$ and $B$:
+\[
+  M_1 = (A_{11}+A_{22})(B_{11}+B_{22}), \quad
+  M_2 = (A_{21}+A_{22})B_{11}, \quad \ldots
+\]
+Then reconstruct $C_{11}, C_{12}, C_{21}, C_{22}$ from $M_1$--$M_7$.
+
+
+
+\begin{lstlisting}
+STRASSEN-MAT-MULT(A, B, n)
+    let C be a new n * n matrix
+    if n == 1
+        C11 = A11 * B11
+    else
+        partition A, B, and C into n/2 x n/2 submatrices
+
+        M1 = (A11 + A22) * (B11 + B22)
+        M2 = (A21 + A22) * B11
+        M3 = A11 * (B12 - B22)
+        M4 = A22 * (B21 - B11)
+        M5 = (A11 + A12) * B22
+        M6 = (A21 - A11) * (B11 + B12)
+        M7 = (A12 - A22) * (B21 + B22)
+
+        C11 = M1 + M4 - M5 + M7
+        C12 = M3 + M5
+        C21 = M2 + M4
+        C22 = M1 - M2 + M3 + M6
+
+    return C
+\end{lstlisting}
+
+\textbf{Goal:} Perform matrix multiplication more efficiently than the classical method \\
+\textbf{Time complexity:} $O(n^{\log_2 7})$ \\
+\textbf{Space:} $O(n^2)$ \\
+\textbf{Idea:} Reduce the number of recursive multiplications from 8 to 7 by using clever linear combinations of submatrices.
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+\subsection{Karatsuba Multiplication}
+
+Multiply two $n$-digit integers (en base b n'importe laquelle) faster than the naive $O(n^2)$ schoolbook method.
+Pourquoi est-ce qu'on en parle maintenant ? Parce que tout simplement
+ça va utiliser un peu la même logique que Strassen's algorithm parce que on va séparer
+en différents calculs qui vont nous permettre de résuire au final le nombre de multiplicationsà réaliser.
+
+Split: $x = x_H b^{n/2} + x_L$, $y = y_H b^{n/2} + y_L$.
+
+Compute only 3 multiplications:
+\[
+  p_1 = x_H \cdot y_H, \quad
+  p_2 = x_L \cdot y_L, \quad
+  p_3 = (x_H + x_L)(y_H + y_L)
+\]
+then $x \cdot y = p_1 b^n + (p_3 - p_1 - p_2)\,b^{n/2} + p_2$.
+
+\begin{propbox}[title=Complexity]
+$T(n) = 3\,T(n/2) + \Theta(n)$ $\Rightarrow$ $\Theta(n^{\log_2 3}) \approx \Theta(n^{1.585})$.
+\end{propbox}
+
+Ceci n'estr  pas un pseudocode pseudocodesque mais ça explique bien le principe
+de l'algo: 
+
+\begin{lstlisting}
+KARATSUBA-MULT(x, y, n)
+    if n == 1
+        return x * y
+
+    else
+        split x into xH, xL
+        split y into yH, yL
+
+        p1 = KARATSUBA-MULT(xH, yH, n/2)
+        p2 = KARATSUBA-MULT(xL, yL, n/2)
+        p3 = KARATSUBA-MULT(xH + xL, yH + yL, n/2)
+
+        return p1 * b^n + (p3 - p1 - p2) * b^(n/2) + p2
+\end{lstlisting}
+
+\textbf{Goal:} Perform multiplication faster than the naive method \\
+\textbf{Time complexity:} $O(n^{\log_2 3})$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+
+
+% ---------------------------------------------------------
+\chapter{Heap data structure}
+% ---------------------------------------------------------
+
+\begin{defnbox}[title=Heap]
+
+Un \textbf{heap} (ou tas) est une structure de données sous forme d’arbre binaire presque complet, utilisée pour gérer efficacement des priorités.
+
+COMMENT ON LE STOCKE DANS UN COMPUTER ?????????? \\
+Il est généralement stocké sous forme de tableau :
+\[
+\begin{aligned}
+\text{LEFT}(i) &= 2i \\
+\text{RIGHT}(i) &= 2i + 1 \\
+\text{PARENT}(i) &= \left\lfloor \frac{i}{2} \right\rfloor
+\end{aligned}
+\]
+Cette structure est très utilisée pour les files de priorité et l’algorithme de tri \textit{heapsort}.
+\end{defnbox}
+
+
+\begin{defnbox}[title=Max-heap property]
+A \textbf{max-heap} is a nearly complete binary tree where every node satisfies
+$A[\text{parent}(i)] \geq A[i]$.
+\end{defnbox}
+
+\begin{defnbox}[title=Min-heap property]
+A \textbf{min-heap} is a nearly complete binary tree where every node satisfies
+$A[\text{parent}(i)] \leq A[i]$.
+\end{defnbox}
+
+
+
+
+
+
+
+\begin{defnbox}[title=Root]
+The \textbf{root} is the top node of the heap. In array representation, it is at index 1.  
+In a max-heap, it contains the largest element.
+\end{defnbox}
+
+\begin{defnbox}[title=Leaf]
+A \textbf{leaf} is a node with no children.  
+Leaves are located at the bottom level of the heap.
+\end{defnbox}
+
+\begin{defnbox}[title=Height]
+The \textbf{height} of a heap is the number of edges on the longest path from the root to a leaf.  
+A heap of size $n$ has height $\Theta(\log n)$.
+\end{defnbox}
+
+\begin{defnbox}[title=Height of a node]
+Height of node is the number of edges on a longest simple path from the node
+down to a leaf. (logiquement ça ne peut pas être plus grand que la height du tree en entier)
+\end{defnbox}
+
+\begin{defnbox}[title=Shape property]
+A heap is a \textbf{complete binary tree}: all levels are full except possibly the last, which is filled from left to right.
+\end{defnbox}
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+\section{MAX-HEAPIFY}
+
+Ce qu'on veut maintenant c'est un algorithm capable de prendre un heap et d'en 
+faire un max heap donc on utilise MAX HEAPIFY
+\textbf{Algorithme :}
+\begin{itemize}
+    \item Comparer $A[i]$, $A[\mathrm{LEFT}(i)]$ et $A[\mathrm{RIGHT}(i)]$.
+    
+    \item Si nécessaire, échanger $A[i]$ avec le plus grand de ses deux enfants afin de préserver la propriété de tas (heap).
+    
+    \item Continuer ce processus de comparaison et d'échange vers le bas du tas jusqu'à ce que le sous-arbre enraciné en $i$ soit un max-heap.
+\end{itemize}
+
+
+\begin{lstlisting}
+MAX-HEAPIFY(A, i, n)
+    l = LEFT(i)
+    r = RIGHT(i)
+
+    if l <= n and A[l] > A[i]
+        largest = l
+    else
+        largest = i
+
+    if r <= n and A[r] > A[largest]
+        largest = r
+
+    if largest != i
+        exchange A[i] with A[largest]
+        MAX-HEAPIFY(A, largest, n)
+\end{lstlisting}
+
+\textbf{Goal:} Restore the max-heap property at node $i$ \\
+\textbf{Time complexity:} $Theta(height of i) =  O(\log n)$ \\
+\textbf{Space:} $O(\log n)$
+
+
+
+
+\textbf{Loop invariant:} At the start of every iteration of the for loop, each node
+$i + 1, i + 2, \ldots, n$ is the root of a max-heap.
+
+\textbf{Maintenance:}
+\begin{itemize}
+    \item The children of node $i$ are indexed higher than $i$, so by the loop invariant, they are both roots of max-heaps.
+    \item Therefore, \texttt{MAX-HEAPIFY} makes node $i$ a root of a max-heap (so $i, i + 1, \ldots, n$ are all roots of max-heaps).
+    \item Hence, the invariant remains true when $i$ is decremented at the beginning of the next iteration.
+\end{itemize}
+
+
+
+
+\vspace{2cm}
+
+
+
+
+\section{Build-Heap}
+C'est bien toutes ces histoires de max-heap, de min-heap, de heap ect mais
+bon quand même au début il faudrait commencer par le constrruire et savoir 
+le construite cette data structure !!!!!!!!!!
+
+Call \texttt{MAX-HEAPIFY} on all internal nodes bottom-up.
+Though each call is $O(\log n)$, a tight analysis gives $O(n)$ total.
+
+\textbf{Concept and idea:}
+
+The \texttt{BUILD-MAX-HEAP} algorithm takes an unordered array and transforms it into a valid max-heap.
+
+It works by starting from the last non-leaf node and going backwards to the root.  
+At each step, it applies \texttt{MAX-HEAPIFY} to ensure that the subtree rooted at that node satisfies the heap property.  
+By doing this bottom-up, the algorithm efficiently builds a correct max-heap.
+
+\begin{lstlisting}
+BUILD-MAX-HEAP(A, n)
+    for i = n/2 downto 1
+        MAX-HEAPIFY(A, i, n)
+\end{lstlisting}
+
+\textbf{Goal:} Build a max-heap from an unsorted array \\
+\textbf{Time complexity:} $O(n)$ \\
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+\section{Heapsort}
+\textbf{Concept and idea:}
+
+The \texttt{HEAPSORT} algorithm sorts an array by first building a max-heap, then repeatedly extracting the maximum element.
+
+After building the max-heap, the largest element is always at the root.  
+The algorithm swaps it with the last element of the heap, then “removes” it by reducing the heap size.
+
+After each removal, \texttt{MAX-HEAPIFY} is applied to restore the heap property.  
+This process is repeated until the entire array is sorted in increasing order.
+
+\begin{lstlisting}
+HEAPSORT(A, n)
+    BUILD-MAX-HEAP(A, n)
+
+    for i = n downto 2
+        exchange A[1] with A[i]
+        MAX-HEAPIFY(A, 1, i - 1)
+\end{lstlisting}
+
+\textbf{Goal:} Sort an array using a max-heap \\
+\textbf{Time complexity:} $O(n \log n)$ \\
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+
+\section{Heap extract max}
+
+\textbf{Concept and idea:}
+
+The \texttt{HEAP-EXTRACT-MAX} operation removes the maximum element from a max-heap (the root) and restores the heap structure afterwards.
+
+It works by first checking that the heap is not empty, then storing the root (maximum element).  
+The last element of the heap is moved to the root position, and the heap size is reduced.  
+Finally, \texttt{MAX-HEAPIFY} is called to restore the max-heap property.
+
+\begin{lstlisting}
+HEAP-EXTRACT-MAX(A, n)
+    if n < 1
+        error "heap underflow"
+
+    max = A[1]
+    A[1] = A[n]
+    n = n - 1
+
+    MAX-HEAPIFY(A, 1, n)
+
+    return max
+\end{lstlisting}
+
+\textbf{Goal:} Remove and return the maximum element of a heap \\
+\textbf{Time complexity:} $O(\log n)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+\vspace{2cm}
+
+\section{Heap maximum in a max-heap}
+\textbf{Concept and idea:}
+
+The \texttt{HEAP-MAXIMUM} operation simply returns the lagrest element in a max-heap.
+
+Since the max-heap property guarantees that the maximum element is always stored at the root, this operation only needs to access the first element of the array.
+
+\begin{lstlisting}
+HEAP-MAXIMUM(A)
+    return A[1]
+\end{lstlisting}
+
+\textbf{Goal:} Return the maximum element of a max-heap \\
+
+\textbf{Time complexity:} $O(1)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+
+
+\section{Heap increase key}
+
+\textbf{Concept and idea:}
+
+The \texttt{HEAP-INCREASE-KEY} operation updates the value of a node in a max-heap and restores the heap property.
+
+It assumes that the new key is not smaller than the current key.  
+After updating the value, the algorithm moves the element upward in the tree, swapping it with its parent as long as it is larger.  
+This process continues until the heap property is restored.
+
+\begin{lstlisting}
+HEAP-INCREASE-KEY(A, i, key)
+    if key < A[i]
+        error "new key is smaller than current key"
+
+    A[i] = key
+
+    while i > 1 and A[PARENT(i)] < A[i]
+        exchange A[i] and A[PARENT(i)]
+        i = PARENT(i)
+\end{lstlisting}
+
+\textbf{Goal:} Update a key and restore the max-heap property \\
+\textbf{Time complexity:} $O(\log n)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+
+
+
+
+\section{Max heap insert}
+
+
+
+\textbf{Concept and idea:}
+
+The \texttt{MAX-HEAP-INSERT} operation adds a new element into a max-heap while maintaining the heap property.
+
+The idea is to first increase the heap size and place a temporary very small value (so it will not violate the heap structure).  
+Then the algorithm uses \texttt{HEAP-INCREASE-KEY} to replace this value with the correct key and move the element upward until the heap property is restored.
+
+\begin{lstlisting}
+MAX-HEAP-INSERT(A, key, n)
+    n = n + 1
+    A[n] = -8
+    HEAP-INCREASE-KEY(A, n, key)
+\end{lstlisting}
+
+\textbf{Goal:} Insert a new element into a max-heap \\
+
+\textbf{Time complexity:} $O(\log n)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\chapter{Priority Queue}
+
+
+\textbf{Concept and idea:}
+
+A \textbf{priority queue} maintains a dynamic set $S$ of elements.  
+Each element in the set has a \textbf{key}, which represents its priority (importance).
+
+The structure supports efficient management of elements based on their keys, especially when priorities change over time.
+
+\textbf{Main operations:}
+\begin{itemize}
+    \item \texttt{INSERT(S, x)}: inserts element $x$ into $S$
+    \item \texttt{MAXIMUM(S)}: returns the element with the largest key
+    \item \texttt{EXTRACT-MAX(S)}: removes and returns the element with the largest key
+    \item \texttt{INCREASE-KEY(S, x, k)}: increases the key of element $x$ to value $k$ (where $k \geq$ current key of $x$)
+\end{itemize}
+
+\textbf{Example application:} scheduling jobs on a shared computer, where higher priority jobs are executed first.
+
+Heaps are commonly used to efficiently implement priority queues.
+
+\begin{defnbox}[title=Element]
+An \textbf{element} is an item stored in a priority queue. It consists of a value and an associated key that determines its priority.
+\end{defnbox}
+
+\begin{defnbox}[title=Maximum element]
+The \textbf{maximum element} is the element in $S$ with the largest key.  
+It is always the element returned by a max-priority queue.
+\end{defnbox}
+
+\begin{defnbox}[title=Priority queue operations]
+Beyond the basic operations, a priority queue relies on the idea that all updates maintain ordering by key, allowing fast access to the highest-priority element.
+\end{defnbox}
+
+\begin{defnbox}[title=Application]
+Priority queues are widely used in scheduling systems (e.g., CPU job scheduling), where tasks with higher priority are executed first.
+\end{defnbox}
+
+
+
+\begin{propbox}
+\begin{tabular}{ll}
+\texttt{Maximum}     & $O(1)$ \\
+\texttt{Extract-Max} & $O(\log n)$ \\
+\texttt{Insert}      & $O(\log n)$ \\
+\texttt{Increase-Key}& $O(\log n)$ \\
+\end{tabular}
+\end{propbox}
+
+
+
+\begin{defnbox}[title=Heap implementation]
+BEN OUI FAUT QUE CA AIT DU SENS DE LE FAIRE APRES HEAP. DONC ON DEFINIT SYMPATIQUEMENT UNE PRIORITY QUEUE AVEC UN HEAP. 
+A priority queue is efficiently implemented using a \textbf{heap}, which supports logarithmic-time insertion and extraction operations.
+\end{defnbox}
+
+
+
+Une \textbf{priority queue} peut être implémentée à l'aide d'un \textbf{heap} pour gérer efficacement les éléments selon leur priorité.
+
+On stocke tous les éléments dans un max-heap :
+le nœud au sommet (la racine) contient toujours l'élément avec la plus grande clé.
+
+Grâce à cette structure :
+\begin{itemize}
+    \item l'insertion se fait en ajoutant l'élément puis en remontant dans le heap,
+    \item l'accès au maximum est direct (racine),
+    \item la suppression du maximum se fait en remplaçant la racine par le dernier élément puis en réorganisant le heap.
+\end{itemize}
+
+Ainsi, le heap permet de réaliser une priority queue efficace, avec des opérations rapides en temps logarithmique.
+
+(Dans le cas où on a une paire clé-valeur et pas juste ici les valeurs de priorité, alors
+on met dans le heap ces paires et on bouge les deux elements en meme temps mais on regarde
+roujours seulement la valeur de la key pour l'ordering)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+
+
+
+
+\chapter{Stacks}
+
+
+
+\begin{defnbox}[title=Stack (pile), colback=red!10, colframe=red]
+A \textbf{stack} is a linear data structure that follows the LIFO principle
+(Last In, First Out).  
+This means that the last element added is the first one to be removed.
+\end{defnbox}
+
+\begin{defnbox}[title=LIFO principle]
+\textbf{LIFO (Last In, First Out)} means that elements are removed in the reverse order of insertion.  
+The most recently inserted element is always at the top of the stack.
+\end{defnbox}
+
+\begin{defnbox}[title=Top]
+The \textbf{top} is the position of the last inserted element in the stack.  
+All insertions and deletions happen only at the top.
+\end{defnbox}
+
+\begin{defnbox}[title=Push operation]
+\texttt{PUSH} adds an element to the top of the stack.  
+After the operation, this element becomes the new top.
+\end{defnbox}
+
+\begin{defnbox}[title=Pop operation]
+\texttt{POP} removes and returns the element at the top of the stack.  
+The next element below becomes the new top.
+\end{defnbox}
+
+\begin{defnbox}[title=Stack underflow]
+A \textbf{stack underflow} occurs when trying to pop an element from an empty stack.  
+This is an invalid operation.
+\end{defnbox}
+
+\begin{defnbox}[title=Stack overflow]
+A \textbf{stack overflow} occurs when trying to push an element into a full stack (if the size is bounded).
+\end{defnbox}
+
+\begin{defnbox}[title=Applications]
+Stacks are used in function calls (call stack), expression evaluation, undo mechanisms, and depth-first search (DFS).
+\end{defnbox}
+
+
+\begin{defnbox}[title=Stack implementation (how it is stored)]
+A stack is usually implemented using an array $S[1..n]$ and a variable \texttt{top}.
+
+\texttt{top} keeps track of the index of the last inserted element:
+\begin{itemize}
+    \item If \texttt{top = 0}, the stack is empty
+    \item Elements are stored from $S[1]$ up to $S[top]$
+    \item All operations (push and pop) modify only the \texttt{top}
+\end{itemize}
+
+\textbf{Fixed size stack:}
+The array size is fixed in advance. If the stack becomes full, no more elements can be added (stack overflow).
+
+\textbf{Dynamic size stack:}
+The array can grow when it becomes full (usually by allocating a larger array and copying elements). This avoids overflow but may require resizing operations.
+
+This makes the stack very efficient, since no shifting of elements is needed. (PAS CE QUON A FAIT)
+\end{defnbox}
+
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+
+
+\section{Stack empty}
+\textbf{Concept and idea:}
+
+The \texttt{STACK-EMPTY} operation checks whether a stack contains any elements or not.  
+It simply tests the position of the top pointer: if the stack has no elements, the top is equal to 0.
+
+\begin{lstlisting}
+STACK-EMPTY(S)
+    if S.top == 0
+        return TRUE
+    else
+        return FALSE
+\end{lstlisting}
+
+\textbf{Goal:} Check whether a stack is empty \\
+\textbf{Time complexity:} $O(1)$ \\
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+
+
+\section{Stack push}
+\textbf{Concept and idea:}
+
+The \texttt{PUSH} operation adds an element to the top of the stack.  
+It increases the \texttt{top} pointer and stores the new value at that position.
+
+\begin{lstlisting}
+PUSH(S, x)
+    S.top = S.top + 1
+    S[S.top] = x
+\end{lstlisting}
+
+\textbf{Goal:} Insert an element into a stack \\
+
+\textbf{Time complexity:} $O(1)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+
+
+\section{Stack pop}
+\textbf{Concept and idea:}
+
+The \texttt{POP} operation removes and returns the top element of the stack.  
+It first checks if the stack is empty to avoid underflow, then decreases the \texttt{top} pointer.
+
+\begin{lstlisting}
+POP(S)
+    if STACK-EMPTY(S)
+        error "underflow"
+    else
+        S.top = S.top - 1
+        return S[S.top + 1]
+\end{lstlisting}
+
+\textbf{Goal:} Remove and return the top element of a stack \\
+
+\textbf{Time complexity:} $O(1)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Queue}
+
+
+\begin{defnbox}[title=Queue (file)]
+A \textbf{queue} is a linear data structure that follows the FIFO principle
+(First In, First Out).  
+This means that the first element added is the first one to be removed.
+\end{defnbox}
+
+\begin{defnbox}[title=FIFO principle]
+\textbf{FIFO (First In, First Out)} means that elements are removed in the same order they were inserted.  
+The oldest element in the structure is always the first to leave.
+\end{defnbox}
+
+\begin{defnbox}[title=Front]
+The \textbf{front} is the position of the first element in the queue.  
+Deletions (dequeue) always happen at the front.
+\end{defnbox}
+
+\begin{defnbox}[title=Rear]
+The \textbf{rear} is the position where new elements are inserted.  
+Insertions (enqueue) always happen at the rear.
+\end{defnbox}
+
+\begin{defnbox}[title=Enqueue operation]
+\texttt{ENQUEUE} adds an element at the rear of the queue.  
+After insertion, the new element becomes the last element.
+\end{defnbox}
+
+\begin{defnbox}[title=Dequeue operation]
+\texttt{DEQUEUE} removes and returns the element at the front of the queue.  
+The next element becomes the new front.
+\end{defnbox}
+
+\begin{defnbox}[title=Queue underflow]
+A \textbf{queue underflow} occurs when trying to dequeue from an empty queue.  
+This is an invalid operation.
+\end{defnbox}
+
+\begin{defnbox}[title=Queue overflow]
+A \textbf{queue overflow} occurs when trying to enqueue into a full queue (if bounded).
+\end{defnbox}
+
+\begin{defnbox}[title=Applications]
+Queues are used in scheduling systems, breadth-first search (BFS), printer queues, and buffering.
+\end{defnbox}
+
+\begin{defnbox}[title=Queue implementation (how it is stored)]
+A queue is usually implemented using an array $Q[1..n]$ with two pointers: \texttt{front} and \texttt{rear}.
+
+\begin{itemize}
+    \item \texttt{front} points to the first element to remove
+    \item \texttt{rear} points to the position where the next element is inserted
+    \item If \texttt{front > rear}, the queue is empty
+\end{itemize}
+
+\textbf{Fixed size queue:}
+The array has a fixed capacity. When full, no more elements can be inserted.
+
+\textbf{Dynamic size queue:}
+The array can grow when needed (by resizing and copying elements), avoiding overflow but with occasional cost.
+
+This structure is efficient because insertions and deletions do not require shifting elements.(MAIS C PAS CE QUON A FAIT LA C DEF EN PLUS)
+\end{defnbox}
+
+
+Implementation using arrays: Q consists of elements
+$S[Q.head, \ldots, Q.tail - 1]$
+
+\begin{itemize}
+    \item $Q.head$ points at the first element (the next element to be removed)
+    \item $Q.tail$ points at the next location where a newly arrived element will be placed
+\end{itemize}
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+\section{ENQUEUE}
+\textbf{Concept and idea:}
+
+The \texttt{ENQUEUE} operation inserts a new element at the rear of the queue.  
+In a circular array implementation, it places the element at \texttt{Q.tail} and then updates the tail pointer, wrapping around if needed.
+
+\begin{lstlisting}
+ENQUEUE(Q, x)
+    Q[Q.tail] = x
+
+    if Q.tail == Q.length
+        Q.tail = 1
+    else
+        Q.tail = Q.tail + 1
+\end{lstlisting}
+
+\textbf{Goal:} Insert an element into a queue \\
+
+\textbf{Time complexity:} $O(1)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+\section{DEQUEUE}
+\textbf{Concept and idea:}
+
+The \texttt{DEQUEUE} operation removes and returns the element at the front of the queue.  
+In a circular array implementation, it reads the element at \texttt{Q.head} and then advances the head pointer, wrapping around if needed.
+
+\begin{lstlisting}
+DEQUEUE(Q)
+    x = Q[Q.head]
+
+    if Q.head == Q.length
+        Q.head = 1
+    else
+        Q.head = Q.head + 1
+
+    return x
+\end{lstlisting}
+
+\textbf{Goal:} Remove and return the front element of a queue \\
+
+\textbf{Time complexity:} $O(1)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+\section{Stacks and Queues pros and cons}
+
+\begin{tabular}{|p{6cm}|p{8cm}|}
+\hline
+\textbf{Positives} & \textbf{Negatives} \\
+\hline
+Very efficient &
+Limited support: for example, no search \\
+\hline
+Natural operations &
+Implementations using arrays have a fixed capacity \\
+\hline
+\end{tabular}
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+
+
+\chapter{Linked List}
+
+\begin{defnbox}[title=Linked List]
+A \textbf{linked list} is a linear data structure where elements are stored in nodes.  
+Each node contains a value and a pointer to the next node in the sequence.  
+Unlike arrays, elements are not stored contiguously in memory.
+\end{defnbox}
+
+\begin{defnbox}[title=Node]
+A \textbf{node} is the basic building block of a linked list.  
+It contains:
+\begin{itemize}
+    \item a \textbf{key/value} (the data)
+    \item a \textbf{next pointer} pointing to the next node
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Head]
+The \textbf{head} is the first node of the linked list.  
+It is the entry point used to access the entire structure.
+\end{defnbox}
+
+\begin{defnbox}[title=Tail]
+The \textbf{tail} is the last node of the linked list.  
+Its next pointer is \texttt{NULL}, meaning the end of the list.
+\end{defnbox}
+
+\begin{defnbox}[title=Next pointer]
+The \textbf{next pointer} links one node to the next node in the list.  
+It defines the ordering of elements.
+\end{defnbox}
+
+\begin{defnbox}[title=Insertion]
+Insertion in a linked list means creating a new node and updating pointers to include it in the list.  
+It can be done at the head, tail, or in the middle depending on the case.
+\end{defnbox}
+
+\begin{defnbox}[title=Deletion]
+Deletion removes a node from the list by changing pointers so that the previous node points to the next one.
+\end{defnbox}
+
+\begin{defnbox}[title=Advantages]
+\begin{itemize}
+    \item Dynamic size (no fixed capacity)
+    \item Efficient insertions and deletions (no shifting required)
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Disadvantages]
+\begin{itemize}
+    \item No direct access to elements (no indexing)
+    \item Extra memory usage due to pointers
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Applications]
+Linked lists are used in dynamic memory management, graph adjacency lists, and implementing stacks/queues.
+\end{defnbox}
+
+\textbf{Representation:}
+
+A linked list is represented as:
+\[
+\text{Head} \rightarrow node_1 \rightarrow node_2 \rightarrow \cdots \rightarrow \text{NULL}
+\]
+
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+\section{Linked list search}
+\textbf{Concept and idea:}
+
+The \texttt{LIST-SEARCH} operation looks for an element with a given key in a linked list.
+
+It starts from the head of the list and traverses node by node until it either finds the key or reaches the end of the list.
+
+\begin{lstlisting}
+LIST-SEARCH(L, k)
+    x = L.head
+
+    while x != NIL and x.key != k
+        x = x.next
+
+    return x
+\end{lstlisting}
+
+\textbf{Goal:} Find an element with key $k$ in a linked list \\
+
+\textbf{Time complexity:} $O(n)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+\section{Linked list insert}
+\textbf{Concept and idea:}
+
+The \texttt{LIST-INSERT} operation inserts a new node at the beginning of a doubly linked list.
+
+It updates pointers so that the new node becomes the new head of the list, and properly connects it to the previous first node if it exists.
+
+\begin{lstlisting}
+LIST-INSERT(L, x)
+    x.next = L.head
+
+    if L.head != NIL
+        L.head.prev = x
+
+    L.head = x
+    x.prev = NIL
+\end{lstlisting}
+
+\textbf{Goal:} Insert a new element at the head of a linked list \\
+
+\textbf{Time complexity:} $O(1)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+\section{Linked list delete}
+\textbf{Concept and idea:}
+
+The \texttt{LIST-DELETE} operation removes a given node $x$ from a doubly linked list.
+
+It updates the pointers of the neighboring nodes so that the list remains correctly connected after deletion.  
+Depending on whether $x$ is the head or not, the head pointer may also need to be updated.
+
+\begin{lstlisting}
+LIST-DELETE(L, x)
+    if x.prev != NIL
+        x.prev.next = x.next
+    else
+        L.head = x.next
+
+    if x.next != NIL
+        x.next.prev = x.prev
+\end{lstlisting}
+
+\textbf{Goal:} Delete a node from a doubly linked list \\
+
+\textbf{Time complexity:} $O(1)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+\section{Simplified pseudocodes}
+
+\begin{lstlisting}
+LIST-INSERT'(L, x)
+    x.next = L.nil.next
+    L.nil.next.prev = x
+    L.nil.next = x
+    x.prev = L.nil
+\end{lstlisting}
+
+\begin{lstlisting}
+LIST-DELETE'(L, x)
+    x.prev.next = x.next
+    x.next.prev = x.prev
+\end{lstlisting}
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+% ---------------------------------------------------------
+\chapter{Binary Search Tree}
+% ---------------------------------------------------------
+
+\begin{defnbox}[title=Binary Search Tree (BST)]
+A \textbf{binary search tree} is a binary tree where each node follows a specific ordering rule:
+all values in the left subtree are smaller than the node, and all values in the right subtree are larger.
+\end{defnbox}
+
+\begin{defnbox}[title=Node]
+A \textbf{node} is the basic element of a BST.  
+It contains:
+\begin{itemize}
+    \item a \textbf{key/value}
+    \item a \textbf{left pointer}
+    \item a \textbf{right pointer}
+    \item (optionally) a \textbf{parent pointer}
+\end{itemize}
+\end{defnbox}
+
+
+\begin{defnbox}[title=BST property]
+For every node in the tree:
+\begin{itemize}
+    \item all keys in the left subtree are smaller
+    \item all keys in the right subtree are larger
+\end{itemize}
+This property is applied recursively at every node.
+\end{defnbox}
+
+\begin{defnbox}[title=Search]
+Searching in a BST means starting from the root and going left or right depending on comparisons with the current node’s key.
+\end{defnbox}
+
+\begin{defnbox}[title=Insertion]
+Insertion adds a new node by following the BST property until reaching a NULL position where the node is inserted.
+\end{defnbox}
+
+\begin{defnbox}[title=Deletion]
+Deletion removes a node while preserving the BST property.  
+It may require replacing the node with its successor or predecessor.
+\end{defnbox}
+
+\begin{defnbox}[title=Minimum and Maximum]
+\begin{itemize}
+    \item Minimum: leftmost node in the tree
+    \item Maximum: rightmost node in the tree
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Applications]
+BSTs are used in searching, sorting, symbol tables, and implementing dynamic ordered sets.
+\end{defnbox}
+
+\textbf{Representation:}
+
+A BST is represented as:
+\[
+\text{root} \rightarrow \text{left subtree (smaller)} , \text{right subtree (larger)}
+\]
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{defnbox}[title=BST property]
+For every node $x$: all keys in the left subtree $\leq x.\mathit{key} \leq$ all keys in
+the right subtree.
+\end{defnbox}
+
+
+
+
+
+All basic operations run in $O(h)$ where $h$ is the height.
+For a \emph{random} BST, $\mathbb{E}[h] = O(\log n)$; in the worst case $h = n-1$.
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+\section{Tree search}
+\textbf{Concept and idea:}
+
+The \texttt{TREE-SEARCH} operation looks for a node with key $k$ in a binary search tree.
+
+It starts from the root (or a given node) and uses the BST property:
+if the key is smaller, it goes left; otherwise, it goes right.
+
+\begin{lstlisting}
+TREE-SEARCH(x, k)
+    if x == NIL or k == x.key
+        return x
+
+    if k < x.key
+        return TREE-SEARCH(x.left, k)
+    else
+        return TREE-SEARCH(x.right, k)
+\end{lstlisting}
+
+\textbf{Goal:} Find a node with key $k$ in a BST \\
+
+\textbf{Time complexity:} $O(h)$ (where $h$ is the height of the tree) \\
+
+\textbf{Space:} $O(h)$ (recursive call stack)
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+\section{Tree minimum}
+
+\textbf{Concept and idea:}
+
+The \texttt{TREE-MINIMUM} operation finds the smallest key in a binary search tree by always going to the left child until reaching a node with no left child.
+
+\begin{lstlisting}
+TREE-MINIMUM(x)
+    while x.left != NIL
+        x = x.left
+    return x
+\end{lstlisting}
+
+\textbf{Goal:} Find the minimum element in a BST \\
+
+\textbf{Time complexity:} $O(h)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+\vspace{2cm}
+
+
+
+
+\section{Tree maximum}
+
+\textbf{Concept and idea:}
+
+The \texttt{TREE-MAXIMUM} operation finds the largest key in a binary search tree by always going to the right child until reaching a node with no right child.
+
+\begin{lstlisting}
+TREE-MAXIMUM(x)
+    while x.right != NIL
+        x = x.right
+    return x
+\end{lstlisting}
+
+\textbf{Goal:} Find the maximum element in a BST \\
+
+\textbf{Time complexity:} $O(h)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+\section{Tree successor}
+\textbf{Concept and idea:}
+
+The \texttt{TREE-SUCCESSOR} operation finds the next node in in-order traversal of a binary search tree.
+
+If the node has a right subtree, the successor is simply the minimum element of that right subtree.  
+Otherwise, the algorithm moves up using parent pointers until it finds a node that is a left child of its parent.
+
+\begin{lstlisting}
+TREE-SUCCESSOR(x)
+
+    if x.right != NIL
+        return TREE-MINIMUM(x.right)
+
+    y = x.p
+
+    while y != NIL and x == y.right
+        x = y
+        y = y.p
+
+    return y
+\end{lstlisting}
+
+\textbf{Goal:} Find the in-order successor of a node in a BST \\
+
+\textbf{Time complexity:} $O(h)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+\vspace{2cm}
+
+
+
+\section{Inorder tree walk}
+\textbf{Concept and idea:}
+
+The \texttt{INORDER-TREE-WALK} operation visits all nodes of a binary search tree in sorted order.
+
+It follows the in-order traversal strategy: left subtree → node → right subtree.
+
+\begin{lstlisting}
+INORDER-TREE-WALK(x)
+
+    if x != NIL
+        INORDER-TREE-WALK(x.left)
+        print key[x]
+        INORDER-TREE-WALK(x.right)
+\end{lstlisting}
+
+\textbf{Goal:} Traverse a BST in sorted (in-order) order \\
+
+\textbf{Time complexity:} $O(n)$ \\
+
+\textbf{Space:} $O(h)$ (recursion stack)
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+\section{Preorder tree walk}
+\textbf{Concept and idea:}
+
+The \texttt{PREORDER-TREE-WALK} operation traverses a binary tree by visiting the root first, then the left subtree, and finally the right subtree.
+
+This is useful when you want to process a node before its children.
+
+\begin{lstlisting}
+PREORDER-TREE-WALK(x)
+
+    if x != NIL
+        print key[x]
+        PREORDER-TREE-WALK(x.left)
+        PREORDER-TREE-WALK(x.right)
+\end{lstlisting}
+
+\textbf{Goal:} Traverse a BST in preorder (root → left → right) \\
+
+\textbf{Time complexity:} $O(n)$ \\
+
+\textbf{Space:} $O(h)$ (recursion stack)
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+\section{Postorder tree walk}
+
+\textbf{Concept and idea:}
+
+The \texttt{POSTORDER-TREE-WALK} operation traverses a binary tree by visiting the children first, and the root last.
+
+It follows the order: left subtree → right subtree → node.
+
+\begin{lstlisting}
+POSTORDER-TREE-WALK(x)
+
+    if x != NIL
+        POSTORDER-TREE-WALK(x.left)
+        POSTORDER-TREE-WALK(x.right)
+        print key[x]
+\end{lstlisting}
+
+\textbf{Goal:} Traverse a BST in postorder (left → right → root) \\
+
+\textbf{Time complexity:} $O(n)$ \\
+
+\textbf{Space:} $O(h)$ (recursion stack)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+\section{Tree insert}
+\textbf{Concept and idea:}
+
+The \texttt{TREE-INSERT} operation inserts a new node into a binary search tree while preserving the BST property.
+
+It first searches for the correct position by moving down the tree, then attaches the new node as a leaf.
+
+\begin{lstlisting}
+TREE-INSERT(T, z)
+
+    y = NIL
+    x = T.root
+
+    while x != NIL
+        y = x
+        if z.key < x.key
+            x = x.left
+        else
+            x = x.right
+
+    z.p = y
+
+    if y == NIL
+        T.root = z
+
+    elseif z.key < y.key
+        y.left = z
+
+    else
+        y.right = z
+\end{lstlisting}
+
+\textbf{Goal:} Insert a node into a BST \\
+
+\textbf{Time complexity:} $O(h)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+\section{Tree delete}
+
+\textbf{Concept and idea:}
+
+The \texttt{TREE-DELETE} operation removes a node from a binary search tree while preserving the BST property.  
+It relies on a helper operation called \texttt{TRANSPLANT}, which replaces one subtree with another.
+
+The \texttt{TRANSPLANT} method is used to replace one subtree with another while correctly updating parent pointers, allowing the tree structure to be modified safely without breaking the binary search tree properties.  
+
+The \texttt{TREE-DELETE} operation removes a node from a binary search tree while preserving the BST property. It handles all structural cases (no child, one child, or two children) and uses \texttt{TRANSPLANT} to correctly reconnect subtrees when needed.
+
+There are three cases when deleting a node $z$:
+\begin{itemize}
+    \item If $z$ has no children, it is simply removed.
+    \item If $z$ has one child, that child takes $z$'s position.
+    \item If $z$ has two children, we find its successor $y$ and replace $z$ with $y$.
+\end{itemize}
+
+\begin{lstlisting}
+TRANSPLANT(T, u, v)
+
+    if u.p == NIL
+        T.root = v
+
+    elseif u == u.p.left
+        u.p.left = v
+
+    else
+        u.p.right = v
+
+    if v != NIL
+        v.p = u.p
+\end{lstlisting}
+
+\begin{lstlisting}
+TREE-DELETE(T, z)
+
+    if z.left == NIL
+        TRANSPLANT(T, z, z.right)
+
+    elseif z.right == NIL
+        TRANSPLANT(T, z, z.left)
+
+    else
+        y = TREE-MINIMUM(z.right)
+
+        if y.p != z
+            TRANSPLANT(T, y, y.right)
+            y.right = z.right
+            y.right.p = y
+
+        TRANSPLANT(T, z, y)
+        y.left = z.left
+        y.left.p = y
+\end{lstlisting}
+
+\textbf{Goal:} Delete a node from a BST while preserving its structure \\
+
+\textbf{Time complexity:} $O(h)$ \\
+
+\textbf{Space:} $O(1)$
+
+
+
+
+
+\begin{warnbox}
+A BST is only efficient when \emph{balanced}. For guaranteed $O(\log n)$, use a
+self-balancing variant such as a \textbf{Red-Black tree} (height $\leq 2\log_2(n+1)$).
+\end{warnbox}
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+\vspace{2cm}
+
+
+
+% ---------------------------------------------------------
+\chapter{Data Structures Comparison}
+% ---------------------------------------------------------
+
+\begin{center}
+\begin{tabular}{lllll}
+\toprule
+Structure    & Search    & Insert      & Delete      & Notes \\
+\midrule
+Unsorted array & $O(n)$  & $O(1)$      & $O(n)$      & simple \\
+Sorted array   & $O(\log n)$ & $O(n)$  & $O(n)$      & binary search \\
+Linked list    & $O(n)$  & $O(1)$      & $O(1)^*$    & $^*$with pointer \\
+BST            & $O(h)$  & $O(h)$      & $O(h)$      & $h = O(n)$ worst \\
+Red-Black tree & $O(\log n)$ & $O(\log n)$ & $O(\log n)$ & balanced \\
+Heap           & $O(n)$  & $O(\log n)$ & $O(\log n)$ & max/min in $O(1)$ \\
+Hash table     & $O(1)^*$& $O(1)^*$    & $O(1)^*$    & $^*$expected \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+
+
+
+\begin{table}[h]
+\centering
+
+\begin{tabular}{|p{3.5cm}|p{10cm}|}
+\hline
+\textbf{Data Structure} & \textbf{Properties} \\
+\hline
+
+\textbf{Stacks} &
+Last-In-First-Out (LIFO). \newline
+Insertion and deletion in $O(1)$ time. \newline
+Array implementation with fixed capacity. \\
+\hline
+
+\textbf{Queues} &
+First-In-First-Out (FIFO). \newline
+Insertion and deletion in $O(1)$ time. \newline
+Array implementation with fixed capacity. \\
+\hline
+
+\textbf{Linked Lists} &
+No fixed capacity. \newline
+Insertion and deletion in $O(1)$ time (if position is known). \newline
+Search takes $O(n)$ time. \\
+\hline
+
+\textbf{Binary Search Trees} &
+No fixed capacity. \newline
+Supports insertion, deletion, search, minimum and maximum in $O(h)$ time, where $h$ is the height of the tree. \\
+\hline
+
+\end{tabular}
+
+\caption{Summary of basic data structures and their complexities}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+\chapter{Dynamic programming}
+
+
+\begin{defnbox}[title=Dynamic Programming (DP)]
+\textbf{Main idea:}
+\begin{itemize}
+    \item Remember calculations already made
+    \item Saves enormous amounts of computation
+    \item Allows to solve many optimization problems
+    \item Always at least one question in Google Code Jam needs DP
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Dynamic Programming (DP)]
+Dynamic Programming is a technique used to solve problems by breaking them into smaller subproblems and reusing already computed results instead of recomputing them.
+\end{defnbox}
+
+\begin{defnbox}[title=Main idea]
+\begin{itemize}
+    \item Store results of subproblems (memoization or tabulation)
+    \item Avoid recomputing the same values multiple times
+    \item Transform exponential problems into polynomial time solutions
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Overlapping subproblems]
+A problem has overlapping subproblems when the same subproblems are solved multiple times during recursion.
+\end{defnbox}
+
+\begin{defnbox}[title=Optimal substructure]
+A problem has optimal substructure when the optimal solution can be built from optimal solutions of its subproblems.
+\end{defnbox}
+
+\begin{defnbox}[title=Memoization (Top-down)]
+Memoization is a DP technique where results are stored during recursion to avoid recomputation.
+\end{defnbox}
+
+\begin{defnbox}[title=Tabulation (Bottom-up)]
+Tabulation is a DP technique where solutions are built iteratively from the smallest subproblems to the final solution.
+\end{defnbox}
+
+\begin{defnbox}[title=Applications]
+Dynamic Programming is used in optimization problems such as shortest paths, knapsack, sequence alignment, and many combinatorial problems.
+\end{defnbox}
+
+\textbf{Representation:}
+
+DP is generally represented as:
+\[
+dp[i] = \text{optimal solution of subproblem } i
+\]
+or more generally:
+\[
+dp[state] = \text{best value achievable for a given state}
+\]
+
+
+
+
+
+\vspace{2cm}
+
+
+
+\section{IMPORTANT CONCEPT BASICS}
+
+\begin{defnbox}[title=Two ways of Dynamic Programming]
+Dynamic Programming can be implemented in two main ways: top-down and bottom-up approaches.
+\end{defnbox}
+
+\begin{defnbox}[title=Top-down (Memoization)]
+\begin{itemize}
+    \item Solve the problem recursively
+    \item Store each computed result in a table
+    \item Avoid recomputing already solved subproblems
+    \item Memoization means "remembering previously computed results"
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Bottom-up (Tabulation)]
+\begin{itemize}
+    \item Solve subproblems in increasing order of size
+    \item Start from the smallest subproblems
+    \item Use already computed results to build larger solutions
+\end{itemize}
+\end{defnbox}
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+\section{Exemples on fibonnaci}
+
+
+\begin{lstlisting}
+Bottom-Up-Fib(n)
+
+1. Let r = [0 ... n] be a new array
+2. r[0] \leftarrow 1
+3. r[1] \leftarrow 1
+4. for i = 2 to n
+5.     r[i] \leftarrow r[i - 1] + r[i - 2]
+6. return r[n]
+\end{lstlisting}
+
+\begin{lstlisting}
+Memoized-Fib(n)
+
+1. Let r = [0 ... n] be a new array
+2. for i = 0 to n
+3.     r[i] \leftarrow -\infty
+4. return Memoized-Fib-Aux(n, r)
+\end{lstlisting}
+
+\begin{lstlisting}
+Memoized-Fib-Aux(n, r)
+
+1. if r[n] \geq 0
+2.     return r[n]
+3. if n = 0 or n = 1
+4.     ans \leftarrow 1
+5. else
+6.     ans \leftarrow Memoized-Fib-Aux(n - 1, r) +
+                     Memoized-Fib-Aux(n - 2, r)
+7. r[n] \leftarrow ans
+8. return r[n]
+\end{lstlisting}
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+\section{Key element on designing DP}
+
+
+\begin{defnbox}[title=Optimal Substructure]
+Optimal substructure means that a solution to a problem is built by making a choice that leads to one or more subproblems, and the optimal solution is obtained by solving these subproblems optimally.
+\end{defnbox}
+
+\begin{defnbox}[title=Overlapping Subproblems]
+A problem has overlapping subproblems when a naive recursive solution solves the same subproblems multiple times.
+\end{defnbox}
+
+\begin{defnbox}[title=Top-down with Memoization]
+Solve the problem recursively while storing each computed result in a table to avoid recomputation.
+\end{defnbox}
+
+\begin{defnbox}[title=Bottom-up Approach]
+Sort the subproblems by size and solve the smallest ones first.  
+This ensures that when solving a subproblem, all required smaller subproblems have already been solved.
+\end{defnbox}
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+\section{Rod Cutting algorithm}
+
+\textbf{Concept and idea:}
+
+The rod cutting problem consists in cutting a rod of length $n$ into smaller pieces in order to maximize the total profit, given a price table $p[i]$.
+
+This dynamic programming solution uses memoization to avoid recomputing the same subproblems multiple times.
+
+\begin{lstlisting}
+Memoized-Cut-Rod(p, n)
+
+1. let r[0 .. n] be a new array
+2. for i = 0 to n
+3.     r[i] = -8
+4. return Memoized-Cut-Rod-Aux(p, n, r)
+\end{lstlisting}
+
+\textbf{Goal:} Compute the maximum revenue obtainable by cutting a rod of size $n$
+
+\textbf{Time complexity:} $O(n^2)$
+
+\textbf{Space:} $O(n)$
+
+---
+
+\begin{lstlisting}
+Memoized-Cut-Rod-Aux(p, n, r)
+
+1. if r[n] >= 0
+2.     return r[n]
+
+3. if n == 0
+4.     q = 0
+5. else
+6.     q = -8
+7.     for i = 1 to n
+8.         q = max(q, p[i] + Memoized-Cut-Rod-Aux(p, n - i, r))
+
+9. r[n] = q
+10. return q
+\end{lstlisting}
+
+\textbf{Goal:} Compute the optimal revenue for a rod of length $n$ using memoization
+
+\textbf{Time complexity:} $O(n^2)$
+
+\textbf{Space:} $O(n)$
+
+---
+
+\textbf{What the algorithm does:}
+
+The algorithm tries all possible first cuts $i$, and recursively solves the remaining subproblem of size $n-i$.  
+Memoization ensures that each subproblem is solved only once.
+
+---
+
+\textbf{General idea:}
+\begin{itemize}
+    \item Keep the recursive structure of the problem
+    \item Store results of subproblems (memoization)
+    \item Reuse stored results instead of recomputing
+\end{itemize}
+
+---
+
+\textbf{Theorem (intuition):}
+
+If an optimal solution starts with a first cut at position $i$, then the remaining part of size $n-i$ must also be solved optimally.
+
+Thus:
+\begin{itemize}
+    \item optimal solution = optimal first cut + optimal solution of remaining subproblems
+\end{itemize}
+
+---
+
+\textbf{Problem solved:}
+
+This algorithm removes the exponential explosion of the naive recursive solution by avoiding repeated computations of the same rod sizes.
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+\section{Rod Cutting algorithm bottom-up}
+
+\textbf{Concept and idea:}
+
+The \texttt{BOTTOM-UP-CUT-ROD} algorithm solves the rod cutting problem using the bottom-up dynamic programming approach.
+
+Instead of solving recursively like the memoized version, it starts from the smallest rod sizes and progressively builds solutions up to size $n$.
+
+At each step:
+\begin{itemize}
+    \item smaller subproblems are already solved
+    \item the algorithm reuses these results directly from the table
+    \item no recursive calls are needed
+\end{itemize}
+
+This avoids recursion overhead and guarantees that each subproblem is solved exactly once.
+
+\begin{lstlisting}
+BOTTOM-UP-CUT-ROD(p, n)
+
+let r[0..n] be a new array
+r[0] = 0
+
+for j = 1 to n
+    q = -8
+    for i = 1 to j
+        q = max(q, p[i] + r[j - i])
+
+    r[j] = q
+
+return r[n]
+\end{lstlisting}
+
+\textbf{Goal:} Compute the maximum obtainable revenue for a rod of size $n$ using bottom-up dynamic programming \\
+
+\textbf{Time complexity:} $O(n^2)$ \\
+
+\textbf{Space:} $O(n)$
+
+---
+
+\textbf{Difference with the memoized (top-down) approach:}
+
+\begin{itemize}
+    \item \textbf{Top-down:}
+    starts from the final problem and recursively explores smaller subproblems only when needed.
+
+    \item \textbf{Bottom-up:}
+    starts from the smallest subproblems and iteratively builds all larger solutions until reaching the final answer.
+
+    \item \textbf{Top-down:}
+    uses recursion + memoization.
+
+    \item \textbf{Bottom-up:}
+    uses iteration + tabulation (array filling).
+\end{itemize}
+
+---
+
+\textbf{General idea:}
+
+\begin{itemize}
+    \item Sort subproblems by size
+    \item Solve the smallest ones first
+    \item Reuse already computed solutions to build larger ones
+\end{itemize}
+
+
+
+\begin{defnbox}[title=Recovering the Optimal Solution]
+The previous rod cutting algorithms only return the optimal profit.  
+However, in many cases, we also want to know the actual cuts used to obtain this optimal solution.
+\end{defnbox}
+
+\begin{defnbox}[title=Main idea]
+Each cell of the dynamic programming table corresponds to a decision:
+the position of the leftmost cut chosen for that rod size.
+\end{defnbox}
+
+\begin{defnbox}[title=Approach]
+Store the decision associated with each subproblem in a separate table.  
+This allows reconstruction of the sequence of cuts after computing the optimal profit.
+\end{defnbox}
+
+
+\begin{lstlisting}
+EXTENDED-BOTTOM-UP-CUT-ROD(p, n)
+
+let r[0..n] and s[0..n] be new arrays
+r[0] = 0
+
+for j = 1 to n
+    q = -8
+    for i = 1 to j
+        if q < p[i] + r[j - i]
+            q = p[i] + r[j - i]
+            s[j] = i
+
+    r[j] = q
+
+return r and s
+\end{lstlisting}
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+\section{Matrix chain multiplication - find best separation}
+
+
+\textbf{Concept and idea:}
+
+Matrix Chain Multiplication aims to determine the most efficient way to multiply a chain of matrices.  
+The goal is not to change the order of multiplication, but to decide the optimal parenthesization that minimizes the number of scalar multiplications.
+
+\begin{lstlisting}
+Input: A chain A1, A2, ..., An of n matrices
+where Ai has dimension p[i-1] x p[i]
+
+Output: Optimal parenthesization minimizing scalar multiplications
+\end{lstlisting}
+
+\textbf{Theorem (Optimal substructure):}
+
+If an optimal solution splits the chain at position $i$:
+\[
+(A_1A_2 \cdots A_i)(A_{i+1}A_{i+2} \cdots A_n)
+\]
+and if $P_L$ and $P_R$ are optimal solutions for the left and right parts, then combining them:
+\[
+(P_L \cdot P_R)
+\]
+is an optimal solution for the whole chain.
+
+---
+
+\begin{lstlisting}
+MATRIX-CHAIN-ORDER(p)
+
+n = p.length - 1
+
+let m[1..n, 1..n] and s[1..n, 1..n] be new tables
+
+for i = 1 to n
+    m[i, i] = 0
+
+for l = 2 to n
+    for i = 1 to n - l + 1
+        j = i + l - 1
+        m[i, j] = 8
+
+        for k = i to j - 1
+            q = m[i, k] + m[k + 1, j] + p[i - 1] * p[k] * p[j]
+
+            if q < m[i, j]
+                m[i, j] = q
+                s[i, j] = k
+
+return m and s
+\end{lstlisting}
+
+\textbf{Goal:} Find the optimal parenthesization minimizing scalar multiplications \\
+
+\textbf{Time complexity:} $O(n^3)$ \\
+
+\textbf{Space:} $O(n^2)$
+
+\vspace{2cm}
+
+\textbf{Concept and idea:}
+
+The \texttt{PRINT-OPTIMAL-PARENS} procedure reconstructs the optimal parenthesization of a matrix chain using the table $s$ computed by the dynamic programming algorithm.
+
+It recursively splits the chain at the optimal position and prints parentheses accordingly.
+
+\begin{lstlisting}
+Print-Optimal-Parens(s, i, j)
+
+1 if i == j
+2     print "Ai"
+3 else print "("
+4     Print-Optimal-Parens(s, i, s[i, j])
+5     Print-Optimal-Parens(s, s[i, j] + 1, j)
+6     print ")"
+\end{lstlisting}
+
+\textbf{Goal:} Reconstruct and print the optimal parenthesization of a matrix chain \\
+
+\textbf{Time complexity:} $O(n)$ (visits each split once) \\
+
+\textbf{Space:} $O(h)$ (recursion stack, where $h$ is recursion depth)
+
+
+
+\vspace{2cm}
+
+
+
+
+\section{Longest common subsequence}
+
+
+
+\textbf{Concept and idea:}
+
+The Longest Common Subsequence (LCS) problem consists in finding the longest sequence that appears in the same order (not necessarily consecutively) in two given sequences $X$ and $Y$.
+
+The idea is to compare characters step by step and build an optimal solution using dynamic programming.
+
+\begin{lstlisting}
+INPUT: sequences X = x1, ..., xm and Y = y1, ..., yn
+OUTPUT: longest common subsequence
+\end{lstlisting}
+
+\textbf{Intuition:}
+
+We compare the sequences from the end:
+\begin{itemize}
+    \item If the characters are equal, they are part of the LCS.
+    \item If they are different, we move left in one of the sequences depending on which choice gives the best result.
+\end{itemize}
+
+---
+
+\textbf{Theorem (optimal substructure):}
+
+Let $Z = z_1, z_2, ..., z_k$ be an LCS of $X_i$ and $Y_j$.
+
+\begin{itemize}
+    \item If $x_i = y_j$, then $z_k = x_i = y_j$ and $Z_{k-1}$ is an LCS of $X_{i-1}$ and $Y_{j-1}$.
+    
+    \item If $x_i \neq y_j$, then:
+    \begin{itemize}
+        \item either $Z$ is an LCS of $X_{i-1}$ and $Y_j$
+        \item or $Z$ is an LCS of $X_i$ and $Y_{j-1}$
+    \end{itemize}
+\end{itemize}
+
+This means that the optimal solution is built from optimal solutions of smaller subproblems.
+
+---
+
+\begin{lstlisting}
+LCS-LENGTH(X, Y, m, n)
+
+let b[1..m, 1..n] and c[0..m, 0..n] be new tables
+
+for i = 1 to m
+    c[i, 0] = 0
+
+for j = 0 to n
+    c[0, j] = 0
+
+for i = 1 to m
+    for j = 1 to n
+        if x_i == y_j
+            c[i, j] = c[i - 1, j - 1] + 1
+            b[i, j] = "<-"
+        else if c[i - 1, j] >= c[i, j - 1]
+            c[i, j] = c[i - 1, j]
+            b[i, j] = "fleche en haut"
+        else
+            c[i, j] = c[i, j - 1]
+            b[i, j] = "<-"
+
+return c and b
+\end{lstlisting}
+
+---
+
+\begin{lstlisting}
+PRINT-LCS(b, X, i, j)
+
+if i == 0 or j == 0
+    return
+
+if b[i, j] == "fleche en haut a gauche"
+    PRINT-LCS(b, X, i - 1, j - 1)
+    print x_i
+
+elseif b[i, j] == "fleche en haut"
+    PRINT-LCS(b, X, i - 1, j)
+
+else
+    PRINT-LCS(b, X, i, j - 1)
+\end{lstlisting}
+
+---
+
+\textbf{Goal:} Find the longest subsequence common to both sequences \\
+
+\textbf{Time complexity:} $O(mn)$ \\
+
+\textbf{Space:} $O(mn)$
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+\section{Bottom-up optimal BST}
+
+  \textbf{Concept and idea:}
+
+  The Optimal Binary Search Tree (OBST) problem consists in building a BST from sorted keys such that the expected search cost is minimized, given probabilities of successful searches $p_i$ and unsuccessful searches $q_i$.
+
+  The goal is not just to keep the tree valid, but to minimize the weighted search cost.
+
+  \begin{lstlisting}
+  OPTIMAL-BST(p, q, n)
+
+  let e[1..n + 1, 0..n], w[1..n + 1, 0..n], and root[1..n, 1..n]
+      be new tables
+
+  for i = 1 to n + 1
+      e[i, i - 1] = 0
+      w[i, i - 1] = 0
+
+  for l = 1 to n
+      for i = 1 to n - l + 1
+          j = i + l - 1
+          e[i, j] = 8
+          w[i, j] = w[i, j - 1] + p_j
+
+          for r = i to j
+              t = e[i, r - 1] + e[r + 1, j] + w[i, j]
+
+              if t < e[i, j]
+                  e[i, j] = t
+                  root[i, j] = r
+
+  return e and root
+  \end{lstlisting}
+
+  \textbf{Goal:} Construct a BST with minimum expected search cost \\
+
+  \textbf{Time complexity:} $O(n^3)$ \\
+
+  \textbf{Space:} $O(n^2)$
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+% =========================================================
+\chapter{Graphs}
+% =========================================================
+
+
+\begin{defnbox}[title=Graph (Graphe)]
+A \textbf{graph} is a data structure composed of a set of vertices (nodes) and edges (connections) between them.  
+It is used to model relationships between objects.
+\end{defnbox}
+
+\begin{defnbox}[title=Vertex (Node)]
+A \textbf{vertex} is a fundamental unit of a graph.  
+It represents an object or entity in the graph.
+\end{defnbox}
+
+\begin{defnbox}[title=Edge]
+An \textbf{edge} is a connection between two vertices.  
+It can be directed or undirected, and may have a weight.
+\end{defnbox}
+
+\begin{defnbox}[title=Directed Graph (Digraph)]
+A \textbf{directed graph} is a graph where edges have a direction, going from one vertex to another.
+\end{defnbox}
+
+\begin{defnbox}[title=Undirected Graph]
+An \textbf{undirected graph} is a graph where edges have no direction; the relationship is symmetric.
+\end{defnbox}
+
+\begin{defnbox}[title=Weighted Graph]
+A \textbf{weighted graph} is a graph where each edge has an associated cost or weight.
+\end{defnbox}
+
+\begin{defnbox}[title=Adjacent vertices]
+Two vertices are \textbf{adjacent} if they are connected by an edge.
+\end{defnbox}
+
+\begin{defnbox}[title=Degree]
+The \textbf{degree} of a vertex is the number of edges connected to it.
+In a directed graph, we distinguish in-degree and out-degree.
+\end{defnbox}
+
+\begin{defnbox}[title=Path]
+A \textbf{path} is a sequence of vertices connected by edges.
+\end{defnbox}
+
+\begin{defnbox}[title=Cycle]
+A \textbf{cycle} is a path that starts and ends at the same vertex.
+\end{defnbox}
+
+\begin{defnbox}[title=Connected Graph]
+An undirected graph is \textbf{connected} if there is a path between every pair of vertices.
+\end{defnbox}
+
+\begin{defnbox}[title=Strongly Connected Graph]
+A \textbf{directed graph} is strongly connected if for every pair of vertices $u$ and $v$, there exists a path from $u$ to $v$ and a path from $v$ to $u$.
+\end{defnbox}
+
+\begin{defnbox}[title=Weakly Connected Graph]
+A \textbf{directed graph} is weakly connected if, after ignoring the direction of edges, the resulting undirected graph is connected.
+\end{defnbox}
+
+\begin{defnbox}[title=Connected Components]
+A \textbf{connected component} is a maximal set of vertices such that every pair is connected by a path.
+\end{defnbox}
+
+\begin{defnbox}[title=Tree (Graph Theory)]
+A \textbf{tree} is a connected acyclic graph.
+\end{defnbox}
+
+\begin{defnbox}[title=Directed Acyclic Graph (DAG)]
+A \textbf{DAG} is a directed graph with no cycles.
+\end{defnbox}
+
+
+\textbf{Representation:}
+
+A graph is written as:
+\[
+G = (V, E)
+\]
+where:
+\begin{itemize}
+    \item $V$ is the set of vertices
+    \item $E$ is the set of edges
+\end{itemize}
+
+
+\begin{defnbox}[title=Weighted Vertex]
+A \textbf{weighted vertex} is a vertex that has an associated value (weight), which can represent cost, priority, distance, or any other metric.
+\end{defnbox}
+
+\begin{defnbox}[title=Weighted Edge]
+A \textbf{weighted edge} is an edge that has an associated weight.  
+This weight represents a cost, distance, time, or any numerical value assigned to the connection between two vertices.
+\end{defnbox}
+
+\begin{defnbox}[title=Adjacency List Representation]
+An \textbf{adjacency list} represents a graph by storing, for each vertex, a list of all vertices directly connected to it.
+
+\textbf{Idea:}
+\begin{itemize}
+    \item Each vertex stores its neighbors
+    \item Efficient for sparse graphs
+    \item Space complexity: $O(V + E)$
+\end{itemize}
+
+\textbf{Example:}
+\[
+A \rightarrow \{B, C\}, \quad B \rightarrow \{A, D\}
+\]
+\end{defnbox}
+
+\begin{defnbox}[title=Adjacency Matrix Representation]
+An \textbf{adjacency matrix} represents a graph using a 2D matrix $M$ where:
+
+\begin{itemize}
+    \item $M[i][j] = 1$ (or weight) if there is an edge from $i$ to $j$
+    \item $M[i][j] = 0$ (or $\infty$) otherwise
+\end{itemize}
+
+\textbf{Idea:}
+\begin{itemize}
+    \item Fast edge lookup: $O(1)$
+    \item Uses $O(V^2)$ space
+    \item Better for dense graphs
+\end{itemize}
+
+\textbf{Example:}
+
+For a graph with vertices $\{A, B, C\}$ and edges $A \rightarrow B$, $B \rightarrow C$, the adjacency matrix is:
+
+\[
+\begin{array}{c|ccc}
+    & A & B & C \\
+\hline
+A & 0 & 1 & 0 \\
+B & 0 & 0 & 1 \\
+C & 0 & 0 & 0 \\
+\end{array}
+\]
+\end{defnbox}
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+ & \textbf{Adjacency List} & \textbf{Adjacency Matrix} \\
+\hline
+Space & $\Theta(V + E)$ & $\Theta(V^2)$ \\
+\hline
+List adjacent to $u$ & $\Theta(\deg(u))$ & $\Theta(V)$ \\
+\hline
+Test if $(u,v) \in E$ & $O(\deg(u))$ & $\Theta(1)$ \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\begin{defnbox}[title=Cycle Detection Lemma]
+A directed graph $G$ is \textbf{acyclic} if and only if a Depth-First Search (DFS) of $G$ produces no back edges.
+\end{defnbox}
+
+
+\begin{defnbox}[title=Strongly Connected Component (SCC)]
+A \textbf{strongly connected component} (SCC) of a directed graph $G = (V, E)$ is a \textbf{maximal set of vertices} $C \subseteq V$ such that for every pair of vertices $u, v \in C$, there exists a path from $u$ to $v$ and a path from $v$ to $u$.
+\end{defnbox}
+
+\begin{defnbox}[title=Component Graph (SCC Graph)]
+For a directed graph $G = (V, E)$, its \textbf{component graph} $G_{SCC} = (V_{SCC}, E_{SCC})$ is defined as follows:
+
+\begin{itemize}
+    \item $V_{SCC}$ contains one vertex for each strongly connected component of $G$
+    \item $E_{SCC}$ contains an edge between two SCCs if there exists at least one edge in $G$ connecting a vertex in the first SCC to a vertex in the second SCC
+\end{itemize}
+
+\textbf{Intuition:} each SCC is contracted into a single “super-node”, and edges between SCCs define how these components are connected.
+\end{defnbox}
+
+
+\begin{defnbox}[title=Lemma: The SCC Graph is a DAG (Directed acyclic graph)]
+For any directed graph $G = (V, E)$, the component graph $G_{SCC}$ (formed by contracting each strongly connected component into a single vertex) is a directed acyclic graph (DAG).
+
+\medskip
+
+\textbf{Intuition:} if there were a cycle between SCCs, then all vertices in those components would be mutually reachable, meaning they would actually belong to the same strongly connected component. This contradicts the definition of SCCs being maximal.
+\end{defnbox}
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{Breadth-First Search}
+\textbf{Concept and idea:}
+
+The BFS (Breadth-First Search) algorithm explores a graph level by level starting from a source vertex $s$.  
+It computes the shortest path (in number of edges) from $s$ to every reachable vertex in the graph.
+
+The idea is that vertices closer to the source are processed first using a queue, ensuring that the first time we reach a vertex, it is via the shortest path.
+
+\begin{lstlisting}
+BFS(V, E, s)
+
+for each u apparient V - {s}
+    u.d = 8
+
+s.d = 0
+Q = ensemble vide
+ENQUEUE(Q, s)
+
+while Q != ensemble vide
+    u = DEQUEUE(Q)
+
+    for each v apparient G.Adj[u]
+        if v.d == 8
+            v.d = u.d + 1
+            ENQUEUE(Q, v)
+\end{lstlisting}
+
+\textbf{Goal:} Compute the shortest distance (in number of edges) from source $s$ to every vertex $v \in V$ \\
+
+\textbf{Time complexity:} $O(V + E)$ \\
+
+\textbf{Space:} $O(V)$
+\textbf{Idea of correctness:}
+
+If a vertex $v$ had a distance greater than the true shortest path from $s$ to $v$, this would contradict the BFS exploration order.
+
+Since BFS explores vertices in increasing order of distance from the source (level by level using a queue), the first time a vertex is discovered is always via a shortest path.
+
+---
+
+\textbf{Runtime analysis:} $\mathcal{O}(V + E)$
+
+\begin{itemize}
+    \item $\mathcal{O}(V)$: each vertex is enqueued at most once
+    \item $\mathcal{O}(E)$: each edge is examined at most once (or twice for undirected graphs)
+\end{itemize}
+
+---
+
+\textbf{Additional notes:}
+\begin{itemize}
+    \item BFS may not reach all vertices if the graph is not connected
+    \item We can reconstruct the shortest path tree by storing the predecessor (the edge that first discovered each vertex)
+\end{itemize}
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{Depth-First Search}
+
+\textbf{Concept and idea:}
+
+Depth-First Search (DFS) explores a graph by going as deep as possible along each branch before backtracking.  
+It starts from a vertex, explores one path completely, then backtracks and continues with other unexplored paths.
+
+Unlike BFS, which explores vertices level by level, DFS explores along depth first.
+
+The algorithm assigns two timestamps to each vertex:
+\begin{itemize}
+    \item discovery time $v.d$ when the vertex is first visited
+    \item finishing time $v.f$ when exploration of the vertex is complete
+\end{itemize}
+
+\begin{lstlisting}
+DFS(G)
+
+for each u appartient G.V
+    u.color = WHITE
+
+time = 0
+
+for each u appartent G.V
+    if u.color == WHITE
+        DFS-VISIT(G, u)
+\end{lstlisting}
+
+\begin{lstlisting}
+DFS-VISIT(G, u)
+
+time = time + 1
+u.d = time
+u.color = GRAY
+
+for each v appartient G.Adj[u]
+    if v.color == WHITE
+        DFS-VISIT(v)
+
+u.color = BLACK
+time = time + 1
+u.f = time
+\end{lstlisting}
+
+\textbf{Goal:} Explore all vertices and edges of the graph while computing discovery and finishing times \\
+
+\textbf{Time complexity:} $O(V + E)$ \\
+
+\textbf{Space:} $O(V)$ (recursion stack)
+
+\begin{defnbox}[title=DFS Vertex Colors]
+As Depth-First Search (DFS) progresses, each vertex is assigned a color to track its exploration state:
+
+\begin{itemize}
+    \item \textbf{WHITE}: the vertex is undiscovered
+    \item \textbf{GRAY}: the vertex is discovered but not fully explored (DFS is still processing its neighbors)
+    \item \textbf{BLACK}: the vertex is finished (all reachable vertices from it have been explored)
+\end{itemize}
+
+These colors help DFS manage traversal order and avoid revisiting vertices.
+\end{defnbox}
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{Classification of edges}
+
+\begin{defnbox}[title=Tree Edge]
+A \textbf{tree edge} is an edge discovered while exploring a new vertex during DFS.  
+It becomes part of the depth-first forest.
+\end{defnbox}
+
+\begin{defnbox}[title=Back Edge]
+A \textbf{back edge} is an edge $(u,v)$ where $v$ is an ancestor of $u$ in the DFS tree.  
+It points back toward an already discovered ancestor.
+\end{defnbox}
+
+\begin{defnbox}[title=Forward Edge]
+A \textbf{forward edge} is an edge $(u,v)$ where $v$ is a descendant of $u$ in the DFS tree, but $(u,v)$ is not a tree edge.
+\end{defnbox}
+
+\begin{defnbox}[title=Cross Edge]
+A \textbf{cross edge} is any edge that is neither a tree edge, a back edge, nor a forward edge.  
+It typically connects vertices belonging to different DFS branches.
+\end{defnbox}
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{Parentheses theorem}
+
+\begin{defnbox}[title=Parenthesis Theorem (DFS)]
+For any two vertices $u$ and $v$ in a depth-first search, exactly one of the following cases holds:
+
+\begin{enumerate}
+    \item
+    \[
+    u.d < u.f < v.d < v.f
+    \quad \text{or} \quad
+    v.d < v.f < u.d < u.f
+    \]
+    Neither $u$ nor $v$ is a descendant of the other.
+
+    \item
+    \[
+    u.d < v.d < v.f < u.f
+    \]
+    Vertex $v$ is a descendant of $u$.
+
+    \item
+    \[
+    v.d < u.d < u.f < v.f
+    \]
+    Vertex $u$ is a descendant of $v$.
+\end{enumerate}
+
+In other words, DFS discovery and finishing times form properly nested intervals: descendant vertices have intervals entirely contained within the intervals of their ancestors.
+
+\medskip
+
+\textbf{Explication simple :} ce théorème permet de déterminer la relation entre deux sommets uniquement en regardant leurs temps de découverte ($d$) et de fin ($f$). Il sert notamment à savoir rapidement si un sommet est descendant d'un autre dans l'arbre DFS, sans avoir à parcourir de nouveau le graphe.
+\end{defnbox}
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{White Path Theorem}
+
+
+\begin{defnbox}[title=White-Path Theorem]
+A vertex $v$ is a descendant of a vertex $u$ in the DFS forest if and only if, at the time $u.d$, there exists a path from $u$ to $v$ consisting entirely of WHITE vertices (except $u$, which has just been colored GRAY).
+
+\medskip
+
+\textbf{Explication simple :} ce théorème permet de savoir quels sommets deviendront descendants de $u$ dans l'arbre DFS. Au moment où DFS découvre $u$, tous les sommets encore atteignables par un chemin composé uniquement de sommets non visités (WHITE) seront explorés à partir de $u$ et feront donc partie de son sous-arbre DFS. Ce théorème est souvent utilisé pour démontrer formellement pourquoi DFS construit correctement ses arbres de parcours.
+\end{defnbox}
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Topological sort}
+
+
+\textbf{Concept and idea:}
+
+Topological Sort produces a linear ordering of the vertices of a Directed Acyclic Graph (DAG) such that for every edge $(u,v)$, vertex $u$ appears before vertex $v$ in the ordering.
+
+The algorithm uses DFS and relies on finishing times. Vertices that finish later are placed earlier in the topological ordering.
+
+\begin{lstlisting}
+TOPOLOGICAL-SORT(G)
+
+1. Call DFS(G) to compute finishing times v.f for all v appartenant a G.V
+2. Output vertices in order of decreasing finishing times
+\end{lstlisting}
+
+
+\textbf{Goal:} Compute a valid topological ordering of a DAG \\
+
+\textbf{Time complexity:} $O(V + E)$ \\
+
+\textbf{Space:} $O(V)$
+
+
+---
+
+
+\textbf{Implementation note:}
+
+Instead of sorting vertices by their finishing times:
+
+\begin{itemize}
+    \item Output each vertex when it finishes and reverse the resulting list.
+    \item Or insert each finished vertex at the front of a linked list.
+\end{itemize}
+
+When DFS terminates, the linked list contains the vertices in topologically sorted order.
+
+---
+
+\textbf{Correctness idea:}
+
+We must show that for every edge $(u,v) \in E$:
+
+\[
+v.f < u.f
+\]
+
+When DFS explores $(u,v)$:
+
+\begin{itemize}
+    \item $u$ is necessarily \textbf{GRAY}.
+    
+    \item $v$ cannot be \textbf{GRAY}, because then $v$ would be an ancestor of $u$, creating a back edge. By the cycle detection lemma, the graph would not be acyclic.
+    
+    \item If $v$ is \textbf{WHITE}, then $v$ becomes a descendant of $u$. By the Parenthesis Theorem:
+    \[
+    u.d < v.d < v.f < u.f
+    \]
+    
+    \item If $v$ is \textbf{BLACK}, then $v$ has already finished. Since we are still exploring from $u$, we have:
+    \[
+    v.f < u.f
+    \]
+\end{itemize}
+
+Therefore, for every edge $(u,v)$:
+
+\[
+v.f < u.f
+\]
+
+which means that ordering vertices by decreasing finishing times guarantees that $u$ appears before $v$.
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{SCC and magic algorithm}
+
+
+
+
+\begin{defnbox}[title=Strongly Connected Component (SCC)]
+A \textbf{strongly connected component} (SCC) of a directed graph $G = (V, E)$ is a \textbf{maximal set of vertices} $C \subseteq V$ such that for every pair of vertices $u, v \in C$, there exists a path from $u$ to $v$ and a path from $v$ to $u$.
+\end{defnbox}
+
+
+
+\textbf{Concept and idea:}
+
+The SCC (Strongly Connected Components) algorithm decomposes a directed graph into its strongly connected components.
+
+The idea is to use two DFS passes:
+\begin{itemize}
+    \item First DFS computes finishing times.
+    \item Transpose the graph (reverse all edges).
+    \item Second DFS explores vertices in decreasing order of finishing times to identify SCCs.
+\end{itemize}
+
+\begin{lstlisting}
+SCC(G)
+
+1. Call DFS(G) to compute finishing times u.f for all u
+2. Compute G^T
+3. Call DFS(G^T), considering vertices in order of decreasing u.f
+4. Output each tree of the DFS forest as one SCC
+\end{lstlisting}
+
+\textbf{Transpose graph:}
+
+$G^T = (V, E^T)$ where:
+\[
+E^T = \{(u,v) : (v,u) \in E\}
+\]
+
+In other words, all edges of $G$ are reversed.
+
+---
+
+\textbf{Observations:}
+\begin{itemize}
+    \item $G^T$ can be built in $O(V + E)$ time using adjacency lists
+    \item $G$ and $G^T$ have exactly the same strongly connected components
+\end{itemize}
+
+---
+
+\textbf{Goal:} Decompose the graph into all SCCs \\
+
+\textbf{Time complexity:} $O(V + E)$ \\
+
+\textbf{Space:} $O(V + E)$
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% =========================================================
+\chapter{Flow networks}
+% =========================================================
+
+
+
+
+\begin{defnbox}[title=Flow network]
+A directed graph $G = (V, E)$ with:
+\begin{itemize}
+  \item a \textbf{source} $s$ and a \textbf{sink} $t$,
+  \item a \textbf{capacity function} $c : V \times V \to \mathbb{R}_{\geq 0}$ (0 for non-edges),
+  \item no antiparallel edges (replace $(u,v)$ and $(v,u)$ by splitting with an intermediate node).
+\end{itemize}
+A \textbf{flow} $f$ must satisfy capacity ($0 \leq f(u,v) \leq c(u,v)$) and conservation
+($\sum_v f(v,u) = \sum_v f(u,v)$ for all $u \neq s, t$).
+\end{defnbox}
+
+The \textbf{value} of a flow is $|f| = \sum_v f(s,v) - \sum_v f(v,s)$.
+
+
+
+
+\begin{defnbox}[title=Flow Network]
+A \textbf{flow network} is a directed graph $G = (V, E)$ where each edge has a capacity $c(u,v) \ge 0$.  
+It contains:
+\begin{itemize}
+    \item a \textbf{source} $s$
+    \item a \textbf{sink} $t$
+\end{itemize}
+Flow is sent from $s$ to $t$ while respecting capacities.
+\end{defnbox}
+
+\begin{defnbox}[title=Flow]
+A \textbf{flow} is a function $f(u,v)$ that represents how much “stuff” is sent along an edge, satisfying:
+\begin{itemize}
+    \item $0 \le f(u,v) \le c(u,v)$ (capacity constraint)
+    \item Flow conservation: incoming flow = outgoing flow for all vertices except $s$ and $t$
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Capacity]
+The \textbf{capacity} $c(u,v)$ is the maximum amount of flow allowed on edge $(u,v)$.
+\end{defnbox}
+
+\begin{defnbox}[title=Residual Capacity]
+The \textbf{residual capacity} represents how much additional flow can still be pushed through an edge:
+\[
+c_f(u,v) = c(u,v) - f(u,v)
+\]
+It also includes backward edges to allow flow cancellation.
+\end{defnbox}
+
+\begin{defnbox}[title=Residual Graph]
+The \textbf{residual graph} $G_f$ contains all edges with positive residual capacity.  
+It represents all possible ways to increase or adjust the current flow.
+\end{defnbox}
+
+\begin{defnbox}[title=Flow Value]
+The \textbf{value of a flow} is the total amount leaving the source:
+\[
+|f| = \sum_{v \in V} f(s,v)
+\]
+\end{defnbox}
+
+\begin{defnbox}[title=Max Flow Problem]
+The goal is to compute a flow of maximum value from $s$ to $t$ while respecting all capacity constraints.
+\end{defnbox}
+
+\begin{defnbox}[title=Key Ideas to Know]
+\begin{itemize}
+    \item Flow conservation at intermediate vertices
+    \item Capacity constraints on edges
+    \item Residual graph allows augmentation
+    \item Augmenting path increases total flow
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Applications]
+Flow networks are used in:
+\begin{itemize}
+    \item network routing
+    \item bipartite matching
+    \item scheduling
+    \item transportation problems
+\end{itemize}
+\end{defnbox}
+
+
+\begin{defnbox}[title=Flow Constraints]
+
+\textbf{Capacity constraint:} For all $u, v \in V$,
+\[
+0 \le f(u,v) \le c(u,v)
+\]
+
+\textbf{Flow conservation:} For all $u \in V \setminus \{s,t\}$,
+\[
+\sum_{v \in V} f(v,u) = \sum_{v \in V} f(u,v)
+\]
+
+\textbf{Interpretation:}
+\begin{itemize}
+    \item The amount of flow entering a node equals the amount of flow leaving it (except for source and sink)
+    \item No flow is created or destroyed inside the network
+\end{itemize}
+
+\end{defnbox}
+
+
+
+\begin{defnbox}[title=Cut in Flow Networks]
+A \textbf{cut} in a flow network $G = (V, E)$ is a partition of the vertices into two disjoint sets $S$ and $T = V \setminus S$ such that:
+\begin{itemize}
+    \item $s \in S$ (the source is in $S$)
+    \item $t \in T$ (the sink is in $T$)
+\end{itemize}
+
+\textbf{Idea:} a cut separates the graph into a “left side” (containing the source) and a “right side” (containing the sink).
+\textbf{Note:} Note that this equals the value of the flow; it's always the case! (talking about the net across flow)
+\begin{defnbox}[title=Net Flow Across a Cut]
+The \textbf{net flow} across a cut $(S, T)$ is defined as:
+\[
+f(S,T) = \sum_{u \in S, v \in T} f(u,v) - \sum_{u \in S, v \in T} f(v,u)
+\]
+
+\textbf{Interpretation:}
+\begin{itemize}
+    \item The first term represents the flow leaving $S$ toward $T$
+    \item The second term represents the flow coming back from $T$ to $S$
+\end{itemize}
+
+\textbf{Idea:} it measures how much flow actually crosses from the source side to the sink side of the cut.
+\end{defnbox}
+
+
+
+\end{defnbox}
+
+\medskip
+
+\textbf{Explication simple :} une coupe (cut) consiste à “couper” le graphe en deux parties : une partie qui contient la source $s$, et une autre qui contient le puits $t$. Cela permet de mesurer combien de flux peut passer d’un côté à l’autre du réseau.
+
+
+
+
+
+
+
+
+\begin{defnbox}[title=Flow Conservation Theorem]
+For any cut $(S, T)$ in a flow network, the value of the flow satisfies:
+\[
+|f| = f(S,T)
+\]
+
+\textbf{Idea:} the total flow sent from the source is exactly equal to the net flow crossing any cut separating the source from the sink.
+\end{defnbox}
+
+
+
+\begin{defnbox}[title=Capacity of a Cut]
+The \textbf{capacity} of a cut $(S, T)$ is defined as:
+\[
+c(S,T) = \sum_{u \in S, v \in T} c(u,v)
+\]
+
+\textbf{Idea:} it represents the total maximum amount of flow that can cross from the source side $S$ to the sink side $T$.
+\end{defnbox}
+
+
+
+\begin{defnbox}[title=Max-Flow Min-Cut Theorem]
+The \textbf{maximum flow value} in a flow network is equal to the \textbf{minimum capacity of any cut} separating the source from the sink:
+\[
+\max |f| = \min_{(S,T)} c(S,T)
+\]
+
+
+IN OTHER WORDS : MAX-FLOW = MIN-CUT
+
+\textbf{Idea:} the best possible flow you can send from $s$ to $t$ is exactly limited by the smallest “bottleneck” cut in the network.
+\end{defnbox}
+
+
+
+\begin{defnbox}[title=Max-Flow Min-Cut Theorem (Equivalent Statements)]
+Let $G = (V, E)$ be a flow network with source $s$, sink $t$, capacities $c$, and a flow $f$.
+The following statements are equivalent:
+
+\begin{enumerate}
+    \item $f$ is a maximum flow
+    \item The residual graph $G_f$ has no augmenting path
+    \item There exists a cut $(S,T)$ such that $|f| = c(S,T)$, and this cut is a minimum cut
+\end{enumerate}
+
+\textbf{Idea:} all three viewpoints describe the same optimal situation: no more flow can be pushed, and the flow is exactly limited by the smallest bottleneck in the network.
+\end{defnbox}
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{Maximum flow - Ford Fulkerson algorithm}
+
+
+
+\textbf{Concept and idea:}
+
+The Maximum Flow problem consists in sending the maximum possible amount of flow from a source $s$ to a sink $t$ in a flow network, while respecting edge capacities and flow conservation.
+
+The Ford-Fulkerson method solves this by repeatedly finding paths where additional flow can still be pushed (called augmenting paths), and increasing the flow along these paths until no more improvements are possible.
+
+\begin{lstlisting}
+Ford-Fulkerson-Method(G, s, t)
+
+1. Initialize flow f to 0
+2. while there exists an augmenting path p in the residual network G_f
+3.     augment flow f along p
+4. return f
+\end{lstlisting}
+
+\textbf{Basic idea:}
+\begin{itemize}
+    \item As long as there exists a path from $s$ to $t$ with available capacity on every edge
+    \item Send additional flow along this path
+    \item Update the residual network
+    \item Repeat until no augmenting path exists
+\end{itemize}
+
+\textbf{Goal:} Compute the maximum possible flow from source $s$ to sink $t$ \\
+
+\textbf{Key insight:} Each augmenting path increases the total flow, and the algorithm stops when no such path exists \\
+
+\textbf{Time complexity:} Depends on the choice of augmenting paths (can be unbounded in general)
+\textbf{Time complexity:} $O(E \cdot |f^*|)$ (for integer capacities, where $|f^*|$ is the value of the maximum flow) \\
+\textbf{Space complexity:} $O(V + E)$ (to store the residual graph)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\chapter{Disjoint-set data structures}
+
+
+\begin{defnbox}[title=Disjoint-Set Data Structure (Union-Find)]
+A \textbf{disjoint-set data structure} maintains a collection
+\[
+S = \{S_1, S_2, \dots, S_k\}
+\]
+of pairwise disjoint dynamic sets (sets that change over time).
+
+Each set is identified by a \textbf{representative} element, which is a member of the set.
+The representative must be consistent: if we ask for it multiple times without modifying the set, it must return the same value.
+\end{defnbox}
+
+\begin{defnbox}[title=Make-Set]
+\textbf{Make-Set}(x) creates a new set containing only $x$:
+\[
+S = \{\{x\}\}
+\]
+
+\textbf{Idea:} each element starts in its own singleton set.
+\end{defnbox}
+
+\begin{defnbox}[title=Find-Set]
+\textbf{Find-Set}(x) returns the representative of the set containing $x$.
+
+\textbf{Idea:} it identifies which component/set an element belongs to.
+\end{defnbox}
+
+\begin{defnbox}[title=Union]
+\textbf{Union}(x, y) merges the two sets containing $x$ and $y$:
+\[
+S_x \cup S_y
+\]
+
+\textbf{Idea:} combines two disjoint sets into one single set, destroying the original two sets.
+
+The representative of the new set is usually one of the two previous representatives.
+\end{defnbox}
+
+\begin{defnbox}[title=Key Properties]
+\begin{itemize}
+    \item Sets are always disjoint
+    \item Each element belongs to exactly one set
+    \item Structure evolves dynamically over time
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Applications]
+Disjoint-set structures are used in:
+\begin{itemize}
+    \item Kruskal’s algorithm (Minimum Spanning Tree)
+    \item Connected components in graphs
+    \item Cycle detection in undirected graphs
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Operations Summary]
+\begin{itemize}
+    \item Make-Set(x): create a new singleton set $\{x\}$
+    \item Find-Set(x): return representative of $x$
+    \item Union(x, y): merge the sets containing $x$ and $y$
+\end{itemize}
+\end{defnbox}
+
+
+
+\begin{defnbox}[title=Path Compression]
+During \textbf{Find-Set}, each visited node is directly linked to the representative (root).
+
+\textbf{Idea:} flatten the structure of the tree so that future queries become much faster.
+\end{defnbox}
+
+\begin{defnbox}[title=Union by Rank / Size]
+When performing \textbf{Union}, attach the smaller tree under the root of the larger tree (by rank or size).
+
+\textbf{Idea:} keep trees as shallow as possible to speed up future operations.
+\end{defnbox}
+
+
+\begin{defnbox}[title=Representation + Intuition]
+Each element stores:
+\begin{itemize}
+    \item a parent pointer (itself if it is a root)
+    \item optionally a rank or size
+\end{itemize}
+
+\textbf{Intuition:} the structure is a forest of trees where each tree represents a set.
+
+\textbf{Goal:} efficiently support merging sets and checking whether two elements belong to the same set.
+\end{defnbox}
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{Connected components algorithm}
+
+
+
+\textbf{Concept and idea:}
+
+The Connected Components algorithm finds all connected components of an undirected graph by using the Union-Find (Disjoint Set) data structure to group vertices that are reachable from each other.
+
+Initially, each vertex starts in its own component, and edges are used to progressively merge these components.
+
+\begin{lstlisting}
+CONNECTED-COMPONENTS(G)
+
+for each vertex v apartenat a G.V
+    MAKE-SET(v)
+
+for each edge (u, v) appartenant a G.E
+    if FIND-SET(u) != FIND-SET(v)
+        UNION(u, v)
+
+\end{lstlisting}
+
+\textbf{Basic idea:}
+\begin{itemize}
+    \item Start with each vertex in its own set
+    \item Process edges one by one
+    \item Merge sets when an edge connects two different components
+    \item At the end, each set represents a connected component
+\end{itemize}
+
+\textbf{Goal:} Compute all connected components of an undirected graph \\
+
+\textbf{Time complexity:} $O(E \cdot \alpha(V))$ \\
+
+\textbf{Space complexity:} $O(V)$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{Disjoint-Set via Linked List Representation}
+
+
+
+
+
+\begin{defnbox}[title=Disjoint-Set via Linked List Representation]
+In this representation, each set is stored as a \textbf{single linked list}.
+
+Each set has a \textbf{set object} containing:
+\begin{itemize}
+    \item a pointer to the \textbf{head} of the list (the representative)
+    \item a pointer to the \textbf{tail} of the list
+\end{itemize}
+
+Each element in the list stores:
+\begin{itemize}
+    \item the value (set member)
+    \item a pointer to the set object it belongs to
+    \item a pointer to the next element in the list
+\end{itemize}
+
+\textbf{Operations:}
+\begin{itemize}
+    \item \textbf{Make-Set(x):} creates a new list containing only $x$ in $O(1)$ time
+    \item \textbf{Find(x):} follows the pointer to the set object, then returns the head (representative), in $O(1)$ time
+    \item \textbf{Union(x, y):} merges the list of $y$ into the list of $x$
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Union Operation (Linked List)]
+There are two main ways to implement \textbf{Union}:
+
+\textbf{1. Simple append strategy}
+\begin{itemize}
+    \item Append the list of $y$ to the end of the list of $x$
+    \item Use the tail pointer of $x$ to access the end in $O(1)$ time
+    \item Update the set pointer for every element in $y$’s list
+\end{itemize}
+
+\textbf{Problem:} if a large list is appended to a small one, updating pointers can take a lot of time.
+
+\textbf{2. Weighted-union heuristic}
+\begin{itemize}
+    \item Always append the smaller list to the larger list
+    \item Break ties arbitrarily
+\end{itemize}
+
+\textbf{Idea:} reduce the number of relabeling operations by avoiding expensive merges.
+\end{defnbox}
+
+\begin{defnbox}[title=Weighted-Union Theorem]
+With the weighted-union heuristic, any sequence of $m$ operations on $n$ elements takes:
+\[
+O(m + n \log n)
+\]
+
+\textbf{Idea (simple explanation):} each time an element is moved to another list, it goes into a strictly larger set. So it can only be moved a limited number of times, which keeps the total cost low.
+
+\textbf{Goal:} guarantee that even many union operations remain efficient overall.
+\end{defnbox}
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{Forest of trees}
+
+
+\begin{defnbox}[title=Disjoint-Set via Forest of Trees]
+In this representation, each set is stored as a \textbf{tree}.
+
+\begin{itemize}
+    \item Each tree corresponds to one set
+    \item The \textbf{root} of the tree is the representative of the set
+    \item Each node stores only a pointer to its \textbf{parent}
+\end{itemize}
+
+\textbf{Idea:} instead of storing lists, we represent sets as trees, which makes unions more efficient.
+
+\textbf{Explication simple :} ici, chaque ensemble est vu comme un arbre. Tous les éléments “remontent” vers une racine commune qui représente leur groupe.
+\end{defnbox}
+
+\begin{defnbox}[title=Operations]
+\begin{itemize}
+    \item \textbf{Make-Set(x):} creates a single-node tree where $x$ is its own root
+    \item \textbf{Find(x):} follows parent pointers until reaching the root (representative)
+    \item \textbf{Union(x, y):} attaches the root of one tree under the root of another
+\end{itemize}
+
+\textbf{Idea:} operations are simple pointer manipulations on tree roots.
+
+\textbf{Explication simple :} Make-Set crée un groupe avec un seul élément, Find remonte jusqu’au chef du groupe, et Union fusionne deux groupes en reliant leurs racines.
+\end{defnbox}
+
+\begin{defnbox}[title=Intuition and Purpose]
+This structure is used to efficiently manage dynamic connectivity, i.e., groups of elements that change over time.
+
+\textbf{Why it is useful:}
+\begin{itemize}
+    \item Much faster than linked lists for large datasets
+    \item Easily merges groups of elements
+    \item Becomes extremely efficient with optimizations (path compression + union by rank)
+\end{itemize}
+
+\textbf{Explication simple :} cela permet de savoir rapidement si deux éléments sont dans le même groupe, même si les groupes changent tout le temps.
+\end{defnbox}
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{Global idea (Union-Find / Disjoint Set) algorithms basics}
+
+
+
+\textbf{Global idea (Union-Find / Disjoint Set):}
+
+The Union-Find structure maintains a collection of disjoint sets and supports two main operations:
+\begin{itemize}
+    \item quickly finding which set an element belongs to
+    \item efficiently merging two sets
+\end{itemize}
+
+It represents each set as a tree where each node points to its parent, and the root is the representative.
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\subsection{MAKE-SET}
+
+
+
+\begin{lstlisting}
+MAKE-SET(x)
+
+1. x.p = x
+2. x.rank = 0
+\end{lstlisting}
+
+\textbf{What it does:} creates a new set containing only $x$.
+
+\textbf{Purpose:} initialize the structure so every element starts in its own group.
+
+\textbf{Idea:} each element is initially its own root.
+
+\textbf{Time complexity:} $O(1)$
+
+\textbf{Data structure state:} single-node tree.
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\subsection{FIND-SET}
+
+
+
+\begin{lstlisting}
+FIND-SET(x)
+
+1. if x != x.p
+2.     x.p = FIND-SET(x.p)
+3. return x.p
+\end{lstlisting}
+
+\textbf{What it does:} returns the representative (root) of the set containing $x$.
+
+\textbf{Purpose:} identify which group an element belongs to.
+
+\textbf{Idea:} climb parent pointers to the root + compress the path to speed up future queries.
+
+\textbf{Time complexity:} amortized $O(\alpha(n))$
+
+\textbf{Data structure state:} trees become flatter over time (path compression).
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\subsection{UNION}
+
+
+
+\begin{lstlisting}
+UNION(x, y)
+
+1. LINK(FIND-SET(x), FIND-SET(y))
+\end{lstlisting}
+
+\textbf{What it does:} merges the two sets containing $x$ and $y$.
+
+\textbf{Purpose:} combine two separate groups into one.
+
+\textbf{Idea:} find roots first, then attach one tree to the other.
+
+\textbf{Time complexity:} amortized $O(\alpha(n))$
+
+\textbf{Data structure state:} two trees become one.
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\subsection{LINK}
+
+
+
+\begin{lstlisting}
+LINK(x, y)
+
+1. if x.rank > y.rank
+2.     y.p = x
+3. else x.p = y
+4.     if x.rank == y.rank
+5.         y.rank = y.rank + 1
+\end{lstlisting}
+
+\textbf{What it does:} attaches one root under another.
+
+\textbf{Purpose:} merge trees while keeping them as shallow as possible.
+
+\textbf{Idea:} union by rank prevents tall trees by always attaching the smaller height tree under the larger one.
+
+\textbf{Time complexity:} $O(1)$
+
+\textbf{Data structure state:} balanced forest structure is maintained.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{CONNECTED COMPONENTS WITH THIS IMPLEMENTATION}
+
+
+\begin{defnbox}[title=NEW TIME COMPLEXITY]
+Total running time if implemented as linked list with
+weighted-union heuristic
+O(V log V + E)
+\end{defnbox}
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\chapter{Minimum spanning trees}
+
+
+
+\begin{defnbox}[title=Spanning Tree]
+A \textbf{spanning tree} of a connected graph $G=(V,E)$ is a subset of edges $T \subseteq E$ such that:
+\begin{itemize}
+    \item $T$ is \textbf{acyclic} (contains no cycle)
+    \item $T$ is \textbf{spanning} (it connects all vertices in $V$)
+\end{itemize}
+
+\textbf{Equivalent property:} a spanning tree contains exactly $|V|-1$ edges.
+\end{defnbox}
+
+---
+
+\begin{defnbox}[title=Spanning Tree (Intuition)]
+A spanning tree is a way to connect all vertices of a graph using the minimum number of edges, without forming any cycle.
+
+\textbf{Idea:} it keeps only the “essential” connections needed to maintain connectivity.
+
+\textbf{En mots simples :} un spanning tree est une version simplifiée du graphe où tout est encore connecté, mais sans aucun cycle (aucun “chemin en boucle”).
+\end{defnbox}
+
+---
+
+\begin{defnbox}[title=Properties of a Spanning Tree]
+Let $T$ be a spanning tree of a connected graph $G$:
+\begin{itemize}
+    \item $T$ connects all vertices
+    \item $T$ has no cycles
+    \item $T$ has exactly $|V|-1$ edges
+    \item There is a unique simple path between any two vertices
+\end{itemize}
+
+\textbf{Idea:} a spanning tree is minimally connected and maximally acyclic.
+\end{defnbox}
+
+---
+
+\begin{defnbox}[title=Why Spanning Trees are Important]
+Spanning trees are used to:
+\begin{itemize}
+    \item reduce network cost (fewer edges)
+    \item build efficient communication structures
+    \item design minimum-cost networks (MST problems)
+    \item simplify graph structures while preserving connectivity
+\end{itemize}
+
+\textbf{En mots simples :} on garde seulement les connexions essentielles pour que tout reste relié, mais en utilisant le minimum d’arêtes possible.
+\end{defnbox}
+
+---
+
+\begin{defnbox}[title=Spanning Tree vs General Graph]
+\begin{itemize}
+    \item A general graph may contain cycles and many redundant edges
+    \item A spanning tree removes all redundancy
+    \item It preserves connectivity but removes all cycles
+\end{itemize}
+
+\textbf{Idea:} spanning tree = skeleton of the graph.
+\end{defnbox}
+
+
+
+\begin{defnbox}[title=Cut Property]
+Consider a cut $(S, V \setminus S)$ and let
+\begin{itemize}
+    \item $T$ be a tree on $S$ which is part of a MST
+    \item $e$ be a crossing edge of minimum weight
+\end{itemize}
+
+Then there exists an MST of $G$ containing $e$ and $T$.
+
+\textbf{Explication simple :} cette propriété dit du coup alors que si on coupe le graphe en deux parties, l'arête la moins chère (donc celle qui a la plus petite valuer ici comme ca) qui relie ces deux parties peut toujours faire partie d’un arbre couvrant minimal (MST).
+\end{defnbox}
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{Prim's algorithm}
+
+
+\textbf{Concept and idea:}
+
+Prim’s algorithm finds a \textbf{Minimum Spanning Tree (MST)} of a weighted graph by starting from a root vertex and repeatedly adding the cheapest edge that connects a visited vertex to an unvisited one.
+
+It grows a tree step by step, always choosing the locally optimal (minimum weight) edge.
+
+\begin{lstlisting}
+PRIM(G, w, r)
+
+Q = ensemble vide
+
+for each u appartien a G.V
+    u.key = 8
+    u.pi = NIL
+    INSERT(Q, u)
+
+DECREASE-KEY(Q, r, 0)
+
+while Q != de l'ensemble vide
+    u = EXTRACT-MIN(Q)
+
+    for each v appartien a G.Adj[u]
+        if v appartient a Q and w(u, v) < v.key
+            v.pi = u
+            DECREASE-KEY(Q, v, w(u, v))
+\end{lstlisting}
+
+\textbf{Basic idea:}
+\begin{itemize}
+    \item Start from an arbitrary root vertex $r$
+    \item Maintain a priority queue of vertices not yet in the tree
+    \item Always pick the vertex with smallest connection cost (key)
+    \item Update neighbors if a cheaper connection is found
+\end{itemize}
+
+\textbf{Goal:} build a Minimum Spanning Tree by greedy expansion \\
+
+\textbf{Time complexity:}
+\begin{itemize}
+    \item Initialization: $O(V)$
+    \item Decrease-key on root: $O(\log V)$
+    \item Extract-min: $O(V \log V)$
+    \item Decrease-key operations: $O(E \log V)$
+\end{itemize}
+
+\textbf{Total:} $O(E \log V)$ (or $O(E + V \log V)$ with Fibonacci heap)
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{Kruskal's algorithm}
+
+
+\textbf{Concept and idea:}
+
+Kruskal’s algorithm finds a \textbf{Minimum Spanning Tree (MST)} by sorting all edges by increasing weight and adding them one by one, as long as they do not create a cycle.
+
+It builds the MST globally (edge by edge), instead of growing it from a single source like Prim.
+
+\begin{lstlisting}
+KRUSKAL(G, w)
+
+A = ensemble vide
+
+for each vertex v appartient a G.V
+    MAKE-SET(v)
+
+sort the edges of G.E into nondecreasing order by weight w
+
+for each (u, v) taken from the sorted list
+    if FIND-SET(u) != FIND-SET(v)
+        A = A U {(u, v)}
+        UNION(u, v)
+
+return A
+\end{lstlisting}
+
+\textbf{Basic idea:}
+\begin{itemize}
+    \item Start with each vertex in its own component
+    \item Sort all edges by weight (cheapest first)
+    \item Add an edge only if it connects two different components
+    \item Avoid cycles using Union-Find
+\end{itemize}
+
+\textbf{Goal:} construct a Minimum Spanning Tree by globally selecting the smallest safe edges \\
+
+\textbf{Time complexity:}
+
+ Initialize A: $O(1)$  
+ First for loop: $O(V)$ Make-Sets  
+ Sorting edges: $O(E \log E)$  
+ Second for loop: $O(E)$ Find-Set and Union operations  
+
+ Total time:  
+$O((V + E)\,\alpha(V)) + O(E \log E)$  
+$= O(E \log E)$  
+$= O(E \log V)$
+
+If edges already sorted time is O(E * alpha(V)) which is almost linear
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\chapter{THE SHORTEST PATH PROBLEM}
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{NEGATIVE WEIGHTS AND APPLICATIONS}
+
+
+
+
+
+
+\begin{defnbox}[title=Negative Weights in Graphs]
+We will allow negative edge weights.
+
+This is valid as long as there is \textbf{no negative-weight cycle reachable from the source}.
+
+If a negative cycle exists, then we could loop around it indefinitely and keep decreasing the path cost without bound.
+\end{defnbox}
+
+\begin{defnbox}[title=Why Negative Weights are a Problem]
+Some algorithms (e.g. Dijkstra's algorithm) only work correctly when all edge weights are non-negative.
+
+This is because they assume that once a vertex is processed, its shortest path is final, which is false when negative edges exist.
+\end{defnbox}
+
+\begin{defnbox}[title=Why Negative Weights are Useful]
+Negative weights are important because they model real-world situations where gains and losses exist.
+
+\textbf{En mots simples :} les poids négatifs permettent de représenter des “profits” ou des réductions de coût, pas seulement des distances.
+\end{defnbox}
+
+\begin{defnbox}[title=Example: Currency Exchange]
+Negative weights can represent currency exchange or arbitrage problems:
+\begin{itemize}
+    \item vertices = currencies
+    \item edges = exchange rates
+    \item weights = cost or gain (log-transformed)
+\end{itemize}
+
+\textbf{Idea:} finding a negative cycle corresponds to finding a way to start with money and end up with more money after a sequence of exchanges.
+\end{defnbox}
+
+
+
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{Bellman ford algorithm}
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\subsection{Init single source}
+
+
+\textbf{Concept and idea:}
+
+The INIT-SINGLE-SOURCE procedure initializes the shortest-path algorithm by setting the initial distance values from a source vertex $s$.
+
+All vertices are initially considered unreachable, except the source.
+
+\begin{lstlisting}
+INIT-SINGLE-SOURCE(G, s)
+
+for each v appartient a G.V
+    v.d = 8
+    v.pi = NIL
+
+s.d = 0
+\end{lstlisting}
+
+\textbf{Basic idea:}
+\begin{itemize}
+    \item Set all distances to infinity (unknown / unreachable at start)
+    \item Remove all predecessors (no known path yet)
+    \item Set source distance to 0
+\end{itemize}
+
+\textbf{Goal:} prepare the graph for shortest-path algorithms \\
+
+\textbf{Time complexity:} $O(V)$
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\subsection{Relax}
+
+
+\textbf{Concept and idea:}
+
+The RELAX operation is the core step in shortest-path algorithms. It tries to improve the best known distance to a vertex $v$ by going through an adjacent vertex $u$.
+
+If a shorter path is found, it updates the distance and remembers the predecessor.
+
+\begin{lstlisting}
+RELAX(u, v, w)
+
+if v.d > u.d + w(u, v)
+    v.d = u.d + w(u, v)
+    v.pi = u
+\end{lstlisting}
+
+\textbf{Basic idea:}
+\begin{itemize}
+    \item Check if going through $u$ gives a shorter path to $v$
+    \item If yes, update the best known distance
+    \item Store $u$ as the predecessor of $v$
+\end{itemize}
+
+\textbf{Goal:} progressively improve shortest-path estimates \\
+
+\textbf{Time complexity:} $O(1)$
+
+
+
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\subsection{Bellman-for main}
+
+
+\textbf{Concept and idea:}
+
+The Bellman-Ford algorithm computes shortest paths from a single source in a weighted graph, even when negative weights are present (as long as there is no negative cycle reachable from the source).
+
+It repeatedly relaxes all edges to progressively improve distance estimates.
+
+\begin{lstlisting}
+Bellman-Ford(G, w, s)
+
+Init-Single-Source(G, s)
+
+for i = 1 to |G.V| - 1
+    for each edge (u, v) appartient a G.E
+        Relax(u, v, w)
+\end{lstlisting}
+
+\textbf{Basic idea:}
+\begin{itemize}
+    \item Initialize all distances from the source
+    \item Repeatedly relax all edges
+    \item Each pass allows shortest paths with one more edge to be found
+    \item After |V| - 1 iterations, all shortest paths are correct
+\end{itemize}
+
+\textbf{Goal:} compute shortest paths even with negative edge weights \\
+
+\textbf{Time complexity:} $O(V \cdot E)$
+
+
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\subsection{Bellman-for main with negative cycle detect}
+
+\textbf{Concept and idea:}
+
+The Bellman-Ford algorithm computes single-source shortest paths in a weighted graph and is also able to detect negative-weight cycles reachable from the source.
+
+It first relaxes all edges repeatedly, then performs an extra pass to check for improvements.
+
+\begin{lstlisting}
+Bellman-Ford(G, w, s)
+
+Init-Single-Source(G, s)
+
+for i = 1 to |G.V| - 1
+    for each edge (u, v) appartient a G.E
+        Relax(u, v, w)
+
+for each edge (u, v) appartient a G.E
+    if v.d > u.d + w(u, v)
+        return FALSE
+
+return TRUE
+\end{lstlisting}
+
+\textbf{Basic idea:}
+\begin{itemize}
+    \item Initialize all distances from the source
+    \item Relax all edges repeatedly to propagate shortest paths
+    \item Do one final pass to check if any distance can still be improved
+    \item If yes, a negative cycle exists
+\end{itemize}
+
+\textbf{Goal:} compute shortest paths and detect negative-weight cycles \\
+
+\textbf{Time complexity:} $O(V \cdot E)$
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{Dijkstra algorithm}
+
+\textbf{Concept and idea:}
+
+Dijkstra's algorithm computes single-source shortest paths in a weighted graph with \textbf{non-negative edge weights}.
+
+It repeatedly selects the vertex with the smallest tentative distance and “finalizes” it.
+
+\begin{lstlisting}
+DIJKSTRA(G, w, s)
+
+INIT-SINGLE-SOURCE(G, s)
+
+S = ensemble vide
+Q = G.V
+
+while Q != ensemble vide
+    u = EXTRACT-MIN(Q)
+    S = S U {u}
+
+    for each vertex v appartient a G.Adj[u]
+        RELAX(u, v, w)
+\end{lstlisting}
+
+\textbf{Basic idea:}
+\begin{itemize}
+    \item Start from source with distance 0
+    \item Maintain a priority queue of unprocessed vertices
+    \item Always pick vertex with smallest current distance
+    \item Relax all outgoing edges of the chosen vertex
+    \item Once a vertex is extracted, its shortest path is finalized
+\end{itemize}
+
+\textbf{Goal:} compute shortest paths efficiently when all weights are non-negative \\
+
+\textbf{Time complexity:}
+\begin{itemize}
+    \item With binary heap: $O((V + E)\log V)$
+    \item With adjacency list + heap: $O(E \log V)$
+\end{itemize}
+\textbf{Running time:}
+
+Like Prim’s algorithm, the running time is dominated by operations on the priority queue.
+
+\begin{itemize}
+    \item If a binary heap is used: each operation costs $O(\log V)$
+    \quad $\Rightarrow O(E \log V)$
+    
+    \item More careful implementation (with efficient decrease-key structure):
+    \quad $O(V \log V + E)$
+\end{itemize}
+
+
+
+\vspace{2cm}
+
+
+
+
+
+\section{Dijkstra algorithm}
+
+
+
+
+
+
+
+
+
+
+\section{Ford-Fulkerson Method}
+
+\begin{defnbox}[title=Residual network]
+Given flow $f$, the residual network $G_f$ has residual capacity
+$c_f(u,v) = c(u,v) - f(u,v)$ for forward edges and $c_f(v,u) = f(u,v)$ for back edges.
+An \textbf{augmenting path} is any $s$-$t$ path in $G_f$.
+\end{defnbox}
+
+\begin{lstlisting}
+FORD-FULKERSON(G, s, t):
+    initialise f = 0 on all edges
+    while exists augmenting path p in G_f:
+        cf(p) = min capacity along p
+        augment f along p by cf(p)
+    return f
+\end{lstlisting}
+
+\begin{thmbox}[title=Max-flow min-cut theorem]
+The following are equivalent for a flow $f$:
+\begin{enumerate}
+  \item $f$ is a maximum flow.
+  \item There is no augmenting path in $G_f$.
+  \item $|f|$ equals the capacity of some minimum cut $(S, T)$.
+\end{enumerate}
+\end{thmbox}
+
+\section{Applications}
+
+\subsection{Bipartite matching via max flow}
+
+\begin{thmbox}[title=Algorithm]
+\textbf{Goal:} Maximum matching in a bipartite graph $G = (L \cup R, E)$.
+
+\textbf{Reduction:}
+\begin{itemize}
+  \item Add source $s$ with edge $s \to u$ (capacity 1) for each $u \in L$.
+  \item Keep all edges $u \to v$ for $(u,v) \in E$ (capacity 1).
+  \item Add sink $t$ with edge $v \to t$ (capacity 1) for each $v \in R$.
+\end{itemize}
+
+Run max-flow. Each unit of flow corresponds to one matched pair.
+The maximum matching has size $|f^*|$.
+\end{thmbox}
+
+\subsection{Edge-disjoint paths via max flow}
+
+\begin{thmbox}[title=Algorithm]
+\textbf{Goal:} Maximum number of $s$-$t$ paths sharing no edge.
+
+\textbf{Reduction:} Keep the original graph, set every edge capacity to~1.
+Run max-flow from $s$ to $t$.
+
+The value $|f^*|$ equals the maximum number of edge-disjoint paths.
+By the max-flow min-cut theorem, it also equals the minimum number of edges whose
+removal disconnects $s$ from $t$.
+\end{thmbox}
+
+
+\chapter{Quizzes}
+
+\section{Quiz \#7}
+
+\subsection{Bipartite matching via max flow}
+
+\begin{exbox}[title=Bipartite matching via max flow — student notes]
+\small\raggedright
+Cet algorithme est une application de max flow : même code en substance, mais le
+contexte et les règles du graphe changent.
+
+\textbf{Qu'est-ce que le bipartite matching ?} On a deux sets d'éléments et le but
+est de faire le maximum de paires possibles, sachant que chaque élément ne peut être
+apparié qu'une seule fois avec un élément de l'autre set, et uniquement avec certains.
+
+\textbf{Modélisation du graphe :}
+\begin{center}
+\begin{tabular}{l}
+$\text{src} \to$ tous les éléments du premier set (capacité 1) \\
+éléments set 1 $\to$ éléments set 2 compatibles (capacité 1) \\
+éléments set 2 $\to \text{end}$ (capacité 1)
+\end{tabular}
+\end{center}
+
+La capacité 1 sur chaque branche garantit qu'elle n'est traversée qu'une fois, évitant
+ainsi les doublons ou les mauvais appariements.
+\end{exbox}
+
+\subsection{Edge disjoint paths via max flow}
+
+\begin{exbox}[title=Edge disjoint paths via max flow — student notes]
+\small\raggedright
+On utilise max flow pour trouver le maximum de chemins de $s$ à $t$ sans intersection.
+
+\textbf{Qu'est-ce que edge disjoint paths ?} On cherche le maximum de chemins de $A$
+à $B$ qui ne partagent aucune arête.
+
+\textbf{Modélisation du graphe :}
+\begin{center}
+\begin{tabular}{l}
+chaque chemin = arêtes du graphe \\
+capacité de chaque arête = 1
+\end{tabular}
+\end{center}
+
+La capacité 1 force chaque arête à n'être empruntée qu'une fois. Le max flow donne
+alors directement le nombre maximum de chemins arête-disjoints.
+\end{exbox}
+
+\newpage \section{Quiz \#9}
+
+\subsection{Bellman-Ford}
+
+\begin{enumerate}
+    \item \textbf{Pourquoi $|V|-1$ itérations sont suffisantes :} Le nombre $|V|-1$ correspond au nombre maximal d'arêtes dans un chemin simple. Après $|V|-1$ itérations, l'algorithme a nécessairement trouvé tous les plus courts chemins ne contenant aucun cycle.
+
+    \item \textbf{Détection des cycles négatifs :} Si le coût d'un chemin peut encore être réduit lors de la $|V|$-ième itération, cela implique que le plus court chemin contient plus de $|V|-1$ arêtes. Ceci n'est possible que si le chemin contient un cycle, et pour que le coût diminue, ce cycle doit être négatif.
+\end{enumerate}
+
+\subsubsection{Problème d'examen vu en cours}
+
+\begin{exbox}[title=Problem solving (exam)]
+\includegraphics[width=\linewidth]{images/bellman-problem.png}
+\end{exbox}
+
+\paragraph{Idée.} La carte est cohérente si et seulement si tout cycle $C$ du graphe vérifie $W(C) = 0$. On décompose cette condition en deux :
+\[
+\forall C : W(C) = 0 \iff \bigl(\forall C : W(C) \geq 0\bigr) \;\textbf{ET}\; \bigl(\forall C : W(C) \leq 0\bigr)
+\]
+Chacune se vérifie avec Bellman-Ford en détectant l'absence de cycle négatif : une fois avec les poids $w$, une fois avec $-w$.
+
+\paragraph{Pourquoi $|V|-1$ itérations suffisent.}
+Un plus court chemin sans cycle a au plus $|V|-1$ arêtes. Après $|V|-1$ itérations de relaxation, toutes les distances correctes sont calculées.
+\begin{itemize}
+    \item \textbf{Pas de cycle négatif :} tout est stabilisé après $|V|-1$ itérations ; une $|V|$-ème ne relaxera plus rien.
+    \item \textbf{Cycle négatif présent :} on peut indéfiniment réduire une distance en repassant par le cycle, donc la $|V|$-ème itération relaxe encore au moins une arête.
+\end{itemize}
+
+En exécutant Bellman-Ford deux fois (une fois avec $w$, une fois avec $-w$), la solution complète reste $O(|V| \cdot |E|)$.
+
+\subsection{Dijkstra}
+
+\begin{exbox}[title=Ce qu'il faut retenir]
+\small\raggedright
+
+\textbf{L'idée centrale.}
+A chaque étape on finalise le sommet non-visité dont la distance
+estimée est minimale. Cette distance est déjà optimale — car tous les poids sont
+$\geq 0$, aucun chemin futur ne pourra la réduire.
+C'est exactement ce qui distingue Dijkstra de Bellman-Ford : pas de deuxième chance,
+pas de retour en arrière.
+
+\textbf{Ce qui se passe à chaque itération.}
+\begin{enumerate}
+  \item On extrait $u = \arg\min_{v \in Q}\, v.d$ de la file.
+  \item On l'ajoute à $S$ — sa distance est maintenant définitive.
+  \item Pour chaque voisin $v$ de $u$ : si $u.d + w(u,v) < v.d$, on met à jour
+        $v.d$ \emph{et} $v.\pi$.
+\end{enumerate}
+
+\textbf{Pourquoi ça ne marche pas avec des poids négatifs.}
+Si une arête négative $(x, y)$ existe, un sommet $x$ déjà dans $S$ pourrait offrir un
+chemin plus court vers $y$ mais $y$ est peut-être déjà finalisé.
+
+\end{exbox}
+
+\end{document}

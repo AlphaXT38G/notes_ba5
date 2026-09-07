@@ -1,0 +1,575 @@
+\documentclass[8pt,a4paper,landscape]{extarticle}
+\makeatletter
+\def\input@path{{../_shared/}}
+\makeatother
+\usepackage{cheatsheet}
+\usepackage{graphicx}
+
+\begin{document}
+\begin{multicols*}{4}
+
+\cheattitle{Algorithms I}{}{BA4}
+
+\begin{thm}[title=Sum of a sequence]
+  $\sum_{k=m}^{n} k = \frac{(m+n)(n-m+1)}{2}$ ;  $\sum_{i=1}^{n} \frac{1}{i} = \Theta(\log n)$\\
+  $\sum_{k=m}^{n} z^{k} = \begin{cases} n-m+1 & z=1 \\ \frac{z^m-z^{n+1}}{1-z} & z\ne 1 \end{cases}$\\
+  $\log_b n = \frac{\log_2 n}{\log_2 b}$ ; $\log(ab) = \log a + \log b$
+\end{thm}
+
+\section{Sorting}
+
+\begin{lstlisting}
+INSERTION-SORT(A, n)
+    for j = 2 to n
+        key = A[j]
+        i = j - 1
+        while i > 0 and A[i] > key
+            A[i + 1] = A[i]
+            i = i - 1
+        A[i + 1] = key
+\end{lstlisting}
+
+\begin{prop}[title=Runtime \& Loop invariant (like induction)]
+In-place. $\Theta(n^2)$ worst, $\Theta(n)$ best. \textbf{Inv:} $A[1..j{-}1]$ sorted.
+\textbf{Init:} $j{=}2$, trivial. \textbf{Maint:} key inserted correctly. \textbf{Term:} $A$ sorted.
+\end{prop}
+
+\begin{lstlisting}
+MERGE(A, p, q, r)
+    n1 = q-p+1; n2 = r-q
+    L[1..n1+1] and R[1..n2+1] be new arrays
+    for i = 1 to n1: L[i] = A[p+i-1]
+    for j = 1 to n2: R[j] = A[q+j]
+    L[n1+1] = inf; R[n2+1] = inf
+    i = 1; j = 1
+    for k = p to r
+        if L[i] <= R[j]: A[k] = L[i]; i = i+1
+        else: A[k] = R[j]; j = j+1
+
+MERGE-SORT(A, p, r)
+    if p < r
+        q = floor((p+r)/2)
+        MERGE-SORT(A, p, q)
+        MERGE-SORT(A, q+1, r)
+        MERGE(A, p, q, r)
+\end{lstlisting}
+
+\begin{prop}[title=Runtime]
+Not in-place. $T(n)=2T(n/2)+\Theta(n)=\Theta(n\lg n)$
+\end{prop}
+
+\section{Solving recurrences}
+
+\subsection{The substitution method}
+\begin{enumerate}
+  \item Guess the form of the solution.
+  \item Use \textbf{induction} to find constants \& verify.
+\end{enumerate}
+
+\subsection{Recursion trees}
+Draw tree, sum cost per level, sum all levels.
+
+\begin{thm}[title=Master Theorem]
+$T(n)=aT(n/b)+f(n)$, $a\ge1$, $b>1$, $\alpha=\log_b a$:\\[2pt]
+\begin{tabular}{@{}l@{$\;\Rightarrow\;$}l@{}}
+$f=O(n^{\alpha-\varepsilon})$                        & $T=\Theta(n^\alpha)$ \\
+$f=\Theta(n^{\alpha})$                               & $T=\Theta(n^\alpha\log n)$ \\
+$f=\Omega(n^{\alpha+\varepsilon})$, $af(n/b)\le cf(n)$ & $T=\Theta(f(n))$ \\
+\end{tabular}
+\end{thm}
+
+\section{Maximum-Subarray Problem}
+
+\begin{lstlisting}
+FIND-MAX-CROSSING-SUBARRAY(A, low, mid, high)
+    ls=-inf; rs=-inf; sum=0
+    for i=mid downto low      // max: form A[i..mid]
+        sum+=A[i]
+        if sum>ls: ls=sum; ml=i
+    sum=0
+    for j=mid+1 to high     // max: form A[mid+1..j]
+        sum+=A[j]
+        if sum>rs: rs=sum; mr=j
+    return (ml, mr, ls+rs)
+
+FIND-MAXIMUM-SUBARRAY(A, low, high)
+    if high==low: return (low, high, A[low])
+    mid=floor((low+high)/2)
+    (ll,lh,ls) = FIND-MAXIMUM-SUBARRAY(A,low,mid)
+    (rl,rh,rs) = FIND-MAXIMUM-SUBARRAY(A,mid+1,high)
+    (cl,ch,cs) = FIND-MAX-CROSSING-SUBARRAY(A,low,mid,high)
+    if ls>=rs and ls>=cs: return (ll,lh,ls)
+    elseif rs>=cs: return (rl,rh,rs)
+    else: return (cl,ch,cs)
+\end{lstlisting}
+
+\begin{prop}[title=Runtime]
+$T(n)=2T(n/2)+\Theta(n)=\Theta(n\lg n)$
+\end{prop}
+
+\section{Matrix Multiplication - Strassen's Algorithm}
+
+Only \textbf{7} recursive calls. Partition as before, compute:
+\begin{lstlisting}
+M1=(A11+A22)(B11+B22)  M5=(A11+A12)B22
+M2=(A21+A22)B11        M6=(A21-A11)(B11+B12)
+M3=A11(B12-B22)        M7=(A12-A22)(B21+B22)
+M4=A22(B21-B11)
+C11=M1+M4-M5+M7  C12=M3+M5
+C21=M2+M4        C22=M1-M2+M3+M6
+\end{lstlisting}
+\begin{prop}[title=Runtime]
+$T(n)=7T(n/2)+\Theta(n^2)=\Theta(n^{\lg 7})\approx\Theta(n^{2.807})$
+\end{prop}
+
+\section{Karatsuba's Algorithm}
+$x=x_H b^{n/2}+x_L$, $y=y_H b^{n/2}+y_L$.\\
+$\rightarrow xy=x_Hy_H b^n+(x_Hy_L+x_Ly_H)b^{n/2}+x_Ly_L$\\
+Only 3 products: $x_Hy_L+x_Ly_H=(x_H{+}x_L)(y_H{+}y_L)-x_Hy_H-x_Ly_L$.
+
+\begin{prop}[title=Runtime]
+$T(n)=3T(n/2)+\Theta(n)=\Theta(n^{\log_2 3})\approx\Theta(n^{1.585})$
+\end{prop}
+
+\section{Heaps}
+Assume \texttt{LEFT}$(i)$ and \texttt{RIGHT}$(i)$ are already max-heaps.
+
+\begin{lstlisting}
+MAX-HEAPIFY(A, i, n)
+    l = LEFT(i)
+    r = RIGHT(i)
+    if l <= n and A[l] > A[i]
+        largest = l
+    else largest = i
+    if r <= n and A[r] > A[largest]
+        largest = r
+    if largest != i
+        exchange A[i] with A[largest]
+        MAX-HEAPIFY(A, largest, n)
+\end{lstlisting}
+
+\begin{prop}[title=Runtime]
+$T(n) \le T(2n/3) + \Theta(1) = O(\lg n)$
+\end{prop}
+
+\begin{lstlisting}
+BUILD-MAX-HEAP(A, n)
+    for i = floor(n/2) downto 1
+        MAX-HEAPIFY(A, i, n)
+\end{lstlisting}
+
+\begin{prop}[title=Runtime]
+$O(n)$ (tighter than the naive $O(n \lg n)$)
+\end{prop}
+
+\begin{lstlisting}
+HEAPSORT(A, n)
+    BUILD-MAX-HEAP(A, n)
+    for i = n downto 2
+        exchange A[1] with A[i]
+        MAX-HEAPIFY(A, 1, i-1)
+\end{lstlisting}
+
+\begin{prop}[title=Runtime]
+$O(n \lg n)$, in-place.
+\end{prop}
+
+\subsection{Implementation of priority queue}
+
+\begin{lstlisting}
+HEAP-EXTRACT-MAX(A, n) # error if n < 1
+    max, A[1] = A[1], A[n]
+    MAX-HEAPIFY(A, 1, n-1)
+    return max
+
+HEAP-INCREASE-KEY(A, i, key) # error if key < A[i]
+    A[i] = key
+    while i > 1 and A[PARENT(i)] < A[i]
+        exchange A[i] with A[PARENT(i)]
+        i = PARENT(i)
+
+MAX-HEAP-INSERT(A, key, n)
+    n = n + 1
+    A[n] = -inf
+    HEAP-INCREASE-KEY(A, n, key)
+\end{lstlisting}
+
+\begin{prop}[title=Runtimes]
+\texttt{Insert}: $O(\lg n)$, \texttt{Maximum}: $O(1)$, \texttt{Extract-Max}: $O(\lg n)$, \texttt{Increase-Key}: $O(\lg n)$
+\end{prop}
+
+\section{Data Structures for Disjoint Sets}
+Each set identified by a representative.
+
+\begin{defn}[title=Operations]
+\begin{itemize}
+  \item \texttt{MAKE-SET(x)}: $S_i = \{x\}$, add to $\mathcal{S}$
+  \item \texttt{UNION(x, y)}: $\mathcal{S} = \mathcal{S} \setminus \{S_x, S_y\} \cup \{S_x \cup S_y\}$
+  \item \texttt{FIND(x)}: return representative of $x$ in $S_x$
+\end{itemize}
+\end{defn}
+
+\begin{lstlisting}
+CONNECTED-COMPONENTS(G)
+    for each vertex v in G.V
+        MAKE-SET(v)
+    for each edge (u, v) in G.E
+        if FIND(u) != FIND(v)
+            UNION(u, v)
+\end{lstlisting}
+
+\begin{thm}[title=Parenthesis theorem]
+For all $u,v$, exactly one of:
+\begin{itemize}
+  \item \textbf{Neither ances.:} $u.d<u.f<v.d<v.f$ (or >)
+  \item \textbf{$v$ descendant of $u$:} $u.d<v.d<v.f<u.f$
+  \item \textbf{$u$ descendant of $v$:} $v.d<u.d<u.f<v.f$
+\end{itemize}
+\end{thm}
+
+\section{Traversing/Searching a Graph G=(V,E)}
+
+\begin{lstlisting}
+BFS(G, s)
+    for each u in G.V - {s}
+        u.color = WHITE; u.d = inf; u.pi = NIL
+    s.color = GRAY; s.d = 0; s.pi = NIL; Q = {s}
+    while Q != {}
+        u = DEQUEUE(Q)
+        for each v in G.Adj[u]
+            if v.color == WHITE
+                v.color = GRAY;
+                v.d = u.d + 1; v.pi = u
+                ENQUEUE(Q, v)
+        u.color = BLACK
+\end{lstlisting}
+
+\begin{prop}[title=BFS properties]
+Search for all vertices from $s$. Runtime: $O(V+E)$.
+\end{prop}
+
+\begin{lstlisting}
+DFS(G)
+    for each u in G.V: u.color = WHITE
+    time = 0
+    for each u in G.V
+        if u.color == WHITE: DFS-VISIT(G, u)
+DFS-VISIT(G, u)
+    time = time + 1; u.d = time; u.color = GRAY
+    for each v in G.Adj[u]
+        if v.color == WHITE: DFS-VISIT(v)
+    u.color = BLACK; time = time + 1; u.f = time
+\end{lstlisting}
+
+\begin{prop}[title=Runtime]
+$\Theta(V+E)$
+\end{prop}
+
+\begin{defn}[title=Classification of edges]
+\textcolor{orange}{\textbf{Tree:}} found by exploring $(u,v)$ in DF forest\\
+\textcolor{blue}{\textbf{Back:}} $(u,v)$, $u$ descendant of $v$\\
+\textcolor{red}{\textbf{Forward:}} $(u,v)$, $v$ desc.\ of $u$, not tree edge\\
+\textcolor{green!60!black}{\textbf{Cross:}} any other edge\\
+\textbf{UDG:} only tree/back edges. | \textbf{DAG:} no back edge.
+\end{defn}
+\begin{center} % A retirer si besoin d'espace
+  \includegraphics[width=0.8\linewidth]{images/classification_of_edges.png}
+\end{center}
+
+\begin{lstlisting}
+TOPOLOGICAL-SORT(G):
+    Call DFS(G) to compute v.f for all v in G.V
+    Output vertices in order of decreasing v.f
+\end{lstlisting}
+
+\begin{prop}[title=Runtime]
+Same as DFS: $\Theta(V+E)$
+\end{prop}
+
+\begin{lstlisting}
+SCC(G):
+    Call DFS(G) to compute u.f for all u
+    Compute G^T (with all edges reversed)
+    Call DFS(G^T), visiting vertices in
+      decreasing u.f order
+    Output each tree in DFS forest = one SCC
+\end{lstlisting}
+
+\begin{prop}[title=Runtime]
+Same as DFS: $\Theta(V+E)$
+\end{prop}
+
+\section{Flow network}
+
+\begin{thm}[title=Capacity constraint]
+$\forall u,v\in V$, $0\le f(u,v)\le c(u,v)$
+\end{thm}
+
+\subsection{Maximum flow problem - Ford-Fulkerson method}
+
+\begin{prop}[title={Residual network $G_f=(V,E_f)$}]
+$c_f(u,v)$: additional flow possible or removable.
+\end{prop}
+
+\begin{lstlisting}
+FORD-FULKERSON-METHOD(G, s, t)
+    initialize flow f to 0
+    while exists an augmenting path p in G_f
+        b = bottleneck(p)
+        augment flow along p by b
+    return f
+\end{lstlisting}
+
+\begin{thm}[title=Max-flow min-cut theorem ($\Leftrightarrow$)]
+\begin{itemize}
+  \item f is the maximum flow
+  \item $G_f$ has no augmenting path
+  \item $|f| = c(S,T)$ for a minimum cut (S, T)
+\end{itemize}
+\end{thm}
+
+\subsection{Applications of max flow}
+\begin{enumerate}
+  \item Bipartite matching as flow.
+  \item Edge-disjoint paths.
+\end{enumerate}
+
+% ============================================================
+\section{Spanning Trees}
+
+\begin{thm}[title=Cut property (safe edge)]
+Given any cut, a minimum-weight crossing edge belongs to some MST.
+\end{thm}
+
+\begin{lstlisting}
+PRIM(G, w, r)    // G undirected ; w: E -> R weights
+    Q = {}             // min-priority (sorted by w)
+    for each u in G.V:
+        u.key = inf
+        u.pi = NIL             // u.pi = parent in T
+        INSERT(Q, u)
+    DECREASE-KEY(Q, r, 0)               // r.key = 0
+    while Q != {}:
+        u = EXTRACT-MIN(Q)
+        for each v in G.Adj[u]:
+            if v in Q and w(u,v) < v.key:
+                v.pi = u
+                DECREASE-KEY(Q, v, w(u,v))
+\end{lstlisting}
+
+\begin{thm}[title=Why does it work?]
+T is always a subtree of a MST.
+\end{thm}
+
+\begin{prop}[title=Prim's runtime]
+$O(E\lg V)$: binary heap. $O(V\lg V+E)$: Fibo. heap.
+\end{prop}
+
+\begin{lstlisting}
+KRUSKAL(G, w)
+    A = {}
+    for v in G.V: MAKE-SET(v)
+    sort G.E by w non-decreasing
+    for (u, v) in G.E (sorted):
+        if FIND(u) != FIND(v)
+            A += {(u,v)}; UNION(u, v)
+    return A
+\end{lstlisting}
+
+\begin{thm}[title=Why does it work?]
+T is always a sub-forest of a MST.
+\end{thm}
+
+\begin{prop}[title=Kruskal's runtime]
+$O(E\lg E) = O(E\lg V)$ (sorting dominates).
+\end{prop}
+
+% ============================================================
+
+\section{Shortest Paths}
+
+\begin{warn}[title=Negative weights]
+Allowed but no negative-weight cycle.
+\end{warn}
+
+\begin{prop}[title=Optimal substructure]
+Any subpath of a shortest path is itself a shortest path (proof by contradiction).
+\end{prop}
+
+\begin{warn}[title=Helpful tools]
+\begin{itemize}
+  \item $d(v) > $ path cost from s to v (upper bound)
+  \item $\pi(v) $ is the predecessor of v in this shortest path
+\end{itemize}
+\end{warn}
+
+\begin{lstlisting}
+INIT-SINGLE-SOURCE(G, s)
+    s.d = 0
+    for v in G.V: v.d = inf; v.pi = NIL
+
+RELAX(u, v, w)
+    if v.d > u.d + w(u, v)
+        v.d = u.d + w(u, v); v.pi = u
+\end{lstlisting}
+
+\begin{lstlisting}
+BELLMAN-FORD(G, w, s)
+    INIT-SINGLE-SOURCE(G, s)
+    for i = 1 to |G.V| - 1
+        for (u, v) in G.E: 
+            RELAX(u, v, w)
+\end{lstlisting}
+
+\begin{thm}[title=Correctness]
+\textbf{Invariant:} Après l'itération i, pour tout sommet v dont le plus court chemin depuis s utilise au plus i arêtes, $l$(v) vaut déjà sa valeur finale.
+\end{thm}
+
+\begin{prop}[title=Negative cycle detection]
+If any edge can still be relaxed with one more iter.
+\end{prop}
+
+\begin{prop}[title=Runtime]
+$\Theta(E\cdot V)$.
+\end{prop}
+
+Non-negative weights only. (an algo like Prim's)
+
+\begin{lstlisting}
+DIJKSTRA(G, w, s)
+    INIT-SINGLE-SOURCE(G, s)
+    S = {}
+    Q = G.V   // min-priority queue (sorted by d(v))
+    while Q != {}:
+        u = EXTRACT-MIN(Q)
+        S = S U {u}
+        for each vertex v in G.Adj[u]:
+            RELAX(u, v, w)
+\end{lstlisting}
+
+\begin{thm}[title=Loop invariant (correctness)]
+At the start of each iteration, we have for all $v \in S$ that the distance $v.d$ from $s$ to $v$ is equal to the shortest path from $s$ to $v$.
+\end{thm}
+
+\begin{prop}[title=Runtime]
+The runtime is the same as Prim's algorithm.
+\end{prop}
+
+% ============================================================
+\section{Probabilistic Analysis}
+
+\begin{defn}[title=Indicator RV]
+$I\{A\} = \begin{cases}1 & A\text{ occurs}\\0 & \text{otherwise}\end{cases}$ \quad $\E[I\{A\}] = P\{A\}$
+\end{defn}
+
+\begin{prop}[title=Hiring Problem]
+Expected $\#$ of hires is $O(\ln n)$ vs worst case $O(n)$.
+\end{prop}
+
+\begin{prop}[title=Birthday lemma]
+Prob.\ of \emph{no} collision among $q$ items drawn uniformly from $[n]$:
+$\leq e^{-q(q-1)/(2n)}$.
+\end{prop}
+
+% ============================================================
+\section{Data Structure: Hash Tables}
+
+\begin{defn}[title=Hash function]
+$h: U\to\{0,\ldots,m{-}1\}$ maps key universe to $m$ slots.\\
+\textbf{Collision:} $h(k_1)=h(k_2)$ with $k_1\neq k_2$.\\
+\textbf{Load factor:} $\alpha = n/m$ (number of keys / slots).
+\end{defn}
+
+\begin{prop}[title=Chaining (collision resolution)]
+Each slot: linked list of keys.
+\end{prop}
+
+% ============================================================
+\section{Quick Sort}
+\begin{thm}[title=Loop invariant of Partitioning]
+\begin{enumerate}
+  \item All entries in A[p...i] are <= pivot
+  \item All entries in A[i+1...j] are > pivot
+  \item A[r] = pivot
+\end{enumerate}
+\end{thm}
+
+\begin{lstlisting}
+PARTITION(A,p,r)
+    x = A[r]
+    i = p-1
+    for j = p to r - 1
+        if A[j] <= x
+            i = i + 1
+            exchange A[i] with A[j]
+    exchange A[i+1] with A[r]
+    return i+1
+
+QUICKSORT(A, p, r)
+    if p < r
+        q = PARTITION(A, p, r)
+        QUICKSORT(A, p, q-1)
+        QUICKSORT(A, q+1, r)
+\end{lstlisting}
+
+\begin{prop}[title=Runtime]
+In-place $\Theta(n^2)$ worst, $\Theta(n\lg(n))$ on best/average
+\end{prop}
+
+\begin{lstlisting}
+RANDOMIZED-PARTITION(A, p, r)
+    i = RANDOM(p, r)
+    exchange A[r] with A[i]
+    return PARTITION(A, p, r)
+\end{lstlisting}
+It changes how likely the worst case is to occur.
+
+\begin{prop}[title=Probability x compared to y]
+$\Pr[x \leftrightarrow y] = \frac{2}{|\text{rk}(x)-\text{rk}(y)|+1}$.\\
+$\text{rk}(x)$ = position of $x$ in sorted order.
+\end{prop}
+
+\section{Online Algorithms}
+
+\begin{defn}[title=Competitive Ratio]
+ALG is \textbf{$r$-competitive} if $\forall I$: $\text{cost}_\text{ALG}(I) \leq r \cdot \text{cost}_\text{OPT}(I) + c$. Strong: $c=0$.
+\end{defn}
+
+\subsection{Expert Advice ($N$ experts, $T$ rounds)}
+$N$ experts predict YES/NO. $M_i$ = mistakes of expert $i$. \textbf{Elimination} (majority vote, delete wrong experts): $M_\text{ALG} \leq \lg N$ if a perfect expert exists.
+
+\textbf{Weighted Majority}: init $w_i=1$, halve weight on mistake, predict by weighted majority.
+\begin{thm}
+$M_\text{WM} \leq 2.41(\min_i M_i + \lg N)$
+\end{thm}
+
+\subsection{Ski Rental}
+Rent 1/day or buy at cost $B$. \textbf{Rent-then-buy}: rent $B$ days then buy $\Rightarrow$ 2-competitive ($T\leq B$: ALG$=T=$OPT; $T>B$: ALG$=2B$, OPT$=B$).
+\begin{thm}
+No deterministic algo beats ratio 2. Randomized: $e/(e{-}1)\approx1.58$.
+\end{thm}
+
+\subsection{Caching}
+Cache of $k$ pages; miss = cost 1. \textbf{Belady (OPT)}: evict farthest-in-future. \textbf{LRU}/\textbf{FIFO}: $k$-competitive. \textbf{LIFO}: not competitive. No deterministic algo beats $k$.
+
+\subsection{Secretary Problem}
+$n$ candidates, random arrival order. \textbf{Sample-then-record}: reject first $r{-}1$, accept first new record.
+\[ \Pr[\text{success}] = \frac{1}{n}\sum_{i=r}^{n}\frac{r-1}{i-1} \approx \frac{r}{n}\ln\!\tfrac{n}{r} \]
+\begin{thm}
+Optimal $r=n/e$ gives $\Pr[\text{success}]\approx 1/e\approx 0.368$. Tight: no algo beats $1/e$.
+\end{thm}
+
+\subsection{Prophet Inequality}
+Independent nonneg.\ RVs $X_1,\ldots,X_n$ with known distributions; accept one irrevocably. Prophet gets $M=\max_i X_i$.
+\begin{thm}
+Threshold $\tau=\mathbb{E}[M]/2$, accept first $X_i\geq\tau$:
+$\mathbb{E}[\text{ALG}]\geq\tfrac{1}{2}\mathbb{E}[\max_i X_i]$. Tight.
+\end{thm}
+
+\vfill
+\begin{center}
+\textit{Bon courage.}
+\end{center}
+
+\end{multicols*}
+\end{document}
