@@ -6,31 +6,41 @@
 \begin{document}
 \raggedbottom
 
-\coursetitle{Algorithms I}{BA4}{2025--2026}
+\coursetitle{SWENT - SoftWare EnTerprise}{BA5}{2026--2027}
 
 \tableofcontents
 \clearpage
 
-These notes cover the core algorithmique techniques of the BA4 Algorithms I course:
-asymptotic analysis, sorting, divide-and-conquer, heaps, binary search trees, and
-graph algorithms (max flow, matchings).
-
 % =========================================================
-\chapter{Algorithms Fundamentals}
+\chapter{Week1 : Part A}
 % =========================================================
 
-\section{Definition of an Algorithm}
-\begin{defnbox}
-An \textbf{algorithm} is a well-defined computational procedure that takes some value (or
-set of values) as \emph{input} and produces some value (or set of values) as \emph{output}
-in a finite number of steps.
-\end{defnbox}
+\section{Agentic Software Development}
 
-We analyse algorithms along two axes:
-\begin{itemize}
-  \item \textbf{Correctness} — does it always produce the right answer?
-  \item \textbf{Efficiency} — how many resources (time, space) does it consume?
+\begin{center}
+\includegraphics[width=\linewidth]{images/goal.png}
+\end{center}
+
+\begin{exbox}[title=What the agent does not know]
+\small
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+  \item \textbf{Context} --- why the codebase is the way it is (the auth layer looks strange for a reason).
+  \item \textbf{Decomposition} --- turning ``build the food ordering feature'' into one reviewable change.
+  \item \textbf{Acceptance criteria} --- what ``done'' means; if you do not say, it decides optimistically.
+  \item \textbf{Permissions} --- what it may touch, and what must be approved by you first.
 \end{itemize}
+\tcblower
+\centering
+\textcolor{redColor}{\itshape Only you have these --- the agentic loop is blind to them.}
+\end{exbox}
+
+\begin{center}
+\includegraphics[width=\linewidth]{images/agent-context.png}
+\textcolor{redColor}{\itshape Write down the rules for the agent (it will help your team agree on them)}
+\end{center}
+
+
+\iffalse
 
 % ---------------------------------------------------------
 \section{Asymptotic Complexity}
@@ -4840,10 +4850,6 @@ alors directement le nombre maximum de chemins arête-disjoints.
 
 \subsubsection{Problème d'examen vu en cours}
 
-\begin{exbox}[title=Problem solving (exam)]
-\includegraphics[width=\linewidth]{images/bellman-problem.png}
-\end{exbox}
-
 \paragraph{Idée.} La carte est cohérente si et seulement si tout cycle $C$ du graphe vérifie $W(C) = 0$. On décompose cette condition en deux :
 \[
 \forall C : W(C) = 0 \iff \bigl(\forall C : W(C) \geq 0\bigr) \;\textbf{ET}\; \bigl(\forall C : W(C) \leq 0\bigr)
@@ -4884,5 +4890,5 @@ Si une arête négative $(x, y)$ existe, un sommet $x$ déjà dans $S$ pourrait 
 chemin plus court vers $y$ mais $y$ est peut-être déjà finalisé.
 
 \end{exbox}
-
+\fi
 \end{document}
