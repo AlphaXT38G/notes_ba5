@@ -199,6 +199,68 @@ so that   & \textcolor{greenColor}{[reason]}.       & what value will she derive
 \end{itemize}
 \end{exbox}
 
+\section{Epics}
+
+\begin{defnbox}[title=Epic]
+\small
+An \textbf{epic} is a broad set of features that spans \textbf{multiple user stories}.
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+  \item Captures larger, more complex user needs.
+  \item Enables a comprehensive understanding of a feature set.
+    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
+      \item \textit{once divided into actionable, specific user stories, the big picture can get lost}
+    \end{itemize}
+  \item Useful for organizing work.
+    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
+      \item \textit{ensures the development process stays aligned with user needs}
+    \end{itemize}
+  \item A \textbf{user story} then becomes a specific, actionable item that contributes to
+        the broader goal of the epic.
+\end{itemize}
+\tcblower
+\textbf{Example.}\quad Epic: \emph{Personalized and Streamlined Dining Experience}.
+\smallskip
+
+\textit{As a user of PolyFood, I want the app to understand my habits, preferences, and
+context, so that ordering food becomes faster, smarter, and more enjoyable over time.}
+\end{defnbox}
+
+\begin{exbox}[title=User flow vs.\ epic]
+\small
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+  \item \textbf{User flow} --- a specific sequence of steps a user takes to accomplish one
+        task in the app, from start to finish.
+    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
+      \item \textit{\textbf{Login flow}: launch screen $\to$ login screen $\to$ error
+            handling for wrong credentials $\to$ main dashboard on success}
+    \end{itemize}
+  \item \textbf{Epic} --- a broader, high-level feature or goal that usually spans several
+        user flows or smaller tasks.
+    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
+      \item \textit{\textbf{Account Management} epic: login flow + password-reset flow +
+            account-creation flow + edit-profile flow}
+    \end{itemize}
+\end{itemize}
+\end{exbox}
+
+\begin{keybox}[title=Recipe for user-centric software]
+\small
+\begin{enumerate}[leftmargin=1.6em, itemsep=3pt]
+  \item Elicit user requirements.
+  \item Formulate user stories.
+    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt, label=--]
+      \item \textit{should be \textbf{I}ndependent, \textbf{N}egotiable, \textbf{V}aluable,
+            \textbf{E}stimable, \textbf{S}mall, and \textbf{T}estable}
+    \end{itemize}
+  \item Validate and prioritize them.
+    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt, label=--]
+      \item \textit{all stakeholders must be involved}
+    \end{itemize}
+  \item Organize user stories into epics.
+  \item Plan the work.
+\end{enumerate}
+\end{keybox}
+
 \iffalse
 
 % ---------------------------------------------------------
