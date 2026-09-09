@@ -107,6 +107,67 @@ Answer with : \textcolor{redColor}{\itshape "I can't review this. Please split i
 \textcolor{redColor}{\itshape Use an LLM to sharpen a requirement you got from a person --- not to invent the person.}
 \end{exbox}
 
+\section{User Story}
+
+\begin{defnbox}[title=User story template]
+\begin{center}
+\ttfamily
+\begin{tabular}{@{}r l @{\qquad} >{\normalfont\itshape\footnotesize\color{black!55}}l@{}}
+As a      & \textcolor{blueColor}{[role]},          & who is the primary stakeholder? \\[5pt]
+I want to & \textcolor{redColor}{[action]},         & what effect does she want the story to have? \\[5pt]
+so that   & \textcolor{greenColor}{[reason]}.       & what value will she derive from that effect? \\
+\end{tabular}
+\end{center}
+\tcblower
+{\itshape Example.}\quad
+{\ttfamily As a \textcolor{blueColor}{SwEnt student}, I want to
+\textcolor{redColor}{learn about software requirements}, so that
+\textcolor{greenColor}{I can engineer better software}.}
+\end{defnbox}
+
+\begin{warnbox}
+\begin{itemize}[leftmargin=1.2em, itemsep=3pt]
+  \item If you can only fill the template with a very generic role or reason, the feature
+        is probably not something a real user actually cares about.
+  \item The developer is not an end user --- ``as a developer'' is not a valid role in a
+        user story.
+  \item If the story dictates \emph{how} it should be implemented, it is too specific:
+        a user story states the problem, not the solution.
+\end{itemize}
+\end{warnbox}
+
+\begin{exbox}[title=Good user stories: INVEST]
+\small
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+  \item \textbf{\textcolor{blueColor}{I}ndependent} ---
+        \textit{self-contained; can be built without waiting on other stories}
+  \item \textbf{\textcolor{blueColor}{N}egotiable} ---
+        \textit{captures the problem, not the solution, leaving room for the implementor}
+  \item \textbf{\textcolor{blueColor}{V}aluable} ---
+        \textit{delivers value the end user can see}
+  \item \textbf{\textcolor{blueColor}{E}stimable} ---
+        \textit{small enough that the effort can be estimated}
+  \item \textbf{\textcolor{blueColor}{S}mall} ---
+        \textit{fits inside a single sprint}
+  \item \textbf{\textcolor{blueColor}{T}estable} ---
+        \textit{comes with clear acceptance criteria}
+\end{itemize}
+\end{exbox}
+
+\begin{exbox}[title=What to do about shared needs?]
+\small
+\newcommand{\story}[1]{\par\smallskip
+  \colorbox{black!5}{\parbox{\dimexpr\linewidth-2\fboxsep}{\itshape #1}}\par\smallskip}
+\begin{itemize}[leftmargin=1.5em, itemsep=6pt]
+  \item \textbf{Truly universal desire} --- one story with a deliberately generic role.
+        \story{As a user, I want to reset my password, so that I can regain access to my account.}
+  \item \textbf{Capture fine distinctions in separate user stories.}
+        \story{As a student or teacher, I want to access the course materials on Moodle, so that I can use them for studying or teaching, respectively.}
+  \item \textbf{Persona groups (``meta-persona'')} --- one role standing for several personas that share the need.
+        \story{As a member of the IT department\ldots\\ As a mobile app user\ldots}
+\end{itemize}
+\end{exbox}
+
 \iffalse
 
 % ---------------------------------------------------------
