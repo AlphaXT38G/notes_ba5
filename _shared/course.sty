@@ -48,6 +48,7 @@
 
 % ---------- Header / footer ---------------------------------
 \RequirePackage{fancyhdr}
+\RequirePackage{extramarks}
 
 % ============================================================
 %                        STYLE DEFINITIONS
@@ -282,7 +283,13 @@
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\headrule}{%
   \hbox to\headwidth{\color{blueColor!35}\leaders\hrule height\headrulewidth\hfill}}
-\fancyhead[C]{\small\color{black!60}\rightmark}
+% Show the section that is in effect at the TOP of the page (not the last one
+% started on it): record each section as an extramark and print \toprightxmark.
+\renewcommand{\sectionmark}[1]{%
+  \markboth{#1}{#1}%
+  \extramarks{}{\ifnum\c@secnumdepth>\z@ \thesection.\quad\fi #1}}
+\fancyhead[C]{\small\color{black!60}%
+  \expandafter\MakeUppercase\expandafter{\toprightxmark}}
 \fancyfoot[C]{\small\color{black!60}\thepage}
 \fancypagestyle{plain}{%
   \fancyhf{}%
