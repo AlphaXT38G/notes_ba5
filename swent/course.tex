@@ -39,6 +39,36 @@
 \textcolor{redColor}{\itshape Write down the rules for the agent (it will help your team agree on them)}
 \end{center}
 
+\begin{minipage}{\linewidth}
+\textbf{What if the agent opened this PR?}
+
+\begin{center}
+\includegraphics[width=\linewidth]{images/reviewing-a-PR.png}
+Answer with : \textcolor{redColor}{\itshape "I can't review this. Please split it: the total calculation in one PR, the config change in another, and drop all unrelated screen edits."}
+\end{center}
+\end{minipage}
+
+\begin{exbox}[title=How agentic can go wrong]
+\small
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+  \item \textbf{Confidently wrong at scale} \\
+        \textit{``refactored 30 files and broke one thing in each''}
+  \item \textbf{Hallucinated dependencies} \\
+        \textit{``imported a library that doesn't exist, and added one that shouldn't''}
+  \item \textbf{Tests that pass and check nothing} \\
+        \textit{``wrote tests and coverage went up, but correctness went down''}
+  \item \textbf{Plausible architecture drift} \\
+        \textit{``every feature is fine in isolation, but nothing fits together anymore''}
+\end{itemize}
+\end{exbox}
+
+\noindent
+\begin{minipage}[t]{0.48\linewidth}
+\includegraphics[width=\linewidth]{images/vide-coding.png}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+\includegraphics[width=\linewidth]{images/agentic-dev.png}
+\end{minipage}
 
 \iffalse
 
