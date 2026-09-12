@@ -366,7 +366,27 @@ How do you make your app work across the board?
 \includegraphics[width=\linewidth]{images/diff-android-ios.png}
 \end{center}
 
+\section{App Data (Persistence Levels)}
 
+\begin{center}
+\includegraphics[width=\linewidth]{images/app-data.png}
+\end{center}
+
+\begin{exbox}[title=Which row survives what?]
+Say your app remembers the user's favorite restaurants.
+\begin{itemize}
+  \item Which row should it use to survive a \textbf{reinstall of the app}?
+  \item Which row should it use to survive a reinstall on a \textbf{new phone}?
+\end{itemize}
+\end{exbox}
+
+\begin{keybox}[title=Answer]
+\begin{itemize}
+  \item \textbf{Survives reinstall (same phone):} SharedPreferences, Room and internal storage all die on uninstall. External storage and cloud storage both survive.
+  \item \textbf{Survives reinstall on a new phone:} external storage won't work, since it never existed on that phone in the first place. Only \textbf{cloud storage} works.
+\end{itemize}
+Choose the storage service based on data complexity, visibility, and required lifespan -- a real project will typically combine more than one row of this table.
+\end{keybox}
 
 \iffalse
 
