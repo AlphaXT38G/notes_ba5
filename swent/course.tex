@@ -273,8 +273,42 @@ and \textbf{operation} of mobile content and services.
 \end{defnbox}
 
 \begin{center}
-\includegraphics[width=\linewidth]{images/mobile-plateform.png}
+\includegraphics[width=\linewidth]{images/mobile-platform.png}
 \end{center}
+
+\section{The Mobile Device}
+
+\subsection{The Mobile SoC = A "Commitee" of Processors}
+
+\begin{defnbox}[title=Mobile SoC (System-on-Chip)]
+A single chip integrating many specialized processors, each optimized for a different job. This heterogeneity is what lets a phone deliver serious compute for a few Watts.
+\end{defnbox}
+
+\begin{center}
+\includegraphics[width=\linewidth]{images/mobile-SoC.png}
+\end{center}
+
+\begin{keybox}[title=On-device vs. server]
+The NPU raises a design question for every app that uses ML: should the model run on the device, or should the data be shipped over the network to a server?
+\end{keybox}
+
+\begin{keybox}[title=Why the HSM matters]
+\begin{itemize}
+  \item Stores passwords, crypto keys, FaceID data.
+  \item The OS neever sees the secrets, only a controlled API.
+  \item This isolation is what makes TWINT and e-banking possible.
+\end{itemize}
+\end{keybox}
+
+\subsection{Fragmentation}
+
+\begin{center}
+\includegraphics[width=\linewidth]{images/fragmentation.png}
+\end{center}
+
+\begin{warnbox}
+How do you make your app work across the board?
+\end{warnbox}
 
 \iffalse
 
