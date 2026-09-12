@@ -388,6 +388,80 @@ Say your app remembers the user's favorite restaurants.
 Choose the storage service based on data complexity, visibility, and required lifespan -- a real project will typically combine more than one row of this table.
 \end{keybox}
 
+\section{The Split-App Model}
+
+\begin{itemize}
+  \item \textbf{Client-side (frontend)}
+  \begin{itemize}
+    \item runs on the user's device, provides the UI and UX
+  \end{itemize}
+  \item \textbf{Server-side (backend)}
+  \begin{itemize}
+    \item runs on a server or in the cloud
+  \end{itemize}
+  \item \textbf{Client interacts with cloud services}
+  \begin{itemize}
+    \item typically REST APIs or GraphQL
+    \item send HTTP request
+    \item get back JSON or XML
+  \end{itemize}
+\end{itemize}
+
+\subsection{Benefits of Split-App Model}
+
+\begin{propbox}
+Modularity + contracts between the frontend and backend $\Rightarrow$ highly decoupled $\Rightarrow$
+\begin{itemize}
+  \item Independent development
+  \item Scalability
+  \item Flexibility to choose the most suitable technology and frameworks
+  \item Can update app frontend independently of backend
+  \item Reuse backend services across clients (mobile, Web, etc.)
+\end{itemize}
+\end{propbox}
+
+\subsection{Backend/Network Services}
+
+\begin{itemize}
+  \item \textbf{Authentication and authorization}
+  \begin{itemize}
+    \item user sign-up, sign-in, and sign-out processes; access control and permissions
+  \end{itemize}
+  \item \textbf{Data storage and mgmt}
+  \begin{itemize}
+    \item user data and app content, typically with a CRUD interface
+  \end{itemize}
+  \item \textbf{Real-time data sync}
+  \begin{itemize}
+    \item real-time updates of data across user devices
+  \end{itemize}
+  \item \textbf{Payment processing}
+  \begin{itemize}
+    \item in-app purchases, subscriptions, payment verification and receipts
+  \end{itemize}
+  \item Content Delivery Networks (CDNs)
+  \item Analytics and reporting
+  \item Email and SMS
+  \item Backup and recovery
+  \item Geo-location
+  \item Integration services
+  \item \ldots
+\end{itemize}
+
+\subsection{Push Notifications}
+
+\begin{itemize}
+  \item Messages sent to the user by the backend of the app
+  \item Each platform has its own push notification service
+\end{itemize}
+
+\begin{keybox}[title=Push notification flow]
+\begin{itemize}
+  \item \textbf{Push service registration:} the device requests a token from the platform's push service (Google/Apple), receives it, and registers that token with the app's backend (notification servers).
+  \item \textbf{Routine delivery process:} the backend sends the notification to its push servers, which forward the message to the platform's push service, which delivers the push message to the device.
+\end{itemize}
+\end{keybox}
+
 \iffalse
 
 % ---------------------------------------------------------
