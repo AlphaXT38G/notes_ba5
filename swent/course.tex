@@ -523,6 +523,70 @@ To show in the UI how long ago a message was sent (e.g.\ ``3 minutes ago''), whi
   \item Easy to evolve, maintain, and reuse
 \end{itemize}
 
+\section{Components of A Mobile App}
+
+\subsection{Four Android App Components}
+
+\begin{itemize}
+  \item \textbf{[1] Activities}
+  \begin{itemize}
+    \item Entry point for interacting with the user (1 screen + UI)
+    \item One app can start an activity in another app (e.g., camera can email photo)
+  \end{itemize}
+  \item \textbf{[2] Services}
+  \begin{itemize}
+    \item Run in background without UI
+    \item (often replaced or augmented by WorkManager for deferrable tasks)
+  \end{itemize}
+  \item \textbf{[3] Broadcast receivers}
+  \begin{itemize}
+    \item Receive ``out of band'' event broadcasts
+    \item App doesn't need to be running to receive broadcast
+  \end{itemize}
+  \item \textbf{[4] Content providers}
+  \begin{itemize}
+    \item Manage data that is of interest to multiple apps
+  \end{itemize}
+\end{itemize}
+
+\subsection{Activities}
+
+\begin{itemize}
+  \item Key part of an Android app
+  \item Provides the window in which the app draws its UI
+  \item UI consists of multiple screens
+  \item Screens defined inside the main Activity
+\end{itemize}
+
+\subsection{Inter-App Communication via Intents}
+
+\begin{itemize}
+  \item An app can cause another app's component to start
+  \begin{itemize}
+    \item E.g., WhatsApp takes a photo with the Camera app
+  \end{itemize}
+  \item Activation is via an Intent object
+  \begin{itemize}
+    \item Think of it as an ``active message''
+  \end{itemize}
+  \item To start activities and services: \texttt{<action, URI>} $\rightarrow$ \underline{explicit} intent
+  \begin{itemize}
+    \item E.g., \texttt{<ACTION\_DIAL, "tel:123456789">}, \texttt{<ACTION\_WEB\_SEARCH, "app developers">}
+  \end{itemize}
+  \item Register for broadcast announcements: \texttt{<announcement>} $\rightarrow$ \underline{implicit} intent
+  \begin{itemize}
+    \item E.g., \texttt{<ACTION\_BATTERY\_LOW>}, \texttt{<ACTION\_POWER\_DISCONNECTED>}
+  \end{itemize}
+  \item For content providers: pull instead of push
+  \begin{itemize}
+    \item Activated by request from a \texttt{ContentResolver}
+  \end{itemize}
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.7\linewidth]{images/inter-app.png}
+\end{center}
+
 \iffalse
 
 % ---------------------------------------------------------
