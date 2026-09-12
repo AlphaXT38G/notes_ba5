@@ -462,6 +462,67 @@ Modularity + contracts between the frontend and backend $\Rightarrow$ highly dec
 \end{itemize}
 \end{keybox}
 
+\section{MVVM}
+
+\begin{center}
+\begin{minipage}{0.45\linewidth}
+\centering
+\textbf{MVC (Model View Controller)}\\[2pt]
+\includegraphics[width=\linewidth]{images/mvc.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\linewidth}
+\centering
+\textbf{MVVM (Model View ViewModel)}\\[2pt]
+\includegraphics[width=\linewidth]{images/mvvm.png}
+\end{minipage}
+\end{center}
+
+\begin{center}
+\includegraphics[width=\linewidth]{images/mvvm-example.png}
+\end{center}
+
+\begin{defnbox}[title=Observability]
+Key concept in MVVM: enables communication between the app's data layer and its UI.
+\begin{itemize}
+  \item The view never pulls data directly from the view model; it reacts to changes pushed from the view model through the underlying mechanism.
+  \item The view model exposes state; the UI functions in the view connect to this state; once bound, the framework recomposes the affected UI functions automatically whenever there's a state change.
+  \item When the user interacts with the UI, the view calls the view model to communicate these user actions.
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}
+Layers are decoupled $\Rightarrow$ you can swap the model (e.g.\ dumb echo LLM for one calling OpenAI or a local model) or the view (e.g.\ phone UI for a web browser) without touching the other layers.
+\end{rembox}
+
+\begin{exbox}[title=Where does ``3 minutes ago'' belong?]
+To show in the UI how long ago a message was sent (e.g.\ ``3 minutes ago''), which layer holds that functionality: the view, the view model, or the model?
+\end{exbox}
+
+\begin{keybox}[title=Answer: the view model]
+\begin{itemize}
+  \item The model keeps the timestamp of each message -- set once, it never changes.
+  \item The string on screen changes every minute while the data sits still, so it can't be done in the model.
+  \item Not in the view either: the moment the view does data arithmetic and runs a timer, you can't test any of it without launching a screen -- the view must stay stateless (re-creatable from the view model).
+  \item The view model exists exactly for this kind of UI logic: to display ``3 minutes ago'' you need the model's timestamp plus a notion of the current time, both combined in the view model -- testable in milliseconds by feeding it various values of current time.
+\end{itemize}
+\textbf{Variant:} for a screen saying ``last refreshed 2 minutes ago'', the timestamp of the last refresh belongs in the view model instead of the model, because nobody sent that information and no other client cares -- purely UI state, nothing in the model.
+\end{keybox}
+
+\subsection{Benefits of MVVM}
+
+\begin{itemize}
+  \item Decouple UI logic from application's logic (``business logic'')
+  \begin{itemize}
+    \item View is conceptually a function of the ViewModel $\Rightarrow$ can be entirely computed from the ViewModel every time
+    \item E.g., on mobile: app may run in background and need no UI --- can destroy View and re-create from the ViewModel whenever needed
+  \end{itemize}
+  \item Enables UIs that are reactive, responsive, dynamic
+  \item Easy to test
+  \item Easy to develop by separate people
+  \item Easy to evolve, maintain, and reuse
+\end{itemize}
+
 \iffalse
 
 % ---------------------------------------------------------
