@@ -587,6 +587,51 @@ To show in the UI how long ago a message was sent (e.g.\ ``3 minutes ago''), whi
 \includegraphics[width=0.7\linewidth]{images/inter-app.png}
 \end{center}
 
+\section{The Lifecycle of an Android Activity}
+
+\begin{defnbox}[title=Single entry vs.\ multiple entry points]
+A traditional program has one entry point, \texttt{main()}: in $\to$ runs $\to$ returns. An Android Activity instead exposes \textbf{seven} lifecycle callbacks, each a possible entry point -- and no single way out.
+\end{defnbox}
+
+\begin{center}
+\includegraphics[width=\linewidth]{images/single-vs-multiple-entrypoints.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=0.55\linewidth]{images/lifecycle-activity.png}
+\end{center}
+
+\begin{exbox}[title=Rotating mid-form]
+The user is halfway through filling in a form -- three fields done, typing the fourth -- then rotates the phone to landscape. Which callbacks fire from the start of the rotation until the form is back on screen, and what happens to the text typed so far?
+\end{exbox}
+
+\begin{keybox}[title=Answer]
+The Activity object is destroyed completely, then a brand new one is created in landscape mode:
+\[
+\text{pause} \to \text{stop} \to \text{destroy} \to \text{create} \to \text{start} \to \text{resume}
+\]
+with a \textbf{different Activity object} and a different screen configuration -- anything kept in the Activity's own fields is gone.
+\end{keybox}
+
+\begin{rembox}[title=Why the form text survives anyway]
+\begin{itemize}
+  \item The \textbf{ViewModel} is deliberately scoped to outlive the Activity across a configuration change. If the form text lives in the ViewModel (as it should), the new Activity reads that state straight back -- separation of concerns at work.
+  \item Redrawing itself is not a callback: a frame loop repaints the screen at 60--120\,Hz whenever something changed. The lifecycle governs whether the UI is drawable; the frame loop governs when pixels actually change.
+\end{itemize}
+\end{rembox}
+
+\begin{warnbox}[title=A different risk: switching away]
+Switching away from the app mid-form (not a rotation -- e.g.\ to take a call) risks the process itself being killed before it resumes. That kills everything, including the ViewModel. The only way to recover the text would be to persist it in \texttt{onStop} -- but a half-filled form generally isn't expected to survive this case.
+\end{warnbox}
+
+\begin{rembox}[title=iOS has a similar lifecycle]
+Direct correspondences exist between the Android and iOS callbacks. Difference: iOS may enter a \textbf{suspended} state after being paused (stays in memory, executes no code); Android may keep the process alive with no explicit suspended state.
+\end{rembox}
+
+\begin{keybox}
+Mobile app lifecycles are considerably more sophisticated than server or desktop ones -- a reflection of the added complexity and constraints mobile apps face.
+\end{keybox}
+
 \iffalse
 
 % ---------------------------------------------------------
