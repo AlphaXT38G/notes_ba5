@@ -11,80 +11,159 @@
 \tableofcontents
 \clearpage
 
-These notes cover the core ...
+These notes cover the core vocabulary and reasoning framework of computer security:
+adversaries, threat models, security policies, mechanisms, and how to argue that a
+system is secure.
 
 % =========================================================
-\chapter{Definitions}
+\chapter{Lecture 1 : Basics}
 % =========================================================
 
-\begin{defnbox}[title=COMPUTER SECURITY]
-Properties of a computer system must hold in the presence of a resourced strategic adversary.
+\begin{rembox}[title=Why a course on security?]
+Ordinary engineering asks for \textbf{correctness}, \textbf{safety} and
+\textbf{robustness} against accidental errors. Security additionally requires that
+properties hold in the presence of a \textbf{deliberate, strategic adversary}.
+\end{rembox}
+
+\section{Computer security}
+
+\begin{defnbox}[title=Computer security]
+\textbf{Properties} of a computer system must hold in the presence of a
+\textbf{resourced strategic adversary}.
 \end{defnbox}
 
-\begin{defnbox}[title=Confidentiality]
-Prevention of unauthorized disclosure of information (e.g. The adversary should not be able to read my bank statement)
+\subsection{Security properties}
+
+\begin{defnbox}[title=CIA triad]
+\begin{itemize}
+  \item \textbf{Confidentiality} — prevention of unauthorized \emph{disclosure} of information.
+  \item \textbf{Integrity} — prevention of unauthorized \emph{modification} of information.
+  \item \textbf{Availability} — prevention of unauthorized \emph{denial of service}.
+\end{itemize}
 \end{defnbox}
 
-\begin{defnbox}[title=Integrity]
-Prevention of unauthorized modification of information (e.g. The adversary should not be able to change my bank balance)
+\begin{exbox}[title=CIA on a bank account]
+The adversary should not be able to \textit{read} my statement (confidentiality),
+\textit{change} my balance (integrity), or \textit{block} my access to the account
+(availability).
+\end{exbox}
+
+\begin{rembox}[title=Beyond the CIA triad]
+Modern systems also care about \textbf{authenticity}, \textbf{anonymity},
+\textbf{isolation}, \textbf{non-repudiation}, and more.
+\end{rembox}
+
+\section{Security policy}
+
+\begin{defnbox}[title=Security policy]
+A high-level description of the \textbf{security properties} that must hold, in
+relation to \textbf{assets} and \textbf{principals}.
+\begin{itemize}
+  \item \textbf{Assets (objects)} — anything of value that needs protection (data, files, memory, \ldots).
+  \item \textbf{Principals (subjects)} — people, programs, services, \ldots (never the adversary).
+\end{itemize}
 \end{defnbox}
 
-\begin{defnbox}[title=Availability]
-Prevention of unauthorized denial of service (e.g. The adversary should not prevent me accessing my bank account)
-\end{defnbox}
+\begin{propbox}[title=Properties in terms of principals and assets]
+\begin{tabular}{lll}
+Confidentiality & prevent unauthorized disclosure & authorized \textbf{users} may read a \textbf{file} \\
+Integrity & prevent unauthorized modification & authorized \textbf{programs} may write a \textbf{file} \\
+Availability & prevent unauthorized denial of service & authorized \textbf{services} can access a \textbf{file} \\
+\end{tabular}
+\end{propbox}
 
+\section{The adversary}
 
-
-\begin{defnbox}[title=SECURITY POLICY]
-A high-level description of the security properties that must hold in the system in relation to assets and principals.
-\end{defnbox}
-
-\begin{defnbox}[title= Assets (objects)]
-Anything with value (e.g., data, files, memory) that needs to be protected
-\end{defnbox}
-
-\begin{defnbox}[title=Principals (subjects)]
-People, computer programs, services,… (may not contain the adversary)
-\end{defnbox}
-
-
-
-
-\begin{defnbox}[title=THREAT MODEL]
-Describes the resources available to the adversary and the adversary’s capabilities (observe, influence, corrupt,…)
+\begin{defnbox}[title=Threat model]
+Describes the \textbf{resources} available to the adversary and its \textbf{capabilities}
+(observe, influence, corrupt, \ldots).
 \end{defnbox}
 
 \begin{defnbox}[title=Adversary]
-The adversary is a malicious entity aiming at breaching the security policy. The adversary is strategic: the adversary will choose the optimal way to
-use her resources to mount an attack that violates the security properties.
+A malicious entity aiming to breach the security policy. The adversary is
+\textbf{strategic}: it always picks the \textbf{optimal} way to use its resources to
+violate a security property.
 \end{defnbox}
 
-\begin{defnbox}[title=VULNERABILITY]
-Specific weakness that could be exploited by adversaries with interest in a lot of different assets The banking API is not protected The password appears in plain text in my screen.
+\begin{rembox}[title=Key vocabulary]
+\begin{itemize}
+  \item \textbf{Vulnerability} — a specific weakness an adversary could exploit (\textit{e.g.\ a password shown in plaintext}).
+  \item \textbf{Threat} — the feared event, i.e.\ the adversary's goal (\textit{e.g.\ a hacker wants to steal money from the bank}).
+  \item \textbf{Harm} — what actually happens if the threat materializes (\textit{e.g.\ the adversary steals the money}).
+\end{itemize}
+If the properties hold within the threat model, no vulnerability can be exploited to
+realize a threat, so no harm occurs.
+\end{rembox}
+
+\section{Security mechanisms}
+
+\begin{defnbox}[title=Security mechanism]
+A technical mechanism (software, hardware, cryptography, procedures, \ldots) used to
+ensure that the security policy is not violated by an adversary
+\underline{within the threat model}.
 \end{defnbox}
 
-\begin{defnbox}[title=THREAT]
-What is the feared event, the goal of the adversary that we don’t want materialized A hacker wants to retrieve money breaking into the bank’s system A student wants to learn my password by looking over my shoulder.
+\begin{exbox}[title=Policy $\to$ mechanism]
+\textbf{Policy}: the transaction log must not be tampered with by a single employee. \\
+\textbf{Mechanism}: replicate the log across multiple machines so that no employee has
+access to all copies.
+\end{exbox}
+
+\begin{propbox}[title=Composing mechanisms]
+Security does \textbf{not} increase linearly with the number of mechanisms.
+\begin{itemize}
+  \item \textbf{Defence in depth} (AND) — secure as long as \emph{one} mechanism holds.
+  \item \textbf{Weakest link} (OR) — insecure as soon as \emph{any one} mechanism fails.
+\end{itemize}
+\end{propbox}
+
+\begin{warnbox}[title=Humans are part of the system]
+Social engineering, phishing, and weak/reused/written-down passwords are frequently the
+weakest link — but that is no excuse to neglect the rest of the system.
+\end{warnbox}
+
+\section{Showing a system is secure}
+
+\begin{rembox}[title=Attacker vs.\ defender]
+\textbf{Attacker}: one way to violate one property is enough (within the threat model). \\
+\textbf{Defender}: must show \textbf{no} adversary strategy violates the policy —
+security is always relative to \textbf{a specific threat model}.
+\end{rembox}
+
+\begin{defnbox}[title=Secure]
+A system is \textbf{secure} if an adversary constrained by a specific threat model
+cannot violate the security policy.
 \end{defnbox}
 
-\begin{defnbox}[title=HARM]
-The bad thing that happens when the threat materializes The adversary steals money The adversary blocks access to the bank The adversary learns my password The adversary reads the message.
+\begin{defnbox}[title=Security argument]
+A rigorous argument (verbal or mathematical) that the security mechanisms in place are
+effective in maintaining the security policy — \textbf{subject to the assumptions of
+the threat model}.
 \end{defnbox}
 
-If the properties hold within the threat model, it means that there are no
-vulnerabilities that can be exploited to materialize threats, and no harm happens
+\begin{warnbox}[title=Composition is hard]
+A useful threat model must constrain the adversary, otherwise no security argument is
+possible. Security arguments for the \textbf{composition} of mechanisms are notoriously
+hard to get right.
+\end{warnbox}
 
+\section{Security engineering process}
 
-\begin{defnbox}[title=SECURITY MECHANISM]
-Technical mechanism used to ensure that the security policy is not violated by an adversary within the threat model.
-\end{defnbox}
+\begin{algbox}[title=Three-stage process]
+\begin{enumerate}
+  \item \textbf{High-level specification} — architecture, security policy (principals, assets, properties), threat model.
+  \item \textbf{Security design} — select/design mechanisms; state the security argument (which mechanism maintains which property).
+  \item \textbf{Secure implementation} — implement the mechanisms, ensure conformance to the design, perform security testing.
+\end{enumerate}
+\end{algbox}
 
-\begin{defnbox}[title=Definition]
-A system is “secure” if an adversary constrained by a specific threat model cannot violate the security policy.
-\end{defnbox}
-
-\begin{defnbox}[title=SECURITY ARGUMENT]
-Rigorous argument that the security mechanisms in place are indeed effective in maintaining the security policy (verbal or mathematical). Subject to the assumptions of the threat model.
-\end{defnbox}
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Security problems always involve an \textbf{adversary}, who is \textbf{strategic}.
+  \item The adversary's capabilities define a \textbf{threat model}.
+  \item \textbf{Security mechanisms} aim at fulfilling a \textbf{security policy within a threat model}.
+  \item Showing security means providing a \textbf{security argument}.
+\end{itemize}
+\end{keybox}
 
 \end{document}
