@@ -1,0 +1,600 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1cm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[sfdefault]{FiraSans}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Computer Security}}
+\fancyhead[C]{\small Definitions}
+\fancyhead[R]{\small Course Notes}
+\fancyhead[L]{\small\textbf{Computer security and privacy}}
+\fancyhead[C]{\small Introduction  course - definitions}
+\fancyhead[R]{\small Week 01 --- 07-13/09/2026}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% Separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% DEFINITION - blue
+
+\newtcolorbox{definition}{
+enhanced,
+breakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+
+% IMPORTANT - pink
+
+\newtcolorbox{important}{
+enhanced,
+breakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+
+% FORMULAS - green
+
+\newtcolorbox{formula}{
+enhanced,
+breakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+
+% WARNING - orange
+
+\newtcolorbox{warning}{
+enhanced,
+breakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+
+% EXAMPLE - purple
+
+\newtcolorbox{example}{
+enhanced,
+breakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+
+% SUMMARY - yellow
+
+\newtcolorbox{summary}{
+enhanced,
+breakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+\thispagestyle{fancy}
+
+\begin{multicols}{2}
+
+
+%=========================================================
+\section{Computer Security}
+%=========================================================
+
+\begin{definition}
+
+\textbf{Computer Security}
+
+\vspace{2pt}
+
+Properties of a computer system must hold in the presence of a
+resourced strategic adversary.
+
+\end{definition}
+
+
+\separator
+
+
+\textbf{The three main security properties}
+
+
+\begin{definition}
+
+\textbf{Confidentiality}
+
+\vspace{2pt}
+
+Prevention of unauthorized disclosure of information.
+
+\end{definition}
+
+
+\begin{example}
+
+The adversary should not be able to read my bank statement.
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{Integrity}
+
+\vspace{2pt}
+
+Prevention of unauthorized modification of information.
+
+\end{definition}
+
+
+\begin{example}
+
+The adversary should not be able to change my bank balance.
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{Availability}
+
+\vspace{2pt}
+
+Prevention of unauthorized denial of service.
+
+\end{definition}
+
+
+\begin{example}
+
+The adversary should not prevent me from accessing my bank account.
+
+\end{example}
+
+
+%=========================================================
+\section{Security Policy}
+%=========================================================
+
+\begin{definition}
+
+\textbf{Security Policy}
+
+\vspace{2pt}
+
+A high-level description of the security properties that must hold
+in the system in relation to assets and principals.
+
+\end{definition}
+
+
+\separator
+
+
+\begin{definition}
+
+\textbf{Assets (Objects)}
+
+\vspace{2pt}
+
+Anything with value that needs to be protected.
+
+\end{definition}
+
+
+\begin{example}
+
+Examples of assets:
+
+\begin{itemize}
+
+\item data;
+
+\item files;
+
+\item memory;
+
+\item sensitive information.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{Principals (Subjects)}
+
+\vspace{2pt}
+
+People, computer programs, services, etc.
+
+Principals may not contain the adversary.
+
+\end{definition}
+
+
+%=========================================================
+\section{Threat Model}
+%=========================================================
+
+\begin{definition}
+
+\textbf{Threat Model}
+
+\vspace{2pt}
+
+Describes the resources available to the adversary and the
+adversary's capabilities.
+
+\end{definition}
+
+
+\textbf{Typical adversary capabilities}
+
+\begin{itemize}
+
+\item observe;
+
+\item influence;
+
+\item corrupt;
+
+\item exploit available resources.
+
+\end{itemize}
+
+
+\begin{definition}
+
+\textbf{Adversary}
+
+\vspace{2pt}
+
+The adversary is a malicious entity aiming at breaching the
+security policy.
+
+The adversary is strategic: the adversary chooses the optimal way
+to use their resources to mount an attack that violates the
+security properties.
+
+\end{definition}
+
+
+%=========================================================
+\section{Vulnerabilities and Threats}
+%=========================================================
+
+\begin{definition}
+
+\textbf{Vulnerability}
+
+\vspace{2pt}
+
+A specific weakness that could be exploited by adversaries with
+interest in different assets.
+
+\end{definition}
+
+
+\begin{example}
+
+Examples:
+
+\begin{itemize}
+
+\item The banking API is not protected.
+
+\item The password appears in plain text on my screen.
+
+\end{itemize}
+
+\end{example}
+
+
+\separator
+
+
+\begin{definition}
+
+\textbf{Threat}
+
+\vspace{2pt}
+
+The feared event or the goal of the adversary that we do not want
+to materialize.
+
+\end{definition}
+
+
+\begin{example}
+
+Examples:
+
+\begin{itemize}
+
+\item A hacker wants to retrieve money by breaking into the bank's
+system.
+
+\item A student wants to learn my password by looking over my
+shoulder.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{Harm}
+
+\vspace{2pt}
+
+The bad thing that happens when the threat materializes.
+
+\end{definition}
+
+
+\begin{example}
+
+Examples:
+
+\begin{itemize}
+
+\item The adversary steals money.
+
+\item The adversary blocks access to the bank.
+
+\item The adversary learns my password.
+
+\item The adversary reads a message.
+
+\end{itemize}
+
+\end{example}
+
+
+%=========================================================
+\section{Relationship Between Concepts}
+%=========================================================
+
+\begin{important}
+
+If the security properties hold within the threat model, it means
+that:
+
+\begin{itemize}
+
+\item there are no vulnerabilities that can be exploited;
+
+\item threats cannot materialize;
+
+\item no harm happens.
+
+\end{itemize}
+
+\end{important}
+
+
+\separator
+
+
+%=========================================================
+\section{Security Mechanisms}
+%=========================================================
+
+\begin{definition}
+
+\textbf{Security Mechanism}
+
+\vspace{2pt}
+
+A technical mechanism used to ensure that the security policy is
+not violated by an adversary within the threat model.
+
+\end{definition}
+
+
+\begin{important}
+
+Security mechanisms protect the system against adversaries whose
+resources and capabilities are described by the threat model.
+
+\end{important}
+
+
+%=========================================================
+\section{When is a System Secure?}
+%=========================================================
+
+\begin{definition}
+
+\textbf{Secure System}
+
+\vspace{2pt}
+
+A system is secure if an adversary constrained by a specific threat
+model cannot violate the security policy.
+
+\end{definition}
+
+
+\begin{summary}
+
+A secure system depends on:
+
+\begin{itemize}
+
+\item a clearly defined security policy;
+
+\item identified assets and principals;
+
+\item a realistic threat model;
+
+\item effective security mechanisms.
+
+\end{itemize}
+
+\end{summary}
+
+
+%=========================================================
+\section{Security Argument}
+%=========================================================
+
+\begin{definition}
+
+\textbf{Security Argument}
+
+\vspace{2pt}
+
+A rigorous argument that the security mechanisms in place are
+indeed effective in maintaining the security policy.
+
+The argument can be verbal or mathematical and is subject to the
+assumptions of the threat model.
+
+\end{definition}
+
+
+
+\end{multicols}
+
+\end{document}
