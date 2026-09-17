@@ -704,4 +704,25 @@ The goal of testing is to find bugs so they can be fixed before release.
   \item How do we tell how much testing we still need to do?
 \end{itemize}
 
+\section{Coverage Metrics}
+
+\begin{itemize}
+  \item \textbf{Statement coverage}
+  \begin{itemize}
+    \item easy to compute, easy to reason about
+    \item a decent first-cut approximation of how good your tests are
+  \end{itemize}
+  \item \textbf{Branch coverage}
+  \begin{itemize}
+    \item more complicated but still doable
+    \item a better estimate of the quality of your tests
+    \item basis-set testing (cyclomatic complexity) gives us the sets for 100\% branch coverage
+  \end{itemize}
+  \item \textbf{Path coverage}
+  \begin{itemize}
+    \item impractical
+    \item the perfect measure of how good your tests are
+  \end{itemize}
+\end{itemize}
+
 \end{document}
