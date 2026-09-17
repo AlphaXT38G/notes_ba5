@@ -25,14 +25,9 @@ Ordinary engineering asks for \textbf{correctness}, \textbf{safety} and
 properties hold in the presence of a \textbf{deliberate, strategic adversary}.
 \end{rembox}
 
-\section{Computer security}
+\section{Security properties}
 
-\begin{defnbox}[title=Computer security]
-\textbf{Properties} of a computer system must hold in the presence of a
-\textbf{resourced strategic adversary}.
-\end{defnbox}
-
-\subsection{Security properties}
+\textbf{Properties} of a computer system must hold in the presence of a \textbf{resourced strategic adversary}.
 
 \begin{defnbox}[title=CIA triad]
 \begin{itemize}
@@ -50,7 +45,7 @@ The adversary should not be able to \textit{read} my statement (confidentiality)
 
 \begin{rembox}[title=Beyond the CIA triad]
 Modern systems also care about \textbf{authenticity}, \textbf{anonymity},
-\textbf{isolation}, \textbf{non-repudiation}, and more.
+\textbf{isolation}, and more.
 \end{rembox}
 
 \section{Security policy}
@@ -65,11 +60,11 @@ relation to \textbf{assets} and \textbf{principals}.
 \end{defnbox}
 
 \begin{propbox}[title=Properties in terms of principals and assets]
-\begin{tabular}{lll}
-Confidentiality & prevent unauthorized disclosure & authorized \textbf{users} may read a \textbf{file} \\
-Integrity & prevent unauthorized modification & authorized \textbf{programs} may write a \textbf{file} \\
-Availability & prevent unauthorized denial of service & authorized \textbf{services} can access a \textbf{file} \\
-\end{tabular}
+\begin{itemize}
+  \item \textbf{Confidentiality} — authorized \textbf{users} may read a \textbf{file}.
+  \item \textbf{Integrity} — authorized \textbf{programs} may write a \textbf{file}.
+  \item \textbf{Availability} — authorized \textbf{services} can access a \textbf{file}.
+\end{itemize}
 \end{propbox}
 
 \section{The adversary}
