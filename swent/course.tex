@@ -725,4 +725,96 @@ The goal of testing is to find bugs so they can be fixed before release.
   \end{itemize}
 \end{itemize}
 
+\section{Technical Debt}
+
+\begin{itemize}
+  \item \textbf{Implied cost of additional rework caused by doing a hack}
+  \begin{itemize}
+    \item fixing hard-coded values, poorly structured code, coding-convention violations, \ldots
+  \end{itemize}
+  \item \textbf{Causes}
+  \begin{itemize}
+    \item Rushed timelines, incomplete requirements, lack of knowledge, legacy code, evolution
+  \end{itemize}
+  \item \textbf{Kinds of technical debt}
+  \begin{itemize}
+    \item Deliberate, Inadvertent, Bit Rot
+  \end{itemize}
+  \item \textbf{Managing technical debt}
+  \begin{itemize}
+    \item Recognize, Measure, Devise a repayment plan, Prevent
+  \end{itemize}
+\end{itemize}
+
+\section{Code Smells}
+
+\begin{itemize}
+  \item \textbf{Code patterns that suggest a potential issue or problem}
+  \begin{itemize}
+    \item not bugs, just indicators of increased risks for future bugs, maintainability challenges, etc.
+  \end{itemize}
+\end{itemize}
+
+\begin{multicols}{2}
+\begin{itemize}
+  \item Large Class
+  \item Long Method
+  \item Primitive Obsession
+  \item Feature Envy
+  \item Duplicated Code
+  \item God Object
+  \item Data Clumps
+  \item Shotgun Surgery
+  \item Lazy Class/Freeloader
+  \item Speculative Generality
+  \item Temporary Field
+  \item Message Chains
+  \item Middle Man
+\end{itemize}
+\end{multicols}
+
+\begin{center}
+\begin{minipage}[t]{0.48\linewidth}
+\centering
+\includegraphics[width=\linewidth]{images/code-smell-A.png}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+\centering
+\includegraphics[width=\linewidth]{images/code-smell-B.png}
+\end{minipage}
+\end{center}
+
+\begin{exbox}[title=Maintainability overview]
+\small
+Each bubble is one file: \textbf{lines of code} on the x-axis, \textbf{technical debt} (estimated time to fix) on the y-axis, \textbf{bubble size} is the number of code smells, and \textbf{color} is the maintainability rating (A, healthy, through E, critical).
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+  \item Most files cluster near the origin: small, low-debt, rated A --- the bulk of a healthy codebase.
+  \item The outliers --- large bubbles, or bubbles shifted toward orange/red --- are the files worth refactoring first: many smells and/or high estimated debt relative to their size.
+  \item The right-hand chart is the same view at a larger scale (debt in days rather than hours), showing how smells and debt compound as files grow.
+\end{itemize}
+\end{exbox}
+
+\section{Takeaways}
+
+\begin{keybox}
+\begin{itemize}
+  \item \textbf{Coverage metrics}
+  \begin{itemize}
+    \item just an indicator, they do not ``sign off'' on software quality
+    \item provide guidance: areas that need attention
+  \end{itemize}
+  \item \textbf{Tests are code}
+  \begin{itemize}
+    \item update tests as code evolves (e.g., every time you fix a bug, write a test for it)
+    \item keep tests under version control
+    \item run often
+    \item should be of production quality
+  \end{itemize}
+  \item \textbf{Look at the big picture}
+  \begin{itemize}
+    \item consider technical debt, code smells, etc.
+  \end{itemize}
+\end{itemize}
+\end{keybox}
+
 \end{document}
