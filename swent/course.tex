@@ -634,8 +634,6 @@ Mobile app lifecycles are considerably more sophisticated than server or desktop
 
 \chapter{Week2 : Part A}
 
-\section{Testing Fundamentals}
-
 \begin{defnbox}[title=Validation vs.\ Verification]
 \begin{itemize}
   \item \textbf{Validation} asks whether the requirements themselves are the right ones.
@@ -663,6 +661,29 @@ The goal of testing is to find bugs so they can be fixed before release.
   \item \textbf{Keep tests independent of each other}
   \item \textbf{Decouple tests from the rest of the implementation}, as much as possible, especially around object creation
 \end{itemize}
+
+\section{The Cost of Bugs}
+
+\textbf{More causes of increasing bug costs:}
+
+\begin{itemize}
+  \item \textbf{Technical debt}
+  \begin{itemize}
+    \item bug workarounds $\Rightarrow$ codebase becomes more complex and fragile
+  \end{itemize}
+  \item \textbf{Lost knowledge}
+  \begin{itemize}
+    \item the longer a bug lives, the more likely the original developers have moved on
+  \end{itemize}
+  \item \textbf{Entrenchment} --- the bug has become part of the interface
+  \begin{itemize}
+    \item other code and other systems come to depend on the buggy behavior, so eventually you can't fix it without breaking them
+  \end{itemize}
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=\linewidth]{images/graphic-cost-bugs.png}
+\end{center}
 
 \iffalse
 
