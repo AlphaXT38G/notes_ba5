@@ -794,6 +794,83 @@ Each bubble is one file: \textbf{lines of code} on the x-axis, \textbf{technical
 \end{itemize}
 \end{exbox}
 
+\section{What Coverage Doesn't Catch}
+
+\subsection{The Imperfection of Coverage}
+
+\begin{itemize}
+  \item High coverage $\Rightarrow$ well-exercised codebase $\nRightarrow$ freedom from defects
+  \item \textbf{Coverage is an imperfect proxy metric for test quality}
+  \begin{itemize}
+    \item measures how much code is executed by tests, not how well they test the code
+    \item does not measure the quality and importance of the test scenarios
+  \end{itemize}
+  \item \textbf{Challenge: Not all code is equal}
+  \item \textbf{Challenge: Flaky tests}
+  \item \textbf{Challenge: Contextual sensitivity}
+  \begin{itemize}
+    \item the more circumstances need to combine in order for a bug to manifest, the harder it is to anticipate and reveal them in testing (e.g., concurrency issues)
+  \end{itemize}
+\end{itemize}
+
+\subsection{Smartphone Platform: Heterogeneity Challenges to Testing}
+
+\begin{itemize}
+  \item \textbf{Devices}
+  \begin{itemize}
+    \item device-specific or configuration-specific bugs
+  \end{itemize}
+  \item \textbf{Integration with external systems}
+  \begin{itemize}
+    \item you depend on the network!
+    \item unexpected behavior can cause mobile app to misbehave
+  \end{itemize}
+  \item \textbf{Users}
+  \begin{itemize}
+    \item watch your input validation
+  \end{itemize}
+  \item \textbf{Sensors are finicky}
+  \item \textbf{Interaction with system features}
+\end{itemize}
+
+\subsection{Testing Challenges: Non-Functional Requirements}
+
+\begin{itemize}
+  \item performance, security, usability, compatibility, etc.
+  \item test coverage numbers do not capture these directly
+  \begin{itemize}
+    \item yet they can significantly impact user experience
+  \end{itemize}
+  \item static analysis tools
+  \item performance and load testing
+  \item security testing (both automated and manual)
+  \item exploratory testing
+\end{itemize}
+
+\subsection{Careful What You Ask For}
+
+\begin{warnbox}[title=An agent optimizes exactly the metric you name]
+\begin{itemize}
+  \item ask for ``increase coverage to 80\%'' and you get the two tests we opened with
+  \item ask for tests of specific behaviors, and you get tests
+\end{itemize}
+\end{warnbox}
+
+\begin{itemize}
+  \item \textbf{For every test: what would have to break for this to fail (i.e., ``go red'')?}
+  \begin{itemize}
+    \item if you can't answer in one sentence, it isn't a test --- delete it
+  \end{itemize}
+  \item \textbf{Verify the suite, not the number}
+  \begin{itemize}
+    \item break your own code on purpose; if nothing goes red, your tests are decorative
+  \end{itemize}
+  \item \textbf{A coverage jump is a reason to look harder, not to celebrate}
+  \begin{itemize}
+    \item 40\% to 90\% in one afternoon could mean 40 plausible green tests nobody has read
+  \end{itemize}
+\end{itemize}
+
 \section{Takeaways}
 
 \begin{keybox}
