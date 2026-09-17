@@ -632,6 +632,38 @@ Direct correspondences exist between the Android and iOS callbacks. Difference: 
 Mobile app lifecycles are considerably more sophisticated than server or desktop ones -- a reflection of the added complexity and constraints mobile apps face.
 \end{keybox}
 
+\chapter{Week2 : Part A}
+
+\section{Testing Fundamentals}
+
+\begin{defnbox}[title=Validation vs.\ Verification]
+\begin{itemize}
+  \item \textbf{Validation} asks whether the requirements themselves are the right ones.
+  \item \textbf{Verification} checks that the product actually satisfies those requirements.
+\end{itemize}
+\tcblower
+The goal of testing is to find bugs so they can be fixed before release.
+\end{defnbox}
+
+\subsection{Testing: Different Levels}
+\textit{(recap from CS-214)}
+
+\begin{itemize}
+  \item \textbf{Unit tests} exercise individual components or functions in isolation --- e.g.\ a user-input validation function.
+  \item \textbf{Integration tests} exercise combinations of components together --- e.g.\ the login interface talking to the backend database.
+  \item \textbf{System tests} exercise the complete, integrated software --- e.g.\ the entire app's functionality.
+  \item \textbf{End-to-end tests} follow a full user journey from start to finish. Every e2e test is a system test, but not every system test is end-to-end.
+  \item \textbf{Acceptance tests} exercise the product in real-world scenarios to confirm it meets stakeholders' requirements.
+\end{itemize}
+
+\subsection{Writing Good Unit Tests}
+
+\begin{itemize}
+  \item \textbf{Keep tests small, checking only one thing}
+  \item \textbf{Keep tests independent of each other}
+  \item \textbf{Decouple tests from the rest of the implementation}, as much as possible, especially around object creation
+\end{itemize}
+
 \iffalse
 
 % ---------------------------------------------------------
