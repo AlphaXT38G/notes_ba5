@@ -27,7 +27,6 @@ python build.py algo iml sigproc
 |---|---|
 | Computer security and privacy| _____ |
 | The software enterprise - from ideas to products | _____ |
-| Algebra | _____ |
 | Modeles stochastiques pour les communications | _____ |
 | Numerical methods for visual computing and ML | _____ |
 | Electronique I | _____ |
@@ -43,10 +42,6 @@ python build.py algo iml sigproc
 
 ### The software enterprise - from ideas to products — `swent/`
 - [Cheat sheet](_overview/swent/cheatsheet.pdf)
-
-### Algebra — `algebra/`
-- [Cheat sheet](_overview/algebra/cheatsheet.pdf)
-- [Course notes](_overview/algebra/course.pdf)
 
 ### Modeles stochastiques pour les communications — `modstoc/`
 - [Cheat sheet](_overview/modstoc/cheatsheet.pdf)
@@ -81,7 +76,6 @@ notes_ba4/
 ├── _shared/     # Shared LaTeX style files
 ├── compsec/     # Computer security and privacy course
 ├── swent/       # The software enterprise - from ideas to products course
-├── algebra/     # Algebra course
 ├── modstoc/     # Modeles stochastiques pour les communications course
 ├── nummet/      # Numerical methods for visual computing and ML course
 ├── elec/        # Electronique I course
