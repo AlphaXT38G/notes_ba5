@@ -6,8 +6,9 @@
 \includegraphics[width=\linewidth]{images/viewmodel-need.png}
 \end{center}
 
-\centering
+\begin{center}
 \textcolor{redColor}{\itshape Slow, flaky, different answers on different days $\Rightarrow$ not a test.}
+\end{center}
 
 \section{Breaking the Dependency}
 
@@ -23,12 +24,6 @@
 \tcblower
 This is what makes stubs, mocks, and fakes possible in the first place: you can only inject a test double where the code depends on an interface, not a hard-coded implementation.
 \end{keybox}
-
-\begin{warnbox}[title=The Firebase emulator is not a test double]
-The emulator runs a \textbf{real} Firestore implementation locally --- same query engine,
-same security rules --- just not in the cloud. It is not a fake: a fake replaces Firestore
-with a few lines of your own code that only approximate its behavior.
-\end{warnbox}
 
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
@@ -47,23 +42,29 @@ with a few lines of your own code that only approximate its behavior.
 \includegraphics[width=\linewidth]{images/three-test-doubles.png}
 \end{center}
 
-\begin{defnbox}[title=Three test doubles]
-All three replace a dependency; they differ in what you assert against.
+\begin{center}
+\begin{minipage}[t]{0.32\linewidth}
+\centering
+\includegraphics[width=\linewidth]{images/stub-diagram.png}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.32\linewidth}
+\centering
+\includegraphics[width=\linewidth]{images/mock-diagram.png}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.32\linewidth}
+\centering
+\includegraphics[width=\linewidth]{images/fake-diagram.png}
+\end{minipage}
+\end{center}
+
+\begin{rembox}
 \begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item \textbf{Stub} --- answers questions with a canned value, no logic. You never ask it anything afterwards; you assert on \textbf{your own code's result}.
-  \item \textbf{Mock} --- answers, and remembers every call (arguments, how many times, \ldots). You assert on the \textbf{calls your code made to the mock}.
-  \item \textbf{Fake} --- a small working thing: a real, simplified implementation (e.g.\ an in-memory map instead of a database). You assert on \textbf{your code's behavior over a sequence of interactions} with the fake.
+  \item \textbf{Stub} --- \texttt{grades(student)} is cut off from the real DB and replaced by a canned answer; nobody checks that the cut edge was ever used.
+  \item \textbf{Mock} --- \texttt{securityOn()} fans out to \texttt{WindowMock} and \texttt{DoorMock}; the test verifies that \texttt{close()} was sent to both.
+  \item \textbf{Fake} --- \texttt{LoginService} is cut off from \texttt{AccountDAO} and instead wired to \texttt{FakeAccountDAO}, a real (tiny) implementation backed by a \texttt{HashMap} instead of the DB.
 \end{itemize}
-\end{defnbox}
+\end{rembox}
 
 \begin{center}
 \includegraphics[width=\linewidth]{images/test-doubles-example.png}
 \end{center}
-
-\begin{exbox}[title=Picking the right double]
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item[(a)] \textbf{Stub} --- checking that the ViewModel shows an error message on sign-in failure only cares what your code does with a failure, not how the failure was produced.
-  \item[(b)] \textbf{Mock} --- ``a failed sign-in is reported to analytics exactly once'' is a claim about the \emph{conversation} itself; only a recorder can check it.
-  \item[(c)] \textbf{Fake} --- a cart flow that reads and writes twenty user documents, where order matters and later reads depend on earlier writes, needs a real (if tiny) implementation --- ten lines of an in-memory map.
-\end{itemize}
-\end{exbox}
