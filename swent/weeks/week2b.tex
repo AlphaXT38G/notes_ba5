@@ -121,3 +121,48 @@ slightly differently (inconsistency), and it is easy to leak a long-lived object
 wiring code for you: you declare which implementation satisfies which interface once, and
 the framework builds and injects the right objects everywhere they are needed.
 \end{keybox}
+
+\section{Regression Testing}
+
+\begin{defnbox}[title=Regression]
+A \textbf{regression} is a bug that reintroduces a problem that was already fixed once ---
+the software regresses to a previously broken state, usually because a later change did not
+account for it.
+\end{defnbox}
+
+\begin{keybox}[title=Rule \#1]
+When you fix a bug, add a test that fails on the old code and passes on the fix. That test
+now proves the bug's absence \textbf{forever}: it turns every future change into a check
+against this specific regression, not just a one-time fix.
+\end{keybox}
+
+\begin{keybox}[title=Rule \#2]
+A software product is never ``done'' --- it keeps evolving, and \textbf{every change risks
+breaking something that already worked}. This is exactly why Rule~\#1 matters: each
+regression test accumulated over time is a fixed cost paid once, guarding against a risk
+that recurs on every single future change.
+\end{keybox}
+
+\subsection{Building a Regression Suite}
+
+\begin{rembox}[title=Step 2: identify the core features]
+Before writing regression tests, list the product's core features and rank them --- not
+every feature deserves the same testing budget. A \textbf{core features matrix} records,
+per feature, its description, importance, user impact, and any testing notes; the highest-importance,
+highest-impact rows are exactly where regressions hurt the most and where the suite should
+concentrate first.
+\end{rembox}
+
+\begin{center}
+\includegraphics[width=\linewidth]{images/regression-core-features-matrix.png}
+\end{center}
+
+\subsection{Regression Test Suite: Summary}
+
+\begin{keybox}
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+  \item \textbf{Goal of the regression suite} --- spot regressions on both functional and non-functional requirements.
+  \item \textbf{The suite needs to run frequently} --- which means it needs to be fully automated and fast.
+  \item \textbf{Use CI to run it automatically} whenever needed, e.g.\ on every push.
+\end{itemize}
+\end{keybox}
