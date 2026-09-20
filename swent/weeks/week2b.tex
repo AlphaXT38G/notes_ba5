@@ -166,3 +166,50 @@ concentrate first.
   \item \textbf{Use CI to run it automatically} whenever needed, e.g.\ on every push.
 \end{itemize}
 \end{keybox}
+
+\section{UI Testing for Your App}
+
+\begin{center}
+\includegraphics[width=\linewidth]{images/viewmodel-vs-ui-tests.png}
+\end{center}
+
+\begin{center}
+\textcolor{redColor}{\bfseries UI tests check the wiring. ViewModel tests check the logic.}
+\end{center}
+
+\begin{rembox}
+The ViewModel test is cheap and covers many cases; the UI test is expensive but is the only
+one that catches wiring mistakes --- e.g.\ the banner's visibility bound to the wrong field,
+even though the ViewModel's own logic is correct.
+\end{rembox}
+
+\subsection{Where Does Validation Belong?}
+
+\begin{center}
+\includegraphics[width=\linewidth]{images/validation-view-vs-viewmodel.png}
+\end{center}
+
+\subsection{What to Test with UI Tests}
+
+\begin{defnbox}
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+  \item \textbf{Navigation} --- e.g.\ pressing this button takes you to that screen.
+  \item \textbf{Permission flows} --- e.g.\ the permission system dialog appears, and both answers are handled.
+  \item \textbf{End-to-end test of the critical path} --- e.g.\ the one crucial flow that your app exists for.
+  \item \textbf{Regression} --- e.g.\ UI wiring bugs.
+\end{itemize}
+\end{defnbox}
+
+\begin{center}
+\textcolor{redColor}{\bfseries Have a few such UI tests, not tens.}
+\end{center}
+
+\subsection{UI Testing: A Recap}
+
+\begin{keybox}
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+  \item Check that the ViewModel's state reaches the screen correctly.
+  \item Everything else belongs below the UI --- \textit{there it can run orders of magnitude faster and isn't flaky}.
+  \item Tag what you test, then assert on state (not on appearance).
+\end{itemize}
+\end{keybox}
