@@ -12,6 +12,7 @@
 \end{center}
 
 \subsection{Breaking the Dependency}
+\label{sec:breaking-dependency}
 
 \begin{center}
 \includegraphics[width=\linewidth]{images/repository-interface.png}
@@ -69,3 +70,54 @@ This is what makes stubs, mocks, and fakes possible in the first place: you can 
 \begin{center}
 \includegraphics[width=\linewidth]{images/test-doubles-example.png}
 \end{center}
+
+\section{Dependency Injection}
+
+\begin{defnbox}[title=Dependency Injection (DI)]
+A class does not create the objects it depends on itself; instead, those dependencies are
+handed to it (``injected'') from the outside, typically as constructor parameters.
+The class only knows about an \textbf{interface}; it never decides, and never even sees,
+which concrete implementation it gets.
+\end{defnbox}
+
+\begin{exbox}[title=Without DI vs.\ with DI]
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+  \item \textbf{Without DI} --- the ViewModel builds its own dependency internally, e.g.\
+        \texttt{private val repo = FirestoreUserRepository()}. It is hard-wired to that one
+        concrete class: nothing can ever be swapped in, in production or in a test.
+  \item \textbf{With DI} --- the ViewModel's constructor takes a \texttt{UserRepository}
+        parameter instead: \texttt{class UserViewModel(private val repo: UserRepository)}.
+        Whoever \emph{creates} the ViewModel decides which implementation to hand it ---
+        \texttt{FirestoreUserRepository} when the app runs, \texttt{FakeUserRepository}
+        when a test runs --- the ViewModel's own code never changes.
+\end{itemize}
+\tcblower
+This is exactly the ``after'' picture from \S\ref{sec:breaking-dependency}: DI is simply the
+practice of always constructing a class this way, so that a test double can be substituted
+without touching the class under test.
+\end{exbox}
+
+\begin{rembox}[title=Who does the injecting?]
+Someone still has to build the real object graph and pass the right implementation to the
+right constructor. \textbf{Manual DI} means you write that wiring code yourself --- fine for
+a handful of classes, as the next slide shows.
+\end{rembox}
+
+\paragraph{Manual DI: pros vs.\ cons.}
+
+\begin{center}
+\includegraphics[width=\linewidth]{images/di-pros-cons.png}
+\end{center}
+
+\begin{center}
+\textcolor{redColor}{\bfseries OK to do by hand for a small project. But not at industrial scale.}
+\end{center}
+
+\begin{keybox}[title=Why frameworks exist]
+Manual DI does not scale: every new ViewModel needs its own hand-written factory, the
+wiring code is near-identical across them (boilerplate), each teammate wires things up
+slightly differently (inconsistency), and it is easy to leak a long-lived object like a
+\texttt{Context} without noticing. \textbf{DI frameworks} (e.g.\ Hilt, Dagger) generate that
+wiring code for you: you declare which implementation satisfies which interface once, and
+the framework builds and injects the right objects everywhere they are needed.
+\end{keybox}
