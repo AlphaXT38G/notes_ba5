@@ -16,6 +16,7 @@ algos_condensed.pdf
 _overview/**
 !_overview/**/
 !_overview/**/*.pdf
+!_overview/**/*.md
 
 # AI assistant files
 .claude/
