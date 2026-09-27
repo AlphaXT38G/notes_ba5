@@ -10,6 +10,10 @@
 
 \cheattitle{Numerical Methods}{}{BA5}
 
+\begin{thm}[title=Submultiplicativity,halign=center,top=3pt,bottom=3pt]
+\(\norm{A\vect{x}} \le \norm{A}\,\norm{\vect{x}} \qquad \norm{AB} \le \norm{A}\,\norm{B}\)
+\end{thm}
+
 \section{LU Factorization}
 
 \begin{center}
@@ -24,12 +28,6 @@
 \(A=LL^T\): half the cost/storage of LU. \textbf{2\(\times\)2:}\\
 \(L_{11}=\sqrt{A_{11}},\ L_{21}=A_{21}/L_{11},\ L_{22}=\sqrt{A_{22}-L_{21}^2}\)
 \end{defn}
-
-\section{Norm Inequalities}
-
-\begin{prop}[title=Submultiplicativity]
-\(\norm{A\vect{x}} \le \norm{A}\,\norm{\vect{x}} \qquad \norm{AB} \le \norm{A}\,\norm{B}\)
-\end{prop}
 
 \section{Conditioning}
 
