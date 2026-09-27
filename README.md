@@ -49,7 +49,6 @@ python build.py algo iml sigproc
 
 ### Numerical methods for visual computing and ML — `nummet/`
 - [Cheat sheet](_overview/nummet/cheatsheet.pdf)
-- [Course notes](_overview/nummet/course.pdf)
 
 ### Electronique I — `elec/`
 - [Cheat sheet](_overview/elec/cheatsheet.pdf)
