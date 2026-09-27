@@ -41,7 +41,7 @@ python build.py algo iml sigproc
 - [Cheat sheet](_overview/compsec/cheatsheet.pdf)
 
 ### The software enterprise - from ideas to products — `swent/`
-- [Cheat sheet](_overview/swent/cheatsheet.pdf)
+- [Course notes](_overview/swent/course.pdf)
 
 ### Modeles stochastiques pour les communications — `modstoc/`
 - [Cheat sheet](_overview/modstoc/cheatsheet.pdf)
