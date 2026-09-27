@@ -45,6 +45,7 @@
 \end{thm}
 
 \begin{prop}[title=Properties]
+\(1 \le \operatorname{cond}(A) \le \infty\)\\
 \(\operatorname{cond}(A)=\infty \iff A\) singular\\
 \(\operatorname{cond}(I)=1\)\\
 \(\operatorname{cond}(\gamma A)=\operatorname{cond}(A),\ \gamma\neq0\)\\
@@ -59,6 +60,13 @@ determinant close to zero, yet it is trivial to solve and perfectly conditioned.
 \begin{thm}[title=Implications (without proof{,} good solver{,} exact \(\vect{b}\)),halign=center,top=3pt,bottom=3pt]
 \(\displaystyle \frac{\norm{\Delta\vect{x}}}{\norm{\vect{x}}} \lesssim
 \operatorname{cond}(A)\,\operatorname{ulp}(1)\)\\[2pt]
+\end{thm}
+
+\section{Least Squares}
+
+\begin{thm}[title=Problem (\(A\in\R^{m\times n}{,}\ m>n\)),halign=center,top=3pt,bottom=3pt]
+\(\displaystyle \min_{\vect{x}\in\R^n} \norm{A\vect{x}-\vect{b}}_2^2\)\\[2pt]
+Normal equations: \(A^T\!A\,\vect{x} = A^T\vect{b}\)
 \end{thm}
 
 \end{multicols*}
