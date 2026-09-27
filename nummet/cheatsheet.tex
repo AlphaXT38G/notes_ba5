@@ -10,8 +10,9 @@
 
 \cheattitle{Numerical Methods}{}{BA5}
 
-\begin{thm}[title=Submultiplicativity,halign=center,top=3pt,bottom=3pt]
-\(\norm{A\vect{x}} \le \norm{A}\,\norm{\vect{x}} \qquad \norm{AB} \le \norm{A}\,\norm{B}\)
+\begin{thm}[title=Reminders,halign=center,top=3pt,bottom=3pt]
+\(\norm{A\vect{x}} \le \norm{A}\,\norm{\vect{x}} \qquad \norm{AB} \le \norm{A}\,\norm{B}\)\\
+\(\det(A)=0 \iff A\) singular
 \end{thm}
 
 \section{LU Factorization}
@@ -32,7 +33,7 @@
 \section{Conditioning}
 
 \begin{center}
-\includegraphics[width=0.85\linewidth]{images/conditioning.png}
+\includegraphics[width=0.8\linewidth]{images/conditioning.png}
 \end{center}
 
 \begin{thm}[title=Condition number,halign=center,top=3pt,bottom=3pt]
@@ -43,15 +44,6 @@
 \(\operatorname{cond}(A) = \kappa(A) = \norm{A}\,\lVert A^{-1}\rVert\)
 \end{thm}
 
-\begin{defn}[title=Intuition]
-\(A\): circle \(\to\) ellipse\\
-\(\kappa=\) max stretch / min stretch \(=\sigma_{\max}/\sigma_{\min}\)\\
-\(\kappa=1\): still a circle. Flat ellipse: \(\kappa\gg1\)\\
-Worst: \(\vect{x}\) on max, \(\Delta\vect{b}\) on min stretch \(\Rightarrow\) error \(\times\,\kappa\)\\
-\(\det\) = volume, \(\kappa\) = shape\\
-Lose \(\approx\log_{10}\kappa\) digits (of \(\approx16\) in double)
-\end{defn}
-
 \begin{prop}[title=Properties]
 \(\operatorname{cond}(A)=\infty \iff A\) singular\\
 \(\operatorname{cond}(I)=1\)\\
@@ -60,14 +52,13 @@ Lose \(\approx\log_{10}\kappa\) digits (of \(\approx16\) in double)
 \end{prop}
 
 \begin{warn}[title=Not the determinant]
-\(A=\tfrac{1}{10}I\in\R^{1000\times1000}\): \(\det(A)=10^{-1000}\), but
-\(\operatorname{cond}(A)=1\) (trivial to solve).
+A tiny determinant does not mean a hard system: a scaled identity has a
+determinant close to zero, yet it is trivial to solve and perfectly conditioned.
 \end{warn}
 
-\begin{thm}[title=Implications (good solver{,} exact \(\vect{b}\)),halign=center,top=3pt,bottom=3pt]
+\begin{thm}[title=Implications (without proof{,} good solver{,} exact \(\vect{b}\)),halign=center,top=3pt,bottom=3pt]
 \(\displaystyle \frac{\norm{\Delta\vect{x}}}{\norm{\vect{x}}} \lesssim
 \operatorname{cond}(A)\,\operatorname{ulp}(1)\)\\[2pt]
-\(\operatorname{ulp}(1)\approx2^{-23}\) (single), \(\approx2^{-52}\) (double)
 \end{thm}
 
 \end{multicols*}
