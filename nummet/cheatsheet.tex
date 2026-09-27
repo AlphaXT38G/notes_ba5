@@ -23,7 +23,8 @@ Factor once, then \(O(n^2)\) per right-hand side.
 \end{prop}
 
 \begin{defn}[title=Cholesky (SPD)]
-\(A=LL^T\): half the cost/storage of LU.
+\(A=LL^T\): half the cost/storage of LU.\\
+\textbf{2\(\times\)2:} \(L_{11}=\sqrt{A_{11}}\), \(L_{21}=\frac{A_{21}}{L_{11}}\), \(L_{22}=\sqrt{A_{22}-L_{21}^2}\).
 \end{defn}
 
 \end{multicols*}
