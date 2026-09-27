@@ -10,8 +10,9 @@
 
 \cheattitle{Numerical Methods}{}{BA5}
 
-\begin{thm}[title=Submultiplicativity,halign=center,top=3pt,bottom=3pt]
-\(\norm{A\vect{x}} \le \norm{A}\,\norm{\vect{x}} \qquad \norm{AB} \le \norm{A}\,\norm{B}\)
+\begin{thm}[title=Reminders,halign=center,top=3pt,bottom=3pt]
+\(\norm{A\vect{x}} \le \norm{A}\,\norm{\vect{x}} \qquad \norm{AB} \le \norm{A}\,\norm{B}\)\\
+\(\det(A)=0 \iff A\) singular
 \end{thm}
 
 \section{LU Factorization}
@@ -32,8 +33,41 @@
 \section{Conditioning}
 
 \begin{center}
-\includegraphics[width=0.85\linewidth]{images/conditioning.png}
+\includegraphics[width=0.8\linewidth]{images/conditioning.png}
 \end{center}
+
+\begin{thm}[title=Condition number,halign=center,top=3pt,bottom=3pt]
+\(\displaystyle
+\colorbox{greenColor!20}{\(\dfrac{\norm{\Delta\vect{x}}}{\norm{\vect{x}}}\)}
+\le \underbrace{\lVert A^{-1}\rVert\,\norm{A}}_{=\,\kappa(A)}
+\colorbox{blueColor!20}{\(\dfrac{\norm{\Delta\vect{b}}}{\norm{\vect{b}}}\)}\)\\[2pt]
+\(\operatorname{cond}(A) = \kappa(A) = \norm{A}\,\lVert A^{-1}\rVert\)
+\end{thm}
+
+\begin{prop}[title=Properties]
+\(1 \le \operatorname{cond}(A) \le \infty\)\\
+\(\operatorname{cond}(A)=\infty \iff A\) singular\\
+\(\operatorname{cond}(I)=1\)\\
+\(\operatorname{cond}(\gamma A)=\operatorname{cond}(A),\ \gamma\neq0\)\\
+\(\operatorname{cond}(QA)=\operatorname{cond}(A),\ Q\) rotation
+\end{prop}
+
+\begin{warn}[title=Not the determinant]
+A tiny determinant does not mean a hard system: a scaled identity has a
+determinant close to zero, yet it is trivial to solve and perfectly conditioned.
+\end{warn}
+
+\begin{thm}[title=Implications (without proof{,} good solver{,} exact \(\vect{b}\)),halign=center,top=3pt,bottom=3pt]
+\(\displaystyle \frac{\norm{\Delta\vect{x}}}{\norm{\vect{x}}} \lesssim
+\operatorname{cond}(A)\,\operatorname{ulp}(1)\)\\[2pt]
+\end{thm}
+
+\section{Least Squares}
+
+\begin{thm}[title=Problem (\(A\in\R^{m\times n}{,}\ m>n\)),halign=center,top=3pt,bottom=3pt]
+\(\displaystyle \min_{\vect{x}\in\R^n} \norm{A\vect{x}-\vect{b}}_2^2\)\\[2pt]
+Normal equations: \(A^T\!A\,\vect{x} = A^T\vect{b}\)
+\end{thm}
 
 \end{multicols*}
 \end{document}
