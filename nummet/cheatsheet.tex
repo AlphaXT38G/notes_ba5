@@ -16,11 +16,9 @@
 \includegraphics[width=0.6\linewidth]{images/lu.png}
 \end{center}
 
-\begin{prop}[title={Solve $Ax=b$}]
-Pivoting: \(A=PLU\), \(P\) permutation (row swaps).\\
-\(x=U^{-1}(L^{-1}(P^{-1}b))\): forward then back substitution (no inverse computed).\\
-Factor once, then \(O(n^2)\) per right-hand side.
-\end{prop}
+\begin{center}
+\includegraphics[width=0.8\linewidth]{images/lu_solve.png}
+\end{center}
 
 \begin{defn}[title=Cholesky (SPD)]
 \(A=LL^T\): half the cost/storage of LU.\\
