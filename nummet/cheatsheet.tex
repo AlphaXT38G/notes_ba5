@@ -43,6 +43,15 @@
 \(\operatorname{cond}(A) = \kappa(A) = \norm{A}\,\lVert A^{-1}\rVert\)
 \end{thm}
 
+\begin{defn}[title=Intuition]
+\(A\): circle \(\to\) ellipse\\
+\(\kappa=\) max stretch / min stretch \(=\sigma_{\max}/\sigma_{\min}\)\\
+\(\kappa=1\): still a circle. Flat ellipse: \(\kappa\gg1\)\\
+Worst: \(\vect{x}\) on max, \(\Delta\vect{b}\) on min stretch \(\Rightarrow\) error \(\times\,\kappa\)\\
+\(\det\) = volume, \(\kappa\) = shape\\
+Lose \(\approx\log_{10}\kappa\) digits (of \(\approx16\) in double)
+\end{defn}
+
 \begin{prop}[title=Properties]
 \(\operatorname{cond}(A)=\infty \iff A\) singular\\
 \(\operatorname{cond}(I)=1\)\\
