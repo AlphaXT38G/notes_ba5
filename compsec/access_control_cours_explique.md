@@ -23,15 +23,15 @@ L’idée fondamentale est donc :
 
 On peut représenter une autorisation par le triplet :
 
-\[
-(subject,\ object,\ access\ right)
-\]
+```text
+(subject, object, access right)
+```
 
 Par exemple :
 
-\[
-(Alice,\ file1,\ read)
-\]
+```text
+(Alice, file1, read)
+```
 
 signifie :
 
@@ -89,9 +89,9 @@ On peut donc toujours se poser :
 
 Exemple :
 
-\[
-(Alice,\ fileA,\ read)
-\]
+```text
+(Alice, fileA, read)
+```
 
 ---
 
@@ -130,13 +130,13 @@ Cela ne signifie pas automatiquement qu’Alice peut :
 
 ### À retenir
 
-\[
+```text
 Authentication = identité
-\]
+```
 
-\[
+```text
 Authorization = permissions
-\]
+```
 
 ---
 
