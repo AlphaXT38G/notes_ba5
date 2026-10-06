@@ -339,4 +339,26 @@ have security consequences (e.g.\ create a file in a directory, access a device,
 to a socket for communicating over the Internet).
 \end{defnbox}
 
+\begin{defnbox}[title=Separation of privilege]
+``No single accident, deception, or breach of trust is sufficient to compromise the
+protected information.'' [SS75] \\
+Requiring \textbf{multiple conditions} to execute an action improves security
+(e.g.\ two keys to open a safe, two factors to authenticate).
+\end{defnbox}
+
+\begin{warnbox}[title=Problems]
+\textbf{Availability?} (more conditions = more ways to be blocked),
+\textbf{Responsibility?} (who is accountable?), \textbf{Complexity!}
+\end{warnbox}
+
+\begin{exbox}[title=Payment system of a business]
+\textbf{Goal}: the attacker must not steal money. \textbf{Threat model}: the attacker
+can corrupt \emph{at most one} principal (no collusion). If a manager can both
+\textit{create a vendor}, \textit{create an order} and \textit{approve} it, a single
+corrupted manager registers a fake shell company and pays it. \\
+\textbf{Solution: split roles} --- Procurement can \textbf{only} create/approve vendors;
+Finance can \textbf{only} approve payments for vendors already in the system.
+Reminiscent of \textbf{separation of powers} / ``checks and balances''.
+\end{exbox}
+
 \end{document}
