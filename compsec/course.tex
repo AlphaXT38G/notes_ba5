@@ -518,4 +518,19 @@ everywhere}:
 \end{itemize}
 \end{rembox}
 
+\begin{defnbox}[title=Authentication vs.\ authorization]
+\begin{itemize}
+  \item \textbf{Authentication} --- the system needs to \textbf{bind the actor to a
+        principal} before authorization. A \textbf{principal} is an abstract entity
+        that is authorized to act (users, connections, processes).
+  \item \textbf{Authorization} --- the system needs to decide whether the
+        \textbf{principal is authorized}: this is \textbf{access control}.
+\end{itemize}
+\end{defnbox}
+
+\begin{warnbox}[title=TCB]
+The mechanisms that do authentication and authorization are in the \textbf{Trusted
+Computing Base}!
+\end{warnbox}
+
 \end{document}
