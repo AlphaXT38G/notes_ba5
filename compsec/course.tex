@@ -1306,4 +1306,26 @@ reputation.
 \end{enumerate}
 \end{defnbox}
 
+\begin{defnbox}[title=Chinese Wall access rule]
+A subject can access an object (for either read or write) if the access \textbf{does not
+allow an information flow} between items with labels in the \textbf{same conflict set}.
+\end{defnbox}
+
+\begin{exbox}[title=Direct flow]
+Alice accesses Pepsi files (OK), then Microsoft Invest (OK), then tries Coca-Cola:
+\textbf{denied}. She has already accessed Pepsi, so an information flow between Pepsi and
+Coca-Cola might happen (she could work again with Pepsi).
+\end{exbox}
+
+\begin{exbox}[title=Indirect flow]
+Alice is assigned to Pepsi; Bob to Coca-Cola and IBM. Alice tries to access IBM:
+\textbf{denied}. If she writes in IBM with her knowledge of Pepsi, the information
+\emph{may} flow to Coca-Cola through Bob.
+\end{exbox}
+
+\begin{rembox}[title=Sanitization is necessary for business]
+``Un-label'' some items as long as the information cannot lead to any conflict of
+interest, e.g.\ extract some ``general market information''.
+\end{rembox}
+
 \end{document}
