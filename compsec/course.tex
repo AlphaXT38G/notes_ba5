@@ -1111,4 +1111,38 @@ system can be analyzed in terms of \textbf{single-step transitions} of states (n
 surprising: it is an induction).
 \end{thmbox}
 
+\subsection{Covert channels}
+
+\begin{exbox}[title={What are the transitions, and what does ``read'' mean?}]
+$\text{level}(s_1) = TS$, $\text{level}(s_2) = C$.
+\begin{enumerate}
+  \item $s_2$ creates $o_2$, so $\text{level}(o_2) = C$;
+  \item $s_1$ reads $C$ and either raises the object level to $TS$ or leaves it at $C$;
+  \item $s_2$ attempts to access $o_2$: \textbf{success or failure leaks 1 bit of
+        information} from $TS$ to $C$!
+\end{enumerate}
+\end{exbox}
+
+\begin{defnbox}[title=Covert channel]
+Any channel that allows \textbf{information flows contrary to the security policy}.
+\begin{itemize}
+  \item \textbf{Storage channels} --- e.g.\ shared counters, ID fields, file
+        metadata, etc.
+  \item \textbf{Timing channels} --- e.g.\ use of CPU, load to memory (cache), queuing
+        time, etc.
+\end{itemize}
+\end{defnbox}
+
+\begin{propbox}[title=Covert channels and least common mechanism]
+\textbf{The more resources are shared, the harder it is to eliminate covert channels}
+(principle 7, least common mechanism). \\
+\textbf{Mitigation}: isolation (communication with low level not possible) or adding
+noise to the communication.
+\begin{itemize}
+  \item Hard to achieve less than 1 bit/sec.
+  \item OK for documents, \textbf{NOT} OK for cryptographic keys (DoD policy:
+        cryptographic keys must always be stored on dedicated hardware).
+\end{itemize}
+\end{propbox}
+
 \end{document}
