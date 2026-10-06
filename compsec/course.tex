@@ -1270,4 +1270,19 @@ Insert a photo in a web album? Ensure the caption is from a restricted set of Un
 does not contain \texttt{<script>}.
 \end{exbox}
 
+\subsection{Principles to support integrity}
+
+\begin{defnbox}[title=Three principles to support integrity]
+\begin{itemize}
+  \item \textbf{Separation of duties} --- require \textbf{multiple principals} to perform
+        an operation (harder for an adversary: they have to corrupt two principals).
+  \item \textbf{Rotation of duties} --- allow a principal only a \textbf{limited time} on
+        any particular role and limit other actions while in this role (harder for an
+        adversarial insider to tamper with the system).
+  \item \textbf{Secure logging} --- \textbf{tamper-evident log} to recover from integrity
+        failures; consistency of the log across multiple entities is key (harder to make
+        an integrity breach durable).
+\end{itemize}
+\end{defnbox}
+
 \end{document}
