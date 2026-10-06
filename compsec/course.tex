@@ -721,4 +721,20 @@ computer (1976), Intel iAPX 432 (1981). The industry then adopted UNIX and its A
 Google Fuchsia (2016), WASI (2019), ARM Morello (2022), Scala capabilities at EPFL.
 \end{rembox}
 
+\section{Ambient authority and the confused deputy}
+
+\begin{defnbox}[title=Ambient authority]
+\textbf{Ambient authority} is used by a subject if, for an action to succeed, it
+\textbf{only} needs to specify the \textbf{operation} and the \textbf{names} of the
+involved object(s). The \textbf{subject} (with authority) is \textbf{implicit}:
+in \texttt{open("file1", "rw")} the subject is missing, it is understood to be the
+process owner.
+\end{defnbox}
+
+\begin{propbox}[title=Ambient authority: pros and cons]
+\textbf{Pro}: no need to repeat the subject all the time (usability). \\
+\textbf{Cons}: the program cannot check permissions for whom it acts; least privilege
+becomes harder to enforce; \textbf{confused deputy problem}!
+\end{propbox}
+
 \end{document}
