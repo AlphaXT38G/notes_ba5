@@ -659,4 +659,29 @@ another doctor).
 \end{enumerate}
 \end{warnbox}
 
+\subsection{Group Based Access Control}
+
+\begin{defnbox}[title=Group Based Access Control]
+Observation: some permissions are always needed together (e.g.\ access to sockets and
+network interface).
+\begin{enumerate}
+  \item assign permissions to access objects to \textbf{groups};
+  \item assign subjects to \textbf{groups};
+  \item subjects have the permissions of \textbf{all} their groups.
+\end{enumerate}
+\textbf{Negative permissions} (explicit denials for a subject) can be added to implement
+fine-grained policies.
+\end{defnbox}
+
+\begin{rembox}[title=RBAC vs.\ groups]
+With \textbf{roles}, a subject has the permissions of the \emph{one active} role; with
+\textbf{groups}, a subject has the union of the permissions of \emph{all} its groups.
+\end{rembox}
+
+\begin{propbox}[title=Negative permissions are checked first]
+If group permissions were checked first, a group would grant the access and the
+negative permission would never be applied. Checking \textbf{negative permissions first}
+is the fail-safe choice.
+\end{propbox}
+
 \end{document}
