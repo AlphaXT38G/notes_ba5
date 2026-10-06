@@ -1204,4 +1204,15 @@ cannot rewrite rules. \textbf{Computer}: a web application open in the browser s
 write to the file system (at most \texttt{/tmp}).
 \end{exbox}
 
+\subsection{BIBA variants}
+
+\begin{defnbox}[title=Variant 1 --- low-water-mark for subjects]
+Subjects start processes at their \textbf{highest} integrity level. When accessing an
+object, the subject's current level is \textbf{lowered to the lowest} of
+$\text{current-level}(s)$ and $\text{level}(o)$. \\
+\textbf{Temporary downgrade} for the session (e.g.\ mitigates the impact of a network
+Trojan: after reading low network data, the subject can no longer write high OS data).
+Hard to avoid \textbf{label creep}.
+\end{defnbox}
+
 \end{document}
