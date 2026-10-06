@@ -198,4 +198,25 @@ The mechanism needs to be \textbf{easy to audit and verify}. Operational testing
 appropriate to evaluate security (penetration testing is nevertheless valuable).
 \end{rembox}
 
+\begin{defnbox}[title=Trusted Computing Base (TCB)]
+\textbf{Every component} of the system (hardware / firmware / software) on which the
+security policy relies. The TCB is \textbf{trusted} to operate correctly for the
+security policy to hold.
+\end{defnbox}
+
+\begin{propbox}[title=Consequences of the TCB]
+\begin{itemize}
+  \item If something goes wrong \textbf{within} the TCB, \textbf{the security policy
+        may be violated}; a failure \textbf{outside} the TCB should not matter for the
+        policy.
+  \item The TCB must be kept \textbf{small} to \textbf{ease verification} (economy of
+        mechanism) and \textbf{diminish the attack surface}.
+\end{itemize}
+\end{propbox}
+
+\begin{warnbox}[title=The verb ``to trust'']
+The only proper use of ``to trust'' in security engineering is
+\textbf{``X trusts Y will do Z''}.
+\end{warnbox}
+
 \end{document}
