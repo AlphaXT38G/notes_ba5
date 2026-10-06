@@ -1145,4 +1145,29 @@ noise to the communication.
 \end{itemize}
 \end{propbox}
 
+\subsection{Declassification}
+
+\begin{defnbox}[title=Declassification]
+\textbf{Remove the classification label} of an object. It is very typical and necessary
+(e.g.\ the officer must eventually be able to tell the soldier ``Attack!''), and happens
+\textbf{under the control of the security policy}.
+\end{defnbox}
+
+\begin{warnbox}[title=Declassification cannot be made inherently safe]
+It is a \textbf{manual process} (rules about archives, historical records) and it is hard
+to rule out covert channels: how to know the object does not contain secrets? In
+practice: Word revision history retains deleted text; PDF ``redaction'' by overlaying
+black rectangles leaves the text in the file. \textbf{Strategic adversary!}
+\end{warnbox}
+
+\begin{warnbox}[title=BLP limitations]
+\begin{itemize}
+  \item \textbf{Confidentiality-oriented}: does not consider integrity or availability.
+  \item \textbf{State-based + single transition} model: too low-level, not expressive.
+  \item The 3 security properties are \textbf{not sufficient} to ensure
+        confidentiality: changes in clearance and classification can create covert
+        channels, and a static system without changes is impractical.
+\end{itemize}
+\end{warnbox}
+
 \end{document}
