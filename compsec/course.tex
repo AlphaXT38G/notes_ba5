@@ -1060,4 +1060,19 @@ reachable downwards.}
 $\text{level}(S_i)$ \textbf{must dominate} $\text{current-level}(S_i)$!
 \end{defnbox}
 
+\subsection{The three BLP properties}
+
+\begin{defnbox}[title=Simple security property (ss-property) --- No Read Up]
+If (subject, object, $r$) is a current access, then $\text{level}(\text{subject})$
+\textbf{dominates} $\text{level}(\text{object})$. \\
+$\Rightarrow$ \textbf{No Read Up (NRU)}: a subject cleared Secret can read Secret,
+Classified, Unclassified, but not Top Secret.
+\end{defnbox}
+
+\begin{warnbox}[title=Why is the ss-property not sufficient?]
+A Secret subject runs \textbf{malicious code} (Trojan) that reads Secret data (allowed
+by NRU) and \textbf{writes it into an Unclassified object}, which an Unclassified subject
+then reads (also allowed by NRU). Information flowed \textbf{down} without any read-up.
+\end{warnbox}
+
 \end{document}
