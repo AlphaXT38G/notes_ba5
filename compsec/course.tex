@@ -737,4 +737,39 @@ process owner.
 becomes harder to enforce; \textbf{confused deputy problem}!
 \end{propbox}
 
+\begin{defnbox}[title=Confused deputy problem]
+Problem with ambient authority: a \textbf{privileged program} can be \textbf{tricked to
+misuse its authority}.
+\end{defnbox}
+
+\begin{exbox}[title=Pay-per-use compiler]
+The compiler receives \texttt{(input, output)}, compiles \texttt{input}, writes usage
+into \texttt{bill} and errors into \texttt{output}.
+\begin{center}
+\begin{tabular}{l|c|c|c}
+         & input & output      & bill        \\ \hline
+Alice    & write & read        & read        \\
+Compiler & read  & read, write & read, write
+\end{tabular}
+\end{center}
+Alice cannot write \texttt{bill}, but she calls the compiler with
+\texttt{(input, bill)}: the compiler writes the errors into \texttt{output = bill}
+\textbf{with its own authority} $\Rightarrow$ \texttt{bill} is corrupted. The compiler
+is the \textbf{confused deputy}. (Same idea: a student with a card asks someone
+authorized to badge them into a room.)
+\end{exbox}
+
+\begin{algbox}[title=How to avoid confused deputies]
+Ambient authority is used for convenience in many real systems (OS services, web
+servers, \ldots). Solutions:
+\begin{enumerate}
+  \item re-implement access control in the privileged process;
+  \item let the privileged process check authorization for Alice;
+  \item \textbf{capabilities can help}! The compiler holds a capability for
+        \texttt{bill}; to compile, Alice must give a capability for the
+        \texttt{output} file --- she cannot give a capability for writing
+        \texttt{bill}, so she cannot confuse anyone.
+\end{enumerate}
+\end{algbox}
+
 \end{document}
