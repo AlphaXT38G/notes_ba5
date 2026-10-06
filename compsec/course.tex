@@ -872,4 +872,27 @@ user to execute code you do not know (particularly obfuscated code): limits dama
 misbehaves / gets compromised.
 \end{defnbox}
 
+\begin{exbox}[title={Exercise --- ACL in Linux}]
+\texttt{drwxr-x--- 2 manager\_A core\_devs 4096 Sep 24 11:35 /project\_beta} \\
+\textbf{manager\_A} is the directory owner, a member of \texttt{core\_devs}, and is
+sudo; \textbf{developer\_B} is a member of \texttt{core\_devs}; \textbf{intern\_C} is
+\textbf{not} a member of \texttt{core\_devs}. \\
+For each user, determine which of \texttt{cd /project\_beta}, \texttt{ls /project\_beta}
+and \texttt{touch /project\_beta/<file>} succeed or fail, and explain why based on the DAC
+rules. \\[4pt]
+Same state, with a new subdirectory and a file inside it: \\
+\texttt{drwxr-xr-x 2 developer\_B core\_devs 4096 Sep 24 12:00 /project\_beta/Foo} \\
+\texttt{-rw-r--r-- 1 developer\_B core\_devs 512 Sep 24 12:05 \ldots/Foo/intern\_project.txt}
+\begin{enumerate}[label=Q\arabic*:]
+  \item \texttt{/project\_beta} is owned by manager\_A, but \texttt{Foo} is owned by
+        developer\_B. Find a scenario (sequence of commands) that would have led to this
+        situation.
+  \item intern\_C runs \texttt{cd /project\_beta/Foo} then
+        \texttt{cat intern\_project.txt}. Do they work?
+  \item intern\_C runs \texttt{cat /project\_beta/Foo/intern\_project.txt} from their
+        home directory. Does it work?
+  \item Who do they need to contact to fix the problem?
+\end{enumerate}
+\end{exbox}
+
 \end{document}
