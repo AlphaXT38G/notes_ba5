@@ -413,4 +413,32 @@ directory, shared between low-privilege users and root processes. (Modern Linux
 mitigates it in \texttt{/tmp}, but it still works e.g.\ in \texttt{/home/user}.)
 \end{exbox}
 
+\section{8 -- Psychological acceptability}
+
+\begin{defnbox}[title=Psychological acceptability]
+``It is essential that the human interface be designed for \textbf{ease of use}, so that
+users routinely and automatically apply the protection mechanisms correctly.'' [SS75]
+\end{defnbox}
+
+\begin{propbox}[title=What it implies]
+\begin{itemize}
+  \item \textbf{Hide the complexity} introduced by security mechanisms: they should not
+        make the resource more difficult to access than if they were not present.
+  \item The \textbf{mental model} of the (honest) users must match the security policy
+        and security mechanisms.
+  \item \textbf{Cultural acceptability} --- not all mechanisms are acceptable everywhere
+        (face recognition in cultures that cover the face, register of everyone who
+        sleeps in a dorm).
+\end{itemize}
+\end{propbox}
+
+\begin{exbox}[title=Amazon S3 ``Any Authenticated AWS User'']
+Psychological acceptability is \textbf{not just for end users}: system administrators
+are also users of a configuration UI. Admins thought the option meant ``any
+authenticated user \emph{in my account}'' whereas it meant ``anyone with \emph{any} AWS
+account'' (free to create) $\Rightarrow$ several leaks from 2017. In 2023 AWS added a
+fail-safe default (block public access) --- \textbf{safer defaults have tradeoffs}
+(users struggled to share buckets).
+\end{exbox}
+
 \end{document}
