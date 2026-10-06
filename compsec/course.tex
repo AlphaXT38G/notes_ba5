@@ -576,4 +576,44 @@ crash of the system). All these reasons are just as strong if ``user'' is replac
 ``\textbf{program}''.
 \end{rembox}
 
+\section{The access control matrix}
+
+\begin{defnbox}[title=Access control matrix]
+An \textbf{abstract} representation of all \textbf{permitted} triplets
+\textbf{(subject, object, access right)} within a system. DAC policies are often
+conceptualized as an access control matrix (Lampson).
+\begin{itemize}
+  \item \textbf{Subjects (principals)} --- entities within an IT system (a user, a
+        process, a service).
+  \item \textbf{Objects (assets)} --- resources that (some) subject may access or use
+        (a file, a folder, a row in a database, the system's memory, a machine in the
+        network, a printer, a page in a website).
+  \item \textbf{Operations} --- in abstract, subjects can \textbf{observe} and/or
+        \textbf{alter} objects (read, write, append, execute).
+\end{itemize}
+\end{defnbox}
+
+\begin{exbox}[title=Access control matrix]
+$S = \{\text{Alice}, \text{Bob}\}$, $O = \{\text{file1}, \text{file2},
+\text{file3}\}$, $A = \{\text{read}, \text{write}\}$.
+\begin{center}
+\begin{tabular}{l|c|c|c}
+      & file1      & file2      & file3      \\ \hline
+Alice & read, write &            & read       \\
+Bob   &            & read, write & read, write
+\end{tabular}
+\end{center}
+Can Alice read file1? Can Bob write file1? Can file3 be written by Alice?
+\end{exbox}
+
+\begin{warnbox}[title=The matrix is an abstract concept]
+Not for direct implementation: size $O(f \cdot u)$ ($f$ files, $u$ users), which is huge
+with thousands of files or hundreds of users. Moreover it is:
+\begin{itemize}
+  \item \textbf{usually very sparse} --- wasteful;
+  \item \textbf{inefficient to access} --- need to keep the matrix in fast memory?
+  \item \textbf{not extensible} --- add a file? add a user?
+\end{itemize}
+\end{warnbox}
+
 \end{document}
