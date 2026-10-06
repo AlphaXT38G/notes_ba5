@@ -378,4 +378,39 @@ Rights are \textbf{added as needed} and \textbf{discarded after use}.
 \end{itemize}
 \end{propbox}
 
+\section{7 -- Least common mechanism}
+
+\begin{defnbox}[title=Least common mechanism]
+``Minimize the amount of mechanism \textbf{common to more than one user} and depended on
+by all users.'' [SS75] \\
+Every shared mechanism represents a \textbf{potential information path between users}
+and must be designed with great care so that it does not unintentionally compromise
+security.
+\end{defnbox}
+
+\begin{propbox}[title=Link with economy of mechanism]
+\begin{itemize}
+  \item \textbf{(Design)} interactions make it hard to validate the security design;
+  \item \textbf{(Implementation)} interactions may lead to unintentional leaks of
+        information --- \textbf{unintended channels}: use of \texttt{/tmp}, shared cache.
+\end{itemize}
+\end{propbox}
+
+\begin{warnbox}[title={Mechanisms, not code}]
+This principle refers to \textbf{mechanisms}, not to code: reusable code that has been
+tested many times is \textbf{helpful} for security. The problem is the
+\textbf{isolation of data}.
+\end{warnbox}
+
+\begin{exbox}[title=Symlink attack in \texttt{/tmp}]
+A \textbf{symbolic link} (symlink) is a ``shortcut'' file: when the OS accesses it, it is
+automatically redirected to the real file it points to. \\
+A root program writes \texttt{echo "Service is starting..." > /tmp/starting.log}. A
+non-root user (corrupted by the adversary) also has write access to \texttt{/tmp} and
+runs \texttt{ln -s /var/log/dmesg /tmp/starting.log}: the root program now overwrites a
+system log, breaking \textbf{log integrity}. The common mechanism is the \texttt{/tmp}
+directory, shared between low-privilege users and root processes. (Modern Linux
+mitigates it in \texttt{/tmp}, but it still works e.g.\ in \texttt{/home/user}.)
+\end{exbox}
+
 \end{document}
