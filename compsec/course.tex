@@ -910,4 +910,22 @@ The DACL is compared with the process' access token \textbf{when creating a hand
 object}.
 \end{defnbox}
 
+\begin{defnbox}[title=DACL]
+A list of \textbf{Access Control Entries (ACEs)}, each with a \textbf{type}
+(negative/positive, i.e.\ access denied/allowed), a \textbf{principal}, and
+\textbf{permissions} (more fine-grained than UNIX), plus flags and others. Negative
+entries come \textbf{first} so that a denial cannot be bypassed by an earlier allow.
+\end{defnbox}
+
+\begin{exbox}[title=DACL evaluation]
+ACE1: \textit{deny} Andrew read/write/execute; ACE2: \textit{allow} Group A write; ACE3:
+\textit{allow} Everyone read/execute. Thread A (Andrew, groups A, B, C) is denied by ACE1.
+Thread B (Jane, group A) is granted write (ACE2) and read/execute (ACE3).
+\end{exbox}
+
+\begin{rembox}[title=Least privilege by default]
+Windows runs with least privilege by default; elevated rights require
+``Run as administrator''.
+\end{rembox}
+
 \end{document}
