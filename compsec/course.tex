@@ -1234,4 +1234,40 @@ replicate objects \& sanitize / erase.
 \end{itemize}
 \end{defnbox}
 
+\subsection{Sanitization}
+
+\begin{defnbox}[title=Sanitization]
+Process of taking objects with ``\textbf{low}'' integrity and ``\textbf{lifting them}''
+to ``\textbf{high}'' integrity.
+\end{defnbox}
+
+\begin{warnbox}[title=Root cause of many vulnerabilities]
+``Sanitization'' problems are the root cause of large classes of real-world security
+vulnerabilities: malformed ``low'' (user) input can influence ``high'' (service) data
+and code.
+\begin{itemize}
+  \item \textbf{Web}: web server (high) accepts input from a web client (low) $\to$ SQL
+        interpreter $\to$ \textbf{SQL injection}.
+  \item \textbf{OS}: UNIX suid program (high) accepts input from a user (low) $\to$
+        short buffer $\to$ \textbf{buffer overflow}.
+\end{itemize}
+\end{warnbox}
+
+\begin{propbox}[title=Fundamental principle of sanitization (fail-safe defaults)]
+\textbf{Positively verify} that ``low'' objects are within a valid set before elevating
+their integrity to ``high''.
+\begin{itemize}
+  \item \textbf{Whitelist}: check that all properties of good objects hold (is it in the
+        universe of good things? accept).
+  \item \textbf{Do not blacklist}: do not just check for bad objects or properties (the
+        set of bad things is large and undefined).
+\end{itemize}
+\end{propbox}
+
+\begin{exbox}[title=XSS]
+Insert a photo in a web album? Ensure the caption is from a restricted set of Unicode, or
+``escape''/``encode'' any character not in that safe set. Do not simply check that it
+does not contain \texttt{<script>}.
+\end{exbox}
+
 \end{document}
