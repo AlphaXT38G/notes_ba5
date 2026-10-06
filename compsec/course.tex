@@ -616,4 +616,22 @@ with thousands of files or hundreds of users. Moreover it is:
 \end{itemize}
 \end{warnbox}
 
+\section{Access Control Lists (ACLs)}
+
+\begin{defnbox}[title=Access Control List (ACL)]
+Associate permissions to \textbf{objects}: each object stores the \textbf{column} of the
+matrix, i.e.\ the list of (subject, rights) pairs. \textbf{Blanks are not stored}.
+\begin{center}
+\texttt{file3: \{(Alice, read), (Bob, read/write)\}}
+\end{center}
+\end{defnbox}
+
+\begin{propbox}[title=ACLs: pros and cons]
+\textbf{Pros}: can be stored close to / with the resource; easy to determine who can
+access a resource; easy to revoke rights by resource. \\
+\textbf{Cons}: difficult to check at runtime; difficult to audit all rights of a user;
+difficult to remove all permissions from a user (better remove authentication!);
+difficult delegation.
+\end{propbox}
+
 \end{document}
