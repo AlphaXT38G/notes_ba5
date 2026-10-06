@@ -455,4 +455,16 @@ It helps \textbf{refining the threat model}, but cost is \textbf{difficult to
 quantify} (cost of compromising insiders? of finding a bug? monetization?).
 \end{defnbox}
 
+\begin{defnbox}[title=10 -- Compromise recording]
+``\textbf{Reliably record} that a compromise of information has occurred [\ldots] in
+place of more elaborate mechanisms that completely prevent loss.'' [SS75] \\
+Keep \textbf{tamper-evident logs}: they may enable recovery (integrity).
+\end{defnbox}
+
+\begin{warnbox}[title=Logs are not magic]
+What if you cannot recover (e.g.\ confidentiality already lost)? How to keep the log's
+integrity? Logs may be a vulnerability (privacy)? Logging the log (availability)?
+\textbf{Logging is not a guarantee that the compromise is detected.}
+\end{warnbox}
+
 \end{document}
