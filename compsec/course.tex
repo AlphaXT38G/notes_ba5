@@ -684,4 +684,41 @@ negative permission would never be applied. Checking \textbf{negative permission
 is the fail-safe choice.
 \end{propbox}
 
+\section{Capabilities}
+
+\begin{defnbox}[title=Capabilities]
+Associate permissions to \textbf{subjects}: each subject stores the \textbf{row} of the
+matrix, i.e.\ the list of (object, rights) pairs. \textbf{Blanks are not stored}.
+\begin{center}
+\texttt{Alice: \{(file1, read/write), (file3, read)\}}
+\end{center}
+\end{defnbox}
+
+\begin{propbox}[title=Capabilities: pros and cons]
+\textbf{Pros}: can be stored with the subject (portable!); easy to audit all subject
+permissions; delegating is ``simple''. \\
+\textbf{Cons}: revoking permission on one object is hard; transferability --- once the
+capability is given, how can we prevent sharing?; authenticity --- how to check it?
+\end{propbox}
+
+\begin{keybox}[title=ACL vs.\ capabilities]
+\begin{center}
+\begin{tabular}{l|l|l}
+                       & \textbf{ACL}           & \textbf{Capabilities} \\ \hline
+Stored with            & the object (column)    & the subject (row)     \\
+Who can access $o$?    & easy                   & hard                  \\
+What can $s$ access?   & hard                   & easy                  \\
+Revocation             & easy per object        & hard per object       \\
+Delegation             & difficult              & ``simple''
+\end{tabular}
+\end{center}
+\end{keybox}
+
+\begin{rembox}[title=History of capability-based security]
+Introduced by Dennis \& Van Horn (1966); used in the Plessey System 250 (1972), CAP
+computer (1976), Intel iAPX 432 (1981). The industry then adopted UNIX and its ACLs
+(1982, Linux 1991). Revival: seL4 formally verified microkernel (2009), CHERI (2015),
+Google Fuchsia (2016), WASI (2019), ARM Morello (2022), Scala capabilities at EPFL.
+\end{rembox}
+
 \end{document}
