@@ -855,4 +855,15 @@ to do, and \emph{only} what it is meant to do? (e.g.\ a setuid-root \texttt{pyth
 gives root to anyone.)
 \end{warnbox}
 
+\begin{defnbox}[title=Sticky bit]
+``Restricted deletion bit'' (\texttt{chmod +t}).
+\begin{itemize}
+  \item \textbf{Directories}: prevents unprivileged users from removing or renaming a
+        file in the directory \textbf{unless they own the file} (e.g.\ \texttt{/tmp}:
+        users can only edit their own files).
+  \item \textbf{Files}: historically prevented a program from being moved from swap
+        for fast load; Linux currently ignores the bit.
+\end{itemize}
+\end{defnbox}
+
 \end{document}
