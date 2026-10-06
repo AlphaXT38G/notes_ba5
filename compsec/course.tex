@@ -219,4 +219,40 @@ The only proper use of ``to trust'' in security engineering is
 \textbf{``X trusts Y will do Z''}.
 \end{warnbox}
 
+\section{2 -- Fail-safe defaults}
+
+\begin{defnbox}[title=Fail-safe defaults]
+``Base access decisions on \textbf{permission} rather than \textbf{exclusion}.'' [SS75]
+\\
+If something fails, be as secure as if it does not fail: errors / uncertainty should
+err \textbf{on the side of the security policy}. Do \textbf{not} try to fix!
+\end{defnbox}
+
+\begin{propbox}[title={Whitelist, not blacklist}]
+Use a \textbf{whitelist} (list what is allowed), not a blacklist (list what is
+forbidden): a \textbf{lack of permission is easy to detect and solve}, whereas a
+forgotten exclusion silently grants access.
+\end{propbox}
+
+\begin{exbox}[title=Fail-safe defaults]
+\begin{itemize}
+  \item Security door: if no permission, do not open.
+  \item Form input: if no permission to write in $X$, do not write anywhere.
+\end{itemize}
+\end{exbox}
+
+\begin{exbox}[title=MongoDB ransomware (2017) --- ease of use vs.\ security]
+For a while, the default installation had \textbf{authentication turned off} and was
+\textbf{bound to all network interfaces} (0.0.0.0) instead of localhost. Attackers
+scanned the whole internet, connected without password, stole/deleted the data and left
+a ransom note. Unsafe defaults + users who do not read the manual = no access control.
+\end{exbox}
+
+\begin{rembox}[title=Ransomware]
+A ransomware \textbf{denies you access to your own data}, most commonly by
+\textbf{encrypting your files}; the attacker then demands a \textbf{ransom payment} in
+exchange for the key needed to decrypt them. Its prevalence exploded with the arrival of
+cryptocurrencies.
+\end{rembox}
+
 \end{document}
