@@ -261,4 +261,27 @@ cryptocurrencies.
 ``\textbf{Every access to every object} must be checked for authority.'' [SS75]
 \end{defnbox}
 
+\begin{defnbox}[title=Reference monitor]
+The component that \textbf{mediates ALL actions from subjects on objects} and ensures
+they are according to the \textbf{policy}. It takes as input the request
+(subject $\to$ object) and the policy, and writes to an \textbf{audit log}.
+\end{defnbox}
+
+\begin{warnbox}[title=Difficult to implement]
+\begin{itemize}
+  \item \textbf{Performance} --- checking everything is slow.
+  \item \textbf{Time to check vs.\ time to use} --- the permission may change between
+        the check and the use.
+  \item \textbf{Modern distributed systems} --- you can only check what you see!
+\end{itemize}
+\end{warnbox}
+
+\begin{exbox}[title=Missing mediation --- the ``Gold Member'' cookie]
+A streaming platform checks the subscription in the database \textbf{only once at
+login}, then stores \texttt{\{'user': 'Alice', 'status': 'paid'\}} in a session cookie
+and only looks at the cookie afterwards. Alice subscribes, logs in, unsubscribes (the DB
+is correctly updated to ``unpaid''), and can still watch premium content until her
+session expires: \textbf{violation of complete mediation}.
+\end{exbox}
+
 \end{document}
