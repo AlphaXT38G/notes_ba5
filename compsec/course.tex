@@ -513,6 +513,19 @@ typically through \textbf{improperly evaluated tradeoffs}.
 \chapter{Lecture 3 : Access control basics and DAC}
 % =========================================================
 
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} \textbf{Access control} answers one question:
+``is \emph{this} user allowed to do \emph{this} action on \emph{this} file?''. In
+\textbf{DAC}, the \textbf{owner} of a file decides who can use it (like on your laptop or
+on Facebook). We see how to store these permissions (matrix, ACLs, capabilities, roles,
+groups), a classic trap (the \emph{confused deputy}), and how Linux and Windows do it in
+practice. \\
+\textbf{Why is it useful?} Access control is the \textbf{first line of defense} and is
+everywhere: apps, databases, operating systems, hardware. Understanding it lets you read
+and set file permissions correctly (\texttt{ls -l}, \texttt{chmod}, \texttt{sudo}) and
+spot programs that can be tricked into using their rights for an attacker.
+\end{rembox}
+
 \section{What is access control?}
 
 \begin{defnbox}[title=Access control]
