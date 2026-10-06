@@ -533,4 +533,47 @@ The mechanisms that do authentication and authorization are in the \textbf{Trust
 Computing Base}!
 \end{warnbox}
 
+\section{Implementing access control}
+
+\begin{propbox}[title={``Checks soup'' vs.\ reference monitor}]
+\begin{itemize}
+  \item \textbf{What NOT to do: ``checks soup''} --- add checks all over the program,
+        implementing the decision \textbf{in-line} based on the policy
+        (\texttt{if user == Alice or user == Bob: open(\ldots)}).
+  \item \textbf{What you SHOULD do: systematic calls to a ``reference monitor''} ---
+        all over the program add checks that \textbf{call the monitor}: they state the
+        authorization required and provide evidence about principals and objects; a
+        \textbf{``central'' subsystem} establishes whether the checks pass or not
+        (e.g.\ Apache Shiro: \texttt{subject.isPermitted("user:delete:jsmith")}).
+\end{itemize}
+\end{propbox}
+
+\begin{rembox}[title=Least common mechanism?]
+A central reference monitor is a mechanism shared by everybody --- but this is fine: least
+common mechanism is about the isolation of data, and a single well-tested monitor is
+easier to verify (economy of mechanism, complete mediation).
+\end{rembox}
+
+\section{DAC vs.\ MAC}
+
+\begin{defnbox}[title=Who decides the access policy? Two approaches]
+\begin{itemize}
+  \item \textbf{Discretionary Access Control (DAC)} --- \textbf{object owners} assign
+        permissions (ownership of resources). E.g.\ Windows, Linux, macOS, social
+        networks.
+  \item \textbf{Mandatory Access Control (MAC)} --- a \textbf{central security policy}
+        assigns permissions. For organizations with need for central controls:
+        military (confidentiality), hospital (confidentiality and integrity), banking
+        (integrity).
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title={Origin of protection mechanisms (Lampson, 1971)}]
+The original motivation was to keep \textbf{one user's malice or error from harming other
+users}: by destroying/modifying another user's data, by reading/copying it without
+permission, or by degrading the service another user gets (the extreme case being a
+crash of the system). All these reasons are just as strong if ``user'' is replaced by
+``\textbf{program}''.
+\end{rembox}
+
 \end{document}
