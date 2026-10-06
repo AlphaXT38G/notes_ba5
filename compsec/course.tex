@@ -284,4 +284,51 @@ is correctly updated to ``unpaid''), and can still watch premium content until h
 session expires: \textbf{violation of complete mediation}.
 \end{exbox}
 
+\section{4 -- Open design}
+
+\begin{defnbox}[title=Open design]
+``The design should \textbf{not be secret}.'' [SS75] \\
+When you design, \textbf{algorithms are public}; only \textbf{key elements} are kept
+secret:
+\begin{itemize}
+  \item \textbf{Crypto} --- only keep the key secret;
+  \item \textbf{Authentication} --- only keep the password secret;
+  \item \textbf{Obfuscation} --- only keep the used noise secret.
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title=Historical formulations]
+\begin{itemize}
+  \item \textbf{Kerckhoffs} (1883): the design of a system should not require secrecy.
+  \item \textbf{Shannon} (1949): ``the enemy knows the system'' --- design systems
+        assuming the enemy immediately gains full familiarity with them.
+  \item \textbf{Baran} (1964): the paradox of secrecy about secrecy --- without
+        widespread scrutiny, weaknesses are more likely to be overlooked.
+\end{itemize}
+\end{rembox}
+
+\begin{propbox}[title=Why open design?]
+\begin{itemize}
+  \item Open design results in \textbf{better \& easier auditing}. \textbf{Linus' law}
+        (Raymond, 1997): ``given enough eyeballs, all bugs are shallow'' --- more of a
+        mantra: it needs many eyeballs, and defect density is high.
+  \item \textbf{Secrecy is unrealistic}: assuming the design stays secret is a way to
+        build a \textbf{bad threat model}.
+  \item Key principle behind the academic discipline devoted to understanding computer
+        security.
+\end{itemize}
+Famous failure of a closed design: \textbf{GSM encryption}.
+\end{propbox}
+
+\begin{exbox}[title=Security through obscurity does not work]
+\begin{itemize}
+  \item \textbf{Hidden instance (2017)}: data of 198 million US voters stored on a
+        public server with no authentication; the only ``protection'' was a
+        ``semi-secret'' URL. A researcher found it.
+  \item \textbf{Addresses are not safe}: the whole IPv4 space ($2^{32}\approx 4$
+        billion addresses) could be scanned in about 3 minutes in 2013 --- picking a
+        random port (0--65535) \textbf{is not hiding the service}.
+\end{itemize}
+\end{exbox}
+
 \end{document}
