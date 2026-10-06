@@ -1215,4 +1215,12 @@ Trojan: after reading low network data, the subject can no longer write high OS 
 Hard to avoid \textbf{label creep}.
 \end{defnbox}
 
+\begin{defnbox}[title=Variant 2 --- low-water-mark for objects]
+Once an object has been written to by a subject, it assumes the \textbf{lowest} level of
+the object or subject (a high-integrity database written by a process with network
+access is labelled ``low''). \\
+\textbf{Dangerous!} It only allows integrity violation \textbf{detection}. Mitigation:
+replicate objects \& sanitize / erase.
+\end{defnbox}
+
 \end{document}
