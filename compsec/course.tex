@@ -1170,4 +1170,38 @@ black rectangles leaves the text in the file. \textbf{Strategic adversary!}
 \end{itemize}
 \end{warnbox}
 
+\section{BIBA: protecting integrity}
+
+\begin{rembox}[title=Why integrity?]
+BLP focuses on confidentiality (military / government). For \textbf{commercial services}
+(banking, inventory, stock exchange, land registry, grades database, contracts,
+payments), preventing fraud is about \textbf{protecting integrity}: the adversary has not
+influenced the result; confidentiality is either secondary or unnecessary. \\
+\textbf{Integrity is key for computer security in general}: the TCB has to have high
+integrity; public key cryptography requires high integrity for confidentiality.
+\end{rembox}
+
+\begin{defnbox}[title=BIBA model]
+Subjects and objects have an \textbf{integrity level} (from lowest to high integrity).
+Two operations: \textbf{read} (observe) and \textbf{write} (modify). Two key (strict)
+rules:
+\begin{itemize}
+  \item \textbf{Simple integrity (no read-down)} --- protects higher integrity
+        principals from being corrupted by lower integrity level data.
+  \item \textbf{*-integrity (no write-up)} --- prevents lower integrity principals from
+        corrupting high integrity data.
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title=BIBA is the dual of BLP]
+BLP: no read \emph{up}, no write \emph{down} (secrets must not flow down). \\
+BIBA: no read \emph{down}, no write \emph{up} (dirty data must not flow up).
+\end{rembox}
+
+\begin{exbox}[title=BIBA illustrated]
+\textbf{Bank}: the director can establish a rule and every employee reads it; employees
+cannot rewrite rules. \textbf{Computer}: a web application open in the browser should not
+write to the file system (at most \texttt{/tmp}).
+\end{exbox}
+
 \end{document}
