@@ -634,4 +634,29 @@ difficult to remove all permissions from a user (better remove authentication!);
 difficult delegation.
 \end{propbox}
 
+\subsection{Role Based Access Control (RBAC)}
+
+\begin{defnbox}[title=Role Based Access Control (RBAC)]
+Systems have too many subjects that come and go (large dynamic ACLs), but subjects are
+similar to each other and need the same rights (a doctor has the same privileges as
+another doctor).
+\begin{enumerate}
+  \item assign permissions to \textbf{roles};
+  \item assign \textbf{roles} to subjects;
+  \item subjects select an \textbf{active role} --- they have the permissions of the
+        active role.
+\end{enumerate}
+\end{defnbox}
+
+\begin{warnbox}[title=RBAC problems]
+\begin{enumerate}
+  \item \textbf{Role explosion} --- temptation to create fine-grained roles, denying the
+        benefits of RBAC.
+  \item \textbf{Limited expressiveness} of simple RBAC --- problems implementing least
+        privilege; some roles are relative (``Alice's doctor'' vs.\ ``any doctor'').
+  \item \textbf{Separation of duty is difficult} --- ``two doctors are needed to
+        authorize a procedure'': the mechanism needs to ensure they are distinct!
+\end{enumerate}
+\end{warnbox}
+
 \end{document}
