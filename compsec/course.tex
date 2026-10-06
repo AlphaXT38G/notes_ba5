@@ -977,6 +977,20 @@ Windows runs with least privilege by default; elevated rights require
 \chapter{Lecture 4 : Mandatory Access Control}
 % =========================================================
 
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} In \textbf{MAC}, it is not the owner but a
+\textbf{central policy} that decides, and nobody can override it. We study three classic
+``recipes'' (security models): \textbf{Bell-La Padula} to keep secrets from leaking down
+(army: no read up, no write down), \textbf{BIBA} to keep bad data from corrupting good
+data (bank: no read down, no write up), and the \textbf{Chinese Wall} to avoid conflicts
+of interest (a consultant cannot work for Pepsi and Coca-Cola). \\
+\textbf{Why is it useful?} When an organization must guarantee a property no matter what
+users do (military secrets, bank records, hospitals), these models give a ready-made,
+proven design. They also explain deep real-world problems: hidden leaks (\emph{covert
+channels}), why declassifying documents is hard, and why unchecked user input
+(\emph{sanitization}) causes SQL injections and buffer overflows.
+\end{rembox}
+
 \begin{defnbox}[title=Mandatory Access Control (MAC)]
 Access to and operations on resources \textbf{are determined by the security policy}
 (a central security policy assigns permissions):
