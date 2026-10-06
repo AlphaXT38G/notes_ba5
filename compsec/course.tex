@@ -895,4 +895,19 @@ Same state, with a new subdirectory and a file inside it: \\
 \end{enumerate}
 \end{exbox}
 
+\section{DAC in practice: Windows}
+
+\begin{defnbox}[title=Windows access control]
+Principals = users, machines, groups, \ldots; objects = files, registry keys, printers,
+\ldots
+\begin{itemize}
+  \item Each object has a \textbf{Discretionary Access Control List (DACL)}.
+  \item Each process (or thread) has an \textbf{access token} with: the login user
+        account (the process ``runs as'' this user), all groups of which the user is a
+        member (recursively!), all privileges assigned to these groups.
+\end{itemize}
+The DACL is compared with the process' access token \textbf{when creating a handle to the
+object}.
+\end{defnbox}
+
 \end{document}
