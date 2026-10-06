@@ -174,6 +174,18 @@ hard to get right.
 \chapter{Lecture 2 : Principles of computer security}
 % =========================================================
 
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Nobody knows how to build a system without bugs, so
+experience gave us \textbf{8 (+2) rules of thumb} (Saltzer \& Schroeder) to design
+security mechanisms: keep it simple, refuse by default, check every access, do not rely on
+secrecy of the design, never trust a single person, give only the rights needed, share as
+little as possible, make security easy to use. \\
+\textbf{Why is it useful?} These principles are a \textbf{toolbox to judge a design}: when
+you look at a system (or an attack), you can ask ``which principle was violated?''. Most
+real-world breaches (Heartbleed, MongoDB, S3 leaks, \ldots) are a principle that was
+broken because of a bad tradeoff.
+\end{rembox}
+
 \begin{rembox}[title=Where do the principles come from?]
 Saltzer \& Schroeder, \textit{The Protection of Information in Computer Systems} (1975),
 abbreviated \textbf{[SS75]}: \textbf{8 (+2) principles} at the core of security
