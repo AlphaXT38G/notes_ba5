@@ -361,4 +361,21 @@ Finance can \textbf{only} approve payments for vendors already in the system.
 Reminiscent of \textbf{separation of powers} / ``checks and balances''.
 \end{exbox}
 
+\section{6 -- Least privilege}
+
+\begin{defnbox}[title=Least privilege]
+``Every program and every user of the system should operate using the \textbf{least set
+of privileges necessary} to complete the job.'' [SS75] \\
+Rights are \textbf{added as needed} and \textbf{discarded after use}.
+\end{defnbox}
+
+\begin{propbox}[title=Least privilege in practice]
+\begin{itemize}
+  \item \textbf{Damage control} --- minimize high-privilege actions \& interactions
+        (related to economy of mechanism: small TCB).
+  \item \textbf{``Need-to-know'' principle} --- e.g.\ guest accounts at EPFL,
+        \textbf{data minimization} principle (data protection).
+\end{itemize}
+\end{propbox}
+
 \end{document}
