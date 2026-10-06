@@ -772,4 +772,29 @@ servers, \ldots). Solutions:
 \end{enumerate}
 \end{algbox}
 
+\section{DAC in practice: UNIX}
+
+\begin{defnbox}[title=UNIX principals and groups]
+\begin{itemize}
+  \item \textbf{User Identities (UIDs)} and \textbf{Group Identities (GIDs)}:
+        originally 16-bit (now 32-bit) numbers. Special UIDs: $-2$, $0$, $1$, \ldots
+  \item Each user has its own directory \texttt{/home/username}; user accounts are in
+        \texttt{/etc/passwd} (\texttt{username:password:UID:GID:info:home:shell}).
+  \item Users belong to one or more groups: primary group (\texttt{/etc/passwd}),
+        other groups (\texttt{/etc/group}).
+\end{itemize}
+\end{defnbox}
+
+\begin{propbox}[title=UNIX security architecture]
+\begin{itemize}
+  \item \textbf{Everything is a file}; each user ``owns'' a set of files.
+  \item Each file has a simple \textbf{ACL} expressing its access control policy. The
+        owner can \textbf{modify the permissions of the file} (but cannot give away
+        ownership). System files are owned by special users that can make system
+        operations.
+  \item All processes run by a user run \textbf{with that user's privileges}
+        $\Rightarrow$ \textbf{ambient authority}!
+\end{itemize}
+\end{propbox}
+
 \end{document}
