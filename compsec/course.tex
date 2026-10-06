@@ -1083,4 +1083,23 @@ $\Rightarrow$ \textbf{No Write Down (NWD)}: a Secret subject can append to Top S
 read Secret and below, but cannot append/write to lower levels.
 \end{defnbox}
 
+\begin{defnbox}[title=Discretionary property (ds-property)]
+If an access (subject, object, action) takes place, it \textbf{must be in the access
+control matrix}. \\
+Information should only be accessed on a \textbf{``need-to-know''} basis: MAC needs
+\textbf{DAC} (least privilege inside the security level). Also important to protect
+integrity.
+\end{defnbox}
+
+\begin{exbox}[title=BLP in the army]
+\begin{itemize}
+  \item An Unclassified soldier reports ``We've seen tanks moving!'' to a Secret
+        officer: \textbf{allowed} (write up).
+  \item The Secret officer reads a Secret document: \textbf{allowed} (read at clearance
+        level).
+  \item The Secret officer orders ``Attack!'' to the Unclassified soldier: \textbf{not
+        allowed} (write down, against the *-property).
+\end{itemize}
+\end{exbox}
+
 \end{document}
