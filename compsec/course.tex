@@ -467,4 +467,25 @@ integrity? Logs may be a vulnerability (privacy)? Logging the log (availability)
 \textbf{Logging is not a guarantee that the compromise is detected.}
 \end{warnbox}
 
+\begin{keybox}[title=Summary]
+``Since no one knows how to build a system without flaws, the alternative is to rely on
+eight design principles, which tend to reduce both the number and the seriousness of any
+flaws.'' [SS75]
+\begin{itemize}
+  \item \textbf{Economy of mechanism} --- keep it simple!
+  \item \textbf{Fail-safe defaults} --- safe defaults; if there is a problem, your move
+        should comply with the policy.
+  \item \textbf{Complete mediation} --- verify \emph{every} action.
+  \item \textbf{Open design} --- make the design (and implementation) available.
+  \item \textbf{Separation of privilege} --- never rely on \emph{only one} entity or
+        action.
+  \item \textbf{Least privilege} --- only the privileges needed, only while needed.
+  \item \textbf{Least common mechanism} --- minimize shared mechanisms (isolate data).
+  \item \textbf{Psychological acceptability} --- security must be easy to use correctly.
+\end{itemize}
+Principles help identify safe and unsafe \textbf{patterns}: do \textbf{not} use them as a
+blind checklist, but as tools to weigh design decisions. They are easy to violate ---
+typically through \textbf{improperly evaluated tradeoffs}.
+\end{keybox}
+
 \end{document}
