@@ -964,4 +964,24 @@ Many aspects are \textbf{not covered by the model}: who are the subjects? what a
 objects? what mechanisms to use to implement it?
 \end{warnbox}
 
+\section{Bell-La Padula (BLP): protecting confidentiality}
+
+\begin{defnbox}[title=Bell-La Padula model (BLP)]
+Subjects $S$ and objects $O$ are associated to a \textbf{level} of confidentiality.
+Subjects' access rights are defined (in an access control matrix) by four attributes:
+\begin{itemize}
+  \item \textbf{Execute} --- the subject cannot see or modify the object, but can run it;
+  \item \textbf{Read} --- the subject can only see the object but cannot modify it;
+  \item \textbf{Append} --- the subject cannot read the object, but can attach new
+        content;
+  \item \textbf{Write} --- the subject can see the object and add content or modify
+        existing content.
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title=Observe vs.\ alter]
+\textbf{Observe} rights: read ($r$), write ($w$). \textbf{Alter} rights: append ($a$),
+write ($w$). Write is both observe and alter.
+\end{rembox}
+
 \end{document}
