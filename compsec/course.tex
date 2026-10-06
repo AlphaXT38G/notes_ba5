@@ -841,4 +841,18 @@ operations, can access anything ((almost) all security checks disabled).
 \texttt{su} (switch user).
 \end{defnbox}
 
+\begin{defnbox}[title=\texttt{suid} / \texttt{sgid}]
+Setuid and setgid bits indicate that a file is \textbf{not run with the privileges of
+the launcher}, but \textbf{with the privileges of the owner} user/group. Useful for
+normal users to access system services that need system privileges, respecting least
+privilege, e.g.\ changing a password:
+\texttt{-rwsr-xr-x 1 root root \ldots /bin/passwd}.
+\end{defnbox}
+
+\begin{warnbox}[title=Setuid root programs are dangerous]
+They are in the TCB: how do you know that a \texttt{suid} program does what it is meant
+to do, and \emph{only} what it is meant to do? (e.g.\ a setuid-root \texttt{python}
+gives root to anyone.)
+\end{warnbox}
+
 \end{document}
