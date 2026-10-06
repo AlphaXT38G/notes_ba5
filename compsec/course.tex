@@ -488,4 +488,34 @@ blind checklist, but as tools to weigh design decisions. They are easy to violat
 typically through \textbf{improperly evaluated tradeoffs}.
 \end{keybox}
 
+% =========================================================
+\chapter{Lecture 3 : Access control basics and DAC}
+% =========================================================
+
+\section{What is access control?}
+
+\begin{defnbox}[title=Access control]
+Security mechanism that ensures that ``all accesses and actions on objects by principals
+are \textbf{within} the security policy''.
+\end{defnbox}
+
+\begin{exbox}[title=Questions an access control system answers]
+Can Alice read file \texttt{/users/Bob/readme.txt}? Can Bob open a TCP socket to
+\texttt{http://www.abc.com/}? Can Charlie write to row 15 of the table GRADES? \\
+The answer is either \textbf{authorized} (``has permission'') or
+\textbf{unauthorized} (``access denied''): only events within the security policy may
+happen.
+\end{exbox}
+
+\begin{rembox}[title=Why is access control so important?]
+Access control is the \textbf{first line of defense}, thus \textbf{it is used
+everywhere}:
+\begin{itemize}
+  \item \textbf{Applications} --- online social networks, email servers, cloud storage;
+  \item \textbf{Middleware} --- database management systems (DBMS);
+  \item \textbf{Operating system} --- access to files, directories, ports, \ldots;
+  \item \textbf{Hardware} --- memory, registers, privileges.
+\end{itemize}
+\end{rembox}
+
 \end{document}
