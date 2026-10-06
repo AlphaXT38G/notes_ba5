@@ -984,4 +984,20 @@ Subjects' access rights are defined (in an access control matrix) by four attrib
 write ($w$). Write is both observe and alter.
 \end{rembox}
 
+\subsection{Security levels and dominance}
+
+\begin{defnbox}[title=Security level (classification of objects)]
+Objects are associated to a \textbf{security level}: they have a \textbf{label} and
+belong to one or more \textbf{categories}.
+\[
+  \text{Security level} = (\text{Classification}, \{\text{set of categories}\})
+\]
+\begin{itemize}
+  \item \textbf{Classification} --- \textbf{total order} of labels (e.g.\
+        Unclassified $<$ Confidential $<$ Secret $<$ Top Secret).
+  \item \textbf{Categories} --- compartments of objects with a common topic (e.g.\
+        Nuclear, NATO, Crypto).
+\end{itemize}
+\end{defnbox}
+
 \end{document}
