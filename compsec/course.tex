@@ -1007,4 +1007,47 @@ A security level $(l_1, c_1)$ \textbf{dominates} $(l_2, c_2)$ \textbf{if and onl
 \]
 \end{defnbox}
 
+\begin{exbox}[title={Exercise --- Dominance}]
+Labels: Admin $<$ Nurse $<$ Surgeon $<$ Doctor; categories: DEMOGRAPHICS, ANALYSIS,
+RESULTS. Which statements are true?
+\begin{itemize}
+  \item $(D, \{\})$ dominates $(S, \{\})$
+  \item $(S, \{\})$ dominates $(N, \{\text{RESULTS}\})$
+  \item $(S, \{\text{DEMOGRAPHICS}, \text{RESULTS}\})$ dominates
+        $(N, \{\text{DEMOGRAPHICS}\})$
+  \item $(D, \{\text{ANALYSIS}, \text{RESULTS}\})$ dominates
+        $(S, \{\text{DEMOGRAPHICS}\})$
+\end{itemize}
+What level dominates them all? What level dominates only itself?
+\end{exbox}
+
+\begin{propbox}[title=Dominance lattice]
+Three key properties:
+\begin{enumerate}[label=(\alph*)]
+  \item dominates is \textbf{transitive};
+  \item there are \textbf{top and bottom} elements;
+  \item it is only a \textbf{partial} order: two levels may be incomparable (e.g.\
+        $(S, \{\text{Crypto}\})$ and $(S, \{\text{Nuclear}\})$).
+\end{enumerate}
+\begin{center}
+\begin{tikzpicture}[x=2.6cm, y=1.1cm, every node/.style={font=\small}]
+  \node (top) at (0,3)    {$(S, \{Cr, Nu\})$};
+  \node (sc)  at (-1,2)   {$(S, \{Cr\})$};
+  \node (sn)  at (0,2)    {$(S, \{Nu\})$};
+  \node (ccn) at (1,2)    {$(C, \{Cr, Nu\})$};
+  \node (s0)  at (-1,1)   {$(S, \{\})$};
+  \node (cc)  at (0,1)    {$(C, \{Cr\})$};
+  \node (cn)  at (1,1)    {$(C, \{Nu\})$};
+  \node (bot) at (0,0)    {$(C, \{\})$};
+  \draw (top) -- (sc); \draw (top) -- (sn); \draw (top) -- (ccn);
+  \draw (sc) -- (s0);  \draw (sn) -- (s0);
+  \draw (sc) -- (cc);  \draw (sn) -- (cn);
+  \draw (ccn) -- (cc); \draw (ccn) -- (cn);
+  \draw (s0) -- (bot); \draw (cc) -- (bot); \draw (cn) -- (bot);
+\end{tikzpicture} \\
+{\small Labels $C < S$, categories Crypto, Nuclear: a higher node dominates every node
+reachable downwards.}
+\end{center}
+\end{propbox}
+
 \end{document}
