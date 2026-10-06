@@ -1223,4 +1223,15 @@ access is labelled ``low''). \\
 replicate objects \& sanitize / erase.
 \end{defnbox}
 
+\begin{defnbox}[title=Invocation]
+\begin{itemize}
+  \item \textbf{Simple invocation} --- only allow subjects to invoke subjects with a label
+        \textbf{they dominate}. $+$ protects high integrity data from misuse by low
+        integrity principals; $-$ what level is the output?
+  \item \textbf{Controlled invocation} --- only allow subjects to invoke subjects
+        \textbf{that dominate them}. $+$ prevents corruption of high integrity data;
+        $-$ hard to detect polluting information.
+\end{itemize}
+\end{defnbox}
+
 \end{document}
