@@ -161,4 +161,41 @@ hard to get right.
 \end{itemize}
 \end{keybox}
 
+% =========================================================
+\chapter{Lecture 2 : Principles of computer security}
+% =========================================================
+
+\begin{rembox}[title=Where do the principles come from?]
+Saltzer \& Schroeder, \textit{The Protection of Information in Computer Systems} (1975),
+abbreviated \textbf{[SS75]}: \textbf{8 (+2) principles} at the core of security
+engineering practice. Experience has shown that they \textbf{guide} the design and
+contribute to an implementation without security flaws. They are still used today
+(e.g.\ to analyse the threat model of machine learning systems).
+\end{rembox}
+
+\begin{exbox}[title=Heartbleed (CVE-2014-0160) --- why simplicity matters]
+In OpenSSL (used for HTTPS), the \textit{Heartbeat} feature lets a client send a small
+piece of data that the server echoes back. The attacker sends 1 byte but
+\textbf{claims} to have sent 64\,000 bytes; the server, \textbf{without checking the
+actual length}, replies with the byte plus 63\,999 bytes of its private memory.
+\begin{itemize}
+  \item \textbf{Feature complexity} --- Heartbeat was a non-essential feature: the
+        added complexity created a \textbf{new attack surface}.
+  \item \textbf{Codebase complexity} --- the bug was a single missing bounds check,
+        hidden for two years because the huge codebase made auditing difficult.
+\end{itemize}
+\end{exbox}
+
+\section{1 -- Economy of mechanism}
+
+\begin{defnbox}[title=Economy of mechanism]
+``Keep the [security mechanism / implementation] design as \textbf{simple and small}
+as possible.'' (KISS principle)
+\end{defnbox}
+
+\begin{rembox}[title=Why?]
+The mechanism needs to be \textbf{easy to audit and verify}. Operational testing is not
+appropriate to evaluate security (penetration testing is nevertheless valuable).
+\end{rembox}
+
 \end{document}
