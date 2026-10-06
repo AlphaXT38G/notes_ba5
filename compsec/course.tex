@@ -833,4 +833,12 @@ Only \emph{one} class of bits is checked: an owner with \texttt{---} for owner b
 \texttt{rwx} for group is denied, even if they are in the group.
 \end{warnbox}
 
+\begin{defnbox}[title=Super user (\texttt{root})]
+Special user account with \textbf{User ID 0}: accesses system files and special
+operations, can access anything ((almost) all security checks disabled).
+\textbf{\texttt{root} is in the TCB!} \\
+\textbf{Never login as root}: use \texttt{sudo} (run one command as root) or
+\texttt{su} (switch user).
+\end{defnbox}
+
 \end{document}
