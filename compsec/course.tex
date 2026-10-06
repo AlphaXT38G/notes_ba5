@@ -1075,4 +1075,12 @@ by NRU) and \textbf{writes it into an Unclassified object}, which an Unclassifie
 then reads (also allowed by NRU). Information flowed \textbf{down} without any read-up.
 \end{warnbox}
 
+\begin{defnbox}[title=Star property (*-property) --- No Write Down]
+If a subject has simultaneous ``\textbf{observe}'' ($r$, $w$) access to $O_1$ and
+``\textbf{alter}'' ($a$, $w$) access to $O_2$, then $\text{level}(O_2)$
+\textbf{dominates} $\text{level}(O_1)$. \\
+$\Rightarrow$ \textbf{No Write Down (NWD)}: a Secret subject can append to Top Secret,
+read Secret and below, but cannot append/write to lower levels.
+\end{defnbox}
+
 \end{document}
