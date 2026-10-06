@@ -797,4 +797,40 @@ servers, \ldots). Solutions:
 \end{itemize}
 \end{propbox}
 
+\begin{defnbox}[title=UNIX file ACLs]
+Each file is assigned an \textbf{owner UID} and a \textbf{GID}, and has \textbf{9
+permission bits}: 3 actions (\textbf{r}ead, \textbf{w}rite, e\textbf{x}ecute) $\times$ 3
+subjects (\textbf{owner}, \textbf{group}, \textbf{other}). Plus 3 attributes:
+\texttt{suid}, \texttt{sgid} and \texttt{sticky}. \\
+Different semantics for \textbf{directories}: Read $\to$ list files, Write $\to$ add
+files, Exec $\to$ traverse the directory (\texttt{cd}).
+\end{defnbox}
+
+\begin{exbox}[title=Reading \texttt{ls -l}]
+\texttt{drwxrwxr-x 1 catronco catronco 4096 Sep 16 14:23 exampledir} \\
+First char: \texttt{d} = directory, \texttt{-} = file; then \texttt{rwx} for owner,
+\texttt{rwx} for group, \texttt{r-x} for others; then number of links, owner, group,
+size, last modified, filename. \\
+The owner changes permissions with \texttt{chmod}: \texttt{+r}, \texttt{-w},
+octal \texttt{666}, \texttt{662}, sticky \texttt{+t} or \texttt{1666}, suid
+\texttt{+s} or \texttt{4666}.
+\end{exbox}
+
+\begin{algbox}[title=UNIX access control in action]
+Compare the \texttt{UID}/\texttt{GID} of the \textbf{process} trying to perform the
+action with the state of the file (owner, group, mode bits). \textbf{Order matters}:
+\begin{enumerate}
+  \item if the \texttt{UID} says you are the owner: check the bits for \textbf{owner};
+  \item if not owner, but your group is the file's group: check the bits for
+        \textbf{group};
+  \item otherwise check the bits for \textbf{other}.
+\end{enumerate}
+The \texttt{root} user is \textbf{never denied access}.
+\end{algbox}
+
+\begin{warnbox}[title=Order matters]
+Only \emph{one} class of bits is checked: an owner with \texttt{---} for owner but
+\texttt{rwx} for group is denied, even if they are in the group.
+\end{warnbox}
+
 \end{document}
