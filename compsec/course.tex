@@ -1548,4 +1548,20 @@ A \textbf{big key space is necessary but not sufficient}. Security is about the
 \emph{best} attack, not only brute force.
 \end{keybox}
 
+\begin{defnbox}[title=Bits of security]
+\textbf{Goal}: an $N$-bit key should offer security as close to $N$ bits as possible,
+i.e.\ require $2^N$ attempts. \\
+\textbf{The break}: if a 1024-bit key is broken with only $2^{40}$ attempts (40 bits of
+security), the algorithm is considered \textbf{broken}. \\
+\textbf{Caesar lesson}: the 25-key space was cleverly reduced to \textbf{1 possibility};
+similarly the $\approx 88$ bits of the substitution cipher were reduced to a few tries.
+\end{defnbox}
+
+\begin{rembox}[title=Orders of magnitude]
+Each extra bit \textbf{doubles} the work. $2^{40} \approx 10^{12}$ operations is easy for
+a laptop; $2^{128}$ is far beyond all computers on Earth for billions of years. ``Broken''
+does not mean ``practically decrypted today'', it means \textbf{faster than brute
+force}.
+\end{rembox}
+
 \end{document}
