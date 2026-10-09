@@ -1499,4 +1499,20 @@ small} for real-world use (a brute force is trivial). It is still pedagogically 
 introduce a first real attack.
 \end{exbox}
 
+\begin{defnbox}[title=Frequency analysis attack]
+\begin{itemize}
+  \item Eve knows that Alice wrote a long-enough message for Bob in English.
+  \item She knows that the most frequent letter in English is `e'.
+  \item She identifies the most frequent letter in the ciphertext: it likely corresponds
+        to `e'.
+  \item She then directly recovers the key (a number between 0 and 25).
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title=Why it works]
+Caesar maps every `e' to the \emph{same} ciphertext letter, so the ciphertext keeps the
+\textbf{statistics} of English. Eve does not even need to try the 25 keys: one look at the
+letter counts gives the shift.
+\end{rembox}
+
 \end{document}
