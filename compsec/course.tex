@@ -1795,4 +1795,17 @@ Encryption hides the content; it does \textbf{not} prove that the content was no
 modified. Integrity needs separate mechanisms (MACs, signatures --- later in the course).
 \end{warnbox}
 
+\section{Module 4 -- From OTP to stream ciphers}
+
+\begin{defnbox}[title=Symmetric encryption]
+Encryption of plaintext and decryption of ciphertext are done using \textbf{the same
+key}. Two main types:
+\begin{itemize}
+  \item \textbf{Block ciphers} --- operate on fixed-size blocks (e.g.\ 128 bits).
+        Example: \textbf{AES} (Advanced Encryption Standard).
+  \item \textbf{Stream ciphers} --- operate one bit/byte at a time, like a
+        \textbf{pseudo-OTP}. Example: \textbf{ChaCha20}.
+\end{itemize}
+\end{defnbox}
+
 \end{document}
