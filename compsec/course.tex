@@ -2036,4 +2036,22 @@ interesting mathematics:
 \end{itemize}
 \end{rembox}
 
+\begin{defnbox}[title=Man-In-The-Middle (MITM) attack]
+Vanilla DH is vulnerable to an \textbf{active} attack: DH only guarantees key
+\emph{agreement}, not \emph{authenticity} (verifying \emph{who} you are agreeing with).
+\begin{enumerate}
+  \item Eve intercepts $A$ from Alice and $B$ from Bob.
+  \item Eve sends her own value $E_B$ to Alice: Alice computes $K_{AE}$.
+  \item Eve sends her own value $E_A$ to Bob: Bob computes $K_{BE}$.
+\end{enumerate}
+Eve shares a key $K_{AE}$ with Alice and a separate key $K_{BE}$ with Bob: she can
+\textbf{read, modify, and relay} all communication.
+\end{defnbox}
+
+\begin{rembox}[title=Why it works]
+Alice believes $E_B$ comes from Bob, but nothing in the protocol proves it. Each side
+does a perfectly correct DH --- just with Eve. DH is secure against a \emph{passive}
+eavesdropper, not against an \emph{active} attacker (Module 2).
+\end{rembox}
+
 \end{document}
