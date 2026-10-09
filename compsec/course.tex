@@ -1407,4 +1407,25 @@ encrypted backup and every messaging app. Understanding its basics tells you
 golden rule is: \textbf{never design your own crypto, use vetted standards}.
 \end{rembox}
 
+\section{Module 1 -- Introduction}
+
+\begin{rembox}[title=Why cryptography matters]
+\begin{itemize}
+  \item \textbf{Data in transit} --- securing communication (e.g.\ HTTPS, VPNs).
+  \item \textbf{Data at rest} --- securing stored information (e.g.\ encrypted
+        backups).
+\end{itemize}
+Cryptography is also the building block for \textbf{integrity} (ensuring data has not
+been tampered with: hashing, signatures), \textbf{authentication} (verifying identity:
+protocols), \textbf{anonymity}, etc. This lecture focuses on the basics of using
+cryptography for \textbf{confidentiality}.
+\end{rembox}
+
+\begin{defnbox}[title=Secure communication over an insecure channel]
+The core problem: we need a way for \textbf{Alice} to send a message to \textbf{Bob},
+so that \textbf{Eve} (the adversary) \textbf{cannot read it}. \\
+Confidentiality for data at rest can be seen as a particular case, where
+Alice $=$ Bob (you ``send'' the data to your future self).
+\end{defnbox}
+
 \end{document}
