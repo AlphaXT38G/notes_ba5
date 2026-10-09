@@ -1878,4 +1878,19 @@ ciphers have none (bit $i$ of $C$ only depends on bit $i$ of $M$), which is exac
 the bit-flipping attack works on them.
 \end{rembox}
 
+\begin{defnbox}[title=Periodicity of key stream generators]
+Key stream generators which have a \textbf{finite state} are eventually
+\textbf{periodic}: if the message is longer than the period, the stream
+\textbf{repeats}. \\
+\textbf{The attack}: if the period is identified and too small, the key stream is known
+for the entire message.
+\end{defnbox}
+
+\begin{rembox}[title=Why finite state implies periodic]
+A KSG with $L$ bits of internal state has at most $2^L$ different states. Each output
+step moves deterministically to a next state, so after at most $2^L$ steps a state
+repeats, and from then on everything repeats: a repeating stream is a \textbf{reused
+pad}.
+\end{rembox}
+
 \end{document}
