@@ -2011,4 +2011,17 @@ secret colour to what it receives: both end up with the same final colour. Un-mi
 paint (finding the secret colour) is hard, like the discrete logarithm.
 \end{rembox}
 
+\begin{defnbox}[title=Trapdoor functions]
+DH is one of many ways to use public-key cryptography to establish a shared secret (a
+shared key) to then do symmetric cryptography. They boil down to mathematical functions
+that are \textbf{easy to compute in one direction} but \textbf{hard (high complexity) to
+compute in the other direction}.
+\end{defnbox}
+
+\begin{defnbox}[title=Discrete Logarithm Problem (DLP)]
+Underlying difficulty of DH: computing $g^a \bmod p$ is cheap (fast modular
+exponentiation), but there is \textbf{no known fast (polynomial) algorithm} to recover
+$a$ from $A = g^a \bmod p$ (and $g$, $p$).
+\end{defnbox}
+
 \end{document}
