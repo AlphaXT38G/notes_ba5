@@ -1459,4 +1459,20 @@ lock design is public (open design, Lecture 2 / Kerckhoffs), only the key is sec
 Step 1 (sharing the key) is the hard part, and comes back at the end of the lecture.
 \end{rembox}
 
+\begin{defnbox}[title=Invertibility (the core requirement)]
+The decryption function $D_K$ \textbf{must} be the \textbf{inverse} of $E_K$:
+\[
+  \forall K, M,\quad D_K\big(E_K(M)\big) = M .
+\]
+If not, Bob cannot recover the original message $M$. \\
+\textbf{Security requirement}: to provide security, these functions must also be
+\textbf{hard to invert without knowing the key} $K$.
+\end{defnbox}
+
+\begin{rembox}[title=Two requirements that pull in opposite directions]
+\textbf{Correctness}: \emph{with} the key, inverting is easy. \textbf{Security}:
+\emph{without} the key, inverting is hard. The whole art of cryptography is to get both
+at the same time.
+\end{rembox}
+
 \end{document}
