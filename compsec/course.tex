@@ -1483,4 +1483,20 @@ secret key} $K$ (a \textbf{brute-force attack}). \\
 \textbf{Goal}: a secure scheme forces the attacker into this situation.
 \end{defnbox}
 
+\begin{defnbox}[title=Caesar's cipher]
+\begin{itemize}
+  \item \textbf{Encryption}: shift each letter by a fixed number $K$.
+  \item \textbf{Decryption}: shift each letter by $-K$.
+  \item \textbf{Key space}: only 25 possible keys.
+\end{itemize}
+\end{defnbox}
+
+\begin{exbox}[title={Caesar with $K = 3$}]
+\texttt{ATTACK AT DAWN} $\xrightarrow{K=3}$ \texttt{DWWDFN DW GDZQ}
+($A \to D$, $T \to W$, \ldots). \\
+\textbf{Security insight}: $\log_2(25) \approx 4.6$ bits of security --- \textbf{far too
+small} for real-world use (a brute force is trivial). It is still pedagogically useful to
+introduce a first real attack.
+\end{exbox}
+
 \end{document}
