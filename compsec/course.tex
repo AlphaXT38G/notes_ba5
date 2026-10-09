@@ -2024,4 +2024,16 @@ exponentiation), but there is \textbf{no known fast (polynomial) algorithm} to r
 $a$ from $A = g^a \bmod p$ (and $g$, $p$).
 \end{defnbox}
 
+\begin{rembox}[title=Beyond DH]
+Other ways to set a shared secret (or even to directly communicate), all involving
+interesting mathematics:
+\begin{itemize}
+  \item \textbf{RSA} --- based on the \textbf{factoring} problem.
+  \item \textbf{Elliptic Curve Cryptography (ECC)} --- the discrete logarithm problem on
+        elliptic curves instead of modulo $p$ (smaller keys for the same security).
+  \item \textbf{Post-quantum cryptography} --- new primitives (like \textbf{lattice
+        crypto}) to resist quantum computers.
+\end{itemize}
+\end{rembox}
+
 \end{document}
