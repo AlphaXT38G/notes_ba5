@@ -1732,4 +1732,25 @@ For a given ciphertext $c$, \emph{every} message $m$ is possible: there is exact
 infinite computing power, Eve cannot tell which message was sent.
 \end{rembox}
 
+\begin{defnbox}[title={One-time: never reuse the key}]
+One-time pads are called like this because they must \textbf{not} be reused. If the same
+key encrypts two messages:
+\[
+  C_1 \oplus C_2 = (M_1 \oplus K) \oplus (M_2 \oplus K) = M_1 \oplus M_2 ,
+\]
+the key cancels out. Eve cannot recover the full messages directly, but she learns
+information about the plaintexts, which can feed frequency analysis and help recover
+them.
+\end{defnbox}
+
+\begin{exbox}[title=Spaces vs.\ letters in ASCII]
+In ASCII, spaces start with \texttt{00} and letters with \texttt{01}. In $M_1 \oplus M_2$:
+\begin{itemize}
+  \item 2 letters: $01 \oplus 01 = 00$;
+  \item 2 spaces: $00 \oplus 00 = 00$;
+  \item letter $+$ space: $01 \oplus 00 = 01$ $\Rightarrow$ one of the messages has a
+        space at this position!
+\end{itemize}
+\end{exbox}
+
 \end{document}
