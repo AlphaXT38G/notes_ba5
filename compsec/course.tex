@@ -1980,4 +1980,35 @@ securely without a pre-shared secret. \\
 \textbf{never met} to establish a secure channel.
 \end{defnbox}
 
+\begin{defnbox}[title=Diffie-Hellman (DH) key exchange]
+Alice, Bob (and Eve) know large \textbf{public parameters}: a prime number $p$ and a
+generator $g$.
+\begin{itemize}
+  \item \textbf{Alice} chooses a \textbf{private} secret $a$, computes the
+        \textbf{public value} $A = g^a \bmod p$ and sends $A$ to Bob.
+  \item \textbf{Bob} chooses a \textbf{private} secret $b$, computes the
+        \textbf{public value} $B = g^b \bmod p$ and sends $B$ to Alice.
+\end{itemize}
+Both compute the same \textbf{shared secret}:
+\[
+  K = B^a = (g^b)^a = g^{ab} = (g^a)^b = A^b \pmod p .
+\]
+Alice computes $B^a$ (she has $a$), Bob computes $A^b$ (he has $b$). Eve sees $A$, $B$,
+$g$ and $p$, but cannot find $a$ or $b$ (discrete logarithm problem), so she cannot
+compute $K$.
+\end{defnbox}
+
+\begin{exbox}[title={Toy example (real $p$ has 2048+ bits)}]
+$p = 23$, $g = 5$. Alice picks $a = 4$: $A = 5^4 \bmod 23 = 625 \bmod 23 = 4$. Bob picks
+$b = 3$: $B = 5^3 \bmod 23 = 125 \bmod 23 = 10$. \\
+Alice: $K = 10^4 \bmod 23 = 18$. Bob: $K = 4^3 \bmod 23 = 64 \bmod 23 = 18$. Same key!
+Eve sees $23, 5, 4, 10$ but must find $a$ with $5^a \equiv 4 \pmod{23}$.
+\end{exbox}
+
+\begin{rembox}[title=Paint analogy]
+Mix a public colour with your secret colour and send the mix; each side adds its own
+secret colour to what it receives: both end up with the same final colour. Un-mixing
+paint (finding the secret colour) is hard, like the discrete logarithm.
+\end{rembox}
+
 \end{document}
