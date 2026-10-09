@@ -1952,4 +1952,18 @@ There are modern stream ciphers with \textbf{no known practical cryptanalysis}, 
 \textbf{Salsa20} (using different techniques).
 \end{exbox}
 
+\begin{keybox}[title=Bit security and consequences]
+\begin{itemize}
+  \item \textbf{Cost of breaking} --- exploiting a mathematical property or bug can break
+        the scheme much faster than $2^{|K|}$ attempts, \textbf{reducing the bit
+        security}.
+  \item \textbf{The difficulty} --- designing mathematically secure and subtly resistant
+        primitives is incredibly hard.
+  \item \textbf{Conclusion} --- \textbf{never design your own} stream cipher (block
+        cipher, or hash function).
+  \item \textbf{Best practice} --- use \textbf{well-vetted, peer-reviewed, standard
+        algorithms and their implementations} (AES, ChaCha20, SHA-3).
+\end{itemize}
+\end{keybox}
+
 \end{document}
