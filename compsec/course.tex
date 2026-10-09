@@ -1858,4 +1858,24 @@ decode future messages. A fresh IV per message gives a \textbf{different stream 
 message} while reusing the same key.
 \end{rembox}
 
+\begin{propbox}[title=Stream ciphers: strengths and weaknesses]
+\begin{center}
+\begin{tabular}{p{0.32\linewidth}|p{0.58\linewidth}}
+\textbf{Speed} (+) & Algorithms are linear in time and constant in space. \\
+\textbf{Low error propagation} (+) & Errors in one bit do not affect subsequent
+symbols. \\ \hline
+\textbf{Low diffusion} ($-$) & A change in one plaintext bit only affects one ciphertext
+bit. \\
+\textbf{Susceptibility to modification} ($-$) & Low diffusion makes it easier to tamper
+with the message (like the OTP).
+\end{tabular}
+\end{center}
+\end{propbox}
+
+\begin{rembox}[title=Diffusion]
+\textbf{Diffusion} = how much a small change in the input spreads to the output. Stream
+ciphers have none (bit $i$ of $C$ only depends on bit $i$ of $M$), which is exactly why
+the bit-flipping attack works on them.
+\end{rembox}
+
 \end{document}
