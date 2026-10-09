@@ -1515,4 +1515,37 @@ Caesar maps every `e' to the \emph{same} ciphertext letter, so the ciphertext ke
 letter counts gives the shift.
 \end{rembox}
 
+\begin{defnbox}[title=Substitution cipher]
+Encryption/decryption by \textbf{permuting the alphabet}: each letter is mapped to a
+unique, different letter, defined by a \textbf{permutation} of the 26 letters (the key).
+\begin{center}
+\texttt{ABCDEFGHIJKLMNOPQRSTUVWXYZ} \\
+\texttt{HOWBUGIACRYEVZXPJQMSNTFDKL}
+\end{center}
+\textbf{Key space}: $26! \approx 4.03 \times 10^{26}$ possible keys, i.e.\
+$\log_2(26!) \approx 88.4$ bits of security?
+\end{defnbox}
+
+\begin{warnbox}[title={The flaw, again}]
+This key space looks big enough, but the cipher is \textbf{still easily broken} by the
+same frequency analysis. \textbf{Vulnerability}: the cipher \textbf{preserves the
+statistical properties} of the plaintext language (e.g.\ single-letter frequencies). With
+a long enough ciphertext, statistical analysis breaks the cipher, rendering the full $26!$
+key space \textbf{irrelevant}. \\
+E.g.\ on the whole Harry Potter series encrypted with one key, Eve guesses the most
+likely letter mappings, uses a dictionary to rule out keys that give non-English text,
+and finds $K$ in a few tries.
+\end{warnbox}
+
+\begin{rembox}[title=Goal of the adversary]
+Eve does not necessarily need the \emph{full} key: depending on the scenario, recovering
+part of it (the mapping of some letters) may be enough. Sometimes the goal is even
+smaller: Eve may only want to know whether Alice sent ``Yes'' or ``No''.
+\end{rembox}
+
+\begin{keybox}[title=Lesson]
+A \textbf{big key space is necessary but not sufficient}. Security is about the
+\emph{best} attack, not only brute force.
+\end{keybox}
+
 \end{document}
