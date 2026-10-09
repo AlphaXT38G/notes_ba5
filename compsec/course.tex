@@ -2065,4 +2065,21 @@ problem}.
 \end{itemize}
 \end{defnbox}
 
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Encryption $C = E_K(M)$ must be \textbf{invertible with the key} and \textbf{hard
+        to invert without it}; ideally the best attack is brute force.
+  \item A big key space is not enough: \textbf{frequency analysis} breaks Caesar and
+        substitution ciphers. Security is measured in \textbf{bits of security}.
+  \item Adversary models: \textbf{passive} $<$ \textbf{KPA} $<$ \textbf{CPA}, plus
+        \textbf{side channels} on implementations.
+  \item The \textbf{one-time pad} is \textbf{perfectly secret} but needs a random,
+        message-length, single-use key, and is \textbf{malleable} (no integrity).
+  \item \textbf{Stream ciphers} expand a short key + IV into a pseudo-random stream;
+        never reuse a stream, never use plain LFSRs, \textbf{never design your own
+        crypto}.
+  \item \textbf{Diffie-Hellman} solves key distribution thanks to the \textbf{discrete
+        logarithm problem}, but needs \textbf{authentication} against MITM.
+\end{itemize}
+\end{keybox}
 \end{document}
