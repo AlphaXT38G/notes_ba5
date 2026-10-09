@@ -1583,4 +1583,25 @@ few keys). This is not the only possible adversary model.
 \end{itemize}
 \end{defnbox}
 
+\begin{defnbox}[title=Known Plaintext Attack (KPA)]
+\textbf{Scenario}: Eve is given access to multiple pairs $(M, C)$ of messages and their
+corresponding ciphertexts, all encrypted with the secret key $K$. \\
+\textbf{Goal}: from these pairs, guess the key $K$ to decrypt other messages.
+\end{defnbox}
+
+\begin{propbox}[title=Why is KPA a realistic model?]
+\begin{itemize}
+  \item \textbf{Standard headers} --- many encrypted messages contain predictable parts
+        (``From:'', timestamps, packet destinations, \ldots).
+  \item \textbf{Malicious guessing} --- if Eve guesses a message (or part of it) and
+        observes its encryption, she has an $(M, C)$ pair.
+\end{itemize}
+\end{propbox}
+
+\begin{exbox}[title=KPA and the substitution cipher]
+Under KPA the substitution cipher becomes \textbf{even more broken}: if Eve knows that
+$M = $ \texttt{THE QUICK BROWN FOX}, she immediately recovers the mapping of many
+letters, drastically reducing the key space without any statistical analysis.
+\end{exbox}
+
 \end{document}
