@@ -1828,4 +1828,34 @@ OTP key: as long as the message, used once. Symmetric key: \textbf{short and fix
 how to get OTP-like encryption from such a short key.
 \end{rembox}
 
+\begin{defnbox}[title=Stream cipher (pseudo-OTP)]
+A stream cipher attempts to emulate the OTP's security while solving the key-length
+problem:
+\begin{enumerate}
+  \item \textbf{Short key} $K$ --- Alice and Bob share a small, manageable key (kept
+        secret).
+  \item \textbf{Key Stream Generator (KSG)} --- uses $K$ and an \textbf{Initialization
+        Vector (IV)} (which does \textbf{not} need to be secret) to produce an
+        arbitrarily long, \emph{pseudo-random} bit stream $S = \mathrm{stream}(K, IV)$.
+  \item \textbf{Encryption} --- $C = M \oplus S$.
+\end{enumerate}
+To \textbf{decrypt}, the receiver feeds the KSG with the shared key and the IV (sent with
+the ciphertext) to recreate the same stream $S$, then computes $C \oplus S = M$.
+\end{defnbox}
+
+\begin{propbox}[title=Security of the KSG]
+We generate potentially \textbf{infinitely long randomness} (the stream $S$) from a
+\textbf{finite secret} ($K$). Security depends entirely on $S$ being
+\textbf{computationally indistinguishable from a truly random OTP key}: unless one knows
+the key, one cannot distinguish the stream from a random string.
+\end{propbox}
+
+\begin{rembox}[title=Why does the KSG also take an IV?]
+Without an IV, the same key would always produce the \textbf{same stream} $S$, and two
+messages would be encrypted with the same ``pad'': XOR-ing the two ciphertexts recovers
+$M_1 \oplus M_2$ (the two-time pad above), and Eve could recover the prefix of $S$ and
+decode future messages. A fresh IV per message gives a \textbf{different stream for every
+message} while reusing the same key.
+\end{rembox}
+
 \end{document}
