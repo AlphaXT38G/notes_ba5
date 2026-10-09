@@ -1808,4 +1808,24 @@ key}. Two main types:
 \end{itemize}
 \end{defnbox}
 
+\begin{defnbox}[title=Symmetric cryptographic key]
+A \textbf{fixed-size} input to symmetric cryptographic primitives; the size of the key
+influences the level of security provided. Key properties:
+\begin{itemize}
+  \item \textbf{Known to both parties} --- partners must agree on the key
+        \textbf{before} starting to use the primitive (requires secure generation and
+        sharing protocols).
+  \item \textbf{It is reused} --- the key is pre-shared once and then reused (keys do
+        have a ``duration'').
+  \item \textbf{It must be secret} --- revealing the key eliminates any protection
+        provided by the primitive.
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title=Difference with the OTP]
+OTP key: as long as the message, used once. Symmetric key: \textbf{short and fixed}
+(e.g.\ 128 or 256 bits) and \textbf{reused} for many messages. The next definitions show
+how to get OTP-like encryption from such a short key.
+\end{rembox}
+
 \end{document}
