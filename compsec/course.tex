@@ -1665,4 +1665,41 @@ always, new adversary models can be defined, but always as a \textbf{strategic a
 with limited, well-defined resources}.
 \end{rembox}
 
+\section{Module 3 -- Perfect secrecy and the one-time pad}
+
+\begin{rembox}[title={Reminder: XOR ($\oplus$)}]
+\begin{center}
+\begin{tabular}{cc|c}
+$a$ & $b$ & $a \oplus b$ \\ \hline
+0 & 0 & 0 \\ 0 & 1 & 1 \\ 1 & 0 & 1 \\ 1 & 1 & 0
+\end{tabular}
+\end{center}
+Key properties: $a \oplus a = 0$, $a \oplus 0 = a$, hence $a \oplus b \oplus b = a$
+(XOR-ing twice with the same value cancels out). XOR with a random bit flips the input
+bit with probability $1/2$: the output is itself random.
+\end{rembox}
+
+\begin{defnbox}[title=One-Time Pad (OTP)]
+How to remove frequency analysis? Make sure that letters are \textbf{not} encrypted to
+the same values. \\
+\textbf{Key}: a string $k$ of \textbf{random} bits, \textbf{as long as the message},
+pre-shared between Alice and Bob.
+\[
+  \mathrm{Enc}(k, m) = m \oplus k \qquad\qquad \mathrm{Dec}(k, c) = c \oplus k
+\]
+Decryption works because $(m \oplus k) \oplus k = m$.
+\end{defnbox}
+
+\begin{exbox}[title=OTP on ``YEAH'']
+\begin{tabular}{ll}
+Message (ASCII \texttt{59454148}) & \texttt{01011001010001010100000101001000} \\
+$\oplus$ OTP key                   & \texttt{01110101000111010100101001001010} \\ \hline
+Ciphertext                         & \texttt{00101100010110000000101100000010}
+\end{tabular} \\[4pt]
+XOR-ing the ciphertext with the same key gives back the message. Encrypting ``YEAH''
+twice with \emph{different} keys gives \emph{different} ciphertexts, and ``YEAH'' and
+``NOPE'' can produce any ciphertext depending on the key: the ciphertext alone tells
+nothing.
+\end{exbox}
+
 \end{document}
