@@ -1702,4 +1702,34 @@ twice with \emph{different} keys gives \emph{different} ciphertexts, and ``YEAH'
 nothing.
 \end{exbox}
 
+\begin{defnbox}[title=Perfect secrecy]
+For any ciphertext $C$, \textbf{every possible plaintext $M$ is equally likely} as
+before seeing $C$: the ciphertext gives the adversary \textbf{zero new information} about
+$M$. Formally:
+\[
+  \forall m, c,\quad \PR\big(M = m \mid E_K(M) = c\big) = \PR(M = m).
+\]
+\end{defnbox}
+
+\begin{proofbox}[title=The OTP is perfectly secure]
+Messages $m$ have some prior probability $\PR(M = m)$ (``Yes'' may be more likely than
+``Autobus''), and the key $K$ is uniform on $n$-bit strings, independent of $M$. Since
+$E_K(m) = c \iff K = m \oplus c$:
+\begin{align*}
+  \PR(M = m \mid C = c)
+  &= \frac{\PR(M = m \cap K = m \oplus c)}{\PR(C = c)}
+   = \frac{\PR(M = m)\,\PR(K = m \oplus c)}{\PR(C = c)} \\
+  &= \frac{\PR(M = m)\, 2^{-n}}{2^{-n}}
+   = \PR(M = m),
+\end{align*}
+using independence of $M$ and $K$, and
+$\PR(C = c) = \sum_{m'} \PR(M = m')\,\PR(K = m' \oplus c) = 2^{-n}$.
+\end{proofbox}
+
+\begin{rembox}[title=Intuition]
+For a given ciphertext $c$, \emph{every} message $m$ is possible: there is exactly one key
+($k = m \oplus c$) that maps it to $c$, and all keys are equally likely. So even with
+infinite computing power, Eve cannot tell which message was sent.
+\end{rembox}
+
 \end{document}
