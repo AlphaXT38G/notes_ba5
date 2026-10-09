@@ -1927,4 +1927,29 @@ Output: $1, 0, 0, 0, 1, 0, 0, 1, 1, \ldots$
 \end{itemize}
 \end{propbox}
 
+\begin{warnbox}[title=LFSR --- math danger]
+Despite passing some statistical tests, an LFSR is purely \textbf{linear}. Techniques like
+the Berlekamp-Massey algorithm (beyond the scope of the class) recover the entire LFSR
+state and key stream from only a \textbf{short segment of the output}, breaking the
+cipher. \textbf{LFSRs should not be used directly as key stream generators}, though they
+have traditionally been used as a building block of KSGs.
+\end{warnbox}
+
+\begin{rembox}[title=Why linearity is fatal]
+Linear means ``solvable with linear algebra'': each output bit gives one linear equation
+on the unknown initial state. With about $2L$ output bits (easy to get in a KPA), Eve
+solves the system and predicts the whole stream. ``Looks random'' (statistics) is not the
+same as ``unpredictable'' (security).
+\end{rembox}
+
+\begin{exbox}[title={A5/1 and modern stream ciphers}]
+\textbf{A5/1}, used historically to secure GSM mobile phone communications, combined
+\textbf{multiple LFSRs} in a non-linear way to overcome the linearity flaw while staying
+cheap. Despite this, mathematical weaknesses allow breaking it much faster than brute
+force: it is practically broken (recall the closed-design failure of GSM, Lecture 2). \\
+There are modern stream ciphers with \textbf{no known practical cryptanalysis}, e.g.\
+\textbf{Trivium} (based on NLFSRs, 3 shift registers glued with XOR and AND gates) and
+\textbf{Salsa20} (using different techniques).
+\end{exbox}
+
 \end{document}
