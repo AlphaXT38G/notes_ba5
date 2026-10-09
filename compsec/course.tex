@@ -1604,4 +1604,36 @@ $M = $ \texttt{THE QUICK BROWN FOX}, she immediately recovers the mapping of man
 letters, drastically reducing the key space without any statistical analysis.
 \end{exbox}
 
+\begin{defnbox}[title=Chosen Plaintext Attack (CPA)]
+\textbf{Scenario}: Eve can convince Alice (or the system) to encrypt \textbf{arbitrary
+messages chosen by Eve} with the secret key. \\
+\textbf{More abstractly}: for any chosen plaintext $m$, Eve gets $E_K(m)$. We say that
+Eve has access to an \textbf{encryption oracle}.
+\end{defnbox}
+
+\begin{rembox}[title=KPA vs.\ CPA]
+In KPA, Eve does not choose which pairs she sees; in CPA she \emph{chooses} $m$ and gets
+$(m, \mathrm{Enc}(k, m))$. Hence CPA is a \textbf{strictly stronger} model than KPA:
+\[
+  \text{passive (ciphertext only)} \;<\; \text{KPA} \;<\; \text{CPA}.
+\]
+A scheme secure against a stronger adversary is also secure against the weaker ones.
+\end{rembox}
+
+\begin{propbox}[title=Why is CPA a realistic model?]
+\begin{itemize}
+  \item \textbf{Messaging app} --- with a few minutes of access to Alice's phone
+        (Signal, WhatsApp), Eve can send \emph{any} data she chooses to Bob and obtain an
+        $(M, C)$ pair.
+  \item \textbf{Encryption API} --- Eve interacts with an endpoint where she provides
+        data and receives the encrypted output.
+\end{itemize}
+\end{propbox}
+
+\begin{exbox}[title=CPA and the substitution cipher]
+The substitution cipher is \textbf{completely broken} by a CPA: Eve asks for the
+encryption of $M = $ \texttt{abcdefghijklmnopqrstuvwxyz}; the ciphertext \emph{is} the
+entire key (the full permutation), in just \textbf{one} query!
+\end{exbox}
+
 \end{document}
