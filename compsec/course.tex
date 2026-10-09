@@ -1428,4 +1428,35 @@ Confidentiality for data at rest can be seen as a particular case, where
 Alice $=$ Bob (you ``send'' the data to your future self).
 \end{defnbox}
 
+\begin{defnbox}[title=Encryption and decryption]
+\textbf{Confidentiality}: information cannot be accessed by unauthorized parties.
+\begin{itemize}
+  \item \textbf{Encryption algorithm} --- cryptographic instructions that convert a
+        \textbf{plaintext} message into \textbf{ciphertext}.
+  \item \textbf{Decryption algorithm} --- cryptographic instructions that convert a
+        ciphertext message into plaintext.
+\end{itemize}
+Both encryption and decryption algorithms require a \textbf{key}: encryption cannot be
+reversed without the key. As functions, with plaintext $M$ (original message), key $K$
+(secret value) and ciphertext $C$ (scrambled message):
+\[
+  C = E_K(M) \qquad\text{and}\qquad M = D_K(C).
+\]
+\end{defnbox}
+
+\begin{algbox}[title=Cryptographic algorithms for confidentiality]
+\begin{enumerate}
+  \item Get a key $k$ shared between Alice and Bob.
+  \item Alice encrypts the message: $m \to \mathrm{Enc}(k, m)$.
+  \item Alice sends $\mathrm{Enc}(k, m)$ over the insecure channel.
+  \item Bob decrypts: $\mathrm{Dec}(k, \mathrm{Enc}(k, m)) \to m$.
+\end{enumerate}
+\end{algbox}
+
+\begin{rembox}[title=Intuition]
+Think of the algorithm as a \textbf{lock design} and the key as \textbf{the key}: the
+lock design is public (open design, Lecture 2 / Kerckhoffs), only the key is secret.
+Step 1 (sharing the key) is the hard part, and comes back at the end of the lecture.
+\end{rembox}
+
 \end{document}
