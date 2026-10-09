@@ -1564,4 +1564,23 @@ does not mean ``practically decrypted today'', it means \textbf{faster than brut
 force}.
 \end{rembox}
 
+\section{Module 2 -- Adversaries in cryptography}
+
+\begin{rembox}[title=Back to threat models]
+As in Lecture 1, security is always measured \textbf{relative to the power of the
+adversary}. Against Caesar and substitution, Eve's capabilities were very limited: she
+observed a long-enough ciphertext of English text (and had some compute power to test a
+few keys). This is not the only possible adversary model.
+\end{rembox}
+
+\begin{defnbox}[title=Types of adversaries]
+\begin{itemize}
+  \item \textbf{Passive eavesdropper} --- Eve can only \emph{read} the ciphertext.
+  \item \textbf{Active attacker} --- Eve can somehow \textbf{influence the system},
+        e.g.\ convince Alice to send Bob specific messages, observe the precise time
+        Bob takes to run his algorithm, etc.: anything that goes beyond just observing
+        communication.
+\end{itemize}
+\end{defnbox}
+
 \end{document}
