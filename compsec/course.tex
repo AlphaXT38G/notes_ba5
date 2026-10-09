@@ -2054,4 +2054,15 @@ does a perfectly correct DH --- just with Eve. DH is secure against a \emph{pass
 eavesdropper, not against an \emph{active} attacker (Module 2).
 \end{rembox}
 
+\begin{defnbox}[title=Identity verification problem]
+DH solves \textbf{key distribution}, but creates the \textbf{identity verification
+problem}.
+\begin{itemize}
+  \item \textbf{Solution}: DH must be paired with a mechanism (like \textbf{digital
+        signatures}) to verify identity (next week).
+  \item \textbf{Setup}: parties still need to trust a third party (a
+        \textbf{Certificate Authority}) for public key ownership.
+\end{itemize}
+\end{defnbox}
+
 \end{document}
