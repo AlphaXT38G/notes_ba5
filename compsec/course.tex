@@ -1636,4 +1636,33 @@ encryption of $M = $ \texttt{abcdefghijklmnopqrstuvwxyz}; the ciphertext \emph{i
 entire key (the full permutation), in just \textbf{one} query!
 \end{exbox}
 
+\begin{defnbox}[title=Side-channel attacks]
+Eve not only accesses an ideal oracle, but also \textbf{measures physical
+characteristics of the actual implementation} while it encrypts/decrypts.
+\begin{itemize}
+  \item \textbf{Timing attack} --- Eve measures \textbf{how long} it takes to encrypt a
+        given message or decrypt a ciphertext.
+  \item \textbf{Power analysis} --- Eve observes the \textbf{energy consumed} by the
+        device (e.g.\ a credit card) doing the crypto.
+\end{itemize}
+\end{defnbox}
+
+\begin{propbox}[title=Why are side channels realistic?]
+\begin{itemize}
+  \item \textbf{Malicious ownership} --- you often own a device (phone, smart card,
+        embedded chip) holding keys of \emph{another} principal (Google, your bank) that
+        are meant to be unreadable to you.
+  \item \textbf{DRM} --- the decryption key of a movie/song is embedded in your media
+        player or console; by measuring power or timing, an attacker could extract it.
+\end{itemize}
+\end{propbox}
+
+\begin{rembox}[title=Algorithm vs.\ implementation]
+A mathematically perfect cipher can still leak through its \textbf{implementation}
+(e.g.\ code that takes longer when a key bit is 1). Side channels attack the code and
+the hardware, not the math --- a reminder that security is about the whole system. As
+always, new adversary models can be defined, but always as a \textbf{strategic adversary
+with limited, well-defined resources}.
+\end{rembox}
+
 \end{document}
