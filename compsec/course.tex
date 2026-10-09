@@ -1389,4 +1389,22 @@ interest, e.g.\ extract some ``general market information''.
 \end{itemize}
 \end{keybox}
 
+% =========================================================
+\chapter{Lecture 5 : Applied cryptography}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} How Alice can send a message to Bob so that Eve,
+who sees everything on the wire, \textbf{cannot read it}. We start from broken historical
+ciphers (Caesar, substitution) to learn how attackers think, define the different kinds
+of attackers, see the only \emph{perfectly} secure cipher (one-time pad) and why it is
+impractical, then how real systems approximate it (\textbf{stream ciphers}), and finally
+how two strangers can agree on a secret key over a public channel
+(\textbf{Diffie-Hellman}). \\
+\textbf{Why is it useful?} Cryptography protects every HTTPS page, every VPN, every
+encrypted backup and every messaging app. Understanding its basics tells you
+\emph{what} a cipher guarantees (and what it does not, e.g.\ integrity), and why the
+golden rule is: \textbf{never design your own crypto, use vetted standards}.
+\end{rembox}
+
 \end{document}
