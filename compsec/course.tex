@@ -1774,4 +1774,25 @@ To send 1~GB securely you first need to share 1~GB of secret randomness \emph{se
 And reusing keys is not an option (see above).
 \end{rembox}
 
+\begin{defnbox}[title={OTP: integrity is NOT included (malleability)}]
+The OTP guarantees \textbf{confidentiality} (nobody can read it), but it \textbf{does
+not} guarantee \textbf{integrity} (nobody can tamper with it).
+\end{defnbox}
+
+\begin{exbox}[title=Bit-flipping attack]
+Eve flips bits of $C$ with a mask $\Delta$ (e.g.\ only the first bit set):
+$C' = C \oplus \Delta$. Bob decrypts
+\[
+  M' = C' \oplus K = (M \oplus K \oplus \Delta) \oplus K = M \oplus \Delta .
+\]
+Eve successfully changed the message ($M'$ is $M$ with one bit flipped)
+\textbf{without knowing $K$}. If Eve knows the format (e.g.\ ``PAY 0100 CHF''), she can
+change the amount in a controlled way.
+\end{exbox}
+
+\begin{warnbox}[title={Confidentiality $\neq$ integrity}]
+Encryption hides the content; it does \textbf{not} prove that the content was not
+modified. Integrity needs separate mechanisms (MACs, signatures --- later in the course).
+\end{warnbox}
+
 \end{document}
