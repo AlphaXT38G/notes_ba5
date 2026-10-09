@@ -1893,4 +1893,38 @@ repeats, and from then on everything repeats: a repeating stream is a \textbf{re
 pad}.
 \end{rembox}
 
+\begin{rembox}[title=Interlude on building KSGs]
+The next definitions illustrate design patterns for KSGs and the challenges of building
+secure ones; you are not expected to master the underlying math.
+\end{rembox}
+
+\begin{defnbox}[title=Linear Feedback Shift Register (LFSR)]
+A \textbf{linear recurrence relation}: the next output bit is a linear function (XOR) of
+previous bits. It extends an initial random sequence of bits into an arbitrary-length
+sequence of (maybe?) random-looking bits. \\
+\textbf{Advantage}: uses only \textbf{shift registers} (state storage) and \textbf{XOR
+gates} (feedback), so it is extremely fast and efficient in hardware.
+\end{defnbox}
+
+\begin{exbox}[title=LFSR example]
+Initial state of 4 bits $a_0, \ldots, a_3 = 1, 0, 0, 0$ and $a_n = a_{n-3} \oplus
+a_{n-4}$:
+\[
+  a_4 = a_1 \oplus a_0 = 1,\quad a_5 = a_2 \oplus a_1 = 0,\quad
+  a_6 = a_3 \oplus a_2 = 0,\quad a_7 = a_4 \oplus a_3 = 1,\ \ldots
+\]
+Output: $1, 0, 0, 0, 1, 0, 0, 1, 1, \ldots$
+\end{exbox}
+
+\begin{propbox}[title=Randomness of LFSRs]
+\begin{itemize}
+  \item \textbf{Maximal period} --- if the characteristic polynomial of the recurrence is
+        \emph{primitive}, an $L$-bit register reaches the maximum period of
+        $2^L - 1$ states before repeating (all non-zero states).
+  \item \textbf{Distribution property} --- every non-zero state appears exactly once in
+        the cycle, so the output is highly balanced: over one period it contains exactly
+        $2^{L-1}$ ones and $2^{L-1} - 1$ zeros.
+\end{itemize}
+\end{propbox}
+
 \end{document}
