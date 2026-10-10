@@ -92,11 +92,12 @@ for subject in subjects:
             results[label] = "ok"
         else:
             err(f"{tex.name} failed (exit {proc.returncode})")
-            # Print last 20 lines of log for quick diagnosis
+            # Print the first error (and some context) for quick diagnosis
             log = tex.with_suffix(".log")
             if log.exists():
                 lines = log.read_text(errors="replace").splitlines()
-                for line in lines[-20:]:
+                start = next((i for i, l in enumerate(lines) if l.startswith("!")), max(len(lines) - 20, 0))
+                for line in lines[start:start + 12]:
                     print(f"       {line}")
             results[label] = "error"
 
