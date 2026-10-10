@@ -2,92 +2,18 @@
 
 LaTeX notes for the BA5 IN semester at EPFL.
 
----
-
 ## Build
 
-Compile all subjects and sync PDFs to `_overview/`:
-
 ```bash
-python build.py
+python build.py                 # compile everything -> dist/ + dist/index.html
+python build.py compsec nummet  # only some subjects
+python build.py --index-only    # regenerate dist/index.html without compiling
 ```
 
-Compile specific subjects:
+Open `dist/index.html` to browse all PDFs. It is generated, never edit it
+(or `dist/`) by hand.
 
-```bash
-python build.py algo
-python build.py algo iml sigproc
-```
+## Adding / editing a subject
 
----
-
-## Exam Instructions (for autumn 2026 session)
-
-| Subject | Allowed |
-|---|---|
-| Computer security and privacy| _____ |
-| The software enterprise - from ideas to products | _____ |
-| Modeles stochastiques pour les communications | _____ |
-| Numerical methods for visual computing and ML | _____ |
-| Electronique I | _____ |
-| Responsible software | _____ |
-
-
----
-
-## Subjects
-
-### Computer security and privacy — `compsec/`
-- [Cheat sheet](_overview/compsec/cheatsheet.pdf)
-
-### The software enterprise - from ideas to products — `swent/`
-- [Course notes](_overview/swent/course.pdf)
-
-### Modeles stochastiques pour les communications — `modstoc/`
-- [Cheat sheet](_overview/modstoc/cheatsheet.pdf)
-- [Course notes](_overview/modstoc/course.pdf)
-
-### Numerical methods for visual computing and ML — `nummet/`
-- [Cheat sheet](_overview/nummet/cheatsheet.pdf)
-
-### Electronique I — `elec/`
-- [Cheat sheet](_overview/elec/cheatsheet.pdf)
-- [Course notes](_overview/elec/course.pdf)
-
-### Responsible software — `respsoft/`
-- [Cheat sheet](_overview/respsoft/cheatsheet.pdf)
-- [Course notes](_overview/respsoft/course.pdf)
-
-
----
-
-## Setup
-
-[LaTeX environment setup tutorial for VS code](https://www.youtube.com/watch?v=4lyHIQl4VM8)
-
----
-
-## Structure
-
-```
-notes_ba4/
-├── _overview/   # Compiled PDFs, one folder per subject
-├── _shared/     # Shared LaTeX style files
-├── compsec/     # Computer security and privacy course
-├── swent/       # The software enterprise - from ideas to products course
-├── modstoc/     # Modeles stochastiques pour les communications course
-├── nummet/      # Numerical methods for visual computing and ML course
-├── elec/        # Electronique I course
-└── respsoft/    # Responsible software course
-```
-
-Each subject folder contains `.tex` sources; run `build.py` to recompile.
-The `.tex` disponible for each course, for each folder may change but are mainly composed of `course.tex` and `cheatsheet.tex`. 
-
----
-
-## Authors
-
-<a href="https://github.com/AlphaXT38G/notes_ba5/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=AlphaXT38G/notes_ba5" alt="Contributors">
-</a>
+Subjects, their display names and exam rules live in [`subjects.json`](subjects.json).
+Put `course.tex` / `cheatsheet.tex` in `<id>/` and rebuild; the page updates itself.
