@@ -2,6 +2,8 @@
 
 LaTeX notes for the BA5 IN semester at EPFL.
 
+**Read online: https://alphaxt38g.github.io/notes_ba5/**
+
 ## Build
 
 ```bash
