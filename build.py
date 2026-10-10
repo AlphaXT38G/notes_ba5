@@ -114,17 +114,14 @@ body{font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(
 header{margin-bottom:1.75rem}
 h1{font-size:1.9rem;margin:0;letter-spacing:-.02em}
 .sub{color:var(--mut);margin:.25rem 0 0}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:1rem}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1.1rem 1.25rem;display:flex;flex-direction:column;gap:.75rem}
-.code{align-self:flex-start;font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--acc);background:var(--acc-bg);padding:.15rem .5rem;border-radius:999px}
-h2{font-size:1.08rem;line-height:1.3;margin:0}
-.exam{margin:0;font-size:.85rem;color:var(--mut)}
-.links{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:auto}
-.links a{flex:1 1 150px;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:8px;padding:.55rem .8rem;color:var(--fg);text-decoration:none;transition:border-color .15s,background .15s}
-.links a:hover,.links a:focus-visible{border-color:var(--acc);background:var(--acc-bg)}
-.links b{font-weight:600;color:var(--acc)}
-.links small{color:var(--mut);font-size:.75rem}
-.none{color:var(--mut);font-size:.9rem;font-style:italic}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:2rem 2.5rem}
+.code{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+h2{font-size:1.1rem;line-height:1.3;margin:.1rem 0 .15rem}
+.exam{margin:0 0 .4rem;font-size:.85rem;color:var(--mut)}
+.links{list-style:none;margin:.5rem 0 0;padding:0;border-top:1px solid var(--line)}
+.links a{display:flex;justify-content:space-between;gap:1rem;padding:.55rem 0;border-bottom:1px solid var(--line);color:var(--acc);text-decoration:none;font-weight:600}
+.links a:hover,.links a:focus-visible{background:var(--acc-bg)}
+.links small{color:var(--mut);font-size:.78rem;font-weight:400;align-self:center}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 """
 
@@ -135,15 +132,17 @@ def build_index():
             (DIST / s["id"]).glob("*.pdf"),
             key=lambda p: (ORDER.index(p.name) if p.name in ORDER else len(ORDER), p.name),
         )
+        if not pdfs:
+            continue
         links = "".join(
-            f'<a href="{s["id"]}/{p.name}"><b>{KINDS.get(p.name, p.stem)}</b>'
-            f'<small>{p.stat().st_size / 1e6:.1f} MB · {datetime.fromtimestamp(p.stat().st_mtime):%d %b %Y}</small></a>'
+            f'<li><a href="{s["id"]}/{p.name}"><span>{KINDS.get(p.name, p.stem)}</span>'
+            f'<small>{p.stat().st_size / 1e6:.1f} MB · {datetime.fromtimestamp(p.stat().st_mtime):%d %b %Y}</small></a></li>'
             for p in pdfs
-        ) or '<span class="none">Not built yet</span>'
+        )
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
         cards.append(
-            f'<section class="card"><span class="code">{s["id"]}</span>'
-            f'<h2>{html.escape(s["name"])}</h2>{exam}<div class="links">{links}</div></section>'
+            f'<section><span class="code">{s["id"]}</span>'
+            f'<h2>{html.escape(s["name"])}</h2>{exam}<ul class="links">{links}</ul></section>'
         )
     page = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
