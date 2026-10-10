@@ -103,39 +103,57 @@ for subject in subjects:
 
 # ── Index page ───────────────────────────────────────────────────────────────
 KINDS = {"course.pdf": "Course notes", "cheatsheet.pdf": "Cheat sheet"}
+ORDER = list(KINDS)  # course first, then cheatsheet, then anything else
+
+CSS = """
+:root{--bg:#f5f6f8;--fg:#15171a;--card:#fff;--line:#e2e5ea;--acc:#2457c5;--acc-bg:#eaf0fd;--mut:#6b7280}
+@media(prefers-color-scheme:dark){:root{--bg:#121417;--fg:#e9eaec;--card:#1b1e23;--line:#2c3037;--acc:#8ab0ff;--acc-bg:#232b3d;--mut:#8b93a1}}
+*{box-sizing:border-box}
+body{font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--fg);margin:0}
+.wrap{max-width:960px;margin:0 auto;padding:2.5rem 1rem 3rem}
+header{margin-bottom:1.75rem}
+h1{font-size:1.9rem;margin:0;letter-spacing:-.02em}
+.sub{color:var(--mut);margin:.25rem 0 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:1rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1.1rem 1.25rem;display:flex;flex-direction:column;gap:.75rem}
+.code{align-self:flex-start;font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--acc);background:var(--acc-bg);padding:.15rem .5rem;border-radius:999px}
+h2{font-size:1.08rem;line-height:1.3;margin:0}
+.exam{margin:0;font-size:.85rem;color:var(--mut)}
+.links{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:auto}
+.links a{flex:1 1 150px;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:8px;padding:.55rem .8rem;color:var(--fg);text-decoration:none;transition:border-color .15s,background .15s}
+.links a:hover,.links a:focus-visible{border-color:var(--acc);background:var(--acc-bg)}
+.links b{font-weight:600;color:var(--acc)}
+.links small{color:var(--mut);font-size:.75rem}
+.none{color:var(--mut);font-size:.9rem;font-style:italic}
+footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
+"""
 
 def build_index():
     cards = []
     for s in CONFIG:
-        pdfs = sorted((DIST / s["id"]).glob("*.pdf"))
+        pdfs = sorted(
+            (DIST / s["id"]).glob("*.pdf"),
+            key=lambda p: (ORDER.index(p.name) if p.name in ORDER else len(ORDER), p.name),
+        )
         links = "".join(
-            f'<a href="{s["id"]}/{p.name}">{KINDS.get(p.name, p.stem)}'
-            f'<small>{datetime.fromtimestamp(p.stat().st_mtime):%d %b %H:%M}</small></a>'
+            f'<a href="{s["id"]}/{p.name}"><b>{KINDS.get(p.name, p.stem)}</b>'
+            f'<small>{p.stat().st_size / 1e6:.1f} MB · {datetime.fromtimestamp(p.stat().st_mtime):%d %b %Y}</small></a>'
             for p in pdfs
-        ) or '<span class="none">not built yet</span>'
+        ) or '<span class="none">Not built yet</span>'
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
         cards.append(
-            f'<section><h2>{html.escape(s["name"])}<code>{s["id"]}</code></h2>{exam}'
-            f'<div class="links">{links}</div></section>'
+            f'<section class="card"><span class="code">{s["id"]}</span>'
+            f'<h2>{html.escape(s["name"])}</h2>{exam}<div class="links">{links}</div></section>'
         )
     page = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Notes BA5</title>
-<style>
-:root{{--bg:#fafafa;--fg:#1a1a1a;--card:#fff;--line:#ddd;--acc:#2457c5;--mut:#777}}
-@media(prefers-color-scheme:dark){{:root{{--bg:#16181c;--fg:#e8e8e8;--card:#1f2228;--line:#333;--acc:#7aa2ff;--mut:#999}}}}
-body{{font:16px/1.5 system-ui,sans-serif;background:var(--bg);color:var(--fg);max-width:860px;margin:0 auto;padding:2rem 1rem}}
-h1{{margin-top:0}} section{{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:1rem 1.25rem;margin:1rem 0}}
-h2{{font-size:1.1rem;margin:0 0 .5rem;display:flex;justify-content:space-between;gap:1rem}}
-code{{color:var(--mut);font-size:.8rem;font-weight:400}} .exam{{margin:.25rem 0;color:var(--mut)}}
-.links{{display:flex;gap:.75rem;flex-wrap:wrap}} .links a{{border:1px solid var(--line);border-radius:6px;padding:.4rem .8rem;color:var(--acc);text-decoration:none;display:flex;flex-direction:column}}
-.links a:hover{{border-color:var(--acc)}} small{{color:var(--mut);font-size:.7rem}} .none{{color:var(--mut)}}
-</style></head><body>
-<h1>Notes BA5</h1>
-{"".join(cards)}
-<p class="none">Generated {datetime.now():%Y-%m-%d %H:%M} by build.py</p>
-</body></html>"""
+<style>{CSS}</style></head><body><div class="wrap">
+<header><h1>Notes BA5</h1><p class="sub">EPFL IN, autumn semester: course notes and cheat sheets</p></header>
+<main class="grid">{"".join(cards)}</main>
+<footer>Generated {datetime.now():%Y-%m-%d %H:%M} by build.py</footer>
+</div></body></html>"""
     DIST.mkdir(exist_ok=True)
     (DIST / "index.html").write_text(page, encoding="utf-8")
     ok("dist/index.html")
