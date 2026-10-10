@@ -28,8 +28,10 @@ jobs:
             texlive-fonts-recommended texlive-fonts-extra \
             texlive-science texlive-lang-french
 
+      # Publish whatever compiled; failed documents are reported but do not block the deploy.
       - name: Build PDFs and index
         run: python3 build.py
+        continue-on-error: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
