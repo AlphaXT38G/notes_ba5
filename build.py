@@ -320,6 +320,9 @@ body.epic section{animation:arcane 4s ease-in-out infinite alternate}
 #more{position:fixed;left:50%;top:50%;z-index:60;padding:1rem 2rem;transform:translate(-50%,-50%);color:#fff;font:700 1.4rem "Palatino Linotype",Georgia,serif;letter-spacing:.05em;background:radial-gradient(circle at 50% 30%,#6c7bff,#3b1f9e 70%);border:2px solid #b9c8ff;border-radius:999px;box-shadow:0 0 30px rgba(110,140,255,.9),0 0 80px rgba(150,80,255,.6),inset 0 0 18px rgba(255,255,255,.35);cursor:pointer;animation:more-in .6s cubic-bezier(.34,1.56,.64,1) both,more-glow 1.2s ease-in-out .6s infinite alternate}
 #more:hover{filter:brightness(1.2)}
 #more.queued{cursor:default;animation:none;background:radial-gradient(circle at 50% 30%,#3e4bbf,#1e0f5e 70%)}
+/* "Back to normal", small and discreet in the bottom right corner of the epic finale */
+#leave{position:fixed;right:1rem;bottom:1rem;z-index:45;padding:.35rem .7rem;color:#c9d4ff;font:600 .75rem system-ui,sans-serif;background:rgba(12,10,40,.75);border:1px solid rgba(140,160,255,.45);border-radius:999px;cursor:pointer}
+#leave:hover,#leave:focus-visible{color:#fff;border-color:#b9c8ff;box-shadow:0 0 12px rgba(120,150,255,.6)}
 @keyframes more-in{from{opacity:0;transform:translate(-50%,20%) scale(.6)}}
 @keyframes more-glow{to{box-shadow:0 0 45px rgba(140,170,255,1),0 0 120px rgba(170,90,255,.8),inset 0 0 22px rgba(255,255,255,.5)}}
 /* Metal takeover (body.metal, 1:00:00 - 1:01:51): pitch black stage, blood red light pulsing on
@@ -662,10 +665,9 @@ const forced = new URLSearchParams(location.search).get("night");
 let metalEggAt = 0;
 // Epic finale: 10 s before a metal takeover ends, a "More epicness ?" button shows up (see the
 // epic code below). Clicked, it queues the epic phase (body.epic), which takes over right when
-// the metal ends and lasts for its whole song: epicEnded is set when the player reports the end
-// of the song, EPIC_MAX is a safety cap. ?night=epic forces it.
-let epicQueued = false, epicAt = 0, epicEnded = false;
-const EPIC_MAX = 8 * 60 * 1000;
+// the metal ends and lasts until the "Back to normal" button is clicked (epicAt = when it started,
+// 0 = not running). ?night=epic forces it, until that button is clicked (epicLeft).
+let epicQueued = false, epicAt = 0, epicLeft = false;
 const clockSeconds = () => { const d = new Date(); return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds(); };
 const metalLeft = () => {  // seconds before the current metal takeover ends (Infinity when forced)
   if (metalEggAt) return METAL_SECONDS - (Date.now() - metalEggAt) / 1000;
@@ -673,11 +675,7 @@ const metalLeft = () => {  // seconds before the current metal takeover ends (In
   return 3600 + METAL_SECONDS - clockSeconds();
 };
 const phaseNow = () => {
-  if (forced === "epic") return "epic";
-  if (epicAt) {
-    if (!epicEnded && Date.now() - epicAt < EPIC_MAX) return "epic";
-    epicAt = 0; epicEnded = false;
-  }
+  if ((forced === "epic" && !epicLeft) || epicAt) return "epic";
   const phase = basePhase();
   if (epicQueued && phase !== "metal") {  // the metal just ended: the epic finale takes over
     epicQueued = false;
@@ -689,7 +687,7 @@ const basePhase = () => {
   if (metalEggAt && Date.now() - metalEggAt < METAL_SECONDS * 1000) return "metal";
   metalEggAt = 0;
   if (forced === "0") return null;
-  if (forced in NIGHT_SUBS) return forced;
+  if (forced in NIGHT_SUBS && forced !== "epic") return forced;  // a left epic falls back to the clock
   const d = new Date(), t = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
   if (t >= 21 * 3600 + 30 * 60 || t < 45 * 60) return "evening";
   if (t < 3600) return "closing";
@@ -1445,46 +1443,22 @@ moreBtn.addEventListener("click", e => {
   moreBtn.classList.add("queued");
   moreBtn.textContent = "⚔️ Epicness incoming…";
 });
-// Epic music: the epic song, from its start to its end, on the same amp (turned blue). The player
-// is loaded as soon as the button is clicked (paused), so it starts at once when the metal ends;
-// the click also counts as the gesture browsers need for sound. Once loaded, the page asks the
-// player to report its state ("listening"); when it reports the end of the song (state 0) the
-// epic phase is over and the page goes back to its usual look.
+// Epic music: the epic video, looped, on the same amp (turned blue). The player is loaded as soon
+// as the button is clicked (paused), so it starts at once when the metal ends; the click also
+// counts as the gesture browsers need for sound.
 const EPIC = "pCUzn7WbUb4";
-let epicRiff = null, epicPlaying = false, epicMuted = false, epicLength = 0;  // song length in s, from the player
+let epicRiff = null, epicPlaying = false, epicMuted = false;
 const epicCommand = (func, args = []) => epicRiff && epicRiff.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
-const epicListen = () => {
-  if (!epicRiff) return;
-  epicRiff.contentWindow.postMessage(JSON.stringify({ event: "listening", id: "epic", channel: "widget" }), "*");
-  epicCommand("addEventListener", ["onStateChange"]);
-};
 const makeEpicRiff = (autoplay, muted) => {
   epicRiff = document.createElement("iframe");
   epicRiff.id = "epicriff";
   epicRiff.title = "Epic song";
   epicRiff.allow = "autoplay; encrypted-media";
   epicRiff.src = `https://www.youtube.com/embed/${EPIC}?autoplay=${autoplay}&mute=${muted ? 1 : 0}` +
-    `&controls=0&enablejsapi=1&origin=${encodeURIComponent(location.origin)}`;
+    `&loop=1&playlist=${EPIC}&controls=0&enablejsapi=1`;
   document.body.append(epicRiff);
   epicMuted = muted;
-  // the player is not always ready to listen when it fires "load": ask again every second
-  // until it answers (any message from it), or until it is removed
-  clearInterval(epicHello);
-  epicHello = setInterval(() => epicRiff ? epicListen() : clearInterval(epicHello), 1000);
 };
-let epicHello = null;
-addEventListener("message", e => {
-  if (!epicRiff || e.source !== epicRiff.contentWindow) return;
-  clearInterval(epicHello);  // it answered
-  let d;
-  try { d = typeof e.data === "string" ? JSON.parse(e.data) : e.data; } catch (err) { return; }
-  const info = d.event === "infoDelivery" ? d.info || {} : {};
-  if (info.duration) epicLength = info.duration;
-  const state = d.event === "onStateChange" ? d.info : info.playerState;
-  // song over: the player says so (state 0), or its position reached the end of the song
-  const over = state === 0 || (epicLength && info.currentTime >= epicLength - .5);
-  if (over && document.body.classList.contains("epic")) { epicEnded = true; applyNight(); }
-});
 const preloadEpic = () => { if (!epicRiff) makeEpicRiff(0, false); };
 const epicPlay = () => {
   if (!epicRiff) {
@@ -1513,6 +1487,22 @@ const setEpicMusic = on => {
 };
 setEpicMusic(document.body.classList.contains("epic"));
 document.addEventListener("epic", e => setEpicMusic(e.detail));
+
+// "Back to normal": a small button in the bottom right corner during the epic finale. It ends the
+// epic and the page falls back to whatever the clock says (day, or the jazz bar at night).
+const leaveBtn = document.createElement("button");
+leaveBtn.id = "leave";
+leaveBtn.type = "button";
+leaveBtn.textContent = "↩ Back to normal";
+leaveBtn.addEventListener("click", e => {
+  e.stopPropagation();
+  epicAt = 0;
+  epicLeft = true;
+  applyNight();
+});
+const setLeave = on => on ? document.body.append(leaveBtn) : leaveBtn.remove();
+setLeave(document.body.classList.contains("epic"));
+document.addEventListener("epic", e => setLeave(e.detail));
 
 const epicTick = () => {  // called every second with the clock check
   const left = document.body.classList.contains("metal") ? metalLeft() : 0;
