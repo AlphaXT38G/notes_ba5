@@ -193,10 +193,8 @@ def build_index():
                 group = folder
                 items.append(link(s["id"], p, root))
             n = len(rest)
-            # Without course notes there is nothing above the list, so show it unfolded
-            opened = "" if main else " open"
             links += (
-                f'<li><details{opened}><summary>{n} {"more " if main else ""}document{"s" if n > 1 else ""}</summary>'
+                f'<li><details><summary>{n} {"more " if main else ""}document{"s" if n > 1 else ""}</summary>'
                 f'<ul class="links">{"".join(items)}</ul></details></li>'
             )
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
