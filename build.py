@@ -327,6 +327,20 @@ body.metal h1{animation:riff .12s steps(2) infinite}
 #strobe{position:fixed;inset:0;z-index:3;pointer-events:none;background:#fff;opacity:0}
 #eq{position:fixed;left:0;right:0;bottom:0;z-index:2;height:4.5rem;display:flex;align-items:flex-end;gap:3px;padding:0 3px;pointer-events:none;opacity:.6}
 #eq i{flex:1;height:100%;transform-origin:bottom;background:linear-gradient(to top,#ff1e00,#ff7a00 55%,#ffe14d);border-radius:2px 2px 0 0;animation:eq var(--d) ease-in-out infinite alternate}
+/* Guitar amp (replaces the turntable during the metal takeover): black tolex cabinet with a gold
+   logo, a row of knobs and two speakers behind the grille that pump while the song plays */
+#amp{position:fixed;left:1.1rem;bottom:1.1rem;z-index:40;display:flex;align-items:center;gap:.6rem;padding:0;color:#f4f1f1;font:700 .78rem system-ui,sans-serif;background:none;border:0;cursor:pointer}
+#amp .cab{position:relative;width:5.4rem;height:4.4rem;padding:.25rem;border-radius:.35rem;background:repeating-linear-gradient(45deg,#151515 0 2px,#1d1d1d 2px 4px);box-shadow:0 6px 20px rgba(0,0,0,.8),0 0 0 2px #2b2b2b,0 0 18px rgba(255,40,0,.35)}
+#amp .panel{display:flex;align-items:center;justify-content:space-between;height:.9rem;padding:0 .25rem;background:linear-gradient(#3a3a3a,#1a1a1a);border-radius:.15rem}
+#amp .logo{font:italic 900 .55rem Georgia,serif;color:#e8c46a;letter-spacing:.04em}
+#amp .knobs{display:flex;gap:.15rem}
+#amp .knobs i{width:.32rem;height:.32rem;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#888 60%,#333)}
+#amp .grille{display:flex;justify-content:space-around;align-items:center;height:3rem;margin-top:.2rem;border-radius:.15rem;background:radial-gradient(circle,#2a2a2a 1px,transparent 1.5px) 0 0/4px 4px,#0c0c0c}
+#amp .cone{width:2.1rem;height:2.1rem;border-radius:50%;background:radial-gradient(circle,#555 0 12%,#111 16%,#262626 40%,#0e0e0e 42%,#222 70%,#000 72%)}
+#amp.playing .cone{animation:pump .23s ease-out infinite alternate}
+#amp .label{padding:.3rem .6rem;border-radius:.3rem;background:rgba(30,4,4,.9);border:1px solid rgba(255,60,30,.5);text-transform:uppercase;letter-spacing:.04em}
+#riff{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
+@keyframes pump{from{transform:scale(1)}to{transform:scale(1.12)}}
 .mosh{position:absolute;bottom:-3rem;filter:drop-shadow(0 0 8px rgba(255,60,0,.8));animation:mosh linear forwards}
 @keyframes mosh{0%{transform:translate(0,0) rotate(0) scale(.6)}50%{transform:translate(var(--mx),var(--my)) rotate(calc(var(--spin) / 2)) scale(1.15)}100%{transform:translate(var(--ex),var(--ey)) rotate(var(--spin)) scale(.8);opacity:.2}}
 @keyframes headbang{from{transform:rotate(-.7deg) translateY(0)}to{transform:rotate(.7deg) translateY(4px)}}
@@ -790,6 +804,54 @@ const setStage = on => {
 };
 setStage(document.body.classList.contains("metal"));
 document.addEventListener("metal", e => setStage(e.detail));
+
+// Metal music: one song from YouTube, from 1:50 to its end (METAL_SECONDS later), in sync with the
+// takeover: opened late, it starts further into the song so both end together. Sound needs a user
+// gesture: if the page already had one (e.g. the jazz was playing) it starts right away, otherwise
+// on the first click or key press. The amp plays / pauses it; the end of the phase stops it.
+const METAL = "IAvgph1RjCc", METAL_START = 110;
+let riff = null, rocking = false;
+const amp = document.createElement("button");
+amp.id = "amp";
+amp.type = "button";
+amp.innerHTML = '<span class="cab"><span class="panel"><span class="logo">BA5</span><span class="knobs">' +
+  "<i></i>".repeat(5) + '</span></span><span class="grille"><span class="cone"></span><span class="cone"></span></span></span><span class="label"></span>';
+const paintAmp = () => {
+  amp.classList.toggle("playing", rocking);
+  amp.querySelector(".label").textContent = rocking ? "🎸 Rocking — click to mute" : "🎸 Click to crank it up";
+  amp.title = rocking ? "Pause the music" : "Play the music";
+};
+const riffCommand = func => riff && riff.contentWindow.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
+const rock = () => {
+  if (!riff) {
+    const d = new Date(), t = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+    const late = forced === "metal" ? 0 : Math.max(0, t - 3600);  // seconds since 1:00:00
+    riff = document.createElement("iframe");
+    riff.id = "riff";
+    riff.title = "Metal song";
+    riff.allow = "autoplay; encrypted-media";
+    riff.src = `https://www.youtube.com/embed/${METAL}?autoplay=1&start=${METAL_START + late}&end=${METAL_START + METAL_SECONDS}&controls=0&enablejsapi=1`;
+    document.body.append(riff);
+  } else riffCommand("playVideo");
+  rocking = true;
+  paintAmp();
+};
+amp.addEventListener("click", e => { e.stopPropagation(); if (rocking) { riffCommand("pauseVideo"); rocking = false; paintAmp(); } else rock(); });
+const rockOnTouch = () => { if (document.body.classList.contains("metal") && !riff) rock(); };
+const setMetalMusic = on => {
+  document.removeEventListener("pointerdown", rockOnTouch);
+  document.removeEventListener("keydown", rockOnTouch);
+  if (!on) { riff?.remove(); riff = null; rocking = false; amp.remove(); return; }
+  paintAmp();
+  document.body.append(amp);
+  if (navigator.userActivation?.hasBeenActive) rock();
+  else {
+    document.addEventListener("pointerdown", rockOnTouch, { once: true });
+    document.addEventListener("keydown", rockOnTouch, { once: true });
+  }
+};
+setMetalMusic(document.body.classList.contains("metal"));
+document.addEventListener("metal", e => setMetalMusic(e.detail));
 
 // Names / Previews switch: sets data-view on <html> (the CSS does the rest) and remembers it
 const viewBtns = document.querySelectorAll(".view button");
