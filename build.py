@@ -315,7 +315,7 @@ body.night::before{background:radial-gradient(70% 45% at 50% -8%,rgba(255,176,90
 body.night h1{color:#ffe1b0;font-family:"Brush Script MT","Segoe Script",cursive;font-weight:400;font-size:2.6rem;letter-spacing:.01em;text-shadow:0 0 4px #fff2d6,0 0 12px #ff9d4d,0 0 26px #ff5e8a,0 0 48px #ff2d6f;animation:neon 6s infinite}
 body.night h1::after{content:" 🎷"}
 body.night .sub{color:#e9c89a;font-style:italic}
-body.night #fire,body.metal #fire,body.epic #fire{display:none}  /* no flame mode during the night shows, see applyNight in JS */
+body.metal #fire,body.epic #fire{display:none}  /* no flame mode during the shows; in the jazz bar it only counts clicks (JS) */
 /* Epic finale (body.epic): a fantasy night in deep blue and violet, an aurora glowing behind
    everything (::before), the title in carved capitals lit by blue fire, cards edged with arcane light */
 body.epic{--bg:#05040f;--fg:#e9e6ff;--card:rgba(14,12,40,.85);--line:rgba(140,120,255,.22);--acc:#8fb4ff;--acc-bg:rgba(110,140,255,.14);--mut:#a6a2cc;--new:#9ff3ff;--new-bg:rgba(120,230,255,.14);background:var(--bg)}
@@ -497,10 +497,14 @@ const setFire = on => {
   try { localStorage.setItem("fire", on ? "1" : ""); } catch (e) {}
 };
 // 20 clicks on the flame button within a minute start the metal takeover (easter egg, see
-// metalEggAt in the night code below); the clicks counted are the ones of the last 60 s
+// metalEggAt in the night code below); the clicks counted are the ones of the last 60 s.
+// In the jazz bar the button is still there but lights no flames (too heavy on top of the bar):
+// it only gives a little puff and counts towards the 20 clicks.
 const fireClicks = [];
 fireBtn.addEventListener("click", () => {
-  setFire(!document.body.classList.contains("fire"));
+  if (document.body.classList.contains("night")) {
+    fireBtn.animate([{ transform: "scale(1)" }, { transform: "scale(1.25) rotate(-8deg)" }, { transform: "scale(1)" }], { duration: 200 });
+  } else setFire(!document.body.classList.contains("fire"));
   const now = Date.now();
   fireClicks.push(now);
   while (fireClicks[0] < now - 60000) fireClicks.shift();
@@ -721,8 +725,8 @@ const applyNight = () => {
     if (phase) document.body.dataset.phase = phase; else delete document.body.dataset.phase;
     sub.textContent = (metalEggAt && phase === "metal" ? "You lit too many fires. Time to headbang. 🤘"
       : phase && NIGHT_SUBS[phase]) || daySub;
-    // Flames on top of the jazz bar or the metal show are too many moving elements (the page
-    // lags): both turn the flame mode off, and hide its button while they last (CSS)
+    // Flames on top of the jazz bar or the shows are too many moving elements (the page lags):
+    // they turn the flame mode off (the shows hide its button, the bar keeps it only for clicks)
     if ((night || metal || epic) && document.body.classList.contains("fire")) setFire(false);
     if (night !== document.body.classList.contains("night")) {
       document.body.classList.toggle("night", night);
