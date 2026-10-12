@@ -316,6 +316,21 @@ body.metal h1::after{content:" 🤘";-webkit-text-fill-color:initial}
 body.metal .sub{color:#ff4a2a;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
 body.metal section{box-shadow:-10px 0 24px -12px rgba(255,40,0,.8)}
 @keyframes beat{0%{opacity:1;transform:scale(1.04)}100%{opacity:.55;transform:scale(1)}}
+/* Metal stage animations: cards headbanging on the beat (the right column half a beat later),
+   the title vibrating like a riff, lightning bolts striking with a flash (JS adds .bolt and
+   #strobe), and an equalizer bouncing along the bottom of the screen (#eq) */
+body.metal section{transform-origin:0 100%;animation:headbang .46s ease-in-out infinite alternate}
+body.metal .col:nth-child(2) section{animation-delay:-.23s}
+body.metal h1{animation:riff .12s steps(2) infinite}
+.stage{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.bolt{position:absolute;top:-2vh;width:9rem;height:var(--h);margin-left:-4.5rem;background:linear-gradient(#fff,#e2d4ff 60%,#9b6bff);clip-path:polygon(52% 0,30% 38%,48% 40%,22% 72%,42% 73%,14% 100%,70% 58%,50% 56%,78% 30%,58% 29%,82% 0);filter:drop-shadow(0 0 14px #a77bff) drop-shadow(0 0 30px #fff);opacity:0;animation:strike .5s ease-out forwards}
+#strobe{position:fixed;inset:0;z-index:3;pointer-events:none;background:#fff;opacity:0}
+#eq{position:fixed;left:0;right:0;bottom:0;z-index:2;height:4.5rem;display:flex;align-items:flex-end;gap:3px;padding:0 3px;pointer-events:none;opacity:.6}
+#eq i{flex:1;height:100%;transform-origin:bottom;background:linear-gradient(to top,#ff1e00,#ff7a00 55%,#ffe14d);border-radius:2px 2px 0 0;animation:eq var(--d) ease-in-out infinite alternate}
+@keyframes headbang{from{transform:rotate(-.7deg) translateY(0)}to{transform:rotate(.7deg) translateY(4px)}}
+@keyframes riff{0%{transform:skew(-10deg) translate(0,0)}50%{transform:skew(-10deg) translate(2px,-1px)}}
+@keyframes strike{0%{opacity:0}10%{opacity:1}25%{opacity:.25}40%{opacity:1}100%{opacity:0}}
+@keyframes eq{from{transform:scaleY(var(--lo))}to{transform:scaleY(var(--hi))}}
 body.night section{box-shadow:-8px 0 22px -12px rgba(255,170,80,.6)}
 body.night .links a:hover{background:rgba(245,176,65,.08)}
 /* Bar air (night only): slow drifting smoke clouds and music notes floating up, behind the page */
@@ -368,7 +383,7 @@ body.night[data-phase=closing] h1::after{display:inline-block;animation:neon-off
 @keyframes barman-in{from{opacity:0;transform:translate(-50%,140%)}to{opacity:1;transform:translate(-50%,0)}}
 @keyframes neon{0%,18%,22%,25%,53%,57%,100%{opacity:1}20%,24%,55%{opacity:.55;text-shadow:0 0 2px #fff2d6,0 0 6px #ff9d4d}}
 /* Reduced motion: no rising flames and no looping animations */
-@media(prefers-reduced-motion:reduce){.flames,.air{display:none}body.fire section,#surprise,#hole .disk::before,body.party,body.party h1,body.party section,body.night h1,body.night[data-phase] h1{animation:none}}
+@media(prefers-reduced-motion:reduce){.flames,.air{display:none}body.fire section,#surprise,#hole .disk::before,body.party,body.party h1,body.party section,body.night h1,body.night[data-phase] h1,body.metal::before,body.metal section,body.metal h1,#eq i{animation:none}}
 """
 
 # Runs in <head> so the saved theme applies before the first paint (no light/dark flicker).
@@ -720,6 +735,41 @@ const setMusic = on => {
 };
 setMusic(document.body.classList.contains("night"));
 document.addEventListener("night", e => setMusic(e.detail));
+
+// Metal stage: a click-through layer for the lightning, a white strobe and the equalizer,
+// all created when the metal phase starts and removed when it ends. A bolt strikes every
+// 1.2 - 3.5 s at a random spot, with a flash and a short shake of the page.
+const stage = document.createElement("div"), strobe = document.createElement("div"), eq = document.createElement("div");
+stage.className = "stage";
+strobe.id = "strobe";
+eq.id = "eq";
+eq.innerHTML = Array.from({ length: 48 }, () =>
+  `<i style="--d:${(.18 + Math.random() * .3).toFixed(2)}s;--lo:${(.08 + Math.random() * .2).toFixed(2)};--hi:${(.45 + Math.random() * .55).toFixed(2)}"></i>`
+).join("");
+let boltTimer = null;
+const strike = () => {
+  boltTimer = setTimeout(strike, 1200 + Math.random() * 2300);
+  if (crowded(stage, 4)) return;
+  const b = document.createElement("span");
+  b.className = "bolt";
+  b.style.cssText = `left:${8 + Math.random() * 84}%;--h:${55 + Math.random() * 45}vh;transform:scaleX(${Math.random() < .5 ? -1 : 1})`;
+  b.addEventListener("animationend", () => b.remove());
+  stage.append(b);
+  strobe.animate([{ opacity: 0 }, { opacity: .35 }, { opacity: 0 }], { duration: 180 });
+  document.querySelector(".wrap").animate(
+    [{ transform: "none" }, { transform: "translate(-6px,3px)" }, { transform: "translate(5px,-4px)" }, { transform: "none" }],
+    { duration: 220 });
+};
+const setStage = on => {
+  clearTimeout(boltTimer);
+  stage.replaceChildren();
+  [stage, strobe, eq].forEach(el => el.remove());
+  if (!on) return;
+  document.body.append(stage, strobe, eq);
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) strike();
+};
+setStage(document.body.classList.contains("metal"));
+document.addEventListener("metal", e => setStage(e.detail));
 
 // Names / Previews switch: sets data-view on <html> (the CSS does the rest) and remembers it
 const viewBtns = document.querySelectorAll(".view button");
