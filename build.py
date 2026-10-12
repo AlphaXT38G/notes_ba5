@@ -262,6 +262,14 @@ body.night:not(.rift) .wrap{position:relative;z-index:1}
 .air .note{position:absolute;bottom:-2rem;color:#f5b041;text-shadow:0 0 8px rgba(245,176,65,.6);animation:float linear forwards}
 @keyframes drift{0%{transform:translate(-30vw,0) scale(1)}50%{transform:translate(20vw,-8vh) scale(1.25)}100%{transform:translate(70vw,4vh) scale(1)}}
 @keyframes float{0%{transform:translate(0,0) rotate(0);opacity:0}15%{opacity:var(--o)}50%{transform:translate(var(--sway),-55vh) rotate(var(--r))}100%{transform:translate(0,-110vh) rotate(0);opacity:0}}
+/* Night music: a vinyl record in the bottom left corner, spinning while the jazz plays.
+   The YouTube player itself is kept invisible behind it. */
+#vinyl{position:fixed;left:1.1rem;bottom:1.1rem;z-index:40;display:flex;align-items:center;gap:.6rem;padding:0;color:#f3e3c3;font:600 .78rem system-ui,sans-serif;background:none;border:0;cursor:pointer}
+#vinyl .disc{width:3.4rem;height:3.4rem;border-radius:50%;background:radial-gradient(circle,#f5b041 0 17%,#2a1208 18% 20%,#111 21%,#1c1c1c 30%,#0d0d0d 31%,#1c1c1c 42%,#0d0d0d 43%,#1c1c1c 56%,#0d0d0d 57%,#151515 70%);box-shadow:0 4px 16px rgba(0,0,0,.6),0 0 0 2px rgba(245,176,65,.35)}
+#vinyl.playing .disc{animation:spin 1.8s linear infinite}
+#vinyl .label{padding:.3rem .6rem;border-radius:999px;background:rgba(48,26,18,.85);border:1px solid rgba(245,176,65,.3)}
+#jazz{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
+@keyframes spin{to{transform:rotate(360deg)}}
 @keyframes neon{0%,18%,22%,25%,53%,57%,100%{opacity:1}20%,24%,55%{opacity:.55;text-shadow:0 0 2px #fff2d6,0 0 6px #ff9d4d}}
 /* Reduced motion: no rising flames and no looping animations */
 @media(prefers-reduced-motion:reduce){.flames,.air{display:none}body.fire section,#surprise,#hole .disk::before,body.party,body.party h1,body.party section,body.night h1{animation:none}}
@@ -511,6 +519,55 @@ const setAir = on => {
 };
 setAir(document.body.classList.contains("night"));
 document.addEventListener("night", e => setAir(e.detail));
+
+// Night music: jazz from YouTube, looped. Browsers refuse to start sound on their own, so it
+// starts on the first click or key press on the page; the vinyl button then plays / pauses it
+// (through the YouTube iframe API messages). Stopping it is remembered for the next visits.
+const JAZZ = "7gtIh5dF9Xk";
+let jazz = null, playing = false;
+const vinyl = document.createElement("button");
+vinyl.id = "vinyl";
+vinyl.type = "button";
+vinyl.innerHTML = '<span class="disc"></span><span class="label"></span>';
+const jazzOff = () => { try { return localStorage.getItem("jazz") === "off"; } catch (e) { return false; } };
+const paintVinyl = () => {
+  vinyl.classList.toggle("playing", playing);
+  vinyl.querySelector(".label").textContent = playing ? "♪ Jazz on — click to pause" : "♪ Click to play some jazz";
+  vinyl.title = playing ? "Pause the music" : "Play the music";
+};
+const command = func => jazz && jazz.contentWindow.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
+const play = () => {
+  if (!jazz) {  // first time: create the player, it autoplays thanks to the user's click
+    jazz = document.createElement("iframe");
+    jazz.id = "jazz";
+    jazz.title = "Background jazz";
+    jazz.allow = "autoplay; encrypted-media";
+    jazz.src = `https://www.youtube.com/embed/${JAZZ}?autoplay=1&loop=1&playlist=${JAZZ}&controls=0&enablejsapi=1`;
+    document.body.append(jazz);
+  } else command("playVideo");
+  playing = true;
+  try { localStorage.removeItem("jazz"); } catch (e) {}
+  paintVinyl();
+};
+const pause = () => {
+  command("pauseVideo");
+  playing = false;
+  try { localStorage.setItem("jazz", "off"); } catch (e) {}
+  paintVinyl();
+};
+vinyl.addEventListener("click", e => { e.stopPropagation(); playing ? pause() : play(); });
+// First interaction anywhere on the page starts the music (unless it was stopped before)
+const firstTouch = () => {
+  if (document.body.classList.contains("night") && !jazz && !jazzOff()) play();
+};
+document.addEventListener("pointerdown", firstTouch, { once: true });
+document.addEventListener("keydown", firstTouch, { once: true });
+const setMusic = on => {
+  if (on) { paintVinyl(); document.body.append(vinyl); }
+  else { if (playing) command("pauseVideo"); playing = false; vinyl.remove(); }
+};
+setMusic(document.body.classList.contains("night"));
+document.addEventListener("night", e => setMusic(e.detail));
 
 // Names / Previews switch: sets data-view on <html> (the CSS does the rest) and remembers it
 const viewBtns = document.querySelectorAll(".view button");
