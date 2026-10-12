@@ -202,7 +202,12 @@ header{margin-bottom:1.75rem;position:relative}
 .tools button:hover,.tools button:focus-visible{border-color:var(--acc)}
 h1{font-size:1.9rem;margin:0;letter-spacing:-.02em}
 .sub{color:var(--mut);margin:.25rem 0 0}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:2rem 2.5rem;align-items:start}
+/* Cards in two independent columns (odd cards left, even cards right), so opening a section only
+   makes its own column longer instead of leaving a gap next to it. On narrow screens the columns
+   dissolve (display:contents) and the cards stack in their original order (inline `order`). */
+.grid{display:flex;flex-direction:column;gap:2rem}
+.col{display:contents}
+@media(min-width:912px){.grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start}.col{display:flex;flex-direction:column;gap:2rem;min-width:0}}
 /* Subject cards: --c is the subject accent colour, set inline on each <section> */
 section{border-left:4px solid var(--c);padding-left:1rem}
 .code{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--c)}
@@ -919,9 +924,10 @@ def build_index():
         links += fold(s["id"], weeks, root, when, shots, "weekly note", grouped=False, extra=progress(weeks, s))
         links += fold(s["id"], others, root, when, shots, "more document")
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
-        # --c = accent colour of the card, from subjects.json or the palette (in file order)
+        # --c = accent colour of the card, from subjects.json or the palette (in file order);
+        # order = position among the cards, used when the two columns collapse into one (CSS .grid)
         cards.append(
-            f'<section style="--c:{s.get("color", PALETTE[i % len(PALETTE)])}"><span class="code">{s["id"]}</span>'
+            f'<section style="--c:{s.get("color", PALETTE[i % len(PALETTE)])};order:{len(cards)}"><span class="code">{s["id"]}</span>'
             f'<h2>{html.escape(s["name"])}</h2>{exam}<ul class="links">{links}</ul></section>'
         )
         # Bar menu (night only): one cocktail per subject, serving its latest weekly note
@@ -948,7 +954,7 @@ def build_index():
 <h1>Notes BA5</h1><p class="sub">EPFL IN, autumn semester: course notes, weekly notes and cheat sheets</p>
 <div class="searchrow"><input id="search" type="search" placeholder="Search a course, a week, a sheet…" aria-label="Search documents" autocomplete="off">
 <div class="view" role="group" aria-label="Display"><button type="button" data-view="names">Names</button><button type="button" data-view="previews">Previews</button></div></div></header>
-<main class="grid">{"".join(cards)}</main>
+<main class="grid"><div class="col">{"".join(cards[0::2])}</div><div class="col">{"".join(cards[1::2])}</div></main>
 <p id="empty" hidden>No document matches this search.</p>
 <footer>Generated {datetime.now():%Y-%m-%d %H:%M} by build.py</footer>
 </div>{menu}<script>{JS}</script></body></html>"""
