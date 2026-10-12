@@ -60,8 +60,9 @@ support view transitions.
 10 seconds before a metal show ends, a **"More epicness ?"** button shows up. Click
 it and, instead of going back to the day, the page turns into an epic fantasy finale ⚔️:
 a blue and violet night with an aurora, realistic blue fire, embers, floating arcane
-lights and a rune circle, while the amp (now blue) plays an epic song. It ends with the
-song (at most 8 minutes). Add `?night=evening`, `?night=closing`, `?night=metal` or
+lights and a rune circle, while the amp (now blue) plays epic music in a loop. It lasts
+until you click the small **"Back to normal"** button in the bottom right corner, which
+brings back the usual look for the time of day (day, or the jazz bar at night). Add `?night=evening`, `?night=closing`, `?night=metal` or
 `?night=epic` (or `1` / `0`) to the URL to force a phase (or the day) at any time.
 
 It hides three easter eggs: a surprise banner that shows up on some visits,
