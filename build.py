@@ -195,7 +195,7 @@ body{font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(
 .wrap{max-width:960px;margin:0 auto;padding:2.5rem 1rem 3rem}
 /* Header, with the flame and theme buttons in its top right corner */
 header{margin-bottom:1.75rem;position:relative}
-.tools{position:absolute;top:0;right:0;display:flex;gap:.4rem}
+.tools{position:absolute;top:0;right:0;z-index:5;display:flex;gap:.4rem}  /* above the title, which animated themes put on its own layer */
 .tools button{width:2.3rem;height:2.3rem;display:grid;place-items:center;font-size:1.05rem;line-height:1;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:.6rem;cursor:pointer}
 .tools button:hover,.tools button:focus-visible{border-color:var(--acc)}
 h1{font-size:1.9rem;margin:0;letter-spacing:-.02em}
