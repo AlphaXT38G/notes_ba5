@@ -7,24 +7,25 @@
 \usepackage[
 a4paper,
 top=1.8cm,
-bottom=1cm,
+bottom=1.5cm,
+footskip=7mm,
 left=1cm,
 right=1cm,
 headheight=14pt,
 headsep=5mm
 ]{geometry}
-
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
-\usepackage[sfdefault]{FiraSans}
 
+\usepackage[sfdefault]{FiraSans}
 \renewcommand{\familydefault}{\sfdefault}
 
 \usepackage{multicol}
 \setlength{\columnsep}{0.7cm}
 
 \usepackage{amsmath,amssymb}
+
 \usepackage{titlesec}
 \usepackage{enumitem}
 
@@ -32,8 +33,10 @@ headsep=5mm
 \tcbuselibrary{skins,breakable}
 
 \usepackage{xcolor}
+
 \usepackage{graphicx}
 \usepackage{float}
+
 \usepackage{tikz}
 
 \usepackage{fancyhdr}
@@ -68,6 +71,7 @@ topsep=1pt
 \definecolor{Purple}{HTML}{EEE7FF}
 \definecolor{Yellow}{HTML}{FFFADB}
 
+
 \definecolor{BlueTitle}{HTML}{285B8F}
 \definecolor{GreenTitle}{HTML}{287052}
 \definecolor{PinkTitle}{HTML}{A84063}
@@ -84,13 +88,14 @@ topsep=1pt
 \fancyhf{}
 
 \fancyhead[L]{\small\textbf{Computer Security}}
-\fancyhead[C]{\small Definitions}
-\fancyhead[R]{\small Course Notes}
-\fancyhead[L]{\small\textbf{Computer security and privacy}}
-\fancyhead[C]{\small Introduction  course - definitions}
+\fancyhead[C]{\small Introduction}
 \fancyhead[R]{\small Week 01 --- 07-13/09/2026}
 
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
 \renewcommand{\headrulewidth}{0.4pt}
+
 
 
 %=========================================================
@@ -105,7 +110,7 @@ topsep=1pt
 {0pt}{6pt}{3pt}
 
 
-% Separator
+% separator
 
 \newcommand{\separator}{
 \vspace{2pt}
@@ -119,7 +124,6 @@ topsep=1pt
 %=========================================================
 
 % DEFINITION - blue
-
 \newtcolorbox{definition}{
 enhanced,
 breakable,
@@ -131,9 +135,7 @@ title=\textbf{Definition},
 fonttitle=\bfseries
 }
 
-
 % IMPORTANT - pink
-
 \newtcolorbox{important}{
 enhanced,
 breakable,
@@ -145,9 +147,7 @@ title=\textbf{Key idea},
 fonttitle=\bfseries
 }
 
-
 % FORMULAS - green
-
 \newtcolorbox{formula}{
 enhanced,
 breakable,
@@ -159,9 +159,7 @@ title=\textbf{Key formulas},
 fonttitle=\bfseries
 }
 
-
 % WARNING - orange
-
 \newtcolorbox{warning}{
 enhanced,
 breakable,
@@ -173,9 +171,7 @@ title=\textbf{Warning},
 fonttitle=\bfseries
 }
 
-
 % EXAMPLE - purple
-
 \newtcolorbox{example}{
 enhanced,
 breakable,
@@ -187,9 +183,7 @@ title=\textbf{Example},
 fonttitle=\bfseries
 }
 
-
-% SUMMARY - yellow
-
+% SUMMARY - orange
 \newtcolorbox{summary}{
 enhanced,
 breakable,
@@ -202,105 +196,147 @@ fonttitle=\bfseries
 }
 
 
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
 %=========================================================
 % DOCUMENT
 %=========================================================
 
 \begin{document}
 
+%\footnotesize   --> To reduce the size of the text
+
 \thispagestyle{fancy}
+
+
 
 \begin{multicols}{2}
 
 
 %=========================================================
 \section{Computer Security}
-%=========================================================
+
 
 \begin{definition}
 
-\textbf{Computer Security}
+\textbf{COMPUTER SECURITY}
 
-\vspace{2pt}
-
-Properties of a computer system must hold in the presence of a
-resourced strategic adversary.
+Properties of a computer system must hold
+in the presence of a resourced strategic adversary.
 
 \end{definition}
+
+
+\begin{important}
+
+If the properties hold within the threat model, it means that there are no vulnerabilities that can be exploited to materialize threats, and no harm happens.
+
+\end{important}
+
+
+
+%=========================================================
+\section{Properties}
+
+
+\textbf{What Properties?}
+
+
+\textbf{TRADITIONAL PROPERTIES}
+
+\begin{itemize}
+
+\item \textbf{Confidentiality} -- prevention of unauthorized disclosure of information
+
+(e.g. The adversary should not be able to read my bank statement)
+
+\item \textbf{Integrity} -- prevention of unauthorized modification of information
+
+(e.g. The adversary should not be able to change my bank balance)
+
+\item \textbf{Availability} -- prevention of unauthorized denial of service
+
+(e.g. The adversary should not prevent me accessing my bank account)
+
+\end{itemize}
 
 
 \separator
 
 
-\textbf{The three main security properties}
+\textbf{NOT-SO-TRADITIONAL (BUT IMPORTANT) PROPERTIES}
 
+\begin{itemize}
 
-\begin{definition}
+\item Authenticity
 
-\textbf{Confidentiality}
+\item Anonymity
 
-\vspace{2pt}
+\item Isolation
 
-Prevention of unauthorized disclosure of information.
+\item Non-repudiation
 
-\end{definition}
+\item \dots
 
+\end{itemize}
 
-\begin{example}
-
-The adversary should not be able to read my bank statement.
-
-\end{example}
-
-
-\begin{definition}
-
-\textbf{Integrity}
-
-\vspace{2pt}
-
-Prevention of unauthorized modification of information.
-
-\end{definition}
-
-
-\begin{example}
-
-The adversary should not be able to change my bank balance.
-
-\end{example}
-
-
-\begin{definition}
-
-\textbf{Availability}
-
-\vspace{2pt}
-
-Prevention of unauthorized denial of service.
-
-\end{definition}
-
-
-\begin{example}
-
-The adversary should not prevent me from accessing my bank account.
-
-\end{example}
 
 
 %=========================================================
 \section{Security Policy}
-%=========================================================
+
 
 \begin{definition}
 
-\textbf{Security Policy}
+\textbf{SECURITY POLICY:} a high-level description of the security properties that must
+hold in the system in relation to assets and principals.
 
-\vspace{2pt}
+\end{definition}
 
-A high-level description of the security properties that must hold
-in the system in relation to assets and principals.
+
+\begin{definition}
+
+\textbf{Assets (objects):} anything with value (e.g., data, files, memory) that needs to be protected.
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{Principals (subjects):} people, computer programs, services,\dots{} (may not contain the adversary)
+
+\end{definition}
+
+
+
+%=========================================================
+\section{Threat Model and Adversary}
+
+
+\begin{definition}
+
+\textbf{THREAT MODEL:} describes the resources available to the adversary and the adversary's capabilities (observe, influence, corrupt,\dots)
+
+\end{definition}
+
+
+\begin{definition}
+
+The \textbf{adversary} is a malicious entity aiming at breaching the security policy. The adversary is strategic: the adversary will choose the optimal way to use her resources to mount an attack that violates the security properties.
 
 \end{definition}
 
@@ -310,151 +346,23 @@ in the system in relation to assets and principals.
 
 \begin{definition}
 
-\textbf{Assets (Objects)}
+\textbf{THREAT MODEL}
 
-\vspace{2pt}
-
-Anything with value that needs to be protected.
-
-\end{definition}
-
-
-\begin{example}
-
-Examples of assets:
-
-\begin{itemize}
-
-\item data;
-
-\item files;
-
-\item memory;
-
-\item sensitive information.
-
-\end{itemize}
-
-\end{example}
-
-
-\begin{definition}
-
-\textbf{Principals (Subjects)}
-
-\vspace{2pt}
-
-People, computer programs, services, etc.
-
-Principals may not contain the adversary.
-
-\end{definition}
-
-
-%=========================================================
-\section{Threat Model}
-%=========================================================
-
-\begin{definition}
-
-\textbf{Threat Model}
-
-\vspace{2pt}
-
-Describes the resources available to the adversary and the
+Technical term to define the
 adversary's capabilities.
 
 \end{definition}
 
 
-\textbf{Typical adversary capabilities}
-
-\begin{itemize}
-
-\item observe;
-
-\item influence;
-
-\item corrupt;
-
-\item exploit available resources.
-
-\end{itemize}
-
-
-\begin{definition}
-
-\textbf{Adversary}
-
-\vspace{2pt}
-
-The adversary is a malicious entity aiming at breaching the
-security policy.
-
-The adversary is strategic: the adversary chooses the optimal way
-to use their resources to mount an attack that violates the
-security properties.
-
-\end{definition}
-
-
-%=========================================================
-\section{Vulnerabilities and Threats}
-%=========================================================
-
-\begin{definition}
-
-\textbf{Vulnerability}
-
-\vspace{2pt}
-
-A specific weakness that could be exploited by adversaries with
-interest in different assets.
-
-\end{definition}
-
-
 \begin{example}
 
-Examples:
-
 \begin{itemize}
 
-\item The banking API is not protected.
+\item The adversary can observe my connection
 
-\item The password appears in plain text on my screen.
+\item The adversary can corrupt my machine
 
-\end{itemize}
-
-\end{example}
-
-
-\separator
-
-
-\begin{definition}
-
-\textbf{Threat}
-
-\vspace{2pt}
-
-The feared event or the goal of the adversary that we do not want
-to materialize.
-
-\end{definition}
-
-
-\begin{example}
-
-Examples:
-
-\begin{itemize}
-
-\item A hacker wants to retrieve money by breaking into the bank's
-system.
-
-\item A student wants to learn my password by looking over my
-shoulder.
+\item The adversary controls a bank employee
 
 \end{itemize}
 
@@ -463,52 +371,129 @@ shoulder.
 
 \begin{definition}
 
-\textbf{Harm}
+\textbf{VULNERABILITY}
 
-\vspace{2pt}
-
-The bad thing that happens when the threat materializes.
+Specific weakness that could be exploited by
+adversaries with interest in a lot of different
+assets
 
 \end{definition}
 
 
 \begin{example}
 
-Examples:
-
 \begin{itemize}
 
-\item The adversary steals money.
+\item The banking API is not protected
 
-\item The adversary blocks access to the bank.
-
-\item The adversary learns my password.
-
-\item The adversary reads a message.
+\item The password appears in plain text in my screen
 
 \end{itemize}
 
 \end{example}
 
 
+\begin{definition}
+
+\textbf{THREAT}
+
+What is the feared event, the goal of the
+adversary that we don't want
+materialized
+
+\end{definition}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item A hacker wants to retrieve money breaking
+into the bank's system
+
+\item A student wants to learn my password by
+looking over my shoulder
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{HARM}
+
+The bad thing that happens when the
+threat materializes
+
+\end{definition}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item The adversary steals money
+
+\item The adversary blocks access to the bank
+
+\item The adversary learns my password
+
+\item The adversary reads the message
+
+\end{itemize}
+
+\end{example}
+
+
+
 %=========================================================
-\section{Relationship Between Concepts}
+\section{Security Mechanism}
+
+
+\begin{definition}
+
+\textbf{SECURITY MECHANISM:} Technical mechanism used to ensure that the security policy
+is not violated by an adversary within the threat model.
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Example 1}
+
+\textbf{Policy:} ensure the log of transactions is not tampered with by a single employee
+
+\textbf{Mechanism:} keep a copy of the log on multiple computers, such that no single employee has access to all of them
+
+\end{example}
+
+
+
 %=========================================================
+\section{Attacker vs Defender}
+
+
+\begin{definition}
+
+\textbf{ATTACKER} Just one way to violate one security property is enough!
+(within the threat model)
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{DEFENDER} No adversary strategy can violate the security policy
+
+\end{definition}
+
 
 \begin{important}
 
-If the security properties hold within the threat model, it means
-that:
-
-\begin{itemize}
-
-\item there are no vulnerabilities that can be exploited;
-
-\item threats cannot materialize;
-
-\item no harm happens.
-
-\end{itemize}
+A system is ``secure'' if an adversary constrained by a
+specific threat model cannot violate the security policy
 
 \end{important}
 
@@ -516,85 +501,71 @@ that:
 \separator
 
 
-%=========================================================
-\section{Security Mechanisms}
-%=========================================================
-
 \begin{definition}
 
-\textbf{Security Mechanism}
+\textbf{SECURITY ARGUMENT:} rigorous argument that the security mechanisms in place are
+indeed effective in maintaining the security policy (verbal or mathematical).
 
-\vspace{2pt}
-
-A technical mechanism used to ensure that the security policy is
-not violated by an adversary within the threat model.
+Subject to the assumptions of the threat model.
 
 \end{definition}
 
 
-\begin{important}
+\begin{warning}
 
-Security mechanisms protect the system against adversaries whose
-resources and capabilities are described by the threat model.
+\textbf{FOR A THREAT MODEL TO BE USEFUL} The model must constrain the adversary, otherwise we cannot
+make a security argument
 
-\end{important}
+\end{warning}
+
 
 
 %=========================================================
-\section{When is a System Secure?}
-%=========================================================
-
-\begin{definition}
-
-\textbf{Secure System}
-
-\vspace{2pt}
-
-A system is secure if an adversary constrained by a specific threat
-model cannot violate the security policy.
-
-\end{definition}
+\section{Steps of Security Engineering}
 
 
 \begin{summary}
 
-A secure system depends on:
+\textbf{1.- High-level specification}
 
 \begin{itemize}
 
-\item a clearly defined security policy;
+\item Define the architecture of the system (e.g., high level block diagram)
 
-\item identified assets and principals;
+\item Define the security policy (principals, assets, security properties)
 
-\item a realistic threat model;
+\item Define the threat model
 
-\item effective security mechanisms.
+\end{itemize}
+
+\textbf{2.- Security design}
+
+\begin{itemize}
+
+\item Select / Design security mechanisms
+
+\item State your security argument: which controls maintain which
+properties?
+
+\end{itemize}
+
+\textbf{3.- Secure implementation}
+
+\begin{itemize}
+
+\item Implement mechanisms
+
+\item Ensure they conform to the design model
+
+\item Security testing
 
 \end{itemize}
 
 \end{summary}
 
 
-%=========================================================
-\section{Security Argument}
-%=========================================================
-
-\begin{definition}
-
-\textbf{Security Argument}
-
-\vspace{2pt}
-
-A rigorous argument that the security mechanisms in place are
-indeed effective in maintaining the security policy.
-
-The argument can be verbal or mathematical and is subject to the
-assumptions of the threat model.
-
-\end{definition}
-
-
 
 \end{multicols}
+
 
 \end{document}
