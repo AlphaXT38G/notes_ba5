@@ -19,3 +19,19 @@ Open `dist/index.html` to browse all PDFs. It is generated, never edit it
 
 Subjects, their display names and exam rules live in [`subjects.json`](subjects.json).
 Put `course.tex` / `cheatsheet.tex` in `<id>/` and rebuild; the page updates itself.
+
+Every standalone `.tex` in `<id>/` and its subfolders (e.g. `week/week01.tex`) is
+compiled, and PDFs without a matching `.tex` (e.g. `cheatsheets/*.pdf`) are copied
+as is. On the page, the course notes come first, then two collapsible sections:
+weekly notes (files named `weekNN`, with a semester progress bar) and every other
+PDF, grouped by folder. Dates come from the last commit touching each document,
+and documents changed in the last 7 days get a "New" badge.
+
+Optional keys per subject in `subjects.json`:
+
+- `"weeks"`: length of the progress bar (default 14)
+- `"color"`: accent colour of the subject card (default: taken from a palette)
+
+The page also has a search field, a light/dark toggle and a flame mode 🔥.
+It hides two easter eggs: a surprise banner that shows up on some visits, and
+something that happens when you type the Konami code (↑↑↓↓←→←→BA).
