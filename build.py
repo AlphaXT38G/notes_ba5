@@ -320,7 +320,6 @@ body.metal section{box-shadow:-10px 0 24px -12px rgba(255,40,0,.8)}
 body.metal section{transform-origin:0 100%;animation:headbang .46s ease-in-out infinite alternate}
 body.metal .col:nth-child(2) section{animation-delay:-.23s}
 body.metal h1{animation:riff .12s steps(2) infinite}
-.stage{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden}
 #metalfx{position:fixed;inset:0;z-index:2;width:100%;height:100%;pointer-events:none}
 #strobe{position:fixed;inset:0;z-index:3;pointer-events:none;background:#fff;opacity:0}
 #eq{position:fixed;left:0;right:0;bottom:0;z-index:2;height:4.5rem;display:flex;align-items:flex-end;gap:3px;padding:0 3px;pointer-events:none;opacity:.6}
@@ -339,8 +338,6 @@ body.metal h1{animation:riff .12s steps(2) infinite}
 #amp .label{padding:.3rem .6rem;border-radius:.3rem;background:rgba(30,4,4,.9);border:1px solid rgba(255,60,30,.5);text-transform:uppercase;letter-spacing:.04em}
 #riff{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
 @keyframes pump{from{transform:scale(1)}to{transform:scale(1.12)}}
-.mosh{position:absolute;bottom:-3rem;filter:drop-shadow(0 0 8px rgba(255,60,0,.8));animation:mosh linear forwards}
-@keyframes mosh{0%{transform:translate(0,0) rotate(0) scale(.6)}50%{transform:translate(var(--mx),var(--my)) rotate(calc(var(--spin) / 2)) scale(1.15)}100%{transform:translate(var(--ex),var(--ey)) rotate(var(--spin)) scale(.8);opacity:.2}}
 @keyframes headbang{from{transform:rotate(-.7deg) translateY(0)}to{transform:rotate(.7deg) translateY(4px)}}
 @keyframes riff{0%{transform:skew(-10deg) translate(0,0)}50%{transform:skew(-10deg) translate(2px,-1px)}}
 @keyframes eq{from{transform:scaleY(var(--lo))}to{transform:scaleY(var(--hi))}}
@@ -759,11 +756,10 @@ const setMusic = on => {
 setMusic(document.body.classList.contains("night"));
 document.addEventListener("night", e => setMusic(e.detail));
 
-// Metal stage: a click-through layer for the lightning, a white strobe and the equalizer,
-// all created when the metal phase starts and removed when it ends. A bolt strikes every
-// 1.2 - 3.5 s at a random spot, with a flash and a short shake of the page.
-const stage = document.createElement("div"), strobe = document.createElement("div"), eq = document.createElement("div");
-stage.className = "stage";
+// Metal stage: a white strobe, the equalizer and the effects canvas below, all created when the
+// metal phase starts and removed when it ends. A bolt strikes every 1.2 - 3.5 s at a random spot,
+// with a flash and a short shake of the page.
+const strobe = document.createElement("div"), eq = document.createElement("div");
 strobe.id = "strobe";
 eq.id = "eq";
 eq.innerHTML = Array.from({ length: 48 }, () =>
@@ -995,6 +991,64 @@ fxLayers.push({
   reset() { flames.length = sparks.length = 0; },
 });
 
+// Flying silhouettes: a skull, a Flying V guitar and a "horns" hand, drawn as vector shapes in a
+// 100 x 100 box and filled with chrome, outlined in black with
+// a red glow. They are thrown from the bottom corners in an arc, with real gravity and a spin.
+const SKULL = new Path2D("M50 6C28 6 12 22 12 44c0 13 6 22 14 28v14c0 4 3 7 7 7h4v-8h6v8h14v-8h6v8h4c4 0 7-3 7-7V72c8-6 14-15 14-28C88 22 72 6 50 6Z" +
+  "M33 40c6 0 11 5 11 11s-5 10-11 10-11-4-11-10 5-11 11-11ZM67 40c6 0 11 5 11 11s-5 10-11 10-11-4-11-10 5-11 11-11ZM50 60l6 12H44Z");
+const FLYING_V = new Path2D("M44 2h12l-2 12h-2v30l28 46-15 10-15-26-15 26-15-10 28-46V14h-2Z");
+const HORNS = new Path2D();
+HORNS.roundRect(28, 48, 46, 46, 10);  // fist
+HORNS.roundRect(28, 6, 13, 52, 6);    // index finger, up
+HORNS.roundRect(61, 16, 12, 42, 6);   // little finger, up
+HORNS.roundRect(36, 58, 30, 11, 5);   // thumb folded over the other fingers
+// [shape, fill rule]: even-odd cuts the skull's eyes and nose, non-zero merges the hand's parts
+const SHAPES = [[SKULL, "evenodd"], [FLYING_V, "nonzero"], [HORNS, "nonzero"]];
+const thrown = [];
+let throwClock = 0;
+fxLayers.push({
+  update(dt) {
+    throwClock += dt;
+    if (throwClock > .35) {
+      throwClock = 0;
+      if (thrown.length < 18) {
+        const left = Math.random() < .5, dir = left ? 1 : -1;
+        const [shape, rule] = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+        thrown.push({ shape, rule, size: 34 + Math.random() * 30,
+          x: left ? Math.random() * fxW * .12 : fxW - Math.random() * fxW * .12, y: fxH + 40,
+          vx: dir * fxW * (.18 + Math.random() * .3), vy: -fxH * (1 + Math.random() * .45),
+          a: 0, va: dir * (3 + Math.random() * 5) });
+      }
+    }
+    for (const t of thrown) {
+      t.vy += fxH * 1.1 * dt;  // gravity, scaled to the screen so the arc always fits
+      t.x += t.vx * dt; t.y += t.vy * dt; t.a += t.va * dt;
+    }
+    let k = 0;
+    for (const t of thrown) if (t.y < fxH + 80) thrown[k++] = t;
+    thrown.length = k;
+  },
+  draw(c) {
+    for (const t of thrown) {
+      c.save();
+      c.translate(t.x, t.y);
+      c.rotate(t.a);
+      c.scale(t.size / 100, t.size / 100);
+      c.translate(-50, -50);
+      const chrome = c.createLinearGradient(0, 0, 0, 100);
+      chrome.addColorStop(0, "#ffffff"); chrome.addColorStop(.4, "#9c9c9c"); chrome.addColorStop(.52, "#2e2e2e"); chrome.addColorStop(.7, "#dcdcdc"); chrome.addColorStop(1, "#6a6a6a");
+      c.shadowColor = "rgba(255,40,0,.9)"; c.shadowBlur = 18;
+      c.fillStyle = chrome;
+      c.fill(t.shape, t.rule);
+      c.shadowBlur = 0;
+      c.lineWidth = 4; c.strokeStyle = "#0a0a0a";
+      c.stroke(t.shape);
+      c.restore();
+    }
+  },
+  reset() { thrown.length = 0; throwClock = 0; },
+});
+
 let boltTimer = null;
 const strike = () => {
   boltTimer = setTimeout(strike, 1200 + Math.random() * 2300);
@@ -1009,33 +1063,15 @@ const strike = () => {
     [{ transform: "none" }, { transform: "translate(-6px,3px)" }, { transform: "translate(5px,-4px)" }, { transform: "none" }],
     { duration: 220 });
 };
-// Mosh pit: rock emojis thrown from the bottom corners, flying across the page in an arc
-// (up to --mx/--my, then down to --ex/--ey) while spinning; one every 180 ms, at most 35 at once
-let moshTimer = null;
-const mosh = () => {
-  if (crowded(stage, 35)) return;
-  const m = document.createElement("span"), left = Math.random() < .5, w = innerWidth, h = innerHeight;
-  const dir = left ? 1 : -1, reach = (.4 + Math.random() * .6) * w;
-  m.className = "mosh";
-  m.textContent = ["🤘", "💀", "⚡", "🎸", "🔥", "🥁"][Math.floor(Math.random() * 6)];
-  m.style.cssText = `${left ? "left" : "right"}:${Math.random() * 12}%;font-size:${1.4 + Math.random() * 1.8}rem;` +
-    `--mx:${dir * reach / 2}px;--my:${-(.45 + Math.random() * .45) * h}px;--ex:${dir * reach}px;--ey:${-Math.random() * .2 * h}px;` +
-    `--spin:${dir * (360 + Math.random() * 720)}deg;animation-duration:${1.6 + Math.random() * 1.4}s`;
-  m.addEventListener("animationend", () => m.remove());
-  stage.append(m);
-};
 const setStage = on => {
   clearTimeout(boltTimer);
-  clearInterval(moshTimer);
-  stage.replaceChildren();
-  [stage, strobe, eq].forEach(el => el.remove());
+  [strobe, eq].forEach(el => el.remove());
   fxStop();
   if (!on) return;
-  document.body.append(stage, strobe, eq);
+  document.body.append(strobe, eq);
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   fxStart();
   strike();
-  moshTimer = setInterval(mosh, 180);
 };
 setStage(document.body.classList.contains("metal"));
 document.addEventListener("metal", e => setStage(e.detail));
