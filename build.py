@@ -806,11 +806,13 @@ setStage(document.body.classList.contains("metal"));
 document.addEventListener("metal", e => setStage(e.detail));
 
 // Metal music: one song from YouTube, from 1:50 to its end (METAL_SECONDS later), in sync with the
-// takeover: opened late, it starts further into the song so both end together. Sound needs a user
-// gesture: if the page already had one (e.g. the jazz was playing) it starts right away, otherwise
-// on the first click or key press. The amp plays / pauses it; the end of the phase stops it.
+// takeover: opened late, it starts further into the song so both end together. It starts by
+// itself when the phase begins. Browsers only allow sound after a user gesture, so if the page
+// has not had one yet the song autoplays muted and the sound comes on at the first click or key
+// press anywhere (the song keeps its place in time). The amp plays / pauses it; the end of the
+// phase stops it.
 const METAL = "IAvgph1RjCc", METAL_START = 110;
-let riff = null, rocking = false;
+let riff = null, rocking = false, riffMuted = false, soundAt = 0;
 const amp = document.createElement("button");
 amp.id = "amp";
 amp.type = "button";
@@ -818,11 +820,12 @@ amp.innerHTML = '<span class="cab"><span class="panel"><span class="logo">BA5</s
   "<i></i>".repeat(5) + '</span></span><span class="grille"><span class="cone"></span><span class="cone"></span></span></span><span class="label"></span>';
 const paintAmp = () => {
   amp.classList.toggle("playing", rocking);
-  amp.querySelector(".label").textContent = rocking ? "🎸 Rocking — click to mute" : "🎸 Click to crank it up";
-  amp.title = rocking ? "Pause the music" : "Play the music";
+  amp.querySelector(".label").textContent = !rocking ? "🎸 Click to crank it up"
+    : riffMuted ? "🔇 Click anywhere for sound" : "🎸 Rocking — click to mute";
+  amp.title = !rocking ? "Play the music" : riffMuted ? "Turn the sound on" : "Pause the music";
 };
 const riffCommand = func => riff && riff.contentWindow.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
-const rock = () => {
+const rock = (muted = false) => {
   if (!riff) {
     const d = new Date(), t = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
     const late = forced === "metal" ? 0 : Math.max(0, t - 3600);  // seconds since 1:00:00
@@ -830,24 +833,38 @@ const rock = () => {
     riff.id = "riff";
     riff.title = "Metal song";
     riff.allow = "autoplay; encrypted-media";
-    riff.src = `https://www.youtube.com/embed/${METAL}?autoplay=1&start=${METAL_START + late}&end=${METAL_START + METAL_SECONDS}&controls=0&enablejsapi=1`;
+    riff.src = `https://www.youtube.com/embed/${METAL}?autoplay=1&mute=${muted ? 1 : 0}` +
+      `&start=${METAL_START + late}&end=${METAL_START + METAL_SECONDS}&controls=0&enablejsapi=1`;
     document.body.append(riff);
+    riffMuted = muted;
   } else riffCommand("playVideo");
   rocking = true;
   paintAmp();
 };
-amp.addEventListener("click", e => { e.stopPropagation(); if (rocking) { riffCommand("pauseVideo"); rocking = false; paintAmp(); } else rock(); });
-const rockOnTouch = () => { if (document.body.classList.contains("metal") && !riff) rock(); };
-const setMetalMusic = on => {
-  document.removeEventListener("pointerdown", rockOnTouch);
-  document.removeEventListener("keydown", rockOnTouch);
-  if (!on) { riff?.remove(); riff = null; rocking = false; amp.remove(); return; }
+const riffSound = () => {  // unmute a song that autoplayed muted
+  if (!riff || !riffMuted) return;
+  riffCommand("unMute");
+  riffMuted = false;
+  soundAt = performance.now();
   paintAmp();
+};
+amp.addEventListener("click", e => {
+  e.stopPropagation();
+  if (performance.now() - soundAt < 600) return;  // this same click just turned the sound on
+  if (riffMuted) riffSound();
+  else if (rocking) { riffCommand("pauseVideo"); rocking = false; paintAmp(); }
+  else rock();
+});
+const setMetalMusic = on => {
+  document.removeEventListener("pointerdown", riffSound);
+  document.removeEventListener("keydown", riffSound);
+  if (!on) { riff?.remove(); riff = null; rocking = riffMuted = false; amp.remove(); return; }
   document.body.append(amp);
-  if (navigator.userActivation?.hasBeenActive) rock();
-  else {
-    document.addEventListener("pointerdown", rockOnTouch, { once: true });
-    document.addEventListener("keydown", rockOnTouch, { once: true });
+  const canSound = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
+  rock(!canSound);
+  if (!canSound) {
+    document.addEventListener("pointerdown", riffSound, { once: true });
+    document.addEventListener("keydown", riffSound, { once: true });
   }
 };
 setMetalMusic(document.body.classList.contains("metal"));
