@@ -34,7 +34,8 @@ Optional keys per subject in `subjects.json`:
 
 The page also has a search field, a light/dark toggle and a flame mode 🔥.
 A **Names / Previews** switch shows every document as a small thumbnail of its
-first page instead. The thumbnails are made by `pdftoppm` (poppler); without it,
+first page instead (for course notes, the first page after the table of contents).
+The thumbnails are made by `pdftoppm` and `pdftotext` (poppler); without them,
 the build still works and the page shows names only.
 
 From **21:30 to 6:00** the page turns into a jazz bar 🎷 (neon title, smoke,
