@@ -49,7 +49,9 @@ press. The turntable in the bottom left corner plays / pauses it.
 Jazz plays until 00:45, then the bar closes until 01:00 (darker light, the neon goes
 out letter by letter and the bartender sends you to bed). At **01:00:00** a metal
 song takes over for 1 min 51 s 🤘: chrome title, red light pulsing on the beat,
-headbanging cards, lightning strikes, flying rock emojis and an equalizer, while a
+headbanging cards and an equalizer, plus effects drawn on a canvas: branching
+lightning with sparks, physics-driven metal chains hanging in the margins, a curtain
+of fire and chrome skulls / Flying V guitars / horns thrown across the page. A
 guitar amp replaces the turntable and plays the song from 1:50 to its end. Then the
 page is back to its day look. Add `?night=evening`, `?night=closing` or
 `?night=metal` (or `1` / `0`) to the URL to force a phase (or the day) at any time.
