@@ -404,7 +404,7 @@ async function rift() {
   // The pieces that get swallowed one by one: header parts, card titles and every visible line
   // of the cards (hidden ones, e.g. inside closed sections, have no size and are left out)
   const pieces = [...document.querySelectorAll(
-    "header h1, header .sub, #search, .tools button, main section .code, main section h2, main section > .links > li, footer"
+    "header h1, header .sub, #search, .view, .tools button, main section .code, main section h2, main section > .links > li, footer"
   )].filter(el => el.getBoundingClientRect().width > 0);
   const wrap = document.querySelector(".wrap");
   document.body.classList.add("rift");
