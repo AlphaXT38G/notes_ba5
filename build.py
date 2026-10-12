@@ -443,10 +443,6 @@ async function rift() {
   });
 }
 
-// Search: keep subjects and documents whose text matches, open the sections holding a match.
-// Every word typed must appear (in any order, case-insensitive). If the subject itself matches
-// (name or code), the whole card stays as usual; otherwise only the matching documents are kept.
-// An empty field shows everything again and closes the sections.
 // Names / Previews switch: sets data-view on <html> (the CSS does the rest) and remembers it
 const viewBtns = document.querySelectorAll(".view button");
 const setView = v => {
@@ -457,6 +453,10 @@ const setView = v => {
 viewBtns.forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
 viewBtns.forEach(b => b.setAttribute("aria-pressed", b.dataset.view === (root.dataset.view || "names")));
 
+// Search: keep subjects and documents whose text matches, open the sections holding a match.
+// Every word typed must appear (in any order, case-insensitive). If the subject itself matches
+// (name or code), the whole card stays as usual; otherwise only the matching documents are kept.
+// An empty field shows everything again and closes the sections.
 const q = document.getElementById("search");
 q.addEventListener("input", () => {
   const words = q.value.toLowerCase().trim().split(/\\s+/).filter(Boolean);
