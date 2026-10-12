@@ -56,5 +56,6 @@ guitar amp replaces the turntable and plays the song from 1:50 to its end. Then 
 page is back to its day look. Add `?night=evening`, `?night=closing` or
 `?night=metal` (or `1` / `0`) to the URL to force a phase (or the day) at any time.
 
-It hides two easter eggs: a surprise banner that shows up on some visits, and
-something that happens when you type the Konami code (↑↑↓↓←→←→BA).
+It hides three easter eggs: a surprise banner that shows up on some visits,
+something that happens when you type the Konami code (↑↑↓↓←→←→BA), and the metal
+takeover at any time of day if you click the flame button 20 times within a minute.
