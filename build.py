@@ -183,8 +183,6 @@ PDFTOPPM = shutil.which("pdftoppm")    # makes the previews; optional
 PDFTOTEXT = shutil.which("pdftotext")  # finds where the content of course notes starts; optional
 # One accent per subject (in subjects.json order), override with "color" in subjects.json
 PALETTE = ["#3b6fd8", "#d9622b", "#2f9e6b", "#b4459a", "#c99a1c", "#7a55d1", "#1f9bb0", "#d04452"]
-# Night bar menu: each subject gets a cocktail (in subjects.json order), e.g. "The Compsec Sour"
-COCKTAILS = ["Sour", "Spritz", "Mule", "Negroni", "Old Fashioned", "Martini", "Manhattan", "Mojito"]
 WEEK = re.compile(r"week_?(\d+)(.*)", re.I)  # weekly notes: week01.pdf, week_3.pdf, ...
 
 CSS = """
@@ -369,17 +367,6 @@ body.night:not(.rift) .wrap{position:relative;z-index:1}
 #vinyl .arm::after{content:"";position:absolute;left:50%;bottom:-.2rem;width:.45rem;height:.3rem;margin-left:-.3rem;border-radius:1px;background:#cfc8bb;transform:rotate(18deg)}
 #vinyl.playing .arm{transform:rotate(25deg)}
 #vinyl .label{padding:.3rem .6rem;border-radius:999px;background:rgba(48,26,18,.85);border:1px solid rgba(245,176,65,.3)}
-/* Bar menu (night only): a small cream paper card in the bottom right corner, slightly askew,
-   folded to its title until clicked; each cocktail opens the latest notes of a subject */
-#menu{display:none;position:fixed;right:1.1rem;bottom:1.1rem;z-index:40;width:min(17rem,calc(100vw - 2.2rem));padding:.55rem .9rem;color:#3a2414;background:linear-gradient(#f8eedb,#efe0c2);border-radius:.3rem;box-shadow:0 8px 24px rgba(0,0,0,.55);font-family:Georgia,"Times New Roman",serif;transform:rotate(-2deg)}
-body.night #menu{display:block}
-#menu summary{padding:0;border:0;color:#3a2414;font:italic 700 1rem Georgia,serif;justify-content:center}
-#menu summary::before{border-color:#8a5a2b}
-#menu ul{list-style:none;margin:.5rem 0 .2rem;padding:.4rem 0 0;border-top:1px dashed rgba(90,55,25,.4)}
-#menu a{display:block;padding:.3rem 0;color:#3a2414;text-decoration:none}
-#menu a:hover b{color:#a8461e}
-#menu b{display:block;font-size:.92rem}
-#menu small{font:italic .75rem Georgia,serif;color:#7a5a3c}
 #jazz{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 /* Closing time: darker, colder light and a blue-violet neon */
@@ -1088,7 +1075,7 @@ def natural(p):
 
 def build_index():
     """Write dist/index.html from whatever PDFs are in dist/ (subjects without any are hidden)."""
-    cards, drinks = [], []
+    cards = []
     for i, s in enumerate(CONFIG):
         root = DIST / s["id"]
         pdfs = list(root.rglob("*.pdf")) if root.is_dir() else []
@@ -1120,20 +1107,6 @@ def build_index():
             f'<section style="--c:{s.get("color", PALETTE[i % len(PALETTE)])};order:{len(cards)}"><span class="code">{s["id"]}</span>'
             f'<h2>{html.escape(s["name"])}</h2>{exam}<ul class="links">{links}</ul></section>'
         )
-        # Bar menu (night only): one cocktail per subject, serving its latest weekly note
-        # (or the course notes when it has no weekly notes, or else its first other document)
-        latest = (max(weeks, key=lambda p: int(WEEK.fullmatch(p.stem)[1]), default=None)
-                  or (main + others)[0])
-        if latest:
-            served = label(latest, root) + (" · fresh this week 🍸" if is_new(when[latest]) else f" · {when[latest]:%d %b}")
-            drinks.append(
-                f'<li><a href="{s["id"]}/{html.escape(latest.relative_to(root).as_posix())}" target="_blank" rel="noopener">'
-                f'<b>The {html.escape(s["id"].capitalize())} {COCKTAILS[i % len(COCKTAILS)]}</b><small>{html.escape(served)}</small></a></li>'
-            )
-    menu = (
-        f'<aside id="menu"><details><summary>🍸 Tonight\'s menu</summary><ul>{"".join(drinks)}</ul></details></aside>'
-        if drinks else ""
-    )
     page = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -1147,7 +1120,7 @@ def build_index():
 <main class="grid"><div class="col">{"".join(cards[0::2])}</div><div class="col">{"".join(cards[1::2])}</div></main>
 <p id="empty" hidden>No document matches this search.</p>
 <footer>Generated {datetime.now():%Y-%m-%d %H:%M} by build.py</footer>
-</div>{menu}<script>{JS}</script></body></html>"""
+</div><script>{JS}</script></body></html>"""
     DIST.mkdir(exist_ok=True)
     (DIST / "index.html").write_text(page, encoding="utf-8")
     ok("dist/index.html")

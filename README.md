@@ -44,8 +44,7 @@ From **21:30 to 01:00** the page turns into a jazz bar 🎷 (neon title, smoke,
 floating notes) and plays background jazz from YouTube. The music (jazz, then the
 metal song) starts by itself; browsers only allow sound after a click, so until the
 page has had one it plays muted and the sound comes on at the first click or key
-press. The turntable in the bottom left corner plays / pauses it. A bar menu in the bottom
-right corner serves each subject's latest notes as a cocktail.
+press. The turntable in the bottom left corner plays / pauses it.
 
 Jazz plays until 00:45, then the bar closes until 01:00 (darker light, the neon goes
 out letter by letter and the bartender sends you to bed). At **01:00:00** a metal
