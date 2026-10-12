@@ -21,6 +21,7 @@ python build.py --index-only
 
 import html
 import json
+import re
 import subprocess
 import shutil
 import sys
@@ -129,31 +130,75 @@ body{font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(
 header{margin-bottom:1.75rem}
 h1{font-size:1.9rem;margin:0;letter-spacing:-.02em}
 .sub{color:var(--mut);margin:.25rem 0 0}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:2rem 2.5rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:2rem 2.5rem;align-items:start}
 .code{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
 h2{font-size:1.1rem;line-height:1.3;margin:.1rem 0 .15rem}
 .exam{margin:0 0 .4rem;font-size:.85rem;color:var(--mut)}
 .links{list-style:none;margin:.5rem 0 0;padding:0;border-top:1px solid var(--line)}
 .links a{display:flex;justify-content:space-between;gap:1rem;padding:.55rem 0;border-bottom:1px solid var(--line);color:var(--acc);text-decoration:none;font-weight:600}
 .links a:hover,.links a:focus-visible{background:var(--acc-bg)}
-.links small{color:var(--mut);font-size:.78rem;font-weight:400;align-self:center}
+.links small{color:var(--mut);font-size:.78rem;font-weight:400;align-self:center;white-space:nowrap}
+details summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:.4rem;padding:.55rem 0;border-bottom:1px solid var(--line);color:var(--mut);font-size:.9rem;font-weight:600}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"";width:.45rem;height:.45rem;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(-45deg);transition:transform .15s}
+details[open] summary::before{transform:rotate(45deg)}
+details summary:hover,details summary:focus-visible{color:var(--fg)}
+details .links{margin:0;border-top:0;padding-left:1rem}
+.group{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);padding:.6rem 0 .1rem;border-bottom:1px solid var(--line)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 """
+
+def label(p, root):
+    if p.relative_to(root).as_posix() in KINDS:
+        return KINDS[p.relative_to(root).as_posix()]
+    m = re.fullmatch(r"week_?(\d+)(.*)", p.stem, re.I)
+    if m:
+        return f"Week {m[1]}{m[2]}"
+    return p.stem.replace("_", " ")
+
+def link(subject, p, root):
+    rel = p.relative_to(root).as_posix()
+    return (
+        f'<li><a href="{subject}/{html.escape(rel)}"><span>{html.escape(label(p, root))}</span>'
+        f'<small>{p.stat().st_size / 1e6:.1f} MB · {datetime.fromtimestamp(p.stat().st_mtime):%d %b %Y}</small></a></li>'
+    )
+
+def natural(p):
+    return [int(t) if t.isdigit() else t.lower() for t in re.split(r"(\d+)", p.as_posix())]
 
 def build_index():
     cards = []
     for s in CONFIG:
-        pdfs = sorted(
-            (DIST / s["id"]).glob("*.pdf"),
-            key=lambda p: (ORDER.index(p.name) if p.name in ORDER else len(ORDER), p.name),
-        )
+        root = DIST / s["id"]
+        pdfs = list(root.rglob("*.pdf")) if root.is_dir() else []
         if not pdfs:
             continue
-        links = "".join(
-            f'<li><a href="{s["id"]}/{p.name}"><span>{KINDS.get(p.name, p.stem)}</span>'
-            f'<small>{p.stat().st_size / 1e6:.1f} MB · {datetime.fromtimestamp(p.stat().st_mtime):%d %b %Y}</small></a></li>'
-            for p in pdfs
+        course = root / "course.pdf"
+        main = [course] if course in pdfs else []
+        rest = sorted(
+            (p for p in pdfs if p not in main),
+            key=lambda p: (
+                len(p.relative_to(root).parts) > 1,          # top-level files first
+                ORDER.index(p.name) if p.parent == root and p.name in ORDER else len(ORDER),
+                natural(p.relative_to(root)),
+            ),
         )
+        links = "".join(link(s["id"], p, root) for p in main)
+        if rest:
+            items, group = [], None
+            for p in rest:
+                folder = p.relative_to(root).parent.as_posix()
+                if folder != "." and folder != group:
+                    items.append(f'<li class="group">{html.escape(folder)}</li>')
+                group = folder
+                items.append(link(s["id"], p, root))
+            n = len(rest)
+            # Without course notes there is nothing above the list, so show it unfolded
+            opened = "" if main else " open"
+            links += (
+                f'<li><details{opened}><summary>{n} {"more " if main else ""}document{"s" if n > 1 else ""}</summary>'
+                f'<ul class="links">{"".join(items)}</ul></details></li>'
+            )
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
         cards.append(
             f'<section><span class="code">{s["id"]}</span>'
@@ -164,7 +209,7 @@ def build_index():
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Notes BA5</title>
 <style>{CSS}</style></head><body><div class="wrap">
-<header><h1>Notes BA5</h1><p class="sub">EPFL IN, autumn semester: course notes and cheat sheets</p></header>
+<header><h1>Notes BA5</h1><p class="sub">EPFL IN, autumn semester: course notes, weekly notes and cheat sheets</p></header>
 <main class="grid">{"".join(cards)}</main>
 <footer>Generated {datetime.now():%Y-%m-%d %H:%M} by build.py</footer>
 </div></body></html>"""
