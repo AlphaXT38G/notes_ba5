@@ -128,11 +128,15 @@ WEEK = re.compile(r"week_?(\d+)(.*)", re.I)  # weekly notes: week01.pdf, week_3.
 
 CSS = """
 :root{--bg:#f5f6f8;--fg:#15171a;--card:#fff;--line:#e2e5ea;--acc:#2457c5;--acc-bg:#eaf0fd;--mut:#6b7280;--new:#1d7a46;--new-bg:#dcf3e5}
-@media(prefers-color-scheme:dark){:root{--bg:#121417;--fg:#e9eaec;--card:#1b1e23;--line:#2c3037;--acc:#8ab0ff;--acc-bg:#232b3d;--mut:#8b93a1;--new:#7ee0a5;--new-bg:#1d3a2a}}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121417;--fg:#e9eaec;--card:#1b1e23;--line:#2c3037;--acc:#8ab0ff;--acc-bg:#232b3d;--mut:#8b93a1;--new:#7ee0a5;--new-bg:#1d3a2a}}
+:root[data-theme=dark]{--bg:#121417;--fg:#e9eaec;--card:#1b1e23;--line:#2c3037;--acc:#8ab0ff;--acc-bg:#232b3d;--mut:#8b93a1;--new:#7ee0a5;--new-bg:#1d3a2a}
 *{box-sizing:border-box}
 body{font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--fg);margin:0}
 .wrap{max-width:960px;margin:0 auto;padding:2.5rem 1rem 3rem}
-header{margin-bottom:1.75rem}
+header{margin-bottom:1.75rem;position:relative}
+.tools{position:absolute;top:0;right:0;display:flex;gap:.4rem}
+.tools button{width:2.3rem;height:2.3rem;display:grid;place-items:center;font-size:1.05rem;line-height:1;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:.6rem;cursor:pointer}
+.tools button:hover,.tools button:focus-visible{border-color:var(--acc)}
 h1{font-size:1.9rem;margin:0;letter-spacing:-.02em}
 .sub{color:var(--mut);margin:.25rem 0 0}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:2rem 2.5rem;align-items:start}
@@ -161,7 +165,23 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 """
 
+# Runs in <head> so the saved theme applies before the first paint
+THEME_JS = """
+try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+"""
+
 JS = """
+// Theme toggle: flip between light and dark, starting from what is shown now
+const root = document.documentElement, themeBtn = document.getElementById("theme");
+const isDark = () => root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+const paintBtn = () => { themeBtn.textContent = isDark() ? "☀" : "☾"; themeBtn.title = isDark() ? "Light mode" : "Dark mode"; };
+themeBtn.addEventListener("click", () => {
+  root.dataset.theme = isDark() ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+  paintBtn();
+});
+paintBtn();
+
 // Search: keep subjects and documents whose text matches, open the sections holding a match
 const q = document.getElementById("search");
 q.addEventListener("input", () => {
@@ -293,8 +313,10 @@ def build_index():
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Notes BA5</title>
+<script>{THEME_JS}</script>
 <style>{CSS}</style></head><body><div class="wrap">
-<header><h1>Notes BA5</h1><p class="sub">EPFL IN, autumn semester: course notes, weekly notes and cheat sheets</p>
+<header><div class="tools"><button id="theme" type="button" aria-label="Toggle dark mode"></button></div>
+<h1>Notes BA5</h1><p class="sub">EPFL IN, autumn semester: course notes, weekly notes and cheat sheets</p>
 <input id="search" type="search" placeholder="Search a course, a week, a sheet…" aria-label="Search documents" autocomplete="off"></header>
 <main class="grid">{"".join(cards)}</main>
 <p id="empty" hidden>No document matches this search.</p>
