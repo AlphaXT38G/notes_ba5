@@ -121,6 +121,7 @@ for subject in subjects:
 KINDS = {"course.pdf": "Course notes", "cheatsheet.pdf": "Cheat sheet"}
 ORDER = list(KINDS)  # course first, then cheatsheet, then anything else
 NEW_DAYS = 7         # documents changed more recently get a "New" badge
+WEEK = re.compile(r"week_?(\d+)(.*)", re.I)  # weekly notes: week01.pdf, week_3.pdf, ...
 
 CSS = """
 :root{--bg:#f5f6f8;--fg:#15171a;--card:#fff;--line:#e2e5ea;--acc:#2457c5;--acc-bg:#eaf0fd;--mut:#6b7280;--new:#1d7a46;--new-bg:#dcf3e5}
@@ -153,7 +154,7 @@ footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 def label(p, root):
     if p.relative_to(root).as_posix() in KINDS:
         return KINDS[p.relative_to(root).as_posix()]
-    m = re.fullmatch(r"week_?(\d+)(.*)", p.stem, re.I)
+    m = WEEK.fullmatch(p.stem)
     if m:
         return f"Week {m[1]}{m[2]}"
     return p.stem.replace("_", " ")
@@ -187,6 +188,26 @@ def link(subject, p, root, when):
         f'<small>{p.stat().st_size / 1e6:.1f} MB · {when:%d %b %Y}</small></a></li>'
     )
 
+def fold(subject, pdfs, root, when, noun, grouped=True):
+    """Collapsible list of PDFs, with folder headings when grouped."""
+    if not pdfs:
+        return ""
+    items, group = [], None
+    for p in pdfs:
+        folder = p.relative_to(root).parent.as_posix()
+        if grouped and folder != "." and folder != group:
+            items.append(f'<li class="group">{html.escape(folder)}</li>')
+        group = folder
+        items.append(link(subject, p, root, when[p]))
+    n = len(pdfs)
+    # The list is folded, so say on the summary when something new is inside
+    fresh = sum(is_new(when[p]) for p in pdfs)
+    badge = f'<span class="new">{fresh} new</span>' if fresh else ""
+    return (
+        f'<li><details><summary>{n} {noun}{"s" if n > 1 else ""}{badge}</summary>'
+        f'<ul class="links">{"".join(items)}</ul></details></li>'
+    )
+
 def natural(p):
     return [int(t) if t.isdigit() else t.lower() for t in re.split(r"(\d+)", p.as_posix())]
 
@@ -208,23 +229,11 @@ def build_index():
                 natural(p.relative_to(root)),
             ),
         )
+        weeks = [p for p in rest if WEEK.fullmatch(p.stem)]
+        others = [p for p in rest if p not in weeks]
         links = "".join(link(s["id"], p, root, when[p]) for p in main)
-        if rest:
-            items, group = [], None
-            for p in rest:
-                folder = p.relative_to(root).parent.as_posix()
-                if folder != "." and folder != group:
-                    items.append(f'<li class="group">{html.escape(folder)}</li>')
-                group = folder
-                items.append(link(s["id"], p, root, when[p]))
-            n = len(rest)
-            # The list is folded, so say on the summary when something new is inside
-            fresh = sum(is_new(when[p]) for p in rest)
-            badge = f'<span class="new">{fresh} new</span>' if fresh else ""
-            links += (
-                f'<li><details><summary>{n} more document{"s" if n > 1 else ""}{badge}</summary>'
-                f'<ul class="links">{"".join(items)}</ul></details></li>'
-            )
+        links += fold(s["id"], weeks, root, when, "weekly note", grouped=False)
+        links += fold(s["id"], others, root, when, "more document")
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
         cards.append(
             f'<section><span class="code">{s["id"]}</span>'
