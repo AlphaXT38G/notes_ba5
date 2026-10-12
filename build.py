@@ -178,12 +178,18 @@ body.fire #fire{border-color:#ff6a00;box-shadow:0 0 12px rgba(255,106,0,.6)}
 @keyframes pulse{50%{transform:translateX(-50%) scale(1.05);box-shadow:0 10px 36px rgba(255,106,0,.6)}}
 body.rift{overflow:hidden}
 body.rift .wrap{position:relative;z-index:2}
-#void{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,rgba(40,0,70,.55),rgba(4,0,12,.96) 65%)}
-#crack{position:fixed;left:50%;top:50%;z-index:3;width:3px;height:0;transform:translate(-50%,-50%);border-radius:2px;pointer-events:none;background:linear-gradient(#fff,#d9c2ff,#fff);box-shadow:0 0 12px 4px #b388ff,0 0 40px 14px #7a3cff}
-#hole{--d:min(60vmin,340px);position:fixed;left:50%;top:50%;z-index:3;width:var(--d);height:var(--d);margin:calc(var(--d) / -2) 0 0 calc(var(--d) / -2);border-radius:50%;pointer-events:none;transform:scale(0);box-shadow:0 0 60px 20px rgba(122,60,255,.55),0 0 160px 70px rgba(255,43,214,.25)}
-#hole::before{content:"";position:absolute;inset:-14%;border-radius:50%;background:conic-gradient(#7a3cff,#ff2bd6,#00e5ff,#ffe066,#7a3cff);-webkit-mask:radial-gradient(circle,transparent 0 34%,#000 40% 52%,transparent 70%);mask:radial-gradient(circle,transparent 0 34%,#000 40% 52%,transparent 70%);filter:blur(5px);animation:spin .7s linear infinite}
-#hole::after{content:"";position:absolute;inset:16%;border-radius:50%;background:#000;box-shadow:0 0 30px 12px #000,inset 0 0 25px rgba(122,60,255,.5)}
-@keyframes spin{to{transform:rotate(360deg)}}
+#void{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;background:radial-gradient(1.5px 1.5px at 8% 14%,#fff,transparent),radial-gradient(1.5px 1.5px at 23% 72%,#fff,transparent),radial-gradient(1.5px 1.5px at 37% 22%,#fff,transparent),radial-gradient(1.5px 1.5px at 52% 88%,#fff,transparent),radial-gradient(1.5px 1.5px at 66% 9%,#fff,transparent),radial-gradient(1.5px 1.5px at 78% 64%,#fff,transparent),radial-gradient(1.5px 1.5px at 91% 31%,#fff,transparent),radial-gradient(1.5px 1.5px at 15% 46%,#fff,transparent),radial-gradient(1.5px 1.5px at 44% 57%,#fff,transparent),radial-gradient(1.5px 1.5px at 84% 85%,#fff,transparent),radial-gradient(1.5px 1.5px at 59% 38%,#fff,transparent),radial-gradient(1.5px 1.5px at 29% 93%,#fff,transparent),radial-gradient(1.5px 1.5px at 71% 19%,#fff,transparent),radial-gradient(1.5px 1.5px at 96% 74%,#fff,transparent),radial-gradient(1.5px 1.5px at 5% 83%,#fff,transparent),radial-gradient(1.5px 1.5px at 48% 6%,#fff,transparent),radial-gradient(circle at 50% 50%,rgba(70,35,10,.45),rgba(2,2,6,.97) 60%)}
+#crack{position:fixed;left:50%;top:50%;z-index:3;width:3px;height:0;transform:translate(-50%,-50%);border-radius:2px;pointer-events:none;background:linear-gradient(#fff,#ffe2a8,#fff);box-shadow:0 0 12px 4px #ffc265,0 0 40px 14px #ff8a2a}
+/* Gargantua-like black hole: lensed back of the disk, shadow with its photon ring, disk passing in front */
+#hole{--d:min(56vmin,320px);position:fixed;left:50%;top:50%;z-index:3;width:var(--d);height:var(--d);margin:calc(var(--d) / -2) 0 0 calc(var(--d) / -2);pointer-events:none;transform:scale(0)}
+#hole i{position:absolute;display:block;border-radius:50%}
+#hole::before{content:"";position:absolute;inset:-45%;border-radius:50%;background:radial-gradient(circle,rgba(255,170,80,.35),rgba(255,120,40,.12) 40%,transparent 65%)}
+#hole .lens{inset:-8%;background:radial-gradient(circle,transparent 0 41%,#fff8e6 43%,#ffd27a 46%,#ff9a3c 51%,rgba(255,110,20,.35) 58%,transparent 67%);filter:blur(1.5px);-webkit-mask:linear-gradient(#000 0 32%,rgba(0,0,0,.3) 46% 54%,#000 68%);mask:linear-gradient(#000 0 32%,rgba(0,0,0,.3) 46% 54%,#000 68%)}
+#hole .shadow{inset:21%;background:#000;box-shadow:0 0 0 1.5px #fff3d0,0 0 10px 3px rgba(255,205,130,.9),0 0 30px 8px rgba(255,140,50,.45)}
+#hole .disk{left:-80%;width:260%;top:44.5%;height:11%;overflow:hidden;background:radial-gradient(ellipse at 50% 50%,#fff 0,#fff3d0 10%,#ffc265 28%,#ff8a2a 46%,rgba(255,90,10,.35) 62%,transparent 72%);filter:blur(.8px)}
+#hole .disk::before{content:"";position:absolute;inset:0 -50%;background:repeating-linear-gradient(90deg,transparent 0 9px,rgba(255,255,255,.1) 12px,transparent 17px,transparent 26px,rgba(255,240,200,.14) 30px,transparent 37px);animation:swirl 1.4s linear infinite}
+#hole .disk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.35),transparent 45%,rgba(60,20,0,.35))}
+@keyframes swirl{to{transform:translateX(-37px)}}
 #flash{position:fixed;inset:0;z-index:65;background:#fff;opacity:0;pointer-events:none}
 .confetti{position:fixed;inset:0;z-index:70;width:100%;height:100%;pointer-events:none}
 body.party{--fg:#1b1530;--mut:#4a4360;--line:rgba(40,20,80,.15);--acc:#5b2bd6;--acc-bg:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);background:linear-gradient(120deg,#ffd1dc,#fff1b8,#c9f7e1,#cfe6ff,#e6d5ff,#ffd1dc) fixed;background-size:400% 400%;animation:party-bg 8s linear infinite}
@@ -194,7 +200,7 @@ body.party h2::after{content:" 🎉"}
 @keyframes party-bg{to{background-position:400% 0}}
 @keyframes party-text{to{background-position:200% 0}}
 @keyframes party-border{0%,100%{border-left-color:#ff3d7f}20%{border-left-color:#ffb300}40%{border-left-color:#2ec27e}60%{border-left-color:#2f80ed}80%{border-left-color:#9b51e0}}
-@media(prefers-reduced-motion:reduce){.flames{display:none}body.fire section,#surprise,#hole::before,body.party,body.party h1,body.party section{animation:none}}
+@media(prefers-reduced-motion:reduce){.flames{display:none}body.fire section,#surprise,#hole .disk::before,body.party,body.party h1,body.party section{animation:none}}
 """
 
 # Runs in <head> so the saved theme applies before the first paint
@@ -309,6 +315,7 @@ async function rift() {
   const wrap = document.querySelector(".wrap");
   document.body.classList.add("rift");
   const space = make("div", "void"), crack = make("div", "crack"), hole = make("div", "hole"), flash = make("div", "flash");
+  hole.innerHTML = '<i class="lens"></i><i class="shadow"></i><i class="disk"></i>';
 
   // 1. The rift tears open: darkness falls, a crack of light splits the screen, the page trembles
   space.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, fill: "forwards" });
@@ -323,8 +330,8 @@ async function rift() {
   await wait(800);
 
   // 2. The black hole opens
-  hole.animate([{ transform: "scale(0) rotate(0)" }, { transform: "scale(1.15) rotate(90deg)", offset: .7 }, { transform: "scale(1) rotate(120deg)" }],
-    { duration: 800, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" });
+  hole.animate([{ transform: "scale(0)" }, { transform: "scale(1.12)", offset: .7 }, { transform: "scale(1)" }],
+    { duration: 900, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" });
   await wait(400);
 
   // 3. Every piece of the page spirals into it, closest first
