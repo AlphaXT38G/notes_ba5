@@ -354,7 +354,12 @@ body.metal h1{animation:riff .12s steps(2) infinite}
 #amp .cone{width:2.1rem;height:2.1rem;border-radius:50%;background:radial-gradient(circle,#555 0 12%,#111 16%,#262626 40%,#0e0e0e 42%,#222 70%,#000 72%)}
 #amp.playing .cone{animation:pump .23s ease-out infinite alternate}
 #amp .label{padding:.3rem .6rem;border-radius:.3rem;background:rgba(30,4,4,.9);border:1px solid rgba(255,60,30,.5);text-transform:uppercase;letter-spacing:.04em}
-#riff{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
+#riff,#epicriff{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
+/* The amp during the epic finale: same cabinet, lit by arcane blue light */
+#amp.epic .cab{box-shadow:0 6px 20px rgba(0,0,0,.8),0 0 0 2px #2b2b55,0 0 26px rgba(110,140,255,.8),0 0 60px rgba(150,80,255,.45)}
+#amp.epic .logo{color:#9fd8ff;text-shadow:0 0 6px #6fa8ff}
+#amp.epic .cone{background:radial-gradient(circle,#9fd8ff 0 10%,#11112a 14%,#24245a 40%,#0b0b20 42%,#1d1d46 70%,#000 72%)}
+#amp.epic .label{background:rgba(12,10,40,.9);border-color:rgba(140,160,255,.6)}
 @keyframes pump{from{transform:scale(1)}to{transform:scale(1.12)}}
 @keyframes headbang{from{transform:rotate(-.7deg) translateY(0)}to{transform:rotate(.7deg) translateY(4px)}}
 @keyframes riff{0%{transform:skew(-10deg) translate(0,0)}50%{transform:skew(-10deg) translate(2px,-1px)}}
@@ -1197,6 +1202,13 @@ amp.type = "button";
 amp.innerHTML = '<span class="cab"><span class="panel"><span class="logo">BA5</span><span class="knobs">' +
   "<i></i>".repeat(5) + '</span></span><span class="grille"><span class="cone"></span><span class="cone"></span></span></span><span class="label"></span>';
 const paintAmp = () => {
+  if (amp.classList.contains("epic")) {  // the epic finale plays its own song on the same amp
+    amp.classList.toggle("playing", epicPlaying);
+    amp.querySelector(".label").textContent = !epicPlaying ? "✨ Click for epicness"
+      : epicMuted ? "🔇 Click anywhere for sound" : "✨ Epic — click to pause";
+    amp.title = !epicPlaying ? "Play the music" : epicMuted ? "Turn the sound on" : "Pause the music";
+    return;
+  }
   amp.classList.toggle("playing", rocking);
   amp.querySelector(".label").textContent = !rocking ? "🎸 Click to crank it up"
     : riffMuted ? "🔇 Click anywhere for sound" : "🎸 Rocking — click to mute";
@@ -1240,6 +1252,12 @@ const rock = (muted = false) => {
     if (late) riffCommand("seekTo", [METAL_START + late, true]);
     if (!muted) { riffCommand("unMute"); riffMuted = false; }
     riffCommand("playVideo");
+    // preloaded only a moment ago, it may not be ready for commands yet: repeat them a few times
+    [1500, 3000, 5000].forEach(ms => setTimeout(() => {
+      if (!rocking) return;
+      if (!riffMuted) riffCommand("unMute");
+      riffCommand("playVideo");
+    }, ms));
   } else riffCommand("playVideo");
   rocking = true;
   paintAmp();
@@ -1254,6 +1272,12 @@ const riffSound = () => {  // unmute a song that autoplayed muted
 amp.addEventListener("click", e => {
   e.stopPropagation();
   if (performance.now() - soundAt < 600) return;  // this same click just turned the sound on
+  if (amp.classList.contains("epic")) {  // epic song (see the epic finale below)
+    if (epicMuted) epicSound();
+    else if (epicPlaying) { epicCommand("pauseVideo"); epicPlaying = false; paintAmp(); }
+    else epicPlay();
+    return;
+  }
   if (riffMuted) riffSound();
   else if (rocking) { riffCommand("pauseVideo"); rocking = false; paintAmp(); }
   else rock();
@@ -1287,7 +1311,75 @@ moreBtn.addEventListener("click", e => {
   moreBtn.classList.add("queued");
   moreBtn.textContent = "⚔️ Epicness incoming…";
 });
-const preloadEpic = () => {};  // the epic song comes in the next step
+// Epic music: the epic song, from its start to its end, on the same amp (turned blue). The player
+// is loaded as soon as the button is clicked (paused), so it starts at once when the metal ends;
+// the click also counts as the gesture browsers need for sound. Once loaded, the page asks the
+// player to report its state ("listening"); when it reports the end of the song (state 0) the
+// epic phase is over and the page goes back to its usual look.
+const EPIC = "pCUzn7WbUb4";
+let epicRiff = null, epicPlaying = false, epicMuted = false, epicLength = 0;  // song length in s, from the player
+const epicCommand = (func, args = []) => epicRiff && epicRiff.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
+const epicListen = () => {
+  if (!epicRiff) return;
+  epicRiff.contentWindow.postMessage(JSON.stringify({ event: "listening", id: "epic", channel: "widget" }), "*");
+  epicCommand("addEventListener", ["onStateChange"]);
+};
+const makeEpicRiff = (autoplay, muted) => {
+  epicRiff = document.createElement("iframe");
+  epicRiff.id = "epicriff";
+  epicRiff.title = "Epic song";
+  epicRiff.allow = "autoplay; encrypted-media";
+  epicRiff.src = `https://www.youtube.com/embed/${EPIC}?autoplay=${autoplay}&mute=${muted ? 1 : 0}` +
+    `&controls=0&enablejsapi=1&origin=${encodeURIComponent(location.origin)}`;
+  document.body.append(epicRiff);
+  epicMuted = muted;
+  // the player is not always ready to listen when it fires "load": ask again every second
+  // until it answers (any message from it), or until it is removed
+  clearInterval(epicHello);
+  epicHello = setInterval(() => epicRiff ? epicListen() : clearInterval(epicHello), 1000);
+};
+let epicHello = null;
+addEventListener("message", e => {
+  if (!epicRiff || e.source !== epicRiff.contentWindow) return;
+  clearInterval(epicHello);  // it answered
+  let d;
+  try { d = typeof e.data === "string" ? JSON.parse(e.data) : e.data; } catch (err) { return; }
+  const info = d.event === "infoDelivery" ? d.info || {} : {};
+  if (info.duration) epicLength = info.duration;
+  const state = d.event === "onStateChange" ? d.info : info.playerState;
+  // song over: the player says so (state 0), or its position reached the end of the song
+  const over = state === 0 || (epicLength && info.currentTime >= epicLength - .5);
+  if (over && document.body.classList.contains("epic")) { epicEnded = true; applyNight(); }
+});
+const preloadEpic = () => { if (!epicRiff) makeEpicRiff(0, false); };
+const epicPlay = () => {
+  if (!epicRiff) {
+    const canSound = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
+    makeEpicRiff(1, !canSound);  // without any gesture yet (e.g. ?night=epic) it starts muted
+  } else epicCommand("playVideo");
+  epicPlaying = true;
+  // a player that has only just been created ignores commands until it is ready: say "play"
+  // again a few times (harmless if it is already playing)
+  [1500, 3000, 5000, 8000].forEach(ms => setTimeout(() => { if (epicPlaying) epicCommand("playVideo"); }, ms));
+  paintAmp();
+};
+const epicSound = () => { if (epicRiff && epicMuted) { epicCommand("unMute"); epicMuted = false; soundAt = performance.now(); paintAmp(); } };
+const setEpicMusic = on => {
+  document.removeEventListener("pointerdown", epicSound);
+  if (!on) {
+    epicRiff?.remove(); epicRiff = null; epicPlaying = epicMuted = false;
+    amp.classList.remove("epic");
+    if (!document.body.classList.contains("metal")) amp.remove();
+    return;
+  }
+  amp.classList.add("epic");
+  document.body.append(amp);
+  epicPlay();
+  if (epicMuted) document.addEventListener("pointerdown", epicSound, { once: true });
+};
+setEpicMusic(document.body.classList.contains("epic"));
+document.addEventListener("epic", e => setEpicMusic(e.detail));
+
 const epicTick = () => {  // called every second with the clock check
   const left = document.body.classList.contains("metal") ? metalLeft() : 0;
   if (left > 0 && left <= 10) {
