@@ -19,3 +19,8 @@ Open `dist/index.html` to browse all PDFs. It is generated, never edit it
 
 Subjects, their display names and exam rules live in [`subjects.json`](subjects.json).
 Put `course.tex` / `cheatsheet.tex` in `<id>/` and rebuild; the page updates itself.
+
+Every standalone `.tex` in `<id>/` and its subfolders (e.g. `week/week01.tex`) is
+compiled, and PDFs without a matching `.tex` (e.g. `cheatsheets/*.pdf`) are copied
+as is. On the page, the course notes come first and every other PDF of the subject
+is listed in a collapsible section, grouped by folder.
