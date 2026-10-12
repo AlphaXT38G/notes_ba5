@@ -40,16 +40,16 @@ first page instead (for course notes, the first page after the table of contents
 The thumbnails are made by `pdftoppm` and `pdftotext` (poppler); without them,
 the build still works and the page shows names only.
 
-From **21:30 to 6:00** the page turns into a jazz bar 🎷 (neon title, smoke,
+From **21:30 to 01:00** the page turns into a jazz bar 🎷 (neon title, smoke,
 floating notes) and plays background jazz from YouTube. Browsers only allow sound
 after a click, so the music starts on the first click or key press, and the
 turntable in the bottom left corner plays / pauses it. A bar menu in the bottom
 right corner serves each subject's latest notes as a cocktail.
 
-The night evolves: warm light until midnight, darker and bluer with a flickering
-neon until 2:00, then the bar closes (the neon goes out letter by letter and the
-bartender sends you to bed). Add `?night=evening`, `late`, `closing` (or `1` / `0`)
-to the URL to force a phase (or the day) at any time.
+Jazz plays until 00:45, then the bar closes until 01:00 (darker light, the neon goes
+out letter by letter and the bartender sends you to bed), and the page is back to
+its day look. Add `?night=evening` or `?night=closing` (or `1` / `0`) to the URL to
+force a phase (or the day) at any time.
 
 It hides two easter eggs: a surprise banner that shows up on some visits, and
 something that happens when you type the Konami code (↑↑↓↓←→←→BA).
