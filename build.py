@@ -929,6 +929,72 @@ fxLayers.push({
   reset() { chains.length = 0; chains.w = 0; },
 });
 
+// Fire and sparks. A curtain of flames rises from the bottom of the screen: each particle goes
+// from white-yellow to orange, red and dark smoke as it ages, rising with a slight wobble while it
+// shrinks. To keep a few hundred of them cheap, each colour is pre-drawn once as a soft blob that
+// is then only copied (drawImage). Each lightning strike throws a shower of sparks from where it
+// hits: bright streaks falling under gravity.
+const blob = (r, g, b, a) => {
+  const s = document.createElement("canvas"), sc = s.getContext("2d");
+  s.width = s.height = 64;
+  const grad = sc.createRadialGradient(32, 32, 0, 32, 32, 32);
+  grad.addColorStop(0, `rgba(${r},${g},${b},${a})`); grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
+  sc.fillStyle = grad; sc.fillRect(0, 0, 64, 64);
+  return s;
+};
+const FIRE = [blob(255, 245, 190, .9), blob(255, 190, 40, .8), blob(255, 90, 10, .7), blob(190, 20, 0, .5), blob(40, 20, 20, .35)];
+const flames = [], sparks = [];
+strikeHooks.push((x, y) => {
+  for (let i = 0; i < 45 && sparks.length < 220; i++) {
+    const a = -Math.PI / 2 + (Math.random() - .5) * 2.4, s = 150 + Math.random() * 380;
+    sparks.push({ x, y, px: x, py: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, age: 0, life: .5 + Math.random() * .6 });
+  }
+});
+fxLayers.push({
+  update(dt) {
+    for (let n = Math.min(40, dt * fxW * .35); n > 0 && flames.length < 450; n--) {
+      flames.push({ x: Math.random() * fxW, y: fxH + 12, vx: (Math.random() - .5) * 20, vy: -(80 + Math.random() * 120),
+        r: 16 + Math.random() * 20, age: 0, life: .7 + Math.random() * .7, seed: Math.random() * 6 });
+    }
+    for (const f of flames) {
+      f.age += dt;
+      f.x += (f.vx + Math.sin(f.age * 6 + f.seed) * 25) * dt;
+      f.y += f.vy * dt;
+      f.r *= 1 - dt * .5;
+    }
+    for (const s of sparks) {
+      s.age += dt;
+      s.px = s.x; s.py = s.y;
+      s.vy += 900 * dt;
+      s.x += s.vx * dt; s.y += s.vy * dt;
+    }
+    for (const list of [flames, sparks]) {
+      let k = 0;
+      for (const p of list) if (p.age < p.life) list[k++] = p;
+      list.length = k;
+    }
+  },
+  draw(c) {
+    c.save();
+    c.globalCompositeOperation = "lighter";
+    for (const f of flames) {
+      const t = f.age / f.life;
+      c.globalAlpha = 1 - t * .6;
+      c.drawImage(FIRE[Math.min(4, Math.floor(t * 5))], f.x - f.r, f.y - f.r, f.r * 2, f.r * 2);
+    }
+    c.globalAlpha = 1;
+    c.lineCap = "round";
+    for (const s of sparks) {
+      const t = s.age / s.life;
+      c.strokeStyle = `rgba(255,${Math.round(230 - t * 150)},${Math.round(120 - t * 120)},${1 - t})`;
+      c.lineWidth = 2.2 * (1 - t) + .5;
+      c.beginPath(); c.moveTo(s.px, s.py); c.lineTo(s.x + (s.x - s.px), s.y + (s.y - s.py)); c.stroke();
+    }
+    c.restore();
+  },
+  reset() { flames.length = sparks.length = 0; },
+});
+
 let boltTimer = null;
 const strike = () => {
   boltTimer = setTimeout(strike, 1200 + Math.random() * 2300);
