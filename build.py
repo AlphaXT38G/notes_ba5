@@ -255,9 +255,16 @@ body.night h1::after{content:" 🎷"}
 body.night .sub{color:#e9c89a;font-style:italic}
 body.night section{box-shadow:-8px 0 22px -12px rgba(255,170,80,.6)}
 body.night .links a:hover{background:rgba(245,176,65,.08)}
+/* Bar air (night only): slow drifting smoke clouds and music notes floating up, behind the page */
+.air{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+body.night:not(.rift) .wrap{position:relative;z-index:1}
+.air .smoke{position:absolute;width:70vmax;height:40vmax;border-radius:50%;background:radial-gradient(closest-side,rgba(230,200,170,.07),transparent);filter:blur(30px);animation:drift linear infinite}
+.air .note{position:absolute;bottom:-2rem;color:#f5b041;text-shadow:0 0 8px rgba(245,176,65,.6);animation:float linear forwards}
+@keyframes drift{0%{transform:translate(-30vw,0) scale(1)}50%{transform:translate(20vw,-8vh) scale(1.25)}100%{transform:translate(70vw,4vh) scale(1)}}
+@keyframes float{0%{transform:translate(0,0) rotate(0);opacity:0}15%{opacity:var(--o)}50%{transform:translate(var(--sway),-55vh) rotate(var(--r))}100%{transform:translate(0,-110vh) rotate(0);opacity:0}}
 @keyframes neon{0%,18%,22%,25%,53%,57%,100%{opacity:1}20%,24%,55%{opacity:.55;text-shadow:0 0 2px #fff2d6,0 0 6px #ff9d4d}}
 /* Reduced motion: no rising flames and no looping animations */
-@media(prefers-reduced-motion:reduce){.flames{display:none}body.fire section,#surprise,#hole .disk::before,body.party,body.party h1,body.party section,body.night h1{animation:none}}
+@media(prefers-reduced-motion:reduce){.flames,.air{display:none}body.fire section,#surprise,#hole .disk::before,body.party,body.party h1,body.party section,body.night h1{animation:none}}
 """
 
 # Runs in <head> so the saved theme applies before the first paint (no light/dark flicker).
@@ -472,6 +479,38 @@ const applyNight = () => {
 };
 applyNight();
 setInterval(applyNight, 60000);
+
+// Bar air: 3 smoke clouds drifting across the room and a music note rising every ~0.9 s,
+// with a random sway and tilt (--sway, --r); everything is removed when the night ends
+const air = document.createElement("div");
+air.className = "air";
+let noteTimer = null;
+const note = () => {
+  const n = document.createElement("span");
+  n.className = "note";
+  n.textContent = "♪♫♩♬"[Math.floor(Math.random() * 4)];
+  n.style.cssText = `left:${Math.random() * 100}%;font-size:${1 + Math.random() * 1.4}rem;--o:${.25 + Math.random() * .45};` +
+    `--sway:${(Math.random() - .5) * 160}px;--r:${(Math.random() - .5) * 50}deg;animation-duration:${9 + Math.random() * 7}s`;
+  n.addEventListener("animationend", () => n.remove());
+  air.append(n);
+};
+const setAir = on => {
+  clearInterval(noteTimer);
+  air.replaceChildren();
+  air.remove();
+  if (!on) return;
+  for (let i = 0; i < 3; i++) {
+    const s = document.createElement("span");
+    s.className = "smoke";
+    s.style.cssText = `top:${10 + i * 28}%;left:${-20 + i * 15}%;animation-duration:${50 + i * 17}s;animation-delay:${-i * 13}s`;
+    air.append(s);
+  }
+  document.body.prepend(air);
+  for (let i = 0; i < 6; i++) setTimeout(note, i * 300);
+  noteTimer = setInterval(note, 900);
+};
+setAir(document.body.classList.contains("night"));
+document.addEventListener("night", e => setAir(e.detail));
 
 // Names / Previews switch: sets data-view on <html> (the CSS does the rest) and remembers it
 const viewBtns = document.querySelectorAll(".view button");
