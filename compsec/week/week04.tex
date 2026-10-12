@@ -1,0 +1,500 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Computer Security}}
+\fancyhead[C]{\small Mandatory Access Control}
+\fancyhead[R]{\small Week 04 --- 28/09-04/10/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% DEFINITION - blue
+\newtcolorbox{definition}{
+enhanced,
+breakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+% IMPORTANT - pink
+\newtcolorbox{important}{
+enhanced,
+breakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+% FORMULAS - green
+\newtcolorbox{formula}{
+enhanced,
+breakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+% WARNING - orange
+\newtcolorbox{warning}{
+enhanced,
+breakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+% EXAMPLE - purple
+\newtcolorbox{example}{
+enhanced,
+breakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+% SUMMARY - orange
+\newtcolorbox{summary}{
+enhanced,
+breakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+%\footnotesize   --> To reduce the size of the text
+
+\thispagestyle{fancy}
+
+
+
+\begin{multicols}{2}
+
+
+%=========================================================
+\section{Mandatory Access Control}
+
+
+\begin{definition}
+
+\textbf{Mandatory Access Control}
+
+Access to and operations on resources are determined by the security policy
+
+\begin{itemize}
+
+\item ``owner'' may not exist or not have power to set permissions against policy
+
+\item the security policy must be enforced despite subjects trying to subvert it
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{SECURITY MODEL:} a design pattern for a specific security
+property or set of properties
+
+\end{definition}
+
+
+
+%=========================================================
+\section{Bell-La Padula (BLP) model: Protecting confidentiality}
+
+
+Subjects S and objects O associated to a level of confidentiality
+
+\textbf{Subjects access rights are defined by four attributes:}
+
+\begin{itemize}
+
+\item \textbf{Execute:} the subject cannot see or modify the object, but can run it
+
+\item \textbf{Read:} the subject can only see the object but cannot modify it
+
+\item \textbf{Append:} the subject cannot read the object, but can add attach new content
+
+\item \textbf{Write:} the subject can see the object and add content or modify existing content
+
+\end{itemize}
+
+These access rights are defined in an access control matrix
+
+
+\separator
+
+
+\textbf{Level function for objects: Classification}
+
+Objects are associated to a Security Level
+
+(they have a label, and belong to one or more categories)
+
+
+\begin{formula}
+
+Security Level = (Classification, \{set of categories\})
+
+\begin{itemize}
+
+\item \textbf{Classification} -- total order of labels (e.g., Unclassified, Confidential, Secret, Top Secret)
+
+\item \textbf{Categories} -- compartments of objects with a common topic (e.g., Nuclear, NATO, Crypto)
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{definition}
+
+\textbf{DOMINANCE RELATIONSHIP}
+
+A security level $(l_1,c_1)$ ``dominates'' $(l_2, c_2)$ if and only if $l_1 \geq l_2$ and $c_2$ is a subset of $c_1$
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{Three key properties}
+
+(a) Dominates is transitive.
+
+(b) Top and bottom elements.
+
+(c) Only partial order
+
+\end{important}
+
+
+\separator
+
+
+\textbf{Level function for subjects: Clearance level}
+
+\begin{itemize}
+
+\item \textbf{Clearance} -- maximum security level a subject has been assigned: clearance level($S_i$)
+
+\item \textbf{Current security level} -- subjects can operate at lower security levels: current-level($S_i$)
+
+\end{itemize}
+
+
+\begin{definition}
+
+\textbf{SIMPLE SECURITY PROPERTY (SS-PROPERTY)}
+
+If (subject, object, r) is a current access, then level(subject) dominates level(object)
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{STAR PROPERTY (*-PROPERTY)}
+
+if a subject has simultaneous ``observe'' (r,w) access to $O_1$
+and ``alter'' (a,w) access to $O_2$
+then level($O_2$) dominates level($O_1$)
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{DISCRETIONARY PROPERTY (DS-PROPERTY)}
+
+if an access (subject, object, action) takes place it must be in the access
+control matrix
+
+\end{definition}
+
+
+
+%=========================================================
+\section{BLP: Basic Security Theorem}
+
+
+\begin{important}
+
+\textbf{BASIC SECURITY THEOREM}
+
+if all state transitions are security preserving, and the initial state is
+secure, then every subsequent state is secure regardless of the inputs
+
+\end{important}
+
+
+If for any individual access:
+
+(1) the ss-property is preserved
+
+(2) the *-property is preserved
+
+(3) the ds-property is preserved
+
+\dots{} then for any sequential composition security holds!
+
+
+\separator
+
+
+\begin{definition}
+
+\textbf{COVERT CHANNEL}
+
+any channel that allows information flows contrary to the security policy
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{DECLASSIFICATION}
+
+remove classification label
+
+\end{definition}
+
+
+
+%=========================================================
+\section{The BIBA model for integrity}
+
+
+\begin{important}
+
+\textbf{Two key rules (strict)}
+
+\begin{itemize}
+
+\item \textbf{simple integrity (no read-down):} protects higher integrity principals from being corrupted
+by lower integrity level data
+
+\item \textbf{*-integrity (no write-up):} prevents lower integrity principals from corrupting high integrity
+data
+
+\end{itemize}
+
+\end{important}
+
+
+\textbf{Low-water-mark policy for subjects}
+
+\begin{itemize}
+
+\item Subjects start processes at their highest integrity level.
+
+\item When accessing an object, its current level is lowered to
+the lowest of the two: current-level(s) and level(o)
+
+\end{itemize}
+
+Temporary downgrade for the session
+
+\begin{itemize}
+
+\item Example: mitigate impact of a network Trojan
+
+\item Hard to avoid label creep
+
+\end{itemize}
+
+
+\begin{definition}
+
+\textbf{SANITIZATION}
+
+Process of taking objects with ``low'' integrity and ``lifting them'' to ``high integrity''
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{PRINCIPLE 2: FAIL-SAFE DEFAULT}
+
+``Base access decisions on permission rather than exclusion'' [SS75]
+
+\end{important}
+
+
+
+%=========================================================
+\section{Chinese Wall model: Access rules}
+
+
+\begin{important}
+
+A subject can read an object (for either read or write) if the access does not
+allow an information flow between items with labels in the same conflict set
+
+\end{important}
+
+
+
+\end{multicols}
+
+
+\end{document}
