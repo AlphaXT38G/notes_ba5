@@ -3,6 +3,10 @@
 Compile all LaTeX files in subject folders, copy PDFs to dist/ and
 generate dist/index.html (an overview of every built PDF).
 Subjects (name, exam rules) are declared in subjects.json.
+
+Every standalone .tex of a subject is compiled, subfolders included (e.g. week/week01.tex),
+and PDFs without a .tex next to them (e.g. cheatsheets/*.pdf) are copied as is.
+On Windows, run it with PYTHONIOENCODING=utf-8 so the console can print the ✔ / → symbols.
 Usage:
 
 # Tout compiler
@@ -76,6 +80,7 @@ for subject in subjects:
     out_dir = DIST / subject
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    # Copy them as is, keeping their subfolder (cheatsheets/x.pdf -> dist/<subject>/cheatsheets/x.pdf)
     for pdf in extra_pdfs:
         rel = pdf.relative_to(subject_dir)
         (out_dir / rel).parent.mkdir(parents=True, exist_ok=True)
@@ -100,6 +105,7 @@ for subject in subjects:
 
         pdf = tex.with_suffix(".pdf")
         if proc.returncode == 0 and pdf.exists():
+            # Mirror the source layout: week/week01.tex -> dist/<subject>/week/week01.pdf
             dest = out_dir / rel.with_suffix(".pdf")
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(pdf, dest)
@@ -118,6 +124,12 @@ for subject in subjects:
 
 
 # ── Index page ───────────────────────────────────────────────────────────────
+# dist/index.html is one self-contained page (inline CSS + JS, no external files).
+# Each subject is a card: course notes first, then two collapsible sections,
+# "weekly notes" (weekNN files, with a progress bar) and "more documents".
+# The page also has a search field, a light/dark toggle, a flame mode and two
+# easter eggs (a random surprise banner and a Konami code animation).
+
 KINDS = {"course.pdf": "Course notes", "cheatsheet.pdf": "Cheat sheet"}
 ORDER = list(KINDS)  # course first, then cheatsheet, then anything else
 NEW_DAYS = 7         # documents changed more recently get a "New" badge
@@ -127,12 +139,14 @@ PALETTE = ["#3b6fd8", "#d9622b", "#2f9e6b", "#b4459a", "#c99a1c", "#7a55d1", "#1
 WEEK = re.compile(r"week_?(\d+)(.*)", re.I)  # weekly notes: week01.pdf, week_3.pdf, ...
 
 CSS = """
+/* Colour tokens: light by default, dark when the system is dark (unless forced light) or when forced dark */
 :root{--bg:#f5f6f8;--fg:#15171a;--card:#fff;--line:#e2e5ea;--acc:#2457c5;--acc-bg:#eaf0fd;--mut:#6b7280;--new:#1d7a46;--new-bg:#dcf3e5}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121417;--fg:#e9eaec;--card:#1b1e23;--line:#2c3037;--acc:#8ab0ff;--acc-bg:#232b3d;--mut:#8b93a1;--new:#7ee0a5;--new-bg:#1d3a2a}}
 :root[data-theme=dark]{--bg:#121417;--fg:#e9eaec;--card:#1b1e23;--line:#2c3037;--acc:#8ab0ff;--acc-bg:#232b3d;--mut:#8b93a1;--new:#7ee0a5;--new-bg:#1d3a2a}
 *{box-sizing:border-box}
 body{font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--fg);margin:0}
 .wrap{max-width:960px;margin:0 auto;padding:2.5rem 1rem 3rem}
+/* Header, with the flame and theme buttons in its top right corner */
 header{margin-bottom:1.75rem;position:relative}
 .tools{position:absolute;top:0;right:0;display:flex;gap:.4rem}
 .tools button{width:2.3rem;height:2.3rem;display:grid;place-items:center;font-size:1.05rem;line-height:1;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:.6rem;cursor:pointer}
@@ -140,6 +154,7 @@ header{margin-bottom:1.75rem;position:relative}
 h1{font-size:1.9rem;margin:0;letter-spacing:-.02em}
 .sub{color:var(--mut);margin:.25rem 0 0}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:2rem 2.5rem;align-items:start}
+/* Subject cards: --c is the subject accent colour, set inline on each <section> */
 section{border-left:4px solid var(--c);padding-left:1rem}
 .code{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--c)}
 h2{font-size:1.1rem;line-height:1.3;margin:.1rem 0 .15rem}
@@ -148,21 +163,25 @@ h2{font-size:1.1rem;line-height:1.3;margin:.1rem 0 .15rem}
 .links a{display:flex;justify-content:space-between;gap:1rem;padding:.55rem 0;border-bottom:1px solid var(--line);color:var(--acc);text-decoration:none;font-weight:600}
 .links a:hover,.links a:focus-visible{background:var(--acc-bg)}
 .links small{color:var(--mut);font-size:.78rem;font-weight:400;align-self:center;white-space:nowrap}
+/* Collapsible sections: custom chevron that turns down when open */
 details summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:.4rem;padding:.55rem 0;border-bottom:1px solid var(--line);color:var(--mut);font-size:.9rem;font-weight:600}
 details summary::-webkit-details-marker{display:none}
 details summary::before{content:"";width:.45rem;height:.45rem;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(-45deg);transition:transform .15s}
 details[open] summary::before{transform:rotate(45deg)}
 details summary:hover,details summary:focus-visible{color:var(--fg)}
 details .links{margin:0;border-top:0;padding-left:1rem}
+/* "New" badge, weekly progress bar and folder headings inside a collapsible section */
 .new{display:inline-block;margin-left:.5rem;padding:.05rem .45rem;border-radius:999px;background:var(--new-bg);color:var(--new);font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;vertical-align:.1em}
 .progress{margin-left:auto;display:flex;align-items:center;gap:.5rem;font-size:.75rem;font-weight:600;color:var(--mut);white-space:nowrap}
 .bar{width:6rem;height:.4rem;border-radius:999px;background:var(--line);overflow:hidden}
 .bar span{display:block;height:100%;border-radius:inherit;background:var(--c)}
 .group{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);padding:.6rem 0 .1rem;border-bottom:1px solid var(--line)}
+/* Search field and its no-result message */
 #search{width:100%;margin-top:1.25rem;padding:.65rem .9rem;font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:.6rem;outline:none}
 #search:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-bg)}
 #empty{color:var(--mut)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
+/* Flame mode (body.fire): fire gradients, glowing card borders, flame emojis rising from the bottom */
 body.fire{background:radial-gradient(120% 60% at 50% 115%,rgba(255,90,0,.35),transparent 70%) fixed,var(--bg)}
 body.fire h1{background:linear-gradient(90deg,#ffcf3f,#ff6a00,#e8132b);-webkit-background-clip:text;background-clip:text;color:transparent}
 body.fire h2::after{content:" 🔥"}
@@ -173,14 +192,22 @@ body.fire #fire{border-color:#ff6a00;box-shadow:0 0 12px rgba(255,106,0,.6)}
 .flames{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
 .flames span{position:absolute;bottom:-3rem;animation:rise linear forwards;filter:drop-shadow(0 0 6px rgba(255,120,0,.7))}
 @keyframes rise{to{transform:translate(var(--dx),-115vh) scale(.3) rotate(var(--r));opacity:0}}
+/* Surprise banner (random, see JS) */
 #surprise{position:fixed;left:50%;bottom:1.25rem;z-index:60;display:flex;align-items:center;gap:.6rem;padding:.7rem 1.1rem;transform:translateX(-50%);border-radius:.8rem;background:linear-gradient(90deg,#e8132b,#ff6a00);color:#fff;font-weight:800;letter-spacing:.06em;text-decoration:none;box-shadow:0 8px 28px rgba(232,19,43,.45);animation:pulse 1.2s ease-in-out infinite;white-space:nowrap}
 #surprise small{font-weight:600;letter-spacing:0;opacity:.85}
 @keyframes pulse{50%{transform:translateX(-50%) scale(1.05);box-shadow:0 10px 36px rgba(255,106,0,.6)}}
+/* Konami easter egg. During the rift the page sits above a starry void (z-index 1) and below the crack and hole (z-index 3) */
 body.rift{overflow:hidden}
 body.rift .wrap{position:relative;z-index:2}
 #void{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;background:radial-gradient(1.5px 1.5px at 8% 14%,#fff,transparent),radial-gradient(1.5px 1.5px at 23% 72%,#fff,transparent),radial-gradient(1.5px 1.5px at 37% 22%,#fff,transparent),radial-gradient(1.5px 1.5px at 52% 88%,#fff,transparent),radial-gradient(1.5px 1.5px at 66% 9%,#fff,transparent),radial-gradient(1.5px 1.5px at 78% 64%,#fff,transparent),radial-gradient(1.5px 1.5px at 91% 31%,#fff,transparent),radial-gradient(1.5px 1.5px at 15% 46%,#fff,transparent),radial-gradient(1.5px 1.5px at 44% 57%,#fff,transparent),radial-gradient(1.5px 1.5px at 84% 85%,#fff,transparent),radial-gradient(1.5px 1.5px at 59% 38%,#fff,transparent),radial-gradient(1.5px 1.5px at 29% 93%,#fff,transparent),radial-gradient(1.5px 1.5px at 71% 19%,#fff,transparent),radial-gradient(1.5px 1.5px at 96% 74%,#fff,transparent),radial-gradient(1.5px 1.5px at 5% 83%,#fff,transparent),radial-gradient(1.5px 1.5px at 48% 6%,#fff,transparent),radial-gradient(circle at 50% 50%,rgba(70,35,10,.45),rgba(2,2,6,.97) 60%)}
+/* Crack of light that tears the screen open before the black hole appears */
 #crack{position:fixed;left:50%;top:50%;z-index:3;width:3px;height:0;transform:translate(-50%,-50%);border-radius:2px;pointer-events:none;background:linear-gradient(#fff,#ffe2a8,#fff);box-shadow:0 0 12px 4px #ffc265,0 0 40px 14px #ff8a2a}
-/* Gargantua-like black hole: lensed back of the disk, shadow with its photon ring, disk passing in front */
+/* Gargantua-like black hole (Interstellar), stacked in this order:
+   ::before  warm haze around everything
+   .lens     back of the accretion disk, bent by gravity into arcs above and below the shadow
+   .shadow   the black disk, with a thin bright photon ring at its edge
+   .disk     front of the accretion disk, seen almost edge-on, passing in front of the shadow;
+             ::before = moving streaks (rotation), ::after = brighter left side (Doppler beaming) */
 #hole{--d:min(56vmin,320px);position:fixed;left:50%;top:50%;z-index:3;width:var(--d);height:var(--d);margin:calc(var(--d) / -2) 0 0 calc(var(--d) / -2);pointer-events:none;transform:scale(0)}
 #hole i{position:absolute;display:block;border-radius:50%}
 #hole::before{content:"";position:absolute;inset:-45%;border-radius:50%;background:radial-gradient(circle,rgba(255,170,80,.35),rgba(255,120,40,.12) 40%,transparent 65%)}
@@ -190,8 +217,10 @@ body.rift .wrap{position:relative;z-index:2}
 #hole .disk::before{content:"";position:absolute;inset:0 -50%;background:repeating-linear-gradient(90deg,transparent 0 9px,rgba(255,255,255,.1) 12px,transparent 17px,transparent 26px,rgba(255,240,200,.14) 30px,transparent 37px);animation:swirl 1.4s linear infinite}
 #hole .disk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.35),transparent 45%,rgba(60,20,0,.35))}
 @keyframes swirl{to{transform:translateX(-37px)}}
+/* White flash when the hole collapses, and the confetti canvas drawn on top of everything */
 #flash{position:fixed;inset:0;z-index:65;background:#fff;opacity:0;pointer-events:none}
 .confetti{position:fixed;inset:0;z-index:70;width:100%;height:100%;pointer-events:none}
+/* Party theme after the rift (15 s): pastel rainbow background, rainbow title, colour-cycling borders */
 body.party{--fg:#1b1530;--mut:#4a4360;--line:rgba(40,20,80,.15);--acc:#5b2bd6;--acc-bg:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);background:linear-gradient(120deg,#ffd1dc,#fff1b8,#c9f7e1,#cfe6ff,#e6d5ff,#ffd1dc) fixed;background-size:400% 400%;animation:party-bg 8s linear infinite}
 body.party h1{background:linear-gradient(90deg,#ff3d7f,#ffb300,#2ec27e,#2f80ed,#9b51e0,#ff3d7f);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:party-text 2s linear infinite}
 body.party section{animation:party-border 1.2s linear infinite}
@@ -200,16 +229,21 @@ body.party h2::after{content:" 🎉"}
 @keyframes party-bg{to{background-position:400% 0}}
 @keyframes party-text{to{background-position:200% 0}}
 @keyframes party-border{0%,100%{border-left-color:#ff3d7f}20%{border-left-color:#ffb300}40%{border-left-color:#2ec27e}60%{border-left-color:#2f80ed}80%{border-left-color:#9b51e0}}
+/* Reduced motion: no rising flames and no looping animations */
 @media(prefers-reduced-motion:reduce){.flames{display:none}body.fire section,#surprise,#hole .disk::before,body.party,body.party h1,body.party section{animation:none}}
 """
 
-# Runs in <head> so the saved theme applies before the first paint
+# Runs in <head> so the saved theme applies before the first paint (no light/dark flicker).
+# localStorage can throw (private mode, blocked storage), hence the try/catch everywhere.
 THEME_JS = """
 try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
 """
 
+# Runs at the end of <body>, once every element exists
 JS = """
-// Theme toggle: flip between light and dark, starting from what is shown now
+// Theme toggle: flip between light and dark, starting from what is shown now.
+// With no saved choice, the page follows the system (prefers-color-scheme); the button
+// then sets data-theme on <html>, which overrides it (see the colour tokens in CSS).
 const root = document.documentElement, themeBtn = document.getElementById("theme");
 const isDark = () => root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
 const paintBtn = () => { themeBtn.textContent = isDark() ? "☀" : "☾"; themeBtn.title = isDark() ? "Light mode" : "Dark mode"; };
@@ -220,11 +254,14 @@ themeBtn.addEventListener("click", () => {
 });
 paintBtn();
 
-// Flame mode: fire styling plus flames rising from the bottom of the screen
+// Flame mode: fire styling (body.fire in CSS) plus flames rising from the bottom of the screen.
+// The flames live in a fixed, click-through layer so they never get in the way.
 const fireBtn = document.getElementById("fire"), layer = document.createElement("div");
 layer.className = "flames";
 document.body.append(layer);
-let timer = null;
+let timer = null;  // interval spawning new flames while the mode is on
+// One flame emoji at x% of the width, size in rem, rising for dur seconds with a random drift
+// and tilt (--dx, --r, used by the "rise" keyframes); it removes itself when the animation ends
 const flame = (x, size, dur) => {
   const f = document.createElement("span");
   f.textContent = "🔥";
@@ -232,6 +269,7 @@ const flame = (x, size, dur) => {
   f.addEventListener("animationend", () => f.remove());
   layer.append(f);
 };
+// Turn the mode on (a burst of 25 flames, then a new one every 140 ms) or off, and remember it
 const setFire = on => {
   document.body.classList.toggle("fire", on);
   fireBtn.setAttribute("aria-pressed", on);
@@ -245,7 +283,8 @@ const setFire = on => {
 fireBtn.addEventListener("click", () => setFire(!document.body.classList.contains("fire")));
 try { if (localStorage.getItem("fire")) setFire(true); } catch (e) {}
 
-// Surprise banner: on about 1 visit in 5, an "important new content" banner links to a Rickroll
+// Surprise banner: on about 1 visit in 5, an "important new content" banner links to a Rickroll.
+// It opens in a new tab and disappears once clicked.
 if (Math.random() < 0.2) {
   const banner = document.createElement("a");
   banner.id = "surprise";
@@ -260,17 +299,23 @@ if (Math.random() < 0.2) {
 // Konami code easter egg (up up down down left right left right B A): a dimensional rift opens,
 // a black hole swallows the page, then everything comes back in confetti colours
 const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
-let konamiPos = 0, riftBusy = false;
+let konamiPos = 0,     // how many keys of the sequence have been typed so far
+    riftBusy = false;  // true while the animation (and the party after it) runs, to ignore repeats
 document.addEventListener("keydown", e => {
-  if (e.target.matches("input")) return;
+  if (e.target.matches("input")) return;  // typing in the search field never triggers it
+  // Advance on the expected key; on a wrong key restart, unless it is itself a first "up"
   const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
   konamiPos = k === KONAMI[konamiPos] ? konamiPos + 1 : (k === KONAMI[0] ? 1 : 0);
   if (konamiPos === KONAMI.length) { konamiPos = 0; rift(); }
 });
 
-const wait = ms => new Promise(r => setTimeout(r, ms));
+const wait = ms => new Promise(r => setTimeout(r, ms));  // pause inside an async function
+// Create an element, give it an id (styled in CSS) and add it at the end of <body>
 const make = (tag, id) => { const el = document.createElement(tag); if (id) el.id = id; document.body.append(el); return el; };
 
+// Confetti on a full-screen canvas: an explosion from (ox, oy) plus a rain from the top.
+// Each piece is a small rectangle with gravity, air drag, a little sideways wobble and a flip
+// (scaleY by cos) so it looks like paper; the canvas is removed after 7 s or once all have fallen.
 function confetti(ox, oy) {
   const c = make("canvas"), ctx = c.getContext("2d"), dpr = devicePixelRatio || 1;
   const W = innerWidth, H = innerHeight;
@@ -298,17 +343,23 @@ function confetti(ox, oy) {
   })(performance.now());
 }
 
+// The whole Konami animation, about 5 s, then 15 s of party theme. Every movement uses the
+// Web Animations API (el.animate), so nothing in the page layout is changed for real:
+// cancelling the animations is enough to put every element back where it was.
 async function rift() {
   if (riftBusy) return;
   riftBusy = true;
-  const hx = innerWidth / 2, hy = innerHeight / 2;
+  const hx = innerWidth / 2, hy = innerHeight / 2;  // centre of the screen = centre of the hole
+  // Final state: party colours (body.party in CSS) and confetti for 15 s, then back to normal
   const party = () => {
     document.body.classList.add("party");
     confetti(hx, hy);
     setTimeout(() => { document.body.classList.remove("party"); riftBusy = false; }, 15000);
   };
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return party();
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return party();  // skip the black hole
 
+  // The pieces that get swallowed one by one: header parts, card titles and every visible line
+  // of the cards (hidden ones, e.g. inside closed sections, have no size and are left out)
   const pieces = [...document.querySelectorAll(
     "header h1, header .sub, #search, .tools button, main section .code, main section h2, main section > .links > li, footer"
   )].filter(el => el.getBoundingClientRect().width > 0);
@@ -334,7 +385,9 @@ async function rift() {
     { duration: 900, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" });
   await wait(400);
 
-  // 3. Every piece of the page spirals into it, closest first
+  // 3. Every piece of the page spirals into it, closest first.
+  //    (dx, dy) goes from the piece to the hole; halfway, the piece is pushed sideways along
+  //    (-dy, dx) to curve its path into a spiral, while it spins, shrinks to nothing and blurs.
   const flights = pieces.map(el => {
     const b = el.getBoundingClientRect();
     const dx = hx - (b.left + b.width / 2), dy = hy - (b.top + b.height / 2);
@@ -358,7 +411,9 @@ async function rift() {
   setTimeout(() => flash.remove(), 700);
   document.body.classList.remove("rift");
 
-  // 5. Everything comes back out, bouncing into place, in confetti colours
+  // 5. Everything comes back out, bouncing into place, in confetti colours:
+  //    drop the "swallowed" state, then play each piece from the hole back to its own spot
+  //    (the cubic-bezier above 1 gives the overshoot bounce)
   party();
   flights.forEach(({ el, anim, dx, dy, spin }) => {
     anim.cancel();
@@ -369,12 +424,15 @@ async function rift() {
   });
 }
 
-// Search: keep subjects and documents whose text matches, open the sections holding a match
+// Search: keep subjects and documents whose text matches, open the sections holding a match.
+// Every word typed must appear (in any order, case-insensitive). If the subject itself matches
+// (name or code), the whole card stays as usual; otherwise only the matching documents are kept.
+// An empty field shows everything again and closes the sections.
 const q = document.getElementById("search");
 q.addEventListener("input", () => {
   const words = q.value.toLowerCase().trim().split(/\\s+/).filter(Boolean);
   const hit = el => words.every(w => el.textContent.toLowerCase().includes(w));
-  let shown = 0;
+  let shown = 0;  // number of subjects still visible, to show the no-result message
   document.querySelectorAll("main section").forEach(sec => {
     const whole = !words.length || hit(sec.querySelector("h2")) || hit(sec.querySelector(".code"));
     let any = whole;
@@ -383,6 +441,8 @@ q.addEventListener("input", () => {
       a.parentNode.hidden = !ok;
       any ||= ok;
     });
+    // A collapsible section is hidden when nothing in it matches, and opened while it holds a
+    // match found by document name (folder headings are hidden then, they would be misleading)
     sec.querySelectorAll("details").forEach(d => {
       const inside = [...d.querySelectorAll(".links a")].some(a => !a.parentNode.hidden);
       d.parentNode.hidden = !inside;
@@ -397,6 +457,7 @@ q.addEventListener("input", () => {
 """
 
 def label(p, root):
+    """Display name of a PDF: "Course notes", "Week 03", or the file name with spaces."""
     if p.relative_to(root).as_posix() in KINDS:
         return KINDS[p.relative_to(root).as_posix()]
     m = WEEK.fullmatch(p.stem)
@@ -405,7 +466,11 @@ def label(p, root):
     return p.stem.replace("_", " ")
 
 def sources(subject, p, root):
-    """Files a built PDF comes from: its .tex and the files it inputs, or the PDF itself."""
+    """Files a built PDF comes from: its .tex and the files it inputs, or the PDF itself.
+
+    p is the PDF in dist/<subject>/, root is dist/<subject>/. The inputs are found with a
+    simple regex on \\input{...} / \\include{...} (one level, enough for swent/course.tex).
+    """
     src = ROOT / subject / p.relative_to(root)
     tex = src.with_suffix(".tex")
     if not tex.exists():
@@ -414,7 +479,11 @@ def sources(subject, p, root):
     return [tex] + [(tex.parent / i).with_suffix(".tex") for i in inputs]
 
 def updated(subject, p, root):
-    """Date of the last commit touching the sources (file mtime if never committed)."""
+    """Date of the last commit touching the sources (file mtime if never committed).
+
+    Build time would be useless here: on CI every file is fresh, so every PDF would look new.
+    This needs the full git history, hence fetch-depth: 0 in the Pages workflow.
+    """
     files = [f for f in sources(subject, p, root) if f.exists()]
     out = subprocess.run(
         ["git", "log", "-1", "--format=%ct", "--", *map(str, files)],
@@ -423,9 +492,11 @@ def updated(subject, p, root):
     return datetime.fromtimestamp(int(out)) if out else datetime.fromtimestamp(p.stat().st_mtime)
 
 def is_new(when):
+    """True for documents changed less than NEW_DAYS ago (they get the "New" badge)."""
     return (datetime.now() - when).days < NEW_DAYS
 
 def link(subject, p, root, when):
+    """One <li> line: document name (+ "New" badge) on the left, size and date on the right."""
     rel = p.relative_to(root).as_posix()
     badge = '<span class="new">New</span>' if is_new(when) else ""
     return (
@@ -434,7 +505,12 @@ def link(subject, p, root, when):
     )
 
 def fold(subject, pdfs, root, when, noun, grouped=True, extra=""):
-    """Collapsible list of PDFs, with folder headings when grouped."""
+    """Collapsible list of PDFs, with folder headings when grouped.
+
+    The summary reads "<n> <noun>(s)", e.g. "4 weekly notes", followed by a "<k> new" badge
+    when it hides new documents, and by `extra` (HTML, used for the progress bar).
+    Returns "" when there is nothing to list, so the section is simply left out.
+    """
     if not pdfs:
         return ""
     items, group = [], None
@@ -454,7 +530,11 @@ def fold(subject, pdfs, root, when, noun, grouped=True, extra=""):
     )
 
 def progress(weeks, subject):
-    """Bar showing the latest weekly note against the length of the semester."""
+    """Bar showing the latest weekly note against the length of the semester.
+
+    Progress is the highest week number published (week04 -> 4/14), not the number of files,
+    so a missing week does not shift the bar. Capped at 100%.
+    """
     if not weeks:
         return ""
     total = subject.get("weeks", SEMESTER_WEEKS)
@@ -466,16 +546,19 @@ def progress(weeks, subject):
     )
 
 def natural(p):
+    """Sort key that orders numbers by value: week2 before week10, 1.6 before 2.4."""
     return [int(t) if t.isdigit() else t.lower() for t in re.split(r"(\d+)", p.as_posix())]
 
 def build_index():
+    """Write dist/index.html from whatever PDFs are in dist/ (subjects without any are hidden)."""
     cards = []
     for i, s in enumerate(CONFIG):
         root = DIST / s["id"]
         pdfs = list(root.rglob("*.pdf")) if root.is_dir() else []
         if not pdfs:
             continue
-        when = {p: updated(s["id"], p, root) for p in pdfs}
+        when = {p: updated(s["id"], p, root) for p in pdfs}  # one git call per PDF, done once
+        # Course notes stay visible on the card, everything else goes in the collapsible sections
         course = root / "course.pdf"
         main = [course] if course in pdfs else []
         rest = sorted(
@@ -486,12 +569,14 @@ def build_index():
                 natural(p.relative_to(root)),
             ),
         )
+        # Weekly notes are recognised by their name (weekNN), wherever they are stored
         weeks = [p for p in rest if WEEK.fullmatch(p.stem)]
         others = [p for p in rest if p not in weeks]
         links = "".join(link(s["id"], p, root, when[p]) for p in main)
         links += fold(s["id"], weeks, root, when, "weekly note", grouped=False, extra=progress(weeks, s))
         links += fold(s["id"], others, root, when, "more document")
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
+        # --c = accent colour of the card, from subjects.json or the palette (in file order)
         cards.append(
             f'<section style="--c:{s.get("color", PALETTE[i % len(PALETTE)])}"><span class="code">{s["id"]}</span>'
             f'<h2>{html.escape(s["name"])}</h2>{exam}<ul class="links">{links}</ul></section>'
