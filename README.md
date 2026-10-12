@@ -33,3 +33,5 @@ Optional keys per subject in `subjects.json`:
 - `"color"`: accent colour of the subject card (default: taken from a palette)
 
 The page also has a search field, a light/dark toggle and a flame mode 🔥.
+It hides two easter eggs: a surprise banner that shows up on some visits, and
+something that happens when you type the Konami code (↑↑↓↓←→←→BA).
