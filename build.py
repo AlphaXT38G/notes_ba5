@@ -163,6 +163,17 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 #search:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-bg)}
 #empty{color:var(--mut)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
+body.fire{background:radial-gradient(120% 60% at 50% 115%,rgba(255,90,0,.35),transparent 70%) fixed,var(--bg)}
+body.fire h1{background:linear-gradient(90deg,#ffcf3f,#ff6a00,#e8132b);-webkit-background-clip:text;background-clip:text;color:transparent}
+body.fire h2::after{content:" 🔥"}
+body.fire section{border-left-color:#ff6a00;animation:flicker 1.6s ease-in-out infinite alternate}
+body.fire .bar span{background:linear-gradient(90deg,#ffcf3f,#ff6a00,#e8132b)}
+body.fire #fire{border-color:#ff6a00;box-shadow:0 0 12px rgba(255,106,0,.6)}
+@keyframes flicker{from{box-shadow:-6px 0 14px -8px rgba(255,106,0,.8)}to{box-shadow:-8px 0 26px -6px rgba(255,170,0,.9)}}
+.flames{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.flames span{position:absolute;bottom:-3rem;animation:rise linear forwards;filter:drop-shadow(0 0 6px rgba(255,120,0,.7))}
+@keyframes rise{to{transform:translate(var(--dx),-115vh) scale(.3) rotate(var(--r));opacity:0}}
+@media(prefers-reduced-motion:reduce){.flames{display:none}body.fire section{animation:none}}
 """
 
 # Runs in <head> so the saved theme applies before the first paint
@@ -181,6 +192,31 @@ themeBtn.addEventListener("click", () => {
   paintBtn();
 });
 paintBtn();
+
+// Flame mode: fire styling plus flames rising from the bottom of the screen
+const fireBtn = document.getElementById("fire"), layer = document.createElement("div");
+layer.className = "flames";
+document.body.append(layer);
+let timer = null;
+const flame = (x, size, dur) => {
+  const f = document.createElement("span");
+  f.textContent = "🔥";
+  f.style.cssText = `left:${x}%;font-size:${size}rem;animation-duration:${dur}s;--dx:${(Math.random() - .5) * 120}px;--r:${(Math.random() - .5) * 60}deg`;
+  f.addEventListener("animationend", () => f.remove());
+  layer.append(f);
+};
+const setFire = on => {
+  document.body.classList.toggle("fire", on);
+  fireBtn.setAttribute("aria-pressed", on);
+  clearInterval(timer);
+  if (on) {
+    for (let i = 0; i < 25; i++) flame(Math.random() * 100, 1 + Math.random() * 2, 2 + Math.random() * 3);
+    timer = setInterval(() => flame(Math.random() * 100, .8 + Math.random() * 1.8, 3 + Math.random() * 4), 140);
+  }
+  try { localStorage.setItem("fire", on ? "1" : ""); } catch (e) {}
+};
+fireBtn.addEventListener("click", () => setFire(!document.body.classList.contains("fire")));
+try { if (localStorage.getItem("fire")) setFire(true); } catch (e) {}
 
 // Search: keep subjects and documents whose text matches, open the sections holding a match
 const q = document.getElementById("search");
@@ -315,7 +351,7 @@ def build_index():
 <title>Notes BA5</title>
 <script>{THEME_JS}</script>
 <style>{CSS}</style></head><body><div class="wrap">
-<header><div class="tools"><button id="theme" type="button" aria-label="Toggle dark mode"></button></div>
+<header><div class="tools"><button id="fire" type="button" aria-label="Flame mode" title="Flame mode" aria-pressed="false">🔥</button><button id="theme" type="button" aria-label="Toggle dark mode"></button></div>
 <h1>Notes BA5</h1><p class="sub">EPFL IN, autumn semester: course notes, weekly notes and cheat sheets</p>
 <input id="search" type="search" placeholder="Search a course, a week, a sheet…" aria-label="Search documents" autocomplete="off"></header>
 <main class="grid">{"".join(cards)}</main>
