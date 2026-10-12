@@ -156,11 +156,29 @@ def label(p, root):
         return f"Week {m[1]}{m[2]}"
     return p.stem.replace("_", " ")
 
+def sources(subject, p, root):
+    """Files a built PDF comes from: its .tex and the files it inputs, or the PDF itself."""
+    src = ROOT / subject / p.relative_to(root)
+    tex = src.with_suffix(".tex")
+    if not tex.exists():
+        return [src]
+    inputs = re.findall(r"\\(?:input|include)\{([^}]+)\}", tex.read_text(encoding="utf-8", errors="replace"))
+    return [tex] + [(tex.parent / i).with_suffix(".tex") for i in inputs]
+
+def updated(subject, p, root):
+    """Date of the last commit touching the sources (file mtime if never committed)."""
+    files = [f for f in sources(subject, p, root) if f.exists()]
+    out = subprocess.run(
+        ["git", "log", "-1", "--format=%ct", "--", *map(str, files)],
+        cwd=ROOT, capture_output=True, text=True,
+    ).stdout.strip()
+    return datetime.fromtimestamp(int(out)) if out else datetime.fromtimestamp(p.stat().st_mtime)
+
 def link(subject, p, root):
     rel = p.relative_to(root).as_posix()
     return (
         f'<li><a href="{subject}/{html.escape(rel)}"><span>{html.escape(label(p, root))}</span>'
-        f'<small>{p.stat().st_size / 1e6:.1f} MB · {datetime.fromtimestamp(p.stat().st_mtime):%d %b %Y}</small></a></li>'
+        f'<small>{p.stat().st_size / 1e6:.1f} MB · {updated(subject, p, root):%d %b %Y}</small></a></li>'
     )
 
 def natural(p):
