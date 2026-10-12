@@ -553,16 +553,16 @@ async function rift() {
   });
 }
 
-// Jazz bar night: from 21:30 to 6:00 the page turns into a jazz bar (body.night in CSS) and the
-// subtitle tells you to go to sleep. The night goes through phases (body[data-phase] in CSS):
+// Jazz bar night: from 21:30 to 6:00 the page turns into a jazz bar (body.night in CSS); after
+// midnight the subtitle changes too. The night goes through phases (body[data-phase] in CSS):
 //   evening  21:30 - 0:00  warm light
 //   late      0:00 - 2:00  darker and bluer, the neon flickers more
 //   closing   2:00 - 6:00  the bar closes (see below)
 // Checked every minute, so it changes by itself while the page is open.
 // ?night=0 / 1 / evening / late / closing in the URL forces a phase (handy to try it any time).
 const sub = document.querySelector(".sub"), daySub = sub.textContent;
-const NIGHT_SUBS = {
-  evening: "It's late. Go to sleep… or stay for one last tune.",
+const NIGHT_SUBS = {  // null = keep the usual subtitle
+  evening: null,
   late: "Past midnight. The band is playing its last set.",
   closing: "Last call was a while ago.",
 };
@@ -580,7 +580,7 @@ const applyNight = () => {
   const phase = phaseNow(), on = phase !== null;
   if (phase === (document.body.dataset.phase || null)) return;
   if (on) document.body.dataset.phase = phase; else delete document.body.dataset.phase;
-  sub.textContent = on ? NIGHT_SUBS[phase] : daySub;
+  sub.textContent = (on && NIGHT_SUBS[phase]) || daySub;
   if (on !== document.body.classList.contains("night")) {
     document.body.classList.toggle("night", on);
     document.dispatchEvent(new CustomEvent("night", { detail: on }));  // for the night extras below
