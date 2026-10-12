@@ -291,10 +291,15 @@
 \fancyhead[C]{\small\color{black!60}%
   \expandafter\MakeUppercase\expandafter{\toprightxmark}}
 \fancyfoot[C]{\small\color{black!60}\thepage}
+% Small clickable link to the repository, bottom right of every page
+\newcommand{\course@repolink}{\scriptsize\color{black!50}%
+  \href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\course@repolink}
 \fancypagestyle{plain}{%
   \fancyhf{}%
   \renewcommand{\headrulewidth}{0pt}%
   \fancyfoot[C]{\small\color{black!60}\thepage}%
+  \fancyfoot[R]{\course@repolink}%
 }
 
 \endinput
