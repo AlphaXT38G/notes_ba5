@@ -247,8 +247,17 @@ body.party h2::after{content:" 🎉"}
 @keyframes party-bg{to{background-position:400% 0}}
 @keyframes party-text{to{background-position:200% 0}}
 @keyframes party-border{0%,100%{border-left-color:#ff3d7f}20%{border-left-color:#ffb300}40%{border-left-color:#2ec27e}60%{border-left-color:#2f80ed}80%{border-left-color:#9b51e0}}
+/* Jazz bar night theme (body.night, from 21:30 to 6:00): dim warm light from above, amber and
+   burgundy tones, a flickering neon sign for the title, cards glowing like candle-lit tables */
+body.night{--bg:#120a09;--fg:#f3e3c3;--card:rgba(48,26,18,.85);--line:rgba(255,190,120,.16);--acc:#f5b041;--acc-bg:rgba(245,176,65,.13);--mut:#b89a7a;--new:#ffcf70;--new-bg:rgba(255,207,112,.15);background:radial-gradient(70% 45% at 50% -8%,rgba(255,176,90,.28),transparent 70%) fixed,radial-gradient(45% 35% at 90% 105%,rgba(150,25,55,.3),transparent 70%) fixed,radial-gradient(40% 30% at 5% 100%,rgba(120,40,20,.25),transparent 70%) fixed,var(--bg)}
+body.night h1{color:#ffe1b0;font-family:"Brush Script MT","Segoe Script",cursive;font-weight:400;font-size:2.6rem;letter-spacing:.01em;text-shadow:0 0 4px #fff2d6,0 0 12px #ff9d4d,0 0 26px #ff5e8a,0 0 48px #ff2d6f;animation:neon 6s infinite}
+body.night h1::after{content:" 🎷"}
+body.night .sub{color:#e9c89a;font-style:italic}
+body.night section{box-shadow:-8px 0 22px -12px rgba(255,170,80,.6)}
+body.night .links a:hover{background:rgba(245,176,65,.08)}
+@keyframes neon{0%,18%,22%,25%,53%,57%,100%{opacity:1}20%,24%,55%{opacity:.55;text-shadow:0 0 2px #fff2d6,0 0 6px #ff9d4d}}
 /* Reduced motion: no rising flames and no looping animations */
-@media(prefers-reduced-motion:reduce){.flames{display:none}body.fire section,#surprise,#hole .disk::before,body.party,body.party h1,body.party section{animation:none}}
+@media(prefers-reduced-motion:reduce){.flames{display:none}body.fire section,#surprise,#hole .disk::before,body.party,body.party h1,body.party section,body.night h1{animation:none}}
 """
 
 # Runs in <head> so the saved theme applies before the first paint (no light/dark flicker).
@@ -442,6 +451,27 @@ async function rift() {
     ], { duration: 700, delay: Math.random() * 400, easing: "cubic-bezier(.34,1.56,.64,1)", fill: "backwards" });
   });
 }
+
+// Jazz bar night: from 21:30 to 6:00 the page turns into a jazz bar (body.night in CSS) and the
+// subtitle tells you to go to sleep. Checked every minute, so it switches on by itself at 21:30.
+// ?night=1 / ?night=0 in the URL force it on / off (handy to try it during the day).
+const sub = document.querySelector(".sub"), daySub = sub.textContent;
+const NIGHT_SUB = "It's late. Go to sleep… or stay for one last tune.";
+const forced = new URLSearchParams(location.search).get("night");
+const isNight = () => {
+  if (forced !== null) return forced === "1";
+  const d = new Date(), m = d.getHours() * 60 + d.getMinutes();
+  return m >= 21 * 60 + 30 || m < 6 * 60;
+};
+const applyNight = () => {
+  const on = isNight();
+  if (on === document.body.classList.contains("night")) return;
+  document.body.classList.toggle("night", on);
+  sub.textContent = on ? NIGHT_SUB : daySub;
+  document.dispatchEvent(new CustomEvent("night", { detail: on }));  // for the night extras below
+};
+applyNight();
+setInterval(applyNight, 60000);
 
 // Names / Previews switch: sets data-view on <html> (the CSS does the rest) and remembers it
 const viewBtns = document.querySelectorAll(".view button");
