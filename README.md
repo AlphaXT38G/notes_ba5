@@ -23,4 +23,6 @@ Put `course.tex` / `cheatsheet.tex` in `<id>/` and rebuild; the page updates its
 Every standalone `.tex` in `<id>/` and its subfolders (e.g. `week/week01.tex`) is
 compiled, and PDFs without a matching `.tex` (e.g. `cheatsheets/*.pdf`) are copied
 as is. On the page, the course notes come first and every other PDF of the subject
-is listed in a collapsible section, grouped by folder.
+is listed in a collapsible section, grouped by folder. Dates come from the last
+commit touching each document, and documents changed in the last 7 days get a
+"New" badge.
