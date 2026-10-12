@@ -303,7 +303,25 @@ body.night{--bg:#120a09;--fg:#f3e3c3;--card:rgba(48,26,18,.85);--line:rgba(255,1
 body.night h1{color:#ffe1b0;font-family:"Brush Script MT","Segoe Script",cursive;font-weight:400;font-size:2.6rem;letter-spacing:.01em;text-shadow:0 0 4px #fff2d6,0 0 12px #ff9d4d,0 0 26px #ff5e8a,0 0 48px #ff2d6f;animation:neon 6s infinite}
 body.night h1::after{content:" 🎷"}
 body.night .sub{color:#e9c89a;font-style:italic}
-body.night #fire,body.metal #fire{display:none}  /* no flame mode in the bar or the metal show, see applyNight in JS */
+body.night #fire,body.metal #fire,body.epic #fire{display:none}  /* no flame mode during the night shows, see applyNight in JS */
+/* Epic finale (body.epic): a fantasy night in deep blue and violet, an aurora glowing behind
+   everything (::before), the title in carved capitals lit by blue fire, cards edged with arcane light */
+body.epic{--bg:#05040f;--fg:#e9e6ff;--card:rgba(14,12,40,.85);--line:rgba(140,120,255,.22);--acc:#8fb4ff;--acc-bg:rgba(110,140,255,.14);--mut:#a6a2cc;--new:#9ff3ff;--new-bg:rgba(120,230,255,.14);background:var(--bg)}
+body.epic::before{content:"";position:fixed;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(45% 35% at 30% 10%,rgba(90,60,255,.35),transparent 70%),radial-gradient(40% 30% at 75% 15%,rgba(40,150,255,.3),transparent 70%),radial-gradient(60% 40% at 50% 110%,rgba(60,90,255,.45),transparent 70%);animation:aurora 14s ease-in-out infinite alternate}
+body.epic .wrap{position:relative;z-index:1}
+body.epic h1{font:700 2.8rem "Cinzel","Trajan Pro","Palatino Linotype",Georgia,serif;text-transform:uppercase;letter-spacing:.14em;background:linear-gradient(90deg,#9fd8ff,#ffffff 30%,#b9a4ff 55%,#7fd0ff 80%,#ffffff);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px rgba(110,150,255,.9)) drop-shadow(0 0 30px rgba(140,80,255,.6));animation:shimmer 6s linear infinite}
+body.epic h1::after{content:" ⚔️";-webkit-text-fill-color:initial;filter:none}
+body.epic .sub{color:#b9c8ff;font:italic 1.05rem "Palatino Linotype",Georgia,serif;letter-spacing:.06em}
+body.epic section{animation:arcane 4s ease-in-out infinite alternate}
+@keyframes aurora{from{transform:translateX(-4%) rotate(-2deg)}to{transform:translateX(4%) rotate(2deg)}}
+@keyframes shimmer{to{background-position:200% 0}}
+@keyframes arcane{from{box-shadow:-8px 0 24px -12px rgba(90,140,255,.8)}to{box-shadow:-10px 0 34px -10px rgba(170,90,255,.9)}}
+/* "More epicness ?" button, rising in the middle of the metal show 10 s before it ends */
+#more{position:fixed;left:50%;top:50%;z-index:60;padding:1rem 2rem;transform:translate(-50%,-50%);color:#fff;font:700 1.4rem "Palatino Linotype",Georgia,serif;letter-spacing:.05em;background:radial-gradient(circle at 50% 30%,#6c7bff,#3b1f9e 70%);border:2px solid #b9c8ff;border-radius:999px;box-shadow:0 0 30px rgba(110,140,255,.9),0 0 80px rgba(150,80,255,.6),inset 0 0 18px rgba(255,255,255,.35);cursor:pointer;animation:more-in .6s cubic-bezier(.34,1.56,.64,1) both,more-glow 1.2s ease-in-out .6s infinite alternate}
+#more:hover{filter:brightness(1.2)}
+#more.queued{cursor:default;animation:none;background:radial-gradient(circle at 50% 30%,#3e4bbf,#1e0f5e 70%)}
+@keyframes more-in{from{opacity:0;transform:translate(-50%,20%) scale(.6)}}
+@keyframes more-glow{to{box-shadow:0 0 45px rgba(140,170,255,1),0 0 120px rgba(170,90,255,.8),inset 0 0 22px rgba(255,255,255,.5)}}
 /* Metal takeover (body.metal, 1:00:00 - 1:01:51): pitch black stage, blood red light pulsing on
    the beat behind everything (::before), chrome title skewed like a band logo */
 body.metal{--bg:#050404;--fg:#f4f1f1;--card:rgba(24,6,6,.88);--line:rgba(255,50,30,.25);--acc:#ff3b1f;--acc-bg:rgba(255,59,31,.14);--mut:#b9a9a9;--new:#ffd23f;--new-bg:rgba(255,210,63,.16);background:var(--bg)}
@@ -393,10 +411,14 @@ body.night[data-phase=closing] h1::after{display:inline-block;animation:neon-off
 @keyframes vt-dim-in{from{opacity:0;filter:brightness(.3) blur(3px)}}
 @keyframes vt-slam-out{to{opacity:0;transform:scale(1.25);filter:brightness(2) saturate(3) hue-rotate(-30deg) blur(4px)}}
 @keyframes vt-slam-in{0%{opacity:0;transform:scale(.85);filter:brightness(4)}60%{opacity:1;filter:brightness(1.6)}100%{transform:none;filter:none}}
+[data-vt=epic]::view-transition-old(root){animation:vt-to-light 1.3s ease-in both}
+[data-vt=epic]::view-transition-new(root){animation:vt-from-light 1.6s ease-out both}
+@keyframes vt-to-light{to{opacity:0;filter:brightness(3) saturate(0) blur(6px)}}
+@keyframes vt-from-light{from{opacity:0;filter:brightness(3) hue-rotate(60deg) blur(8px);transform:scale(1.04)}}
 @keyframes vt-fade-out{to{opacity:0}}
 @keyframes vt-dawn-in{from{opacity:0;filter:brightness(1.6)}}
 /* Reduced motion: no rising flames and no looping animations */
-@media(prefers-reduced-motion:reduce){.flames,.air{display:none}body.fire section,#surprise,#hole .disk::before,body.party,body.party h1,body.party section,body.night h1,body.night[data-phase] h1,body.metal::before,body.metal section,body.metal h1,#eq i{animation:none}}
+@media(prefers-reduced-motion:reduce){.flames,.air{display:none}body.fire section,#surprise,#hole .disk::before,body.party,body.party h1,body.party section,body.night h1,body.night[data-phase] h1,body.metal::before,body.metal section,body.metal h1,#eq i,body.epic::before,body.epic h1,body.epic section{animation:none}}
 """
 
 # Runs in <head> so the saved theme applies before the first paint (no light/dark flicker).
@@ -616,6 +638,7 @@ async function rift() {
 //   evening  21:30    - 0:45     jazz bar, warm light
 //   closing   0:45    - 1:00     the bar closes, the subtitle changes (see below)
 //   metal     1:00:00 - 1:01:51  hard rock / metal takeover for one song (body.metal, see below)
+//   epic      after a metal takeover, only if "More epicness ?" was clicked (body.epic, see below)
 // After that the page is back to its usual day look.
 // Checked every second (the metal phase is short and must start right on time).
 // ?night=0 / 1 / evening / closing / metal in the URL forces a phase (handy to try it any time).
@@ -624,6 +647,7 @@ const NIGHT_SUBS = {  // null = keep the usual subtitle
   evening: null,
   closing: "Last call was a while ago.",
   metal: "1:00 AM. Time to headbang. 🤘",
+  epic: "Behold… more epicness.",
 };
 const NIGHT = new Set(["evening", "closing"]);  // the jazz bar phases (body.night)
 const METAL_SECONDS = 111;  // the song plays from 1:50 to its end, 1 min 51 s later
@@ -631,7 +655,32 @@ const forced = new URLSearchParams(location.search).get("night");
 // Easter egg: spamming the flame button (see below) starts the metal takeover at any time of
 // day, for one song; metalEggAt is when it started (0 = not running)
 let metalEggAt = 0;
+// Epic finale: 10 s before a metal takeover ends, a "More epicness ?" button shows up (see the
+// epic code below). Clicked, it queues the epic phase (body.epic), which takes over right when
+// the metal ends and lasts for its whole song: epicEnded is set when the player reports the end
+// of the song, EPIC_MAX is a safety cap. ?night=epic forces it.
+let epicQueued = false, epicAt = 0, epicEnded = false;
+const EPIC_MAX = 8 * 60 * 1000;
+const clockSeconds = () => { const d = new Date(); return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds(); };
+const metalLeft = () => {  // seconds before the current metal takeover ends (Infinity when forced)
+  if (metalEggAt) return METAL_SECONDS - (Date.now() - metalEggAt) / 1000;
+  if (forced === "metal") return Infinity;
+  return 3600 + METAL_SECONDS - clockSeconds();
+};
 const phaseNow = () => {
+  if (forced === "epic") return "epic";
+  if (epicAt) {
+    if (!epicEnded && Date.now() - epicAt < EPIC_MAX) return "epic";
+    epicAt = 0; epicEnded = false;
+  }
+  const phase = basePhase();
+  if (epicQueued && phase !== "metal") {  // the metal just ended: the epic finale takes over
+    epicQueued = false;
+    if (document.body.dataset.phase === "metal") { epicAt = Date.now(); return "epic"; }
+  }
+  return phase;
+};
+const basePhase = () => {
   if (metalEggAt && Date.now() - metalEggAt < METAL_SECONDS * 1000) return "metal";
   metalEggAt = 0;
   if (forced === "0") return null;
@@ -651,14 +700,14 @@ let nightShown = false;
 const applyNight = () => {
   const phase = phaseNow();
   if (phase === (document.body.dataset.phase || null)) { nightShown = true; return; }
-  const night = NIGHT.has(phase), metal = phase === "metal";
+  const night = NIGHT.has(phase), metal = phase === "metal", epic = phase === "epic";
   const swap = () => {
     if (phase) document.body.dataset.phase = phase; else delete document.body.dataset.phase;
     sub.textContent = (metalEggAt && phase === "metal" ? "You lit too many fires. Time to headbang. 🤘"
       : phase && NIGHT_SUBS[phase]) || daySub;
     // Flames on top of the jazz bar or the metal show are too many moving elements (the page
     // lags): both turn the flame mode off, and hide its button while they last (CSS)
-    if ((night || metal) && document.body.classList.contains("fire")) setFire(false);
+    if ((night || metal || epic) && document.body.classList.contains("fire")) setFire(false);
     if (night !== document.body.classList.contains("night")) {
       document.body.classList.toggle("night", night);
       document.dispatchEvent(new CustomEvent("night", { detail: night }));  // for the night extras below
@@ -667,6 +716,10 @@ const applyNight = () => {
       document.body.classList.toggle("metal", metal);
       document.dispatchEvent(new CustomEvent("metal", { detail: metal }));  // for the metal extras below
     }
+    if (epic !== document.body.classList.contains("epic")) {
+      document.body.classList.toggle("epic", epic);
+      document.dispatchEvent(new CustomEvent("epic", { detail: epic }));  // for the epic extras below
+    }
     document.dispatchEvent(new CustomEvent("phase", { detail: phase }));
   };
   const animate = nightShown && document.startViewTransition && !document.hidden
@@ -674,7 +727,7 @@ const applyNight = () => {
   nightShown = true;
   styleSwitch?.skipTransition();  // a previous change still animating ends at once
   if (!animate) { delete root.dataset.vt; return swap(); }
-  root.dataset.vt = metal ? "metal" : night ? "night" : "day";
+  root.dataset.vt = metal ? "metal" : epic ? "epic" : night ? "night" : "day";
   const t = styleSwitch = document.startViewTransition(swap);
   const done = () => { if (styleSwitch === t) { styleSwitch = null; delete root.dataset.vt; } };
   t.ready.catch(() => {});  // skipped by the browser (e.g. tab hidden meanwhile): the change still applies
@@ -705,7 +758,7 @@ document.addEventListener("phase", e => {
 });
 
 applyNight();
-setInterval(() => { applyNight(); preloadSoon(); }, 1000);  // preloadSoon: see the metal music below
+setInterval(() => { applyNight(); preloadSoon(); epicTick(); }, 1000);  // see the metal music and the epic finale below
 
 // Bar air: 3 smoke clouds drifting across the room and a music note rising every ~0.9 s,
 // with a random sway and tilt (--sway, --r); everything is removed when the night ends
@@ -1219,6 +1272,32 @@ const setMetalMusic = on => {
 };
 setMetalMusic(document.body.classList.contains("metal"));
 document.addEventListener("metal", e => setMetalMusic(e.detail));
+
+// "More epicness ?": 10 s before a metal takeover ends this button rises in the middle of the
+// screen. Clicking it queues the epic finale (epicQueued, see phaseNow) and gets its song ready
+// (preloadEpic, below); it stays as "Epicness incoming…" until the metal ends, then goes away.
+const moreBtn = document.createElement("button");
+moreBtn.id = "more";
+moreBtn.type = "button";
+moreBtn.addEventListener("click", e => {
+  e.stopPropagation();
+  if (epicQueued) return;
+  epicQueued = true;
+  preloadEpic();
+  moreBtn.classList.add("queued");
+  moreBtn.textContent = "⚔️ Epicness incoming…";
+});
+const preloadEpic = () => {};  // the epic song comes in the next step
+const epicTick = () => {  // called every second with the clock check
+  const left = document.body.classList.contains("metal") ? metalLeft() : 0;
+  if (left > 0 && left <= 10) {
+    if (!moreBtn.isConnected) {
+      moreBtn.classList.remove("queued");
+      moreBtn.textContent = "✨ More epicness ?";
+      document.body.append(moreBtn);
+    }
+  } else moreBtn.remove();
+};
 
 // Names / Previews switch: sets data-view on <html> (the CSS does the rest) and remembers it
 const viewBtns = document.querySelectorAll(".view button");
