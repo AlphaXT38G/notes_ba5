@@ -121,6 +121,7 @@ for subject in subjects:
 KINDS = {"course.pdf": "Course notes", "cheatsheet.pdf": "Cheat sheet"}
 ORDER = list(KINDS)  # course first, then cheatsheet, then anything else
 NEW_DAYS = 7         # documents changed more recently get a "New" badge
+SEMESTER_WEEKS = 14  # length of the progress bar, override with "weeks" in subjects.json
 WEEK = re.compile(r"week_?(\d+)(.*)", re.I)  # weekly notes: week01.pdf, week_3.pdf, ...
 
 CSS = """
@@ -147,6 +148,9 @@ details[open] summary::before{transform:rotate(45deg)}
 details summary:hover,details summary:focus-visible{color:var(--fg)}
 details .links{margin:0;border-top:0;padding-left:1rem}
 .new{display:inline-block;margin-left:.5rem;padding:.05rem .45rem;border-radius:999px;background:var(--new-bg);color:var(--new);font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;vertical-align:.1em}
+.progress{margin-left:auto;display:flex;align-items:center;gap:.5rem;font-size:.75rem;font-weight:600;color:var(--mut);white-space:nowrap}
+.bar{width:6rem;height:.4rem;border-radius:999px;background:var(--line);overflow:hidden}
+.bar span{display:block;height:100%;border-radius:inherit;background:var(--acc)}
 .group{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);padding:.6rem 0 .1rem;border-bottom:1px solid var(--line)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 """
@@ -188,7 +192,7 @@ def link(subject, p, root, when):
         f'<small>{p.stat().st_size / 1e6:.1f} MB · {when:%d %b %Y}</small></a></li>'
     )
 
-def fold(subject, pdfs, root, when, noun, grouped=True):
+def fold(subject, pdfs, root, when, noun, grouped=True, extra=""):
     """Collapsible list of PDFs, with folder headings when grouped."""
     if not pdfs:
         return ""
@@ -204,8 +208,20 @@ def fold(subject, pdfs, root, when, noun, grouped=True):
     fresh = sum(is_new(when[p]) for p in pdfs)
     badge = f'<span class="new">{fresh} new</span>' if fresh else ""
     return (
-        f'<li><details><summary>{n} {noun}{"s" if n > 1 else ""}{badge}</summary>'
+        f'<li><details><summary>{n} {noun}{"s" if n > 1 else ""}{badge}{extra}</summary>'
         f'<ul class="links">{"".join(items)}</ul></details></li>'
+    )
+
+def progress(weeks, subject):
+    """Bar showing the latest weekly note against the length of the semester."""
+    if not weeks:
+        return ""
+    total = subject.get("weeks", SEMESTER_WEEKS)
+    last = max(int(WEEK.fullmatch(p.stem)[1]) for p in weeks)
+    pct = min(100, round(100 * last / total))
+    return (
+        f'<span class="progress" title="Week {last} of {total}">'
+        f'<span class="bar"><span style="width:{pct}%"></span></span>{last}/{total}</span>'
     )
 
 def natural(p):
@@ -232,7 +248,7 @@ def build_index():
         weeks = [p for p in rest if WEEK.fullmatch(p.stem)]
         others = [p for p in rest if p not in weeks]
         links = "".join(link(s["id"], p, root, when[p]) for p in main)
-        links += fold(s["id"], weeks, root, when, "weekly note", grouped=False)
+        links += fold(s["id"], weeks, root, when, "weekly note", grouped=False, extra=progress(weeks, s))
         links += fold(s["id"], others, root, when, "more document")
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
         cards.append(
