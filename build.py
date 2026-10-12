@@ -173,7 +173,10 @@ body.fire #fire{border-color:#ff6a00;box-shadow:0 0 12px rgba(255,106,0,.6)}
 .flames{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
 .flames span{position:absolute;bottom:-3rem;animation:rise linear forwards;filter:drop-shadow(0 0 6px rgba(255,120,0,.7))}
 @keyframes rise{to{transform:translate(var(--dx),-115vh) scale(.3) rotate(var(--r));opacity:0}}
-@media(prefers-reduced-motion:reduce){.flames{display:none}body.fire section{animation:none}}
+#surprise{position:fixed;left:50%;bottom:1.25rem;z-index:60;display:flex;align-items:center;gap:.6rem;padding:.7rem 1.1rem;transform:translateX(-50%);border-radius:.8rem;background:linear-gradient(90deg,#e8132b,#ff6a00);color:#fff;font-weight:800;letter-spacing:.06em;text-decoration:none;box-shadow:0 8px 28px rgba(232,19,43,.45);animation:pulse 1.2s ease-in-out infinite;white-space:nowrap}
+#surprise small{font-weight:600;letter-spacing:0;opacity:.85}
+@keyframes pulse{50%{transform:translateX(-50%) scale(1.05);box-shadow:0 10px 36px rgba(255,106,0,.6)}}
+@media(prefers-reduced-motion:reduce){.flames{display:none}body.fire section,#surprise{animation:none}}
 """
 
 # Runs in <head> so the saved theme applies before the first paint
@@ -217,6 +220,18 @@ const setFire = on => {
 };
 fireBtn.addEventListener("click", () => setFire(!document.body.classList.contains("fire")));
 try { if (localStorage.getItem("fire")) setFire(true); } catch (e) {}
+
+// Surprise banner: on about 1 visit in 5, an "important new content" banner links to a Rickroll
+if (Math.random() < 0.2) {
+  const banner = document.createElement("a");
+  banner.id = "surprise";
+  banner.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+  banner.target = "_blank";
+  banner.rel = "noopener";
+  banner.innerHTML = "⚠ IMPORTANT NEW CONTENT <small>click to open</small>";
+  banner.addEventListener("click", () => banner.remove());
+  document.body.append(banner);
+}
 
 // Search: keep subjects and documents whose text matches, open the sections holding a match
 const q = document.getElementById("search");
