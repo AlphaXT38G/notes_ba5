@@ -881,10 +881,11 @@ eq.innerHTML = Array.from({ length: 48 }, () =>
 // lightning and the other drawn effects below (chains, fire, sparks, flying silhouettes). One
 // canvas is much lighter than dozens of animated elements. The loop only runs during the metal
 // phase, the browser pauses it in background tabs, and each step is capped at 50 ms, so nothing
-// piles up while the page is hidden. Each effect registers {update(dt), draw(ctx), reset()}.
+// piles up while the page is hidden. Each effect registers {mode, update(dt), draw(ctx), reset()};
+// only the effects of the current mode ("metal" or "epic", fxMode) run.
 const fx = document.createElement("canvas"), ctx = fx.getContext("2d");
 fx.id = "metalfx";
-let fxW = 0, fxH = 0, fxRaf = null, fxLast = 0;
+let fxW = 0, fxH = 0, fxRaf = null, fxLast = 0, fxMode = null;
 const fxLayers = [], strikeHooks = [];  // strikeHooks: called with (x, y) where a bolt hits
 const fxResize = () => {
   const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -896,7 +897,7 @@ const fxFrame = now => {
   const dt = Math.min(.05, (now - fxLast) / 1000);
   fxLast = now;
   ctx.clearRect(0, 0, fxW, fxH);
-  for (const layer of fxLayers) { layer.update(dt); layer.draw(ctx); }
+  for (const layer of fxLayers) if (layer.mode === fxMode) { layer.update(dt); layer.draw(ctx); }
   fxRaf = requestAnimationFrame(fxFrame);
 };
 const fxStart = () => {
@@ -935,6 +936,7 @@ const boltPath = (x1, y1, x2, y2, spread, depth, out, width) => {
   out.push({ pts, width });
 };
 fxLayers.push({
+  mode: "metal",
   update(dt) {
     for (const b of bolts) b.age += dt;
     while (bolts.length && bolts[0].age > bolts[0].life) bolts.shift();
@@ -1011,6 +1013,7 @@ const drawLink = (c, a, b, face) => {
   c.restore();
 };
 fxLayers.push({
+  mode: "metal",
   update(dt) {
     if (chains.w !== fxW) makeChains();  // first frame, or the window was resized
     beatClock += dt;
@@ -1059,6 +1062,7 @@ strikeHooks.push((x, y) => {
   }
 });
 fxLayers.push({
+  mode: "metal",
   update(dt) {
     for (let n = Math.min(40, dt * fxW * .35); n > 0 && flames.length < 450; n--) {
       flames.push({ x: Math.random() * fxW, y: fxH + 12, vx: (Math.random() - .5) * 20, vy: -(80 + Math.random() * 120),
@@ -1119,6 +1123,7 @@ const SHAPES = [[SKULL, "evenodd"], [FLYING_V, "nonzero"], [HORNS, "nonzero"]];
 const thrown = [];
 let throwClock = 0;
 fxLayers.push({
+  mode: "metal",
   update(dt) {
     throwClock += dt;
     if (throwClock > .35) {
@@ -1161,6 +1166,130 @@ fxLayers.push({
   reset() { thrown.length = 0; throwClock = 0; },
 });
 
+// ── Epic finale effects (mode "epic") ──
+// Blue fire: thousands of tiny additive particles born in clusters ("tongues") that drift along
+// the bottom, plus two tall braziers in the bottom corners. Each particle is stretched upward,
+// wobbles with a turbulence made of sines of time and height, and cools from a white-cyan core
+// to blue, violet and indigo smoke as it rises. Blobs are pre-drawn once, then only copied.
+const BLUE_FIRE = [blob(200, 240, 255, .7), blob(110, 200, 255, .8), blob(60, 110, 255, .75), blob(140, 70, 255, .6), blob(50, 25, 110, .35)];
+const blueFlames = [], embers = [], motes = [];
+let tongues = [], fireTime = 0;
+const makeTongues = () => {
+  tongues = Array.from({ length: Math.max(8, Math.round(fxW / 70)) }, () => ({ x: Math.random() * fxW, v: (Math.random() - .5) * 30, power: .6 + Math.random() * .6 }));
+  tongues.w = fxW;
+};
+fxLayers.push({
+  mode: "epic",
+  update(dt) {
+    if (tongues.w !== fxW) makeTongues();
+    fireTime += dt;
+    const spawn = (x, y, size, rise) => blueFlames.push({ x, y, size, rise, age: 0, life: .6 + Math.random() * .6, seed: Math.random() * 9 });
+    for (const t of tongues) {
+      t.x += t.v * dt;
+      if (t.x < 0 || t.x > fxW) t.v *= -1;
+      for (let n = dt * 70 * t.power; n > 0 && blueFlames.length < 1100; n--) {
+        spawn(t.x + (Math.random() - .5) * 50, fxH + 10, 7 + Math.random() * 11 * t.power, 150 + Math.random() * 220 * t.power);
+      }
+    }
+    for (const bx of [fxW * .04, fxW * .96]) {  // the two braziers
+      for (let n = dt * 120; n > 0 && blueFlames.length < 1100; n--) {
+        spawn(bx + (Math.random() - .5) * 46, fxH + 10, 10 + Math.random() * 16, 260 + Math.random() * 320);
+      }
+    }
+    for (const f of blueFlames) {
+      f.age += dt;
+      const h = fxH - f.y;
+      f.x += (Math.sin(fireTime * 3 + f.seed + h * .02) * 30 + Math.sin(fireTime * 7.3 + f.seed * 2) * 12) * dt;
+      f.y -= f.rise * dt;
+      f.size *= 1 - dt * .45;
+    }
+    let k = 0;
+    for (const f of blueFlames) if (f.age < f.life) blueFlames[k++] = f;
+    blueFlames.length = k;
+  },
+  draw(c) {
+    c.save();
+    c.globalCompositeOperation = "lighter";
+    for (const f of blueFlames) {
+      const t = f.age / f.life, w = f.size, h = f.size * 2.6;  // stretched upward like a tongue of fire
+      c.globalAlpha = (1 - t) * .9;
+      c.drawImage(BLUE_FIRE[Math.min(4, Math.floor(t * 5))], f.x - w, f.y - h, w * 2, h * 2);
+    }
+    c.restore();
+  },
+  reset() { blueFlames.length = 0; tongues = []; fireTime = 0; },
+});
+// Embers and arcane motes: bright cyan sparks shooting up and twinkling, and soft blue / violet
+// orbs of light floating slowly across the room
+fxLayers.push({
+  mode: "epic",
+  update(dt) {
+    for (let n = dt * 40; n > 0 && embers.length < 120; n--) {
+      embers.push({ x: Math.random() * fxW, y: fxH, vx: (Math.random() - .5) * 40, vy: -(120 + Math.random() * 260), age: 0, life: 1.5 + Math.random() * 2, tw: Math.random() * 9 });
+    }
+    while (motes.length < 26) {
+      motes.push({ x: Math.random() * fxW, y: Math.random() * fxH, r: 3 + Math.random() * 6, vx: (Math.random() - .5) * 18, vy: -(6 + Math.random() * 16), hue: Math.random() < .5 ? 205 : 270, ph: Math.random() * 9 });
+    }
+    for (const e of embers) { e.age += dt; e.x += e.vx * dt + Math.sin(e.age * 4 + e.tw) * 20 * dt; e.y += e.vy * dt; e.vy *= 1 - dt * .3; }
+    for (const m of motes) { m.x += m.vx * dt; m.y += m.vy * dt; m.ph += dt; if (m.y < -20) { m.y = fxH + 20; m.x = Math.random() * fxW; } }
+    let k = 0;
+    for (const e of embers) if (e.age < e.life) embers[k++] = e;
+    embers.length = k;
+  },
+  draw(c) {
+    c.save();
+    c.globalCompositeOperation = "lighter";
+    for (const e of embers) {
+      const a = (1 - e.age / e.life) * (.55 + .45 * Math.sin(e.age * 18 + e.tw));  // twinkle
+      c.fillStyle = `rgba(190,240,255,${Math.max(0, a)})`;
+      c.fillRect(e.x - 1.2, e.y - 1.2, 2.4, 2.4);
+    }
+    for (const m of motes) {
+      const a = .35 + .25 * Math.sin(m.ph * 2);
+      c.globalAlpha = a;
+      c.drawImage(m.hue === 205 ? BLUE_FIRE[1] : BLUE_FIRE[3], m.x - m.r * 3, m.y - m.r * 3, m.r * 6, m.r * 6);
+    }
+    c.restore();
+  },
+  reset() { embers.length = motes.length = 0; },
+});
+// Arcane circle: a huge magic circle turning slowly behind the page, very faint: two rings of
+// runes (glyphs made of random strokes, generated once) and an eight-pointed star of two squares
+const RUNES = Array.from({ length: 24 }, () => Array.from({ length: 3 }, () => [Math.random() * 10 - 5, Math.random() * 14 - 7, Math.random() * 10 - 5, Math.random() * 14 - 7]));
+let circleTurn = 0;
+fxLayers.push({
+  mode: "epic",
+  update(dt) { circleTurn += dt * .08; },
+  draw(c) {
+    const R = Math.min(fxW, fxH) * .42;
+    c.save();
+    c.translate(fxW / 2, fxH / 2);
+    c.globalCompositeOperation = "lighter";
+    c.strokeStyle = "rgba(140,170,255,.13)";
+    c.shadowColor = "rgba(120,140,255,.6)"; c.shadowBlur = 12;
+    c.lineWidth = 2;
+    for (const r of [R, R * .86, R * .55]) { c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.stroke(); }
+    c.rotate(circleTurn);
+    for (let s = 0; s < 2; s++) {  // two squares turned 45 degrees: an eight-pointed star
+      c.save(); c.rotate(s * Math.PI / 4);
+      c.strokeRect(-R * .6, -R * .6, R * 1.2, R * 1.2);
+      c.restore();
+    }
+    c.lineWidth = 1.6;
+    RUNES.forEach((rune, i) => {  // the ring of runes between the two outer circles
+      c.save();
+      c.rotate(i / RUNES.length * Math.PI * 2);
+      c.translate(0, -R * .93);
+      c.beginPath();
+      for (const [x1, y1, x2, y2] of rune) { c.moveTo(x1, y1); c.lineTo(x2, y2); }
+      c.stroke();
+      c.restore();
+    });
+    c.restore();
+  },
+  reset() {},
+});
+
 let boltTimer = null;
 const strike = () => {
   boltTimer = setTimeout(strike, 1200 + Math.random() * 2300);
@@ -1175,18 +1304,23 @@ const strike = () => {
     [{ transform: "none" }, { transform: "translate(-6px,3px)" }, { transform: "translate(5px,-4px)" }, { transform: "none" }],
     { duration: 220 });
 };
-const setStage = on => {
+// Start / stop the stage for the current show: the metal one (strobe, equalizer, lightning and
+// the "metal" canvas effects) or the epic one (the "epic" canvas effects, see below)
+const setStage = () => {
+  const mode = document.body.classList.contains("metal") ? "metal" : document.body.classList.contains("epic") ? "epic" : null;
   clearTimeout(boltTimer);
   [strobe, eq].forEach(el => el.remove());
   fxStop();
-  if (!on) return;
-  document.body.append(strobe, eq);
+  fxMode = mode;
+  if (!mode) return;
+  if (mode === "metal") document.body.append(strobe, eq);
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   fxStart();
-  strike();
+  if (mode === "metal") strike();
 };
-setStage(document.body.classList.contains("metal"));
-document.addEventListener("metal", e => setStage(e.detail));
+setStage();
+document.addEventListener("metal", setStage);
+document.addEventListener("epic", setStage);
 
 // Metal music: one song from YouTube, from 1:50 to its end (METAL_SECONDS later), in sync with the
 // takeover: opened late, it starts further into the song so both end together. It starts by
