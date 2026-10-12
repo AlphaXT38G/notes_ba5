@@ -179,8 +179,24 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 .bar span{display:block;height:100%;border-radius:inherit;background:var(--c)}
 .group{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);padding:.6rem 0 .1rem;border-bottom:1px solid var(--line)}
 /* Search field and its no-result message */
-#search{width:100%;margin-top:1.25rem;padding:.65rem .9rem;font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:.6rem;outline:none}
+.searchrow{display:flex;gap:.5rem;margin-top:1.25rem}
+#search{flex:1;min-width:0;padding:.65rem .9rem;font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:.6rem;outline:none}
 #search:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-bg)}
+/* Names / Previews switch, next to the search field */
+.view{display:flex;padding:.2rem;background:var(--card);border:1px solid var(--line);border-radius:.6rem}
+.view button{padding:0 .75rem;font:600 .82rem system-ui,sans-serif;color:var(--mut);background:none;border:0;border-radius:.4rem;cursor:pointer}
+.view button[aria-pressed=true]{color:var(--fg);background:var(--acc-bg)}
+/* Previews view (html[data-view=previews]): every list becomes a grid of small first-page thumbnails.
+   Collapsible sections and folder headings take a full row; size and date move to the tooltip. */
+.thumb{display:none}
+[data-view=previews] .links{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:.5rem;padding:.5rem 0}
+[data-view=previews] .links > .fold,[data-view=previews] .group{grid-column:1/-1}
+[data-view=previews] .links a{flex-direction:column;justify-content:flex-start;align-items:center;gap:.3rem;padding:.35rem;border:0;border-radius:.5rem;font-size:.75rem;line-height:1.25;text-align:center}
+[data-view=previews] .links a small{display:none}
+[data-view=previews] .thumb{display:block;width:100%;aspect-ratio:170/240;object-fit:cover;object-position:top;background:#fff;border:1px solid var(--line);border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+[data-view=previews] .thumb.none{display:grid;place-items:center;color:var(--mut);font:700 .7rem ui-monospace,monospace;background:var(--acc-bg)}
+[data-view=previews] .links a .new{margin:.15rem 0 0;font-size:.6rem}
+[data-view=previews] .links a span{display:flex;flex-direction:column;align-items:center}
 #empty{color:var(--mut)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 /* Flame mode (body.fire): fire gradients, glowing card borders, flame emojis rising from the bottom */
@@ -239,6 +255,7 @@ body.party h2::after{content:" 🎉"}
 # localStorage can throw (private mode, blocked storage), hence the try/catch everywhere.
 THEME_JS = """
 try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+try { const v = localStorage.getItem("view"); if (v) document.documentElement.dataset.view = v; } catch (e) {}
 """
 
 # Runs at the end of <body>, once every element exists
@@ -430,6 +447,16 @@ async function rift() {
 // Every word typed must appear (in any order, case-insensitive). If the subject itself matches
 // (name or code), the whole card stays as usual; otherwise only the matching documents are kept.
 // An empty field shows everything again and closes the sections.
+// Names / Previews switch: sets data-view on <html> (the CSS does the rest) and remembers it
+const viewBtns = document.querySelectorAll(".view button");
+const setView = v => {
+  root.dataset.view = v;
+  viewBtns.forEach(b => b.setAttribute("aria-pressed", b.dataset.view === v));
+  try { localStorage.setItem("view", v); } catch (e) {}
+};
+viewBtns.forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
+viewBtns.forEach(b => b.setAttribute("aria-pressed", b.dataset.view === (root.dataset.view || "names")));
+
 const q = document.getElementById("search");
 q.addEventListener("input", () => {
   const words = q.value.toLowerCase().trim().split(/\\s+/).filter(Boolean);
@@ -497,16 +524,25 @@ def is_new(when):
     """True for documents changed less than NEW_DAYS ago (they get the "New" badge)."""
     return (datetime.now() - when).days < NEW_DAYS
 
-def link(subject, p, root, when):
-    """One <li> line: document name (+ "New" badge) on the left, size and date on the right."""
+def link(subject, p, root, when, shot=None):
+    """One <li> line: document name (+ "New" badge) on the left, size and date on the right.
+
+    It also carries the first-page thumbnail (or a "PDF" placeholder), only shown in the
+    Previews view; the size and date are repeated in the tooltip for that view.
+    """
     rel = p.relative_to(root).as_posix()
     badge = '<span class="new">New</span>' if is_new(when) else ""
+    meta = f"{p.stat().st_size / 1e6:.1f} MB · {when:%d %b %Y}"
+    thumb = (
+        f'<img class="thumb" src="{subject}/{html.escape(shot.relative_to(root).as_posix())}" alt="" loading="lazy">'
+        if shot else '<span class="thumb none">PDF</span>'
+    )
     return (
-        f'<li><a href="{subject}/{html.escape(rel)}"><span>{html.escape(label(p, root))}{badge}</span>'
-        f'<small>{p.stat().st_size / 1e6:.1f} MB · {when:%d %b %Y}</small></a></li>'
+        f'<li><a href="{subject}/{html.escape(rel)}" title="{meta}">{thumb}<span>{html.escape(label(p, root))}{badge}</span>'
+        f'<small>{meta}</small></a></li>'
     )
 
-def fold(subject, pdfs, root, when, noun, grouped=True, extra=""):
+def fold(subject, pdfs, root, when, shots, noun, grouped=True, extra=""):
     """Collapsible list of PDFs, with folder headings when grouped.
 
     The summary reads "<n> <noun>(s)", e.g. "4 weekly notes", followed by a "<k> new" badge
@@ -521,13 +557,13 @@ def fold(subject, pdfs, root, when, noun, grouped=True, extra=""):
         if grouped and folder != "." and folder != group:
             items.append(f'<li class="group">{html.escape(folder)}</li>')
         group = folder
-        items.append(link(subject, p, root, when[p]))
+        items.append(link(subject, p, root, when[p], shots[p]))
     n = len(pdfs)
     # The list is folded, so say on the summary when something new is inside
     fresh = sum(is_new(when[p]) for p in pdfs)
     badge = f'<span class="new">{fresh} new</span>' if fresh else ""
     return (
-        f'<li><details><summary>{n} {noun}{"s" if n > 1 else ""}{badge}{extra}</summary>'
+        f'<li class="fold"><details><summary>{n} {noun}{"s" if n > 1 else ""}{badge}{extra}</summary>'
         f'<ul class="links">{"".join(items)}</ul></details></li>'
     )
 
@@ -593,9 +629,9 @@ def build_index():
         # Weekly notes are recognised by their name (weekNN), wherever they are stored
         weeks = [p for p in rest if WEEK.fullmatch(p.stem)]
         others = [p for p in rest if p not in weeks]
-        links = "".join(link(s["id"], p, root, when[p]) for p in main)
-        links += fold(s["id"], weeks, root, when, "weekly note", grouped=False, extra=progress(weeks, s))
-        links += fold(s["id"], others, root, when, "more document")
+        links = "".join(link(s["id"], p, root, when[p], shots[p]) for p in main)
+        links += fold(s["id"], weeks, root, when, shots, "weekly note", grouped=False, extra=progress(weeks, s))
+        links += fold(s["id"], others, root, when, shots, "more document")
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
         # --c = accent colour of the card, from subjects.json or the palette (in file order)
         cards.append(
@@ -610,7 +646,8 @@ def build_index():
 <style>{CSS}</style></head><body><div class="wrap">
 <header><div class="tools"><button id="fire" type="button" aria-label="Flame mode" title="Flame mode" aria-pressed="false">🔥</button><button id="theme" type="button" aria-label="Toggle dark mode"></button></div>
 <h1>Notes BA5</h1><p class="sub">EPFL IN, autumn semester: course notes, weekly notes and cheat sheets</p>
-<input id="search" type="search" placeholder="Search a course, a week, a sheet…" aria-label="Search documents" autocomplete="off"></header>
+<div class="searchrow"><input id="search" type="search" placeholder="Search a course, a week, a sheet…" aria-label="Search documents" autocomplete="off">
+<div class="view" role="group" aria-label="Display"><button type="button" data-view="names">Names</button><button type="button" data-view="previews">Previews</button></div></div></header>
 <main class="grid">{"".join(cards)}</main>
 <p id="empty" hidden>No document matches this search.</p>
 <footer>Generated {datetime.now():%Y-%m-%d %H:%M} by build.py</footer>
