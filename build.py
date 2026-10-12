@@ -703,11 +703,13 @@ const setAir = on => {
 setAir(document.body.classList.contains("night"));
 document.addEventListener("night", e => setAir(e.detail));
 
-// Night music: jazz from YouTube, looped. Browsers refuse to start sound on their own, so it
-// starts on the first click or key press on the page; the vinyl button then plays / pauses it
-// (through the YouTube iframe API messages). Stopping it is remembered for the next visits.
+// Night music: jazz from YouTube, looped. It starts by itself when the night begins. Browsers
+// only allow sound after a user gesture, so if the page has not had one yet it autoplays muted
+// and the sound comes on at the first click or key press anywhere. The vinyl button then plays /
+// pauses it (through the YouTube iframe API messages). Pausing is remembered: no autoplay on the
+// next visits until it is played again.
 const JAZZ = "7gtIh5dF9Xk";
-let jazz = null, playing = false;
+let jazz = null, playing = false, jazzMuted = false, jazzSoundAt = 0;
 const vinyl = document.createElement("button");
 vinyl.id = "vinyl";
 vinyl.type = "button";
@@ -715,18 +717,20 @@ vinyl.innerHTML = '<span class="deck"><span class="disc"></span><span class="arm
 const jazzOff = () => { try { return localStorage.getItem("jazz") === "off"; } catch (e) { return false; } };
 const paintVinyl = () => {
   vinyl.classList.toggle("playing", playing);
-  vinyl.querySelector(".label").textContent = playing ? "♪ Jazz on — click to pause" : "♪ Click to play some jazz";
-  vinyl.title = playing ? "Pause the music" : "Play the music";
+  vinyl.querySelector(".label").textContent = !playing ? "♪ Click to play some jazz"
+    : jazzMuted ? "🔇 Click anywhere for sound" : "♪ Jazz on — click to pause";
+  vinyl.title = !playing ? "Play the music" : jazzMuted ? "Turn the sound on" : "Pause the music";
 };
 const command = func => jazz && jazz.contentWindow.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
-const play = () => {
-  if (!jazz) {  // first time: create the player, it autoplays thanks to the user's click
+const play = (muted = false) => {
+  if (!jazz) {  // first time: create the player, it autoplays (muted when there was no gesture yet)
     jazz = document.createElement("iframe");
     jazz.id = "jazz";
     jazz.title = "Background jazz";
     jazz.allow = "autoplay; encrypted-media";
-    jazz.src = `https://www.youtube.com/embed/${JAZZ}?autoplay=1&loop=1&playlist=${JAZZ}&controls=0&enablejsapi=1`;
+    jazz.src = `https://www.youtube.com/embed/${JAZZ}?autoplay=1&mute=${muted ? 1 : 0}&loop=1&playlist=${JAZZ}&controls=0&enablejsapi=1`;
     document.body.append(jazz);
+    jazzMuted = muted;
   } else command("playVideo");
   playing = true;
   try { localStorage.removeItem("jazz"); } catch (e) {}
@@ -738,16 +742,33 @@ const pause = () => {
   try { localStorage.setItem("jazz", "off"); } catch (e) {}
   paintVinyl();
 };
-vinyl.addEventListener("click", e => { e.stopPropagation(); playing ? pause() : play(); });
-// First interaction anywhere on the page starts the music (unless it was stopped before)
-const firstTouch = () => {
-  if (document.body.classList.contains("night") && !jazz && !jazzOff()) play();
+const jazzSound = () => {  // unmute a jazz that autoplayed muted
+  if (!jazz || !jazzMuted) return;
+  command("unMute");
+  jazzMuted = false;
+  jazzSoundAt = performance.now();
+  paintVinyl();
 };
-document.addEventListener("pointerdown", firstTouch, { once: true });
-document.addEventListener("keydown", firstTouch, { once: true });
+vinyl.addEventListener("click", e => {
+  e.stopPropagation();
+  if (performance.now() - jazzSoundAt < 600) return;  // this same click just turned the sound on
+  if (jazzMuted) jazzSound();
+  else playing ? pause() : play();
+});
 const setMusic = on => {
-  if (on) { paintVinyl(); document.body.append(vinyl); }
-  else { if (playing) command("pauseVideo"); playing = false; vinyl.remove(); }
+  document.removeEventListener("pointerdown", jazzSound);
+  document.removeEventListener("keydown", jazzSound);
+  if (!on) { if (playing) command("pauseVideo"); playing = false; vinyl.remove(); return; }
+  document.body.append(vinyl);
+  if (!jazz && !jazzOff()) {
+    const canSound = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
+    play(!canSound);
+    if (!canSound) {
+      document.addEventListener("pointerdown", jazzSound, { once: true });
+      document.addEventListener("keydown", jazzSound, { once: true });
+    }
+  }
+  paintVinyl();
 };
 setMusic(document.body.classList.contains("night"));
 document.addEventListener("night", e => setMusic(e.detail));
