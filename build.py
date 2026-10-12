@@ -327,6 +327,8 @@ body.metal h1{animation:riff .12s steps(2) infinite}
 #strobe{position:fixed;inset:0;z-index:3;pointer-events:none;background:#fff;opacity:0}
 #eq{position:fixed;left:0;right:0;bottom:0;z-index:2;height:4.5rem;display:flex;align-items:flex-end;gap:3px;padding:0 3px;pointer-events:none;opacity:.6}
 #eq i{flex:1;height:100%;transform-origin:bottom;background:linear-gradient(to top,#ff1e00,#ff7a00 55%,#ffe14d);border-radius:2px 2px 0 0;animation:eq var(--d) ease-in-out infinite alternate}
+.mosh{position:absolute;bottom:-3rem;filter:drop-shadow(0 0 8px rgba(255,60,0,.8));animation:mosh linear forwards}
+@keyframes mosh{0%{transform:translate(0,0) rotate(0) scale(.6)}50%{transform:translate(var(--mx),var(--my)) rotate(calc(var(--spin) / 2)) scale(1.15)}100%{transform:translate(var(--ex),var(--ey)) rotate(var(--spin)) scale(.8);opacity:.2}}
 @keyframes headbang{from{transform:rotate(-.7deg) translateY(0)}to{transform:rotate(.7deg) translateY(4px)}}
 @keyframes riff{0%{transform:skew(-10deg) translate(0,0)}50%{transform:skew(-10deg) translate(2px,-1px)}}
 @keyframes strike{0%{opacity:0}10%{opacity:1}25%{opacity:.25}40%{opacity:1}100%{opacity:0}}
@@ -749,7 +751,7 @@ eq.innerHTML = Array.from({ length: 48 }, () =>
 let boltTimer = null;
 const strike = () => {
   boltTimer = setTimeout(strike, 1200 + Math.random() * 2300);
-  if (crowded(stage, 4)) return;
+  if (document.hidden || stage.querySelectorAll(".bolt").length >= 4) return;  // bolts only (see crowded)
   const b = document.createElement("span");
   b.className = "bolt";
   b.style.cssText = `left:${8 + Math.random() * 84}%;--h:${55 + Math.random() * 45}vh;transform:scaleX(${Math.random() < .5 ? -1 : 1})`;
@@ -760,13 +762,31 @@ const strike = () => {
     [{ transform: "none" }, { transform: "translate(-6px,3px)" }, { transform: "translate(5px,-4px)" }, { transform: "none" }],
     { duration: 220 });
 };
+// Mosh pit: rock emojis thrown from the bottom corners, flying across the page in an arc
+// (up to --mx/--my, then down to --ex/--ey) while spinning; one every 180 ms, at most 35 at once
+let moshTimer = null;
+const mosh = () => {
+  if (crowded(stage, 35)) return;
+  const m = document.createElement("span"), left = Math.random() < .5, w = innerWidth, h = innerHeight;
+  const dir = left ? 1 : -1, reach = (.4 + Math.random() * .6) * w;
+  m.className = "mosh";
+  m.textContent = ["🤘", "💀", "⚡", "🎸", "🔥", "🥁"][Math.floor(Math.random() * 6)];
+  m.style.cssText = `${left ? "left" : "right"}:${Math.random() * 12}%;font-size:${1.4 + Math.random() * 1.8}rem;` +
+    `--mx:${dir * reach / 2}px;--my:${-(.45 + Math.random() * .45) * h}px;--ex:${dir * reach}px;--ey:${-Math.random() * .2 * h}px;` +
+    `--spin:${dir * (360 + Math.random() * 720)}deg;animation-duration:${1.6 + Math.random() * 1.4}s`;
+  m.addEventListener("animationend", () => m.remove());
+  stage.append(m);
+};
 const setStage = on => {
   clearTimeout(boltTimer);
+  clearInterval(moshTimer);
   stage.replaceChildren();
   [stage, strobe, eq].forEach(el => el.remove());
   if (!on) return;
   document.body.append(stage, strobe, eq);
-  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) strike();
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  strike();
+  moshTimer = setInterval(mosh, 180);
 };
 setStage(document.body.classList.contains("metal"));
 document.addEventListener("metal", e => setStage(e.detail));
