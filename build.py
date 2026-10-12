@@ -155,7 +155,38 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 .bar{width:6rem;height:.4rem;border-radius:999px;background:var(--line);overflow:hidden}
 .bar span{display:block;height:100%;border-radius:inherit;background:var(--c)}
 .group{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);padding:.6rem 0 .1rem;border-bottom:1px solid var(--line)}
+#search{width:100%;margin-top:1.25rem;padding:.65rem .9rem;font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:.6rem;outline:none}
+#search:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-bg)}
+#empty{color:var(--mut)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
+"""
+
+JS = """
+// Search: keep subjects and documents whose text matches, open the sections holding a match
+const q = document.getElementById("search");
+q.addEventListener("input", () => {
+  const words = q.value.toLowerCase().trim().split(/\\s+/).filter(Boolean);
+  const hit = el => words.every(w => el.textContent.toLowerCase().includes(w));
+  let shown = 0;
+  document.querySelectorAll("main section").forEach(sec => {
+    const whole = !words.length || hit(sec.querySelector("h2")) || hit(sec.querySelector(".code"));
+    let any = whole;
+    sec.querySelectorAll(".links a").forEach(a => {
+      const ok = whole || hit(a);
+      a.parentNode.hidden = !ok;
+      any ||= ok;
+    });
+    sec.querySelectorAll("details").forEach(d => {
+      const inside = [...d.querySelectorAll(".links a")].some(a => !a.parentNode.hidden);
+      d.parentNode.hidden = !inside;
+      d.querySelectorAll(".group").forEach(g => g.hidden = !whole && !!words.length);
+      d.open = words.length > 0 && inside && !whole;
+    });
+    sec.hidden = !any;
+    shown += any;
+  });
+  document.getElementById("empty").hidden = shown > 0;
+});
 """
 
 def label(p, root):
@@ -263,10 +294,12 @@ def build_index():
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Notes BA5</title>
 <style>{CSS}</style></head><body><div class="wrap">
-<header><h1>Notes BA5</h1><p class="sub">EPFL IN, autumn semester: course notes, weekly notes and cheat sheets</p></header>
+<header><h1>Notes BA5</h1><p class="sub">EPFL IN, autumn semester: course notes, weekly notes and cheat sheets</p>
+<input id="search" type="search" placeholder="Search a course, a week, a sheet…" aria-label="Search documents" autocomplete="off"></header>
 <main class="grid">{"".join(cards)}</main>
+<p id="empty" hidden>No document matches this search.</p>
 <footer>Generated {datetime.now():%Y-%m-%d %H:%M} by build.py</footer>
-</div></body></html>"""
+</div><script>{JS}</script></body></html>"""
     DIST.mkdir(exist_ok=True)
     (DIST / "index.html").write_text(page, encoding="utf-8")
     ok("dist/index.html")
