@@ -390,9 +390,15 @@ const fireBtn = document.getElementById("fire"), layer = document.createElement(
 layer.className = "flames";
 document.body.append(layer);
 let timer = null;  // interval spawning new flames while the mode is on
+// While the page is in the background the browser pauses CSS animations, so the floating emojis
+// (flames, music notes) never reach their end and are never removed, while the intervals keep
+// adding more: they piled up at the bottom of the screen and made the page lag on return.
+// So nothing is added while the page is hidden, and never more than `max` at once in a layer.
+const crowded = (box, max) => document.hidden || box.childElementCount >= max;
 // One flame emoji at x% of the width, size in rem, rising for dur seconds with a random drift
 // and tilt (--dx, --r, used by the "rise" keyframes); it removes itself when the animation ends
 const flame = (x, size, dur) => {
+  if (crowded(layer, 70)) return;
   const f = document.createElement("span");
   f.textContent = "🔥";
   f.style.cssText = `left:${x}%;font-size:${size}rem;animation-duration:${dur}s;--dx:${(Math.random() - .5) * 120}px;--r:${(Math.random() - .5) * 60}deg`;
@@ -622,6 +628,7 @@ const air = document.createElement("div");
 air.className = "air";
 let noteTimer = null;
 const note = () => {
+  if (crowded(air, 3 + 25)) return;  // 3 smoke clouds + at most 25 notes (see crowded)
   const n = document.createElement("span");
   n.className = "note";
   n.textContent = "♪♫♩♬"[Math.floor(Math.random() * 4)];
