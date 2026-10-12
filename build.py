@@ -656,6 +656,7 @@ def link(subject, p, root, when, shot=None):
 
     It also carries the first-page thumbnail (or a "PDF" placeholder), only shown in the
     Previews view; the size and date are repeated in the tooltip for that view.
+    Documents open in a new tab, so the index stays open next to them.
     """
     rel = p.relative_to(root).as_posix()
     badge = '<span class="new">New</span>' if is_new(when) else ""
@@ -665,7 +666,7 @@ def link(subject, p, root, when, shot=None):
         if shot else '<span class="thumb none">PDF</span>'
     )
     return (
-        f'<li><a href="{subject}/{html.escape(rel)}" title="{meta}">{thumb}<span>{html.escape(label(p, root))}{badge}</span>'
+        f'<li><a href="{subject}/{html.escape(rel)}" target="_blank" rel="noopener" title="{meta}">{thumb}<span>{html.escape(label(p, root))}{badge}</span>'
         f'<small>{meta}</small></a></li>'
     )
 
