@@ -305,7 +305,17 @@ body.night{--bg:#120a09;--fg:#f3e3c3;--card:rgba(48,26,18,.85);--line:rgba(255,1
 body.night h1{color:#ffe1b0;font-family:"Brush Script MT","Segoe Script",cursive;font-weight:400;font-size:2.6rem;letter-spacing:.01em;text-shadow:0 0 4px #fff2d6,0 0 12px #ff9d4d,0 0 26px #ff5e8a,0 0 48px #ff2d6f;animation:neon 6s infinite}
 body.night h1::after{content:" 🎷"}
 body.night .sub{color:#e9c89a;font-style:italic}
-body.night #fire{display:none}  /* no flame mode in the bar, see applyNight in JS */
+body.night #fire,body.metal #fire{display:none}  /* no flame mode in the bar or the metal show, see applyNight in JS */
+/* Metal takeover (body.metal, 1:00:00 - 1:01:51): pitch black stage, blood red light pulsing on
+   the beat behind everything (::before), chrome title skewed like a band logo */
+body.metal{--bg:#050404;--fg:#f4f1f1;--card:rgba(24,6,6,.88);--line:rgba(255,50,30,.25);--acc:#ff3b1f;--acc-bg:rgba(255,59,31,.14);--mut:#b9a9a9;--new:#ffd23f;--new-bg:rgba(255,210,63,.16);background:var(--bg)}
+body.metal::before{content:"";position:fixed;inset:-10%;z-index:0;pointer-events:none;background:radial-gradient(50% 40% at 50% 100%,rgba(255,30,0,.45),transparent 70%),radial-gradient(35% 30% at 0% 0%,rgba(160,0,0,.4),transparent 70%),radial-gradient(35% 30% at 100% 0%,rgba(160,0,0,.4),transparent 70%);animation:beat .5s ease-out infinite}
+body.metal .wrap{position:relative;z-index:1}
+body.metal h1{font:900 3rem Impact,"Arial Black",sans-serif;text-transform:uppercase;letter-spacing:.06em;background:linear-gradient(180deg,#fff 0%,#cfcfcf 35%,#5a5a5a 50%,#e8e8e8 65%,#8a8a8a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 2px #000) drop-shadow(0 0 14px rgba(255,40,0,.8));transform:skew(-10deg);transform-origin:left}
+body.metal h1::after{content:" 🤘";-webkit-text-fill-color:initial}
+body.metal .sub{color:#ff4a2a;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+body.metal section{box-shadow:-10px 0 24px -12px rgba(255,40,0,.8)}
+@keyframes beat{0%{opacity:1;transform:scale(1.04)}100%{opacity:.55;transform:scale(1)}}
 body.night section{box-shadow:-8px 0 22px -12px rgba(255,170,80,.6)}
 body.night .links a:hover{background:rgba(245,176,65,.08)}
 /* Bar air (night only): slow drifting smoke clouds and music notes floating up, behind the page */
@@ -559,38 +569,48 @@ async function rift() {
   });
 }
 
-// Jazz bar night: from 21:30 to 1:00 the page turns into a jazz bar (body.night in CSS).
+// Night: from 21:30 the page turns into a jazz bar (body.night in CSS), then plays one metal song.
 // The night goes through phases (body[data-phase] in CSS):
-//   evening  21:30 - 0:45  warm light
-//   closing   0:45 - 1:00  the bar closes, the subtitle changes (see below)
-// From 1:00 the page is back to its usual day look.
-// Checked every minute, so it changes by itself while the page is open.
-// ?night=0 / 1 / evening / closing in the URL forces a phase (handy to try it any time).
+//   evening  21:30    - 0:45     jazz bar, warm light
+//   closing   0:45    - 1:00     the bar closes, the subtitle changes (see below)
+//   metal     1:00:00 - 1:01:51  hard rock / metal takeover for one song (body.metal, see below)
+// After that the page is back to its usual day look.
+// Checked every second (the metal phase is short and must start right on time).
+// ?night=0 / 1 / evening / closing / metal in the URL forces a phase (handy to try it any time).
 const sub = document.querySelector(".sub"), daySub = sub.textContent;
 const NIGHT_SUBS = {  // null = keep the usual subtitle
   evening: null,
   closing: "Last call was a while ago.",
+  metal: "1:00 AM. Time to headbang. 🤘",
 };
+const NIGHT = new Set(["evening", "closing"]);  // the jazz bar phases (body.night)
+const METAL_SECONDS = 111;  // the song plays from 1:50 to its end, 1 min 51 s later
 const forced = new URLSearchParams(location.search).get("night");
 const phaseNow = () => {
   if (forced === "0") return null;
   if (forced in NIGHT_SUBS) return forced;
-  const d = new Date(), m = d.getHours() * 60 + d.getMinutes();
-  if (m >= 21 * 60 + 30 || m < 45) return "evening";
-  if (m < 60) return "closing";
+  const d = new Date(), t = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+  if (t >= 21 * 3600 + 30 * 60 || t < 45 * 60) return "evening";
+  if (t < 3600) return "closing";
+  if (t < 3600 + METAL_SECONDS) return "metal";
   return forced === "1" ? "evening" : null;  // ?night=1 during the day: start of the night
 };
 const applyNight = () => {
-  const phase = phaseNow(), on = phase !== null;
+  const phase = phaseNow();
   if (phase === (document.body.dataset.phase || null)) return;
-  if (on) document.body.dataset.phase = phase; else delete document.body.dataset.phase;
-  sub.textContent = (on && NIGHT_SUBS[phase]) || daySub;
-  if (on !== document.body.classList.contains("night")) {
-    // Flames and the jazz bar together are too many moving elements (the page lags):
-    // the night turns the flame mode off, and its button is hidden until morning (CSS)
-    if (on && document.body.classList.contains("fire")) setFire(false);
-    document.body.classList.toggle("night", on);
-    document.dispatchEvent(new CustomEvent("night", { detail: on }));  // for the night extras below
+  if (phase) document.body.dataset.phase = phase; else delete document.body.dataset.phase;
+  sub.textContent = (phase && NIGHT_SUBS[phase]) || daySub;
+  const night = NIGHT.has(phase), metal = phase === "metal";
+  // Flames on top of the jazz bar or the metal show are too many moving elements (the page
+  // lags): both turn the flame mode off, and hide its button while they last (CSS)
+  if ((night || metal) && document.body.classList.contains("fire")) setFire(false);
+  if (night !== document.body.classList.contains("night")) {
+    document.body.classList.toggle("night", night);
+    document.dispatchEvent(new CustomEvent("night", { detail: night }));  // for the night extras below
+  }
+  if (metal !== document.body.classList.contains("metal")) {
+    document.body.classList.toggle("metal", metal);
+    document.dispatchEvent(new CustomEvent("metal", { detail: metal }));  // for the metal extras below
   }
   document.dispatchEvent(new CustomEvent("phase", { detail: phase }));
 };
@@ -617,7 +637,7 @@ document.addEventListener("phase", e => {
 });
 
 applyNight();
-setInterval(applyNight, 60000);
+setInterval(applyNight, 1000);
 
 // Bar air: 3 smoke clouds drifting across the room and a music note rising every ~0.9 s,
 // with a random sway and tilt (--sway, --r); everything is removed when the night ends
