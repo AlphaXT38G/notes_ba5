@@ -47,9 +47,12 @@ turntable in the bottom left corner plays / pauses it. A bar menu in the bottom
 right corner serves each subject's latest notes as a cocktail.
 
 Jazz plays until 00:45, then the bar closes until 01:00 (darker light, the neon goes
-out letter by letter and the bartender sends you to bed), and the page is back to
-its day look. Add `?night=evening` or `?night=closing` (or `1` / `0`) to the URL to
-force a phase (or the day) at any time.
+out letter by letter and the bartender sends you to bed). At **01:00:00** a metal
+song takes over for 1 min 51 s 🤘: chrome title, red light pulsing on the beat,
+headbanging cards, lightning strikes, flying rock emojis and an equalizer, while a
+guitar amp replaces the turntable and plays the song from 1:50 to its end. Then the
+page is back to its day look. Add `?night=evening`, `?night=closing` or
+`?night=metal` (or `1` / `0`) to the URL to force a phase (or the day) at any time.
 
 It hides two easter eggs: a surprise banner that shows up on some visits, and
 something that happens when you type the Konami code (↑↑↓↓←→←→BA).
