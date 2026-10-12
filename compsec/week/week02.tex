@@ -1,0 +1,452 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Computer Security}}
+\fancyhead[C]{\small Security Design Principles}
+\fancyhead[R]{\small Week 02 --- 14-20/09/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% DEFINITION - blue
+\newtcolorbox{definition}{
+enhanced,
+breakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+% IMPORTANT - pink
+\newtcolorbox{important}{
+enhanced,
+breakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+% FORMULAS - green
+\newtcolorbox{formula}{
+enhanced,
+breakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+% WARNING - orange
+\newtcolorbox{warning}{
+enhanced,
+breakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+% EXAMPLE - purple
+\newtcolorbox{example}{
+enhanced,
+breakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+% SUMMARY - orange
+\newtcolorbox{summary}{
+enhanced,
+breakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+%\footnotesize   --> To reduce the size of the text
+
+\thispagestyle{fancy}
+
+
+
+\begin{multicols}{2}
+
+
+%=========================================================
+\section{Heartbleed bug}
+
+
+\begin{example}
+
+\textbf{Heartbleed bug:} Issue: The attacker could lie about the size of their data.
+
+\begin{itemize}
+
+\item Attacker sends 1 byte of data.
+
+\item Attacker claims they sent 64,000 bytes.
+
+\item The server, without checking the actual length, would reply with the attacker's 1
+byte plus the next 63,999 bytes of whatever was in its private memory.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{Transport Layer Security (TLS)} is a cryptographic protocol that provides privacy, data integrity, and authentication for internet communications.
+
+\end{definition}
+
+
+
+%=========================================================
+\section{1 -- Economy of mechanism}
+
+
+\begin{important}
+
+``Keep the [security mechanism / implementation] design as simple and small as possible''
+
+\end{important}
+
+
+\textbf{Why?}
+
+It needs to be easy to audit and verify.
+
+(operational testing is not appropriate to evaluate security)
+
+[Penetration testing is valuable]
+
+
+\separator
+
+
+\begin{definition}
+
+\textbf{The ``Trusted Computing Base'' (TCB)}
+
+Every component of the system on which the security policy relies.
+
+Hardware / firmware / software
+
+\end{definition}
+
+
+\begin{important}
+
+The TCB is trusted to operate correctly for the security policy to hold
+
+\end{important}
+
+
+\begin{warning}
+
+The only proper use of the verb ``to trust'' in Security Engineering:
+
+``X trusts Y will do Z''
+
+\end{warning}
+
+
+
+%=========================================================
+\section{2 -- Fail-safe defaults}
+
+
+\begin{important}
+
+``Base access decisions on permission rather than exclusion'' [SS75]
+
+\end{important}
+
+
+\begin{definition}
+
+\textbf{Ransomware -- What is it?}
+
+\begin{itemize}
+
+\item A Ransomware denies you access to your own data, most commonly by encrypting your files
+
+\item Attacker then demands a ransom payment in exchange for the private key required to decrypt
+your files
+
+\end{itemize}
+
+\end{definition}
+
+
+
+\columnbreak
+
+%=========================================================
+\section{3 -- Complete mediation}
+
+
+\begin{important}
+
+``Every access to every object must be checked for authority'' [SS75]
+
+\end{important}
+
+
+
+%=========================================================
+\section{4 -- Open design}
+
+
+\begin{important}
+
+``The design should not be secret'' [SS75]
+
+\end{important}
+
+
+
+%=========================================================
+\section{5 -- Separation of privilege}
+
+
+\begin{important}
+
+``No single accident, deception, or breach of trust is sufficient to
+compromise the protected information'' [SS75]
+
+\end{important}
+
+
+
+%=========================================================
+\section{6 -- Least privilege}
+
+
+\begin{important}
+
+``Every program and every user of the system should operate using the
+least set of privileges necessary to complete the job'' [SS75]
+
+\end{important}
+
+
+
+%=========================================================
+\section{7 -- Least common mechanism}
+
+
+\begin{important}
+
+``Minimize the amount of mechanism common to more than one
+user and depended on by all users'' [SS75]
+
+\end{important}
+
+
+
+%=========================================================
+\section{8 -- Psychological acceptability}
+
+
+\begin{important}
+
+``It is essential that the human interface be designed for ease of use, so that users
+routinely and automatically apply the protection mechanisms correctly'' [SS75]
+
+\end{important}
+
+
+\separator
+
+
+\textbf{Extra principles from physical security}
+
+
+
+%=========================================================
+\section{9 -- Work factor}
+
+
+\begin{important}
+
+``Compare the cost of circumventing the mechanism with
+the resources of a potential attacker'' [SS75]
+
+\end{important}
+
+
+
+%=========================================================
+\section{10 -- Compromise recording}
+
+
+\begin{important}
+
+``Reliably record that a compromise of information has occurred [...] in
+place of more elaborate mechanisms that completely prevent loss'' [SS75]
+
+\end{important}
+
+
+
+\end{multicols}
+
+
+\end{document}
