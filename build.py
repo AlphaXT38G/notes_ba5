@@ -122,6 +122,8 @@ KINDS = {"course.pdf": "Course notes", "cheatsheet.pdf": "Cheat sheet"}
 ORDER = list(KINDS)  # course first, then cheatsheet, then anything else
 NEW_DAYS = 7         # documents changed more recently get a "New" badge
 SEMESTER_WEEKS = 14  # length of the progress bar, override with "weeks" in subjects.json
+# One accent per subject (in subjects.json order), override with "color" in subjects.json
+PALETTE = ["#3b6fd8", "#d9622b", "#2f9e6b", "#b4459a", "#c99a1c", "#7a55d1", "#1f9bb0", "#d04452"]
 WEEK = re.compile(r"week_?(\d+)(.*)", re.I)  # weekly notes: week01.pdf, week_3.pdf, ...
 
 CSS = """
@@ -134,7 +136,8 @@ header{margin-bottom:1.75rem}
 h1{font-size:1.9rem;margin:0;letter-spacing:-.02em}
 .sub{color:var(--mut);margin:.25rem 0 0}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:2rem 2.5rem;align-items:start}
-.code{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+section{border-left:4px solid var(--c);padding-left:1rem}
+.code{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--c)}
 h2{font-size:1.1rem;line-height:1.3;margin:.1rem 0 .15rem}
 .exam{margin:0 0 .4rem;font-size:.85rem;color:var(--mut)}
 .links{list-style:none;margin:.5rem 0 0;padding:0;border-top:1px solid var(--line)}
@@ -150,7 +153,7 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 .new{display:inline-block;margin-left:.5rem;padding:.05rem .45rem;border-radius:999px;background:var(--new-bg);color:var(--new);font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;vertical-align:.1em}
 .progress{margin-left:auto;display:flex;align-items:center;gap:.5rem;font-size:.75rem;font-weight:600;color:var(--mut);white-space:nowrap}
 .bar{width:6rem;height:.4rem;border-radius:999px;background:var(--line);overflow:hidden}
-.bar span{display:block;height:100%;border-radius:inherit;background:var(--acc)}
+.bar span{display:block;height:100%;border-radius:inherit;background:var(--c)}
 .group{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);padding:.6rem 0 .1rem;border-bottom:1px solid var(--line)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 """
@@ -229,7 +232,7 @@ def natural(p):
 
 def build_index():
     cards = []
-    for s in CONFIG:
+    for i, s in enumerate(CONFIG):
         root = DIST / s["id"]
         pdfs = list(root.rglob("*.pdf")) if root.is_dir() else []
         if not pdfs:
@@ -252,7 +255,7 @@ def build_index():
         links += fold(s["id"], others, root, when, "more document")
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
         cards.append(
-            f'<section><span class="code">{s["id"]}</span>'
+            f'<section style="--c:{s.get("color", PALETTE[i % len(PALETTE)])}"><span class="code">{s["id"]}</span>'
             f'<h2>{html.escape(s["name"])}</h2>{exam}<ul class="links">{links}</ul></section>'
         )
     page = f"""<!doctype html>
