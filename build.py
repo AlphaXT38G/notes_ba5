@@ -439,7 +439,20 @@ const setFire = on => {
   } else layer.replaceChildren();  // drop the flames still rising, right away
   try { localStorage.setItem("fire", on ? "1" : ""); } catch (e) {}
 };
-fireBtn.addEventListener("click", () => setFire(!document.body.classList.contains("fire")));
+// 20 clicks on the flame button within a minute start the metal takeover (easter egg, see
+// metalEggAt in the night code below); the clicks counted are the ones of the last 60 s
+const fireClicks = [];
+fireBtn.addEventListener("click", () => {
+  setFire(!document.body.classList.contains("fire"));
+  const now = Date.now();
+  fireClicks.push(now);
+  while (fireClicks[0] < now - 60000) fireClicks.shift();
+  if (fireClicks.length >= 20) {
+    fireClicks.length = 0;
+    metalEggAt = now;
+    applyNight();
+  }
+});
 try { if (localStorage.getItem("fire")) setFire(true); } catch (e) {}
 
 // Surprise banner: on about 1 visit in 5, an "important new content" banner links to a Rickroll.
@@ -600,7 +613,12 @@ const NIGHT_SUBS = {  // null = keep the usual subtitle
 const NIGHT = new Set(["evening", "closing"]);  // the jazz bar phases (body.night)
 const METAL_SECONDS = 111;  // the song plays from 1:50 to its end, 1 min 51 s later
 const forced = new URLSearchParams(location.search).get("night");
+// Easter egg: spamming the flame button (see below) starts the metal takeover at any time of
+// day, for one song; metalEggAt is when it started (0 = not running)
+let metalEggAt = 0;
 const phaseNow = () => {
+  if (metalEggAt && Date.now() - metalEggAt < METAL_SECONDS * 1000) return "metal";
+  metalEggAt = 0;
   if (forced === "0") return null;
   if (forced in NIGHT_SUBS) return forced;
   const d = new Date(), t = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
@@ -613,7 +631,8 @@ const applyNight = () => {
   const phase = phaseNow();
   if (phase === (document.body.dataset.phase || null)) return;
   if (phase) document.body.dataset.phase = phase; else delete document.body.dataset.phase;
-  sub.textContent = (phase && NIGHT_SUBS[phase]) || daySub;
+  sub.textContent = (metalEggAt && phase === "metal" ? "You lit too many fires. Time to headbang. 🤘"
+    : phase && NIGHT_SUBS[phase]) || daySub;
   const night = NIGHT.has(phase), metal = phase === "metal";
   // Flames on top of the jazz bar or the metal show are too many moving elements (the page
   // lags): both turn the flame mode off, and hide its button while they last (CSS)
@@ -1099,7 +1118,8 @@ const riffCommand = func => riff && riff.contentWindow.postMessage(JSON.stringif
 const rock = (muted = false) => {
   if (!riff) {
     const d = new Date(), t = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
-    const late = forced === "metal" ? 0 : Math.max(0, t - 3600);  // seconds since 1:00:00
+    const late = metalEggAt ? Math.floor((Date.now() - metalEggAt) / 1000)  // seconds since it started
+      : forced === "metal" ? 0 : Math.max(0, t - 3600);
     riff = document.createElement("iframe");
     riff.id = "riff";
     riff.title = "Metal song";
