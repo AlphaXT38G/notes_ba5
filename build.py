@@ -55,6 +55,47 @@ def ok(msg):  print(f"  {GREEN}✔{RESET}  {msg}")
 def err(msg): print(f"  {RED}✘{RESET}  {msg}")
 def info(msg):print(f"  {YELLOW}→{RESET}  {msg}")
 
+# ── Weekly notes written as chapters ─────────────────────────────────────────
+# Most subjects have one standalone document per week (week/week01.tex). swent is the
+# exception: its weeks are chapters \input by course.tex (weeks/week1a.tex, week1b.tex, ...),
+# several parts per week. Each week is then also built as its own PDF from a small generated
+# document (<subject>/_weekNN.tex, git-ignored) with the course preamble and that week's parts.
+WEEK_PART = re.compile(r"week_?(\d+)[a-z]?", re.I)  # week1a, week1b, week3, ...
+
+def course_weeks(subject_dir):
+    """Weekly chapters of course.tex: {week number: [inputs, in course order]} ({} if none)."""
+    course = subject_dir / "course.tex"
+    if not course.exists():
+        return {}
+    weeks = {}
+    for inp in re.findall(r"\\input\{([^}]+)\}", course.read_text(encoding="utf-8", errors="replace")):
+        m = WEEK_PART.fullmatch(Path(inp).name)
+        if m:
+            weeks.setdefault(int(m[1]), []).append(inp)
+    return weeks
+
+def week_documents(subject_dir):
+    """Write one _weekNN.tex per week of course_weeks() and return their paths.
+
+    Same preamble as course.tex, then that week's chapters. The chapter counter starts where
+    it is in the full course, so "Week2 : Part A" stays chapter 3 like in course.pdf.
+    """
+    parts = course_weeks(subject_dir)
+    if not parts:
+        return []
+    preamble = (subject_dir / "course.tex").read_text(encoding="utf-8").split("\\begin{document}")[0]
+    docs, before = [], 0
+    for n, inputs in sorted(parts.items()):
+        doc = subject_dir / f"_week{n:02d}.tex"
+        text = (preamble + "\\begin{document}\n\\raggedbottom\n"
+                + f"\\setcounter{{chapter}}{{{before}}}\n"
+                + "".join(f"\\input{{{i}}}\n" for i in inputs) + "\\end{document}\n")
+        if not doc.exists() or doc.read_text(encoding="utf-8") != text:  # keep latexmk's cache valid
+            doc.write_text(text, encoding="utf-8")
+        docs.append(doc)
+        before += len(inputs)
+    return docs
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 results = {}   # subject/file -> "ok" | "error" | "skipped"
 
@@ -64,11 +105,13 @@ for subject in subjects:
         print(f"\n{BOLD}{subject}{RESET}: folder not found, skipping.")
         continue
 
-    # Standalone documents only (files pulled in with \input have no \documentclass)
+    # Standalone documents only (files pulled in with \input have no \documentclass),
+    # plus the generated per-week documents (_weekNN.tex, see week_documents)
+    week_docs = week_documents(subject_dir)
     tex_files = sorted(
         t for t in subject_dir.rglob("*.tex")
-        if "\\documentclass" in t.read_text(encoding="utf-8", errors="replace")
-    )
+        if not t.name.startswith("_") and "\\documentclass" in t.read_text(encoding="utf-8", errors="replace")
+    ) + week_docs
     # PDFs that are not produced by a .tex here (e.g. downloaded sheets)
     extra_pdfs = sorted(p for p in subject_dir.rglob("*.pdf") if p.with_suffix(".tex") not in tex_files)
     if not tex_files and not extra_pdfs:
@@ -105,8 +148,9 @@ for subject in subjects:
 
         pdf = tex.with_suffix(".pdf")
         if proc.returncode == 0 and pdf.exists():
-            # Mirror the source layout: week/week01.tex -> dist/<subject>/week/week01.pdf
-            dest = out_dir / rel.with_suffix(".pdf")
+            # Mirror the source layout: week/week01.tex -> dist/<subject>/week/week01.pdf;
+            # generated weeks go to the same place: _week01.tex -> dist/<subject>/week/week01.pdf
+            dest = out_dir / ("week/" + tex.stem[1:] + ".pdf" if tex in week_docs else rel.with_suffix(".pdf"))
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(pdf, dest)
             ok(f"{rel.as_posix()}  →  dist/{subject}/{dest.relative_to(out_dir).as_posix()}")
@@ -705,11 +749,14 @@ def sources(subject, p, root):
 
     p is the PDF in dist/<subject>/, root is dist/<subject>/. The inputs are found with a
     simple regex on \\input{...} / \\include{...} (one level, enough for swent/course.tex).
+    A week built from chapters of course.tex (swent) comes from those chapters.
     """
     src = ROOT / subject / p.relative_to(root)
     tex = src.with_suffix(".tex")
     if not tex.exists():
-        return [src]
+        m = WEEK.fullmatch(p.stem)
+        parts = course_weeks(ROOT / subject).get(int(m[1]), []) if m else []
+        return [(ROOT / subject / i).with_suffix(".tex") for i in parts] or [src]
     inputs = re.findall(r"\\(?:input|include)\{([^}]+)\}", tex.read_text(encoding="utf-8", errors="replace"))
     return [tex] + [(tex.parent / i).with_suffix(".tex") for i in inputs]
 
