@@ -22,7 +22,14 @@ Put `course.tex` / `cheatsheet.tex` in `<id>/` and rebuild; the page updates its
 
 Every standalone `.tex` in `<id>/` and its subfolders (e.g. `week/week01.tex`) is
 compiled, and PDFs without a matching `.tex` (e.g. `cheatsheets/*.pdf`) are copied
-as is. On the page, the course notes come first and every other PDF of the subject
-is listed in a collapsible section, grouped by folder. Dates come from the last
-commit touching each document, and documents changed in the last 7 days get a
-"New" badge.
+as is. On the page, the course notes come first, then two collapsible sections:
+weekly notes (files named `weekNN`, with a semester progress bar) and every other
+PDF, grouped by folder. Dates come from the last commit touching each document,
+and documents changed in the last 7 days get a "New" badge.
+
+Optional keys per subject in `subjects.json`:
+
+- `"weeks"`: length of the progress bar (default 14)
+- `"color"`: accent colour of the subject card (default: taken from a palette)
+
+The page also has a search field, a light/dark toggle and a flame mode 🔥.
