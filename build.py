@@ -447,6 +447,7 @@ fireBtn.addEventListener("click", () => {
   const now = Date.now();
   fireClicks.push(now);
   while (fireClicks[0] < now - 60000) fireClicks.shift();
+  if (fireClicks.length === 10) preloadRiff();  // halfway: get the song ready (see the metal music)
   if (fireClicks.length >= 20) {
     fireClicks.length = 0;
     metalEggAt = now;
@@ -670,7 +671,7 @@ document.addEventListener("phase", e => {
 });
 
 applyNight();
-setInterval(applyNight, 1000);
+setInterval(() => { applyNight(); preloadSoon(); }, 1000);  // preloadSoon: see the metal music below
 
 // Bar air: 3 smoke clouds drifting across the room and a music note rising every ~0.9 s,
 // with a random sway and tilt (--sway, --r); everything is removed when the night ends
@@ -1114,20 +1115,44 @@ const paintAmp = () => {
     : riffMuted ? "🔇 Click anywhere for sound" : "🎸 Rocking — click to mute";
   amp.title = !rocking ? "Play the music" : riffMuted ? "Turn the sound on" : "Pause the music";
 };
-const riffCommand = func => riff && riff.contentWindow.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
+const riffCommand = (func, args = []) => riff && riff.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
+const makeRiff = (autoplay, muted, start) => {
+  riff = document.createElement("iframe");
+  riff.id = "riff";
+  riff.title = "Metal song";
+  riff.allow = "autoplay; encrypted-media";
+  riff.src = `https://www.youtube.com/embed/${METAL}?autoplay=${autoplay}&mute=${muted ? 1 : 0}` +
+    `&start=${start}&end=${METAL_START + METAL_SECONDS}&controls=0&enablejsapi=1`;
+  document.body.append(riff);
+  riffMuted = muted;
+};
+// Loading the YouTube player takes a few seconds, so when the takeover is coming (10th click on
+// the flame button, or 00:59:30) the player is loaded in advance, hidden, paused and muted at
+// 1:50; starting it is then almost instant. Unused, it is dropped again after 75 s.
+let riffWaiting = false, riffDrop = null;
+const preloadRiff = () => {
+  if (riff) return;
+  makeRiff(0, true, METAL_START);
+  riffWaiting = true;
+  clearTimeout(riffDrop);
+  riffDrop = setTimeout(() => {
+    if (riffWaiting && !document.body.classList.contains("metal")) { riff.remove(); riff = null; riffWaiting = false; }
+  }, 75000);
+};
+const preloadSoon = () => {  // called every second with the clock check
+  const d = new Date(), t = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+  if (t >= 3600 - 30 && t < 3600) preloadRiff();
+};
 const rock = (muted = false) => {
-  if (!riff) {
-    const d = new Date(), t = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
-    const late = metalEggAt ? Math.floor((Date.now() - metalEggAt) / 1000)  // seconds since it started
-      : forced === "metal" ? 0 : Math.max(0, t - 3600);
-    riff = document.createElement("iframe");
-    riff.id = "riff";
-    riff.title = "Metal song";
-    riff.allow = "autoplay; encrypted-media";
-    riff.src = `https://www.youtube.com/embed/${METAL}?autoplay=1&mute=${muted ? 1 : 0}` +
-      `&start=${METAL_START + late}&end=${METAL_START + METAL_SECONDS}&controls=0&enablejsapi=1`;
-    document.body.append(riff);
-    riffMuted = muted;
+  const d = new Date(), t = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+  const late = metalEggAt ? Math.floor((Date.now() - metalEggAt) / 1000)  // seconds since it started
+    : forced === "metal" ? 0 : Math.max(0, t - 3600);
+  if (!riff) makeRiff(1, muted, METAL_START + late);
+  else if (riffWaiting) {  // the preloaded player: jump to the right spot, sound on if allowed, play
+    riffWaiting = false;
+    if (late) riffCommand("seekTo", [METAL_START + late, true]);
+    if (!muted) { riffCommand("unMute"); riffMuted = false; }
+    riffCommand("playVideo");
   } else riffCommand("playVideo");
   rocking = true;
   paintAmp();
@@ -1149,7 +1174,7 @@ amp.addEventListener("click", e => {
 const setMetalMusic = on => {
   document.removeEventListener("pointerdown", riffSound);
   document.removeEventListener("keydown", riffSound);
-  if (!on) { riff?.remove(); riff = null; rocking = riffMuted = false; amp.remove(); return; }
+  if (!on) { riff?.remove(); riff = null; rocking = riffMuted = riffWaiting = false; amp.remove(); return; }
   document.body.append(amp);
   const canSound = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
   rock(!canSound);
@@ -1394,6 +1419,7 @@ def build_index():
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Notes BA5</title>
+<link rel="preconnect" href="https://www.youtube.com"><link rel="preconnect" href="https://i.ytimg.com">
 <script>{THEME_JS}</script>
 <style>{CSS}</style></head><body><div class="wrap">
 <header><div class="tools"><button id="fire" type="button" aria-label="Flame mode" title="Flame mode" aria-pressed="false">🔥</button><button id="theme" type="button" aria-label="Toggle dark mode"></button></div>
