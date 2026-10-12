@@ -250,13 +250,22 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 #empty{color:var(--mut)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 /* Flame mode (body.fire): fire gradients, glowing card borders, flame emojis rising from the bottom */
-body.fire{background:radial-gradient(120% 60% at 50% 115%,rgba(255,90,0,.35),transparent 70%) fixed,var(--bg)}
+/* Backgrounds that stay put while scrolling live on a fixed layer (body::before) instead of
+   background-attachment:fixed, which makes the browser repaint the whole screen on every scroll */
+body.fire::before,body.night::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none}
+body.fire .wrap{position:relative;z-index:1}
+body.fire::before{background:radial-gradient(120% 60% at 50% 115%,rgba(255,90,0,.35),transparent 70%)}
+/* Glowing cards: the glow sits on its own layer and only its opacity is animated (cheap),
+   rather than animating box-shadow, which repaints every card on every frame */
+body.fire section,body.epic section{position:relative}
+body.fire section::after,body.epic section::after{content:"";position:absolute;inset:0;pointer-events:none;will-change:opacity;animation:glow 1.6s ease-in-out infinite alternate}
+body.fire section::after{box-shadow:-8px 0 26px -6px rgba(255,170,0,.9)}
+@keyframes glow{from{opacity:.35}to{opacity:1}}
 body.fire h1{background:linear-gradient(90deg,#ffcf3f,#ff6a00,#e8132b);-webkit-background-clip:text;background-clip:text;color:transparent}
 body.fire h2::after{content:" 🔥"}
-body.fire section{border-left-color:#ff6a00;animation:flicker 1.6s ease-in-out infinite alternate}
+body.fire section{border-left-color:#ff6a00;box-shadow:-6px 0 14px -8px rgba(255,106,0,.8)}
 body.fire .bar span{background:linear-gradient(90deg,#ffcf3f,#ff6a00,#e8132b)}
 body.fire #fire{border-color:#ff6a00;box-shadow:0 0 12px rgba(255,106,0,.6)}
-@keyframes flicker{from{box-shadow:-6px 0 14px -8px rgba(255,106,0,.8)}to{box-shadow:-8px 0 26px -6px rgba(255,170,0,.9)}}
 .flames{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
 .flames span{position:absolute;bottom:-3rem;animation:rise linear forwards;filter:drop-shadow(0 0 6px rgba(255,120,0,.7))}
 @keyframes rise{to{transform:translate(var(--dx),-115vh) scale(.3) rotate(var(--r));opacity:0}}
@@ -289,7 +298,9 @@ body.rift .wrap{position:relative;z-index:2}
 #flash{position:fixed;inset:0;z-index:65;background:#fff;opacity:0;pointer-events:none}
 .confetti{position:fixed;inset:0;z-index:70;width:100%;height:100%;pointer-events:none}
 /* Party theme after the rift (15 s): pastel rainbow background, rainbow title, colour-cycling borders */
-body.party{--fg:#1b1530;--mut:#4a4360;--line:rgba(40,20,80,.15);--acc:#5b2bd6;--acc-bg:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);background:linear-gradient(120deg,#ffd1dc,#fff1b8,#c9f7e1,#cfe6ff,#e6d5ff,#ffd1dc) fixed;background-size:400% 400%;animation:party-bg 8s linear infinite}
+body.party{--fg:#1b1530;--mut:#4a4360;--line:rgba(40,20,80,.15);--acc:#5b2bd6;--acc-bg:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);}
+body.party::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(120deg,#ffd1dc,#fff1b8,#c9f7e1,#cfe6ff,#e6d5ff,#ffd1dc);background-size:400% 400%;animation:party-bg 8s linear infinite}
+body.party .wrap{position:relative;z-index:1}
 body.party h1{background:linear-gradient(90deg,#ff3d7f,#ffb300,#2ec27e,#2f80ed,#9b51e0,#ff3d7f);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:party-text 2s linear infinite}
 body.party section{animation:party-border 1.2s linear infinite}
 body.party .bar span{background:linear-gradient(90deg,#ff3d7f,#ffb300,#2ec27e,#2f80ed,#9b51e0)}
@@ -299,7 +310,8 @@ body.party h2::after{content:" 🎉"}
 @keyframes party-border{0%,100%{border-left-color:#ff3d7f}20%{border-left-color:#ffb300}40%{border-left-color:#2ec27e}60%{border-left-color:#2f80ed}80%{border-left-color:#9b51e0}}
 /* Jazz bar night theme (body.night, from 21:30 to 1:00): dim warm light from above, amber and
    burgundy tones, a flickering neon sign for the title, cards glowing like candle-lit tables */
-body.night{--bg:#120a09;--fg:#f3e3c3;--card:rgba(48,26,18,.85);--line:rgba(255,190,120,.16);--acc:#f5b041;--acc-bg:rgba(245,176,65,.13);--mut:#b89a7a;--new:#ffcf70;--new-bg:rgba(255,207,112,.15);background:radial-gradient(70% 45% at 50% -8%,rgba(255,176,90,.28),transparent 70%) fixed,radial-gradient(45% 35% at 90% 105%,rgba(150,25,55,.3),transparent 70%) fixed,radial-gradient(40% 30% at 5% 100%,rgba(120,40,20,.25),transparent 70%) fixed,var(--bg)}
+body.night{--bg:#120a09;--fg:#f3e3c3;--card:rgba(48,26,18,.85);--line:rgba(255,190,120,.16);--acc:#f5b041;--acc-bg:rgba(245,176,65,.13);--mut:#b89a7a;--new:#ffcf70;--new-bg:rgba(255,207,112,.15);background:var(--bg)}
+body.night::before{background:radial-gradient(70% 45% at 50% -8%,rgba(255,176,90,.28),transparent 70%),radial-gradient(45% 35% at 90% 105%,rgba(150,25,55,.3),transparent 70%),radial-gradient(40% 30% at 5% 100%,rgba(120,40,20,.25),transparent 70%)}
 body.night h1{color:#ffe1b0;font-family:"Brush Script MT","Segoe Script",cursive;font-weight:400;font-size:2.6rem;letter-spacing:.01em;text-shadow:0 0 4px #fff2d6,0 0 12px #ff9d4d,0 0 26px #ff5e8a,0 0 48px #ff2d6f;animation:neon 6s infinite}
 body.night h1::after{content:" 🎷"}
 body.night .sub{color:#e9c89a;font-style:italic}
@@ -307,15 +319,15 @@ body.night #fire,body.metal #fire,body.epic #fire{display:none}  /* no flame mod
 /* Epic finale (body.epic): a fantasy night in deep blue and violet, an aurora glowing behind
    everything (::before), the title in carved capitals lit by blue fire, cards edged with arcane light */
 body.epic{--bg:#05040f;--fg:#e9e6ff;--card:rgba(14,12,40,.85);--line:rgba(140,120,255,.22);--acc:#8fb4ff;--acc-bg:rgba(110,140,255,.14);--mut:#a6a2cc;--new:#9ff3ff;--new-bg:rgba(120,230,255,.14);background:var(--bg)}
-body.epic::before{content:"";position:fixed;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(45% 35% at 30% 10%,rgba(90,60,255,.35),transparent 70%),radial-gradient(40% 30% at 75% 15%,rgba(40,150,255,.3),transparent 70%),radial-gradient(60% 40% at 50% 110%,rgba(60,90,255,.45),transparent 70%);animation:aurora 14s ease-in-out infinite alternate}
+body.epic::before{content:"";position:fixed;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(45% 35% at 30% 10%,rgba(90,60,255,.35),transparent 70%),radial-gradient(40% 30% at 75% 15%,rgba(40,150,255,.3),transparent 70%),radial-gradient(60% 40% at 50% 110%,rgba(60,90,255,.45),transparent 70%);will-change:transform;animation:aurora 14s ease-in-out infinite alternate}
 body.epic .wrap{position:relative;z-index:1}
-body.epic h1{font:700 2.8rem "Cinzel","Trajan Pro","Palatino Linotype",Georgia,serif;text-transform:uppercase;letter-spacing:.14em;background:linear-gradient(90deg,#9fd8ff,#ffffff 30%,#b9a4ff 55%,#7fd0ff 80%,#ffffff);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px rgba(110,150,255,.9)) drop-shadow(0 0 30px rgba(140,80,255,.6));animation:shimmer 6s linear infinite}
+body.epic h1{font:700 2.8rem "Cinzel","Trajan Pro","Palatino Linotype",Georgia,serif;text-transform:uppercase;letter-spacing:.14em;background:linear-gradient(90deg,#9fd8ff,#ffffff 30%,#b9a4ff 55%,#7fd0ff 80%,#ffffff);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 12px rgba(130,120,255,.9));animation:shimmer 6s linear infinite}
 body.epic h1::after{content:" ⚔️";-webkit-text-fill-color:initial;filter:none}
 body.epic .sub{color:#b9c8ff;font:italic 1.05rem "Palatino Linotype",Georgia,serif;letter-spacing:.06em}
-body.epic section{animation:arcane 4s ease-in-out infinite alternate}
+body.epic section{box-shadow:-8px 0 24px -12px rgba(90,140,255,.8)}
+body.epic section::after{box-shadow:-10px 0 34px -10px rgba(170,90,255,.9);animation-duration:4s}
 @keyframes aurora{from{transform:translateX(-4%) rotate(-2deg)}to{transform:translateX(4%) rotate(2deg)}}
 @keyframes shimmer{to{background-position:200% 0}}
-@keyframes arcane{from{box-shadow:-8px 0 24px -12px rgba(90,140,255,.8)}to{box-shadow:-10px 0 34px -10px rgba(170,90,255,.9)}}
 /* "More epicness ?" button, rising in the middle of the metal show 10 s before it ends */
 #more{position:fixed;left:50%;top:50%;z-index:60;padding:1rem 2rem;transform:translate(-50%,-50%);color:#fff;font:700 1.4rem "Palatino Linotype",Georgia,serif;letter-spacing:.05em;background:radial-gradient(circle at 50% 30%,#6c7bff,#3b1f9e 70%);border:2px solid #b9c8ff;border-radius:999px;box-shadow:0 0 30px rgba(110,140,255,.9),0 0 80px rgba(150,80,255,.6),inset 0 0 18px rgba(255,255,255,.35);cursor:pointer;animation:more-in .6s cubic-bezier(.34,1.56,.64,1) both,more-glow 1.2s ease-in-out .6s infinite alternate}
 #more:hover{filter:brightness(1.2)}
@@ -328,7 +340,7 @@ body.epic section{animation:arcane 4s ease-in-out infinite alternate}
 /* Metal takeover (body.metal, 1:00:00 - 1:01:51): pitch black stage, blood red light pulsing on
    the beat behind everything (::before), chrome title skewed like a band logo */
 body.metal{--bg:#050404;--fg:#f4f1f1;--card:rgba(24,6,6,.88);--line:rgba(255,50,30,.25);--acc:#ff3b1f;--acc-bg:rgba(255,59,31,.14);--mut:#b9a9a9;--new:#ffd23f;--new-bg:rgba(255,210,63,.16);background:var(--bg)}
-body.metal::before{content:"";position:fixed;inset:-10%;z-index:0;pointer-events:none;background:radial-gradient(50% 40% at 50% 100%,rgba(255,30,0,.45),transparent 70%),radial-gradient(35% 30% at 0% 0%,rgba(160,0,0,.4),transparent 70%),radial-gradient(35% 30% at 100% 0%,rgba(160,0,0,.4),transparent 70%);animation:beat .5s ease-out infinite}
+body.metal::before{content:"";position:fixed;inset:-10%;z-index:0;pointer-events:none;background:radial-gradient(50% 40% at 50% 100%,rgba(255,30,0,.45),transparent 70%),radial-gradient(35% 30% at 0% 0%,rgba(160,0,0,.4),transparent 70%),radial-gradient(35% 30% at 100% 0%,rgba(160,0,0,.4),transparent 70%);will-change:transform,opacity;animation:beat .5s ease-out infinite}
 body.metal .wrap{position:relative;z-index:1}
 body.metal h1{font:900 3rem Impact,"Arial Black",sans-serif;text-transform:uppercase;letter-spacing:.06em;background:linear-gradient(180deg,#fff 0%,#cfcfcf 35%,#5a5a5a 50%,#e8e8e8 65%,#8a8a8a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 2px #000) drop-shadow(0 0 14px rgba(255,40,0,.8));transform:skew(-10deg);transform-origin:left}
 body.metal h1::after{content:" 🤘";-webkit-text-fill-color:initial}
@@ -392,7 +404,8 @@ body.night:not(.rift) .wrap{position:relative;z-index:1}
 #jazz{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 /* Closing time: darker, colder light and a blue-violet neon */
-body.night[data-phase=closing]{--bg:#08080f;--card:rgba(22,22,40,.85);--line:rgba(150,160,255,.14);--mut:#9a97b8;background:radial-gradient(60% 40% at 50% -8%,rgba(110,130,255,.2),transparent 70%) fixed,radial-gradient(45% 35% at 90% 105%,rgba(130,40,160,.3),transparent 70%) fixed,radial-gradient(40% 30% at 5% 100%,rgba(40,60,140,.25),transparent 70%) fixed,var(--bg)}
+body.night[data-phase=closing]{--bg:#08080f;--card:rgba(22,22,40,.85);--line:rgba(150,160,255,.14);--mut:#9a97b8}
+body.night[data-phase=closing]::before{background:radial-gradient(60% 40% at 50% -8%,rgba(110,130,255,.2),transparent 70%),radial-gradient(45% 35% at 90% 105%,rgba(130,40,160,.3),transparent 70%),radial-gradient(40% 30% at 5% 100%,rgba(40,60,140,.25),transparent 70%)}
 body.night[data-phase=closing] h1{color:#e6e0ff;text-shadow:0 0 4px #f1edff,0 0 12px #8fa2ff,0 0 26px #b45cff,0 0 48px #7a3cff}
 body.night[data-phase=closing] section{box-shadow:-8px 0 22px -12px rgba(140,150,255,.55)}
 /* Closing time (0:45 - 1:00): the sign goes out letter by letter (each .l waits --i x 0.7 s, the
@@ -426,7 +439,7 @@ body.night[data-phase=closing] h1::after{display:inline-block;animation:neon-off
 @keyframes vt-fade-out{to{opacity:0}}
 @keyframes vt-dawn-in{from{opacity:0;filter:brightness(1.6)}}
 /* Reduced motion: no rising flames and no looping animations */
-@media(prefers-reduced-motion:reduce){.flames,.air{display:none}body.fire section,#surprise,#hole .disk::before,body.party,body.party h1,body.party section,body.night h1,body.night[data-phase] h1,body.metal::before,body.metal section,body.metal h1,#eq i,body.epic::before,body.epic h1,body.epic section{animation:none}}
+@media(prefers-reduced-motion:reduce){.flames,.air{display:none}body.fire section::after,body.epic section::after,#surprise,#hole .disk::before,body.party::after,body.party h1,body.party section,body.night h1,body.night[data-phase] h1,body.metal::before,body.metal section,body.metal h1,#eq i,body.epic::before,body.epic h1{animation:none}}
 """
 
 # Runs in <head> so the saved theme applies before the first paint (no light/dark flicker).
