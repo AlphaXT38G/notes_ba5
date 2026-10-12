@@ -315,13 +315,13 @@ body.metal .sub{color:#ff4a2a;font-weight:800;text-transform:uppercase;letter-sp
 body.metal section{box-shadow:-10px 0 24px -12px rgba(255,40,0,.8)}
 @keyframes beat{0%{opacity:1;transform:scale(1.04)}100%{opacity:.55;transform:scale(1)}}
 /* Metal stage animations: cards headbanging on the beat (the right column half a beat later),
-   the title vibrating like a riff, lightning bolts striking with a flash (JS adds .bolt and
-   #strobe), and an equalizer bouncing along the bottom of the screen (#eq) */
+   the title vibrating like a riff, a white flash when lightning strikes (#strobe; the bolts
+   themselves are drawn on the #metalfx canvas by JS), and an equalizer along the bottom (#eq) */
 body.metal section{transform-origin:0 100%;animation:headbang .46s ease-in-out infinite alternate}
 body.metal .col:nth-child(2) section{animation-delay:-.23s}
 body.metal h1{animation:riff .12s steps(2) infinite}
 .stage{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden}
-.bolt{position:absolute;top:-2vh;width:9rem;height:var(--h);margin-left:-4.5rem;background:linear-gradient(#fff,#e2d4ff 60%,#9b6bff);clip-path:polygon(52% 0,30% 38%,48% 40%,22% 72%,42% 73%,14% 100%,70% 58%,50% 56%,78% 30%,58% 29%,82% 0);filter:drop-shadow(0 0 14px #a77bff) drop-shadow(0 0 30px #fff);opacity:0;animation:strike .5s ease-out forwards}
+#metalfx{position:fixed;inset:0;z-index:2;width:100%;height:100%;pointer-events:none}
 #strobe{position:fixed;inset:0;z-index:3;pointer-events:none;background:#fff;opacity:0}
 #eq{position:fixed;left:0;right:0;bottom:0;z-index:2;height:4.5rem;display:flex;align-items:flex-end;gap:3px;padding:0 3px;pointer-events:none;opacity:.6}
 #eq i{flex:1;height:100%;transform-origin:bottom;background:linear-gradient(to top,#ff1e00,#ff7a00 55%,#ffe14d);border-radius:2px 2px 0 0;animation:eq var(--d) ease-in-out infinite alternate}
@@ -343,7 +343,6 @@ body.metal h1{animation:riff .12s steps(2) infinite}
 @keyframes mosh{0%{transform:translate(0,0) rotate(0) scale(.6)}50%{transform:translate(var(--mx),var(--my)) rotate(calc(var(--spin) / 2)) scale(1.15)}100%{transform:translate(var(--ex),var(--ey)) rotate(var(--spin)) scale(.8);opacity:.2}}
 @keyframes headbang{from{transform:rotate(-.7deg) translateY(0)}to{transform:rotate(.7deg) translateY(4px)}}
 @keyframes riff{0%{transform:skew(-10deg) translate(0,0)}50%{transform:skew(-10deg) translate(2px,-1px)}}
-@keyframes strike{0%{opacity:0}10%{opacity:1}25%{opacity:.25}40%{opacity:1}100%{opacity:0}}
 @keyframes eq{from{transform:scaleY(var(--lo))}to{transform:scaleY(var(--hi))}}
 body.night section{box-shadow:-8px 0 22px -12px rgba(255,170,80,.6)}
 body.night .links a:hover{background:rgba(245,176,65,.08)}
@@ -770,15 +769,98 @@ eq.id = "eq";
 eq.innerHTML = Array.from({ length: 48 }, () =>
   `<i style="--d:${(.18 + Math.random() * .3).toFixed(2)}s;--lo:${(.08 + Math.random() * .2).toFixed(2)};--hi:${(.45 + Math.random() * .55).toFixed(2)}"></i>`
 ).join("");
+// Metal effects canvas: one full-screen, click-through canvas and one animation loop for the
+// lightning and the other drawn effects below (chains, fire, sparks, flying silhouettes). One
+// canvas is much lighter than dozens of animated elements. The loop only runs during the metal
+// phase, the browser pauses it in background tabs, and each step is capped at 50 ms, so nothing
+// piles up while the page is hidden. Each effect registers {update(dt), draw(ctx), reset()}.
+const fx = document.createElement("canvas"), ctx = fx.getContext("2d");
+fx.id = "metalfx";
+let fxW = 0, fxH = 0, fxRaf = null, fxLast = 0;
+const fxLayers = [], strikeHooks = [];  // strikeHooks: called with (x, y) where a bolt hits
+const fxResize = () => {
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  fxW = innerWidth; fxH = innerHeight;
+  fx.width = fxW * dpr; fx.height = fxH * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+};
+const fxFrame = now => {
+  const dt = Math.min(.05, (now - fxLast) / 1000);
+  fxLast = now;
+  ctx.clearRect(0, 0, fxW, fxH);
+  for (const layer of fxLayers) { layer.update(dt); layer.draw(ctx); }
+  fxRaf = requestAnimationFrame(fxFrame);
+};
+const fxStart = () => {
+  fxResize();
+  document.body.append(fx);
+  addEventListener("resize", fxResize);
+  fxLast = performance.now();
+  fxRaf = requestAnimationFrame(fxFrame);
+};
+const fxStop = () => {
+  cancelAnimationFrame(fxRaf);
+  removeEventListener("resize", fxResize);
+  fx.remove();
+  fxLayers.forEach(layer => layer.reset());
+};
+
+// Lightning: each bolt is generated at random. A jagged path runs from above the top of the
+// screen down to a random point, the segments kicked sideways at random, and side branches fork
+// off it (up to two levels, thinner each time). It is drawn three times on top of each other
+// (wide violet halo, glow, white core) and flickers a few times during its 0.5 s life.
+const bolts = [];
+const FLICKER = [1, .2, 1, .45, .9, .6, 0];  // brightness over the life of a bolt
+const boltPath = (x1, y1, x2, y2, spread, depth, out, width) => {
+  const len = Math.hypot(x2 - x1, y2 - y1), n = Math.max(5, Math.round(len / 18));
+  const pts = [[x1, y1]], ang = Math.atan2(y2 - y1, x2 - x1);
+  for (let i = 1; i <= n; i++) {
+    const t = i / n, last = i === n;
+    const x = x1 + (x2 - x1) * t + (last ? 0 : (Math.random() - .5) * spread);
+    const y = y1 + (y2 - y1) * t + (last ? 0 : (Math.random() - .5) * spread * .3);
+    pts.push([x, y]);
+    if (depth < 2 && !last && Math.random() < .16) {  // fork a branch off this point
+      const bl = (1 - t) * len * (.3 + Math.random() * .4), ba = ang + (Math.random() < .5 ? -1 : 1) * (.35 + Math.random() * .6);
+      boltPath(x, y, x + Math.cos(ba) * bl, y + Math.sin(ba) * bl, spread * .6, depth + 1, out, width * .5);
+    }
+  }
+  out.push({ pts, width });
+};
+fxLayers.push({
+  update(dt) {
+    for (const b of bolts) b.age += dt;
+    while (bolts.length && bolts[0].age > bolts[0].life) bolts.shift();
+  },
+  draw(c) {
+    c.save();
+    c.globalCompositeOperation = "lighter";
+    c.lineCap = c.lineJoin = "round";
+    for (const b of bolts) {
+      const a = FLICKER[Math.min(FLICKER.length - 1, Math.floor(b.age / b.life * FLICKER.length))];
+      for (const [mul, color, blur] of [[4, `rgba(150,100,255,${.35 * a})`, 30], [2, `rgba(205,180,255,${.7 * a})`, 12], [1, `rgba(255,255,255,${a})`, 0]]) {
+        c.strokeStyle = color; c.shadowColor = "#a77bff"; c.shadowBlur = blur;
+        for (const p of b.paths) {
+          c.lineWidth = p.width * mul;
+          c.beginPath();
+          p.pts.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y));
+          c.stroke();
+        }
+      }
+    }
+    c.restore();
+  },
+  reset() { bolts.length = 0; },
+});
+
 let boltTimer = null;
 const strike = () => {
   boltTimer = setTimeout(strike, 1200 + Math.random() * 2300);
-  if (document.hidden || stage.querySelectorAll(".bolt").length >= 4) return;  // bolts only (see crowded)
-  const b = document.createElement("span");
-  b.className = "bolt";
-  b.style.cssText = `left:${8 + Math.random() * 84}%;--h:${55 + Math.random() * 45}vh;transform:scaleX(${Math.random() < .5 ? -1 : 1})`;
-  b.addEventListener("animationend", () => b.remove());
-  stage.append(b);
+  if (document.hidden || bolts.length >= 3) return;
+  const x = fxW * (.08 + Math.random() * .84), ex = x + (Math.random() - .5) * fxW * .25, ey = fxH * (.55 + Math.random() * .4);
+  const paths = [];
+  boltPath(x, -20, ex, ey, 70, 0, paths, 2.6);
+  bolts.push({ paths, age: 0, life: .5 });
+  strikeHooks.forEach(hook => hook(ex, ey));
   strobe.animate([{ opacity: 0 }, { opacity: .35 }, { opacity: 0 }], { duration: 180 });
   document.querySelector(".wrap").animate(
     [{ transform: "none" }, { transform: "translate(-6px,3px)" }, { transform: "translate(5px,-4px)" }, { transform: "none" }],
@@ -804,9 +886,11 @@ const setStage = on => {
   clearInterval(moshTimer);
   stage.replaceChildren();
   [stage, strobe, eq].forEach(el => el.remove());
+  fxStop();
   if (!on) return;
   document.body.append(stage, strobe, eq);
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  fxStart();
   strike();
   moshTimer = setInterval(mosh, 180);
 };
