@@ -59,9 +59,15 @@ for subject in subjects:
         print(f"\n{BOLD}{subject}{RESET}: folder not found, skipping.")
         continue
 
-    tex_files = sorted(subject_dir.glob("*.tex"))
-    if not tex_files:
-        print(f"\n{BOLD}{subject}{RESET}: no .tex files found, skipping.")
+    # Standalone documents only (files pulled in with \input have no \documentclass)
+    tex_files = sorted(
+        t for t in subject_dir.rglob("*.tex")
+        if "\\documentclass" in t.read_text(encoding="utf-8", errors="replace")
+    )
+    # PDFs that are not produced by a .tex here (e.g. downloaded sheets)
+    extra_pdfs = sorted(p for p in subject_dir.rglob("*.pdf") if p.with_suffix(".tex") not in tex_files)
+    if not tex_files and not extra_pdfs:
+        print(f"\n{BOLD}{subject}{RESET}: no documents found, skipping.")
         continue
 
     print(f"\n{BOLD}{subject}{RESET}")
@@ -69,9 +75,16 @@ for subject in subjects:
     out_dir = DIST / subject
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    for pdf in extra_pdfs:
+        rel = pdf.relative_to(subject_dir)
+        (out_dir / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(pdf, out_dir / rel)
+        ok(f"{rel.as_posix()}  →  dist/{subject}/{rel.as_posix()}")
+
     for tex in tex_files:
-        label = f"{subject}/{tex.name}"
-        info(f"Compiling {tex.name} …")
+        rel = tex.relative_to(subject_dir)
+        label = f"{subject}/{rel.as_posix()}"
+        info(f"Compiling {rel.as_posix()} …")
 
         cmd = [
             "latexmk",
@@ -86,12 +99,13 @@ for subject in subjects:
 
         pdf = tex.with_suffix(".pdf")
         if proc.returncode == 0 and pdf.exists():
-            dest = out_dir / pdf.name
+            dest = out_dir / rel.with_suffix(".pdf")
+            dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(pdf, dest)
-            ok(f"{tex.name}  →  dist/{subject}/{pdf.name}")
+            ok(f"{rel.as_posix()}  →  dist/{subject}/{dest.relative_to(out_dir).as_posix()}")
             results[label] = "ok"
         else:
-            err(f"{tex.name} failed (exit {proc.returncode})")
+            err(f"{rel.as_posix()} failed (exit {proc.returncode})")
             # Print the first error (and some context) for quick diagnosis
             log = tex.with_suffix(".log")
             if log.exists():
