@@ -53,7 +53,9 @@ headbanging cards and an equalizer, plus effects drawn on a canvas: branching
 lightning with sparks, physics-driven metal chains hanging in the margins, a curtain
 of fire and chrome skulls / Flying V guitars / horns thrown across the page. A
 guitar amp replaces the turntable and plays the song from 1:50 to its end. Then the
-page is back to its day look. Add `?night=evening`, `?night=closing` or
+page is back to its day look. Each change of style is animated (a warm fade into the
+jazz bar, a slam into the metal show, a soft fade back to the day) in browsers that
+support view transitions. Add `?night=evening`, `?night=closing` or
 `?night=metal` (or `1` / `0`) to the URL to force a phase (or the day) at any time.
 
 It hides three easter eggs: a surprise banner that shows up on some visits,
