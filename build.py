@@ -266,8 +266,15 @@ body.night:not(.rift) .wrap{position:relative;z-index:1}
 /* Night music: a vinyl record in the bottom left corner, spinning while the jazz plays.
    The YouTube player itself is kept invisible behind it. */
 #vinyl{position:fixed;left:1.1rem;bottom:1.1rem;z-index:40;display:flex;align-items:center;gap:.6rem;padding:0;color:#f3e3c3;font:600 .78rem system-ui,sans-serif;background:none;border:0;cursor:pointer}
-#vinyl .disc{width:3.4rem;height:3.4rem;border-radius:50%;background:radial-gradient(circle,#f5b041 0 17%,#2a1208 18% 20%,#111 21%,#1c1c1c 30%,#0d0d0d 31%,#1c1c1c 42%,#0d0d0d 43%,#1c1c1c 56%,#0d0d0d 57%,#151515 70%);box-shadow:0 4px 16px rgba(0,0,0,.6),0 0 0 2px rgba(245,176,65,.35)}
+/* Turntable: wooden plinth, record on the left, tonearm hanging from a pivot in the top right.
+   At rest the arm sits beside the record; when playing it swings onto the outer grooves. */
+#vinyl .deck{position:relative;width:4.8rem;height:3.8rem;border-radius:.45rem;background:linear-gradient(135deg,#7a4a26,#4a2a14 60%,#3a200f);box-shadow:0 6px 18px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,220,170,.25)}
+#vinyl .disc{position:absolute;left:.3rem;top:.3rem;width:3.2rem;height:3.2rem;border-radius:50%;background:radial-gradient(circle,#f5b041 0 17%,#2a1208 18% 20%,#111 21%,#1c1c1c 30%,#0d0d0d 31%,#1c1c1c 42%,#0d0d0d 43%,#1c1c1c 56%,#0d0d0d 57%,#151515 70%);box-shadow:0 0 0 2px #1a1a1a,0 2px 6px rgba(0,0,0,.7)}
 #vinyl.playing .disc{animation:spin 1.8s linear infinite}
+#vinyl .arm{position:absolute;right:.42rem;top:.35rem;width:3px;height:2.4rem;margin-left:-1.5px;border-radius:2px;background:linear-gradient(#e8e2d6,#a9a296);transform-origin:50% 0;transform:rotate(-4deg);transition:transform .9s cubic-bezier(.4,0,.2,1)}
+#vinyl .arm::before{content:"";position:absolute;left:50%;top:-.3rem;width:.6rem;height:.6rem;margin-left:-.3rem;border-radius:50%;background:radial-gradient(circle,#ddd 0 30%,#777 35%,#333)}
+#vinyl .arm::after{content:"";position:absolute;left:50%;bottom:-.2rem;width:.45rem;height:.3rem;margin-left:-.3rem;border-radius:1px;background:#cfc8bb;transform:rotate(18deg)}
+#vinyl.playing .arm{transform:rotate(25deg)}
 #vinyl .label{padding:.3rem .6rem;border-radius:999px;background:rgba(48,26,18,.85);border:1px solid rgba(245,176,65,.3)}
 #jazz{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -529,7 +536,7 @@ let jazz = null, playing = false;
 const vinyl = document.createElement("button");
 vinyl.id = "vinyl";
 vinyl.type = "button";
-vinyl.innerHTML = '<span class="disc"></span><span class="label"></span>';
+vinyl.innerHTML = '<span class="deck"><span class="disc"></span><span class="arm"></span></span><span class="label"></span>';
 const jazzOff = () => { try { return localStorage.getItem("jazz") === "off"; } catch (e) { return false; } };
 const paintVinyl = () => {
   vinyl.classList.toggle("playing", playing);
