@@ -176,7 +176,25 @@ body.fire #fire{border-color:#ff6a00;box-shadow:0 0 12px rgba(255,106,0,.6)}
 #surprise{position:fixed;left:50%;bottom:1.25rem;z-index:60;display:flex;align-items:center;gap:.6rem;padding:.7rem 1.1rem;transform:translateX(-50%);border-radius:.8rem;background:linear-gradient(90deg,#e8132b,#ff6a00);color:#fff;font-weight:800;letter-spacing:.06em;text-decoration:none;box-shadow:0 8px 28px rgba(232,19,43,.45);animation:pulse 1.2s ease-in-out infinite;white-space:nowrap}
 #surprise small{font-weight:600;letter-spacing:0;opacity:.85}
 @keyframes pulse{50%{transform:translateX(-50%) scale(1.05);box-shadow:0 10px 36px rgba(255,106,0,.6)}}
-@media(prefers-reduced-motion:reduce){.flames{display:none}body.fire section,#surprise{animation:none}}
+body.rift{overflow:hidden}
+body.rift .wrap{position:relative;z-index:2}
+#void{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,rgba(40,0,70,.55),rgba(4,0,12,.96) 65%)}
+#crack{position:fixed;left:50%;top:50%;z-index:3;width:3px;height:0;transform:translate(-50%,-50%);border-radius:2px;pointer-events:none;background:linear-gradient(#fff,#d9c2ff,#fff);box-shadow:0 0 12px 4px #b388ff,0 0 40px 14px #7a3cff}
+#hole{--d:min(60vmin,340px);position:fixed;left:50%;top:50%;z-index:3;width:var(--d);height:var(--d);margin:calc(var(--d) / -2) 0 0 calc(var(--d) / -2);border-radius:50%;pointer-events:none;transform:scale(0);box-shadow:0 0 60px 20px rgba(122,60,255,.55),0 0 160px 70px rgba(255,43,214,.25)}
+#hole::before{content:"";position:absolute;inset:-14%;border-radius:50%;background:conic-gradient(#7a3cff,#ff2bd6,#00e5ff,#ffe066,#7a3cff);-webkit-mask:radial-gradient(circle,transparent 0 34%,#000 40% 52%,transparent 70%);mask:radial-gradient(circle,transparent 0 34%,#000 40% 52%,transparent 70%);filter:blur(5px);animation:spin .7s linear infinite}
+#hole::after{content:"";position:absolute;inset:16%;border-radius:50%;background:#000;box-shadow:0 0 30px 12px #000,inset 0 0 25px rgba(122,60,255,.5)}
+@keyframes spin{to{transform:rotate(360deg)}}
+#flash{position:fixed;inset:0;z-index:65;background:#fff;opacity:0;pointer-events:none}
+.confetti{position:fixed;inset:0;z-index:70;width:100%;height:100%;pointer-events:none}
+body.party{--fg:#1b1530;--mut:#4a4360;--line:rgba(40,20,80,.15);--acc:#5b2bd6;--acc-bg:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);background:linear-gradient(120deg,#ffd1dc,#fff1b8,#c9f7e1,#cfe6ff,#e6d5ff,#ffd1dc) fixed;background-size:400% 400%;animation:party-bg 8s linear infinite}
+body.party h1{background:linear-gradient(90deg,#ff3d7f,#ffb300,#2ec27e,#2f80ed,#9b51e0,#ff3d7f);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:party-text 2s linear infinite}
+body.party section{animation:party-border 1.2s linear infinite}
+body.party .bar span{background:linear-gradient(90deg,#ff3d7f,#ffb300,#2ec27e,#2f80ed,#9b51e0)}
+body.party h2::after{content:" 🎉"}
+@keyframes party-bg{to{background-position:400% 0}}
+@keyframes party-text{to{background-position:200% 0}}
+@keyframes party-border{0%,100%{border-left-color:#ff3d7f}20%{border-left-color:#ffb300}40%{border-left-color:#2ec27e}60%{border-left-color:#2f80ed}80%{border-left-color:#9b51e0}}
+@media(prefers-reduced-motion:reduce){.flames{display:none}body.fire section,#surprise,#hole::before,body.party,body.party h1,body.party section{animation:none}}
 """
 
 # Runs in <head> so the saved theme applies before the first paint
@@ -231,6 +249,117 @@ if (Math.random() < 0.2) {
   banner.innerHTML = "⚠ IMPORTANT NEW CONTENT <small>click to open</small>";
   banner.addEventListener("click", () => banner.remove());
   document.body.append(banner);
+}
+
+// Konami code easter egg (up up down down left right left right B A): a dimensional rift opens,
+// a black hole swallows the page, then everything comes back in confetti colours
+const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+let konamiPos = 0, riftBusy = false;
+document.addEventListener("keydown", e => {
+  if (e.target.matches("input")) return;
+  const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+  konamiPos = k === KONAMI[konamiPos] ? konamiPos + 1 : (k === KONAMI[0] ? 1 : 0);
+  if (konamiPos === KONAMI.length) { konamiPos = 0; rift(); }
+});
+
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const make = (tag, id) => { const el = document.createElement(tag); if (id) el.id = id; document.body.append(el); return el; };
+
+function confetti(ox, oy) {
+  const c = make("canvas"), ctx = c.getContext("2d"), dpr = devicePixelRatio || 1;
+  const W = innerWidth, H = innerHeight;
+  c.className = "confetti";
+  c.width = W * dpr; c.height = H * dpr; ctx.scale(dpr, dpr);
+  const colors = ["#ff3d7f", "#ffb300", "#2ec27e", "#2f80ed", "#9b51e0", "#00e5ff", "#ffe066"];
+  const parts = [];
+  const add = (x, y, vx, vy) => parts.push({ x, y, vx, vy, w: 6 + Math.random() * 6, h: 3 + Math.random() * 4,
+    r: Math.random() * 6, vr: (Math.random() - .5) * .4, c: colors[Math.floor(Math.random() * colors.length)] });
+  for (let i = 0; i < 260; i++) {           // explosion out of the black hole
+    const a = Math.random() * Math.PI * 2, s = 4 + Math.random() * 14;
+    add(ox, oy, Math.cos(a) * s, Math.sin(a) * s - 5);
+  }
+  for (let i = 0; i < 180; i++) add(Math.random() * W, -Math.random() * H, (Math.random() - .5) * 2, 1 + Math.random() * 3);  // rain
+  const end = performance.now() + 7000;
+  (function frame(now) {
+    ctx.clearRect(0, 0, W, H);
+    for (const p of parts) {
+      p.vx *= .985; p.vy = p.vy * .985 + .22;
+      p.x += p.vx + Math.sin(p.r) * .6; p.y += p.vy; p.r += p.vr;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.scale(1, Math.cos(p.r * 2));
+      ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
+    }
+    if (now < end && parts.some(p => p.y < H + 20)) requestAnimationFrame(frame); else c.remove();
+  })(performance.now());
+}
+
+async function rift() {
+  if (riftBusy) return;
+  riftBusy = true;
+  const hx = innerWidth / 2, hy = innerHeight / 2;
+  const party = () => {
+    document.body.classList.add("party");
+    confetti(hx, hy);
+    setTimeout(() => { document.body.classList.remove("party"); riftBusy = false; }, 15000);
+  };
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return party();
+
+  const pieces = [...document.querySelectorAll(
+    "header h1, header .sub, #search, .tools button, main section .code, main section h2, main section > .links > li, footer"
+  )].filter(el => el.getBoundingClientRect().width > 0);
+  const wrap = document.querySelector(".wrap");
+  document.body.classList.add("rift");
+  const space = make("div", "void"), crack = make("div", "crack"), hole = make("div", "hole"), flash = make("div", "flash");
+
+  // 1. The rift tears open: darkness falls, a crack of light splits the screen, the page trembles
+  space.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, fill: "forwards" });
+  crack.animate([
+    { height: "0", width: "3px" }, { height: "35vh", width: "2px", offset: .5 },
+    { height: "70vh", width: "5px", offset: .8 }, { height: "70vh", width: "40px", opacity: 0 }
+  ], { duration: 1100, easing: "ease-in", fill: "forwards" });
+  wrap.animate(Array.from({ length: 24 }, (_, i) => {
+    const a = i / 24 * 6;
+    return { transform: `translate(${(Math.random() - .5) * a}px, ${(Math.random() - .5) * a}px)` };
+  }), { duration: 3000 });
+  await wait(800);
+
+  // 2. The black hole opens
+  hole.animate([{ transform: "scale(0) rotate(0)" }, { transform: "scale(1.15) rotate(90deg)", offset: .7 }, { transform: "scale(1) rotate(120deg)" }],
+    { duration: 800, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" });
+  await wait(400);
+
+  // 3. Every piece of the page spirals into it, closest first
+  const flights = pieces.map(el => {
+    const b = el.getBoundingClientRect();
+    const dx = hx - (b.left + b.width / 2), dy = hy - (b.top + b.height / 2);
+    const dist = Math.hypot(dx, dy), spin = (Math.random() < .5 ? -1 : 1) * (360 + Math.random() * 540);
+    const anim = el.animate([
+      { transform: "none", opacity: 1, filter: "blur(0)" },
+      { transform: `translate(${dx * .35 - dy * .3}px, ${dy * .35 + dx * .3}px) rotate(${spin * .3}deg) scale(.85)`, offset: .45 },
+      { transform: `translate(${dx}px, ${dy}px) rotate(${spin}deg) scale(0)`, opacity: 0, filter: "blur(6px)" }
+    ], { duration: 900 + Math.random() * 500, delay: Math.min(dist, 900) * 1.1, easing: "cubic-bezier(.55,0,1,.45)", fill: "forwards" });
+    return { el, anim, dx, dy, spin };
+  });
+  await Promise.all(flights.map(f => f.anim.finished));
+
+  // 4. The hole collapses in a flash of light
+  hole.animate([{ transform: "scale(1)" }, { transform: "scale(1.4)", offset: .3 }, { transform: "scale(0)" }],
+    { duration: 500, easing: "ease-in", fill: "forwards" });
+  await wait(350);
+  flash.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 700 });
+  await wait(250);
+  [space, crack, hole].forEach(el => el.remove());
+  setTimeout(() => flash.remove(), 700);
+  document.body.classList.remove("rift");
+
+  // 5. Everything comes back out, bouncing into place, in confetti colours
+  party();
+  flights.forEach(({ el, anim, dx, dy, spin }) => {
+    anim.cancel();
+    el.animate([
+      { transform: `translate(${dx}px, ${dy}px) rotate(${-spin / 2}deg) scale(0)`, opacity: 0 },
+      { transform: "none", opacity: 1 }
+    ], { duration: 700, delay: Math.random() * 400, easing: "cubic-bezier(.34,1.56,.64,1)", fill: "backwards" });
+  });
 }
 
 // Search: keep subjects and documents whose text matches, open the sections holding a match
