@@ -879,17 +879,19 @@ eq.innerHTML = Array.from({ length: 48 }, () =>
 // lightning and the other drawn effects below (chains, fire, sparks, flying silhouettes). One
 // canvas is much lighter than dozens of animated elements. The loop only runs during the metal
 // phase, the browser pauses it in background tabs, and each step is capped at 50 ms, so nothing
-// piles up while the page is hidden. Each effect registers {mode, update(dt), draw(ctx), reset()};
+// piles up while the page is hidden. Each effect registers {mode, update(dt), draw(ctx), reset(),
+// optional resize()};
 // only the effects of the current mode ("metal" or "epic", fxMode) run.
 const fx = document.createElement("canvas"), ctx = fx.getContext("2d");
 fx.id = "metalfx";
 let fxW = 0, fxH = 0, fxRaf = null, fxLast = 0, fxMode = null;
 const fxLayers = [], strikeHooks = [];  // strikeHooks: called with (x, y) where a bolt hits
+// Drawn at 1 canvas pixel per CSS pixel even on high-density screens: the effects are soft glows,
+// and a 2x canvas means 4x the pixels to fill and composite on every frame (and while scrolling)
 const fxResize = () => {
-  const dpr = Math.min(devicePixelRatio || 1, 2);
   fxW = innerWidth; fxH = innerHeight;
-  fx.width = fxW * dpr; fx.height = fxH * dpr;
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  fx.width = fxW; fx.height = fxH;
+  fxLayers.forEach(layer => layer.resize?.());
 };
 const fxFrame = now => {
   const dt = Math.min(.05, (now - fxLast) / 1000);
@@ -984,7 +986,9 @@ const makeChains = () => {
 };
 const kick = power => chains.forEach(ch => ch.forEach(p => { p.px -= (Math.random() - .5) * power; }));  // moving px gives speed
 strikeHooks.push(() => kick(16));
-const steel = (c, w) => {  // vertical steel gradient across a link of thickness w
+const steelCache = {};  // gradients are expressed in the link's own coordinates, so they can be reused
+const steel = (c, w) => steelCache[w] ||= steelGradient(c, w);
+const steelGradient = (c, w) => {  // vertical steel gradient across a link of thickness w
   const g = c.createLinearGradient(0, -w, 0, w);
   g.addColorStop(0, "#f4f4f4"); g.addColorStop(.35, "#9a9a9a"); g.addColorStop(.55, "#3c3c3c"); g.addColorStop(.8, "#c8c8c8"); g.addColorStop(1, "#5a5a5a");
   return g;
@@ -1119,6 +1123,7 @@ HORNS.roundRect(36, 58, 30, 11, 5);   // thumb folded over the other fingers
 // [shape, fill rule]: even-odd cuts the skull's eyes and nose, non-zero merges the hand's parts
 const SHAPES = [[SKULL, "evenodd"], [FLYING_V, "nonzero"], [HORNS, "nonzero"]];
 const thrown = [];
+let chrome = null;
 let throwClock = 0;
 fxLayers.push({
   mode: "metal",
@@ -1150,8 +1155,10 @@ fxLayers.push({
       c.rotate(t.a);
       c.scale(t.size / 100, t.size / 100);
       c.translate(-50, -50);
-      const chrome = c.createLinearGradient(0, 0, 0, 100);
-      chrome.addColorStop(0, "#ffffff"); chrome.addColorStop(.4, "#9c9c9c"); chrome.addColorStop(.52, "#2e2e2e"); chrome.addColorStop(.7, "#dcdcdc"); chrome.addColorStop(1, "#6a6a6a");
+      if (!chrome) {  // made once: it lives in the shape's own 100 x 100 box
+        chrome = c.createLinearGradient(0, 0, 0, 100);
+        chrome.addColorStop(0, "#ffffff"); chrome.addColorStop(.4, "#9c9c9c"); chrome.addColorStop(.52, "#2e2e2e"); chrome.addColorStop(.7, "#dcdcdc"); chrome.addColorStop(1, "#6a6a6a");
+      }
       c.shadowColor = "rgba(255,40,0,.9)"; c.shadowBlur = 18;
       c.fillStyle = chrome;
       c.fill(t.shape, t.rule);
@@ -1185,12 +1192,12 @@ fxLayers.push({
     for (const t of tongues) {
       t.x += t.v * dt;
       if (t.x < 0 || t.x > fxW) t.v *= -1;
-      for (let n = dt * 70 * t.power; n > 0 && blueFlames.length < 1100; n--) {
+      for (let n = dt * 50 * t.power; n > 0 && blueFlames.length < 760; n--) {
         spawn(t.x + (Math.random() - .5) * 50, fxH + 10, 7 + Math.random() * 11 * t.power, 150 + Math.random() * 220 * t.power);
       }
     }
     for (const bx of [fxW * .04, fxW * .96]) {  // the two braziers
-      for (let n = dt * 120; n > 0 && blueFlames.length < 1100; n--) {
+      for (let n = dt * 85; n > 0 && blueFlames.length < 760; n--) {
         spawn(bx + (Math.random() - .5) * 46, fxH + 10, 10 + Math.random() * 16, 260 + Math.random() * 320);
       }
     }
@@ -1251,40 +1258,51 @@ fxLayers.push({
   },
   reset() { embers.length = motes.length = 0; },
 });
-// Arcane circle: a huge magic circle turning slowly behind the page, very faint: two rings of
-// runes (glyphs made of random strokes, generated once) and an eight-pointed star of two squares
+// Arcane circle: a huge magic circle turning slowly behind the page, very faint: three rings, a
+// ring of runes (glyphs made of random strokes, generated once) and an eight-pointed star of two
+// squares. Its glow (shadowBlur) is costly, so the circle is drawn once per screen size on its own
+// small canvas, and each frame only copies it, turned a little further.
 const RUNES = Array.from({ length: 24 }, () => Array.from({ length: 3 }, () => [Math.random() * 10 - 5, Math.random() * 14 - 7, Math.random() * 10 - 5, Math.random() * 14 - 7]));
-let circleTurn = 0;
+let circleTurn = 0, circleArt = null;
+const drawCircleArt = () => {
+  const R = Math.min(fxW, fxH) * .42, size = Math.ceil(R * 2 + 40);
+  circleArt = document.createElement("canvas");
+  circleArt.width = circleArt.height = size;
+  const c = circleArt.getContext("2d");
+  c.translate(size / 2, size / 2);
+  c.strokeStyle = "rgba(140,170,255,.13)";
+  c.shadowColor = "rgba(120,140,255,.6)"; c.shadowBlur = 12;
+  c.lineWidth = 2;
+  for (const r of [R, R * .86, R * .55]) { c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.stroke(); }
+  for (let s = 0; s < 2; s++) {  // two squares turned 45 degrees: an eight-pointed star
+    c.save(); c.rotate(s * Math.PI / 4);
+    c.strokeRect(-R * .6, -R * .6, R * 1.2, R * 1.2);
+    c.restore();
+  }
+  c.lineWidth = 1.6;
+  RUNES.forEach((rune, i) => {  // the ring of runes between the two outer circles
+    c.save();
+    c.rotate(i / RUNES.length * Math.PI * 2);
+    c.translate(0, -R * .93);
+    c.beginPath();
+    for (const [x1, y1, x2, y2] of rune) { c.moveTo(x1, y1); c.lineTo(x2, y2); }
+    c.stroke();
+    c.restore();
+  });
+};
 fxLayers.push({
   mode: "epic",
   update(dt) { circleTurn += dt * .08; },
   draw(c) {
-    const R = Math.min(fxW, fxH) * .42;
+    if (!circleArt) drawCircleArt();
     c.save();
-    c.translate(fxW / 2, fxH / 2);
     c.globalCompositeOperation = "lighter";
-    c.strokeStyle = "rgba(140,170,255,.13)";
-    c.shadowColor = "rgba(120,140,255,.6)"; c.shadowBlur = 12;
-    c.lineWidth = 2;
-    for (const r of [R, R * .86, R * .55]) { c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.stroke(); }
+    c.translate(fxW / 2, fxH / 2);
     c.rotate(circleTurn);
-    for (let s = 0; s < 2; s++) {  // two squares turned 45 degrees: an eight-pointed star
-      c.save(); c.rotate(s * Math.PI / 4);
-      c.strokeRect(-R * .6, -R * .6, R * 1.2, R * 1.2);
-      c.restore();
-    }
-    c.lineWidth = 1.6;
-    RUNES.forEach((rune, i) => {  // the ring of runes between the two outer circles
-      c.save();
-      c.rotate(i / RUNES.length * Math.PI * 2);
-      c.translate(0, -R * .93);
-      c.beginPath();
-      for (const [x1, y1, x2, y2] of rune) { c.moveTo(x1, y1); c.lineTo(x2, y2); }
-      c.stroke();
-      c.restore();
-    });
+    c.drawImage(circleArt, -circleArt.width / 2, -circleArt.height / 2);
     c.restore();
   },
+  resize() { circleArt = null; },
   reset() {},
 });
 
