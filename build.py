@@ -134,8 +134,13 @@ KINDS = {"course.pdf": "Course notes", "cheatsheet.pdf": "Cheat sheet"}
 ORDER = list(KINDS)  # course first, then cheatsheet, then anything else
 NEW_DAYS = 7         # documents changed more recently get a "New" badge
 SEMESTER_WEEKS = 14  # length of the progress bar, override with "weeks" in subjects.json
+PREVIEW_PX = 240     # longest side of the first-page previews, in pixels (shown smaller, for sharpness)
+PDFTOPPM = shutil.which("pdftoppm")    # makes the previews; optional
+PDFTOTEXT = shutil.which("pdftotext")  # finds where the content of course notes starts; optional
 # One accent per subject (in subjects.json order), override with "color" in subjects.json
 PALETTE = ["#3b6fd8", "#d9622b", "#2f9e6b", "#b4459a", "#c99a1c", "#7a55d1", "#1f9bb0", "#d04452"]
+# Night bar menu: each subject gets a cocktail (in subjects.json order), e.g. "The Compsec Sour"
+COCKTAILS = ["Sour", "Spritz", "Mule", "Negroni", "Old Fashioned", "Martini", "Manhattan", "Mojito"]
 WEEK = re.compile(r"week_?(\d+)(.*)", re.I)  # weekly notes: week01.pdf, week_3.pdf, ...
 
 CSS = """
@@ -177,8 +182,24 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 .bar span{display:block;height:100%;border-radius:inherit;background:var(--c)}
 .group{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);padding:.6rem 0 .1rem;border-bottom:1px solid var(--line)}
 /* Search field and its no-result message */
-#search{width:100%;margin-top:1.25rem;padding:.65rem .9rem;font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:.6rem;outline:none}
+.searchrow{display:flex;gap:.5rem;margin-top:1.25rem}
+#search{flex:1;min-width:0;padding:.65rem .9rem;font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:.6rem;outline:none}
 #search:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-bg)}
+/* Names / Previews switch, next to the search field */
+.view{display:flex;padding:.2rem;background:var(--card);border:1px solid var(--line);border-radius:.6rem}
+.view button{padding:0 .75rem;font:600 .82rem system-ui,sans-serif;color:var(--mut);background:none;border:0;border-radius:.4rem;cursor:pointer}
+.view button[aria-pressed=true]{color:var(--fg);background:var(--acc-bg)}
+/* Previews view (html[data-view=previews]): every list becomes a grid of small first-page thumbnails.
+   Collapsible sections and folder headings take a full row; size and date move to the tooltip. */
+.thumb{display:none}
+[data-view=previews] .links{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:.5rem;padding:.5rem 0}
+[data-view=previews] .links > .fold,[data-view=previews] .group{grid-column:1/-1}
+[data-view=previews] .links a{flex-direction:column;justify-content:flex-start;align-items:center;gap:.3rem;padding:.35rem;border:0;border-radius:.5rem;font-size:.75rem;line-height:1.25;text-align:center}
+[data-view=previews] .links a small{display:none}
+[data-view=previews] .thumb{display:block;width:100%;aspect-ratio:170/240;object-fit:cover;object-position:top;background:#fff;border:1px solid var(--line);border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+[data-view=previews] .thumb.none{display:grid;place-items:center;color:var(--mut);font:700 .7rem ui-monospace,monospace;background:var(--acc-bg)}
+[data-view=previews] .links a .new{margin:.15rem 0 0;font-size:.6rem}
+[data-view=previews] .links a span{display:flex;flex-direction:column;align-items:center}
 #empty{color:var(--mut)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 /* Flame mode (body.fire): fire gradients, glowing card borders, flame emojis rising from the bottom */
@@ -229,14 +250,78 @@ body.party h2::after{content:" 🎉"}
 @keyframes party-bg{to{background-position:400% 0}}
 @keyframes party-text{to{background-position:200% 0}}
 @keyframes party-border{0%,100%{border-left-color:#ff3d7f}20%{border-left-color:#ffb300}40%{border-left-color:#2ec27e}60%{border-left-color:#2f80ed}80%{border-left-color:#9b51e0}}
+/* Jazz bar night theme (body.night, from 21:30 to 6:00): dim warm light from above, amber and
+   burgundy tones, a flickering neon sign for the title, cards glowing like candle-lit tables */
+body.night{--bg:#120a09;--fg:#f3e3c3;--card:rgba(48,26,18,.85);--line:rgba(255,190,120,.16);--acc:#f5b041;--acc-bg:rgba(245,176,65,.13);--mut:#b89a7a;--new:#ffcf70;--new-bg:rgba(255,207,112,.15);background:radial-gradient(70% 45% at 50% -8%,rgba(255,176,90,.28),transparent 70%) fixed,radial-gradient(45% 35% at 90% 105%,rgba(150,25,55,.3),transparent 70%) fixed,radial-gradient(40% 30% at 5% 100%,rgba(120,40,20,.25),transparent 70%) fixed,var(--bg)}
+body.night h1{color:#ffe1b0;font-family:"Brush Script MT","Segoe Script",cursive;font-weight:400;font-size:2.6rem;letter-spacing:.01em;text-shadow:0 0 4px #fff2d6,0 0 12px #ff9d4d,0 0 26px #ff5e8a,0 0 48px #ff2d6f;animation:neon 6s infinite}
+body.night h1::after{content:" 🎷"}
+body.night .sub{color:#e9c89a;font-style:italic}
+body.night section{box-shadow:-8px 0 22px -12px rgba(255,170,80,.6)}
+body.night .links a:hover{background:rgba(245,176,65,.08)}
+/* Bar air (night only): slow drifting smoke clouds and music notes floating up, behind the page */
+.air{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+body.night:not(.rift) .wrap{position:relative;z-index:1}
+.air .smoke{position:absolute;width:70vmax;height:40vmax;border-radius:50%;background:radial-gradient(closest-side,rgba(230,200,170,.07),transparent);filter:blur(30px);animation:drift linear infinite}
+.air .note{position:absolute;bottom:-2rem;color:#f5b041;text-shadow:0 0 8px rgba(245,176,65,.6);animation:float linear forwards}
+@keyframes drift{0%{transform:translate(-30vw,0) scale(1)}50%{transform:translate(20vw,-8vh) scale(1.25)}100%{transform:translate(70vw,4vh) scale(1)}}
+@keyframes float{0%{transform:translate(0,0) rotate(0);opacity:0}15%{opacity:var(--o)}50%{transform:translate(var(--sway),-55vh) rotate(var(--r))}100%{transform:translate(0,-110vh) rotate(0);opacity:0}}
+/* Night music: a vinyl record in the bottom left corner, spinning while the jazz plays.
+   The YouTube player itself is kept invisible behind it. */
+#vinyl{position:fixed;left:1.1rem;bottom:1.1rem;z-index:40;display:flex;align-items:center;gap:.6rem;padding:0;color:#f3e3c3;font:600 .78rem system-ui,sans-serif;background:none;border:0;cursor:pointer}
+/* Turntable: wooden plinth, record on the left, tonearm hanging from a pivot in the top right.
+   At rest the arm sits beside the record; when playing it swings onto the outer grooves. */
+#vinyl .deck{position:relative;width:4.8rem;height:3.8rem;border-radius:.45rem;background:linear-gradient(135deg,#7a4a26,#4a2a14 60%,#3a200f);box-shadow:0 6px 18px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,220,170,.25)}
+#vinyl .disc{position:absolute;left:.3rem;top:.3rem;width:3.2rem;height:3.2rem;border-radius:50%;background:radial-gradient(circle,#f5b041 0 17%,#2a1208 18% 20%,#111 21%,#1c1c1c 30%,#0d0d0d 31%,#1c1c1c 42%,#0d0d0d 43%,#1c1c1c 56%,#0d0d0d 57%,#151515 70%);box-shadow:0 0 0 2px #1a1a1a,0 2px 6px rgba(0,0,0,.7)}
+#vinyl.playing .disc{animation:spin 1.8s linear infinite}
+#vinyl .arm{position:absolute;right:.42rem;top:.35rem;width:3px;height:2.4rem;margin-left:-1.5px;border-radius:2px;background:linear-gradient(#e8e2d6,#a9a296);transform-origin:50% 0;transform:rotate(-4deg);transition:transform .9s cubic-bezier(.4,0,.2,1)}
+#vinyl .arm::before{content:"";position:absolute;left:50%;top:-.3rem;width:.6rem;height:.6rem;margin-left:-.3rem;border-radius:50%;background:radial-gradient(circle,#ddd 0 30%,#777 35%,#333)}
+#vinyl .arm::after{content:"";position:absolute;left:50%;bottom:-.2rem;width:.45rem;height:.3rem;margin-left:-.3rem;border-radius:1px;background:#cfc8bb;transform:rotate(18deg)}
+#vinyl.playing .arm{transform:rotate(25deg)}
+#vinyl .label{padding:.3rem .6rem;border-radius:999px;background:rgba(48,26,18,.85);border:1px solid rgba(245,176,65,.3)}
+/* Bar menu (night only): a small cream paper card in the bottom right corner, slightly askew,
+   folded to its title until clicked; each cocktail opens the latest notes of a subject */
+#menu{display:none;position:fixed;right:1.1rem;bottom:1.1rem;z-index:40;width:min(17rem,calc(100vw - 2.2rem));padding:.55rem .9rem;color:#3a2414;background:linear-gradient(#f8eedb,#efe0c2);border-radius:.3rem;box-shadow:0 8px 24px rgba(0,0,0,.55);font-family:Georgia,"Times New Roman",serif;transform:rotate(-2deg)}
+body.night #menu{display:block}
+#menu summary{padding:0;border:0;color:#3a2414;font:italic 700 1rem Georgia,serif;justify-content:center}
+#menu summary::before{border-color:#8a5a2b}
+#menu ul{list-style:none;margin:.5rem 0 .2rem;padding:.4rem 0 0;border-top:1px dashed rgba(90,55,25,.4)}
+#menu a{display:block;padding:.3rem 0;color:#3a2414;text-decoration:none}
+#menu a:hover b{color:#a8461e}
+#menu b{display:block;font-size:.92rem}
+#menu small{font:italic .75rem Georgia,serif;color:#7a5a3c}
+#jazz{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* After midnight (late) and while closing: darker, colder light, a blue-violet neon flickering more */
+body.night[data-phase=late],body.night[data-phase=closing]{--bg:#08080f;--card:rgba(22,22,40,.85);--line:rgba(150,160,255,.14);--mut:#9a97b8;background:radial-gradient(60% 40% at 50% -8%,rgba(110,130,255,.2),transparent 70%) fixed,radial-gradient(45% 35% at 90% 105%,rgba(130,40,160,.3),transparent 70%) fixed,radial-gradient(40% 30% at 5% 100%,rgba(40,60,140,.25),transparent 70%) fixed,var(--bg)}
+body.night[data-phase=late] h1,body.night[data-phase=closing] h1{color:#e6e0ff;text-shadow:0 0 4px #f1edff,0 0 12px #8fa2ff,0 0 26px #b45cff,0 0 48px #7a3cff;animation:neon-late 2.6s infinite}
+body.night[data-phase=late] section,body.night[data-phase=closing] section{box-shadow:-8px 0 22px -12px rgba(140,150,255,.55)}
+/* Closing time (2:00 - 6:00): the sign goes out letter by letter (each .l waits --i x 0.7 s, the
+   sax last), then the bartender comes up from the bottom of the screen to send you to bed */
+body.night[data-phase=closing] h1{animation:none}
+body.night[data-phase=closing] h1 .l{animation:neon-off .7s forwards;animation-delay:calc(1s + var(--i) * .7s)}
+body.night[data-phase=closing] h1::after{display:inline-block;animation:neon-off .7s forwards;animation-delay:calc(1s + var(--n) * .7s)}
+#barman{position:fixed;left:50%;bottom:1.2rem;z-index:45;display:flex;align-items:center;gap:.7rem;padding:.6rem 1rem .6rem .7rem;transform:translateX(-50%);color:#f3e3c3;background:rgba(22,18,30,.95);border:1px solid rgba(245,176,65,.4);border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.6);cursor:pointer;opacity:0;animation:barman-in .8s cubic-bezier(.34,1.56,.64,1) forwards}
+#barman .who{font-size:2.2rem;line-height:1}
+#barman .say{font:italic 600 1rem Georgia,serif}
+#barman .say small{display:block;font:400 .7rem system-ui,sans-serif;color:#9a97b8;font-style:normal}
+@keyframes neon-off{0%{opacity:1}20%{opacity:.2}30%{opacity:1}50%{opacity:.15}62%{opacity:.85}100%{opacity:.2;color:#3a3550;text-shadow:none}}
+@keyframes barman-in{from{opacity:0;transform:translate(-50%,140%)}to{opacity:1;transform:translate(-50%,0)}}
+/* Between midnight and 2:00 some of the evening's warmth is still there: an amber glow under the
+   blue light, a touch of orange in the violet neon and golden candle-lit cards */
+body.night[data-phase=late]{--bg:#0d0b12;--card:rgba(34,26,34,.85);--line:rgba(220,170,140,.15);--mut:#ad9fa8;background:radial-gradient(55% 35% at 50% -8%,rgba(255,170,80,.16),transparent 70%) fixed,radial-gradient(70% 45% at 50% -10%,rgba(110,130,255,.16),transparent 75%) fixed,radial-gradient(45% 35% at 90% 105%,rgba(150,40,140,.28),transparent 70%) fixed,radial-gradient(40% 30% at 5% 100%,rgba(160,90,30,.22),transparent 70%) fixed,var(--bg)}
+body.night[data-phase=late] h1{color:#f2e4ff;text-shadow:0 0 4px #fff3e6,0 0 12px #ffb26b,0 0 26px #b45cff,0 0 48px #7a3cff}
+body.night[data-phase=late] section{box-shadow:-8px 0 22px -12px rgba(255,180,100,.45),-14px 0 30px -16px rgba(140,150,255,.4)}
+@keyframes neon-late{0%,9%,13%,31%,35%,38%,62%,66%,88%,100%{opacity:1}10%,12%,32%,37%,64%,90%{opacity:.35;text-shadow:0 0 2px #f1edff,0 0 5px #8fa2ff}}
+@keyframes neon{0%,18%,22%,25%,53%,57%,100%{opacity:1}20%,24%,55%{opacity:.55;text-shadow:0 0 2px #fff2d6,0 0 6px #ff9d4d}}
 /* Reduced motion: no rising flames and no looping animations */
-@media(prefers-reduced-motion:reduce){.flames{display:none}body.fire section,#surprise,#hole .disk::before,body.party,body.party h1,body.party section{animation:none}}
+@media(prefers-reduced-motion:reduce){.flames,.air{display:none}body.fire section,#surprise,#hole .disk::before,body.party,body.party h1,body.party section,body.night h1,body.night[data-phase] h1{animation:none}}
 """
 
 # Runs in <head> so the saved theme applies before the first paint (no light/dark flicker).
 # localStorage can throw (private mode, blocked storage), hence the try/catch everywhere.
 THEME_JS = """
 try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+try { const v = localStorage.getItem("view"); if (v) document.documentElement.dataset.view = v; } catch (e) {}
 """
 
 # Runs at the end of <body>, once every element exists
@@ -361,7 +446,7 @@ async function rift() {
   // The pieces that get swallowed one by one: header parts, card titles and every visible line
   // of the cards (hidden ones, e.g. inside closed sections, have no size and are left out)
   const pieces = [...document.querySelectorAll(
-    "header h1, header .sub, #search, .tools button, main section .code, main section h2, main section > .links > li, footer"
+    "header h1, header .sub, #search, .view, .tools button, main section .code, main section h2, main section > .links > li, footer"
   )].filter(el => el.getBoundingClientRect().width > 0);
   const wrap = document.querySelector(".wrap");
   document.body.classList.add("rift");
@@ -423,6 +508,156 @@ async function rift() {
     ], { duration: 700, delay: Math.random() * 400, easing: "cubic-bezier(.34,1.56,.64,1)", fill: "backwards" });
   });
 }
+
+// Jazz bar night: from 21:30 to 6:00 the page turns into a jazz bar (body.night in CSS) and the
+// subtitle tells you to go to sleep. The night goes through phases (body[data-phase] in CSS):
+//   evening  21:30 - 0:00  warm light
+//   late      0:00 - 2:00  darker and bluer, the neon flickers more
+//   closing   2:00 - 6:00  the bar closes (see below)
+// Checked every minute, so it changes by itself while the page is open.
+// ?night=0 / 1 / evening / late / closing in the URL forces a phase (handy to try it any time).
+const sub = document.querySelector(".sub"), daySub = sub.textContent;
+const NIGHT_SUBS = {
+  evening: "It's late. Go to sleep… or stay for one last tune.",
+  late: "Past midnight. The band is playing its last set.",
+  closing: "Last call was a while ago.",
+};
+const forced = new URLSearchParams(location.search).get("night");
+const phaseNow = () => {
+  if (forced === "0") return null;
+  if (forced in NIGHT_SUBS) return forced;
+  const d = new Date(), m = d.getHours() * 60 + d.getMinutes();
+  if (m >= 21 * 60 + 30) return "evening";
+  if (m < 2 * 60) return "late";
+  if (m < 6 * 60) return "closing";
+  return forced === "1" ? "evening" : null;  // ?night=1 during the day: start of the night
+};
+const applyNight = () => {
+  const phase = phaseNow(), on = phase !== null;
+  if (phase === (document.body.dataset.phase || null)) return;
+  if (on) document.body.dataset.phase = phase; else delete document.body.dataset.phase;
+  sub.textContent = on ? NIGHT_SUBS[phase] : daySub;
+  if (on !== document.body.classList.contains("night")) {
+    document.body.classList.toggle("night", on);
+    document.dispatchEvent(new CustomEvent("night", { detail: on }));  // for the night extras below
+  }
+  document.dispatchEvent(new CustomEvent("phase", { detail: phase }));
+};
+// Closing time: wrap each letter of the title in a span (.l, with its index --i) so the CSS can
+// turn them off one by one, then bring the bartender in once the sign is dark. Any other phase
+// puts the title back as plain text and sends the bartender away. A click on him dismisses him.
+const title = document.querySelector("h1"), titleText = title.textContent;
+let barman = null, barmanTimer = null;
+document.addEventListener("phase", e => {
+  clearTimeout(barmanTimer);
+  barman?.remove();
+  barman = null;
+  if (e.detail !== "closing") { title.textContent = titleText; return; }
+  title.innerHTML = [...titleText].map((c, i) => `<span class="l" style="--i:${i}">${c === " " ? "&nbsp;" : c}</span>`).join("");
+  title.style.setProperty("--n", titleText.length);
+  barmanTimer = setTimeout(() => {
+    barman = document.createElement("div");
+    barman.id = "barman";
+    barman.title = "Click to close";
+    barman.innerHTML = '<span class="who">🧑‍🍳</span><span class="say">On ferme. Va dormir.<small>The bar reopens at 21:30</small></span>';
+    barman.addEventListener("click", () => barman.remove());
+    document.body.append(barman);
+  }, (1 + (titleText.length + 1) * .7 + .5) * 1000);
+});
+
+applyNight();
+setInterval(applyNight, 60000);
+
+// Bar air: 3 smoke clouds drifting across the room and a music note rising every ~0.9 s,
+// with a random sway and tilt (--sway, --r); everything is removed when the night ends
+const air = document.createElement("div");
+air.className = "air";
+let noteTimer = null;
+const note = () => {
+  const n = document.createElement("span");
+  n.className = "note";
+  n.textContent = "♪♫♩♬"[Math.floor(Math.random() * 4)];
+  n.style.cssText = `left:${Math.random() * 100}%;font-size:${1 + Math.random() * 1.4}rem;--o:${.25 + Math.random() * .45};` +
+    `--sway:${(Math.random() - .5) * 160}px;--r:${(Math.random() - .5) * 50}deg;animation-duration:${9 + Math.random() * 7}s`;
+  n.addEventListener("animationend", () => n.remove());
+  air.append(n);
+};
+const setAir = on => {
+  clearInterval(noteTimer);
+  air.replaceChildren();
+  air.remove();
+  if (!on) return;
+  for (let i = 0; i < 3; i++) {
+    const s = document.createElement("span");
+    s.className = "smoke";
+    s.style.cssText = `top:${10 + i * 28}%;left:${-20 + i * 15}%;animation-duration:${50 + i * 17}s;animation-delay:${-i * 13}s`;
+    air.append(s);
+  }
+  document.body.prepend(air);
+  for (let i = 0; i < 6; i++) setTimeout(note, i * 300);
+  noteTimer = setInterval(note, 900);
+};
+setAir(document.body.classList.contains("night"));
+document.addEventListener("night", e => setAir(e.detail));
+
+// Night music: jazz from YouTube, looped. Browsers refuse to start sound on their own, so it
+// starts on the first click or key press on the page; the vinyl button then plays / pauses it
+// (through the YouTube iframe API messages). Stopping it is remembered for the next visits.
+const JAZZ = "7gtIh5dF9Xk";
+let jazz = null, playing = false;
+const vinyl = document.createElement("button");
+vinyl.id = "vinyl";
+vinyl.type = "button";
+vinyl.innerHTML = '<span class="deck"><span class="disc"></span><span class="arm"></span></span><span class="label"></span>';
+const jazzOff = () => { try { return localStorage.getItem("jazz") === "off"; } catch (e) { return false; } };
+const paintVinyl = () => {
+  vinyl.classList.toggle("playing", playing);
+  vinyl.querySelector(".label").textContent = playing ? "♪ Jazz on — click to pause" : "♪ Click to play some jazz";
+  vinyl.title = playing ? "Pause the music" : "Play the music";
+};
+const command = func => jazz && jazz.contentWindow.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
+const play = () => {
+  if (!jazz) {  // first time: create the player, it autoplays thanks to the user's click
+    jazz = document.createElement("iframe");
+    jazz.id = "jazz";
+    jazz.title = "Background jazz";
+    jazz.allow = "autoplay; encrypted-media";
+    jazz.src = `https://www.youtube.com/embed/${JAZZ}?autoplay=1&loop=1&playlist=${JAZZ}&controls=0&enablejsapi=1`;
+    document.body.append(jazz);
+  } else command("playVideo");
+  playing = true;
+  try { localStorage.removeItem("jazz"); } catch (e) {}
+  paintVinyl();
+};
+const pause = () => {
+  command("pauseVideo");
+  playing = false;
+  try { localStorage.setItem("jazz", "off"); } catch (e) {}
+  paintVinyl();
+};
+vinyl.addEventListener("click", e => { e.stopPropagation(); playing ? pause() : play(); });
+// First interaction anywhere on the page starts the music (unless it was stopped before)
+const firstTouch = () => {
+  if (document.body.classList.contains("night") && !jazz && !jazzOff()) play();
+};
+document.addEventListener("pointerdown", firstTouch, { once: true });
+document.addEventListener("keydown", firstTouch, { once: true });
+const setMusic = on => {
+  if (on) { paintVinyl(); document.body.append(vinyl); }
+  else { if (playing) command("pauseVideo"); playing = false; vinyl.remove(); }
+};
+setMusic(document.body.classList.contains("night"));
+document.addEventListener("night", e => setMusic(e.detail));
+
+// Names / Previews switch: sets data-view on <html> (the CSS does the rest) and remembers it
+const viewBtns = document.querySelectorAll(".view button");
+const setView = v => {
+  root.dataset.view = v;
+  viewBtns.forEach(b => b.setAttribute("aria-pressed", b.dataset.view === v));
+  try { localStorage.setItem("view", v); } catch (e) {}
+};
+viewBtns.forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
+viewBtns.forEach(b => b.setAttribute("aria-pressed", b.dataset.view === (root.dataset.view || "names")));
 
 // Search: keep subjects and documents whose text matches, open the sections holding a match.
 // Every word typed must appear (in any order, case-insensitive). If the subject itself matches
@@ -495,16 +730,26 @@ def is_new(when):
     """True for documents changed less than NEW_DAYS ago (they get the "New" badge)."""
     return (datetime.now() - when).days < NEW_DAYS
 
-def link(subject, p, root, when):
-    """One <li> line: document name (+ "New" badge) on the left, size and date on the right."""
+def link(subject, p, root, when, shot=None):
+    """One <li> line: document name (+ "New" badge) on the left, size and date on the right.
+
+    It also carries the first-page thumbnail (or a "PDF" placeholder), only shown in the
+    Previews view; the size and date are repeated in the tooltip for that view.
+    Documents open in a new tab, so the index stays open next to them.
+    """
     rel = p.relative_to(root).as_posix()
     badge = '<span class="new">New</span>' if is_new(when) else ""
+    meta = f"{p.stat().st_size / 1e6:.1f} MB · {when:%d %b %Y}"
+    thumb = (
+        f'<img class="thumb" src="{subject}/{html.escape(shot.relative_to(root).as_posix())}" alt="" loading="lazy">'
+        if shot else '<span class="thumb none">PDF</span>'
+    )
     return (
-        f'<li><a href="{subject}/{html.escape(rel)}"><span>{html.escape(label(p, root))}{badge}</span>'
-        f'<small>{p.stat().st_size / 1e6:.1f} MB · {when:%d %b %Y}</small></a></li>'
+        f'<li><a href="{subject}/{html.escape(rel)}" target="_blank" rel="noopener" title="{meta}">{thumb}<span>{html.escape(label(p, root))}{badge}</span>'
+        f'<small>{meta}</small></a></li>'
     )
 
-def fold(subject, pdfs, root, when, noun, grouped=True, extra=""):
+def fold(subject, pdfs, root, when, shots, noun, grouped=True, extra=""):
     """Collapsible list of PDFs, with folder headings when grouped.
 
     The summary reads "<n> <noun>(s)", e.g. "4 weekly notes", followed by a "<k> new" badge
@@ -519,13 +764,13 @@ def fold(subject, pdfs, root, when, noun, grouped=True, extra=""):
         if grouped and folder != "." and folder != group:
             items.append(f'<li class="group">{html.escape(folder)}</li>')
         group = folder
-        items.append(link(subject, p, root, when[p]))
+        items.append(link(subject, p, root, when[p], shots[p]))
     n = len(pdfs)
     # The list is folded, so say on the summary when something new is inside
     fresh = sum(is_new(when[p]) for p in pdfs)
     badge = f'<span class="new">{fresh} new</span>' if fresh else ""
     return (
-        f'<li><details><summary>{n} {noun}{"s" if n > 1 else ""}{badge}{extra}</summary>'
+        f'<li class="fold"><details><summary>{n} {noun}{"s" if n > 1 else ""}{badge}{extra}</summary>'
         f'<ul class="links">{"".join(items)}</ul></details></li>'
     )
 
@@ -545,19 +790,67 @@ def progress(weeks, subject):
         f'<span class="bar"><span style="width:{pct}%"></span></span>{last}/{total}</span>'
     )
 
+TOC_TITLES = {"contents", "table of contents", "table des matières", "sommaire"}
+# A table of contents line ends with a page number, often after dot leaders: "1.2 Policy . . . 5"
+TOC_LINE = re.compile(r"\s\d+\s*$")
+
+def content_page(p):
+    """First page after the table of contents of a course PDF (1 if there is none).
+
+    Reads the text of the first pages with pdftotext (poppler): the TOC starts on the page whose
+    heading is "Contents" (or a French equivalent) and goes on while most lines end with a page
+    number. The page right after it is the first page of actual content.
+    """
+    if not PDFTOTEXT:
+        return 1
+    out = subprocess.run(
+        [PDFTOTEXT, "-f", "1", "-l", "12", "-enc", "UTF-8", str(p), "-"],
+        capture_output=True, text=True, encoding="utf-8", errors="replace",
+    ).stdout
+    pages = [[l.strip() for l in page.splitlines() if l.strip()] for page in out.split("\f")]
+    start = next((i for i, lines in enumerate(pages) if any(l.lower() in TOC_TITLES for l in lines[:3])), None)
+    if start is None:
+        return 1
+    end = start + 1
+    while end < len(pages) and pages[end] and sum(bool(TOC_LINE.search(l)) for l in pages[end]) > len(pages[end]) / 2:
+        end += 1
+    return end + 1 if end < len(pages) and pages[end] else 1
+
+def preview(p):
+    """Small PNG of a page of a PDF (week01.pdf -> week01.pdf.p1.png), or None.
+
+    The first page, except for course notes, where the title page and the table of contents
+    say nothing: their preview shows the first page of content instead (see content_page).
+    Made with pdftoppm (poppler), only when missing or older than the PDF. Without pdftoppm,
+    or if the PDF cannot be read, there is simply no preview and the page shows the name only.
+    """
+    page = content_page(p) if p.name == "course.pdf" else 1
+    png = p.with_name(f"{p.name}.p{page}.png")  # page in the name, so a new page means a new preview
+    if png.exists() and png.stat().st_mtime >= p.stat().st_mtime:
+        return png
+    if not PDFTOPPM:
+        return None
+    subprocess.run(
+        [PDFTOPPM, "-f", str(page), "-l", str(page), "-png", "-singlefile", "-scale-to", str(PREVIEW_PX),
+         str(p), str(png.with_suffix(""))],  # pdftoppm adds the .png itself
+        capture_output=True,
+    )
+    return png if png.exists() else None
+
 def natural(p):
     """Sort key that orders numbers by value: week2 before week10, 1.6 before 2.4."""
     return [int(t) if t.isdigit() else t.lower() for t in re.split(r"(\d+)", p.as_posix())]
 
 def build_index():
     """Write dist/index.html from whatever PDFs are in dist/ (subjects without any are hidden)."""
-    cards = []
+    cards, drinks = [], []
     for i, s in enumerate(CONFIG):
         root = DIST / s["id"]
         pdfs = list(root.rglob("*.pdf")) if root.is_dir() else []
         if not pdfs:
             continue
         when = {p: updated(s["id"], p, root) for p in pdfs}  # one git call per PDF, done once
+        shots = {p: preview(p) for p in pdfs}               # first-page previews (None if unavailable)
         # Course notes stay visible on the card, everything else goes in the collapsible sections
         course = root / "course.pdf"
         main = [course] if course in pdfs else []
@@ -572,15 +865,29 @@ def build_index():
         # Weekly notes are recognised by their name (weekNN), wherever they are stored
         weeks = [p for p in rest if WEEK.fullmatch(p.stem)]
         others = [p for p in rest if p not in weeks]
-        links = "".join(link(s["id"], p, root, when[p]) for p in main)
-        links += fold(s["id"], weeks, root, when, "weekly note", grouped=False, extra=progress(weeks, s))
-        links += fold(s["id"], others, root, when, "more document")
+        links = "".join(link(s["id"], p, root, when[p], shots[p]) for p in main)
+        links += fold(s["id"], weeks, root, when, shots, "weekly note", grouped=False, extra=progress(weeks, s))
+        links += fold(s["id"], others, root, when, shots, "more document")
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
         # --c = accent colour of the card, from subjects.json or the palette (in file order)
         cards.append(
             f'<section style="--c:{s.get("color", PALETTE[i % len(PALETTE)])}"><span class="code">{s["id"]}</span>'
             f'<h2>{html.escape(s["name"])}</h2>{exam}<ul class="links">{links}</ul></section>'
         )
+        # Bar menu (night only): one cocktail per subject, serving its latest weekly note
+        # (or the course notes when it has no weekly notes, or else its first other document)
+        latest = (max(weeks, key=lambda p: int(WEEK.fullmatch(p.stem)[1]), default=None)
+                  or (main + others)[0])
+        if latest:
+            served = label(latest, root) + (" · fresh this week 🍸" if is_new(when[latest]) else f" · {when[latest]:%d %b}")
+            drinks.append(
+                f'<li><a href="{s["id"]}/{html.escape(latest.relative_to(root).as_posix())}" target="_blank" rel="noopener">'
+                f'<b>The {html.escape(s["id"].capitalize())} {COCKTAILS[i % len(COCKTAILS)]}</b><small>{html.escape(served)}</small></a></li>'
+            )
+    menu = (
+        f'<aside id="menu"><details><summary>🍸 Tonight\'s menu</summary><ul>{"".join(drinks)}</ul></details></aside>'
+        if drinks else ""
+    )
     page = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -589,11 +896,12 @@ def build_index():
 <style>{CSS}</style></head><body><div class="wrap">
 <header><div class="tools"><button id="fire" type="button" aria-label="Flame mode" title="Flame mode" aria-pressed="false">🔥</button><button id="theme" type="button" aria-label="Toggle dark mode"></button></div>
 <h1>Notes BA5</h1><p class="sub">EPFL IN, autumn semester: course notes, weekly notes and cheat sheets</p>
-<input id="search" type="search" placeholder="Search a course, a week, a sheet…" aria-label="Search documents" autocomplete="off"></header>
+<div class="searchrow"><input id="search" type="search" placeholder="Search a course, a week, a sheet…" aria-label="Search documents" autocomplete="off">
+<div class="view" role="group" aria-label="Display"><button type="button" data-view="names">Names</button><button type="button" data-view="previews">Previews</button></div></div></header>
 <main class="grid">{"".join(cards)}</main>
 <p id="empty" hidden>No document matches this search.</p>
 <footer>Generated {datetime.now():%Y-%m-%d %H:%M} by build.py</footer>
-</div><script>{JS}</script></body></html>"""
+</div>{menu}<script>{JS}</script></body></html>"""
     DIST.mkdir(exist_ok=True)
     (DIST / "index.html").write_text(page, encoding="utf-8")
     ok("dist/index.html")

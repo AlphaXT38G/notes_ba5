@@ -33,5 +33,21 @@ Optional keys per subject in `subjects.json`:
 - `"color"`: accent colour of the subject card (default: taken from a palette)
 
 The page also has a search field, a light/dark toggle and a flame mode 🔥.
+A **Names / Previews** switch shows every document as a small thumbnail of its
+first page instead (for course notes, the first page after the table of contents).
+The thumbnails are made by `pdftoppm` and `pdftotext` (poppler); without them,
+the build still works and the page shows names only.
+
+From **21:30 to 6:00** the page turns into a jazz bar 🎷 (neon title, smoke,
+floating notes) and plays background jazz from YouTube. Browsers only allow sound
+after a click, so the music starts on the first click or key press, and the
+turntable in the bottom left corner plays / pauses it. A bar menu in the bottom
+right corner serves each subject's latest notes as a cocktail.
+
+The night evolves: warm light until midnight, darker and bluer with a flickering
+neon until 2:00, then the bar closes (the neon goes out letter by letter and the
+bartender sends you to bed). Add `?night=evening`, `late`, `closing` (or `1` / `0`)
+to the URL to force a phase (or the day) at any time.
+
 It hides two easter eggs: a surprise banner that shows up on some visits, and
 something that happens when you type the Konami code (↑↑↓↓←→←→BA).
