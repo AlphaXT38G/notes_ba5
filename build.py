@@ -381,6 +381,20 @@ body.night[data-phase=closing] h1::after{display:inline-block;animation:neon-off
 @keyframes neon-off{0%{opacity:1}20%{opacity:.2}30%{opacity:1}50%{opacity:.15}62%{opacity:.85}100%{opacity:.2;color:#3a3550;text-shadow:none}}
 @keyframes barman-in{from{opacity:0;transform:translate(-50%,140%)}to{opacity:1;transform:translate(-50%,0)}}
 @keyframes neon{0%,18%,22%,25%,53%,57%,100%{opacity:1}20%,24%,55%{opacity:.55;text-shadow:0 0 2px #fff2d6,0 0 6px #ff9d4d}}
+/* Style changes (View Transitions, see applyNight in JS): ::view-transition-old is a snapshot of
+   the page before, ::view-transition-new the page after, html[data-vt] says where we are going */
+[data-vt=night]::view-transition-old(root){animation:vt-dim-out 1.6s ease-in both}
+[data-vt=night]::view-transition-new(root){animation:vt-dim-in 1.6s ease-out both}
+[data-vt=metal]::view-transition-old(root){animation:vt-slam-out .55s cubic-bezier(.55,0,1,.45) both}
+[data-vt=metal]::view-transition-new(root){animation:vt-slam-in .75s cubic-bezier(.2,.9,.3,1.2) both}
+[data-vt=day]::view-transition-old(root){animation:vt-fade-out 1.1s ease both}
+[data-vt=day]::view-transition-new(root){animation:vt-dawn-in 1.1s ease both}
+@keyframes vt-dim-out{to{opacity:0;filter:brightness(.4) sepia(.6)}}
+@keyframes vt-dim-in{from{opacity:0;filter:brightness(.3) blur(3px)}}
+@keyframes vt-slam-out{to{opacity:0;transform:scale(1.25);filter:brightness(2) saturate(3) hue-rotate(-30deg) blur(4px)}}
+@keyframes vt-slam-in{0%{opacity:0;transform:scale(.85);filter:brightness(4)}60%{opacity:1;filter:brightness(1.6)}100%{transform:none;filter:none}}
+@keyframes vt-fade-out{to{opacity:0}}
+@keyframes vt-dawn-in{from{opacity:0;filter:brightness(1.6)}}
 /* Reduced motion: no rising flames and no looping animations */
 @media(prefers-reduced-motion:reduce){.flames,.air{display:none}body.fire section,#surprise,#hole .disk::before,body.party,body.party h1,body.party section,body.night h1,body.night[data-phase] h1,body.metal::before,body.metal section,body.metal h1,#eq i{animation:none}}
 """
@@ -628,26 +642,46 @@ const phaseNow = () => {
   if (t < 3600 + METAL_SECONDS) return "metal";
   return forced === "1" ? "evening" : null;  // ?night=1 during the day: start of the night
 };
+// Changing style is animated with the View Transitions API: the browser snapshots the page before
+// and after the change and animates between the two (CSS ::view-transition-*, picked by
+// html[data-vt]): a slow warm fade into the jazz bar, a hard slam into the metal show, a soft fade
+// back to the day. Not on the first load, not with reduced motion, and browsers without the API
+// just switch instantly.
+let nightShown = false;
 const applyNight = () => {
   const phase = phaseNow();
-  if (phase === (document.body.dataset.phase || null)) return;
-  if (phase) document.body.dataset.phase = phase; else delete document.body.dataset.phase;
-  sub.textContent = (metalEggAt && phase === "metal" ? "You lit too many fires. Time to headbang. 🤘"
-    : phase && NIGHT_SUBS[phase]) || daySub;
+  if (phase === (document.body.dataset.phase || null)) { nightShown = true; return; }
   const night = NIGHT.has(phase), metal = phase === "metal";
-  // Flames on top of the jazz bar or the metal show are too many moving elements (the page
-  // lags): both turn the flame mode off, and hide its button while they last (CSS)
-  if ((night || metal) && document.body.classList.contains("fire")) setFire(false);
-  if (night !== document.body.classList.contains("night")) {
-    document.body.classList.toggle("night", night);
-    document.dispatchEvent(new CustomEvent("night", { detail: night }));  // for the night extras below
-  }
-  if (metal !== document.body.classList.contains("metal")) {
-    document.body.classList.toggle("metal", metal);
-    document.dispatchEvent(new CustomEvent("metal", { detail: metal }));  // for the metal extras below
-  }
-  document.dispatchEvent(new CustomEvent("phase", { detail: phase }));
+  const swap = () => {
+    if (phase) document.body.dataset.phase = phase; else delete document.body.dataset.phase;
+    sub.textContent = (metalEggAt && phase === "metal" ? "You lit too many fires. Time to headbang. 🤘"
+      : phase && NIGHT_SUBS[phase]) || daySub;
+    // Flames on top of the jazz bar or the metal show are too many moving elements (the page
+    // lags): both turn the flame mode off, and hide its button while they last (CSS)
+    if ((night || metal) && document.body.classList.contains("fire")) setFire(false);
+    if (night !== document.body.classList.contains("night")) {
+      document.body.classList.toggle("night", night);
+      document.dispatchEvent(new CustomEvent("night", { detail: night }));  // for the night extras below
+    }
+    if (metal !== document.body.classList.contains("metal")) {
+      document.body.classList.toggle("metal", metal);
+      document.dispatchEvent(new CustomEvent("metal", { detail: metal }));  // for the metal extras below
+    }
+    document.dispatchEvent(new CustomEvent("phase", { detail: phase }));
+  };
+  const animate = nightShown && document.startViewTransition && !document.hidden
+    && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+  nightShown = true;
+  styleSwitch?.skipTransition();  // a previous change still animating ends at once
+  if (!animate) { delete root.dataset.vt; return swap(); }
+  root.dataset.vt = metal ? "metal" : night ? "night" : "day";
+  const t = styleSwitch = document.startViewTransition(swap);
+  const done = () => { if (styleSwitch === t) { styleSwitch = null; delete root.dataset.vt; } };
+  t.ready.catch(() => {});  // skipped by the browser (e.g. tab hidden meanwhile): the change still applies
+  t.finished.then(done, done);
+  setTimeout(done, 2500);  // never leave data-vt behind
 };
+let styleSwitch = null;  // the view transition in progress, if any
 // Closing time: wrap each letter of the title in a span (.l, with its index --i) so the CSS can
 // turn them off one by one, then bring the bartender in once the sign is dark. Any other phase
 // puts the title back as plain text and sends the bartender away. A click on him dismisses him.
