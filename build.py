@@ -300,6 +300,7 @@ body.night{--bg:#120a09;--fg:#f3e3c3;--card:rgba(48,26,18,.85);--line:rgba(255,1
 body.night h1{color:#ffe1b0;font-family:"Brush Script MT","Segoe Script",cursive;font-weight:400;font-size:2.6rem;letter-spacing:.01em;text-shadow:0 0 4px #fff2d6,0 0 12px #ff9d4d,0 0 26px #ff5e8a,0 0 48px #ff2d6f;animation:neon 6s infinite}
 body.night h1::after{content:" 🎷"}
 body.night .sub{color:#e9c89a;font-style:italic}
+body.night #fire{display:none}  /* no flame mode in the bar, see applyNight in JS */
 body.night section{box-shadow:-8px 0 22px -12px rgba(255,170,80,.6)}
 body.night .links a:hover{background:rgba(245,176,65,.08)}
 /* Bar air (night only): slow drifting smoke clouds and music notes floating up, behind the page */
@@ -406,7 +407,7 @@ const setFire = on => {
   if (on) {
     for (let i = 0; i < 25; i++) flame(Math.random() * 100, 1 + Math.random() * 2, 2 + Math.random() * 3);
     timer = setInterval(() => flame(Math.random() * 100, .8 + Math.random() * 1.8, 3 + Math.random() * 4), 140);
-  }
+  } else layer.replaceChildren();  // drop the flames still rising, right away
   try { localStorage.setItem("fire", on ? "1" : ""); } catch (e) {}
 };
 fireBtn.addEventListener("click", () => setFire(!document.body.classList.contains("fire")));
@@ -582,6 +583,9 @@ const applyNight = () => {
   if (on) document.body.dataset.phase = phase; else delete document.body.dataset.phase;
   sub.textContent = (on && NIGHT_SUBS[phase]) || daySub;
   if (on !== document.body.classList.contains("night")) {
+    // Flames and the jazz bar together are too many moving elements (the page lags):
+    // the night turns the flame mode off, and its button is hidden until morning (CSS)
+    if (on && document.body.classList.contains("fire")) setFire(false);
     document.body.classList.toggle("night", on);
     document.dispatchEvent(new CustomEvent("night", { detail: on }));  // for the night extras below
   }
