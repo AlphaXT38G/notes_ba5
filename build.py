@@ -209,11 +209,11 @@ section{border-left:4px solid var(--c);padding-left:1rem}
 h2{font-size:1.1rem;line-height:1.3;margin:.1rem 0 .15rem}
 .exam{margin:0 0 .4rem;font-size:.85rem;color:var(--mut)}
 .links{list-style:none;margin:.5rem 0 0;padding:0;border-top:1px solid var(--line)}
-.links a{display:flex;justify-content:space-between;gap:1rem;padding:.55rem 0;border-bottom:1px solid var(--line);color:var(--acc);text-decoration:none;font-weight:600}
+.links a{display:flex;justify-content:space-between;gap:1rem;padding:.55rem .75rem;border-bottom:1px solid var(--line);color:var(--acc);text-decoration:none;font-weight:600}
 .links a:hover,.links a:focus-visible{background:var(--acc-bg)}
 .links small{color:var(--mut);font-size:.78rem;font-weight:400;align-self:center;white-space:nowrap}
 /* Collapsible sections: custom chevron that turns down when open */
-details summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:.4rem;padding:.55rem 0;border-bottom:1px solid var(--line);color:var(--mut);font-size:.9rem;font-weight:600}
+details summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:.4rem;padding:.55rem .75rem;border-bottom:1px solid var(--line);color:var(--mut);font-size:.9rem;font-weight:600}
 details summary::-webkit-details-marker{display:none}
 details summary::before{content:"";width:.45rem;height:.45rem;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(-45deg);transition:transform .15s}
 details[open] summary::before{transform:rotate(45deg)}
@@ -224,7 +224,7 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 .progress{margin-left:auto;display:flex;align-items:center;gap:.5rem;font-size:.75rem;font-weight:600;color:var(--mut);white-space:nowrap}
 .bar{width:6rem;height:.4rem;border-radius:999px;background:var(--line);overflow:hidden}
 .bar span{display:block;height:100%;border-radius:inherit;background:var(--c)}
-.group{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);padding:.6rem 0 .1rem;border-bottom:1px solid var(--line)}
+.group{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);padding:.6rem .75rem .1rem;border-bottom:1px solid var(--line)}
 /* Search field and its no-result message */
 .searchrow{display:flex;gap:.5rem;margin-top:1.25rem}
 #search{flex:1;min-width:0;padding:.65rem .9rem;font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:.6rem;outline:none}
@@ -236,7 +236,7 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 /* Previews view (html[data-view=previews]): every list becomes a grid of small first-page thumbnails.
    Collapsible sections and folder headings take a full row; size and date move to the tooltip. */
 .thumb{display:none}
-[data-view=previews] .links{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:.5rem;padding:.5rem 0}
+[data-view=previews] .links{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:.5rem;padding:.5rem .75rem}
 [data-view=previews] .links > .fold,[data-view=previews] .group{grid-column:1/-1}
 [data-view=previews] .links a{flex-direction:column;justify-content:flex-start;align-items:center;gap:.3rem;padding:.35rem;border:0;border-radius:.5rem;font-size:.75rem;line-height:1.25;text-align:center}
 [data-view=previews] .links a small{display:none}
