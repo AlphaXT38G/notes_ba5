@@ -120,10 +120,11 @@ for subject in subjects:
 # ── Index page ───────────────────────────────────────────────────────────────
 KINDS = {"course.pdf": "Course notes", "cheatsheet.pdf": "Cheat sheet"}
 ORDER = list(KINDS)  # course first, then cheatsheet, then anything else
+NEW_DAYS = 7         # documents changed more recently get a "New" badge
 
 CSS = """
-:root{--bg:#f5f6f8;--fg:#15171a;--card:#fff;--line:#e2e5ea;--acc:#2457c5;--acc-bg:#eaf0fd;--mut:#6b7280}
-@media(prefers-color-scheme:dark){:root{--bg:#121417;--fg:#e9eaec;--card:#1b1e23;--line:#2c3037;--acc:#8ab0ff;--acc-bg:#232b3d;--mut:#8b93a1}}
+:root{--bg:#f5f6f8;--fg:#15171a;--card:#fff;--line:#e2e5ea;--acc:#2457c5;--acc-bg:#eaf0fd;--mut:#6b7280;--new:#1d7a46;--new-bg:#dcf3e5}
+@media(prefers-color-scheme:dark){:root{--bg:#121417;--fg:#e9eaec;--card:#1b1e23;--line:#2c3037;--acc:#8ab0ff;--acc-bg:#232b3d;--mut:#8b93a1;--new:#7ee0a5;--new-bg:#1d3a2a}}
 *{box-sizing:border-box}
 body{font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--fg);margin:0}
 .wrap{max-width:960px;margin:0 auto;padding:2.5rem 1rem 3rem}
@@ -144,6 +145,7 @@ details summary::before{content:"";width:.45rem;height:.45rem;border:solid curre
 details[open] summary::before{transform:rotate(45deg)}
 details summary:hover,details summary:focus-visible{color:var(--fg)}
 details .links{margin:0;border-top:0;padding-left:1rem}
+.new{display:inline-block;margin-left:.5rem;padding:.05rem .45rem;border-radius:999px;background:var(--new-bg);color:var(--new);font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;vertical-align:.1em}
 .group{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);padding:.6rem 0 .1rem;border-bottom:1px solid var(--line)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 """
@@ -174,11 +176,15 @@ def updated(subject, p, root):
     ).stdout.strip()
     return datetime.fromtimestamp(int(out)) if out else datetime.fromtimestamp(p.stat().st_mtime)
 
-def link(subject, p, root):
+def is_new(when):
+    return (datetime.now() - when).days < NEW_DAYS
+
+def link(subject, p, root, when):
     rel = p.relative_to(root).as_posix()
+    badge = '<span class="new">New</span>' if is_new(when) else ""
     return (
-        f'<li><a href="{subject}/{html.escape(rel)}"><span>{html.escape(label(p, root))}</span>'
-        f'<small>{p.stat().st_size / 1e6:.1f} MB · {updated(subject, p, root):%d %b %Y}</small></a></li>'
+        f'<li><a href="{subject}/{html.escape(rel)}"><span>{html.escape(label(p, root))}{badge}</span>'
+        f'<small>{p.stat().st_size / 1e6:.1f} MB · {when:%d %b %Y}</small></a></li>'
     )
 
 def natural(p):
@@ -191,6 +197,7 @@ def build_index():
         pdfs = list(root.rglob("*.pdf")) if root.is_dir() else []
         if not pdfs:
             continue
+        when = {p: updated(s["id"], p, root) for p in pdfs}
         course = root / "course.pdf"
         main = [course] if course in pdfs else []
         rest = sorted(
@@ -201,7 +208,7 @@ def build_index():
                 natural(p.relative_to(root)),
             ),
         )
-        links = "".join(link(s["id"], p, root) for p in main)
+        links = "".join(link(s["id"], p, root, when[p]) for p in main)
         if rest:
             items, group = [], None
             for p in rest:
@@ -209,10 +216,13 @@ def build_index():
                 if folder != "." and folder != group:
                     items.append(f'<li class="group">{html.escape(folder)}</li>')
                 group = folder
-                items.append(link(s["id"], p, root))
+                items.append(link(s["id"], p, root, when[p]))
             n = len(rest)
+            # The list is folded, so say on the summary when something new is inside
+            fresh = sum(is_new(when[p]) for p in rest)
+            badge = f'<span class="new">{fresh} new</span>' if fresh else ""
             links += (
-                f'<li><details><summary>{n} more document{"s" if n > 1 else ""}</summary>'
+                f'<li><details><summary>{n} more document{"s" if n > 1 else ""}{badge}</summary>'
                 f'<ul class="links">{"".join(items)}</ul></details></li>'
             )
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
