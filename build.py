@@ -306,6 +306,11 @@ body.night[data-phase=closing] h1::after{display:inline-block;animation:neon-off
 #barman .say small{display:block;font:400 .7rem system-ui,sans-serif;color:#9a97b8;font-style:normal}
 @keyframes neon-off{0%{opacity:1}20%{opacity:.2}30%{opacity:1}50%{opacity:.15}62%{opacity:.85}100%{opacity:.2;color:#3a3550;text-shadow:none}}
 @keyframes barman-in{from{opacity:0;transform:translate(-50%,140%)}to{opacity:1;transform:translate(-50%,0)}}
+/* Between midnight and 2:00 some of the evening's warmth is still there: an amber glow under the
+   blue light, a touch of orange in the violet neon and golden candle-lit cards */
+body.night[data-phase=late]{--bg:#0d0b12;--card:rgba(34,26,34,.85);--line:rgba(220,170,140,.15);--mut:#ad9fa8;background:radial-gradient(55% 35% at 50% -8%,rgba(255,170,80,.16),transparent 70%) fixed,radial-gradient(70% 45% at 50% -10%,rgba(110,130,255,.16),transparent 75%) fixed,radial-gradient(45% 35% at 90% 105%,rgba(150,40,140,.28),transparent 70%) fixed,radial-gradient(40% 30% at 5% 100%,rgba(160,90,30,.22),transparent 70%) fixed,var(--bg)}
+body.night[data-phase=late] h1{color:#f2e4ff;text-shadow:0 0 4px #fff3e6,0 0 12px #ffb26b,0 0 26px #b45cff,0 0 48px #7a3cff}
+body.night[data-phase=late] section{box-shadow:-8px 0 22px -12px rgba(255,180,100,.45),-14px 0 30px -16px rgba(140,150,255,.4)}
 @keyframes neon-late{0%,9%,13%,31%,35%,38%,62%,66%,88%,100%{opacity:1}10%,12%,32%,37%,64%,90%{opacity:.35;text-shadow:0 0 2px #f1edff,0 0 5px #8fa2ff}}
 @keyframes neon{0%,18%,22%,25%,53%,57%,100%{opacity:1}20%,24%,55%{opacity:.55;text-shadow:0 0 2px #fff2d6,0 0 6px #ff9d4d}}
 /* Reduced motion: no rising flames and no looping animations */
