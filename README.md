@@ -33,5 +33,15 @@ Optional keys per subject in `subjects.json`:
 - `"color"`: accent colour of the subject card (default: taken from a palette)
 
 The page also has a search field, a light/dark toggle and a flame mode 🔥.
+A **Names / Previews** switch shows every document as a small thumbnail of its
+first page instead. The thumbnails are made by `pdftoppm` (poppler); without it,
+the build still works and the page shows names only.
+
+From **21:30 to 6:00** the page turns into a jazz bar 🎷 (neon title, smoke,
+floating notes) and plays background jazz from YouTube. Browsers only allow sound
+after a click, so the music starts on the first click or key press, and the vinyl
+in the bottom left corner plays / pauses it. Add `?night=1` (or `?night=0`) to the
+URL to force the night theme on (or off) at any time.
+
 It hides two easter eggs: a surprise banner that shows up on some visits, and
 something that happens when you type the Konami code (↑↑↓↓←→←→BA).
