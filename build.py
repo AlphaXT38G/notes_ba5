@@ -852,6 +852,83 @@ fxLayers.push({
   reset() { bolts.length = 0; },
 });
 
+// Chains: heavy metal chains hanging from the top corners, simulated with Verlet integration:
+// each joint remembers its previous position (its speed is the difference), gravity pulls it
+// down, then every link is pushed back to its fixed length a few times per frame, the top joint
+// staying nailed above the screen. They sway by themselves, get whipped by each lightning strike
+// and kicked on each beat, and swing away from the mouse. Links alternate face-on (a ring) and
+// edge-on (a thick bar), drawn with a dark outline, a steel gradient and a highlight.
+const LINK = 13;  // distance between two joints, px
+const chains = [];
+let mouseX = -1e4, mouseY = -1e4, beatClock = 0;
+addEventListener("pointermove", e => { mouseX = e.clientX; mouseY = e.clientY; });
+const makeChains = () => {
+  chains.length = 0;
+  chains.w = fxW;
+  // Hang them in the empty margins beside the content (960 px wide): two per side when there is
+  // room, otherwise one against each edge of the screen
+  const margin = (fxW - 960) / 2;
+  const spots = margin >= 120 ? [margin * .3, margin * .75, fxW - margin * .75, fxW - margin * .3] : [10, fxW - 10];
+  for (const x of spots) {
+    const n = Math.round(fxH * (.28 + Math.random() * .3) / LINK);
+    chains.push(Array.from({ length: n + 1 }, (_, i) => ({ x, y: (i - 1) * LINK, px: x, py: (i - 1) * LINK })));
+  }
+};
+const kick = power => chains.forEach(ch => ch.forEach(p => { p.px -= (Math.random() - .5) * power; }));  // moving px gives speed
+strikeHooks.push(() => kick(16));
+const steel = (c, w) => {  // vertical steel gradient across a link of thickness w
+  const g = c.createLinearGradient(0, -w, 0, w);
+  g.addColorStop(0, "#f4f4f4"); g.addColorStop(.35, "#9a9a9a"); g.addColorStop(.55, "#3c3c3c"); g.addColorStop(.8, "#c8c8c8"); g.addColorStop(1, "#5a5a5a");
+  return g;
+};
+const drawLink = (c, a, b, face) => {
+  c.save();
+  c.translate((a.x + b.x) / 2, (a.y + b.y) / 2);
+  c.rotate(Math.atan2(b.y - a.y, b.x - a.x));
+  const len = LINK * .78;
+  if (face) {  // a ring seen from the front
+    c.lineWidth = 5.5; c.strokeStyle = "#0b0b0b";
+    c.beginPath(); c.ellipse(0, 0, len, 5.5, 0, 0, Math.PI * 2); c.stroke();
+    c.lineWidth = 3.2; c.strokeStyle = steel(c, 6);
+    c.stroke();
+    c.lineWidth = 1; c.strokeStyle = "rgba(255,255,255,.55)";
+    c.beginPath(); c.ellipse(0, -.8, len - 1, 4.2, 0, Math.PI * 1.1, Math.PI * 1.9); c.stroke();
+  } else {  // a ring seen from the side: a thick rounded bar
+    c.lineCap = "round";
+    c.lineWidth = 6.5; c.strokeStyle = "#0b0b0b";
+    c.beginPath(); c.moveTo(-len, 0); c.lineTo(len, 0); c.stroke();
+    c.lineWidth = 4.2; c.strokeStyle = steel(c, 2.5);
+    c.stroke();
+  }
+  c.restore();
+};
+fxLayers.push({
+  update(dt) {
+    if (chains.w !== fxW) makeChains();  // first frame, or the window was resized
+    beatClock += dt;
+    if (beatClock > .46) { beatClock -= .46; kick(3.5); }
+    const g = 900 * dt * dt;
+    for (const ch of chains) {
+      for (let i = 1; i < ch.length; i++) {
+        const p = ch[i], vx = (p.x - p.px) * .99, vy = (p.y - p.py) * .99;
+        p.px = p.x; p.py = p.y;
+        p.x += vx; p.y += vy + g;
+        const dx = p.x - mouseX, dy = p.y - mouseY, d = Math.hypot(dx, dy);
+        if (d < 90 && d > 0) p.x += dx / d * (90 - d) * .06;  // pushed away by the mouse
+      }
+      for (let k = 0; k < 6; k++) for (let i = 1; i < ch.length; i++) {
+        const a = ch[i - 1], b = ch[i], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1, f = (d - LINK) / d;
+        if (i === 1) { b.x -= dx * f; b.y -= dy * f; }  // the top joint never moves
+        else { a.x += dx * f / 2; a.y += dy * f / 2; b.x -= dx * f / 2; b.y -= dy * f / 2; }
+      }
+    }
+  },
+  draw(c) {
+    for (const ch of chains) for (let i = 1; i < ch.length; i++) drawLink(c, ch[i - 1], ch[i], i % 2);
+  },
+  reset() { chains.length = 0; chains.w = 0; },
+});
+
 let boltTimer = null;
 const strike = () => {
   boltTimer = setTimeout(strike, 1200 + Math.random() * 2300);
