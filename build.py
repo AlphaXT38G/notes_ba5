@@ -294,7 +294,7 @@ body.party h2::after{content:" 🎉"}
 @keyframes party-bg{to{background-position:400% 0}}
 @keyframes party-text{to{background-position:200% 0}}
 @keyframes party-border{0%,100%{border-left-color:#ff3d7f}20%{border-left-color:#ffb300}40%{border-left-color:#2ec27e}60%{border-left-color:#2f80ed}80%{border-left-color:#9b51e0}}
-/* Jazz bar night theme (body.night, from 21:30 to 6:00): dim warm light from above, amber and
+/* Jazz bar night theme (body.night, from 21:30 to 1:00): dim warm light from above, amber and
    burgundy tones, a flickering neon sign for the title, cards glowing like candle-lit tables */
 body.night{--bg:#120a09;--fg:#f3e3c3;--card:rgba(48,26,18,.85);--line:rgba(255,190,120,.16);--acc:#f5b041;--acc-bg:rgba(245,176,65,.13);--mut:#b89a7a;--new:#ffcf70;--new-bg:rgba(255,207,112,.15);background:radial-gradient(70% 45% at 50% -8%,rgba(255,176,90,.28),transparent 70%) fixed,radial-gradient(45% 35% at 90% 105%,rgba(150,25,55,.3),transparent 70%) fixed,radial-gradient(40% 30% at 5% 100%,rgba(120,40,20,.25),transparent 70%) fixed,var(--bg)}
 body.night h1{color:#ffe1b0;font-family:"Brush Script MT","Segoe Script",cursive;font-weight:400;font-size:2.6rem;letter-spacing:.01em;text-shadow:0 0 4px #fff2d6,0 0 12px #ff9d4d,0 0 26px #ff5e8a,0 0 48px #ff2d6f;animation:neon 6s infinite}
@@ -340,7 +340,7 @@ body.night #menu{display:block}
 body.night[data-phase=closing]{--bg:#08080f;--card:rgba(22,22,40,.85);--line:rgba(150,160,255,.14);--mut:#9a97b8;background:radial-gradient(60% 40% at 50% -8%,rgba(110,130,255,.2),transparent 70%) fixed,radial-gradient(45% 35% at 90% 105%,rgba(130,40,160,.3),transparent 70%) fixed,radial-gradient(40% 30% at 5% 100%,rgba(40,60,140,.25),transparent 70%) fixed,var(--bg)}
 body.night[data-phase=closing] h1{color:#e6e0ff;text-shadow:0 0 4px #f1edff,0 0 12px #8fa2ff,0 0 26px #b45cff,0 0 48px #7a3cff}
 body.night[data-phase=closing] section{box-shadow:-8px 0 22px -12px rgba(140,150,255,.55)}
-/* Closing time (2:00 - 6:00): the sign goes out letter by letter (each .l waits --i x 0.7 s, the
+/* Closing time (0:45 - 1:00): the sign goes out letter by letter (each .l waits --i x 0.7 s, the
    sax last), then the bartender comes up from the bottom of the screen to send you to bed */
 body.night[data-phase=closing] h1{animation:none}
 body.night[data-phase=closing] h1 .l{animation:neon-off .7s forwards;animation-delay:calc(1s + var(--i) * .7s)}
@@ -554,10 +554,11 @@ async function rift() {
   });
 }
 
-// Jazz bar night: from 21:30 to 6:00 the page turns into a jazz bar (body.night in CSS).
+// Jazz bar night: from 21:30 to 1:00 the page turns into a jazz bar (body.night in CSS).
 // The night goes through phases (body[data-phase] in CSS):
-//   evening  21:30 - 2:00  warm light
-//   closing   2:00 - 6:00  the bar closes, the subtitle changes (see below)
+//   evening  21:30 - 0:45  warm light
+//   closing   0:45 - 1:00  the bar closes, the subtitle changes (see below)
+// From 1:00 the page is back to its usual day look.
 // Checked every minute, so it changes by itself while the page is open.
 // ?night=0 / 1 / evening / closing in the URL forces a phase (handy to try it any time).
 const sub = document.querySelector(".sub"), daySub = sub.textContent;
@@ -570,9 +571,8 @@ const phaseNow = () => {
   if (forced === "0") return null;
   if (forced in NIGHT_SUBS) return forced;
   const d = new Date(), m = d.getHours() * 60 + d.getMinutes();
-  if (m >= 21 * 60 + 30) return "evening";
-  if (m < 2 * 60) return "evening";
-  if (m < 6 * 60) return "closing";
+  if (m >= 21 * 60 + 30 || m < 45) return "evening";
+  if (m < 60) return "closing";
   return forced === "1" ? "evening" : null;  // ?night=1 during the day: start of the night
 };
 const applyNight = () => {
