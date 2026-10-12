@@ -295,6 +295,17 @@ body.night #menu{display:block}
 body.night[data-phase=late],body.night[data-phase=closing]{--bg:#08080f;--card:rgba(22,22,40,.85);--line:rgba(150,160,255,.14);--mut:#9a97b8;background:radial-gradient(60% 40% at 50% -8%,rgba(110,130,255,.2),transparent 70%) fixed,radial-gradient(45% 35% at 90% 105%,rgba(130,40,160,.3),transparent 70%) fixed,radial-gradient(40% 30% at 5% 100%,rgba(40,60,140,.25),transparent 70%) fixed,var(--bg)}
 body.night[data-phase=late] h1,body.night[data-phase=closing] h1{color:#e6e0ff;text-shadow:0 0 4px #f1edff,0 0 12px #8fa2ff,0 0 26px #b45cff,0 0 48px #7a3cff;animation:neon-late 2.6s infinite}
 body.night[data-phase=late] section,body.night[data-phase=closing] section{box-shadow:-8px 0 22px -12px rgba(140,150,255,.55)}
+/* Closing time (2:00 - 6:00): the sign goes out letter by letter (each .l waits --i x 0.7 s, the
+   sax last), then the bartender comes up from the bottom of the screen to send you to bed */
+body.night[data-phase=closing] h1{animation:none}
+body.night[data-phase=closing] h1 .l{animation:neon-off .7s forwards;animation-delay:calc(1s + var(--i) * .7s)}
+body.night[data-phase=closing] h1::after{display:inline-block;animation:neon-off .7s forwards;animation-delay:calc(1s + var(--n) * .7s)}
+#barman{position:fixed;left:50%;bottom:1.2rem;z-index:45;display:flex;align-items:center;gap:.7rem;padding:.6rem 1rem .6rem .7rem;transform:translateX(-50%);color:#f3e3c3;background:rgba(22,18,30,.95);border:1px solid rgba(245,176,65,.4);border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.6);cursor:pointer;opacity:0;animation:barman-in .8s cubic-bezier(.34,1.56,.64,1) forwards}
+#barman .who{font-size:2.2rem;line-height:1}
+#barman .say{font:italic 600 1rem Georgia,serif}
+#barman .say small{display:block;font:400 .7rem system-ui,sans-serif;color:#9a97b8;font-style:normal}
+@keyframes neon-off{0%{opacity:1}20%{opacity:.2}30%{opacity:1}50%{opacity:.15}62%{opacity:.85}100%{opacity:.2;color:#3a3550;text-shadow:none}}
+@keyframes barman-in{from{opacity:0;transform:translate(-50%,140%)}to{opacity:1;transform:translate(-50%,0)}}
 @keyframes neon-late{0%,9%,13%,31%,35%,38%,62%,66%,88%,100%{opacity:1}10%,12%,32%,37%,64%,90%{opacity:.35;text-shadow:0 0 2px #f1edff,0 0 5px #8fa2ff}}
 @keyframes neon{0%,18%,22%,25%,53%,57%,100%{opacity:1}20%,24%,55%{opacity:.55;text-shadow:0 0 2px #fff2d6,0 0 6px #ff9d4d}}
 /* Reduced motion: no rising flames and no looping animations */
@@ -527,6 +538,28 @@ const applyNight = () => {
   }
   document.dispatchEvent(new CustomEvent("phase", { detail: phase }));
 };
+// Closing time: wrap each letter of the title in a span (.l, with its index --i) so the CSS can
+// turn them off one by one, then bring the bartender in once the sign is dark. Any other phase
+// puts the title back as plain text and sends the bartender away. A click on him dismisses him.
+const title = document.querySelector("h1"), titleText = title.textContent;
+let barman = null, barmanTimer = null;
+document.addEventListener("phase", e => {
+  clearTimeout(barmanTimer);
+  barman?.remove();
+  barman = null;
+  if (e.detail !== "closing") { title.textContent = titleText; return; }
+  title.innerHTML = [...titleText].map((c, i) => `<span class="l" style="--i:${i}">${c === " " ? "&nbsp;" : c}</span>`).join("");
+  title.style.setProperty("--n", titleText.length);
+  barmanTimer = setTimeout(() => {
+    barman = document.createElement("div");
+    barman.id = "barman";
+    barman.title = "Click to close";
+    barman.innerHTML = '<span class="who">🧑‍🍳</span><span class="say">On ferme. Va dormir.<small>The bar reopens at 21:30</small></span>';
+    barman.addEventListener("click", () => barman.remove());
+    document.body.append(barman);
+  }, (1 + (titleText.length + 1) * .7 + .5) * 1000);
+});
+
 applyNight();
 setInterval(applyNight, 60000);
 
