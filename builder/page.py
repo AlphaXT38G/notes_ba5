@@ -5,6 +5,7 @@ CSS (site/css/) and the JavaScript (site/js/), all inlined so the page stays a s
 """
 
 import html
+import json
 import re
 import subprocess
 from datetime import datetime
@@ -17,6 +18,15 @@ from .previews import preview
 def site_file(rel):
     """Text of a file of site/, on its own lines when inlined into the page."""
     return "\n" + (SITE / rel).read_text(encoding="utf-8")
+
+def site_bundle(kind):
+    """All the "css" or "js" files listed in site/manifest.json, in that order, as one text.
+
+    The order matters: CSS rules later in the list win over earlier ones of the same weight, and
+    the JS files share one <script> (one scope), so a file can use what an earlier one defines.
+    """
+    files = json.loads((SITE / "manifest.json").read_text(encoding="utf-8"))[kind]
+    return "".join(site_file(rel) for rel in files)
 
 def label(p, root):
     """Display name of a PDF: "Course notes", "Week 03", or the file name with spaces."""
@@ -161,11 +171,11 @@ def build_index():
     page = (SITE / "template.html").read_text(encoding="utf-8").rstrip("\n")
     for key, value in {
         "head_js": site_file("js/head.js"),      # runs in <head>: saved theme / view before the first paint
-        "css": site_file("css/style.css"),
+        "css": site_bundle("css"),               # site/css/*, in manifest order
         "cards_left": "".join(cards[0::2]),
         "cards_right": "".join(cards[1::2]),
         "generated": f"{datetime.now():%Y-%m-%d %H:%M}",
-        "js": site_file("js/app.js"),            # runs at the end of <body>, once every element exists
+        "js": site_bundle("js"),                 # site/js/*, at the end of <body>, once every element exists
     }.items():
         page = page.replace("{{" + key + "}}", value)
     DIST.mkdir(exist_ok=True)
