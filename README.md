@@ -10,10 +10,15 @@ LaTeX notes for the BA5 IN semester at EPFL.
 python build.py                 # compile everything -> dist/ + dist/index.html
 python build.py compsec nummet  # only some subjects
 python build.py --index-only    # regenerate dist/index.html without compiling
+python -m http.server 8765 --directory dist   # preview at http://localhost:8765/
 ```
 
-Open `dist/index.html` to browse all PDFs. It is generated, never edit it
-(or `dist/`) by hand.
+`dist/` is generated, never edit it by hand. The build itself lives in `builder/`, and
+the index page (HTML, CSS, JS) in `site/`.
+
+**Contributing** (humans and AI agents alike): read [`AGENTS.md`](AGENTS.md) first. It
+explains how the build and the page are organised, how to add a new screen to the page,
+and the conventions to follow.
 
 ## Adding / editing a subject
 
@@ -24,8 +29,9 @@ Every standalone `.tex` in `<id>/` and its subfolders (e.g. `week/week01.tex`) i
 compiled, and PDFs without a matching `.tex` (e.g. `cheatsheets/*.pdf`) are copied
 as is. One exception: swent's weeks are chapters of `course.tex` (`weeks/week1a.tex`,
 `week1b.tex`, ...); the build also turns each week into its own PDF from a generated
-`_weekNN.tex` (git-ignored), so they show up like the other weekly notes. On the page, the course notes come first, then two collapsible sections:
-weekly notes (files named `weekNN`, with a semester progress bar) and every other
+`_weekNN.tex` (git-ignored), so they show up like the other weekly notes.
+
+On the page, the course notes come first, then two collapsible sections: weekly notes (files named `weekNN`, with a semester progress bar) and every other
 PDF, grouped by folder. Dates come from the last commit touching each document,
 and documents changed in the last 7 days get a "New" badge.
 
@@ -62,8 +68,10 @@ it and, instead of going back to the day, the page turns into an epic fantasy fi
 a blue and violet night with an aurora, realistic blue fire, embers, floating arcane
 lights and a rune circle, while the amp (now blue) plays epic music in a loop. It lasts
 until you click the small **"Back to normal"** button in the bottom right corner, which
-brings back the usual look for the time of day (day, or the jazz bar at night). Add `?night=evening`, `?night=closing`, `?night=metal` or
-`?night=epic` (or `1` / `0`) to the URL to force a phase (or the day) at any time.
+brings back the usual look for the time of day (day, or the jazz bar at night).
+
+Add `?night=evening`, `?night=closing`, `?night=metal` or `?night=epic` (or `1` / `0`)
+to the URL to force a screen (or the day) at any time.
 
 It hides three easter eggs: a surprise banner that shows up on some visits,
 something that happens when you type the Konami code (↑↑↓↓←→←→BA), and the metal

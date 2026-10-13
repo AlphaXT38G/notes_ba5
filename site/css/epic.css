@@ -1,0 +1,32 @@
+/* Epic finale (body.epic): a fantasy night in deep blue and violet, an aurora glowing behind
+   everything (::before), the title in carved capitals lit by blue fire, cards edged with arcane light */
+body.epic{--bg:#05040f;--fg:#e9e6ff;--card:rgba(14,12,40,.85);--line:rgba(140,120,255,.22);--acc:#8fb4ff;--acc-bg:rgba(110,140,255,.14);--mut:#a6a2cc;--new:#9ff3ff;--new-bg:rgba(120,230,255,.14);background:var(--bg)}
+body.epic::before{content:"";position:fixed;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(45% 35% at 30% 10%,rgba(90,60,255,.35),transparent 70%),radial-gradient(40% 30% at 75% 15%,rgba(40,150,255,.3),transparent 70%),radial-gradient(60% 40% at 50% 110%,rgba(60,90,255,.45),transparent 70%);will-change:transform;animation:aurora 14s ease-in-out infinite alternate}
+body.epic .wrap{position:relative;z-index:1}
+body.epic h1{font:700 2.8rem "Cinzel","Trajan Pro","Palatino Linotype",Georgia,serif;text-transform:uppercase;letter-spacing:.14em;background:linear-gradient(90deg,#9fd8ff,#ffffff 30%,#b9a4ff 55%,#7fd0ff 80%,#ffffff);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 12px rgba(130,120,255,.9));animation:shimmer 6s linear infinite}
+body.epic h1::after{content:" ⚔️";-webkit-text-fill-color:initial;filter:none}
+body.epic .sub{color:#b9c8ff;font:italic 1.05rem "Palatino Linotype",Georgia,serif;letter-spacing:.06em}
+body.epic section{position:relative}
+body.epic section::after{content:"";position:absolute;inset:0;pointer-events:none;will-change:opacity;animation:glow 1.6s ease-in-out infinite alternate}
+body.epic section{box-shadow:-8px 0 24px -12px rgba(90,140,255,.8)}
+body.epic section::after{box-shadow:-10px 0 34px -10px rgba(170,90,255,.9);animation-duration:4s}
+@keyframes aurora{from{transform:translateX(-4%) rotate(-2deg)}to{transform:translateX(4%) rotate(2deg)}}
+@keyframes shimmer{to{background-position:200% 0}}
+/* "More epicness ?" button, rising in the middle of the metal show 10 s before it ends */
+#more{position:fixed;left:50%;top:50%;z-index:60;padding:1rem 2rem;transform:translate(-50%,-50%);color:#fff;font:700 1.4rem "Palatino Linotype",Georgia,serif;letter-spacing:.05em;background:radial-gradient(circle at 50% 30%,#6c7bff,#3b1f9e 70%);border:2px solid #b9c8ff;border-radius:999px;box-shadow:0 0 30px rgba(110,140,255,.9),0 0 80px rgba(150,80,255,.6),inset 0 0 18px rgba(255,255,255,.35);cursor:pointer;animation:more-in .6s cubic-bezier(.34,1.56,.64,1) both,more-glow 1.2s ease-in-out .6s infinite alternate}
+#more:hover{filter:brightness(1.2)}
+#more.queued{cursor:default;animation:none;background:radial-gradient(circle at 50% 30%,#3e4bbf,#1e0f5e 70%)}
+/* "Back to normal", small and discreet in the bottom right corner of the epic finale */
+#leave{position:fixed;right:1rem;bottom:1rem;z-index:45;padding:.35rem .7rem;color:#c9d4ff;font:600 .75rem system-ui,sans-serif;background:rgba(12,10,40,.75);border:1px solid rgba(140,160,255,.45);border-radius:999px;cursor:pointer}
+#leave:hover,#leave:focus-visible{color:#fff;border-color:#b9c8ff;box-shadow:0 0 12px rgba(120,150,255,.6)}
+@keyframes more-in{from{opacity:0;transform:translate(-50%,20%) scale(.6)}}
+@keyframes more-glow{to{box-shadow:0 0 45px rgba(140,170,255,1),0 0 120px rgba(170,90,255,.8),inset 0 0 22px rgba(255,255,255,.5)}}
+#epicriff{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}  /* the YouTube player, kept invisible behind the amp */
+body.epic #fire{display:none}  /* no flame mode during the finale */
+/* The amp during the epic finale: same cabinet, lit by arcane blue light */
+#amp.epic .cab{box-shadow:0 6px 20px rgba(0,0,0,.8),0 0 0 2px #2b2b55,0 0 26px rgba(110,140,255,.8),0 0 60px rgba(150,80,255,.45)}
+#amp.epic .logo{color:#9fd8ff;text-shadow:0 0 6px #6fa8ff}
+#amp.epic .cone{background:radial-gradient(circle,#9fd8ff 0 10%,#11112a 14%,#24245a 40%,#0b0b20 42%,#1d1d46 70%,#000 72%)}
+#amp.epic .label{background:rgba(12,10,40,.9);border-color:rgba(140,160,255,.6)}
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){body.epic section::after,body.epic::before,body.epic h1{animation:none}}

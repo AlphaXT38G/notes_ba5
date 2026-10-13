@@ -1,0 +1,6 @@
+/* Surprise banner (shown at random, see js/surprise.js) */
+#surprise{position:fixed;left:50%;bottom:1.25rem;z-index:60;display:flex;align-items:center;gap:.6rem;padding:.7rem 1.1rem;transform:translateX(-50%);border-radius:.8rem;background:linear-gradient(90deg,#e8132b,#ff6a00);color:#fff;font-weight:800;letter-spacing:.06em;text-decoration:none;box-shadow:0 8px 28px rgba(232,19,43,.45);animation:pulse 1.2s ease-in-out infinite;white-space:nowrap}
+#surprise small{font-weight:600;letter-spacing:0;opacity:.85}
+@keyframes pulse{50%{transform:translateX(-50%) scale(1.05);box-shadow:0 10px 36px rgba(255,106,0,.6)}}
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){#surprise{animation:none}}

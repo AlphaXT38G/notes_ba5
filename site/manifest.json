@@ -1,0 +1,24 @@
+{
+  "css": [
+    "css/base.css",
+    "css/flames.css",
+    "css/surprise.css",
+    "css/jazz.css",
+    "css/metal.css",
+    "css/epic.css",
+    "css/screens.css",
+    "css/konami.css"
+  ],
+  "js": [
+    "js/ui.js",
+    "js/flames.js",
+    "js/surprise.js",
+    "js/konami.js",
+    "js/screens.js",
+    "js/jazz.js",
+    "js/fx.js",
+    "js/metal.js",
+    "js/epic.js",
+    "js/start.js"
+  ]
+}
