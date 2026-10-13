@@ -1,3 +1,11 @@
+// ── Jazz bar (screens "evening" and "closing", body.night) ──────────────────────────────────
+// From 21:30 the page turns into a jazz bar (css/jazz.css): warm light, neon title, smoke and
+// floating notes, a turntable playing jazz. At 0:45 the bar closes until 1:00, then the metal
+// show takes over (metal.js).
+SCREENS.evening = { className: "night", subtitle: null, transition: "night" };
+SCREENS.closing = { className: "night", subtitle: "Last call was a while ago.", transition: "night" };
+SCHEDULE.push([21 * 3600 + 30 * 60, 45 * 60, "evening"], [45 * 60, 3600, "closing"]);
+
 // Closing time: wrap each letter of the title in a span (.l, with its index --i) so the CSS can
 // turn them off one by one, then bring the bartender in once the sign is dark. Any other phase
 // puts the title back as plain text and sends the bartender away. A click on him dismisses him.

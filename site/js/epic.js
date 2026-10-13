@@ -1,4 +1,20 @@
-// ── Epic finale effects (mode "epic") ──
+// ── Epic finale (screen "epic", body.epic) ────────────────────────────────────────────────────
+// 10 s before a metal show ends, a "More epicness ?" button shows up. Clicked, it queues the epic
+// finale, which takes over right when the metal ends (css/epic.css): a blue and violet fantasy
+// night with blue fire on the effects canvas (fx.js), the amp playing epic music in a loop. It
+// lasts until its "Back to normal" button is clicked.
+let epicQueued = false, epicAt = 0;  // epicAt: when it started (0 = not running)
+SCREENS.epic = { className: "epic", subtitle: "Behold… more epicness.", transition: "epic" };
+OVERRIDES.push(phase => {  // runs after the metal override (metal.js is loaded first)
+  if (epicAt) return "epic";
+  if (epicQueued && phase !== "metal") {  // the metal just ended: the epic finale takes over
+    epicQueued = false;
+    if (document.body.dataset.phase === "metal") { epicAt = Date.now(); return "epic"; }
+  }
+  return phase;
+});
+
+// ── Epic finale effects (canvas layers of mode "epic", see fx.js) ──
 // Blue fire: thousands of tiny additive particles born in clusters ("tongues") that drift along
 // the bottom, plus two tall braziers in the bottom corners. Each particle is stretched upward,
 // wobbles with a turbulence made of sines of time and height, and cools from a white-cyan core
@@ -135,7 +151,7 @@ fxLayers.push({
 
 
 // "More epicness ?": 10 s before a metal takeover ends this button rises in the middle of the
-// screen. Clicking it queues the epic finale (epicQueued, see phaseNow) and gets its song ready
+// screen. Clicking it queues the epic finale (epicQueued, see the override above) and gets its song ready
 // (preloadEpic, below); it stays as "Epicness incoming…" until the metal ends, then goes away.
 const moreBtn = document.createElement("button");
 moreBtn.id = "more";
@@ -202,14 +218,14 @@ leaveBtn.textContent = "↩ Back to normal";
 leaveBtn.addEventListener("click", e => {
   e.stopPropagation();
   epicAt = 0;
-  epicLeft = true;
-  applyNight();
+  forcedDismissed = true;  // also leaves a ?night=epic
+  applyScreen();
 });
 const setLeave = on => on ? document.body.append(leaveBtn) : leaveBtn.remove();
 setLeave(document.body.classList.contains("epic"));
 document.addEventListener("epic", e => setLeave(e.detail));
 
-const epicTick = () => {  // called every second with the clock check
+everySecond.push(() => {  // show / hide "More epicness ?" in the last 10 s of a metal show
   const left = document.body.classList.contains("metal") ? metalLeft() : 0;
   if (left > 0 && left <= 10) {
     if (!moreBtn.isConnected) {
@@ -218,5 +234,5 @@ const epicTick = () => {  // called every second with the clock check
       document.body.append(moreBtn);
     }
   } else moreBtn.remove();
-};
+});
 

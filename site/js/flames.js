@@ -31,7 +31,7 @@ const setFire = on => {
   try { localStorage.setItem("fire", on ? "1" : ""); } catch (e) {}
 };
 // 20 clicks on the flame button within a minute start the metal takeover (easter egg, see
-// metalEggAt in the night code below); the clicks counted are the ones of the last 60 s.
+// startMetalEgg in metal.js); the clicks counted are the ones of the last 60 s.
 // In the jazz bar the button is still there but lights no flames (too heavy on top of the bar):
 // it only gives a little puff and counts towards the 20 clicks.
 const fireClicks = [];
@@ -42,11 +42,10 @@ fireBtn.addEventListener("click", () => {
   const now = Date.now();
   fireClicks.push(now);
   while (fireClicks[0] < now - 60000) fireClicks.shift();
-  if (fireClicks.length === 10) preloadRiff();  // halfway: get the song ready (see the metal music)
+  if (fireClicks.length === 10) preloadRiff();  // halfway: get the song ready (see metal.js)
   if (fireClicks.length >= 20) {
     fireClicks.length = 0;
-    metalEggAt = now;
-    applyNight();
+    startMetalEgg();
   }
 });
 try { if (localStorage.getItem("fire")) setFire(true); } catch (e) {}

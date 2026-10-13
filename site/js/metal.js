@@ -1,3 +1,28 @@
+// ── Metal takeover (screen "metal", body.metal) ───────────────────────────────────────────────
+// At 1:00:00 one metal song takes over the page for its last 1 min 51 s (css/metal.css): red
+// stage, chrome title, headbanging cards, lightning, chains, fire and thrown silhouettes on the
+// effects canvas (fx.js), and a guitar amp playing the song. 20 clicks on the flame button
+// within a minute start it at any time of day (startMetalEgg, called by flames.js).
+const METAL_SECONDS = 111;  // the song plays from 1:50 to its end, 1 min 51 s later
+let metalEggAt = 0;         // when the easter egg started it (0 = not running)
+SCREENS.metal = {
+  className: "metal",
+  subtitle: () => metalEggAt ? "You lit too many fires. Time to headbang. 🤘" : "1:00 AM. Time to headbang. 🤘",
+  transition: "metal",
+};
+SCHEDULE.push([3600, 3600 + METAL_SECONDS, "metal"]);
+OVERRIDES.push(phase => {  // the easter egg runs for one song, whatever the clock says
+  if (metalEggAt && Date.now() - metalEggAt < METAL_SECONDS * 1000) return "metal";
+  metalEggAt = 0;
+  return phase;
+});
+const startMetalEgg = () => { metalEggAt = Date.now(); applyScreen(); };
+const metalLeft = () => {  // seconds before the current metal takeover ends (Infinity when forced)
+  if (metalEggAt) return METAL_SECONDS - (Date.now() - metalEggAt) / 1000;
+  if (forced === "metal") return Infinity;
+  return 3600 + METAL_SECONDS - clockSeconds();
+};
+
 // Metal stage: a white strobe, the equalizer and the effects canvas below, all created when the
 // metal phase starts and removed when it ends. A bolt strikes every 1.2 - 3.5 s at a random spot,
 // with a flash and a short shake of the page.
@@ -332,14 +357,13 @@ const preloadRiff = () => {
     if (riffWaiting && !document.body.classList.contains("metal")) { riff.remove(); riff = null; riffWaiting = false; }
   }, 75000);
 };
-const preloadSoon = () => {  // called every second with the clock check
-  const d = new Date(), t = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+everySecond.push(() => {  // 00:59:30: get the song ready for the 1:00 show
+  const t = clockSeconds();
   if (t >= 3600 - 30 && t < 3600) preloadRiff();
-};
+});
 const rock = (muted = false) => {
-  const d = new Date(), t = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
   const late = metalEggAt ? Math.floor((Date.now() - metalEggAt) / 1000)  // seconds since it started
-    : forced === "metal" ? 0 : Math.max(0, t - 3600);
+    : forced === "metal" ? 0 : Math.max(0, clockSeconds() - 3600);
   if (!riff) makeRiff(1, muted, METAL_START + late);
   else if (riffWaiting) {  // the preloaded player: jump to the right spot, sound on if allowed, play
     riffWaiting = false;
