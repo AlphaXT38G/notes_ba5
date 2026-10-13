@@ -7,12 +7,13 @@ CSS (site/css/) and the JavaScript (site/js/), all inlined so the page stays a s
 import html
 import json
 import re
+import shutil
 import subprocess
 from datetime import datetime
 
 from .config import CONFIG, DIST, KINDS, NEW_DAYS, ORDER, PALETTE, ROOT, SEMESTER_WEEKS, SITE, WEEK
 from .latex import course_weeks
-from .log import ok
+from .log import err, ok
 from .previews import preview
 
 def site_file(rel):
@@ -181,3 +182,36 @@ def build_index():
     DIST.mkdir(exist_ok=True)
     (DIST / "index.html").write_text(page, encoding="utf-8")
     ok("dist/index.html")
+    check_script()
+
+def check_script():
+    """Check the syntax of the page's JavaScript with node, when node is installed.
+
+    All of site/js/ ends up in one <script>, so a single typo stops every feature of the page;
+    this catches it at build time instead of in the browser. Only a warning: the page is written.
+    """
+    node = shutil.which("node")
+    if not node:
+        return
+    files = json.loads((SITE / "manifest.json").read_text(encoding="utf-8"))["js"]
+    texts = [(rel, (SITE / rel).read_text(encoding="utf-8")) for rel in files]
+    bundle = DIST / ".page-check.js"
+    bundle.write_text("".join(text for _, text in texts), encoding="utf-8")
+    proc = subprocess.run([node, "--check", str(bundle)], capture_output=True, text=True)
+    bundle.unlink()
+    if proc.returncode == 0:
+        ok("page JavaScript: syntax OK")
+        return
+    err("page JavaScript: syntax error (the page is broken until it is fixed)")
+    # node reports a line of the bundle: find which site/js file and line it is
+    m = re.search(r":(\d+)\s*$", proc.stderr.strip().splitlines()[0])
+    if m:
+        line = int(m[1])
+        for rel, text in texts:
+            n = text.count("\n")
+            if line <= n:
+                print(f"       in site/{rel}, line {line}")
+                break
+            line -= n
+    for line in proc.stderr.strip().splitlines()[1:6]:
+        print(f"       {line}")
