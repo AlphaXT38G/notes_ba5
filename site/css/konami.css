@@ -1,0 +1,37 @@
+/* Konami easter egg. During the rift the page sits above a starry void (z-index 1) and below the crack and hole (z-index 3) */
+body.rift{overflow:hidden}
+body.rift .wrap{position:relative;z-index:2}
+#void{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;background:radial-gradient(1.5px 1.5px at 8% 14%,#fff,transparent),radial-gradient(1.5px 1.5px at 23% 72%,#fff,transparent),radial-gradient(1.5px 1.5px at 37% 22%,#fff,transparent),radial-gradient(1.5px 1.5px at 52% 88%,#fff,transparent),radial-gradient(1.5px 1.5px at 66% 9%,#fff,transparent),radial-gradient(1.5px 1.5px at 78% 64%,#fff,transparent),radial-gradient(1.5px 1.5px at 91% 31%,#fff,transparent),radial-gradient(1.5px 1.5px at 15% 46%,#fff,transparent),radial-gradient(1.5px 1.5px at 44% 57%,#fff,transparent),radial-gradient(1.5px 1.5px at 84% 85%,#fff,transparent),radial-gradient(1.5px 1.5px at 59% 38%,#fff,transparent),radial-gradient(1.5px 1.5px at 29% 93%,#fff,transparent),radial-gradient(1.5px 1.5px at 71% 19%,#fff,transparent),radial-gradient(1.5px 1.5px at 96% 74%,#fff,transparent),radial-gradient(1.5px 1.5px at 5% 83%,#fff,transparent),radial-gradient(1.5px 1.5px at 48% 6%,#fff,transparent),radial-gradient(circle at 50% 50%,rgba(70,35,10,.45),rgba(2,2,6,.97) 60%)}
+/* Crack of light that tears the screen open before the black hole appears */
+#crack{position:fixed;left:50%;top:50%;z-index:3;width:3px;height:0;transform:translate(-50%,-50%);border-radius:2px;pointer-events:none;background:linear-gradient(#fff,#ffe2a8,#fff);box-shadow:0 0 12px 4px #ffc265,0 0 40px 14px #ff8a2a}
+/* Gargantua-like black hole (Interstellar), stacked in this order:
+   ::before  warm haze around everything
+   .lens     back of the accretion disk, bent by gravity into arcs above and below the shadow
+   .shadow   the black disk, with a thin bright photon ring at its edge
+   .disk     front of the accretion disk, seen almost edge-on, passing in front of the shadow;
+             ::before = moving streaks (rotation), ::after = brighter left side (Doppler beaming) */
+#hole{--d:min(56vmin,320px);position:fixed;left:50%;top:50%;z-index:3;width:var(--d);height:var(--d);margin:calc(var(--d) / -2) 0 0 calc(var(--d) / -2);pointer-events:none;transform:scale(0)}
+#hole i{position:absolute;display:block;border-radius:50%}
+#hole::before{content:"";position:absolute;inset:-45%;border-radius:50%;background:radial-gradient(circle,rgba(255,170,80,.35),rgba(255,120,40,.12) 40%,transparent 65%)}
+#hole .lens{inset:-8%;background:radial-gradient(circle,transparent 0 41%,#fff8e6 43%,#ffd27a 46%,#ff9a3c 51%,rgba(255,110,20,.35) 58%,transparent 67%);filter:blur(1.5px);-webkit-mask:linear-gradient(#000 0 32%,rgba(0,0,0,.3) 46% 54%,#000 68%);mask:linear-gradient(#000 0 32%,rgba(0,0,0,.3) 46% 54%,#000 68%)}
+#hole .shadow{inset:21%;background:#000;box-shadow:0 0 0 1.5px #fff3d0,0 0 10px 3px rgba(255,205,130,.9),0 0 30px 8px rgba(255,140,50,.45)}
+#hole .disk{left:-80%;width:260%;top:44.5%;height:11%;overflow:hidden;background:radial-gradient(ellipse at 50% 50%,#fff 0,#fff3d0 10%,#ffc265 28%,#ff8a2a 46%,rgba(255,90,10,.35) 62%,transparent 72%);filter:blur(.8px)}
+#hole .disk::before{content:"";position:absolute;inset:0 -50%;background:repeating-linear-gradient(90deg,transparent 0 9px,rgba(255,255,255,.1) 12px,transparent 17px,transparent 26px,rgba(255,240,200,.14) 30px,transparent 37px);animation:swirl 1.4s linear infinite}
+#hole .disk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.35),transparent 45%,rgba(60,20,0,.35))}
+@keyframes swirl{to{transform:translateX(-37px)}}
+/* White flash when the hole collapses, and the confetti canvas drawn on top of everything */
+#flash{position:fixed;inset:0;z-index:65;background:#fff;opacity:0;pointer-events:none}
+.confetti{position:fixed;inset:0;z-index:70;width:100%;height:100%;pointer-events:none}
+/* Party theme after the rift (15 s): pastel rainbow background, rainbow title, colour-cycling borders */
+body.party{--fg:#1b1530;--mut:#4a4360;--line:rgba(40,20,80,.15);--acc:#5b2bd6;--acc-bg:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);}
+body.party::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(120deg,#ffd1dc,#fff1b8,#c9f7e1,#cfe6ff,#e6d5ff,#ffd1dc);background-size:400% 400%;animation:party-bg 8s linear infinite}
+body.party .wrap{position:relative;z-index:1}
+body.party h1{background:linear-gradient(90deg,#ff3d7f,#ffb300,#2ec27e,#2f80ed,#9b51e0,#ff3d7f);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:party-text 2s linear infinite}
+body.party section{animation:party-border 1.2s linear infinite}
+body.party .bar span{background:linear-gradient(90deg,#ff3d7f,#ffb300,#2ec27e,#2f80ed,#9b51e0)}
+body.party h2::after{content:" 🎉"}
+@keyframes party-bg{to{background-position:400% 0}}
+@keyframes party-text{to{background-position:200% 0}}
+@keyframes party-border{0%,100%{border-left-color:#ff3d7f}20%{border-left-color:#ffb300}40%{border-left-color:#2ec27e}60%{border-left-color:#2f80ed}80%{border-left-color:#9b51e0}}
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){#hole .disk::before,body.party::after,body.party h1,body.party section{animation:none}}

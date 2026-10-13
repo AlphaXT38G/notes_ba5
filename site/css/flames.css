@@ -1,0 +1,21 @@
+/* Flame mode (body.fire): fire gradients, glowing card borders, flame emojis rising from the bottom */
+/* Backgrounds that stay put while scrolling live on a fixed layer (body::before) instead of
+   background-attachment:fixed, which makes the browser repaint the whole screen on every scroll */
+body.fire::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none}
+body.fire .wrap{position:relative;z-index:1}
+body.fire::before{background:radial-gradient(120% 60% at 50% 115%,rgba(255,90,0,.35),transparent 70%)}
+/* Glowing cards: the glow sits on its own layer and only its opacity is animated (cheap),
+   rather than animating box-shadow, which repaints every card on every frame */
+body.fire section{position:relative}
+body.fire section::after{content:"";position:absolute;inset:0;pointer-events:none;will-change:opacity;animation:glow 1.6s ease-in-out infinite alternate}
+body.fire section::after{box-shadow:-8px 0 26px -6px rgba(255,170,0,.9)}
+body.fire h1{background:linear-gradient(90deg,#ffcf3f,#ff6a00,#e8132b);-webkit-background-clip:text;background-clip:text;color:transparent}
+body.fire h2::after{content:" 🔥"}
+body.fire section{border-left-color:#ff6a00;box-shadow:-6px 0 14px -8px rgba(255,106,0,.8)}
+body.fire .bar span{background:linear-gradient(90deg,#ffcf3f,#ff6a00,#e8132b)}
+body.fire #fire{border-color:#ff6a00;box-shadow:0 0 12px rgba(255,106,0,.6)}
+.flames{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.flames span{position:absolute;bottom:-3rem;animation:rise linear forwards;filter:drop-shadow(0 0 6px rgba(255,120,0,.7))}
+@keyframes rise{to{transform:translate(var(--dx),-115vh) scale(.3) rotate(var(--r));opacity:0}}
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){.flames{display:none}body.fire section::after{animation:none}}

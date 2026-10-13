@@ -1,6 +1,13 @@
 {
   "css": [
-    "css/style.css"
+    "css/base.css",
+    "css/flames.css",
+    "css/surprise.css",
+    "css/jazz.css",
+    "css/metal.css",
+    "css/epic.css",
+    "css/screens.css",
+    "css/konami.css"
   ],
   "js": [
     "js/ui.js",

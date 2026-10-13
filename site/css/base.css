@@ -1,0 +1,65 @@
+/* Colour tokens: light by default, dark when the system is dark (unless forced light) or when forced dark */
+:root{--bg:#f5f6f8;--fg:#15171a;--card:#fff;--line:#e2e5ea;--acc:#2457c5;--acc-bg:#eaf0fd;--mut:#6b7280;--new:#1d7a46;--new-bg:#dcf3e5}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121417;--fg:#e9eaec;--card:#1b1e23;--line:#2c3037;--acc:#8ab0ff;--acc-bg:#232b3d;--mut:#8b93a1;--new:#7ee0a5;--new-bg:#1d3a2a}}
+:root[data-theme=dark]{--bg:#121417;--fg:#e9eaec;--card:#1b1e23;--line:#2c3037;--acc:#8ab0ff;--acc-bg:#232b3d;--mut:#8b93a1;--new:#7ee0a5;--new-bg:#1d3a2a}
+*{box-sizing:border-box}
+body{font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--fg);margin:0}
+.wrap{max-width:960px;margin:0 auto;padding:2.5rem 1rem 3rem}
+/* Header, with the flame and theme buttons in its top right corner */
+header{margin-bottom:1.75rem;position:relative}
+.tools{position:absolute;top:0;right:0;z-index:5;display:flex;gap:.4rem}  /* above the title, which animated themes put on its own layer */
+.tools button{width:2.3rem;height:2.3rem;display:grid;place-items:center;font-size:1.05rem;line-height:1;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:.6rem;cursor:pointer}
+.tools button:hover,.tools button:focus-visible{border-color:var(--acc)}
+h1{font-size:1.9rem;margin:0;letter-spacing:-.02em}
+.sub{color:var(--mut);margin:.25rem 0 0}
+/* Cards in two independent columns (odd cards left, even cards right), so opening a section only
+   makes its own column longer instead of leaving a gap next to it. On narrow screens the columns
+   dissolve (display:contents) and the cards stack in their original order (inline `order`). */
+.grid{display:flex;flex-direction:column;gap:2rem}
+.col{display:contents}
+@media(min-width:912px){.grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start}.col{display:flex;flex-direction:column;gap:2rem;min-width:0}}
+/* Subject cards: --c is the subject accent colour, set inline on each <section> */
+section{border-left:4px solid var(--c);padding-left:1rem}
+.code{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--c)}
+h2{font-size:1.1rem;line-height:1.3;margin:.1rem 0 .15rem}
+.exam{margin:0 0 .4rem;font-size:.85rem;color:var(--mut)}
+.links{list-style:none;margin:.5rem 0 0;padding:0;border-top:1px solid var(--line)}
+.links a{display:flex;justify-content:space-between;gap:1rem;padding:.55rem .75rem;border-bottom:1px solid var(--line);color:var(--acc);text-decoration:none;font-weight:600}
+.links a:hover,.links a:focus-visible{background:var(--acc-bg)}
+.links small{color:var(--mut);font-size:.78rem;font-weight:400;align-self:center;white-space:nowrap}
+/* Collapsible sections: custom chevron that turns down when open */
+details summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:.4rem;padding:.55rem .75rem;border-bottom:1px solid var(--line);color:var(--mut);font-size:.9rem;font-weight:600}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"";width:.45rem;height:.45rem;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(-45deg);transition:transform .15s}
+details[open] summary::before{transform:rotate(45deg)}
+details summary:hover,details summary:focus-visible{color:var(--fg)}
+details .links{margin:0;border-top:0;padding-left:1rem}
+/* "New" badge, weekly progress bar and folder headings inside a collapsible section */
+.new{display:inline-block;margin-left:.5rem;padding:.05rem .45rem;border-radius:999px;background:var(--new-bg);color:var(--new);font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;vertical-align:.1em}
+.progress{margin-left:auto;display:flex;align-items:center;gap:.5rem;font-size:.75rem;font-weight:600;color:var(--mut);white-space:nowrap}
+.bar{width:6rem;height:.4rem;border-radius:999px;background:var(--line);overflow:hidden}
+.bar span{display:block;height:100%;border-radius:inherit;background:var(--c)}
+.group{font:600 .7rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);padding:.6rem .75rem .1rem;border-bottom:1px solid var(--line)}
+/* Search field and its no-result message */
+.searchrow{display:flex;gap:.5rem;margin-top:1.25rem}
+#search{flex:1;min-width:0;padding:.65rem .9rem;font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:.6rem;outline:none}
+#search:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-bg)}
+/* Names / Previews switch, next to the search field */
+.view{display:flex;padding:.2rem;background:var(--card);border:1px solid var(--line);border-radius:.6rem}
+.view button{padding:0 .75rem;font:600 .82rem system-ui,sans-serif;color:var(--mut);background:none;border:0;border-radius:.4rem;cursor:pointer}
+.view button[aria-pressed=true]{color:var(--fg);background:var(--acc-bg)}
+/* Previews view (html[data-view=previews]): every list becomes a grid of small first-page thumbnails.
+   Collapsible sections and folder headings take a full row; size and date move to the tooltip. */
+.thumb{display:none}
+[data-view=previews] .links{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:.5rem;padding:.5rem .75rem}
+[data-view=previews] .links > .fold,[data-view=previews] .group{grid-column:1/-1}
+[data-view=previews] .links a{flex-direction:column;justify-content:flex-start;align-items:center;gap:.3rem;padding:.35rem;border:0;border-radius:.5rem;font-size:.75rem;line-height:1.25;text-align:center}
+[data-view=previews] .links a small{display:none}
+[data-view=previews] .thumb{display:block;width:100%;aspect-ratio:170/240;object-fit:cover;object-position:top;background:#fff;border:1px solid var(--line);border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+[data-view=previews] .thumb.none{display:grid;place-items:center;color:var(--mut);font:700 .7rem ui-monospace,monospace;background:var(--acc-bg)}
+[data-view=previews] .links a .new{margin:.15rem 0 0;font-size:.6rem}
+[data-view=previews] .links a span{display:flex;flex-direction:column;align-items:center}
+#empty{color:var(--mut)}
+footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
+/* Shared animation: a glow layer whose opacity breathes (see flames.css and epic.css) */
+@keyframes glow{from{opacity:.35}to{opacity:1}}
