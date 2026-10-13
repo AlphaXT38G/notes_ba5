@@ -29,3 +29,5 @@ desktop.ini
 .vscode/
 .env
 .env/
+# Python bytecode (builder/)
+__pycache__/
