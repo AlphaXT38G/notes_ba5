@@ -33,7 +33,7 @@ as is. One exception: swent's weeks are chapters of `course.tex` (`weeks/week1a.
 
 On the page, the course notes come first, then two collapsible sections: weekly notes (files named `weekNN`, with a semester progress bar) and every other
 PDF, grouped by folder. Dates come from the last commit touching each document,
-and documents changed in the last 7 days get a "New" badge.
+and documents changed in the last 4 days get a "New" badge.
 
 Optional keys per subject in `subjects.json`:
 

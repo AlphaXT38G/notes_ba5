@@ -16,7 +16,7 @@ ALL_SUBJECTS = [s["id"] for s in CONFIG]
 # ── Index page ───────────────────────────────────────────────────────────────
 KINDS = {"course.pdf": "Course notes", "cheatsheet.pdf": "Cheat sheet"}
 ORDER = list(KINDS)  # course first, then cheatsheet, then anything else
-NEW_DAYS = 7         # documents changed more recently get a "New" badge
+NEW_DAYS = 4         # documents changed more recently get a "New" badge
 SEMESTER_WEEKS = 14  # length of the progress bar, override with "weeks" in subjects.json
 PREVIEW_PX = 240     # longest side of the first-page previews, in pixels (shown smaller, for sharpness)
 PDFTOPPM = shutil.which("pdftoppm")    # makes the previews; optional
