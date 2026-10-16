@@ -2367,4 +2367,18 @@ It is the opposite profile of stream ciphers (Lecture 5).
 \end{itemize}
 \end{keybox}
 
+\subsection{Integrity from symmetric cryptography: MACs}
+
+\begin{defnbox}[title=Message Authentication Code (MAC)]
+Takes a \textbf{fixed (short) size key} $K$ and a message $M$, and outputs a short
+$MAC_K(M)$. It is \textbf{hard to generate} a pair $\{M, MAC_K(M)\}$ \textbf{without
+knowing $K$}. Bob sends $\{M; MAC_K(M)\}$ using the pre-shared key $K$. Two properties:
+\begin{enumerate}
+  \item $M$ cannot be tampered with;
+  \item the message comes from Bob/Alice (whoever holds $K$).
+\end{enumerate}
+$\Rightarrow$ \textbf{Mutual authentication BUT no sender authenticity towards a 3rd
+party.}
+\end{defnbox}
+
 \end{document}
