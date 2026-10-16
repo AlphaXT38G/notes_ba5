@@ -2240,4 +2240,21 @@ What matters:
 \end{itemize}
 \end{propbox}
 
+\begin{defnbox}[title={All together: asymmetric confidentiality and authentication}]
+Users have \textbf{two pairs} of keys (2 secret keys, 2 public keys): an
+\textbf{encryption} pair and a \textbf{signing} pair.
+\begin{itemize}
+  \item \textbf{Confidentiality}: $D_{SK}(C) = M$ with $C = E_{PK}(M)$.
+  \item \textbf{Authentication}: $V_{PK}(M, S) = \checkmark$ with
+        $S = \mathrm{Sign}_{SK}(M)$.
+\end{itemize}
+Bob sends to Alice
+\[
+  E_{PK_{\text{Alice}}}(M), \quad \mathrm{Sign}_{SK_{\text{Bob}}}\big(h(M)\big),
+\]
+encrypting with Alice's \textbf{encryption public key} and signing with his own
+\textbf{signing secret key}; Alice decrypts with her secret key and verifies with Bob's
+\textbf{verification public key}.
+\end{defnbox}
+
 \end{document}
