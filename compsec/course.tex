@@ -2381,4 +2381,25 @@ $\Rightarrow$ \textbf{Mutual authentication BUT no sender authenticity towards a
 party.}
 \end{defnbox}
 
+\begin{defnbox}[title=Repudiation]
+With a MAC, both Alice and Bob hold the same key $K$, so \textbf{both} can produce
+$MAC_K(M)$. Given $\{M = \text{``I don't like Charlie''}; MAC_K(M)\}$, Bob says ``it was
+Alice'' and Alice says ``it was Bob'': a third party (Charlie) \textbf{cannot tell} who
+wrote it.
+\end{defnbox}
+
+\begin{keybox}[title=MAC vs.\ digital signature]
+\begin{center}
+\begin{tabular}{l|c|c}
+                         & \textbf{MAC}       & \textbf{Signature}  \\ \hline
+Keys                     & one shared secret  & key pair $(SK, PK)$ \\
+Integrity                & yes                & yes                 \\
+Authenticity (to peer)   & yes                & yes                 \\
+Convince a third party   & no                 & yes                 \\
+Non-repudiation          & no                 & yes                 \\
+Speed                    & fast               & slow
+\end{tabular}
+\end{center}
+\end{keybox}
+
 \end{document}
