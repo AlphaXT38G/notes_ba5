@@ -95,14 +95,23 @@ async function rift() {
   };
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return party();  // skip the black hole
 
-  // What gets swallowed: first every letter of the page on its own, then the boxes that held them
-  // (hidden ones, e.g. inside closed sections, have no size and are left out). What comes back
-  // out at the end are the big pieces, once the letters are put back together.
+  // What gets swallowed: first every letter of the page on its own, then the boxes that held them,
+  // innermost first (badges, progress bars, buttons, rows, then the course cards; the title too,
+  // for its decorations drawn in CSS), and the music
+  // player of the screen (hidden ones, e.g. inside closed sections, have no size and are left
+  // out). What comes back out at the end are the big pieces, once the letters are put back together.
   const wrap = document.querySelector(".wrap");
   const shown = sel => [...document.querySelectorAll(sel)].filter(el => el.getBoundingClientRect().width > 0);
-  const boxes = shown("#search, .view, .tools button, main section > .links > li");
-  const returning = shown("header h1, header .sub, #search, .view, .tools button, main section .code, main section h2, main section > .links > li, footer");
-  const { letters, restore } = splitLetters([wrap]);
+  const music = shown("#vinyl, #amp, #xmusic");
+  const boxes = [...shown("header h1, #search, .view button, .view, .tools button, .links li, .bar, .new, .thumb, main section"), ...music];
+  const returning = [...shown("header h1, header .sub, #search, .view, .tools button, main section, footer"), ...music];
+  const { letters, restore } = splitLetters([wrap, ...music]);
+  // Level of a box: 1 if it holds no other box, else one more than the highest box it holds
+  const levels = new Map();
+  const level = el => {
+    if (!levels.has(el)) levels.set(el, 1 + Math.max(0, ...boxes.filter(b => b !== el && el.contains(b)).map(level)));
+    return levels.get(el);
+  };
   document.body.classList.add("rift");
   const space = make("div", "void"), crack = make("div", "crack"), hole = make("div", "hole"), flash = make("div", "flash");
   // The ray-traced black hole (blackhole.js): its sky goes in the void under the page, its disk and
@@ -151,7 +160,7 @@ async function rift() {
   const near = el => { const b = el.getBoundingClientRect(); return Math.min(Math.hypot(hx - b.left - b.width / 2, hy - b.top - b.height / 2), 900); };
   const anims = [
     ...letters.map(l => swallow(l, near(l) * 1.1 + Math.random() * 200, 900 + Math.random() * 500, false)),
-    ...boxes.map(el => swallow(el, near(el) * 1.1 + 1300, 900 + Math.random() * 500, true))
+    ...boxes.map(el => swallow(el, near(el) * 1.1 + 1300 + (level(el) - 1) * 1100, 900 + Math.random() * 500, true))
   ];
   await Promise.all(anims.map(a => a.finished));
 

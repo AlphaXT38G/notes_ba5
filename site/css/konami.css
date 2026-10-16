@@ -1,6 +1,8 @@
 /* Konami easter egg. During the rift the page sits above a starry void (z-index 1) and below the crack and hole (z-index 3) */
 body.rift{overflow:hidden}
 body.rift .wrap{position:relative;z-index:2}
+/* The music players fall in with the page: between the sky (1) and the disk (3) */
+body.rift #vinyl,body.rift #amp,body.rift #xmusic{z-index:2}
 /* Letters split to be swallowed one by one (konami.js): words stay whole, letters can move */
 .rw{white-space:nowrap}
 .rl{display:inline-block}
