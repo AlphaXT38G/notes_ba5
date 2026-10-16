@@ -2474,4 +2474,25 @@ forged ciphertexts are rejected without ever being fed to the decryption algorit
 (fail-safe default, Lecture 2). Use separate keys for encryption and MAC.
 \end{keybox}
 
+\begin{keybox}[title={Summary: what we have learned about applied cryptography}]
+\begin{itemize}
+  \item \textbf{Symmetric cryptography}
+        \begin{itemize}
+          \item Confidentiality: stream ciphers, block ciphers (\textbf{modes of
+                operation}!).
+          \item Integrity / authentication: \textbf{Message Authentication Codes (MACs)}.
+        \end{itemize}
+  \item \textbf{Asymmetric cryptography}
+        \begin{itemize}
+          \item Confidentiality: \textbf{encryption} with the receiver's public key.
+          \item Integrity / authentication: \textbf{digital signatures} (+
+                non-repudiation).
+        \end{itemize}
+  \item \textbf{Hash functions}
+        \begin{itemize}
+          \item Three security properties (pre-image, second pre-image, collision).
+          \item Support digital signatures + other functions.
+        \end{itemize}
+\end{itemize}
+\end{keybox}
 \end{document}
