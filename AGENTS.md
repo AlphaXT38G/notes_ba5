@@ -102,7 +102,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `konami.js` | Konami code: black hole, confetti, party theme |
 | `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()` |
 | `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable, neon sign going out |
-| `closing.js` | closing time: the life-size bartender (SVG with the Gigachad photo `img/gigachad.webp` as head), swinging lamp, last call bell (Web Audio), typed speech, chalkboard with countdown, "Good night" |
+| `closing.js` | closing time: the life-size bartender (SVG layers pre-rendered as `<img>`, with the Gigachad photo `img/gigachad.webp` as head), swinging lamp, last call bell (Web Audio), typed speech, chalkboard with countdown, "Good night" |
 | `fx.js` | the effects canvas: `fxLayers`, `blob()`, the animation loop |
 | `christmas.js` | Christmas screens: date override and `yeti` code, garland (with mouse physics), winter scene (mountains and chalets, moon, tree, snowman), tree lights canvas, snow, sleigh, music, hidden sax |
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win) |
@@ -240,6 +240,8 @@ Example: a calm "dawn" screen from 06:00 to 07:00.
 - Draw many moving things on the **effects canvas** (`fx.js`) rather than as DOM elements. The
   canvas is 1x even on high-density screens; pre-render expensive shapes once (see the rune
   circle in `epic.js`) and avoid `shadowBlur` in per-frame drawing.
+- Heavy SVG filters (textures, blurs, grain) are fine in an SVG shown as an `<img>`: it is rendered
+  once into a bitmap, and animating the `<img>` never re-runs them (see the bartender in `closing.js`).
 - Remove a screen's extras (elements, timers, players) when its class turns off.
 
 ### Workflow
