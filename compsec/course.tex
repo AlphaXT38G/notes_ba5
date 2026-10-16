@@ -2191,4 +2191,53 @@ $\Rightarrow$ \textbf{Sign the hash} of messages instead of the message itself:
 where Alice recomputes $H = h(M)$ from the received $M$.
 \end{propbox}
 
+\begin{defnbox}[title=Hash function]
+A function $h(\cdot)$ that maps a message $M$ of \textbf{any length} to a \textbf{fixed
+short-length} output $H = h(M)$. Three security properties:
+\begin{itemize}
+  \item \textbf{Pre-image resistance} --- given $H = h(M)$, it is difficult to find $M$.
+  \item \textbf{Second pre-image resistance} --- given $M$, it is difficult to find an
+        $M' \neq M$ such that $h(M') = h(M)$.
+  \item \textbf{Collision resistance} --- it is difficult to find \emph{any} $M, M'$
+        (with $M \neq M'$) such that $h(M) = h(M')$.
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title=Understanding the three properties]
+\begin{itemize}
+  \item \textbf{Pre-image}: the hash is a one-way ``fingerprint'': from the fingerprint
+        you cannot rebuild the person.
+  \item \textbf{Second pre-image}: the attacker is given a \emph{fixed} $M$ and must
+        match its hash.
+  \item \textbf{Collision}: the attacker chooses \emph{both} messages freely --- an easier
+        task, so collision resistance is the strongest requirement. By the birthday
+        paradox, an $n$-bit hash only gives about $n/2$ bits of collision resistance.
+\end{itemize}
+Collisions must exist (infinitely many inputs, finitely many outputs); they must just be
+\textbf{hard to find}.
+\end{rembox}
+
+\begin{propbox}[title=Standard hash functions]
+\begin{itemize}
+  \item \textbf{MD5} (1991): 128-bit hash --- \textbf{insecure}.
+  \item \textbf{SHA-0, SHA-1}: 160 bits --- \textbf{insecure}.
+  \item \textbf{SHA-2} (224/256/384/512) --- OK but slow.
+  \item \textbf{SHA-3} (224/256/384/512).
+\end{itemize}
+\textbf{Don't design your own!} \\
+\textbf{Uses}: support digital signatures, build HMAC, password storage, file integrity,
+secure commitments, secure logging, blockchains, \ldots
+\end{propbox}
+
+\begin{propbox}[title=Which hash properties do signatures need?]
+When signing $h(M)$, \textbf{pre-image resistance is not needed} ($M$ is sent anyway).
+What matters:
+\begin{itemize}
+  \item \textbf{Second pre-image resistance} --- otherwise Eve finds $M' \neq M$ with
+        $h(M') = h(M)$, and Bob's signature on $M$ is also valid on $M'$.
+  \item \textbf{Collision resistance} --- otherwise Eve prepares two messages with the same
+        hash, gets Bob to sign the harmless one, and reuses the signature on the other.
+\end{itemize}
+\end{propbox}
+
 \end{document}
