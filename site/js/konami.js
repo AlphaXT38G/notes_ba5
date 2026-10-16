@@ -80,7 +80,7 @@ function splitLetters(roots) {
   return { letters, restore: () => swaps.forEach(([box, n]) => box.replaceWith(n)) };
 }
 
-// The whole Konami animation, about 16 s (slow, to watch the black hole), then 15 s of party theme. Every movement uses the
+// The whole Konami animation, about 20 s (slow, to watch the black hole and its supernova), then 15 s of party theme. Every movement uses the
 // Web Animations API (el.animate), so nothing in the page layout is changed for real:
 // cancelling the animations is enough to put every element back where it was.
 async function rift() {
@@ -167,17 +167,53 @@ async function rift() {
   ];
   await Promise.all(anims.map(a => a.finished));
 
-  // 4. The hole collapses in a flash of light
-  if (bh) bh.tween("grow", [[0, 1], [.3, 1.4], [1, 0]], 500, k => k * k);
-  else hole.animate([{ transform: "scale(1)" }, { transform: "scale(1.4)", offset: .3 }, { transform: "scale(0)" }],
-    { duration: 500, easing: "ease-in", fill: "forwards" });
-  await wait(350);
-  flash.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 700 });
-  await wait(250);
-  if (bh) bh.destroy();
-  [space, crack, hole].forEach(el => el.remove());
-  setTimeout(() => flash.remove(), 700);
-  document.body.classList.remove("rift");
+  // 4. The end. With WebGL, a supernova in stages; without, the hole collapses in a flash
+  if (bh) {
+    // a. Instability: the gas overheats and turns faster and faster, the hole throbs, and the
+    //    whole sky shakes harder and harder (same keyframes for both layers, so they move together)
+    bh.tween("heat", [[0, 1], [1, 3.2]], 2200, k => k * k);
+    bh.tween("speed", [[0, 1], [1, 6]], 2200, k => k * k);
+    bh.tween("grow", [[0, 1], [.2, 1.06], [.35, .97], [.5, 1.1], [.65, .95], [.8, 1.15], [1, 1.1]], 2200);
+    const shake = n => Array.from({ length: 40 }, (_, i) => {
+      const a = n(i / 39);
+      return { transform: `translate(${(Math.random() - .5) * a}px, ${(Math.random() - .5) * a}px)` };
+    });
+    const quake = shake(k => k * k * 16);
+    [space, hole].forEach(el => el.animate(quake, { duration: 2800 }));
+    await wait(2200);
+    // b. Implosion: the hole falls in on itself down to a point, its gas at its brightest
+    bh.tween("grow", [[0, 1.1], [1, 0]], 600, k => k * k * k);
+    bh.tween("heat", [[0, 3.2], [1, 5]], 600);
+    await wait(600);
+    // c. A held breath: darkness, and a single point of light, the core bouncing back
+    bh.destroy();
+    [crack, hole].forEach(el => el.remove());
+    const core = make("div", "sn-core");
+    core.animate([{ transform: "scale(0)" }, { transform: "scale(1)", offset: .3 }, { transform: "scale(.6)", offset: .7 },
+      { transform: "scale(2.5)" }], { duration: 550, easing: "ease-in", fill: "forwards" });
+    await wait(550);
+    // d. Detonation (supernova.js): flash, shock wave, ejecta, then the nebula and its pulsar
+    core.remove();
+    const sn = createSupernova();
+    if (sn) { document.body.append(sn.canvas); sn.start(); }
+    else { flash.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 700 }); }
+    space.animate(shake(k => 30 * (1 - k) ** 2), { duration: 900 });
+    await wait(1800);
+    // e. The page comes back out as the nebula spreads, and the night sky fades away
+    space.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 1500, fill: "forwards" }).finished.then(() => {
+      space.remove(); flash.remove();
+      document.body.classList.remove("rift");  // only now: until then the page must stay above the sky
+    });
+  } else {
+    hole.animate([{ transform: "scale(1)" }, { transform: "scale(1.4)", offset: .3 }, { transform: "scale(0)" }],
+      { duration: 500, easing: "ease-in", fill: "forwards" });
+    await wait(350);
+    flash.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 700 });
+    await wait(250);
+    [space, crack, hole].forEach(el => el.remove());
+    setTimeout(() => flash.remove(), 700);
+    document.body.classList.remove("rift");
+  }
 
   // 5. Everything comes back out, bouncing into place, in confetti colours: drop the "swallowed"
   //    state and put the letters back together, then play each big piece from the hole back to
