@@ -2278,4 +2278,14 @@ Digital signatures provide:
 \end{itemize}
 \end{propbox}
 
+\subsection{Symmetric cryptography: block ciphers}
+
+\begin{defnbox}[title=Block cipher]
+And for symmetric cryptography? A block cipher encrypts a block with a pre-shared key:
+$C_i = E_K(M_i)$, $M_i = D_K(C_i)$. The algorithms work on \textbf{blocks} the size of the
+key, typically \textbf{128/256 bits}. \\
+\textbf{Problem}: messages are longer than a block! $\Rightarrow$ requires iteration
+$\Rightarrow$ block ciphers have a \textbf{mode of operation}.
+\end{defnbox}
+
 \end{document}
