@@ -10,8 +10,9 @@ LaTeX notes for the BA5 IN semester at EPFL. `build.py` compiles every subject t
 04:00 UTC (so the "New" badges expire), the GitHub Pages workflow (`.github/workflows/pages.yml`)
 runs the build and publishes `dist/` at <https://alphaxt38g.github.io/notes_ba5/>.
 
-The index page has grown a lot of personality: a flame mode, a jazz bar at night, a metal show at
-01:00, an epic finale, Christmas screens in December, easter eggs. Most of the code is there, in `site/`.
+The index page has grown a lot of personality: a flame mode, a jazz bar at night (closed by a
+life-size Gigachad bartender at 00:45), a metal show at 01:00, an epic finale, Christmas screens
+in December, easter eggs. Most of the code is there, in `site/`.
 
 ## Repository layout
 
@@ -23,12 +24,13 @@ builder/              the Python behind build.py
   previews.py           first-page thumbnails of the PDFs (poppler)
   page.py               dist/index.html: cards from dist/, assembled with site/
   log.py                coloured console output
-site/                 the index page (HTML, CSS, JS), inlined into one dist/index.html
+site/                 the index page (HTML, CSS, JS inlined into one dist/index.html, images)
   template.html         the HTML skeleton, with {{placeholders}}
   manifest.json         which CSS / JS files go in the page, IN ORDER
   css/                  one file per theme / screen
   js/                   one file per feature / screen
-  img/                  images, copied as files to dist/img/ (too heavy to inline)
+  img/                  images, copied as files to dist/img/ (too heavy to inline); gigachad.webp
+                        is the meme photo, used as an illustration in this non-commercial project
 subjects.json         subjects: id, display name, exam rules, optional "weeks" and "color"
 <subject>/            course.tex, cheatsheet.tex, week/weekNN.tex, extra PDFs...
 _shared/              course.sty and cheatsheet.sty, shared by every course / cheat sheet
@@ -60,7 +62,7 @@ The night screens follow the clock. Force one with the URL:
 |---|---|
 | `?night=0` | the day, whatever the time |
 | `?night=1` | the first scheduled screen (the jazz bar) |
-| `?night=evening` / `?night=closing` | jazz bar / bar closing |
+| `?night=evening` / `?night=closing` | jazz bar / bar closing (the bartender comes ~9 s in, once the sign is dark) |
 | `?night=metal` | metal show (does not end by itself when forced) |
 | `?night=epic` | epic finale (until "Back to normal") |
 | `?night=christmas` / `?night=christmas-night` | Christmas day / Christmas night |
