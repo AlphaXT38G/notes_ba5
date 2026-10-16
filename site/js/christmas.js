@@ -403,9 +403,9 @@ fxLayers.push({
   reset() { flakes.length = 0; flakes.w = 0; },
 });
 
-// Santa's sleigh: at night, every 2 minutes or so (the first one soon after the night starts), a
-// sleigh pulled by four reindeer, Rudolph's nose glowing in front, crosses the sky in front of the
-// moon, leaving a trail of sparkles.
+// Santa's sleigh: at night, now and then at random (every 40 s to 4 min), a small sleigh pulled by
+// four reindeer, Rudolph's nose glowing in front, crosses the sky far away: random height, size,
+// speed and direction, on a gentle arc, leaving a short golden trail.
 const REINDEER = x => `<g transform="translate(${x + 33},0) scale(-1,1)"><path d="M0,14C2,8 14,7 22,10L26,4 24,0 27,-1 29,3 31,-1 33,1 30,6 31,9C33,10 33,13 30,13L24,15C22,18 18,19 14,18L16,26 13,26 11,19 6,19 4,26 1,26 3,18C0,18-1,16 0,14Z"/></g>`;
 const sleighEl = document.createElement("div");
 sleighEl.id = "sleigh";
@@ -415,16 +415,25 @@ sleighEl.innerHTML = `<svg viewBox="0 0 260 60"><g class="team">${[0, 38, 76, 11
   `<path class="sleigh" d="M150,22h70c8,0 12,-12 22,-12v6c-6,0 -8,14 -20,14h-66ZM146,40h92c6,0 9,-3 12,-6l2,2c-3,4 -7,8 -14,8h-92ZM160,30v10M210,30v10"/>` +
   `<path class="santa" d="M190,22c0,-10 4,-16 10,-16s10,6 10,16ZM197,6l8,-6 4,4ZM214,22c0,-8 4,-12 12,-12s10,6 8,12Z"/>` +
   `<circle class="nose" cx="1.5" cy="11" r="2.6"/></svg>`;
-let sleighIn = 15;  // seconds before the next flight
+let sleighIn = 20 + Math.random() * 60;  // seconds before the next flight
+let sleighFlight = null;
 const flySleigh = () => {
   if (document.hidden || sleighEl.isConnected || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  sleighEl.style.top = `${4 + Math.random() * 14}vh`;
+  const ltr = Math.random() < .5, w = 70 + Math.random() * 60, y = 15 + Math.random() * 25, rise = (Math.random() - .5) * 10;
+  sleighEl.style.cssText = `top:${f1(y)}vh;width:${f1(w)}px`;
+  sleighEl.classList.toggle("ltr", ltr);  // flying left to right: the drawing is mirrored (CSS)
+  const [from, to] = ltr ? [`-${f1(w + 40)}px`, "100vw"] : ["100vw", `-${f1(w + 40)}px`];
   document.body.append(sleighEl);
-  sleighEl.addEventListener("animationend", () => sleighEl.remove(), { once: true });
+  sleighFlight = sleighEl.animate([
+    { transform: `translate(${from},0)` },
+    { transform: `translate(calc((${from} + ${to}) / 2),${f1(-2 - Math.random() * 4)}vh)` },
+    { transform: `translate(${to},${f1(rise)}vh)` },
+  ], { duration: (14 + Math.random() * 14) * 1000, easing: "linear" });
+  sleighFlight.onfinish = sleighFlight.oncancel = () => sleighEl.remove();
 };
 everySecond.push(() => {
-  if (document.body.dataset.phase !== "christmas-night") { sleighIn = 15; return; }
-  if (--sleighIn <= 0) { sleighIn = 100 + Math.random() * 60; flySleigh(); }
+  if (document.body.dataset.phase !== "christmas-night") { sleighFlight?.cancel(); sleighIn = 20 + Math.random() * 60; return; }
+  if (--sleighIn <= 0) { sleighIn = 40 + Math.random() * 200; flySleigh(); }
 });
 
 // Christmas music: a live of Christmas songs from YouTube, on a Christmas turntable in the bottom
