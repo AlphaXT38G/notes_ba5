@@ -2082,4 +2082,22 @@ problem}.
         logarithm problem}, but needs \textbf{authentication} against MITM.
 \end{itemize}
 \end{keybox}
+% =========================================================
+\chapter{Lecture 6 : Applied cryptography II}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Lecture 5 only hid messages (confidentiality). Here we
+fix the two holes it left: \textbf{authenticity} (am I really talking to Bob, and not to
+Eve in the middle?) and \textbf{integrity} (was the message changed on the way?). With
+public keys we get \textbf{public-key encryption} and \textbf{digital signatures}, made
+fast thanks to \textbf{hash functions}; with a shared secret key we get \textbf{block
+ciphers} and their \textbf{modes of operation} (ECB, CBC, CTR) and \textbf{MACs}. Finally
+we combine encryption and MAC correctly (\textbf{Encrypt-then-MAC}). \\
+\textbf{Why is it useful?} Every real secure channel (HTTPS, messaging apps, software
+updates) needs all three properties at once. Knowing which tool gives which guarantee
+--- and which naive combinations leak or can be tampered with --- is what lets you
+choose the right standard primitive instead of building a broken one.
+\end{rembox}
+
 \end{document}
