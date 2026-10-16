@@ -21,7 +21,7 @@ uniform sampler2D uAlb, uHgt, uMat, uTex;
 uniform vec2 uRes;      // bitmap size (px)
 uniform float uUnit;    // bitmap px per drawing unit
 varying vec2 vUv;
-#define DEPTH 110.      // drawing units between black and white in the height drawing
+#define DEPTH 80.      // drawing units between black and white in the height drawing
 
 // The height comes smoothed and packed in two channels (see RELIEF_BLUR): 16 bits instead of 8
 float H(vec2 uv) { vec2 v = texture2D(uHgt, uv).rg; return v.x + v.y / 255.; }
@@ -71,7 +71,7 @@ void main() {
   float ao = clamp(1. - occ * 1.1, .15, 1.);
 
   // Lights: key from the right (hard, casts shadows), fill from the left, bar lamp from above
-  vec3 key = normalize(vec3(.78, .32, .54)), fill = normalize(vec3(-.75, .1, .65)), lamp = normalize(vec3(-.1, .92, .38));
+  vec3 key = normalize(vec3(.86, .3, .42)), fill = normalize(vec3(-.75, .1, .65)), lamp = normalize(vec3(-.1, .92, .38));
   // Cast shadow: walk towards the key light over the height; anything above the ray hides it
   float lit = 1.;
   vec2 dir = normalize(key.xy) * px * uUnit;
@@ -87,7 +87,7 @@ void main() {
   float df = clamp((dot(n, fill) + w) / (1. + w), 0., 1.);
   float dl = clamp(dot(n, lamp), 0., 1.);
   vec3 base = alb.rgb * (1. - mat.b * .75);           // metals are mostly reflection
-  vec3 col = base * (.07 * ao + 1.15 * dk + .2 * df * ao + .32 * dl * ao);
+  vec3 col = base * (.06 * ao + 1.05 * dk + .16 * df * ao + .26 * dl * ao);
   // Highlights (Blinn-Phong): sharp on glossy things, coloured by metals
   vec3 hk = normalize(key + vec3(0, 0, 1)), hl = normalize(lamp + vec3(0, 0, 1));
   float shine = mix(6., 140., mat.g);
