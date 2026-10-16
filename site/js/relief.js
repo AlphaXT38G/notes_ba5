@@ -56,7 +56,7 @@ void main() {
   g /= 12.;
   vec3 n = vec3(-g * DEPTH * uUnit, 1.);
   // Micro textures, as small bumps: pores, the fine grain of cotton, the diagonal rib of wool
-  n.xy += (bumps(p * 1.7) * .5 + bumps(p * 4.3) * .25) * tex.r;
+  n.xy += (bumps(p * 2.4) * .22 + bumps(p * 5.) * .16) * tex.r;
   n.xy += (bumps(p * vec2(2.6, 2.2)) * .12 + bumps(p * 6.) * .06) * tex.g;
   n.xy += bumps(vec2(p.x + p.y, p.x - p.y) * vec2(2.4, .6)) * .3 * tex.b;
   n = normalize(n);
@@ -87,7 +87,7 @@ void main() {
   float df = clamp((dot(n, fill) + w) / (1. + w), 0., 1.);
   float dl = clamp(dot(n, lamp), 0., 1.);
   vec3 base = alb.rgb * (1. - mat.b * .75);           // metals are mostly reflection
-  vec3 col = base * (.06 * ao + 1.05 * dk + .16 * df * ao + .26 * dl * ao);
+  vec3 col = base * (.06 * ao + 1.05 * dk + .24 * df * ao + .28 * dl * ao);
   // Highlights (Blinn-Phong): sharp on glossy things, coloured by metals
   vec3 hk = normalize(key + vec3(0, 0, 1)), hl = normalize(lamp + vec3(0, 0, 1));
   float shine = mix(6., 140., mat.g);

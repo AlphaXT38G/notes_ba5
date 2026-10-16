@@ -29,6 +29,7 @@ const BTR_MATS = {
   towel: ["#e6e4df", [8, 10, 0], [0, 255, 120]],
   stripe: ["#3c3c44", [8, 10, 0], [0, 255, 120]],
   pocket: ["#0b0b0c", [10, 10, 0], [0, 0, 0]],
+  nail: ["#b4b0aa", [160, 170, 0], [0, 0, 0]],
 };
 const btrRgb = v => `rgb(${v.join(",")})`;
 // Blurs used in the drawings: btrBlur(n) blurs by n drawing units
@@ -144,56 +145,68 @@ BTR_BODY.height = BTR_BODY.height.replace("</svg>", btrUp(`<path d="M262,488 Q29
 BTR_BODY.mat = BTR_BODY.mat.replace("</svg>", `<path d="M262,488 Q296,524 332,500" fill="none" stroke="${btrRgb(BTR_MATS.gold[1])}" stroke-width="2.6"/></svg>`);
 
 // ── Raised right arm (on the left of the picture): the sleeve, its garter and roll, the forearm ──
+// The forearm goes straight up from the elbow, long and thick (widest under the elbow), the fist
+// on top of it and the bell hanging under the fist, so most of the forearm stays in view.
 const BTR_ARM_SLEEVE = "M206,300 C202,280 182,270 160,270 C130,272 104,284 88,304 C72,322 60,342 52,362 L104,392 C116,372 136,356 160,348 C182,342 202,334 208,320 Z";
 const BTR_ARM_GARTER = "M146,274 C150,296 156,322 164,350 L176,346 C168,320 162,294 158,272 Z";
-const BTR_ARM_ROLL = "M46,350 C70,338 98,344 114,358 L114,394 C92,382 68,380 48,388 Z";
-const BTR_ARM_FOREARM = "M54,374 C42,322 54,272 80,234 L124,234 C130,280 122,330 110,374 Z";
+const BTR_ARM_ROLL = "M42,352 C68,338 98,344 116,358 L116,396 C94,384 68,382 44,390 Z";
+const BTR_ARM_FOREARM = "M46,382 C28,342 30,300 42,264 C52,232 62,204 72,176 L118,174 C124,200 132,236 130,272 C128,320 124,354 116,382 Z";
 const BTR_ARM = btrLayer([
-  [BTR_ARM_FOREARM, "skin", 18, .5],
+  [BTR_ARM_FOREARM, "skin", 22, .5],
   [BTR_ARM_SLEEVE, "shirt", 14, .5],
   [BTR_ARM_GARTER, "garter", 2, .06],
   ["<circle cx=\"168\" cy=\"332\" r=\"5\"/>", "silver", 2, .1],
-  [BTR_ARM_ROLL, "shirt", 5, .16],
+  [BTR_ARM_ROLL, "shirt", 7, .3],
 ],
   // Biceps bulging the sleeve, folds pulled towards the elbow, the garter biting in, the roll
-  btrUp(`<ellipse cx="124" cy="300" rx="40" ry="24" transform="rotate(-30 124 300)"/>`, 12, .22) +
-  btrDown(`<path d="M182,300 Q150,316 120,340 M176,326 Q146,340 118,364 M110,296 Q90,316 76,340" stroke="#000" stroke-width="5" fill="none"/>`, 4, .45) +
+  btrUp(`<ellipse cx="124" cy="300" rx="44" ry="26" transform="rotate(-30 124 300)"/>`, 12, .26) +
+  btrDown(`<path d="M182,300 Q150,316 120,340 M176,326 Q146,340 118,364" stroke="#000" stroke-width="6" fill="none"/>`, 5, .4) +
   btrUp(`<path d="M186,292 Q154,308 124,330" stroke="#fff" stroke-width="5" fill="none"/>`, 4, .14) +
   btrDown(`<path d="M146,274 C150,296 156,322 164,350 M160,272 C164,296 170,322 178,346" stroke="#000" stroke-width="4" fill="none"/>`, 2, .45) +
-  btrUp(`<path d="M48,362 Q78,350 112,366 M48,376 Q78,364 112,380" stroke="#fff" stroke-width="7" fill="none"/>`, 3, .14) +
-  btrDown(`<path d="M48,369 Q78,357 112,373 M50,388 Q78,378 112,390" stroke="#000" stroke-width="3" fill="none"/>`, 2, .5) +
-  // Forearm: the muscle mass on the outside, the flexors inside, the wrist, veins
-  btrUp(`<ellipse cx="66" cy="318" rx="16" ry="44"/><ellipse cx="104" cy="306" rx="14" ry="40"/>`, 10, .22) +
-  btrDown(`<path d="M84,250 Q80,300 82,360" stroke="#000" stroke-width="6" fill="none"/>`, 6, .3) +
-  btrUp(`<path d="M90,240 C84,270 96,292 88,320 C84,336 92,350 86,368 M88,300 C76,310 70,322 70,336 M108,248 C112,276 104,300 108,330" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/>`, 1, .5),
-  // The forearm's shadow side, the underside of the sleeve
-  `<path d="M54,374 C42,322 54,272 80,234 L92,234 C70,272 62,322 70,374 Z" fill="#000" opacity=".12" filter="${btrBlur(8)}"/>` +
-  `<path d="M104,392 C116,372 136,356 160,348 C178,342 190,340 198,340 L196,326 C170,326 140,336 112,360 Z" fill="#000" opacity=".3" filter="${btrBlur(6)}"/>`
+  btrUp(`<path d="M42,362 Q78,348 116,366 M42,378 Q78,364 116,384" stroke="#fff" stroke-width="8" fill="none"/>`, 4, .3) +
+  btrDown(`<path d="M42,370 Q78,356 116,375 M44,391 Q78,381 116,394 M60,352 Q64,372 58,390 M94,350 Q100,372 96,392" stroke="#000" stroke-width="3" fill="none"/>`, 2, .6) +
+  // Forearm: the big muscle on the outside under the elbow, the flexors on the inside, the bony
+  // ridge between them, the wrist narrowing, and veins running up to the hand
+  btrUp(`<ellipse cx="52" cy="306" rx="20" ry="58" transform="rotate(8 52 306)"/><ellipse cx="108" cy="282" rx="18" ry="56" transform="rotate(-4 108 282)"/>`, 12, .3) +
+  btrUp(`<ellipse cx="88" cy="214" rx="16" ry="34"/>`, 10, .14) +
+  btrUp(`<path d="M98,186 C92,216 100,244 94,276 C90,296 96,312 92,332" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/>`, 1.5, .3),
+  // The forearm's shadow side, the underside of the sleeve, the bell's shadow on the wrist
+  `<path d="M46,382 C28,342 30,300 42,264 C52,232 62,204 72,176 L82,176 C66,230 50,300 60,382 Z" fill="#000" opacity=".14" filter="${btrBlur(8)}"/>` +
+  `<path d="M104,392 C116,372 136,356 160,348 C178,342 190,340 198,340 L196,326 C170,326 140,336 112,360 Z" fill="#000" opacity=".3" filter="${btrBlur(6)}"/>` +
+  `<ellipse cx="96" cy="236" rx="34" ry="12" fill="#000" opacity=".35" filter="${btrBlur(8)}"/>`
 );
 
 // ── The bell (brass, wooden handle), its clapper, and the hand holding it ──
-const BTR_BELL_BRASS = "M90,228 Q86,238 84,252 Q80,274 64,288 H140 Q124,274 120,252 Q118,238 114,228 Z";
+const BTR_BELL_BRASS = "M90,168 Q86,178 84,192 Q80,214 64,228 H140 Q124,214 120,192 Q118,178 114,168 Z";
 const BTR_BELL = btrLayer([
-  ["M97,160 h10 v74 h-10 Z", "wood", 3, .2],
-  ["<ellipse cx=\"102\" cy=\"160\" rx=\"8\" ry=\"6\"/>", "wood", 3, .24],
+  ["M97,98 h10 v76 h-10 Z", "wood", 3, .2],
+  ["<ellipse cx=\"102\" cy=\"98\" rx=\"8.5\" ry=\"6.5\"/>", "wood", 3, .24],
   [BTR_BELL_BRASS, "brass", 14, .5],
-  ["<ellipse cx=\"102\" cy=\"288\" rx=\"38\" ry=\"6\"/>", "brass", 2, .3],
+  ["<ellipse cx=\"102\" cy=\"228\" rx=\"38\" ry=\"6\"/>", "brass", 2, .3],
 ],
-  btrUp(`<path d="M86,262 Q102,268 118,262" stroke="#fff" stroke-width="3" fill="none"/>`, 1, .2) +
-  btrDown(`<ellipse cx="102" cy="287" rx="33" ry="3.5"/>`, 1, .6),
-  `<ellipse cx="102" cy="287" rx="33" ry="3.5" fill="#1d1204"/>`);
-const BTR_CLAPPER = btrLayer([["<circle cx=\"102\" cy=\"295\" r=\"6.5\"/>", "brass", 3, .4]]);
-const BTR_FIST = "M76,236 C70,214 72,196 84,186 L118,184 C130,190 132,212 128,236 Z";
-const BTR_THUMB = "M78,212 C70,198 76,186 90,184 C102,182 110,190 108,198 C100,200 92,204 84,214 Z";
+  btrUp(`<path d="M86,202 Q102,208 118,202" stroke="#fff" stroke-width="3" fill="none"/>`, 1, .5) +
+  btrDown(`<ellipse cx="102" cy="227" rx="33" ry="3.5"/>`, 1, 1),
+  `<ellipse cx="102" cy="227" rx="33" ry="3.5" fill="#1d1204"/>`);
+const BTR_CLAPPER = btrLayer([["<circle cx=\"102\" cy=\"235\" r=\"6.5\"/>", "brass", 3, .4]]);
+// The fist round the handle, seen from the front: four fingers curled one above the other (the
+// little one smaller), their knuckles on the right, and the thumb wrapped over the top one. The
+// creases are also painted, so that the fingers read at any size.
+const BTR_FIST = "M66,184 C56,166 56,142 70,130 C80,124 108,122 120,128 C132,138 134,164 126,184 C108,192 84,192 66,184 Z";
+const BTR_FINGERS = [0, 1, 2, 3].map(i => `<rect x="${68 + i}" y="${132 + i * 12}" width="${58 - i * 3}" height="12" rx="6"/>`);
+const BTR_CREASES = [0, 1, 2].map(i => `M${70 + i},${144 + i * 12} H${124 - i * 3}`).join(" ");
+const BTR_THUMB = "M64,160 C58,144 64,131 78,128 C92,125 108,129 112,137 C102,144 88,148 76,162 Z";
 const BTR_HAND = btrLayer([
-  [BTR_FIST, "skin", 10, .5],
-  [BTR_THUMB, "skin", 6, .2],
+  [BTR_FIST, "skin", 10, .42],
+  ...BTR_FINGERS.map(f => [f, "skin", 3, .18]),
+  [BTR_THUMB, "skin", 4, .22],
+  ['<ellipse cx="102" cy="133" rx="8" ry="4.6" transform="rotate(-12 102 133)"/>', "nail", 1, .05],
 ],
-  // Four fingers wrapped round the handle, their creases and knuckles
-  [192, 203, 214, 225].map(y => btrUp(`<path d="M80,${y} Q103,${y - 4} 128,${y}" stroke="#fff" stroke-width="7" fill="none"/>`, 3, .2) +
-    btrDown(`<path d="M80,${y + 5.5} Q103,${y + 1.5} 128,${y + 5.5}" stroke="#000" stroke-width="2.4" fill="none"/>`, 1, .55)).join("") +
-  btrUp(`<path d="M124,190 V232" stroke="#fff" stroke-width="6"/>`, 3, .15),
-  `<path d="M76,236 C70,214 72,196 84,186 L90,186 C80,200 80,220 84,236 Z" fill="#000" opacity=".3" filter="${btrBlur(5)}"/>`);
+  btrDown(`<path d="${BTR_CREASES}" stroke="#000" stroke-width="2.6"/>`, 1, 1.4) +
+  btrUp([0, 1, 2, 3].map(i => `<circle cx="${122 - i * 3}" cy="${138 + i * 12}" r="5.5"/>`).join(""), 3, .5) +
+  btrDown(`<path d="M70,162 Q90,150 112,140" stroke="#000" stroke-width="4" fill="none"/>`, 2, .9),
+  `<path d="${BTR_CREASES}" stroke="#000" stroke-width="1.6" opacity=".45" filter="${btrBlur(1)}"/>` +
+  `<path d="M70,162 Q90,150 112,140" stroke="#000" stroke-width="2" fill="none" opacity=".35" filter="${btrBlur(1.5)}"/>` +
+  `<path d="M64,182 C58,158 60,138 72,128 L80,128 C70,146 70,166 74,182 Z" fill="#000" opacity=".2" filter="${btrBlur(5)}"/>`);
 
 // Rendered once per visit, the first time it is asked for
 let btrRendered = null;

@@ -58,6 +58,10 @@
 #closing .arm{transform-origin:32.69% 50%}
 #closing .bell{transform-origin:19.62% 34.33%}
 #closing .bt img.clapper{transform-origin:19.62% 38.33%}
+/* The photo-like body holds the bell higher (bartender.js): the fist is at 102,150, the clapper
+   hangs from 102,172 */
+#closing .bt.real .bell{transform-origin:19.62% 25%}
+#closing .bt.real img.clapper{transform-origin:19.62% 28.67%}
 #closing.ring .arm{animation:cl-shake .3s ease-in-out infinite alternate}
 #closing.ring .bell{animation:cl-ring .3s ease-in-out infinite alternate}
 #closing.ring .clapper{animation:cl-ring .3s ease-in-out infinite alternate-reverse}
