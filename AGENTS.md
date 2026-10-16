@@ -73,8 +73,10 @@ year; outside the Christmas period, typed on a Christmas screen it goes back to 
 a random surprise banner on some visits, and on the Christmas night a small golden sax hidden
 among the tree ornaments (on the garland on narrow screens) that opens the jazz bar; a little fir
 in the bar's bottom right corner brings Christmas back. `armstrong` typed anywhere but the search
-field opens the jazz bar at any time (over Christmas too); typed again in the bar it goes back to
-the normal screen, unless the normal screen at that moment is the bar itself (21:30 – 01:00).
+field opens the jazz bar at any time (over Christmas too, but not over the shows); typed again in
+the bar it goes back to the normal screen of that moment, by the clock alone: it drops the
+`armstrong` and `yeti` eggs, the sax and a forced `?night=`, so it shows the day, the bar itself
+at bar time (21:30 – 01:00), or Christmas during the Christmas period.
 
 ## How the index page is built
 
@@ -109,7 +111,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `closing.js` | closing time: the life-size bartender (SVG layers pre-rendered as `<img>`, with the Gigachad photo `img/gigachad.webp` as head), swinging lamp, last call bell (Web Audio), typed speech, chalkboard with countdown, "Good night" |
 | `fx.js` | the effects canvas: `fxLayers`, `blob()`, the animation loop |
 | `christmas.js` | Christmas screens: date override and `yeti` code, garland (with mouse physics), winter scene (mountains and chalets, moon, tree, snowman), tree lights canvas, snow, sleigh, music, hidden sax |
-| `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win) |
+| `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song |
 | `epic.js` | epic finale: blue fire, motes, rune circle, "More epicness ?", "Back to normal" |
 | `start.js` | **last**: first `applyScreen()`, then the every-second clock check |
