@@ -15,7 +15,7 @@
 
 // Materials: colour (unlit), [specular, glossiness, metal] and [pores, cotton, wool] in 0-255
 const BTR_MATS = {
-  skin: ["#8e8e8e", [70, 95, 0], [255, 0, 0]],
+  skin: ["#8e8e8e", [55, 70, 0], [255, 0, 0]],
   shirt: ["#d8d8d4", [22, 40, 0], [0, 255, 0]],
   vest: ["#3a3a40", [50, 75, 0], [0, 0, 255]],
   satin: ["#141416", [255, 205, 0], [0, 0, 0]],
@@ -61,11 +61,11 @@ const btrLayer = (parts, relief = "", paint = "") => ({
 const BTR_NECK = "M198,200 C202,236 202,262 190,294 L334,294 C320,262 316,236 318,200 Z";
 const BTR_TORSO = "M204,270 C178,281 152,290 132,300 C112,310 102,332 106,362 C108,394 122,420 130,442 " +
   "C136,500 144,560 148,600 L376,600 C380,560 388,500 394,442 C402,420 412,392 414,362 C416,332 408,310 390,300 C370,290 346,281 320,270 Z";
-const BTR_SLEEVE_R = "M386,306 C426,304 456,334 462,376 C466,408 468,440 464,468 L408,474 C404,440 398,412 392,392 C388,360 384,330 386,306 Z";
-const BTR_FOREARM_R = "M408,466 L464,462 C474,490 474,530 466,600 L404,600 C398,560 400,510 408,466 Z";
+const BTR_SLEEVE_R = "M386,306 C428,302 462,330 468,372 C472,404 468,436 462,468 L408,474 C402,446 396,416 392,392 C388,360 384,330 386,306 Z";
+const BTR_FOREARM_R = "M408,466 L466,462 C480,486 480,520 470,556 L466,600 L404,600 C398,560 400,500 408,466 Z";
 const BTR_ROLL_R = "M404,446 C430,440 452,440 468,446 L470,480 C448,474 426,476 405,482 Z";
 const BTR_GARTER_R = "M394,398 C420,406 446,404 466,396 L467,410 C446,418 420,420 395,412 Z";
-const BTR_TOWEL = "M396,508 C424,500 452,500 478,506 C482,540 480,572 474,600 L398,600 C392,570 392,540 396,508 Z";
+const BTR_TOWEL = "M398,538 C424,528 454,528 480,536 C486,560 484,582 478,600 L400,600 C394,580 394,558 398,538 Z";
 const BTR_VEST_L = "M232,292 L262,436 L262,600 L150,600 C146,560 140,500 136,452 C148,420 156,382 166,352 C176,324 194,304 212,296 Z";
 const BTR_VEST_R = "M292,292 L262,436 L262,600 L374,600 C378,560 384,500 388,452 C376,420 368,382 358,352 C348,324 330,304 312,296 Z";
 const BTR_LAPEL_L = "M212,296 C224,338 244,392 258,432 L262,436 L232,292 Z";
@@ -125,15 +125,16 @@ const BTR_BODY = btrLayer([
   // the roll of the sleeve, then the forearm: its big muscles, veins and tendons
   btrUp(`<ellipse cx="440" cy="420" rx="22" ry="40"/>`, 12, .16) +
   btrDown(`<path d="M394,398 Q430,412 466,398 M394,414 Q430,428 466,412" stroke="#000" stroke-width="4" fill="none"/>`, 2, .45) +
-  btrDown(`<path d="M400,372 Q426,388 456,378 M404,432 Q430,442 460,430" stroke="#000" stroke-width="6" fill="none"/>`, 6, .35) +
+  btrDown(`<path d="M398,368 Q424,384 454,376 M402,428 Q428,436 456,428" stroke="#000" stroke-width="8" fill="none"/>`, 8, .22) +
   btrUp(`<path d="M404,452 Q436,446 468,452 M404,466 Q436,460 468,466" stroke="#fff" stroke-width="7" fill="none"/>`, 3, .14) +
   btrDown(`<path d="M404,459 Q436,453 468,459 M404,474 Q436,470 468,474" stroke="#000" stroke-width="3" fill="none"/>`, 2, .5) +
-  btrUp(`<ellipse cx="454" cy="500" rx="16" ry="34"/><ellipse cx="420" cy="512" rx="16" ry="38"/>`, 10, .2) +
-  btrUp(`<path d="M432,484 C424,510 440,530 430,560 C426,574 432,588 428,600 M430,540 C440,550 450,556 452,570 M418,498 C412,520 416,540 412,560" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/>`, 1, .5) +
-  // Towel: soft folds hanging over the forearm
-  btrUp(`<path d="M410,510 Q406,556 412,600 M440,506 Q446,552 440,600 M462,508 Q466,556 460,600" stroke="#fff" stroke-width="10" fill="none"/>`, 5, .2) +
-  btrDown(`<path d="M424,508 Q426,556 424,600 M452,506 Q456,552 452,600" stroke="#000" stroke-width="6" fill="none"/>`, 4, .45) +
-  btrUp(`<path d="M396,510 Q436,498 478,508" stroke="#fff" stroke-width="8" fill="none"/>`, 3, .18) +
+  btrUp(`<ellipse cx="452" cy="500" rx="20" ry="34" transform="rotate(-6 452 500)"/>`, 12, .26) +
+  btrUp(`<ellipse cx="418" cy="512" rx="12" ry="26"/>`, 10, .1) +
+  btrUp(`<path d="M434,484 C428,500 438,514 432,532" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/>`, 1.5, .3) +
+  // Towel folded over the forearm: a round fold along the top, soft vertical folds hanging down
+  btrUp(`<path d="M398,540 Q438,526 480,538" stroke="#fff" stroke-width="12" fill="none"/>`, 5, .4) +
+  btrUp(`<path d="M412,552 Q408,576 414,600 M442,548 Q448,574 442,600 M466,550 Q470,576 464,600" stroke="#fff" stroke-width="10" fill="none"/>`, 5, .24) +
+  btrDown(`<path d="M426,550 Q428,576 426,600 M454,548 Q458,574 454,600" stroke="#000" stroke-width="6" fill="none"/>`, 4, .45) +
   // Bow tie: knot pinched, wings folded
   btrDown(`<path d="M232,288 Q246,294 252,294 M232,302 Q246,298 252,298 M292,288 Q278,294 272,294 M292,302 Q278,298 272,298" stroke="#000" stroke-width="3" fill="none"/>`, 2, .5),
   // Colour touches: the head's shadow on the neck and collar, the shadow side of the neck, the
@@ -141,7 +142,7 @@ const BTR_BODY = btrLayer([
   `<path d="M120,300 C150,312 186,318 204,334 C190,360 150,370 116,368 Z" fill="#000" opacity=".4" filter="${btrBlur(12)}"/>` +
   `<ellipse cx="270" cy="222" rx="60" ry="36" fill="#000" opacity=".28" filter="${btrBlur(18)}"/>` +
   `<ellipse cx="262" cy="270" rx="56" ry="10" fill="#000" opacity=".15" filter="${btrBlur(8)}"/>` +
-  `<path d="M397,522 Q436,512 478,520 L478,526 Q436,518 397,528 Z M397,534 Q436,524 479,532 L479,538 Q436,530 397,540 Z" fill="${BTR_MATS.stripe[0]}"/>` +
+  `<path d="M398,556 Q438,544 481,554 L481,560 Q438,550 398,562 Z M398,568 Q438,556 482,566 L482,572 Q438,562 398,574 Z" fill="${BTR_MATS.stripe[0]}"/>` +
   `<path d="M262,488 Q296,524 332,500" fill="none" stroke="${BTR_MATS.gold[0]}" stroke-width="2.6" stroke-dasharray="2.6 1.2"/>`
 );
 // The watch chain also needs its relief and its metal
