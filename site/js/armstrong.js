@@ -2,12 +2,13 @@
 // Typing a r m s t r o n g (outside the search field), like the Konami code, opens the jazz bar
 // ("evening" screen) at any time of the day or the year, for the rest of the visit. It runs after
 // the Christmas override (this file is loaded after christmas.js) so it wins over Christmas, and
-// before the metal and epic ones, so the shows still take over.
-// Typed again in the jazz bar, it goes back to the normal screen, but only if the normal screen at
-// that moment is not the jazz bar itself (at 22:00 the bar stays: it is where we should be).
-// "Normal" means what the clock gives without any easter egg nor forced screen: the bar opened
-// from the Christmas sax or by ?night=evening is left the same way. Typing yeti in the bar
-// (Christmas egg) closes it too, so that Christmas actually shows up (jazzEggXmas).
+// before the metal and epic ones, so the shows still take over (the metal show at 01:00 too: only
+// the day and Christmas are replaced).
+// Typed again in the jazz bar, it goes back to the normal screen of that moment: what the clock
+// gives without any easter egg nor forced screen. So it drops the jazz egg, the yeti egg, the
+// Christmas sax and a forced ?night=..., and shows the day, the jazz bar at bar time (it then
+// stays), or Christmas during the Christmas period. Typing yeti in the bar (Christmas egg)
+// closes it too, so that Christmas actually shows up (jazzEggXmas).
 const ARMSTRONG = [..."armstrong"];
 let armstrongPos = 0,     // how many letters of the word have been typed so far
     jazzEgg = false,      // the code was typed: the jazz bar stays open
