@@ -98,23 +98,23 @@ body[data-phase=christmas-night] #xsax{display:block}
 #garland #xsax{top:64px;width:24px;height:42px}
 
 /* The snowman, a big companion in the left margin beside the courses (behind the cards, faded,
-   on narrow screens). It sways gently, blinks and waves now and then; only transforms are animated. */
+   on narrow screens). It blinks, turns its face a bit more to the courses now and then, and waves;
+   only small parts move (transforms), so its snow texture is not redrawn all the time. */
 #xsnowman{--sw:clamp(170px,calc((100vw - 960px) / 2 - 30px),300px);position:absolute;left:max(-40px,calc((100vw - 960px) / 2 - var(--sw) - 10px));bottom:1.5vh;width:min(var(--sw),40vh);aspect-ratio:300/520}
 #xsnowman svg{width:100%;height:100%;overflow:visible}
 #xsnowman .k1{stop-color:#fff}
 #xsnowman .k2{stop-color:#f3f7fc}
 #xsnowman .k3{stop-color:#d2deec}
 #xsnowman .k4{stop-color:#a7bad3}
-#xsnowman .speckles{fill:rgba(150,175,210,.45)}
-#xsnowman .twig{fill:none;stroke:#5a3418;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+#xsnowman .twig path{fill:none;stroke:#4e2d15;stroke-linecap:round}
 body[data-phase=christmas-night] #xsnowman .k1{stop-color:#e6eefa}
 body[data-phase=christmas-night] #xsnowman .k2{stop-color:#c7d4e8}
 body[data-phase=christmas-night] #xsnowman .k3{stop-color:#8fa3c4}
 body[data-phase=christmas-night] #xsnowman .k4{stop-color:#566b90}
-#xsnowman .head{transform-origin:150px 190px;animation:sm-nod 7s ease-in-out infinite}
+#xsnowman .face{animation:sm-turn 19s ease-in-out infinite}
 #xsnowman .eyes{transform-box:fill-box;transform-origin:center;animation:sm-blink 5.5s infinite}
-#xsnowman .wave{transform-origin:204px 248px;animation:sm-wave 14s ease-in-out infinite}
-@keyframes sm-nod{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(2deg)}}
+#xsnowman .wave{transform-origin:218px 258px;animation:sm-wave 14s ease-in-out infinite}
+@keyframes sm-turn{0%,55%,100%{transform:translateX(0)}62%,80%{transform:translateX(5px)}}
 @keyframes sm-blink{0%,93%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
 @keyframes sm-wave{0%,70%,100%{transform:rotate(0)}74%,82%,90%{transform:rotate(-22deg)}78%,86%{transform:rotate(6deg)}}
 @media(max-width:1240px){#xsnowman{opacity:.5}}
@@ -161,4 +161,4 @@ body[data-phase=christmas-night] #xsnowman .k4{stop-color:#566b90}
 @keyframes vt-snow-in{from{opacity:0;filter:brightness(1.8) blur(6px)}}
 
 /* Reduced motion */
-@media(prefers-reduced-motion:reduce){#xsnowman .head,#xsnowman .eyes,#xsnowman .wave{animation:none}body[data-phase=christmas-night] #garland :is(.lit,.halo,.refl){animation:none}#sleigh{display:none}#xmusic.playing .disc{animation:none}}
+@media(prefers-reduced-motion:reduce){#xsnowman .face,#xsnowman .eyes,#xsnowman .wave{animation:none}body[data-phase=christmas-night] #garland :is(.lit,.halo,.refl){animation:none}#sleigh{display:none}#xmusic.playing .disc{animation:none}}

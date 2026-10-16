@@ -263,52 +263,86 @@ const MOUNTAINS = `<svg class="mountains" viewBox="0 0 1600 300" preserveAspectR
   `<path class="m2" d="M0,230 140,170 260,210 400,150 540,215 690,160 820,220 980,165 1120,225 1260,170 1400,215 1600,180V300H0Z"/>` +
   `<path class="ground-shade" d="M0,262C200,236 380,252 560,246S900,232 1100,248 1450,238 1600,246V300H0Z"/>` +
   `<path class="ground" d="M0,270C220,246 400,262 580,256S920,244 1120,258 1460,248 1600,256V300H0Z"/></svg>`;
-// The snowman: a big companion standing in the left margin, beside the columns of courses. Drawn in
-// a 300 x 520 box, lit from the top left so it looks round: shaded snowballs with contact shadows
-// where they meet and a shadow on the ground, glossy coal, a ridged carrot, a knitted scarf with
-// fringes, a top hat with a holly sprig, twig arms. It sways a little, blinks, and now and then
-// waves with its right arm (CSS).
+// The snowman: a big companion standing in the left margin, beside the columns of courses, seen in
+// three-quarter view, face turned to the right as if about to look at the courses. Drawn in a
+// 300 x 520 box, lit from the top left: lumpy hand-packed snowballs (wobbly outlines) shaded round,
+// a grainy snow texture, contact shadows and a snowdrift at its base, irregular lumps of coal, a
+// carrot seen in perspective, a battered top hat tilted back with snow on the brim, a knitted scarf
+// with one end blowing behind, tapering branches for arms. It blinks, now and then turns its face
+// a little more towards the courses, and waves with the arm on that side (CSS).
 const SNOWMAN = (() => {
-  const rnd = seeded(31), speckles = [];
-  for (const [cx, cy, r] of [[150, 405, 95], [150, 255, 70], [150, 140, 52]]) {
-    for (let i = 0; i < r / 3; i++) {
-      const a = rnd() * Math.PI * 2, d = Math.sqrt(rnd()) * r * .9;
-      speckles.push(`<circle cx="${f1(cx + Math.cos(a) * d)}" cy="${f1(cy + Math.sin(a) * d)}" r="${f1(.8 + rnd() * 1.4)}"/>`);
+  const rnd = seeded(31);
+  // closed wobbly outline through n points around an ellipse, smoothed (Catmull-Rom to Bezier)
+  const lump = (cx, cy, rx, ry, amp) => {
+    const n = 22, pts = Array.from({ length: n }, (_, i) => {
+      const a = i / n * Math.PI * 2, k = 1 + (rnd() - .5) * amp;
+      return [cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k];
+    });
+    let d = `M${f1(pts[0][0])},${f1(pts[0][1])}`;
+    for (let i = 0; i < n; i++) {
+      const [p0, p1, p2, p3] = [pts[(i + n - 1) % n], pts[i], pts[(i + 1) % n], pts[(i + 2) % n]];
+      d += `C${f1(p1[0] + (p2[0] - p0[0]) / 6)},${f1(p1[1] + (p2[1] - p0[1]) / 6)} ${f1(p2[0] - (p3[0] - p1[0]) / 6)},${f1(p2[1] - (p3[1] - p1[1]) / 6)} ${f1(p2[0])},${f1(p2[1])}`;
     }
-  }
-  const coal = (x, y, r) => `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#sm-coal)"/><circle cx="${f1(x - r * .35)}" cy="${f1(y - r * .35)}" r="${f1(r * .28)}" fill="rgba(255,255,255,.7)"/>`;
-  const smile = [[130, 160], [139, 166], [150, 168], [161, 166], [170, 160]].map(([x, y]) => coal(x, y, 3.2)).join("");
+    return d + "Z";
+  };
+  // an irregular lump of coal, with a glint
+  const coal = (x, y, r) => {
+    const pts = Array.from({ length: 7 }, (_, i) => {
+      const a = i / 7 * Math.PI * 2, k = r * (.75 + rnd() * .45);
+      return `${f1(x + Math.cos(a) * k)},${f1(y + Math.sin(a) * k * .9)}`;
+    }).join(" ");
+    return `<polygon points="${pts}" fill="url(#sm-coal)"/><circle cx="${f1(x - r * .3)}" cy="${f1(y - r * .35)}" r="${f1(r * .22)}" fill="rgba(255,255,255,.6)"/>`;
+  };
+  // a branch tapering from its base: the same line stroked thinner and thinner, each a bit shorter
+  const branch = (x0, y0, x1, y1, w) => [1, .75, .5].map((f, i) => {
+    const xe = x0 + (x1 - x0) * (1 - i * .08), ye = y0 + (y1 - y0) * (1 - i * .08);
+    return `<path d="M${x0},${y0}L${f1(xe)},${f1(ye)}" stroke-width="${f1(w * f)}"/>`;
+  }).join("");
+  const BOTTOM = lump(150, 412, 100, 86, .07), MIDDLE = lump(156, 264, 70, 64, .08), HEAD = lump(164, 152, 50, 47, .07);
+  const ball = d => `<path d="${d}" fill="url(#sm-snow)"/><path d="${d}" fill="url(#sm-under)"/><path d="${d}" fill="#fff" filter="url(#sm-grain)" opacity=".55"/>`;
   return `<svg viewBox="0 0 300 520" aria-hidden="true"><defs>` +
-    `<radialGradient id="sm-snow" cx=".36" cy=".3" r=".78"><stop class="k1" offset="0"/><stop class="k2" offset=".45"/><stop class="k3" offset=".82"/><stop class="k4" offset="1"/></radialGradient>` +
-    `<radialGradient id="sm-ground"><stop offset="0" stop-color="rgba(30,50,90,.35)"/><stop offset="1" stop-color="rgba(30,50,90,0)"/></radialGradient>` +
-    `<radialGradient id="sm-contact"><stop offset="0" stop-color="rgba(60,85,130,.45)"/><stop offset="1" stop-color="rgba(60,85,130,0)"/></radialGradient>` +
-    `<radialGradient id="sm-coal" cx=".35" cy=".3"><stop offset="0" stop-color="#6a6a74"/><stop offset=".5" stop-color="#22222a"/><stop offset="1" stop-color="#0a0a0e"/></radialGradient>` +
-    `<linearGradient id="sm-carrot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb35a"/><stop offset=".5" stop-color="#ec7a16"/><stop offset="1" stop-color="#b4500a"/></linearGradient>` +
-    `<linearGradient id="sm-hat" x1="0" x2="1"><stop offset="0" stop-color="#454556"/><stop offset=".3" stop-color="#2a2a36"/><stop offset=".75" stop-color="#121218"/><stop offset="1" stop-color="#25252f"/></linearGradient>` +
-    `<linearGradient id="sm-scarf" x1="0" x2="1"><stop offset="0" stop-color="#e2384f"/><stop offset=".55" stop-color="#b3122e"/><stop offset="1" stop-color="#6e0716"/></linearGradient>` +
-    `</defs><ellipse cx="160" cy="498" rx="125" ry="18" fill="url(#sm-ground)"/>` +
-    // left arm, behind the body
-    `<path class="twig" d="M95,250 32,205M58,224 40,196M46,214 18,206"/>` +
-    `<circle cx="150" cy="405" r="95" fill="url(#sm-snow)"/><ellipse cx="150" cy="322" rx="62" ry="13" fill="url(#sm-contact)"/>` +
-    `<circle cx="150" cy="255" r="70" fill="url(#sm-snow)"/><ellipse cx="150" cy="192" rx="44" ry="10" fill="url(#sm-contact)"/>` +
-    `<g class="speckles">${speckles.join("")}</g>` +
-    coal(150, 236, 6) + coal(150, 262, 6.5) + coal(150, 290, 7) + coal(150, 380, 7.5) +
-    `<g class="head"><circle cx="150" cy="140" r="52" fill="url(#sm-snow)"/>` +
-    `<g class="eyes">${coal(132, 126, 5.5)}${coal(168, 126, 5.5)}</g>${smile}` +
-    `<path d="M150,138C166,136 196,144 216,152 194,154 166,152 150,150Z" fill="url(#sm-carrot)"/>` +
-    `<path d="M168,139l2,11M180,142l1.5,9M192,146l1,6" stroke="#a5470a" stroke-width="1.4" fill="none" stroke-linecap="round"/>` +
-    // top hat: brim, crown, red band with holly
-    `<ellipse cx="150" cy="96" rx="62" ry="13" fill="#1a1a22"/><path d="M110,94V30C110,22 190,22 190,30V94C190,104 110,104 110,94Z" fill="url(#sm-hat)"/>` +
-    `<ellipse cx="150" cy="30" rx="40" ry="7" fill="#3a3a48"/><path d="M110,76H190V90C190,96 110,96 110,90Z" fill="#b3122e"/>` +
-    `<path d="M172,84c-6,-10 -16,-8 -20,-12 4,6 0,10 6,12 -4,2 0,6 -2,10 6,-4 10,-2 16,-10Z" fill="#1f7a3e"/>` +
-    `<circle cx="172" cy="84" r="3.4" fill="#d6203a"/><circle cx="178" cy="80" r="3.4" fill="#c8102e"/></g>` +
-    // scarf: band around the neck, and a hanging end with fringes
-    `<path d="M96,184C110,200 190,200 204,184L208,200C192,218 108,218 92,200Z" fill="url(#sm-scarf)"/>` +
-    `<path d="M104,190C120,200 138,203 150,203M120,198v14M140,202v14M160,202v14M180,198v14" stroke="rgba(255,255,255,.35)" stroke-width="2" fill="none"/>` +
-    `<path d="M168,204 186,206 194,276 172,278Z" fill="url(#sm-scarf)"/><path d="M172,226 192,226M174,250 194,250" stroke="rgba(255,255,255,.45)" stroke-width="4"/>` +
-    `<path d="M172,278v10M177,278v12M182,277v10M187,277v12M192,276v9" stroke="#b3122e" stroke-width="2.2" stroke-linecap="round"/>` +
-    // right arm, in front, the one that waves
-    `<g class="wave"><path class="twig" d="M204,248 262,196M240,216 270,206M250,206 248,178"/></g></svg>`;
+    `<radialGradient id="sm-snow" cx=".33" cy=".27" r=".8"><stop class="k1" offset="0"/><stop class="k2" offset=".42"/><stop class="k3" offset=".8"/><stop class="k4" offset="1"/></radialGradient>` +
+    `<linearGradient id="sm-under" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="rgba(50,75,120,0)"/><stop offset="1" stop-color="rgba(50,75,120,.28)"/></linearGradient>` +
+    `<filter id="sm-grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="2" seed="4"/>` +
+    `<feColorMatrix values="0 0 0 0 .45  0 0 0 0 .55  0 0 0 0 .72  0 0 0 -2.2 1.25"/><feComposite in2="SourceGraphic" operator="in"/></filter>` +
+    `<radialGradient id="sm-contact"><stop offset="0" stop-color="rgba(55,80,125,.5)"/><stop offset="1" stop-color="rgba(55,80,125,0)"/></radialGradient>` +
+    `<radialGradient id="sm-ground"><stop offset="0" stop-color="rgba(30,50,90,.4)"/><stop offset="1" stop-color="rgba(30,50,90,0)"/></radialGradient>` +
+    `<linearGradient id="sm-drift" x1="0" y1="0" x2="0" y2="1"><stop class="k1" offset="0"/><stop class="k3" offset="1"/></linearGradient>` +
+    `<radialGradient id="sm-coal" cx=".35" cy=".3"><stop offset="0" stop-color="#5d5d66"/><stop offset=".55" stop-color="#1e1e25"/><stop offset="1" stop-color="#08080b"/></radialGradient>` +
+    `<linearGradient id="sm-carrot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb867"/><stop offset=".45" stop-color="#ee7d18"/><stop offset="1" stop-color="#a8480a"/></linearGradient>` +
+    `<linearGradient id="sm-hat" x1="0" x2="1"><stop offset="0" stop-color="#4a4a5a"/><stop offset=".25" stop-color="#2c2c38"/><stop offset=".7" stop-color="#121218"/><stop offset="1" stop-color="#262630"/></linearGradient>` +
+    `<linearGradient id="sm-scarf" x1="0" x2="1"><stop offset="0" stop-color="#e8475d"/><stop offset=".5" stop-color="#b3122e"/><stop offset="1" stop-color="#650614"/></linearGradient>` +
+    `<pattern id="sm-knit" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(8)"><path d="M0,0 3,6 6,0" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="1.2"/></pattern>` +
+    `</defs><ellipse cx="160" cy="500" rx="135" ry="20" fill="url(#sm-ground)"/>` +
+    // far arm and the scarf end blowing behind, both behind the body
+    `<g class="twig">${branch(100, 252, 40, 196, 7)}${branch(62, 216, 40, 186, 3.5)}${branch(52, 206, 22, 200, 3)}</g>` +
+    `<path d="M112,206C92,214 72,228 50,236 58,226 54,220 46,222 66,210 86,200 110,196Z" fill="url(#sm-scarf)"/><path d="M112,206C92,214 72,228 50,236 58,226 54,220 46,222 66,210 86,200 110,196Z" fill="url(#sm-knit)"/>` +
+    ball(BOTTOM) + `<ellipse cx="154" cy="327" rx="60" ry="12" fill="url(#sm-contact)"/>` +
+    ball(MIDDLE) + `<ellipse cx="160" cy="198" rx="42" ry="9" fill="url(#sm-contact)"/>` +
+    // buttons, following the curve of the body turned to the right
+    coal(178, 240, 6.5) + coal(181, 268, 7) + coal(179, 297, 7) + coal(184, 392, 8) +
+    // snowdrift piled around the base
+    `<path d="M20,505C40,470 80,476 100,486 130,474 180,476 210,486 240,474 270,480 285,505Z" fill="url(#sm-drift)"/>` +
+    `<g class="headball">${ball(HEAD)}<g class="face"><g class="eyes"><ellipse cx="166" cy="140" rx="5.5" ry="6.5" fill="url(#sm-coal)"/><ellipse cx="190" cy="138" rx="4.2" ry="6" fill="url(#sm-coal)"/>` +
+    `<circle cx="164.5" cy="137.5" r="1.4" fill="rgba(255,255,255,.7)"/><circle cx="188.8" cy="135.8" r="1.1" fill="rgba(255,255,255,.7)"/></g>` +
+    [[160, 170, 3.2], [168, 175, 3.3], [177, 177, 3.3], [186, 175, 3], [193, 170, 2.6]].map(([x, y, r]) => coal(x, y, r)).join("") +
+    `<path d="M178,147C192,145 220,150 244,160 222,163 196,162 179,158 175,155 175,149 178,147Z" fill="url(#sm-carrot)"/>` +
+    `<path d="M186,148q2,6 0,11M198,149q2,5 0,10M210,152q1.5,4 0,8M222,155q1,3 0,6" stroke="#a5470a" stroke-width="1.3" fill="none" stroke-linecap="round"/></g>` +
+    // battered top hat tilted back, snow on the brim, red band with holly
+    `<g transform="rotate(-9 164 104)"><ellipse cx="164" cy="106" rx="62" ry="14" fill="#16161d"/><ellipse cx="164" cy="104" rx="60" ry="12" fill="#25252f"/>` +
+    `<path d="M126,104C125,80 127,56 129,36 150,30 180,30 201,36 202,58 203,82 202,104 188,111 140,111 126,104Z" fill="url(#sm-hat)"/>` +
+    `<ellipse cx="165" cy="36" rx="36" ry="7.5" fill="#3a3a48"/><path d="M146,40c4,8 6,16 4,26" stroke="rgba(255,255,255,.08)" stroke-width="3" fill="none"/>` +
+    `<path d="M126,86C140,92 188,92 202,86L202,100C188,107 140,107 126,100Z" fill="#a30d26"/>` +
+    `<path d="M190,94c-6,-10 -16,-8 -20,-12 4,6 0,10 6,12 -4,2 0,6 -2,10 6,-4 10,-2 16,-10Z" fill="#1f7a3e"/><circle cx="190" cy="94" r="3.4" fill="#d6203a"/><circle cx="196" cy="90" r="3.2" fill="#c8102e"/>` +
+    `<path d="M106,104c6,-6 14,-5 20,-2 6,-4 14,-3 18,1M190,100c6,-5 14,-5 20,0" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none" opacity=".9"/></g></g>` +
+    // scarf around the neck, knotted on the right, its end hanging down the front
+    `<path d="M108,196C122,214 196,216 212,196L215,212C198,232 120,232 104,212Z" fill="url(#sm-scarf)"/><path d="M108,196C122,214 196,216 212,196L215,212C198,232 120,232 104,212Z" fill="url(#sm-knit)"/>` +
+    `<ellipse cx="196" cy="216" rx="11" ry="9" fill="#9b0d22"/>` +
+    `<path d="M188,222C186,246 190,270 196,292L216,288C210,266 206,244 204,220Z" fill="url(#sm-scarf)"/><path d="M188,222C186,246 190,270 196,292L216,288C210,266 206,244 204,220Z" fill="url(#sm-knit)"/>` +
+    `<path d="M190,244 207,242M192,264 210,262" stroke="rgba(255,255,255,.4)" stroke-width="4"/>` +
+    `<path d="M197,292v9M201,291v11M205,290v9M209,290v10M213,289v8" stroke="#b3122e" stroke-width="2.2" stroke-linecap="round"/>` +
+    // near arm, towards the courses: the one that waves
+    `<g class="wave"><g class="twig">${branch(218, 258, 274, 212, 7)}${branch(250, 232, 280, 224, 3.5)}${branch(262, 222, 262, 194, 3)}</g></g></svg>`;
 })();
 const snowman = document.createElement("div");
 snowman.id = "xsnowman";
