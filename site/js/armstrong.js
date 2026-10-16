@@ -18,14 +18,15 @@ OVERRIDES.push(phase => {
   return SCREENS[phase]?.className === "night" ? phase : "evening";  // keeps "closing" when the clock says so
 });
 const inBar = phase => SCREENS[phase]?.className === "night";
-// The screen we would have without the jazz egg, the sax and a forced screen. Running the
-// overrides only to look is harmless: they only forget easter eggs that are over anyway.
+// The screen we would have by the clock alone: without the jazz egg, the yeti egg, the sax and a
+// forced screen. Running the overrides only to look is harmless: they only forget easter eggs
+// that are over anyway.
 const normalPhase = () => {
-  const saved = [jazzEgg, xmasJazz, forcedDismissed];
-  jazzEgg = xmasJazz = false;
+  const saved = [jazzEgg, xmasEgg, xmasJazz, forcedDismissed];
+  jazzEgg = xmasEgg = xmasJazz = false;
   forcedDismissed = true;
   const phase = phaseNow();
-  [jazzEgg, xmasJazz, forcedDismissed] = saved;
+  [jazzEgg, xmasEgg, xmasJazz, forcedDismissed] = saved;
   return phase;
 };
 // Leaving the bar: drop what keeps it open, so the screen goes back to what the clock gives
