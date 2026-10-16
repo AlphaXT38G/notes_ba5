@@ -12,12 +12,14 @@ const ARMSTRONG = [..."armstrong"];
 let armstrongPos = 0,     // how many letters of the word have been typed so far
     jazzEgg = false,      // the code was typed: the jazz bar stays open
     jazzEggXmas = false;  // the Christmas egg (xmasEgg) when it was typed
+const inBar = phase => SCREENS[phase]?.className === "night";
 OVERRIDES.push(phase => {
   if (jazzEgg && xmasEgg !== jazzEggXmas) jazzEgg = false;  // yeti typed since: Christmas wins
   if (!jazzEgg) return phase;
-  return SCREENS[phase]?.className === "night" ? phase : "evening";  // keeps "closing" when the clock says so
+  // Keeps "closing" when the clock says so, even if Christmas had replaced it before this override
+  const clock = scheduledPhase();
+  return inBar(phase) ? phase : inBar(clock) ? clock : "evening";
 });
-const inBar = phase => SCREENS[phase]?.className === "night";
 // Leaving the bar: drop the easter eggs that kept it open or that would replace it (the yeti
 // egg's Christmas), so the screen goes back to what the clock gives
 const backToClock = () => {
