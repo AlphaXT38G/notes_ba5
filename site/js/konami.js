@@ -1,5 +1,7 @@
 // Konami code easter egg (up up down down left right left right B A): a dimensional rift opens,
-// a black hole swallows the page, then everything comes back in confetti colours
+// a ray-traced black hole (blackhole.js) swallows the page letter by letter, then its boxes,
+// overheats, implodes and explodes in a supernova (supernova.js); everything comes back out in
+// confetti colours. Without WebGL, a CSS black hole and a white flash do the same job.
 const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
 let konamiPos = 0,     // how many keys of the sequence have been typed so far
     riftBusy = false;  // true while the animation (and the party after it) runs, to ignore repeats
@@ -45,9 +47,45 @@ function confetti(ox, oy) {
   })(performance.now());
 }
 
-// The whole Konami animation, about 5 s, then 15 s of party theme. Every movement uses the
-// Web Animations API (el.animate), so nothing in the page layout is changed for real:
-// cancelling the animations is enough to put every element back where it was.
+// Wrap each visible letter under the roots in its own inline-block <span class="rl"> so that it
+// can fly on its own. Words stay unbreakable (span.rw, nowrap) so lines wrap as before, and each
+// text node becomes a single inline span (span.rs), so a flex container still sees one item.
+// Returns the letters and restore(), which puts the original text nodes back.
+const graphemes = s => typeof Intl.Segmenter === "function"
+  ? [...new Intl.Segmenter().segment(s)].map(x => x.segment) : Array.from(s);  // keeps emoji whole
+function splitLetters(roots) {
+  const nodes = [];
+  for (const root of roots) {
+    const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let n; (n = walk.nextNode());)  // hidden text (closed sections, other view) is left alone
+      if (n.data.trim() && n.parentElement.getClientRects().length && !n.parentElement.closest("script, style")) nodes.push(n);
+  }
+  const letters = [], swaps = [];
+  for (const n of nodes) {
+    const box = document.createElement("span");
+    box.className = "rs";
+    for (const part of n.data.split(/(\s+)/)) {
+      if (!part) continue;
+      if (/^\s/.test(part)) { box.append(part); continue; }
+      const word = document.createElement("span");
+      word.className = "rw";
+      for (const g of graphemes(part)) {
+        const l = document.createElement("span");
+        l.className = "rl"; l.textContent = g;
+        word.append(l); letters.push(l);
+      }
+      box.append(word);
+    }
+    n.replaceWith(box);
+    swaps.push([box, n]);
+  }
+  return { letters, restore: () => swaps.forEach(([box, n]) => box.replaceWith(n)) };
+}
+
+// The whole Konami animation, about 21 s (slow, to watch the black hole and its supernova), then
+// 15 s of party theme. Every movement uses the Web Animations API (el.animate), so nothing in the
+// page layout is changed for real: cancelling the animations is enough to put every element back
+// where it was. The only DOM change, the letters split into spans, is undone by restore().
 async function rift() {
   if (riftBusy) return;
   riftBusy = true;
@@ -60,15 +98,30 @@ async function rift() {
   };
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return party();  // skip the black hole
 
-  // The pieces that get swallowed one by one: header parts, card titles and every visible line
-  // of the cards (hidden ones, e.g. inside closed sections, have no size and are left out)
-  const pieces = [...document.querySelectorAll(
-    "header h1, header .sub, #search, .view, .tools button, main section .code, main section h2, main section > .links > li, footer"
-  )].filter(el => el.getBoundingClientRect().width > 0);
+  // What gets swallowed: first every letter of the page on its own, then the boxes that held them,
+  // innermost first (badges, progress bars, buttons, rows, then the course cards; the title too,
+  // for its decorations drawn in CSS), and the music player of the screen. Hidden ones (e.g. in
+  // closed sections) have no size and are left out. What comes back out at the end are the big
+  // pieces, once the letters are put back together.
   const wrap = document.querySelector(".wrap");
+  const shown = sel => [...document.querySelectorAll(sel)].filter(el => el.getBoundingClientRect().width > 0);
+  const music = shown("#vinyl, #amp, #xmusic");
+  const boxes = [...shown("header h1, #search, .view button, .view, .tools button, .links li, .bar, .new, .thumb, main section"), ...music];
+  const returning = [...shown("header h1, header .sub, #search, .view, .tools button, main section, footer"), ...music];
+  const { letters, restore } = splitLetters([wrap, ...music]);
+  // Level of a box: 1 if it holds no other box, else one more than the highest box it holds
+  const levels = new Map();
+  const level = el => {
+    if (!levels.has(el)) levels.set(el, 1 + Math.max(0, ...boxes.filter(b => b !== el && el.contains(b)).map(level)));
+    return levels.get(el);
+  };
   document.body.classList.add("rift");
   const space = make("div", "void"), crack = make("div", "crack"), hole = make("div", "hole"), flash = make("div", "flash");
-  hole.innerHTML = '<i class="lens"></i><i class="shadow"></i><i class="disk"></i>';
+  // The ray-traced black hole (blackhole.js): its sky goes in the void under the page, its disk and
+  // shadow over the page. Without WebGL, the CSS drawing of it.
+  const bh = createBlackHole();
+  if (bh) { space.append(bh.back); hole.classList.add("gl"); hole.append(bh.front, bh.bloom); bh.start(); }
+  else hole.innerHTML = '<i class="lens"></i><i class="shadow"></i><i class="disk"></i>';
 
   // 1. The rift tears open: darkness falls, a crack of light splits the screen, the page trembles
   space.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, fill: "forwards" });
@@ -83,42 +136,97 @@ async function rift() {
   await wait(800);
 
   // 2. The black hole opens
-  hole.animate([{ transform: "scale(0)" }, { transform: "scale(1.12)", offset: .7 }, { transform: "scale(1)" }],
+  if (bh) bh.tween("grow", [[0, 0], [.7, 1.12], [1, 1]], 1800, k => 1 - (1 - k) ** 3);
+  else hole.animate([{ transform: "scale(0)" }, { transform: "scale(1.12)", offset: .7 }, { transform: "scale(1)" }],
     { duration: 900, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" });
-  await wait(400);
+  await wait(1800);  // a moment to look at it before it starts eating
 
-  // 3. Every piece of the page spirals into it, closest first.
-  //    (dx, dy) goes from the piece to the hole; halfway, the piece is pushed sideways along
-  //    (-dy, dx) to curve its path into a spiral, while it spins, shrinks to nothing and blurs.
-  const flights = pieces.map(el => {
+  // 3. The page spirals into it, closest first. Each piece orbits the hole (all the same way,
+  //    like the gas of its disk), faster and faster as it falls in, flattens towards the disk
+  //    plane, spins, and shrinks to nothing. Boxes also blur (a few of them only: blur is costly).
+  const swallow = (el, delay, duration, blur) => {
     const b = el.getBoundingClientRect();
-    const dx = hx - (b.left + b.width / 2), dy = hy - (b.top + b.height / 2);
-    const dist = Math.hypot(dx, dy), spin = (Math.random() < .5 ? -1 : 1) * (360 + Math.random() * 540);
-    const anim = el.animate([
-      { transform: "none", opacity: 1, filter: "blur(0)" },
-      { transform: `translate(${dx * .35 - dy * .3}px, ${dy * .35 + dx * .3}px) rotate(${spin * .3}deg) scale(.85)`, offset: .45 },
-      { transform: `translate(${dx}px, ${dy}px) rotate(${spin}deg) scale(0)`, opacity: 0, filter: "blur(6px)" }
-    ], { duration: 900 + Math.random() * 500, delay: Math.min(dist, 900) * 1.1, easing: "cubic-bezier(.55,0,1,.45)", fill: "forwards" });
-    return { el, anim, dx, dy, spin };
-  });
-  await Promise.all(flights.map(f => f.anim.finished));
+    const x0 = b.left + b.width / 2 - hx, y0 = b.top + b.height / 2 - hy;  // from the hole centre
+    const r0 = Math.hypot(x0, y0), a0 = Math.atan2(y0, x0);
+    const turn = Math.PI * (1 + Math.random() * .8), spin = 360 + Math.random() * 540;
+    const frames = [];
+    for (let i = 0; i <= 10; i++) {
+      const p = i / 10, r = r0 * (1 - p) ** 1.2, a = a0 + turn * p ** 1.6;
+      const x = Math.cos(a) * r, y = Math.sin(a) * r * (1 - .7 * p);
+      const f = { transform: `translate(${x - x0}px, ${y - y0}px) rotate(${spin * p * p}deg) scale(${(1 - p) ** .8})`,
+        opacity: p < .7 ? 1 : (1 - p) / .3 };
+      if (blur) f.filter = `blur(${p * 6}px)`;
+      frames.push(f);
+    }
+    return el.animate(frames, { duration, delay, easing: "cubic-bezier(.4,0,.85,.6)", fill: "forwards" });
+  };
+  //    Timing: the closest go first (up to 4.5 s later for the farthest), each fall takes about
+  //    2 s, and a box leaves 2.6 s after its own letters, plus 1.6 s per level of boxes inside it.
+  const near = el => { const b = el.getBoundingClientRect(); return Math.min(Math.hypot(hx - b.left - b.width / 2, hy - b.top - b.height / 2), 900) * 5; };
+  const fall = () => 1800 + Math.random() * 800;
+  const anims = [
+    ...letters.map(l => swallow(l, near(l) + Math.random() * 400, fall(), false)),
+    ...boxes.map(el => swallow(el, near(el) + 2600 + (level(el) - 1) * 1600, fall(), true))
+  ];
+  await Promise.all(anims.map(a => a.finished));
 
-  // 4. The hole collapses in a flash of light
-  hole.animate([{ transform: "scale(1)" }, { transform: "scale(1.4)", offset: .3 }, { transform: "scale(0)" }],
-    { duration: 500, easing: "ease-in", fill: "forwards" });
-  await wait(350);
-  flash.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 700 });
-  await wait(250);
-  [space, crack, hole].forEach(el => el.remove());
-  setTimeout(() => flash.remove(), 700);
-  document.body.classList.remove("rift");
+  // 4. The end. With WebGL, a supernova in stages; without, the hole collapses in a flash
+  if (bh) {
+    // a. Instability: the gas overheats and turns faster and faster, the hole throbs, and the
+    //    whole sky shakes harder and harder (same keyframes for both layers, so they move together)
+    bh.tween("heat", [[0, 1], [1, 3.2]], 2200, k => k * k);
+    bh.tween("speed", [[0, 1], [1, 6]], 2200, k => k * k);
+    bh.tween("grow", [[0, 1], [.2, 1.06], [.35, .97], [.5, 1.1], [.65, .95], [.8, 1.15], [1, 1.1]], 2200);
+    const shake = n => Array.from({ length: 40 }, (_, i) => {
+      const a = n(i / 39);
+      return { transform: `translate(${(Math.random() - .5) * a}px, ${(Math.random() - .5) * a}px)` };
+    });
+    const quake = shake(k => k * k * 16);
+    [space, hole].forEach(el => el.animate(quake, { duration: 2800 }));
+    await wait(2200);
+    // b. Implosion: the hole falls in on itself down to a point, its gas at its brightest
+    bh.tween("grow", [[0, 1.1], [1, 0]], 600, k => k * k * k);
+    bh.tween("heat", [[0, 3.2], [1, 5]], 600);
+    await wait(600);
+    // c. A held breath: darkness, and a single point of light, the core bouncing back
+    bh.destroy();
+    [crack, hole].forEach(el => el.remove());
+    const core = make("div", "sn-core");
+    core.animate([{ transform: "scale(0)" }, { transform: "scale(1)", offset: .3 }, { transform: "scale(.6)", offset: .7 },
+      { transform: "scale(2.5)" }], { duration: 550, easing: "ease-in", fill: "forwards" });
+    await wait(550);
+    // d. Detonation (supernova.js): flash, shock wave, ejecta, then the nebula and its pulsar
+    core.remove();
+    const sn = createSupernova();
+    if (sn) { document.body.append(sn.canvas); sn.start(); }
+    else { flash.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 700 }); }
+    space.animate(shake(k => 30 * (1 - k) ** 2), { duration: 900 });
+    await wait(1800);
+    // e. The page comes back out as the nebula spreads, and the night sky fades away
+    space.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 1500, fill: "forwards" }).finished.then(() => {
+      space.remove(); flash.remove();
+      document.body.classList.remove("rift");  // only now: until then the page must stay above the sky
+    });
+  } else {
+    hole.animate([{ transform: "scale(1)" }, { transform: "scale(1.4)", offset: .3 }, { transform: "scale(0)" }],
+      { duration: 500, easing: "ease-in", fill: "forwards" });
+    await wait(350);
+    flash.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 700 });
+    await wait(250);
+    [space, crack, hole].forEach(el => el.remove());
+    setTimeout(() => flash.remove(), 700);
+    document.body.classList.remove("rift");
+  }
 
-  // 5. Everything comes back out, bouncing into place, in confetti colours:
-  //    drop the "swallowed" state, then play each piece from the hole back to its own spot
-  //    (the cubic-bezier above 1 gives the overshoot bounce)
+  // 5. Everything comes back out, bouncing into place, in confetti colours: drop the "swallowed"
+  //    state and put the letters back together, then play each big piece from the hole back to
+  //    its own spot (the cubic-bezier above 1 gives the overshoot bounce)
   party();
-  flights.forEach(({ el, anim, dx, dy, spin }) => {
-    anim.cancel();
+  anims.forEach(a => a.cancel());
+  restore();
+  returning.forEach(el => {
+    const b = el.getBoundingClientRect();
+    const dx = hx - (b.left + b.width / 2), dy = hy - (b.top + b.height / 2), spin = 360 + Math.random() * 540;
     el.animate([
       { transform: `translate(${dx}px, ${dy}px) rotate(${-spin / 2}deg) scale(0)`, opacity: 0 },
       { transform: "none", opacity: 1 }
