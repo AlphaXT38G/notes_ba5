@@ -101,7 +101,8 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `ui.js` | light/dark toggle (`root` = `<html>`), Names / Previews switch, search |
 | `flames.js` | 🔥 flame mode, `setFire`, `crowded()` (anti pile-up helper), the 20-click easter egg |
 | `surprise.js` | random surprise banner |
-| `konami.js` | Konami code: black hole, confetti, party theme |
+| `blackhole.js` | `createBlackHole()`: the Konami black hole, ray-traced in WebGL (light bent by gravity, disk with Doppler beaming, lensed stars), on two canvases so the page falls between its sky and its disk |
+| `konami.js` | Konami code: black hole (CSS drawing as a fallback without WebGL), confetti, party theme |
 | `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()` |
 | `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable, neon sign going out |
 | `closing.js` | closing time: the life-size bartender (SVG layers pre-rendered as `<img>`, with the Gigachad photo `img/gigachad.webp` as head), swinging lamp, last call bell (Web Audio), typed speech, chalkboard with countdown, "Good night" |
