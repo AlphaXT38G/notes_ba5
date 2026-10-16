@@ -119,17 +119,35 @@ body[data-phase=christmas-night] #xsnowman .k4{stop-color:#566b90}
 @keyframes sm-wave{0%,70%,100%{transform:rotate(0)}74%,82%,90%{transform:rotate(-22deg)}78%,86%{transform:rotate(6deg)}}
 @media(max-width:1240px){#xsnowman{opacity:.5}}
 
-/* Santa's sleigh, small and far away, crossing the night sky (animated from js flySleigh);
-   Rudolph's nose glowing, a short golden trail behind */
+/* Santa's sleigh, far away, crossing the night sky (flown by js flySleigh): galloping reindeer
+   (legs swinging from shoulder and hip, bodies bobbing), Rudolph's nose pulsing, sparkles trailing */
 #sleigh{position:fixed;left:0;z-index:0;pointer-events:none}
 #sleigh svg{display:block;width:100%;overflow:visible}
 #sleigh.ltr svg{transform:scaleX(-1)}
-#sleigh .team path,#sleigh .santa{fill:rgba(205,218,245,.8)}
-#sleigh .sleigh{fill:rgba(230,190,110,.9)}
-#sleigh .reins{fill:none;stroke:rgba(205,218,245,.6);stroke-width:1}
-#sleigh .nose{fill:#ff3b3b;filter:drop-shadow(0 0 3px #ff3b3b)}
-#sleigh::after{content:"";position:absolute;left:100%;top:55%;width:80%;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(255,230,150,.7),transparent)}
-#sleigh.ltr::after{left:auto;right:100%;background:linear-gradient(-90deg,rgba(255,230,150,.7),transparent)}
+#sleigh .body{fill:url(#rd-body)}
+#sleigh .far .body{fill:url(#rd-far)}
+#sleigh .pale{fill:#d9c09a}
+#sleigh .far .pale{fill:#a88e6a}
+#sleigh .tail{fill:#f1e6d2}
+#sleigh .antler{fill:none;stroke:#e6d6b4;stroke-width:1.7;stroke-linecap:round}
+#sleigh .antler.back,#sleigh .far .antler{stroke:#a8916a}
+#sleigh .legs-f path,#sleigh .legs-h path{fill:none;stroke:#5a3118;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+#sleigh .far .legs-f path,#sleigh .far .legs-h path{stroke:#3b200e}
+#sleigh .strap{fill:none;stroke:#b3122e;stroke-width:2}
+#sleigh .bell{fill:#f0c24a}
+#sleigh .glow{fill:url(#rd-glow);animation:nose 1.4s ease-in-out infinite alternate}
+#sleigh .reins{fill:none;stroke:rgba(240,204,106,.75);stroke-width:1}
+#sleigh .runner{fill:none;stroke:#e3b341;stroke-width:2.6;stroke-linecap:round}
+#sleigh .sleigh-body{fill:url(#sl-red)}
+#sleigh .deer{animation:deer-bob .5s ease-in-out var(--b) infinite alternate}
+#sleigh .legs-f{transform-box:fill-box;transform-origin:100% 0;animation:leg-f .5s ease-in-out calc(var(--b) + var(--o,0s)) infinite alternate}
+#sleigh .legs-h{transform-box:fill-box;transform-origin:0 0;animation:leg-h .5s ease-in-out calc(var(--b) + var(--o,0s)) infinite alternate}
+#sleigh .spark{animation:spark .9s ease-in-out var(--s) infinite alternate}
+@keyframes deer-bob{from{transform:translateY(-1.5px)}to{transform:translateY(1.5px)}}
+@keyframes leg-f{from{transform:rotate(-18deg)}to{transform:rotate(14deg)}}
+@keyframes leg-h{from{transform:rotate(16deg)}to{transform:rotate(-14deg)}}
+@keyframes nose{from{opacity:.55}to{opacity:1}}
+@keyframes spark{from{opacity:.2}to{opacity:1}}
 
 /* Christmas turntable (bottom left): red lacquer and gold plinth with snow on the lid, a record
    with a red label and a white star, a candy-cane tonearm, holly on the corner. The YouTube

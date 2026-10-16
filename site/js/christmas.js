@@ -539,23 +539,62 @@ fxLayers.push({
   reset() { flakes.length = 0; flakes.w = 0; },
 });
 
-// Santa's sleigh: at night, now and then at random (every 40 s to 4 min), a small sleigh pulled by
-// four reindeer, Rudolph's nose glowing in front, crosses the sky far away: random height, size,
-// speed and direction, on a gentle arc, leaving a short golden trail.
-const REINDEER = x => `<g transform="translate(${x + 33},0) scale(-1,1)"><path d="M0,14C2,8 14,7 22,10L26,4 24,0 27,-1 29,3 31,-1 33,1 30,6 31,9C33,10 33,13 30,13L24,15C22,18 18,19 14,18L16,26 13,26 11,19 6,19 4,26 1,26 3,18C0,18-1,16 0,14Z"/></g>`;
+// Santa's sleigh: at night, now and then at random (every 40 s to 4 min), Santa's sleigh crosses
+// the sky far away: random height, size, speed and direction, on a gentle arc. Drawn flying to the
+// left: Rudolph alone in front, his red nose glowing, then two pairs of reindeer (the far one of each
+// pair darker and a little higher, for depth), all galloping (legs and bodies animated in CSS), in
+// red harnesses with gold bells; then the red and gold sleigh on curled runners, Santa holding the
+// reins, his sack of gifts behind him, and a trail of golden sparkles.
+const deer = (x, y, far, rudolph = false) => `<g transform="translate(${x},${y})"><g class="deer${far ? " far" : ""}" style="--b:${f1(-Math.random())}s">` +
+  // far legs (behind the body), antler behind
+  `<g class="legs-f" style="--o:-.15s"><path d="M22,27 15,35 9,33"/></g><g class="legs-h" style="--o:-.15s"><path d="M46,27 54,35 62,37"/></g>` +
+  `<path class="antler back" d="M14,1C14,-4 16,-9 21,-12M16,-5C18,-7 19,-8 18,-11M15,-2C12,-4 11,-7 12,-9"/>` +
+  `<path class="body" d="M16,16C20,11 32,10 44,11C52,11 57,15 56,21C55,27 49,30 41,30C33,31 24,31 18,28C13,26 12,20 16,16Z"/>` +
+  `<path class="body" d="M18,18C15,12 12,7 9,3L15,1C18,6 22,11 26,14Z"/>` +
+  `<path class="body" d="M9,3C7,0 3,0 0,2-3,4-3,7-1,8 2,9 6,8 9,7 12,6 13,4 12,2Z"/><path class="body" d="M12,1 16,-3 15,2Z"/>` +
+  `<path class="pale" d="M18,27C26,30 36,30 44,29 38,26 26,26 18,27ZM9,6C12,9 15,14 18,19 17,13 14,8 11,5Z"/>` +
+  `<path class="tail" d="M55,14c3,-3 7,-1 5,2 -1,1 -3,1 -5,0Z"/>` +
+  `<path class="antler" d="M11,0C10,-5 12,-10 17,-13M13,-6C15,-8 16,-9 15,-12M12,-3C9,-5 8,-8 9,-10"/>` +
+  `<circle cx="5" cy="2.5" r=".9" fill="#111"/>` +
+  // near legs, harness with bells
+  `<g class="legs-f"><path d="M18,26 12,34 6,31"/></g><g class="legs-h"><path d="M50,25 58,32 66,33"/></g>` +
+  `<path class="strap" d="M15,15C17,21 19,26 20,29M27,12C27,18 27,24 27,30"/><circle class="bell" cx="17.5" cy="21" r="1.6"/><circle class="bell" cx="27" cy="21" r="1.6"/>` +
+  (rudolph ? `<circle class="glow" cx="-2" cy="6" r="7"/><circle cx="-2" cy="6" r="2.4" fill="#ff2a2a"/><circle cx="-2.7" cy="5.3" r=".8" fill="#ffd0d0"/>`
+    : `<circle cx="-2" cy="6" r="1.4" fill="#1a0e08"/>`) + `</g></g>`;
 const sleighEl = document.createElement("div");
 sleighEl.id = "sleigh";
 sleighEl.setAttribute("aria-hidden", "true");
-sleighEl.innerHTML = `<svg viewBox="0 0 260 60"><g class="team">${[0, 38, 76, 114].map(REINDEER).join("")}</g>` +
-  `<path class="reins" d="M150,28C140,22 160,18 150,16M150,28C120,24 60,20 30,16"/>` +
-  `<path class="sleigh" d="M150,22h70c8,0 12,-12 22,-12v6c-6,0 -8,14 -20,14h-66ZM146,40h92c6,0 9,-3 12,-6l2,2c-3,4 -7,8 -14,8h-92ZM160,30v10M210,30v10"/>` +
-  `<path class="santa" d="M190,22c0,-10 4,-16 10,-16s10,6 10,16ZM197,6l8,-6 4,4ZM214,22c0,-8 4,-12 12,-12s10,6 8,12Z"/>` +
-  `<circle class="nose" cx="1.5" cy="11" r="2.6"/></svg>`;
+sleighEl.innerHTML = `<svg viewBox="-12 -34 452 100"><defs>` +
+  `<linearGradient id="rd-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a26a40"/><stop offset="1" stop-color="#5a3118"/></linearGradient>` +
+  `<linearGradient id="rd-far" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#76492a"/><stop offset="1" stop-color="#3b200e"/></linearGradient>` +
+  `<linearGradient id="sl-red" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2384f"/><stop offset=".55" stop-color="#b3122e"/><stop offset="1" stop-color="#6e0716"/></linearGradient>` +
+  `<radialGradient id="rd-glow"><stop offset="0" stop-color="rgba(255,60,60,.9)"/><stop offset="1" stop-color="rgba(255,60,60,0)"/></radialGradient>` +
+  `<radialGradient id="sl-spark"><stop offset="0" stop-color="#fff7d0"/><stop offset=".4" stop-color="rgba(255,215,110,.8)"/><stop offset="1" stop-color="rgba(255,215,110,0)"/></radialGradient></defs>` +
+  // golden sparkles trailing behind the sleigh
+  [[360, 44, 5], [374, 50, 4], [388, 42, 3.4], [400, 52, 3], [412, 46, 2.4], [424, 50, 2], [434, 44, 1.6]].map(([x, y, r], i) =>
+    `<circle class="spark" style="--s:${f1(-i * .23)}s" cx="${x}" cy="${y}" r="${r}" fill="url(#sl-spark)"/>`).join("") +
+  // reins from the sleigh to every harness
+  `<path class="reins" d="M276,10C220,6 140,4 70,14M276,10C230,4 150,0 82,8M276,10C210,10 120,12 20,16"/>` +
+  deer(156, -6, true) + deer(82, -6, true) + deer(148, 2, false) + deer(74, 2, false) + deer(0, 4, false, true) +
+  // the sleigh: runners, body with a scroll at the front, gold trim
+  `<path class="runner" d="M228,51C220,51 218,44 224,42 228,41 231,45 228,48M226,58H340C346,58 349,54 346,51M250,48 247,58M298,48V58M330,45 334,58"/>` +
+  `<path d="M318,20C316,2 326,-12 338,-12 350,-10 356,4 352,20Z" fill="#7a2e1c"/><path d="M326,-6C330,-2 342,-2 346,-8" stroke="#5a1f12" stroke-width="2" fill="none"/>` +
+  `<rect x="326" y="-22" width="12" height="11" fill="#1f7a3e"/><rect x="331" y="-22" width="2.4" height="11" fill="#e3b341"/><rect x="339" y="-18" width="10" height="9" fill="#e3b341"/><rect x="343" y="-18" width="2" height="9" fill="#c8102e"/>` +
+  // Santa: coat, belt, fur trims, beard, face, floppy hat trailing behind, arm forward on the reins
+  `<path d="M286,24C284,6 292,-6 304,-6S324,6 322,24Z" fill="url(#sl-red)"/><rect x="286" y="10" width="36" height="4.5" fill="#1b1b1b"/><rect x="301" y="9.4" width="6" height="5.6" fill="none" stroke="#e3b341" stroke-width="1.4"/>` +
+  `<path d="M302,-14C301,-24 310,-28 318,-22 323,-18 328,-12 331,-8L327,-6C323,-10 318,-14 314,-14Z" fill="url(#sl-red)"/><circle cx="330" cy="-6" r="3.4" fill="#fff"/>` +
+  `<circle cx="304" cy="-11" r="6.2" fill="#f2c7a2"/><path d="M296,-15C296,-18 312,-18 312,-15" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none"/>` +
+  `<path d="M297,-10C294,-2 300,5 306,3 312,5 316,-2 312,-10 309,-7 300,-7 297,-10Z" fill="#f4f6fa"/><circle cx="301" cy="-12" r=".9" fill="#222"/>` +
+  `<path d="M292,4C286,8 280,11 274,11" stroke="url(#sl-red)" stroke-width="6" stroke-linecap="round" fill="none"/><circle cx="273" cy="11" r="3.2" fill="#1b1b1b"/><path d="M278,9.5 280,13" stroke="#fff" stroke-width="2.4"/>` +
+  `<path class="sleigh-body" d="M236,30C232,22 238,14 248,16L262,20H318C324,8 336,2 348,6 342,10 340,18 340,28 340,40 330,48 316,48H250C240,48 236,40 236,30Z"/>` +
+  `<path d="M236,30C228,26 226,16 234,12 240,10 244,14 242,18" stroke="#e3b341" stroke-width="2.2" fill="none" stroke-linecap="round"/>` +
+  `<path d="M248,16 262,20H318C324,8 336,2 348,6" stroke="#e3b341" stroke-width="1.8" fill="none"/>` +
+  `<path d="M262,34C268,26 278,26 282,32 284,36 280,40 276,38M282,32C290,40 304,40 310,32 314,28 320,30 318,34" stroke="#f0cc6a" stroke-width="1.3" fill="none" stroke-linecap="round"/></svg>`;
 let sleighIn = 20 + Math.random() * 60;  // seconds before the next flight
 let sleighFlight = null;
 const flySleigh = () => {
   if (document.hidden || sleighEl.isConnected || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const ltr = Math.random() < .5, w = 70 + Math.random() * 60, y = 15 + Math.random() * 25, rise = (Math.random() - .5) * 10;
+  const ltr = Math.random() < .5, w = 130 + Math.random() * 70, y = 15 + Math.random() * 25, rise = (Math.random() - .5) * 10;
   sleighEl.style.cssText = `top:${f1(y)}vh;width:${f1(w)}px`;
   sleighEl.classList.toggle("ltr", ltr);  // flying left to right: the drawing is mirrored (CSS)
   const [from, to] = ltr ? [`-${f1(w + 40)}px`, "100vw"] : ["100vw", `-${f1(w + 40)}px`];
