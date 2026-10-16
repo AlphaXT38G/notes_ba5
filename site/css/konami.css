@@ -4,7 +4,7 @@ body.rift .wrap{position:relative;z-index:2}
 #void{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;background:radial-gradient(1.5px 1.5px at 8% 14%,#fff,transparent),radial-gradient(1.5px 1.5px at 23% 72%,#fff,transparent),radial-gradient(1.5px 1.5px at 37% 22%,#fff,transparent),radial-gradient(1.5px 1.5px at 52% 88%,#fff,transparent),radial-gradient(1.5px 1.5px at 66% 9%,#fff,transparent),radial-gradient(1.5px 1.5px at 78% 64%,#fff,transparent),radial-gradient(1.5px 1.5px at 91% 31%,#fff,transparent),radial-gradient(1.5px 1.5px at 15% 46%,#fff,transparent),radial-gradient(1.5px 1.5px at 44% 57%,#fff,transparent),radial-gradient(1.5px 1.5px at 84% 85%,#fff,transparent),radial-gradient(1.5px 1.5px at 59% 38%,#fff,transparent),radial-gradient(1.5px 1.5px at 29% 93%,#fff,transparent),radial-gradient(1.5px 1.5px at 71% 19%,#fff,transparent),radial-gradient(1.5px 1.5px at 96% 74%,#fff,transparent),radial-gradient(1.5px 1.5px at 5% 83%,#fff,transparent),radial-gradient(1.5px 1.5px at 48% 6%,#fff,transparent),radial-gradient(circle at 50% 50%,rgba(70,35,10,.45),rgba(2,2,6,.97) 60%)}
 /* Crack of light that tears the screen open before the black hole appears */
 #crack{position:fixed;left:50%;top:50%;z-index:3;width:3px;height:0;transform:translate(-50%,-50%);border-radius:2px;pointer-events:none;background:linear-gradient(#fff,#ffe2a8,#fff);box-shadow:0 0 12px 4px #ffc265,0 0 40px 14px #ff8a2a}
-/* Gargantua-like black hole (Interstellar), stacked in this order:
+/* Without WebGL, a CSS Gargantua-like black hole (Interstellar), stacked in this order:
    ::before  warm haze around everything
    .lens     back of the accretion disk, bent by gravity into arcs above and below the shadow
    .shadow   the black disk, with a thin bright photon ring at its edge
@@ -19,6 +19,13 @@ body.rift .wrap{position:relative;z-index:2}
 #hole .disk::before{content:"";position:absolute;inset:0 -50%;background:repeating-linear-gradient(90deg,transparent 0 9px,rgba(255,255,255,.1) 12px,transparent 17px,transparent 26px,rgba(255,240,200,.14) 30px,transparent 37px);animation:swirl 1.4s linear infinite}
 #hole .disk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.35),transparent 45%,rgba(60,20,0,.35))}
 @keyframes swirl{to{transform:translateX(-37px)}}
+/* Ray-traced black hole (blackhole.js): the sky canvas fills the void under the page, the disk
+   canvas covers the screen over it (transparent around the disk), and a tiny copy of it scaled up
+   and screen-blended over both makes the bloom */
+#hole.gl{inset:0;width:auto;height:auto;margin:0;transform:none}
+#hole.gl::before{content:none}
+#void canvas,#hole canvas{position:absolute;inset:0;width:100%;height:100%}
+#hole .bh-bloom{mix-blend-mode:screen;opacity:.45;filter:blur(6px)}
 /* White flash when the hole collapses, and the confetti canvas drawn on top of everything */
 #flash{position:fixed;inset:0;z-index:65;background:#fff;opacity:0;pointer-events:none}
 .confetti{position:fixed;inset:0;z-index:70;width:100%;height:100%;pointer-events:none}

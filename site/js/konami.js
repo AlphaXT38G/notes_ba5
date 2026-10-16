@@ -68,7 +68,11 @@ async function rift() {
   const wrap = document.querySelector(".wrap");
   document.body.classList.add("rift");
   const space = make("div", "void"), crack = make("div", "crack"), hole = make("div", "hole"), flash = make("div", "flash");
-  hole.innerHTML = '<i class="lens"></i><i class="shadow"></i><i class="disk"></i>';
+  // The ray-traced black hole (blackhole.js): its sky goes in the void under the page, its disk and
+  // shadow over the page. Without WebGL, the CSS drawing of it.
+  const bh = createBlackHole();
+  if (bh) { space.append(bh.back); hole.classList.add("gl"); hole.append(bh.front, bh.bloom); bh.start(); }
+  else hole.innerHTML = '<i class="lens"></i><i class="shadow"></i><i class="disk"></i>';
 
   // 1. The rift tears open: darkness falls, a crack of light splits the screen, the page trembles
   space.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, fill: "forwards" });
@@ -83,7 +87,8 @@ async function rift() {
   await wait(800);
 
   // 2. The black hole opens
-  hole.animate([{ transform: "scale(0)" }, { transform: "scale(1.12)", offset: .7 }, { transform: "scale(1)" }],
+  if (bh) bh.size([[0, 0], [.7, 1.12], [1, 1]], 1100, k => 1 - (1 - k) ** 3);
+  else hole.animate([{ transform: "scale(0)" }, { transform: "scale(1.12)", offset: .7 }, { transform: "scale(1)" }],
     { duration: 900, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" });
   await wait(400);
 
@@ -104,11 +109,13 @@ async function rift() {
   await Promise.all(flights.map(f => f.anim.finished));
 
   // 4. The hole collapses in a flash of light
-  hole.animate([{ transform: "scale(1)" }, { transform: "scale(1.4)", offset: .3 }, { transform: "scale(0)" }],
+  if (bh) bh.size([[0, 1], [.3, 1.4], [1, 0]], 500, k => k * k);
+  else hole.animate([{ transform: "scale(1)" }, { transform: "scale(1.4)", offset: .3 }, { transform: "scale(0)" }],
     { duration: 500, easing: "ease-in", fill: "forwards" });
   await wait(350);
   flash.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 700 });
   await wait(250);
+  if (bh) bh.destroy();
   [space, crack, hole].forEach(el => el.remove());
   setTimeout(() => flash.remove(), 700);
   document.body.classList.remove("rift");
