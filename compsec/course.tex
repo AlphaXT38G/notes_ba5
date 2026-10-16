@@ -2158,4 +2158,27 @@ key is the only key that opens it. Anyone can lock a box for Alice, only Alice c
 it.
 \end{rembox}
 
+\begin{defnbox}[title=Digital signatures (signing and verification)]
+Bob \textbf{signs} with his \textbf{secret} key, Alice \textbf{verifies} with Bob's
+\textbf{public} key (from the PKI):
+\[
+  S = \mathrm{Sign}_{SK_{\text{Bob}}}(M), \qquad
+  V_{PK_{\text{Bob}}}(M, S) = \checkmark .
+\]
+\textbf{Unforgeability}: Eve cannot forge a signature $S$ on $M$ that verifies without
+knowing $SK$. Example: \textbf{NIST DSA}. \textbf{Don't design your own!}
+\end{defnbox}
+
+\begin{rembox}[title=Encryption vs.\ signature: who uses which key?]
+\begin{center}
+\begin{tabular}{l|c|c}
+                   & \textbf{uses $PK$} & \textbf{uses $SK$} \\ \hline
+Encryption         & sender encrypts    & receiver decrypts  \\
+Signature          & receiver verifies  & sender signs
+\end{tabular}
+\end{center}
+Encryption: \emph{anyone} can write to Alice, only Alice can read. Signature: only Bob can
+write (sign), \emph{anyone} can check it was Bob.
+\end{rembox}
+
 \end{document}
