@@ -1,31 +1,19 @@
 // ── Jazz bar (screens "evening" and "closing", body.night) ──────────────────────────────────
 // From 21:30 the page turns into a jazz bar (css/jazz.css): warm light, neon title, smoke and
-// floating notes, a turntable playing jazz. At 0:45 the bar closes until 1:00, then the metal
-// show takes over (metal.js).
+// floating notes, a turntable playing jazz. At 0:45 the bar closes until 1:00 (the bartender's
+// announcement is in closing.js), then the metal show takes over (metal.js).
 SCREENS.evening = { className: "night", subtitle: null, transition: "night" };
 SCREENS.closing = { className: "night", subtitle: "Last call was a while ago.", transition: "night" };
 SCHEDULE.push([21 * 3600 + 30 * 60, 45 * 60, "evening"], [45 * 60, 3600, "closing"]);
 
 // Closing time: wrap each letter of the title in a span (.l, with its index --i) so the CSS can
-// turn them off one by one, then bring the bartender in once the sign is dark. Any other phase
-// puts the title back as plain text and sends the bartender away. A click on him dismisses him.
+// turn them off one by one; once the sign is dark the bartender comes to close (closing.js). Any
+// other phase puts the title back as plain text.
 const title = document.querySelector("h1"), titleText = title.textContent;
-let barman = null, barmanTimer = null;
 document.addEventListener("phase", e => {
-  clearTimeout(barmanTimer);
-  barman?.remove();
-  barman = null;
   if (e.detail !== "closing") { title.textContent = titleText; return; }
   title.innerHTML = [...titleText].map((c, i) => `<span class="l" style="--i:${i}">${c === " " ? "&nbsp;" : c}</span>`).join("");
   title.style.setProperty("--n", titleText.length);
-  barmanTimer = setTimeout(() => {
-    barman = document.createElement("div");
-    barman.id = "barman";
-    barman.title = "Click to close";
-    barman.innerHTML = '<span class="who">🧑‍🍳</span><span class="say">On ferme. Va dormir.<small>The bar reopens at 21:30</small></span>';
-    barman.addEventListener("click", () => barman.remove());
-    document.body.append(barman);
-  }, (1 + (titleText.length + 1) * .7 + .5) * 1000);
 });
 
 

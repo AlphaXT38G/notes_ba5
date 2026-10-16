@@ -1,0 +1,11 @@
+/* Closing time (body.night[data-phase=closing], see js/closing.js): over the whole page the room
+   darkens and the bartender rises from the bottom of the screen, life-size */
+#closing{position:fixed;inset:0;z-index:55;overflow:hidden;color:#f3e3c3}
+#closing .shade{position:absolute;inset:0;background:radial-gradient(70% 70% at 45% 40%,rgba(24,18,30,.72),rgba(4,3,8,.95));opacity:0;animation:cl-fade .9s ease forwards}
+#closing .stage{position:absolute;left:50%;bottom:0;width:min(1100px,100%);display:flex;align-items:flex-end;justify-content:center;gap:1rem;padding:0 1rem;transform:translateX(-50%)}
+#closing .bt{display:block;flex:none;height:min(84vh,720px);width:auto;margin-bottom:-2px;filter:drop-shadow(0 0 40px rgba(0,0,0,.7));animation:cl-rise 1.4s cubic-bezier(.2,.9,.3,1.08) .35s both}
+/* Moving parts of the drawing: their origins are in the SVG's own units (viewBox 0 0 520 600) */
+#closing .lid{transform:scaleY(0);transform-origin:center 138px}
+#closing .mouth{transform:scaleY(.12);transform-origin:260px 207px}
+@keyframes cl-fade{to{opacity:1}}
+@keyframes cl-rise{from{transform:translateY(105%)}}
