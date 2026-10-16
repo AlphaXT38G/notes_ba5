@@ -62,16 +62,33 @@
 @keyframes cl-ring{from{transform:rotate(-16deg)}to{transform:rotate(16deg)}}
 @keyframes cl-fade{to{opacity:1}}
 @keyframes cl-rise{from{transform:translateY(105%)}}
-/* Phones: what he says on top, him below, smaller; no lamp (its cord would cross the bubble) */
-@media(max-width:760px){
+/* Phones and other screens taller than wide (tablets): what he says on top, him below, smaller;
+   no lamp (its cord would cross the bubble) */
+@media(max-width:760px),(max-aspect-ratio:9/10){
   #closing .stage{flex-direction:column-reverse;align-items:center;gap:.6rem}
   #closing .talk{flex:none;align-self:auto;width:100%;max-width:24rem;margin:0}
-  #closing .bt{height:min(48vh,100vw)}
+  /* Sizes follow the screen height, so that the bubble, the board and him fit even on a small
+     phone (320 x 640) */
+  #closing .bt{height:min(40vh,92vw)}
   #closing .lamp{display:none}
-  #closing .bubble{font-size:1.05rem;padding:.8rem 1.1rem;transform-origin:50% 100%}
+  #closing .bubble{font-size:clamp(.85rem,2.3vh,1.05rem);line-height:1.35;padding:.7rem 1rem;transform-origin:50% 100%}
   #closing .bubble::before{left:50%;top:100%;margin-left:-.6rem;border:.6rem solid transparent;border-top:.8rem solid #fff8ec;border-bottom:0}
-  #closing .board{margin-top:.7rem;font-size:.92rem;padding:.7rem 1rem .8rem}
-  #closing .board h2{font-size:1.2rem}
+  #closing .board{margin-top:.6rem;font-size:clamp(.78rem,2vh,.92rem);line-height:1.35;padding:.55rem .9rem .65rem;border-width:.5rem}
+  #closing .board h2{font-size:clamp(1rem,2.5vh,1.2rem);margin-bottom:.2rem}
+  #closing .night-btn{margin-top:.5rem}
+}
+/* Phones held sideways (wider than tall, short): him at full height, smaller words beside him,
+   back in a row whatever the width */
+@media(max-height:560px) and (min-aspect-ratio:1/1){
+  #closing .stage{flex-direction:row;align-items:flex-end;gap:.6rem}
+  #closing .bt{height:94vh}
+  #closing .lamp{display:none}
+  #closing .talk{flex:0 1 21rem;align-self:flex-start;width:auto;margin:3vh 0 0}
+  #closing .bubble{font-size:.85rem;line-height:1.35;padding:.55rem .9rem;transform-origin:0 2rem}
+  #closing .bubble::before{left:-.9rem;top:1rem;margin-left:0;border:.6rem solid transparent;border-right:.9rem solid #fff8ec;border-left:0}
+  #closing .board{margin-top:.6rem;font-size:.8rem;line-height:1.35;padding:.45rem .8rem .55rem;border-width:.45rem}
+  #closing .board h2{font-size:1rem;margin-bottom:.1rem}
+  #closing .night-btn{margin-top:.4rem;font-size:.85rem}
 }
 /* Reduced motion: no rising, swinging nor nodding; everything is simply there */
 @media(prefers-reduced-motion:reduce){
