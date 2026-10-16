@@ -6,18 +6,15 @@
 // "Good night" sends him away, waving; any other phase sends him away at once.
 //
 // He is one SVG drawing built from code: shirt and waistcoat, bow tie, a towel over his left arm,
-// his right arm raised with a brass hand bell, and the head of the Gigachad meme, drawn in black
-// and white like its photo (square jaw, slicked-back hair, side glance, huge neck), with moving
-// parts (.lid, .mouth).
+// his right arm raised with a brass hand bell, and the head of the Gigachad meme: the photo
+// site/img/gigachad.webp (copied to dist/img/ by the build), cut out on a transparent background.
+// Skin and neck are grey to match it. Its mouth cannot move, so he nods while talking (.head).
 const BARTENDER = `<svg class="bt" viewBox="0 0 520 600" aria-hidden="true">
 <defs>
-<linearGradient id="bt-skin" x1="0" x2="1"><stop offset="0" stop-color="#3e3e3e"/><stop offset=".4" stop-color="#8e8e8e"/><stop offset=".72" stop-color="#d6d6d6"/><stop offset="1" stop-color="#7c7c7c"/></linearGradient>
-<filter id="bt-soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3.5"/></filter>
 <linearGradient id="bt-arm" x1="0" x2="1"><stop offset="0" stop-color="#5a5a5a"/><stop offset=".5" stop-color="#a8a8a8"/><stop offset="1" stop-color="#555"/></linearGradient>
 <linearGradient id="bt-shirt" x1="0" x2="1"><stop offset="0" stop-color="#cfc9bf"/><stop offset=".45" stop-color="#fbf8f2"/><stop offset="1" stop-color="#c9c2b6"/></linearGradient>
 <linearGradient id="bt-vest" x1="0" x2="1"><stop offset="0" stop-color="#0b0a0b"/><stop offset=".5" stop-color="#2b2427"/><stop offset="1" stop-color="#0b0a0b"/></linearGradient>
 <linearGradient id="bt-brass" x1="0" x2="1"><stop offset="0" stop-color="#6e470d"/><stop offset=".3" stop-color="#f6d27a"/><stop offset=".55" stop-color="#d9a637"/><stop offset="1" stop-color="#5e3b0a"/></linearGradient>
-<linearGradient id="bt-hair" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e2e2e"/><stop offset="1" stop-color="#0e0e0e"/></linearGradient>
 <linearGradient id="bt-bow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b5283f"/><stop offset="1" stop-color="#6e1222"/></linearGradient>
 </defs>
 <g class="left-arm">
@@ -42,31 +39,7 @@ const BARTENDER = `<svg class="bt" viewBox="0 0 520 600" aria-hidden="true">
 <path d="M232,250 260,282 240,294 222,258ZM288,250 260,282 280,294 298,258Z" fill="#fffdf8" stroke="#cfc8bc"/>
 <path d="M260,274 226,258 229,294ZM260,274 294,258 291,294Z" fill="url(#bt-bow)"/>
 <rect x="251" y="265" width="18" height="18" rx="5" fill="#8f1a2e"/>
-<ellipse cx="208" cy="164" rx="9" ry="17" fill="#4e4e4e"/><ellipse cx="326" cy="160" rx="6" ry="15" fill="#6a6a6a"/>
-<path d="M210,118Q206,160 212,196L224,236Q244,266 276,266Q306,262 317,236L325,200Q331,160 323,116Q314,70 266,66Q214,70 210,118Z" fill="url(#bt-skin)"/>
-<g filter="url(#bt-soft)">
-<path d="M212,120Q208,170 216,200L228,236Q240,256 256,262Q236,230 232,200Q226,160 232,120Z" fill="#1c1c1c" opacity=".55"/>
-<ellipse cx="236" cy="190" rx="10" ry="18" fill="#222" opacity=".5"/>
-<ellipse cx="306" cy="186" rx="7" ry="16" fill="#2a2a2a" opacity=".45"/>
-<path d="M292,120Q300,150 296,176" stroke="#f2f2f2" stroke-width="8" opacity=".35"/>
-<ellipse cx="282" cy="250" rx="18" ry="6" fill="#efefef" opacity=".25"/>
-</g>
-<path d="M212,190Q214,214 224,236Q244,266 276,266Q306,262 317,236L325,196Q316,214 302,216Q292,206 278,204Q264,202 252,206Q240,214 228,210Q216,204 212,190Z" fill="#181818" opacity=".5"/>
-<path d="M210,124Q200,70 250,50Q296,38 324,78Q336,100 326,128Q320,96 300,86Q268,74 238,86Q214,98 212,126Z" fill="url(#bt-hair)"/>
-<path d="M216,92Q246,58 306,64M220,102Q254,72 316,78M228,108Q262,86 320,92M240,96Q270,70 312,70" fill="none" stroke="#a0a0a0" stroke-width="2" opacity=".5"/>
-<g filter="url(#bt-soft)"><ellipse cx="246" cy="146" rx="15" ry="8" fill="#141414" opacity=".8"/><ellipse cx="297" cy="145" rx="13" ry="8" fill="#141414" opacity=".7"/></g>
-<path d="M226,138Q244,130 262,136L261,141Q244,137 228,143ZM280,136Q296,129 314,134L313,139Q297,136 281,141Z" fill="#0c0c0c"/>
-<path d="M240,147Q247,144 254,147Q247,149 240,147ZM291,146Q298,143 304,146Q298,148 291,146Z" fill="#bdbdbd"/>
-<g class="eyes"><circle cx="250" cy="146.6" r="1.9" fill="#050505"/><circle cx="300" cy="145.6" r="1.8" fill="#050505"/></g>
-<ellipse class="lid" cx="247" cy="147" rx="9" ry="4" fill="#3c3c3c"/><ellipse class="lid" cx="297" cy="146" rx="8" ry="4" fill="#4a4a4a"/>
-<path d="M272,138 268,184Q276,192 288,186" fill="none" stroke="#1e1e1e" stroke-width="2.6"/>
-<path d="M276,142 279,178" stroke="#f4f4f4" stroke-width="3.2" opacity=".5"/>
-<ellipse cx="281" cy="188" rx="4" ry="1.8" fill="#0e0e0e"/>
-<g class="mouth"><ellipse cx="274" cy="217" rx="11" ry="7" fill="#0e0e0e"/><rect x="266" y="211" width="16" height="3" rx="1.5" fill="#d0d0d0"/></g>
-<path d="M258,215Q274,218 292,211" fill="none" stroke="#0e0e0e" stroke-width="2.6"/>
-<path d="M292,209Q297,213 294,219" fill="none" stroke="#1a1a1a" stroke-width="1.8"/>
-<ellipse cx="275" cy="226" rx="9" ry="2.4" fill="#c4c4c4" opacity=".35"/>
-<path d="M276,246V258" stroke="#111" stroke-width="2"/>
+<g class="head"><image href="img/gigachad.webp" x="178" y="44" width="178" height="229"/></g>
 <g class="arm">
 <path d="M170,300 80,345" stroke="url(#bt-shirt)" stroke-width="56" stroke-linecap="round"/>
 <path d="M150,296Q130,318 112,316M136,330Q118,340 104,334" fill="none" stroke="#bdb5a8" stroke-width="2.5"/>
@@ -128,7 +101,7 @@ const ringBell = (strokes = 4) => {
   setTimeout(() => ac.close(), strokes * 300 + 2500);
 };
 
-// What he says, typed letter by letter in his speech bubble while his mouth moves (.talking)
+// What he says, typed letter by letter in his speech bubble while he nods (.talking)
 const CLOSING_WORDS = ["Mesdames, messieurs… on ferme !", "Dernier verre servi, les chaises montent sur les tables.",
   "Rentrez bien. Le jazz reprend demain soir, 21h30."];
 const say = (lines, done) => {

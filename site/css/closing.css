@@ -46,11 +46,9 @@
 @keyframes cl-lift{to{transform:translateY(-110%)}}
 @keyframes cl-unfade{from{opacity:1}to{opacity:0}}
 /* Moving parts of the drawing: their origins are in the SVG's own units (viewBox 0 0 520 600) */
-#closing .lid{transform:scaleY(0);transform-origin:center 138px;animation:cl-blink 4.3s 2s infinite}
-@keyframes cl-blink{0%,93%,100%{transform:scaleY(0)}96%{transform:scaleY(1)}}
-#closing .mouth{transform:scaleY(.12);transform-origin:274px 212px}
-#closing.talking .mouth{animation:cl-talk .19s ease-in-out infinite alternate}
-@keyframes cl-talk{from{transform:scaleY(.15)}to{transform:scaleY(1)}}
+#closing .head{transform-origin:262px 262px}
+#closing.talking .head{animation:cl-nod .45s ease-in-out infinite alternate}
+@keyframes cl-nod{from{transform:rotate(-1.5deg)}to{transform:rotate(2deg) translateY(-2px)}}
 /* Last call: the bell swings from his hand, its clapper the other way, his arm shakes with it */
 #closing .arm{transform-origin:170px 300px}
 #closing .bell{transform-origin:102px 206px}
@@ -73,7 +71,7 @@
   #closing .board{margin-top:.7rem;font-size:.92rem;padding:.7rem 1rem .8rem}
   #closing .board h2{font-size:1.2rem}
 }
-/* Reduced motion: no rising, swinging, blinking nor talking; everything is simply there */
+/* Reduced motion: no rising, swinging nor nodding; everything is simply there */
 @media(prefers-reduced-motion:reduce){
   #closing *,#closing .bubble.on,#closing .board.on{animation:none!important}
   #closing .shade{opacity:1}
