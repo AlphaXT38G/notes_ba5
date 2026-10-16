@@ -17,7 +17,7 @@
 const BTR_MATS = {
   skin: ["#8e8e8e", [70, 95, 0], [255, 0, 0]],
   shirt: ["#d8d8d4", [22, 40, 0], [0, 255, 0]],
-  vest: ["#2b2b2f", [45, 70, 0], [0, 0, 255]],
+  vest: ["#3a3a40", [50, 75, 0], [0, 0, 255]],
   satin: ["#141416", [255, 205, 0], [0, 0, 0]],
   button: ["#0d0d0e", [255, 235, 0], [0, 0, 0]],
   shell: ["#f4f2ec", [200, 220, 0], [0, 0, 0]],
@@ -103,13 +103,17 @@ const BTR_BODY = btrLayer([
   btrUp(`<ellipse cx="200" cy="370" rx="72" ry="50"/><ellipse cx="324" cy="370" rx="72" ry="50"/>`, 22, .3) +
   btrUp(`<ellipse cx="262" cy="520" rx="96" ry="90"/>`, 36, .16) +
   btrDown(`<path d="M262,318V430" stroke="#000" stroke-width="10"/>`, 8, .35) +
-  btrDown(`<path d="M150,412 Q200,426 250,416 M274,416 Q324,426 374,412" stroke="#000" stroke-width="12" fill="none"/>`, 10, .3) +
+  btrDown(`<path d="M150,404 Q200,428 250,418 M274,418 Q324,428 374,404" stroke="#000" stroke-width="16" fill="none"/>`, 14, .18) +
   // Neck: the two big muscles from behind the ears down to the collar, the Adam's apple
   btrUp(`<path d="M222,212 L250,290 M302,212 L274,290" stroke="#fff" stroke-width="16"/>`, 6, .16) +
   btrUp(`<ellipse cx="262" cy="262" rx="8" ry="11"/>`, 4, .08) +
   // Waistcoat pulled tight: strain folds from each button, folds at the sides and the armholes
-  btrDown(BTR_VEST_BUTTONS.map(y => `<path d="M256,${y} Q222,${y - 8} 186,${y - 22} M268,${y} Q302,${y - 8} 338,${y - 22}" stroke="#000" stroke-width="5" fill="none"/>`).join(""), 3, .5) +
-  btrUp(BTR_VEST_BUTTONS.map(y => `<path d="M252,${y + 6} Q222,${y} 192,${y - 10} M272,${y + 6} Q302,${y} 332,${y - 10}" stroke="#fff" stroke-width="4" fill="none"/>`).join(""), 3, .12) +
+  // (strongest at the top button, where the chest pulls; lower down, softer and uneven, and the
+  // cloth hangs in a few vertical folds)
+  btrDown(`<path d="M256,452 Q224,440 184,416 M268,452 Q302,442 342,420 M256,488 Q230,482 200,470 M268,488 Q300,484 326,474 M266,524 Q292,522 314,514" stroke="#000" stroke-width="5" fill="none"/>`, 3, .5) +
+  btrUp(`<path d="M252,460 Q224,450 190,428 M272,460 Q302,452 336,432 M252,496 Q230,490 206,480" stroke="#fff" stroke-width="4" fill="none"/>`, 3, .14) +
+  btrDown(`<path d="M190,500 Q186,550 192,600 M334,510 Q338,556 332,600 M228,540 Q224,570 230,600" stroke="#000" stroke-width="7" fill="none"/>`, 6, .3) +
+  btrUp(`<path d="M204,510 Q200,556 206,600 M320,520 Q324,560 318,600" stroke="#fff" stroke-width="6" fill="none"/>`, 6, .14) +
   btrDown(`<path d="M168,356 Q160,400 150,440 M356,356 Q364,400 374,440" stroke="#000" stroke-width="8" fill="none"/>`, 5, .4) +
   btrDown(`<path d="M168,500 L214,493 M310,493 L356,500" stroke="#000" stroke-width="5"/>`, 1, .6) +
   btrUp(`<path d="M168,508 L214,501 M310,501 L356,508" stroke="#fff" stroke-width="3"/>`, 1, .1) +
