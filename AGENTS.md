@@ -11,7 +11,7 @@ LaTeX notes for the BA5 IN semester at EPFL. `build.py` compiles every subject t
 runs the build and publishes `dist/` at <https://alphaxt38g.github.io/notes_ba5/>.
 
 The index page has grown a lot of personality: a flame mode, a jazz bar at night, a metal show at
-01:00, an epic finale, easter eggs. Most of the code is there, in `site/`.
+01:00, an epic finale, Christmas screens in December, easter eggs. Most of the code is there, in `site/`.
 
 ## Repository layout
 
@@ -62,9 +62,12 @@ The night screens follow the clock. Force one with the URL:
 | `?night=evening` / `?night=closing` | jazz bar / bar closing |
 | `?night=metal` | metal show (does not end by itself when forced) |
 | `?night=epic` | epic finale (until "Back to normal") |
+| `?night=christmas` / `?night=christmas-night` | Christmas day / Christmas night |
 
 Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑↑↓↓←→←→BA,
-and a random surprise banner on some visits.
+a random surprise banner on some visits, and on the Christmas night a small golden sax hidden
+among the tree ornaments (on the garland on narrow screens) that opens the jazz bar; a little fir
+in the bar's bottom right corner brings Christmas back.
 
 ## How the index page is built
 
@@ -94,6 +97,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()` |
 | `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable, bartender |
 | `fx.js` | the effects canvas: `fxLayers`, `blob()`, the animation loop |
+| `christmas.js` | Christmas screens: date override, garland, winter scene and tree, tree lights canvas, snow, sleigh, music, hidden sax |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song |
 | `epic.js` | epic finale: blue fire, motes, rune circle, "More epicness ?", "Back to normal" |
 | `start.js` | **last**: first `applyScreen()`, then the every-second clock check |
@@ -101,7 +105,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 ### CSS files, in cascade order
 
 `base.css` (layout, cards, search, previews) → `flames.css` → `surprise.css` → `jazz.css` →
-`metal.css` → `epic.css` → `screens.css` (effects canvas, view transitions) → `konami.css`.
+`metal.css` → `epic.css` → `christmas.css` → `screens.css` (effects canvas, view transitions) → `konami.css`.
 The Konami file is last on purpose: during its animation `body.rift .wrap` must win over every
 theme's `.wrap` rule.
 
@@ -139,6 +143,13 @@ Current screens:
 | `closing` | `night` | 00:45 – 01:00 | `jazz.js`, `jazz.css` |
 | `metal` | `metal` | 01:00:00 – 01:01:51, or 20 flame clicks | `metal.js`, `metal.css` |
 | `epic` | `epic` | after a metal show, if "More epicness ?" was clicked | `epic.js`, `epic.css` |
+| `christmas` | `christmas` | Dec 10 – Jan 3, 06:00 – 18:00 (replaces the day) | `christmas.js`, `christmas.css` |
+| `christmas-night` | `christmas` | Dec 10 – Jan 3, 18:00 – 06:00 (replaces the day and the jazz bar) | `christmas.js`, `christmas.css` |
+
+The Christmas screens depend on the date, so they are an override rather than a `SCHEDULE` slot:
+it only rewrites "no screen" and the jazz screens, and `christmas.js` is loaded before `metal.js`,
+so the metal show (01:00 or easter egg) and the epic finale still take over. A forced `?night=`
+turns it off, except `?night=christmas` / `?night=christmas-night` themselves.
 
 ### Adding a new screen, step by step
 

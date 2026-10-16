@@ -1,0 +1,136 @@
+/* Christmas (body.christmas, December 10 - January 3, see js/christmas.js). Day (06:00 - 18:00):
+   a pale winter sky over snowy mountains, Christmas red and gold. Night (christmas-night): a deep
+   blue starry sky with the moon, gold accents, the garland and the tree lit up. Every colour
+   token is set: the visitor may be in light or dark mode. */
+body.christmas{--bg:#eaf2fa;--fg:#1d2433;--card:rgba(255,255,255,.93);--line:#d5e1ee;--mut:#5b6a80;--acc:#b3122e;--acc-bg:#fde7eb;--new:#fff;--new-bg:#c8102e;background:var(--bg)}
+body.christmas::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(#c9def2,#eaf2fa 55%,#f5f9fd)}
+body.christmas .wrap{position:relative;z-index:1;padding-top:6.2rem}
+body.christmas[data-phase=christmas-night]{--bg:#0a1324;--fg:#eef2f8;--card:rgba(16,28,50,.9);--line:rgba(180,210,255,.15);--mut:#9fb0c8;--acc:#f2c14e;--acc-bg:rgba(242,193,78,.12);--new:#fff;--new-bg:#c8102e}
+/* Night sky: stars, the moon in the top left with its halo, a cold glow over the mountains */
+body.christmas{--moon:radial-gradient(circle at 13% 15%,#fffbe6 0 2.1rem,rgba(255,248,215,.35) 2.3rem,rgba(255,248,215,.08) 5rem,transparent 9rem)}
+@media(max-width:700px){body.christmas{--moon:linear-gradient(transparent,transparent)}}  /* no room beside the title */
+body.christmas[data-phase=christmas-night]::before{background:var(--moon),radial-gradient(1.5px 1.5px at 8% 32%,#fff,transparent),radial-gradient(1px 1px at 22% 8%,#fff,transparent),radial-gradient(1.5px 1.5px at 31% 26%,#fff,transparent),radial-gradient(1px 1px at 42% 12%,#fff,transparent),radial-gradient(1.5px 1.5px at 55% 30%,#fff,transparent),radial-gradient(1px 1px at 63% 6%,#fff,transparent),radial-gradient(1.5px 1.5px at 74% 20%,#fff,transparent),radial-gradient(1px 1px at 86% 10%,#fff,transparent),radial-gradient(1.5px 1.5px at 93% 34%,#fff,transparent),radial-gradient(1px 1px at 37% 40%,#fff,transparent),radial-gradient(1px 1px at 68% 44%,#fff,transparent),radial-gradient(1px 1px at 4% 52%,#fff,transparent),radial-gradient(80% 40% at 50% 100%,rgba(90,130,200,.25),transparent 70%),linear-gradient(#050b18,#0c1830 60%,#13254a)}
+
+/* Title: Christmas red, serif italic, with a sprig of holly; gold and glowing at night */
+body.christmas h1{font:italic 700 2.5rem Georgia,"Palatino Linotype",serif;color:#b3122e;letter-spacing:.01em;text-shadow:0 2px 0 rgba(255,255,255,.8)}
+body.christmas h1::after{content:"";display:inline-block;width:1.5em;height:1em;margin-left:.35em;vertical-align:-.05em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 26'%3E%3Cpath d='M20 14C14 4 6 8 1 4c3 5 1 8 5 10-3 2 0 6-2 10 6-4 10-2 16-10z' fill='%231f7a3e'/%3E%3Cpath d='M20 14c6-10 14-6 19-10-3 5-1 8-5 10 3 2 0 6 2 10-6-4-10-2-16-10z' fill='%2317643a'/%3E%3Ccircle cx='17' cy='15' r='3' fill='%23d6203a'/%3E%3Ccircle cx='23' cy='15' r='3' fill='%23c8102e'/%3E%3Ccircle cx='20' cy='11' r='3' fill='%23e0263f'/%3E%3C/svg%3E") center/contain no-repeat}
+body.christmas[data-phase=christmas-night] h1{color:#ffd86a;text-shadow:0 0 6px rgba(255,200,90,.55),0 0 22px rgba(255,170,60,.35)}
+body.christmas .sub{font:italic 1.05rem Georgia,serif;color:var(--mut)}
+/* Cards: snowy paper panels, with snow piled on their top edge */
+body.christmas section{position:relative;background:var(--card);border-radius:.5rem .7rem .7rem .5rem;padding:.9rem 1rem .6rem;box-shadow:0 6px 20px rgba(30,60,110,.12)}
+body.christmas[data-phase=christmas-night] section{box-shadow:0 8px 26px rgba(0,0,0,.45),0 0 0 1px rgba(255,216,106,.07)}
+body.christmas section::before{content:"";position:absolute;left:-4px;right:-2px;top:-9px;height:16px;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 16' preserveAspectRatio='none'%3E%3Cpath d='M0 16V9c6-6 12-7 18-3 5-6 13-7 19-1 6-5 14-6 20 0 5-5 14-6 20-1 6-5 13-5 18 1 6-4 13-6 18-1 3-2 5-2 7-1v13z' fill='%23fff'/%3E%3C/svg%3E") 0 0/120px 16px repeat-x;filter:drop-shadow(0 2px 1px rgba(90,120,170,.25))}
+body.christmas[data-phase=christmas-night] section::before{opacity:.92;filter:drop-shadow(0 2px 1px rgba(0,0,0,.4))}
+body.christmas .links{border-top-color:var(--line)}
+body.christmas .links a:hover,body.christmas .links a:focus-visible{background:var(--acc-bg)}
+/* "New" badge: a red gift tag with a gold edge; progress bars striped like candy canes */
+body.christmas .new{border:1px solid #e9b949;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+body.christmas .bar{background:rgba(127,140,160,.22)}
+body.christmas .bar span{background:repeating-linear-gradient(-45deg,var(--c) 0 5px,rgba(255,255,255,.85) 5px 9px)}
+body.christmas #search,body.christmas .view,body.christmas .tools button{box-shadow:0 2px 8px rgba(30,60,110,.1)}
+body.christmas footer::after{content:" · Merry Christmas, and happy revising!"}
+body.christmas[data-phase=christmas-night] footer{color:#b9c6da}
+
+/* Garland across the top (js buildGarland): fir swags, snow, red bows, glass bulbs */
+#garland{position:absolute;left:0;right:0;top:0;height:100px;z-index:3;pointer-events:none;overflow:hidden}
+#garland svg{display:block}
+#garland .fir{fill:none;stroke:#123f22;stroke-width:15;stroke-linecap:round}
+#garland .needles{fill:none;stroke-width:2.2;stroke-linecap:round}
+#garland .snow circle{fill:#fff}
+#garland .bow path,#garland .bow circle{fill:#c8102e;stroke:#7d0a1d;stroke-width:1}
+#garland .wire{fill:none;stroke:#0d2616;stroke-width:1.6}
+#garland .cap{fill:#3c4a3e}
+#garland .gloss{fill:#fff;opacity:.55}
+#garland .halo,#garland .lit{opacity:0}
+/* At night the bulbs light up: lit glass and a halo, each twinkling at its own pace (--t, --d) */
+body[data-phase=christmas-night] #garland .lit{opacity:1;animation:twinkle var(--t) ease-in-out var(--d) infinite}
+body[data-phase=christmas-night] #garland .halo{opacity:1;animation:twinkle var(--t) ease-in-out var(--d) infinite}
+body[data-phase=christmas-night] #garland .gloss{opacity:.8}
+body[data-phase=christmas-night] #garland .fir{stroke:#0b2a17}
+@keyframes twinkle{0%,100%{opacity:1}45%{opacity:.55}55%{opacity:.9}70%{opacity:.4}}
+
+/* Winter scene behind the page: mountains and snowy ground, the tree with its snowman and gifts */
+#xscene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#xscene .mountains{position:absolute;left:0;bottom:0;width:100%;height:32vh}
+#xscene .m1{fill:#b6c9df}
+#xscene .m2{fill:#9fb4cd}
+#xscene .caps{fill:#fff}
+#xscene .ground-shade{fill:#d4e0ee}
+#xscene .ground{fill:#fbfdff}
+body[data-phase=christmas-night] #xscene .m1{fill:#1b2a48}
+body[data-phase=christmas-night] #xscene .m2{fill:#15223d}
+body[data-phase=christmas-night] #xscene .caps{fill:#9db0d0}
+body[data-phase=christmas-night] #xscene .ground-shade{fill:#7f93b6}
+body[data-phase=christmas-night] #xscene .ground{fill:#b9c8e0}
+/* The tree box, in the right margin on wide screens; behind the cards (faded) on narrow ones.
+   #xtree-front is the same box above the page, holding only the hidden sax. */
+#xtree,#xtree-front{position:fixed;right:0;bottom:1vh;width:min(clamp(260px,calc((100vw - 960px) / 2 + 150px),520px),66vh);aspect-ratio:520/640}
+#xtree svg,#xtree canvas{position:absolute;inset:0;width:100%;height:100%}
+#xtree .s1{stop-color:#2f8a4a}
+#xtree .s2{stop-color:#1c6b38}
+#xtree .s3{stop-color:#0b3b20}
+#xtree .tier-shadow{fill:rgba(0,20,10,.28)}
+#xtree .tips{fill:none;stroke:#3a9a58;stroke-width:1.6;stroke-linecap:round;opacity:.8}
+#xtree .branch-snow{fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;opacity:.9}
+#xtree .beads{fill:none;stroke:#f3c64f;stroke-width:3.6;stroke-linecap:round;stroke-dasharray:0 6.5}
+#xtree .beads-shade{fill:none;stroke:#7a5206;stroke-width:3.6;stroke-linecap:round;stroke-dasharray:0 6.5}
+#xtree .light-wire{fill:none;stroke:#0b2614;stroke-width:1.2}
+#xtree .hook{stroke:#c9a23a;stroke-width:1;fill:none}
+#xtree .cane{fill:none;stroke:#fff;stroke-width:4;stroke-linecap:round}
+#xtree .cane-stripes{fill:none;stroke:#d6203a;stroke-width:4;stroke-dasharray:3.5 3.5}
+#xtree .twig{fill:none;stroke:#5a3418;stroke-width:3;stroke-linecap:round}
+#xtree .coal,#xtree .hat{fill:#1d1d24}
+body[data-phase=christmas-night] #xtree .s1{stop-color:#1f6a3a}
+body[data-phase=christmas-night] #xtree .s2{stop-color:#124d29}
+body[data-phase=christmas-night] #xtree .s3{stop-color:#062413}
+body[data-phase=christmas-night] #xtree .branch-snow{stroke:#c9d6ea}
+@media(max-width:1240px){#xtree{opacity:.5}}
+#xtree-front{z-index:3;pointer-events:none}
+#xsax{position:absolute;display:none;padding:0;background:none;border:0;cursor:pointer;pointer-events:auto}
+#xsax svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+#xsax:hover svg,#xsax:focus-visible svg{filter:drop-shadow(0 0 5px rgba(255,215,110,.9))}
+body[data-phase=christmas-night] #xsax{display:block}
+/* Where the tree is behind the cards, the sax hangs on the garland instead (js placeSax) */
+#garland #xsax{top:30px;width:22px;height:38px}
+
+/* Santa's sleigh crossing the night sky, Rudolph's nose glowing, sparkles behind */
+#sleigh{position:fixed;left:0;z-index:0;width:min(260px,45vw);pointer-events:none;animation:sleigh 16s linear forwards}
+#sleigh svg{display:block;width:100%;overflow:visible}
+#sleigh .team path,#sleigh .santa{fill:rgba(205,218,245,.75)}
+#sleigh .sleigh{fill:rgba(230,190,110,.85)}
+#sleigh .reins{fill:none;stroke:rgba(205,218,245,.6);stroke-width:1}
+#sleigh .nose{fill:#ff3b3b;filter:drop-shadow(0 0 4px #ff3b3b)}
+#sleigh::after{content:"";position:absolute;right:-60%;top:40%;width:70%;height:3px;border-radius:2px;background:linear-gradient(90deg,rgba(255,230,150,.7),transparent);filter:blur(1px)}
+@keyframes sleigh{0%{transform:translate(110vw,6vh)}50%{transform:translate(40vw,0)}100%{transform:translate(-40vw,5vh)}}
+
+/* Christmas turntable (bottom left): red lacquer and gold plinth with snow on the lid, a record
+   with a red label and a white star, a candy-cane tonearm, holly on the corner. The YouTube
+   player itself is kept invisible. */
+#xmusic{position:fixed;left:1.1rem;bottom:1.1rem;z-index:40;display:flex;align-items:center;gap:.6rem;padding:0;color:var(--fg);font:600 .78rem system-ui,sans-serif;background:none;border:0;cursor:pointer}
+#xmusic .deck{position:relative;width:4.8rem;height:3.8rem;border-radius:.45rem;background:linear-gradient(135deg,#d42a40,#9b0d22 60%,#6e0716);box-shadow:0 6px 18px rgba(0,0,0,.35),inset 0 0 0 2px #e3b341,inset 0 1px 0 rgba(255,255,255,.3)}
+#xmusic .lid{position:absolute;left:-2px;right:-2px;top:-5px;height:9px;border-radius:5px 5px 3px 3px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+#xmusic .lid::before,#xmusic .lid::after{content:"";position:absolute;top:6px;width:7px;height:7px;border-radius:0 0 4px 4px;background:#fff}
+#xmusic .lid::before{left:12px}
+#xmusic .lid::after{right:18px;height:5px}
+#xmusic .disc{position:absolute;left:.3rem;top:.35rem;width:3.2rem;height:3.2rem;border-radius:50%;background:radial-gradient(circle,#fff 0 4%,#c8102e 5% 19%,#e3b341 20% 22%,#111 23%,#1f1f1f 32%,#0d0d0d 33%,#1f1f1f 45%,#0d0d0d 46%,#1f1f1f 58%,#0d0d0d 59%,#161616 70%);box-shadow:0 0 0 2px #1a1a1a,0 2px 6px rgba(0,0,0,.6)}
+#xmusic .disc::after{content:"";position:absolute;inset:38%;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-10 -10 20 20'%3E%3Cpath d='M0-9 2-3h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z' fill='%23fff'/%3E%3C/svg%3E") center/contain no-repeat}
+#xmusic.playing .disc{animation:spin 1.8s linear infinite}
+#xmusic .arm{position:absolute;right:.42rem;top:.4rem;width:4px;height:2.4rem;margin-left:-2px;border-radius:2px;background:repeating-linear-gradient(-35deg,#fff 0 4px,#d6203a 4px 8px);transform-origin:50% 0;transform:rotate(-4deg);transition:transform .9s cubic-bezier(.4,0,.2,1)}
+#xmusic .arm::before{content:"";position:absolute;left:50%;top:-.3rem;width:.6rem;height:.6rem;margin-left:-.3rem;border-radius:50%;background:radial-gradient(circle,#fff3b0 0 30%,#e3a923 35%,#8a5a08)}
+#xmusic.playing .arm{transform:rotate(25deg)}
+#xmusic .holly{position:absolute;right:-.7rem;bottom:-.45rem;width:1.9rem}
+#xmusic .label{padding:.3rem .65rem;border-radius:999px;color:#fff;background:linear-gradient(#1f7a3e,#145a2c);border:1px solid #e3b341;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+#carols{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
+/* The little fir in the jazz bar that brings Christmas back */
+#xback{position:fixed;right:1.1rem;bottom:1.1rem;z-index:40;width:2.4rem;height:3.2rem;padding:0;background:none;border:0;cursor:pointer;opacity:.7;transition:opacity .2s,transform .2s}
+#xback:hover,#xback:focus-visible{opacity:1;transform:scale(1.12)}
+#xback svg{width:100%;height:100%;filter:drop-shadow(0 0 6px rgba(255,216,106,.5))}
+
+/* Entering Christmas: the page fades into a snowy white, the new one appears through it */
+[data-vt=christmas]::view-transition-old(root){animation:vt-snow-out 1.4s ease-in both}
+[data-vt=christmas]::view-transition-new(root){animation:vt-snow-in 1.6s ease-out both}
+@keyframes vt-snow-out{to{opacity:0;filter:brightness(1.8) saturate(.4) blur(4px)}}
+@keyframes vt-snow-in{from{opacity:0;filter:brightness(1.8) blur(6px)}}
+
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){body[data-phase=christmas-night] #garland .lit,body[data-phase=christmas-night] #garland .halo{animation:none}#sleigh{display:none}#xmusic.playing .disc{animation:none}}

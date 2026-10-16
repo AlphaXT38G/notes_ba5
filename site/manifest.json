@@ -6,6 +6,7 @@
     "css/jazz.css",
     "css/metal.css",
     "css/epic.css",
+    "css/christmas.css",
     "css/screens.css",
     "css/konami.css"
   ],
@@ -17,6 +18,7 @@
     "js/screens.js",
     "js/jazz.js",
     "js/fx.js",
+    "js/christmas.js",
     "js/metal.js",
     "js/epic.js",
     "js/start.js"

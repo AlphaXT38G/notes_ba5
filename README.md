@@ -71,8 +71,17 @@ lights and a rune circle, while the amp (now blue) plays epic music in a loop. I
 until you click the small **"Back to normal"** button in the bottom right corner, which
 brings back the usual look for the time of day (day, or the jazz bar at night).
 
-Add `?night=evening`, `?night=closing`, `?night=metal` or `?night=epic` (or `1` / `0`)
-to the URL to force a screen (or the day) at any time.
+From **December 10 to January 3** Christmas replaces the day and the jazz bar: a
+Christmas day from 06:00 to 18:00 and a Christmas night from 18:00 to 06:00. Garland
+across the top (lit at night), falling snow, a snowy landscape with a decorated tree,
+gifts and a snowman, a countdown to Christmas in the subtitle, and Christmas music
+from YouTube on a Christmas turntable. At night the tree lights play changing
+patterns and Santa's sleigh crosses the sky now and then. Look closely at the
+ornaments at night. The metal show at 01:00 and the easter eggs still happen.
+
+Add `?night=evening`, `?night=closing`, `?night=metal`, `?night=epic`,
+`?night=christmas` or `?night=christmas-night` (or `1` / `0`) to the URL to force a
+screen (or the day) at any time.
 
 It hides three easter eggs: a surprise banner that shows up on some visits,
 something that happens when you type the Konami code (↑↑↓↓←→←→BA), and the metal
