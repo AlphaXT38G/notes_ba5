@@ -6,9 +6,9 @@ Guide for anyone working on this repository, human or AI agent (Claude Code read
 ## What this repository is
 
 LaTeX notes for the BA5 IN semester at EPFL. `build.py` compiles every subject to PDF and generates
-`dist/index.html`, an index page of all the PDFs. On every push to `main`, the GitHub Pages
-workflow (`.github/workflows/pages.yml`) runs the build and publishes `dist/` at
-<https://alphaxt38g.github.io/notes_ba5/>.
+`dist/index.html`, an index page of all the PDFs. On every push to `main`, and every day at
+04:00 UTC (so the "New" badges expire), the GitHub Pages workflow (`.github/workflows/pages.yml`)
+runs the build and publishes `dist/` at <https://alphaxt38g.github.io/notes_ba5/>.
 
 The index page has grown a lot of personality: a flame mode, a jazz bar at night, a metal show at
 01:00, an epic finale, easter eggs. Most of the code is there, in `site/`.

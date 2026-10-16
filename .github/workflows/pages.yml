@@ -3,6 +3,11 @@ name: Publish notes
 on:
   push:
     branches: [main]
+  # Daily rebuild: the "New" badges are computed at build time, so without a push they would
+  # never expire. 04:00 UTC = 05:00/06:00 in Lausanne. GitHub pauses scheduled workflows after
+  # 60 days without activity on the repository.
+  schedule:
+    - cron: "0 4 * * *"
   workflow_dispatch:
 
 permissions:
