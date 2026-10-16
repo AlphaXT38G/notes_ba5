@@ -26,15 +26,27 @@ SCREENS["christmas-night"] = { className: "christmas", subtitle: xmasSubtitle, t
 // goes on in the jazz bar until the fir is clicked or Christmas day comes back at 6:00.
 const isXmasDate = (d = new Date()) => (d.getMonth() === 11 && d.getDate() >= 10) || (d.getMonth() === 0 && d.getDate() <= 3);
 const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && t < 18 * 3600; };
-let xmasJazz = false;
+// Easter egg: typing y e t i (outside the search field) brings Christmas at any time of the year, day
+// or night by the clock as usual, for the rest of the visit; typing it again ends it. It also
+// overrides a forced ?night=.
+let xmasJazz = false, xmasEgg = false;
 OVERRIDES.push(phase => {
   let p = phase;
-  if ((!forced || forcedDismissed) && isXmasDate() && (p === null || SCREENS[p]?.className === "night")) {
+  if ((xmasEgg || (!forced || forcedDismissed) && isXmasDate()) && (p === null || SCREENS[p]?.className === "night")) {
     p = isXmasDaytime() ? "christmas" : "christmas-night";
   }
   if (p === "christmas") xmasJazz = false;
   if (xmasJazz && p === "christmas-night") return phase === "closing" ? "closing" : "evening";
   return p;
+});
+
+const YETI = ["y", "e", "t", "i"];
+let yetiPos = 0;  // how many letters of the word have been typed so far
+document.addEventListener("keydown", e => {
+  if (e.target.matches("input")) return;  // typing in the search field never triggers it
+  const k = e.key.toLowerCase();
+  yetiPos = k === YETI[yetiPos] ? yetiPos + 1 : (k === YETI[0] ? 1 : 0);
+  if (yetiPos === YETI.length) { yetiPos = 0; xmasEgg = !xmasEgg; applyScreen(); }
 });
 
 // Same pseudo-random numbers on every visit, so the scene is always drawn the same way

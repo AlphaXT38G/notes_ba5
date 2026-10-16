@@ -83,6 +83,7 @@ Add `?night=evening`, `?night=closing`, `?night=metal`, `?night=epic`,
 `?night=christmas` or `?night=christmas-night` (or `1` / `0`) to the URL to force a
 screen (or the day) at any time.
 
-It hides three easter eggs: a surprise banner that shows up on some visits,
-something that happens when you type the Konami code (↑↑↓↓←→←→BA), and the metal
-takeover at any time of day if you click the flame button 20 times within a minute.
+It hides four easter eggs: a surprise banner that shows up on some visits,
+something that happens when you type the Konami code (↑↑↓↓←→←→BA), the metal
+takeover at any time of day if you click the flame button 20 times within a minute,
+and Christmas at any time of the year if you type `yeti` (type it again to leave).

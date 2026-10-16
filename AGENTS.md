@@ -65,6 +65,8 @@ The night screens follow the clock. Force one with the URL:
 | `?night=christmas` / `?night=christmas-night` | Christmas day / Christmas night |
 
 Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑↑↓↓←→←→BA,
+`yeti` typed anywhere but the search field (Christmas day or night by the clock, any time of the
+year, until typed again),
 a random surprise banner on some visits, and on the Christmas night a small golden sax hidden
 among the tree ornaments (on the garland on narrow screens) that opens the jazz bar; a little fir
 in the bar's bottom right corner brings Christmas back.
@@ -149,7 +151,7 @@ Current screens:
 The Christmas screens depend on the date, so they are an override rather than a `SCHEDULE` slot:
 it only rewrites "no screen" and the jazz screens, and `christmas.js` is loaded before `metal.js`,
 so the metal show (01:00 or easter egg) and the epic finale still take over. A forced `?night=`
-turns it off, except `?night=christmas` / `?night=christmas-night` themselves.
+turns it off, except `?night=christmas` / `?night=christmas-night` themselves and the `yeti` easter egg.
 
 ### Adding a new screen, step by step
 
