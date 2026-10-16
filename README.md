@@ -54,7 +54,9 @@ page has had one it plays muted and the sound comes on at the first click or key
 press. The turntable in the bottom left corner plays / pauses it.
 
 Jazz plays until 00:45, then the bar closes until 01:00 (darker light, the neon goes
-out letter by letter and the bartender sends you to bed). At **01:00:00** a metal
+out letter by letter, then the bartender comes over the whole screen, life-size,
+under a swinging lamp: he rings the last call bell, tells you the bar is closing and
+shows a chalkboard counting down to 01:00; "Good night" sends him away). At **01:00:00** a metal
 song takes over for 1 min 51 s 🤘: chrome title, red light pulsing on the beat,
 headbanging cards and an equalizer, plus effects drawn on a canvas: branching
 lightning with sparks, physics-driven metal chains hanging in the margins, a curtain
@@ -85,8 +87,9 @@ Add `?night=evening`, `?night=closing`, `?night=metal`, `?night=epic`,
 `?night=christmas` or `?night=christmas-night` (or `1` / `0`) to the URL to force a
 screen (or the day) at any time.
 
-It hides four easter eggs: a surprise banner that shows up on some visits,
+It hides five easter eggs: a surprise banner that shows up on some visits,
 something that happens when you type the Konami code (↑↑↓↓←→←→BA), the metal
 takeover at any time of day if you click the flame button 20 times within a minute,
-and Christmas at any time of the year if you type `yeti` (outside the Christmas
-period, type it again on a Christmas screen to leave).
+Christmas at any time of the year if you type `yeti` (outside the Christmas
+period, type it again on a Christmas screen to leave), and the jazz bar at any time
+if you type `armstrong` (type it again in the bar to leave, unless it is bar time).

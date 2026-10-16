@@ -69,7 +69,9 @@ Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑
 year; outside the Christmas period, typed on a Christmas screen it goes back to the normal one),
 a random surprise banner on some visits, and on the Christmas night a small golden sax hidden
 among the tree ornaments (on the garland on narrow screens) that opens the jazz bar; a little fir
-in the bar's bottom right corner brings Christmas back.
+in the bar's bottom right corner brings Christmas back. `armstrong` typed anywhere but the search
+field opens the jazz bar at any time (over Christmas too); typed again in the bar it goes back to
+the normal screen, unless the normal screen at that moment is the bar itself (21:30 – 01:00).
 
 ## How the index page is built
 
@@ -97,16 +99,18 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `surprise.js` | random surprise banner |
 | `konami.js` | Konami code: black hole, confetti, party theme |
 | `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()` |
-| `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable, bartender |
+| `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable, neon sign going out |
+| `closing.js` | closing time: the life-size bartender (SVG), swinging lamp, last call bell (Web Audio), typed speech, chalkboard with countdown, "Good night" |
 | `fx.js` | the effects canvas: `fxLayers`, `blob()`, the animation loop |
 | `christmas.js` | Christmas screens: date override and `yeti` code, garland (with mouse physics), winter scene (mountains and chalets, moon, tree, snowman), tree lights canvas, snow, sleigh, music, hidden sax |
+| `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win) |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song |
 | `epic.js` | epic finale: blue fire, motes, rune circle, "More epicness ?", "Back to normal" |
 | `start.js` | **last**: first `applyScreen()`, then the every-second clock check |
 
 ### CSS files, in cascade order
 
-`base.css` (layout, cards, search, previews) → `flames.css` → `surprise.css` → `jazz.css` →
+`base.css` (layout, cards, search, previews) → `flames.css` → `surprise.css` → `jazz.css` → `closing.css` →
 `metal.css` → `epic.css` → `christmas.css` → `screens.css` (effects canvas, view transitions) → `konami.css`.
 The Konami file is last on purpose: during its animation `body.rift .wrap` must win over every
 theme's `.wrap` rule.
@@ -141,8 +145,8 @@ Current screens:
 
 | Screen | Class | When | Files |
 |---|---|---|---|
-| `evening` | `night` | 21:30 – 00:45 | `jazz.js`, `jazz.css` |
-| `closing` | `night` | 00:45 – 01:00 | `jazz.js`, `jazz.css` |
+| `evening` | `night` | 21:30 – 00:45, or the `armstrong` code | `jazz.js`, `jazz.css`, `armstrong.js` |
+| `closing` | `night` | 00:45 – 01:00 | `jazz.js`, `jazz.css`, `closing.js`, `closing.css` |
 | `metal` | `metal` | 01:00:00 – 01:01:51, or 20 flame clicks | `metal.js`, `metal.css` |
 | `epic` | `epic` | after a metal show, if "More epicness ?" was clicked | `epic.js`, `epic.css` |
 | `christmas` | `christmas` | Dec 10 – Jan 3, 06:00 – 18:00 (replaces the day) | `christmas.js`, `christmas.css` |
