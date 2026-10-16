@@ -99,7 +99,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()` |
 | `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable, bartender |
 | `fx.js` | the effects canvas: `fxLayers`, `blob()`, the animation loop |
-| `christmas.js` | Christmas screens: date override, garland, winter scene and tree, tree lights canvas, snow, sleigh, music, hidden sax |
+| `christmas.js` | Christmas screens: date override and `yeti` code, garland (with mouse physics), winter scene (mountains and chalets, moon, tree, snowman), tree lights canvas, snow, sleigh, music, hidden sax |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song |
 | `epic.js` | epic finale: blue fire, motes, rune circle, "More epicness ?", "Back to normal" |
 | `start.js` | **last**: first `applyScreen()`, then the every-second clock check |

@@ -72,11 +72,13 @@ until you click the small **"Back to normal"** button in the bottom right corner
 brings back the usual look for the time of day (day, or the jazz bar at night).
 
 From **December 10 to January 3** Christmas replaces the day and the jazz bar: a
-Christmas day from 06:00 to 18:00 and a Christmas night from 18:00 to 06:00. Garland
-across the top (lit at night), falling snow, a snowy landscape with a decorated tree,
-gifts and a snowman, a countdown to Christmas in the subtitle, and Christmas music
-from YouTube on a Christmas turntable. At night the tree lights play changing
-patterns and Santa's sleigh crosses the sky now and then. Look closely at the
+Christmas day from 06:00 to 18:00 and a Christmas night from 18:00 to 06:00. A
+garland across the top that swings under the mouse (lit at night), falling snow,
+big snowy mountains, a decorated tree with gifts, a snowman companion beside the
+courses, a countdown to Christmas in the subtitle, and Christmas music from YouTube
+on a Christmas turntable. At night the moon rises, chalets light up on the
+mountains, the tree lights play changing patterns and Santa's sleigh crosses the
+sky now and then. Look closely at the
 ornaments at night. The metal show at 01:00 and the easter eggs still happen.
 
 Add `?night=evening`, `?night=closing`, `?night=metal`, `?night=epic`,
