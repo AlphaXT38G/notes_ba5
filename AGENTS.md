@@ -108,7 +108,9 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `konami.js` | Konami code: black hole (CSS drawing as a fallback without WebGL) swallowing the page letter by letter, then its boxes and the music player, until it overheats, implodes and explodes in a supernova; confetti, party theme |
 | `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()` |
 | `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable, neon sign going out |
-| `closing.js` | closing time: the life-size bartender (SVG layers pre-rendered as `<img>`, with the Gigachad photo `img/gigachad.webp` as head), swinging lamp, last call bell (Web Audio), typed speech, chalkboard with countdown, "Good night" |
+| `relief.js` | `renderRelief()`: WebGL renderer turning flat SVG drawings (colour, height, material, micro texture) into photo-like lit bitmaps: key light from the right like the Gigachad photo, cast shadows, ambient occlusion, skin, cloth and metal, black and white with grain |
+| `bartender.js` | `renderBartender()`: the closing bartender's Gigachad body in a bartender's outfit, drawn for `relief.js`, rendered once per visit |
+| `closing.js` | closing time: the life-size bartender (the photo-like layers of `bartender.js` swapped in once rendered, else SVG layers pre-rendered as `<img>`; the Gigachad photo `img/gigachad.webp` as head), breathing and swaying, swinging lamp, last call bell (Web Audio), typed speech, chalkboard with countdown, "Good night" |
 | `fx.js` | the effects canvas: `fxLayers`, `blob()`, the animation loop |
 | `christmas.js` | Christmas screens: date override and `yeti` code, garland (with mouse physics), winter scene (mountains and chalets, moon, tree, snowman), tree lights canvas, snow, sleigh, music, hidden sax |
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
@@ -248,6 +250,11 @@ Example: a calm "dawn" screen from 06:00 to 07:00.
   circle in `epic.js`) and avoid `shadowBlur` in per-frame drawing.
 - Heavy SVG filters (textures, blurs, grain) are fine in an SVG shown as an `<img>`: it is rendered
   once into a bitmap, and animating the `<img>` never re-runs them (see the bartender in `closing.js`).
+- Same idea, further: `relief.js` lights drawings once in WebGL into image layers (the photo-like
+  bartender, `bartender.js`), started as soon as the bar closes, long before he shows. To change
+  him, edit the parts and relief strokes in `bartender.js`: shapes are blurred into volumes, so
+  keep folds subtle (the lighting shows the smallest step). All scripts share one scope: prefix
+  new names (`btr*`, `BTR_*` there) so they do not clash with another file's.
 - Remove a screen's extras (elements, timers, players) when its class turns off.
 
 ### Workflow

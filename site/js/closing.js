@@ -5,7 +5,10 @@
 // rings the last call bell, then tells you the bar is closing, with a chalkboard of what to know.
 // "Good night" sends him away, waving; any other phase sends him away at once.
 //
-// He is made of layers stacked in .bt, all on the same 520 x 600 canvas: his body (white shirt
+// He is made of layers stacked in .bt, all on the same 520 x 600 canvas. With WebGL they become
+// photo-like bitmaps rendered from bartender.js (see realBartender below); the SVG drawing here is
+// what shows without it. Once up, he breathes and sways (css/closing.css).
+// The drawing's layers: his body (white shirt
 // with rolled-up sleeves, charcoal wool waistcoat with satin lapels, welt pockets and a watch
 // chain, black satin bow tie, a towel over his left arm), his raised right arm, the brass hand
 // bell and its clapper, the hand holding it, and his head: the Gigachad meme photo
