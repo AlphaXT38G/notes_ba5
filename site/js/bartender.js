@@ -161,7 +161,7 @@ const BTR_ARM = btrLayer([
   [BTR_ARM_SLEEVE, "shirt", 14, .5],
   [BTR_ARM_GARTER, "garter", 2, .06],
   ["<circle cx=\"168\" cy=\"332\" r=\"5\"/>", "silver", 2, .1],
-  [BTR_ARM_ROLL, "shirt", 7, .3],
+  [BTR_ARM_ROLL, "shirt", 6, .5],
 ],
   // Biceps bulging the sleeve, folds pulled towards the elbow, the garter biting in, the roll
   btrUp(`<ellipse cx="124" cy="300" rx="44" ry="26" transform="rotate(-30 124 300)"/>`, 12, .26) +
@@ -169,12 +169,12 @@ const BTR_ARM = btrLayer([
   btrUp(`<path d="M186,292 Q154,308 124,330" stroke="#fff" stroke-width="5" fill="none"/>`, 4, .14) +
   btrDown(`<path d="M146,274 C150,296 156,322 164,350 M160,272 C164,296 170,322 178,346" stroke="#000" stroke-width="4" fill="none"/>`, 2, .45) +
   btrUp(`<path d="M42,362 Q78,348 116,366 M42,378 Q78,364 116,384" stroke="#fff" stroke-width="8" fill="none"/>`, 4, .3) +
-  btrDown(`<path d="M42,370 Q78,356 116,375 M44,391 Q78,381 116,394 M60,352 Q64,372 58,390 M94,350 Q100,372 96,392" stroke="#000" stroke-width="3" fill="none"/>`, 2, .6) +
+  btrDown(`<path d="M42,370 Q78,356 116,375 M44,391 Q78,381 116,394" stroke="#000" stroke-width="3" fill="none"/>`, 2, .45) +
   // Forearm: the big muscle on the outside under the elbow, the flexors on the inside, the bony
   // ridge between them, the wrist narrowing, and veins running up to the hand
   btrUp(`<ellipse cx="52" cy="306" rx="20" ry="58" transform="rotate(8 52 306)"/><ellipse cx="108" cy="282" rx="18" ry="56" transform="rotate(-4 108 282)"/>`, 12, .3) +
   btrUp(`<ellipse cx="88" cy="214" rx="16" ry="34"/>`, 10, .14) +
-  btrUp(`<path d="M98,186 C92,216 100,244 94,276 C90,296 96,312 92,332" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/>`, 1.5, .3),
+  btrUp(`<path d="M98,186 C92,216 100,244 94,276 C90,296 96,312 92,332" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>`, 1.5, .14),
   // The forearm's shadow side, the underside of the sleeve, the bell's shadow on the wrist
   `<path d="M46,382 C28,342 30,300 42,264 C52,232 62,204 72,176 L82,176 C66,230 50,300 60,382 Z" fill="#000" opacity=".14" filter="${btrBlur(8)}"/>` +
   `<path d="M104,392 C116,372 136,356 160,348 C178,342 190,340 198,340 L196,326 C170,326 140,336 112,360 Z" fill="#000" opacity=".3" filter="${btrBlur(6)}"/>` +
