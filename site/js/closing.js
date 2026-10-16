@@ -5,54 +5,90 @@
 // rings the last call bell, then tells you the bar is closing, with a chalkboard of what to know.
 // "Good night" sends him away, waving; any other phase sends him away at once.
 //
-// He is one SVG drawing built from code: shirt and waistcoat, bow tie, a towel over his left arm,
-// his right arm raised with a brass hand bell, and the head of the Gigachad meme: the photo
+// He is one SVG drawing built from code: white shirt with rolled-up sleeves, charcoal waistcoat
+// with satin lapels, welt pockets and a watch chain, black satin bow tie, a towel over his left
+// arm, his right arm raised with a brass hand bell. To blend with the black and white photo, it is
+// all in greys lit from the right like the photo, darker towards the bottom left (no SVG filter:
+// the drawing is repainted while he nods and rings). His head is the Gigachad meme: the photo
 // site/img/gigachad.webp (copied to dist/img/ by the build), cut out on a transparent background.
 // Skin and neck are grey to match it. Its mouth cannot move, so he nods while talking (.head).
 const BARTENDER = `<svg class="bt" viewBox="0 0 520 600" aria-hidden="true">
 <defs>
-<linearGradient id="bt-arm" x1="0" x2="1"><stop offset="0" stop-color="#5a5a5a"/><stop offset=".5" stop-color="#a8a8a8"/><stop offset="1" stop-color="#555"/></linearGradient>
-<linearGradient id="bt-shirt" x1="0" x2="1"><stop offset="0" stop-color="#cfc9bf"/><stop offset=".45" stop-color="#fbf8f2"/><stop offset="1" stop-color="#c9c2b6"/></linearGradient>
-<linearGradient id="bt-vest" x1="0" x2="1"><stop offset="0" stop-color="#0b0a0b"/><stop offset=".5" stop-color="#2b2427"/><stop offset="1" stop-color="#0b0a0b"/></linearGradient>
+<linearGradient id="bt-skin" x1="0" x2="1"><stop offset="0" stop-color="#4c4c4c"/><stop offset=".55" stop-color="#a9a9a9"/><stop offset=".8" stop-color="#c4c4c4"/><stop offset="1" stop-color="#6e6e6e"/></linearGradient>
+<linearGradient id="bt-shirt" x1="0" x2="1"><stop offset="0" stop-color="#9e9b96"/><stop offset=".35" stop-color="#dcd9d3"/><stop offset=".7" stop-color="#f7f5f1"/><stop offset="1" stop-color="#b3b0aa"/></linearGradient>
+<linearGradient id="bt-sleeve" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2f0eb"/><stop offset=".45" stop-color="#d2cfc9"/><stop offset="1" stop-color="#85827c"/></linearGradient>
+<linearGradient id="bt-sleeve-side" x1="0" x2="1"><stop offset="0" stop-color="#8d8a84"/><stop offset=".55" stop-color="#e4e1dc"/><stop offset="1" stop-color="#a6a39d"/></linearGradient>
+<linearGradient id="bt-towel" x1="0" x2="1"><stop offset="0" stop-color="#a9a6a0"/><stop offset=".55" stop-color="#f3f1ec"/><stop offset="1" stop-color="#b9b6b0"/></linearGradient>
+<linearGradient id="bt-vest" x1="0" x2="1"><stop offset="0" stop-color="#0c0c0d"/><stop offset=".45" stop-color="#1f1f22"/><stop offset=".78" stop-color="#3a3a3f"/><stop offset="1" stop-color="#141416"/></linearGradient>
+<linearGradient id="bt-lapel" x1="0" x2="1"><stop offset="0" stop-color="#18181a"/><stop offset=".5" stop-color="#4a4a50"/><stop offset="1" stop-color="#202023"/></linearGradient>
+<linearGradient id="bt-satin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3c3c40"/><stop offset=".45" stop-color="#121214"/><stop offset="1" stop-color="#050505"/></linearGradient>
+<linearGradient id="bt-shade" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".55" stop-color="#000" stop-opacity=".12"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></linearGradient>
 <linearGradient id="bt-brass" x1="0" x2="1"><stop offset="0" stop-color="#6e470d"/><stop offset=".3" stop-color="#f6d27a"/><stop offset=".55" stop-color="#d9a637"/><stop offset="1" stop-color="#5e3b0a"/></linearGradient>
-<linearGradient id="bt-bow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b5283f"/><stop offset="1" stop-color="#6e1222"/></linearGradient>
+<linearGradient id="bt-wood" x1="0" x2="1"><stop offset="0" stop-color="#2e1a0c"/><stop offset=".5" stop-color="#6b4325"/><stop offset="1" stop-color="#2a170a"/></linearGradient>
+<radialGradient id="bt-jaw"><stop offset="0" stop-color="#111" stop-opacity=".7"/><stop offset="1" stop-color="#111" stop-opacity="0"/></radialGradient>
 </defs>
-<g class="left-arm">
-<path d="M352,282Q408,292 412,350L418,470 372,474 362,360Z" fill="url(#bt-shirt)"/>
-<path d="M370,462 420,458 422,488 370,492Z" fill="#e6e0d4" stroke="#bdb5a8"/>
-<path d="M374,490 420,486 416,600 380,600Z" fill="url(#bt-arm)"/>
-<path d="M360,502 432,494Q440,530 436,562L426,600 406,566 386,600 366,562Q356,530 360,502Z" fill="#f4f1ea" stroke="#d6d0c4"/>
-<path d="M362,516 434,508M363,524 435,516" stroke="#b5283f" stroke-width="3"/>
+<g>
+<path d="M114,600 112,364Q110,314 140,294Q170,276 208,262Q232,252 242,236H284Q294,252 318,262Q356,276 386,294Q414,314 412,364L406,600Z" fill="url(#bt-shirt)"/>
+<path d="M150,300Q170,330 168,372M374,300Q356,330 358,372M200,268Q214,282 226,300" fill="none" stroke="#8c8984" stroke-width="2" opacity=".5"/>
+<path d="M262,292V420" stroke="#bdb9b2" stroke-width="2.5"/><circle cx="262" cy="330" r="2.6" fill="#fff" stroke="#9a968f"/><circle cx="262" cy="372" r="2.6" fill="#fff" stroke="#9a968f"/>
+<path d="M112,600 112,394Q114,350 142,332Q166,318 176,298Q196,280 232,270L262,412V600Z" fill="url(#bt-vest)"/>
+<path d="M412,600 412,394Q410,350 384,332Q360,318 350,298Q330,280 292,270L262,412V600Z" fill="url(#bt-vest)"/>
+<path d="M232,270 262,412 250,412 222,282ZM292,270 262,412 274,412 302,282Z" fill="url(#bt-lapel)"/>
+<path d="M232,270 262,412 292,270" fill="none" stroke="#5a5a60" stroke-width="1.4"/>
+<path d="M176,300Q170,330 146,342M350,300Q356,330 378,342" fill="none" stroke="#000" stroke-width="3" opacity=".45"/>
+<path d="M200,410Q206,500 200,600M324,410Q318,500 324,600" fill="none" stroke="#000" stroke-width="2" opacity=".35"/>
+<path d="M156,482 206,474 207,481 157,489ZM318,474 368,482 367,489 317,481Z" fill="#070708"/>
+<path d="M156,481 206,473M318,473 368,481" stroke="#56565c" stroke-width="1.2"/>
+<path d="M262,470Q296,506 334,480" fill="none" stroke="#c9a24a" stroke-width="2.2" stroke-dasharray="2.5 1.5"/>
+<g><circle cx="262" cy="436" r="4.6" fill="#0a0a0a" stroke="#5c5c62" stroke-width="1.2"/><circle cx="262" cy="470" r="4.6" fill="#0a0a0a" stroke="#5c5c62" stroke-width="1.2"/>
+<circle cx="262" cy="504" r="4.6" fill="#0a0a0a" stroke="#5c5c62" stroke-width="1.2"/><circle cx="262" cy="538" r="4.6" fill="#0a0a0a" stroke="#5c5c62" stroke-width="1.2"/>
+<circle cx="263.5" cy="434.5" r="1.2" fill="#9a9aa0"/><circle cx="263.5" cy="468.5" r="1.2" fill="#9a9aa0"/><circle cx="263.5" cy="502.5" r="1.2" fill="#9a9aa0"/><circle cx="263.5" cy="536.5" r="1.2" fill="#9a9aa0"/></g>
+<path d="M114,600 112,364Q110,314 140,294Q170,276 208,262Q232,252 242,236H284Q294,252 318,262Q356,276 386,294Q414,314 412,364L406,600Z" fill="url(#bt-shade)"/>
+<path d="M224,196 220,262Q262,282 306,262L302,196Z" fill="url(#bt-skin)"/>
+<path d="M234,222Q248,248 256,272M292,222Q280,248 270,272" fill="none" stroke="#2e2e2e" stroke-width="3" opacity=".35"/>
+<ellipse cx="262" cy="232" rx="50" ry="22" fill="url(#bt-jaw)"/>
+<path d="M222,244Q262,262 304,244L306,256Q262,274 220,256Z" fill="#d8d5cf"/>
+<path d="M222,250Q234,266 262,284L244,298Q224,288 214,262ZM304,250Q292,266 262,284L280,298Q300,288 310,262Z" fill="#f6f4f0" stroke="#a9a59e" stroke-width="1.2"/>
+<path d="M216,262Q226,284 244,298M310,262Q300,284 280,298" fill="none" stroke="#8e8a83" stroke-width="1.5" opacity=".6"/>
+<path d="M262,280Q246,266 230,268Q222,279 230,292Q246,294 262,284Z" fill="url(#bt-satin)"/>
+<path d="M262,280Q278,266 294,268Q302,279 294,292Q278,294 262,284Z" fill="url(#bt-satin)"/>
+<path d="M234,272Q246,274 256,280M290,272Q278,274 268,280" fill="none" stroke="#6a6a70" stroke-width="1.4" opacity=".8"/>
+<rect x="254" y="273" width="16" height="16" rx="5" fill="#0d0d0e" stroke="#3a3a3e"/>
 </g>
-<path d="M120,600 118,330Q122,285 175,268L230,250H290L345,268Q398,285 402,330L400,600Z" fill="url(#bt-shirt)"/>
-<path d="M260,262V420" stroke="#d3ccc0" stroke-width="3"/>
-<circle cx="260" cy="310" r="3" fill="#e9e3d8" stroke="#bdb5a8"/><circle cx="260" cy="360" r="3" fill="#e9e3d8" stroke="#bdb5a8"/>
-<path d="M118,600 119,352Q124,318 150,306Q170,296 176,282L232,262 260,420V600Z" fill="url(#bt-vest)"/>
-<path d="M402,600 401,352Q396,318 370,306Q350,296 344,282L288,262 260,420V600Z" fill="url(#bt-vest)"/>
-<path d="M232,262 260,420 288,262" fill="none" stroke="#4a3f44" stroke-width="2"/>
-<g fill="#9c8660"><circle cx="260" cy="445" r="5"/><circle cx="260" cy="485" r="5"/><circle cx="260" cy="525" r="5"/><circle cx="260" cy="565" r="5"/></g>
-<path d="M160,470H200" stroke="#3a3236" stroke-width="3"/>
-<path d="M180,470Q215,505 255,482" fill="none" stroke="#e1b84e" stroke-width="2.5" stroke-dasharray="3 2"/>
-<path d="M216,200 210,268Q260,292 310,268L304,200Z" fill="url(#bt-arm)"/>
-<path d="M226,214Q244,246 254,272M296,214Q278,246 268,272" fill="none" stroke="#3a3a3a" stroke-width="3" opacity=".6"/>
-<ellipse cx="262" cy="250" rx="7" ry="9" fill="#9a9a9a" opacity=".6"/>
-<path d="M232,250 260,282 240,294 222,258ZM288,250 260,282 280,294 298,258Z" fill="#fffdf8" stroke="#cfc8bc"/>
-<path d="M260,274 226,258 229,294ZM260,274 294,258 291,294Z" fill="url(#bt-bow)"/>
-<rect x="251" y="265" width="18" height="18" rx="5" fill="#8f1a2e"/>
 <g class="head"><image href="img/gigachad.webp" x="178" y="44" width="178" height="229"/></g>
+<g class="left-arm">
+<path d="M368,294Q412,298 424,350L432,454 384,460 374,362Z" fill="url(#bt-sleeve-side)"/>
+<path d="M398,330Q404,380 400,440M384,318Q396,322 408,336" fill="none" stroke="#8c8984" stroke-width="2" opacity=".5"/>
+<path d="M381,446Q408,438 434,444L437,480Q408,472 381,482Z" fill="url(#bt-sleeve-side)" stroke="#8a8780" stroke-width=".8"/>
+<path d="M382,462Q408,454 436,460" fill="none" stroke="#8a8780" stroke-width="1" opacity=".7"/>
+<path d="M384,482Q410,476 436,480" stroke="#000" stroke-width="3" opacity=".25"/>
+<path d="M386,480Q412,474 436,478Q444,530 432,600H392Q380,540 386,480Z" fill="url(#bt-skin)"/>
+<path d="M378,510Q408,502 442,508L444,566Q440,590 432,600H392Q380,572 378,510Z" fill="url(#bt-towel)"/>
+<path d="M379,522Q408,514 443,520M379,527Q408,519 443,525" fill="none" stroke="#4a4a4e" stroke-width="1.6"/>
+<path d="M396,512Q400,556 396,600M424,508Q430,556 424,600" fill="none" stroke="#8f8c86" stroke-width="1.4" opacity=".6"/>
+<path d="M378,510Q408,502 442,508" fill="none" stroke="#000" stroke-width="3" opacity=".2"/>
+<path d="M368,294Q412,298 424,350L432,454 384,460 374,362Z" fill="url(#bt-shade)" opacity=".6"/>
+</g>
 <g class="arm">
-<path d="M170,300 80,345" stroke="url(#bt-shirt)" stroke-width="56" stroke-linecap="round"/>
-<path d="M150,296Q130,318 112,316M136,330Q118,340 104,334" fill="none" stroke="#bdb5a8" stroke-width="2.5"/>
-<path d="M98,336 70,350" stroke="#e6e0d4" stroke-width="60"/>
-<path d="M72,342 100,218" stroke="url(#bt-arm)" stroke-width="36" stroke-linecap="round"/>
+<path d="M182,280Q132,282 98,314Q72,338 58,364L98,384Q112,356 138,342Q168,328 184,332Z" fill="url(#bt-sleeve)"/>
+<path d="M98,384Q112,356 138,342Q168,328 184,332" fill="none" stroke="#000" stroke-width="5" opacity=".18"/>
+<path d="M150,296Q128,318 108,320M140,330Q118,344 100,342M120,300Q104,316 92,336" fill="none" stroke="#8c8984" stroke-width="2" opacity=".6"/>
+<path d="M60,368Q50,300 82,232H120Q114,292 100,372Z" fill="url(#bt-skin)"/>
+<path d="M70,340Q66,300 84,256" fill="none" stroke="#2c2c2c" stroke-width="2.5" opacity=".35"/>
+<path d="M104,300Q110,270 112,244" fill="none" stroke="#e0e0e0" stroke-width="3" opacity=".35"/>
+<path d="M48,352Q76,340 104,354L106,384Q76,372 50,384Z" fill="url(#bt-sleeve-side)" stroke="#8a8780" stroke-width=".8"/>
+<path d="M49,368Q76,356 105,370" fill="none" stroke="#8a8780" stroke-width="1" opacity=".7"/>
+<path d="M52,352Q76,342 102,352" fill="none" stroke="#000" stroke-width="3" opacity=".22"/>
 <g class="bell">
-<rect x="96" y="186" width="12" height="44" rx="5" fill="#4a2a14"/>
+<rect x="97" y="166" width="10" height="64" rx="5" fill="url(#bt-wood)"/><ellipse cx="102" cy="166" rx="7" ry="5" fill="#5a381c"/>
 <path d="M90,226Q86,236 84,250Q80,272 66,286H138Q124,272 120,250Q118,236 114,226Z" fill="url(#bt-brass)"/>
 <ellipse cx="102" cy="286" rx="36" ry="6" fill="#8a5e18"/><circle class="clapper" cx="102" cy="293" r="6" fill="#4e3109"/>
 <path d="M96,232Q92,256 80,278" fill="none" stroke="#fff3c4" stroke-width="3" opacity=".6"/>
 </g>
-<ellipse cx="102" cy="206" rx="22" ry="18" fill="#9a9a9a"/>
-<path d="M86,198Q100,194 116,198M85,207Q100,203 118,207M87,216Q100,212 116,216" fill="none" stroke="#555" stroke-width="1.8"/>
+<path d="M80,216Q78,194 96,188H112Q126,192 124,212Q124,228 108,230H90Q80,228 80,216Z" fill="url(#bt-skin)"/>
+<path d="M84,198Q100,194 120,198M83,207Q100,203 122,207M84,216Q100,212 121,216" fill="none" stroke="#3a3a3a" stroke-width="1.5" opacity=".7"/>
+<path d="M86,224Q98,232 112,226" fill="none" stroke="#2a2a2a" stroke-width="1.5" opacity=".6"/>
+<path d="M80,206Q74,196 84,188Q94,184 100,192" fill="#9a9a9a" stroke="#3a3a3a" stroke-width="1.2"/>
 </g>
 </svg>`;
 
