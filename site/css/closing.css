@@ -16,7 +16,8 @@
 @keyframes cl-sway{from{transform:rotate(-1.2deg)}to{transform:rotate(1.2deg)}}
 @keyframes cl-flicker{0%,40%,44%,100%{opacity:1}42%{opacity:.7}43%{opacity:.95}}
 /* Moving parts of the drawing: their origins are in the SVG's own units (viewBox 0 0 520 600) */
-#closing .lid{transform:scaleY(0);transform-origin:center 138px}
+#closing .lid{transform:scaleY(0);transform-origin:center 138px;animation:cl-blink 4.3s 2s infinite}
+@keyframes cl-blink{0%,93%,100%{transform:scaleY(0)}96%{transform:scaleY(1)}}
 #closing .mouth{transform:scaleY(.12);transform-origin:260px 207px}
 /* Last call: the bell swings from his hand, its clapper the other way, his arm shakes with it */
 #closing .arm{transform-origin:170px 300px}
