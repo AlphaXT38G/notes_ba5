@@ -2320,4 +2320,22 @@ randomness.
 (Hint: look at which values appear in the decryption formula of $M_i$.)
 \end{rembox}
 
+\begin{defnbox}[title={Mode 3: Counter mode (CTR)}]
+Use an \textbf{increasing nonce} to add randomness \textbf{without dependencies between
+blocks}. A \textbf{nonce} is a random number used only \textbf{once}.
+\[
+  \text{Encryption: } C_i = E_K(\mathit{Nonce} + i) \oplus M_i;
+  \qquad
+  \text{Decryption: } M_i = E_K(\mathit{Nonce} + i) \oplus C_i .
+\]
+\end{defnbox}
+
+\begin{rembox}[title=CTR turns a block cipher into a stream cipher]
+$E_K(\mathit{Nonce}+1), E_K(\mathit{Nonce}+2), \ldots$ is a pseudo-random \textbf{key
+stream} XOR-ed with the message, exactly like a stream cipher (Lecture 5). Hence
+decryption only needs $E_K$ (no $D_K$, answering the slide's question ``do we need a
+decryption algorithm?''), blocks can be processed \textbf{in parallel}, and --- as with
+any pad --- a nonce must \textbf{never be reused} with the same key.
+\end{rembox}
+
 \end{document}
