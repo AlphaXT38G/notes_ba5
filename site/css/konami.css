@@ -1,6 +1,9 @@
 /* Konami easter egg. During the rift the page sits above a starry void (z-index 1) and below the crack and hole (z-index 3) */
 body.rift{overflow:hidden}
 body.rift .wrap{position:relative;z-index:2}
+/* Letters split to be swallowed one by one (konami.js): words stay whole, letters can move */
+.rw{white-space:nowrap}
+.rl{display:inline-block}
 #void{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;background:radial-gradient(1.5px 1.5px at 8% 14%,#fff,transparent),radial-gradient(1.5px 1.5px at 23% 72%,#fff,transparent),radial-gradient(1.5px 1.5px at 37% 22%,#fff,transparent),radial-gradient(1.5px 1.5px at 52% 88%,#fff,transparent),radial-gradient(1.5px 1.5px at 66% 9%,#fff,transparent),radial-gradient(1.5px 1.5px at 78% 64%,#fff,transparent),radial-gradient(1.5px 1.5px at 91% 31%,#fff,transparent),radial-gradient(1.5px 1.5px at 15% 46%,#fff,transparent),radial-gradient(1.5px 1.5px at 44% 57%,#fff,transparent),radial-gradient(1.5px 1.5px at 84% 85%,#fff,transparent),radial-gradient(1.5px 1.5px at 59% 38%,#fff,transparent),radial-gradient(1.5px 1.5px at 29% 93%,#fff,transparent),radial-gradient(1.5px 1.5px at 71% 19%,#fff,transparent),radial-gradient(1.5px 1.5px at 96% 74%,#fff,transparent),radial-gradient(1.5px 1.5px at 5% 83%,#fff,transparent),radial-gradient(1.5px 1.5px at 48% 6%,#fff,transparent),radial-gradient(circle at 50% 50%,rgba(70,35,10,.45),rgba(2,2,6,.97) 60%)}
 /* Crack of light that tears the screen open before the black hole appears */
 #crack{position:fixed;left:50%;top:50%;z-index:3;width:3px;height:0;transform:translate(-50%,-50%);border-radius:2px;pointer-events:none;background:linear-gradient(#fff,#ffe2a8,#fff);box-shadow:0 0 12px 4px #ffc265,0 0 40px 14px #ff8a2a}
