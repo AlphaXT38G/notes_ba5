@@ -145,7 +145,10 @@ body[data-phase=christmas-night] #xsnowman .k4{stop-color:#566b90}
 #sleigh .far .legs-f path,#sleigh .far .legs-h path{stroke:#3b200e}
 #sleigh .strap{fill:none;stroke:#b3122e;stroke-width:2}
 #sleigh .bell{fill:#f0c24a}
-#sleigh .glow{fill:url(#rd-glow);animation:nose 1.4s ease-in-out infinite alternate}
+#sleigh .nose .glow{fill:url(#rd-glow)}
+#sleigh .nose .halo{fill:url(#rd-halo)}
+#sleigh .nose .flare{fill:rgba(255,120,110,.7)}
+#sleigh .nose :is(.glow,.halo,.flare){transform-box:fill-box;transform-origin:center;animation:nose 1.1s ease-in-out infinite alternate}
 #sleigh .reins{fill:none;stroke:rgba(240,204,106,.75);stroke-width:1}
 #sleigh .runner{fill:none;stroke:#e3b341;stroke-width:2.6;stroke-linecap:round}
 #sleigh .sleigh-body{fill:url(#sl-red)}
@@ -156,7 +159,7 @@ body[data-phase=christmas-night] #xsnowman .k4{stop-color:#566b90}
 @keyframes deer-bob{from{transform:translateY(-1.5px)}to{transform:translateY(1.5px)}}
 @keyframes leg-f{from{transform:rotate(-18deg)}to{transform:rotate(14deg)}}
 @keyframes leg-h{from{transform:rotate(16deg)}to{transform:rotate(-14deg)}}
-@keyframes nose{from{opacity:.55}to{opacity:1}}
+@keyframes nose{from{opacity:.7;transform:scale(.85)}to{opacity:1;transform:scale(1.15)}}
 @keyframes spark{from{opacity:.2}to{opacity:1}}
 
 /* Christmas turntable (bottom left): red lacquer and gold plinth with snow on the lid, a record

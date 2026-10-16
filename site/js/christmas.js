@@ -601,7 +601,8 @@ fxLayers.push({
 
 // Santa's sleigh: at night, now and then at random (every 40 s to 4 min), Santa's sleigh crosses
 // the sky far away: random height, size, speed and direction, on a gentle arc. Drawn flying to the
-// left: Rudolph alone in front, his red nose glowing, then two pairs of reindeer (the far one of each
+// left: Rudolph alone in front, his red nose shining bright (white-hot core, glow, wide halo and a
+// small flare, pulsing), then two pairs of reindeer (the far one of each
 // pair darker and a little higher, for depth), all galloping (legs and bodies animated in CSS), in
 // red harnesses with gold bells; then the red and gold sleigh on curled runners, Santa holding the
 // reins, his sack of gifts behind him, and a trail of golden sparkles.
@@ -619,7 +620,9 @@ const deer = (x, y, far, rudolph = false) => `<g transform="translate(${x},${y})
   // near legs, harness with bells
   `<g class="legs-f"><path d="M18,26 12,34 6,31"/></g><g class="legs-h"><path d="M50,25 58,32 66,33"/></g>` +
   `<path class="strap" d="M15,15C17,21 19,26 20,29M27,12C27,18 27,24 27,30"/><circle class="bell" cx="17.5" cy="21" r="1.6"/><circle class="bell" cx="27" cy="21" r="1.6"/>` +
-  (rudolph ? `<circle class="glow" cx="-2" cy="6" r="7"/><circle cx="-2" cy="6" r="2.4" fill="#ff2a2a"/><circle cx="-2.7" cy="5.3" r=".8" fill="#ffd0d0"/>`
+  (rudolph ? `<g class="nose"><circle class="halo" cx="-2" cy="6" r="30"/><circle class="glow" cx="-2" cy="6" r="13"/>` +
+      `<path class="flare" d="M-26,6Q-2,4.6 22,6Q-2,7.4-26,6Z"/><circle cx="-2" cy="6" r="3.2" fill="#ff1f1f"/>` +
+      `<circle cx="-2" cy="6" r="1.8" fill="#ff8a8a"/><circle cx="-2.6" cy="5.4" r=".9" fill="#fff"/></g>`
     : `<circle cx="-2" cy="6" r="1.4" fill="#1a0e08"/>`) + `</g></g>`;
 const sleighEl = document.createElement("div");
 sleighEl.id = "sleigh";
@@ -628,7 +631,8 @@ sleighEl.innerHTML = `<svg viewBox="-12 -34 452 100"><defs>` +
   `<linearGradient id="rd-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a26a40"/><stop offset="1" stop-color="#5a3118"/></linearGradient>` +
   `<linearGradient id="rd-far" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#76492a"/><stop offset="1" stop-color="#3b200e"/></linearGradient>` +
   `<linearGradient id="sl-red" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2384f"/><stop offset=".55" stop-color="#b3122e"/><stop offset="1" stop-color="#6e0716"/></linearGradient>` +
-  `<radialGradient id="rd-glow"><stop offset="0" stop-color="rgba(255,60,60,.9)"/><stop offset="1" stop-color="rgba(255,60,60,0)"/></radialGradient>` +
+  `<radialGradient id="rd-glow"><stop offset="0" stop-color="rgba(255,90,80,1)"/><stop offset=".35" stop-color="rgba(255,40,40,.75)"/><stop offset="1" stop-color="rgba(255,30,30,0)"/></radialGradient>` +
+  `<radialGradient id="rd-halo"><stop offset="0" stop-color="rgba(255,60,50,.45)"/><stop offset=".5" stop-color="rgba(255,40,40,.15)"/><stop offset="1" stop-color="rgba(255,40,40,0)"/></radialGradient>` +
   `<radialGradient id="sl-spark"><stop offset="0" stop-color="#fff7d0"/><stop offset=".4" stop-color="rgba(255,215,110,.8)"/><stop offset="1" stop-color="rgba(255,215,110,0)"/></radialGradient></defs>` +
   // golden sparkles trailing behind the sleigh
   [[360, 44, 5], [374, 50, 4], [388, 42, 3.4], [400, 52, 3], [412, 46, 2.4], [424, 50, 2], [434, 44, 1.6]].map(([x, y, r], i) =>
