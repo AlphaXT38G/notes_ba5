@@ -29,9 +29,10 @@ const normalPhase = () => {
   [jazzEgg, xmasEgg, xmasJazz, forcedDismissed] = saved;
   return phase;
 };
-// Leaving the bar: drop what keeps it open, so the screen goes back to what the clock gives
+// Leaving the bar: drop the easter eggs that kept it open or that would replace it (the yeti
+// egg's Christmas), so the screen goes back to what the clock gives
 const backToClock = () => {
-  jazzEgg = xmasJazz = false;
+  jazzEgg = xmasEgg = xmasJazz = false;
   if (inBar(forced)) forcedDismissed = true;  // also leaves a ?night=evening / closing
 };
 const armstrong = () => {
