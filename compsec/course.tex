@@ -2266,4 +2266,16 @@ ciphertext, and Alice decrypts ``Apple'' without noticing (recall the bit-flippi
 on the OTP, Lecture 5).
 \end{defnbox}
 
+\begin{propbox}[title=Message integrity through digital signatures]
+Digital signatures provide:
+\begin{itemize}
+  \item \textbf{Sender authenticity} --- the message comes from Bob;
+  \item \textbf{Message integrity} --- the signature $S$ only verifies if the message $M$
+        has not been modified;
+  \item \textbf{Non-repudiation} --- Bob cannot later deny having signed $M$: only his
+        secret key could produce $S$, and \emph{anyone} (a judge, a third party) can
+        check it with his public key.
+\end{itemize}
+\end{propbox}
+
 \end{document}
