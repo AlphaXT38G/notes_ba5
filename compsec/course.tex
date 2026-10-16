@@ -2303,4 +2303,21 @@ encryption (the same issue as substitution ciphers, but on whole blocks). Classi
 illustration: an image encrypted with ECB still shows its outline.
 \end{warnbox}
 
+\begin{defnbox}[title={Mode 2: Cipher Block Chaining (CBC)}]
+Add an \textbf{IV} and \textbf{propagate information across blocks} to introduce
+randomness.
+\begin{align*}
+  \text{Encryption: } & C_0 = IV, \quad C_i = E_K(M_i \oplus C_{i-1}) \\
+  \text{Decryption: } & C_0 = IV, \quad M_i = D_K(C_i) \oplus C_{i-1}
+\end{align*}
+\end{defnbox}
+
+\begin{rembox}[title=Questions from the lecture]
+\begin{itemize}
+  \item What if the IV is incorrect? Is the full decryption wrong?
+  \item Can you decrypt a block alone? What do you need?
+\end{itemize}
+(Hint: look at which values appear in the decryption formula of $M_i$.)
+\end{rembox}
+
 \end{document}
