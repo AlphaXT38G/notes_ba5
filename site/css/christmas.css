@@ -1,7 +1,9 @@
-/* Christmas (body.christmas, December 10 - January 3, see js/christmas.js). Day (06:00 - 18:00):
-   a pale winter sky over snowy mountains, Christmas red and gold. Night (christmas-night): a deep
-   blue starry sky with the moon, gold accents, the garland and the tree lit up. Every colour
-   token is set: the visitor may be in light or dark mode. */
+/* Christmas (body.christmas, December 10 - January 3 or the yeti code, see js/christmas.js).
+   Day (06:00 - 18:00): a pale winter sky over snowy mountains, Christmas red and gold.
+   Night (christmas-night): a very deep navy sky with stars and the moon, gold accents, the
+   garland, the tree and the chalets lit up. Every colour token is set: the visitor may be in
+   light or dark mode. In order: colours and sky, title, cards, garland, winter scene (mountains,
+   moon, chalets, tree, sax, snowman), sleigh, turntable, fir back from the jazz bar, transition. */
 body.christmas{--bg:#eaf2fa;--fg:#1d2433;--card:rgba(255,255,255,.93);--line:#d5e1ee;--mut:#5b6a80;--acc:#b3122e;--acc-bg:#fde7eb;--new:#fff;--new-bg:#c8102e;background:var(--bg)}
 body.christmas::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(#c9def2,#eaf2fa 55%,#f5f9fd)}
 body.christmas .wrap{position:relative;z-index:1;padding-top:9.8rem}
@@ -54,7 +56,8 @@ body[data-phase=christmas-night] #garland .bauble circle:not(.refl){filter:brigh
 body[data-phase=christmas-night] #garland .shine{opacity:.45}
 @keyframes twinkle{0%,100%{opacity:1}45%{opacity:.55}55%{opacity:.9}70%{opacity:.4}}
 
-/* Winter scene behind the page: mountains and snowy ground, the tree with its snowman and gifts */
+/* Winter scene (#xscene), a fixed layer behind the page: the moon, the mountains and their
+   chalets, the tree and the snowman. Click-through. */
 #xscene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 /* Mountains: most of the window's height, in colours close to the sky so they stay in the background */
 #xscene .mountains{position:absolute;left:0;bottom:0;width:100%;height:78vh}

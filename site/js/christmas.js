@@ -1,12 +1,21 @@
 // ── Christmas (screens "christmas" and "christmas-night", body.christmas) ─────────────────────
 // From December 10 to January 3 the usual looks are replaced by Christmas (css/christmas.css):
-// the day screen from 6:00 to 18:00, the night screen from 18:00 to 6:00. Both have a garland
-// across the top (plain by day, lit at night), snow falling on the effects canvas (fx.js), a
-// winter landscape with a decorated tree, gifts and a snowman behind the page, and a Christmas
-// turntable playing a live of Christmas music. At night the tree lights play changing patterns,
-// Santa's sleigh crosses the sky now and then, and a small golden sax hidden on the tree opens
-// the jazz bar (a little fir in the bar brings Christmas back).
-// The metal show at 1:00 and the easter eggs still take over as usual.
+// the day screen from 6:00 to 18:00, the night screen from 18:00 to 6:00. Typing "yeti" brings
+// them at any time of the year. Both screens have:
+//   - a garland across the top that swings under the mouse (lit at night),
+//   - snow falling on the effects canvas (fx.js),
+//   - a winter scene behind the page: big discreet mountains, a decorated tree on the right with
+//     gifts, a snowman companion on the left (and at night the moon and chalet lights),
+//   - a Christmas turntable playing a live of Christmas music.
+// At night the tree lights play changing patterns, Santa's sleigh crosses the sky now and then,
+// and a small golden sax hidden among the ornaments opens the jazz bar (a little fir in the bar
+// brings Christmas back). The metal show at 1:00 and the other easter eggs still take over.
+//
+// In this file, in order: screens and override, the yeti code, shared helpers, the garland, the
+// tree and its sax ornament, the mountains, the moon, the snowman, the sax button, the tree lights
+// canvas, the snow, the sleigh, the garland physics, the music, the fir back from the jazz bar,
+// and turning it all on and off.
+// Every drawing is SVG built once from code (seeded random, so it looks the same on every visit).
 const xmasSubtitle = () => {
   const d = new Date(), m = d.getMonth(), day = d.getDate();
   if (m === 11 && day < 24) return `${25 - day} days until Christmas. Revise by the tree.`;
@@ -22,8 +31,9 @@ SCREENS["christmas-night"] = { className: "christmas", subtitle: xmasSubtitle, t
 // Christmas replaces the day and the jazz bar, not the shows: the override only rewrites "no
 // screen" and the jazz screens, and it runs before the metal and epic ones (this file is loaded
 // before metal.js), so those still win. A forced ?night=... is left alone (?night=christmas and
-// ?night=christmas-night force these screens). xmasJazz: the hidden sax was clicked, the night
-// goes on in the jazz bar until the fir is clicked or Christmas day comes back at 6:00.
+// ?night=christmas-night force these screens), unless the yeti code was typed (xmasEgg).
+// xmasJazz: the hidden sax was clicked, the night goes on in the jazz bar until the fir is clicked
+// or Christmas day comes back at 6:00.
 const isXmasDate = (d = new Date()) => (d.getMonth() === 11 && d.getDate() >= 10) || (d.getMonth() === 0 && d.getDate() <= 3);
 const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && t < 18 * 3600; };
 // Easter egg: typing y e t i (outside the search field) brings Christmas at any time of the year, day
@@ -63,12 +73,13 @@ const seeded = seed => () => {
   t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
   return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 };
-const f1 = n => n.toFixed(1);
+const f1 = n => n.toFixed(1);  // one decimal is plenty in SVG coordinates, and keeps the markup short
+// point at t (0 - 1) on a quadratic Bezier curve from (x0, y0) to (x1, y1), controlled by (cx, cy)
 const quad = (x0, y0, cx, cy, x1, y1, t) => [(1 - t) ** 2 * x0 + 2 * (1 - t) * t * cx + t * t * x1, (1 - t) ** 2 * y0 + 2 * (1 - t) * t * cy + t * t * y1];
-// Light colours: [glass by day, lit glass at night, glow rgb]
+// Colours of the tree lights: [glass by day, lit glass at night, glow rgb]
 const XMAS_LIGHTS = [["#a3192d", "#ff5a6e", "255,70,90"], ["#b07d12", "#ffd86a", "255,200,80"], ["#1d5aa8", "#7cc0ff", "90,170,255"],
   ["#17784a", "#7dffb4", "90,255,160"], ["#9c2a7e", "#ff94dc", "255,120,210"]];
-const NEEDLES = ["#1b5a31", "#246b3c", "#123f22", "#2f7d48", "#2a6b5a"];
+const NEEDLES = ["#1b5a31", "#246b3c", "#123f22", "#2f7d48", "#2a6b5a"];  // greens of the garland's fir needles
 
 // Garland across the top of the page: wide, heavy swags of fir of irregular widths and depths,
 // dusted with snow, a gold ribbon woven through, a few pine cones, velvet bows at the hooks. Small
@@ -173,11 +184,11 @@ const buildGarland = () => {
   placeSax();  // the sax may hang on the garland, which was just rebuilt
 };
 
-// The winter scene behind the page: mountains and snowy ground across the bottom, and on the right
-// a decorated tree (tiers of fir, tinsel, baubles, candy canes, light strings, star), with gifts
-// below it. Drawn once as SVG in a 520 x 640 box. The lights are also listed
-// (treeLights) for the night canvas that lights them up. The sax ornament is in a separate layer
-// above the page (#xtree-front), so it can be clicked even where the cards cover the tree.
+// The tree, on the right of the winter scene behind the page (#xscene): tiers of fir with snow on
+// the branches, tinsel, baubles, candy canes, light strings and a star, a red skirt and gifts below
+// it. Drawn once as SVG in a 520 x 640 box. The lights are also listed (treeLights) for the night
+// canvas that lights them up. The sax ornament is in a separate layer above the page
+// (#xtree-front), so it can be clicked even where the cards cover the tree.
 const TREE_W = 520, TREE_H = 640, TREE_X = 330;
 const treeLights = [];
 const treeHalfWidth = y => 12 + (y - 60) / (520 - 60) * 172;  // half width of the tree at height y
@@ -287,10 +298,11 @@ treeFront.id = "xtree-front";
 // Mountains filling the background, kept discreet (colours close to the sky's): three ranges, the
 // farther ones higher and paler, each ridge made natural by midpoint displacement between a few
 // chosen peaks, with snow on the tops (the range itself clips a jagged snow line), then the snowy
-// ground. At night, small soft, really yellow lights of chalets, blurred like seen through cold air, dot the slopes: a few hamlets and lone ones, smaller
-// and dimmer on the far ranges, drawn with their own range so the nearer ones hide them (CSS shows
-// them at night only, some flickering slowly). Drawn once in a 1600 x 700 box, scaled to cover the
-// bottom of the window. ridges keeps each range's outline.
+// ground. At night, small yellow chalet lights, blurred as if seen through cold air, dot the
+// slopes: a few hamlets and lone ones, smaller and dimmer on the far ranges, drawn with their own
+// range so the nearer ranges hide them (CSS shows them at night only, some flickering slowly).
+// Drawn once in a 1600 x 700 box, scaled to cover the bottom of the window. ridges keeps each
+// range's outline (y at a given x).
 const ridges = [];
 const MOUNTAINS = (() => {
   const rnd = seeded(77), W = 1600, H = 700;
@@ -489,7 +501,7 @@ saxBtn.title = "A sax among the ornaments?";
 saxBtn.setAttribute("aria-label", "Go to the jazz bar");
 saxBtn.innerHTML = SAX_SVG;
 // Where the tree sits behind the cards (narrow screens), the sax would cover their text: it hangs
-// on the garland instead, between two bulbs
+// on the garland instead, among the baubles (placed again each time the garland is rebuilt)
 const saxOnGarland = matchMedia("(max-width: 1240px)");
 const placeSax = () => {
   if (saxOnGarland.matches) {
@@ -666,10 +678,10 @@ fxLayers.push({
 // Santa's sleigh: at night, now and then at random (every 40 s to 4 min), Santa's sleigh crosses
 // the sky far away: random height, size, speed and direction, on a gentle arc. Drawn flying to the
 // left: Rudolph alone in front, his red nose shining bright (white-hot core, glow, wide halo and a
-// small flare, pulsing), then two pairs of reindeer (the far one of each
-// pair darker and a little higher, for depth), all galloping (legs and bodies animated in CSS), in
-// red harnesses with gold bells; then the red and gold sleigh on curled runners, Santa holding the
-// reins, his sack of gifts behind him, and a trail of golden sparkles.
+// small flare, pulsing), then two pairs of reindeer (the far one of each pair darker and a little
+// higher, for depth), all galloping (legs and bodies animated in CSS), in red harnesses with gold
+// bells; then the red and gold sleigh on curled runners, Santa holding the reins, his sack of
+// gifts behind him, and a trail of golden sparkles. Flying to the right, it is mirrored (.ltr).
 const deer = (x, y, far, rudolph = false) => `<g transform="translate(${x},${y})"><g class="deer${far ? " far" : ""}" style="--b:${f1(-Math.random())}s">` +
   // far legs (behind the body), antler behind
   `<g class="legs-f" style="--o:-.15s"><path d="M22,27 15,35 9,33"/></g><g class="legs-h" style="--o:-.15s"><path d="M46,27 54,35 62,37"/></g>` +
