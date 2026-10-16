@@ -97,7 +97,7 @@ const buildGarland = () => {
 
 // The winter scene behind the page: mountains and snowy ground across the bottom, and on the right
 // a decorated tree (tiers of fir, tinsel, baubles, candy canes, light strings, star), with gifts
-// below and a snowman beside it. Drawn once as SVG in a 520 x 640 box. The lights are also listed
+// below it. Drawn once as SVG in a 520 x 640 box. The lights are also listed
 // (treeLights) for the night canvas that lights them up. The sax ornament is in a separate layer
 // above the page (#xtree-front), so it can be clicked even where the cards cover the tree.
 const TREE_W = 520, TREE_H = 640, TREE_X = 330;
@@ -106,19 +106,11 @@ const treeHalfWidth = y => 12 + (y - 60) / (520 - 60) * 172;  // half width of t
 const buildTree = () => {
   const rnd = seeded(2025), parts = [];
   const defs = [`<linearGradient id="xfir" x1="0" x2="1"><stop class="s1" offset="0"/><stop class="s2" offset=".45"/><stop class="s3" offset="1"/></linearGradient>`,
-    `<radialGradient id="xsnowball" cx=".35" cy=".3"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#eef3fa"/><stop offset="1" stop-color="#c9d6e6"/></radialGradient>`,
     `<linearGradient id="xstar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3b0"/><stop offset=".5" stop-color="#ffc93c"/><stop offset="1" stop-color="#c98a0c"/></linearGradient>`,
     `<linearGradient id="xgold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset=".45" stop-color="#e3a923"/><stop offset="1" stop-color="#8a5a08"/></linearGradient>`];
   const BAUBLES = [["#ff6b7d", "#c8102e", "#5c0614"], ["#fff1a6", "#e2a81e", "#6b4504"], ["#bfe1ff", "#2f7ed8", "#0b2d5c"], ["#ffffff", "#c7ced8", "#59626e"], ["#e9b8ff", "#8e3cc8", "#3a0c5a"]];
   BAUBLES.forEach(([a, b, c], i) => defs.push(`<radialGradient id="xb${i}" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="${a}"/><stop offset=".45" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></radialGradient>`));
 
-  // Snowman on the left: three snowballs, coal eyes and buttons, carrot nose, scarf, top hat, twig arms
-  parts.push(`<g class="snowman"><path class="twig" d="M58,500 28,478M38,485 30,470M112,500 146,474M136,481 146,468"/>` +
-    `<circle cx="85" cy="572" r="38" fill="url(#xsnowball)"/><circle cx="85" cy="510" r="27" fill="url(#xsnowball)"/><circle cx="85" cy="466" r="19" fill="url(#xsnowball)"/>` +
-    `<circle class="coal" cx="78" cy="461" r="2.4"/><circle class="coal" cx="92" cy="461" r="2.4"/><path d="M85,467 106,471 85,472Z" fill="#f07f1a"/>` +
-    `<circle class="coal" cx="85" cy="503" r="2.8"/><circle class="coal" cx="85" cy="517" r="2.8"/><circle class="coal" cx="85" cy="560" r="3"/>` +
-    `<path d="M66,482Q85,492 104,482L105,489Q85,499 65,489Z" fill="#c8102e"/><path d="M92,488 98,512 89,511 86,489Z" fill="#a30d26"/>` +
-    `<rect x="66" y="444" width="38" height="5" rx="2" class="hat"/><rect x="72" y="418" width="26" height="28" rx="2" class="hat"/><rect x="72" y="437" width="26" height="5" fill="#c8102e"/></g>`);
   // Tree skirt and trunk, then the tiers from the bottom up, each casting a shadow on the one below
   parts.push(`<rect x="${TREE_X - 15}" y="512" width="30" height="40" fill="#5a3418"/><ellipse cx="${TREE_X}" cy="560" rx="150" ry="22" fill="#a30d26"/>` +
     `<ellipse cx="${TREE_X}" cy="556" rx="150" ry="19" fill="#c8102e"/><path d="M${TREE_X - 150},556a150,19 0 0 0 300,0" fill="none" stroke="#fff" stroke-width="6" stroke-dasharray="1 9" stroke-linecap="round"/>`);
@@ -220,6 +212,57 @@ const MOUNTAINS = `<svg class="mountains" viewBox="0 0 1600 300" preserveAspectR
   `<path class="m2" d="M0,230 140,170 260,210 400,150 540,215 690,160 820,220 980,165 1120,225 1260,170 1400,215 1600,180V300H0Z"/>` +
   `<path class="ground-shade" d="M0,262C200,236 380,252 560,246S900,232 1100,248 1450,238 1600,246V300H0Z"/>` +
   `<path class="ground" d="M0,270C220,246 400,262 580,256S920,244 1120,258 1460,248 1600,256V300H0Z"/></svg>`;
+// The snowman: a big companion standing in the left margin, beside the columns of courses. Drawn in
+// a 300 x 520 box, lit from the top left so it looks round: shaded snowballs with contact shadows
+// where they meet and a shadow on the ground, glossy coal, a ridged carrot, a knitted scarf with
+// fringes, a top hat with a holly sprig, twig arms. It sways a little, blinks, and now and then
+// waves with its right arm (CSS).
+const SNOWMAN = (() => {
+  const rnd = seeded(31), speckles = [];
+  for (const [cx, cy, r] of [[150, 405, 95], [150, 255, 70], [150, 140, 52]]) {
+    for (let i = 0; i < r / 3; i++) {
+      const a = rnd() * Math.PI * 2, d = Math.sqrt(rnd()) * r * .9;
+      speckles.push(`<circle cx="${f1(cx + Math.cos(a) * d)}" cy="${f1(cy + Math.sin(a) * d)}" r="${f1(.8 + rnd() * 1.4)}"/>`);
+    }
+  }
+  const coal = (x, y, r) => `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#sm-coal)"/><circle cx="${f1(x - r * .35)}" cy="${f1(y - r * .35)}" r="${f1(r * .28)}" fill="rgba(255,255,255,.7)"/>`;
+  const smile = [[130, 160], [139, 166], [150, 168], [161, 166], [170, 160]].map(([x, y]) => coal(x, y, 3.2)).join("");
+  return `<svg viewBox="0 0 300 520" aria-hidden="true"><defs>` +
+    `<radialGradient id="sm-snow" cx=".36" cy=".3" r=".78"><stop class="k1" offset="0"/><stop class="k2" offset=".45"/><stop class="k3" offset=".82"/><stop class="k4" offset="1"/></radialGradient>` +
+    `<radialGradient id="sm-ground"><stop offset="0" stop-color="rgba(30,50,90,.35)"/><stop offset="1" stop-color="rgba(30,50,90,0)"/></radialGradient>` +
+    `<radialGradient id="sm-contact"><stop offset="0" stop-color="rgba(60,85,130,.45)"/><stop offset="1" stop-color="rgba(60,85,130,0)"/></radialGradient>` +
+    `<radialGradient id="sm-coal" cx=".35" cy=".3"><stop offset="0" stop-color="#6a6a74"/><stop offset=".5" stop-color="#22222a"/><stop offset="1" stop-color="#0a0a0e"/></radialGradient>` +
+    `<linearGradient id="sm-carrot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb35a"/><stop offset=".5" stop-color="#ec7a16"/><stop offset="1" stop-color="#b4500a"/></linearGradient>` +
+    `<linearGradient id="sm-hat" x1="0" x2="1"><stop offset="0" stop-color="#454556"/><stop offset=".3" stop-color="#2a2a36"/><stop offset=".75" stop-color="#121218"/><stop offset="1" stop-color="#25252f"/></linearGradient>` +
+    `<linearGradient id="sm-scarf" x1="0" x2="1"><stop offset="0" stop-color="#e2384f"/><stop offset=".55" stop-color="#b3122e"/><stop offset="1" stop-color="#6e0716"/></linearGradient>` +
+    `</defs><ellipse cx="160" cy="498" rx="125" ry="18" fill="url(#sm-ground)"/>` +
+    // left arm, behind the body
+    `<path class="twig" d="M95,250 32,205M58,224 40,196M46,214 18,206"/>` +
+    `<circle cx="150" cy="405" r="95" fill="url(#sm-snow)"/><ellipse cx="150" cy="322" rx="62" ry="13" fill="url(#sm-contact)"/>` +
+    `<circle cx="150" cy="255" r="70" fill="url(#sm-snow)"/><ellipse cx="150" cy="192" rx="44" ry="10" fill="url(#sm-contact)"/>` +
+    `<g class="speckles">${speckles.join("")}</g>` +
+    coal(150, 236, 6) + coal(150, 262, 6.5) + coal(150, 290, 7) + coal(150, 380, 7.5) +
+    `<g class="head"><circle cx="150" cy="140" r="52" fill="url(#sm-snow)"/>` +
+    `<g class="eyes">${coal(132, 126, 5.5)}${coal(168, 126, 5.5)}</g>${smile}` +
+    `<path d="M150,138C166,136 196,144 216,152 194,154 166,152 150,150Z" fill="url(#sm-carrot)"/>` +
+    `<path d="M168,139l2,11M180,142l1.5,9M192,146l1,6" stroke="#a5470a" stroke-width="1.4" fill="none" stroke-linecap="round"/>` +
+    // top hat: brim, crown, red band with holly
+    `<ellipse cx="150" cy="96" rx="62" ry="13" fill="#1a1a22"/><path d="M110,94V30C110,22 190,22 190,30V94C190,104 110,104 110,94Z" fill="url(#sm-hat)"/>` +
+    `<ellipse cx="150" cy="30" rx="40" ry="7" fill="#3a3a48"/><path d="M110,76H190V90C190,96 110,96 110,90Z" fill="#b3122e"/>` +
+    `<path d="M172,84c-6,-10 -16,-8 -20,-12 4,6 0,10 6,12 -4,2 0,6 -2,10 6,-4 10,-2 16,-10Z" fill="#1f7a3e"/>` +
+    `<circle cx="172" cy="84" r="3.4" fill="#d6203a"/><circle cx="178" cy="80" r="3.4" fill="#c8102e"/></g>` +
+    // scarf: band around the neck, and a hanging end with fringes
+    `<path d="M96,184C110,200 190,200 204,184L208,200C192,218 108,218 92,200Z" fill="url(#sm-scarf)"/>` +
+    `<path d="M104,190C120,200 138,203 150,203M120,198v14M140,202v14M160,202v14M180,198v14" stroke="rgba(255,255,255,.35)" stroke-width="2" fill="none"/>` +
+    `<path d="M168,204 186,206 194,276 172,278Z" fill="url(#sm-scarf)"/><path d="M172,226 192,226M174,250 194,250" stroke="rgba(255,255,255,.45)" stroke-width="4"/>` +
+    `<path d="M172,278v10M177,278v12M182,277v10M187,277v12M192,276v9" stroke="#b3122e" stroke-width="2.2" stroke-linecap="round"/>` +
+    // right arm, in front, the one that waves
+    `<g class="wave"><path class="twig" d="M204,248 262,196M240,216 270,206M250,206 248,178"/></g></svg>`;
+})();
+const snowman = document.createElement("div");
+snowman.id = "xsnowman";
+snowman.innerHTML = SNOWMAN;
+
 const treeCanvas = document.createElement("canvas"), tctx = treeCanvas.getContext("2d");
 let treeBuilt = false;
 const saxBtn = document.createElement("button");
@@ -538,7 +581,7 @@ const setChristmas = on => {
   if (!treeBuilt) {
     tree.innerHTML = buildTree();
     scene.innerHTML = MOUNTAINS;
-    scene.append(tree);
+    scene.append(tree, snowman);
     treeBuilt = true;
   }
   buildGarland();
