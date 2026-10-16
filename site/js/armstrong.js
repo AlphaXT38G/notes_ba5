@@ -40,8 +40,7 @@ const armstrong = () => {
     jazzEgg = true;
     jazzEggXmas = xmasEgg;
   } else {
-    if (inBar(normalPhase())) return;  // the bar is the normal screen now: stay
-    backToClock();
+    backToClock();  // at bar time the clock gives the bar: it stays, but the eggs are gone
   }
   applyScreen();
 };
