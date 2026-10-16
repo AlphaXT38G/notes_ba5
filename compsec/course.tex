@@ -2100,4 +2100,21 @@ updates) needs all three properties at once. Knowing which tool gives which guar
 choose the right standard primitive instead of building a broken one.
 \end{rembox}
 
+\section{Recap: where we stand}
+
+\begin{rembox}[title=Recap of Lecture 5]
+\begin{itemize}
+  \item \textbf{Confidentiality}: information cannot be accessed by unauthorized
+        parties. Eve observes the ciphertext $C = E_K(M)$, but is assumed \textbf{not to
+        see inside} Alice's and Bob's devices (no access to $K$ or $M$).
+  \item \textbf{Symmetric encryption}: encryption and decryption use the \textbf{same
+        pre-shared secret key} $K$.
+  \item \textbf{Diffie-Hellman}: with public $p, g$, Bob sends $B = g^b \bmod p$, Alice
+        sends $A = g^a \bmod p$; both compute $K = g^{ab} \bmod p$, which Eve cannot
+        compute (discrete logarithm).
+\end{itemize}
+\textbf{Open question}: how do Alice and Bob know they are talking to the right person,
+and not to Eve in the middle (MITM)?
+\end{rembox}
+
 \end{document}
