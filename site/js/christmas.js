@@ -268,7 +268,7 @@ treeFront.id = "xtree-front";
 // Mountains filling the background, kept discreet (colours close to the sky's): three ranges, the
 // farther ones higher and paler, each ridge made natural by midpoint displacement between a few
 // chosen peaks, with snow on the tops (the range itself clips a jagged snow line), then the snowy
-// ground. At night, small soft yellow lights of chalets, blurred like seen through cold air, dot the slopes: a few hamlets and lone ones, smaller
+// ground. At night, small soft, really yellow lights of chalets, blurred like seen through cold air, dot the slopes: a few hamlets and lone ones, smaller
 // and dimmer on the far ranges, drawn with their own range so the nearer ones hide them (CSS shows
 // them at night only, some flickering slowly). Drawn once in a 1600 x 700 box, scaled to cover the
 // bottom of the window. ridges keeps each range's outline.
@@ -298,7 +298,7 @@ const MOUNTAINS = (() => {
     ["m2", [[0, 470], [200, 420], [380, 480], [560, 430], [760, 500], [960, 440], [1180, 505], [1380, 445], [1600, 480]], 40, 0],
   ];
   let svg = `<svg class="mountains" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMax slice"><defs>` +
-    `<radialGradient id="xchalet"><stop offset="0" stop-color="rgba(255,226,140,.7)"/><stop offset=".45" stop-color="rgba(255,214,120,.28)"/><stop offset="1" stop-color="rgba(255,214,120,0)"/></radialGradient>` +
+    `<radialGradient id="xchalet"><stop offset="0" stop-color="rgba(255,205,40,.85)"/><stop offset=".45" stop-color="rgba(255,190,30,.35)"/><stop offset="1" stop-color="rgba(255,190,30,0)"/></radialGradient>` +
     // blurs for the chalet lights, applied per light so a flickering one only redraws its own spot
     `<filter id="xglowblur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5"/></filter>` +
     `<filter id="xcoreblur" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation=".7"/></filter>`;
@@ -326,7 +326,7 @@ const MOUNTAINS = (() => {
         const r = (1.6 + rnd() * .9) * (1.4 - far * .5);
         lights.push(`<g class="chalet${rnd() < .3 ? " flicker" : ""}" style="--d:${f1(-rnd() * 6)}s;opacity:${f1(.6 + (1 - far) * .4)}">` +
           `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r * 4.5)}" fill="url(#xchalet)" filter="url(#xglowblur)"/>` +
-          `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="#ffeaa8" filter="url(#xcoreblur)"/></g>`);
+          `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="#ffd23a" filter="url(#xcoreblur)"/></g>`);
       }
     }
     return `<path class="${cls}" d="${d}"/>${snow}<g class="chalets">${lights.join("")}</g>`;
