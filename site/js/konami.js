@@ -1,5 +1,7 @@
 // Konami code easter egg (up up down down left right left right B A): a dimensional rift opens,
-// a black hole swallows the page, then everything comes back in confetti colours
+// a ray-traced black hole (blackhole.js) swallows the page letter by letter, then its boxes,
+// overheats, implodes and explodes in a supernova (supernova.js); everything comes back out in
+// confetti colours. Without WebGL, a CSS black hole and a white flash do the same job.
 const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
 let konamiPos = 0,     // how many keys of the sequence have been typed so far
     riftBusy = false;  // true while the animation (and the party after it) runs, to ignore repeats
@@ -80,9 +82,10 @@ function splitLetters(roots) {
   return { letters, restore: () => swaps.forEach(([box, n]) => box.replaceWith(n)) };
 }
 
-// The whole Konami animation, about 20 s (slow, to watch the black hole and its supernova), then 15 s of party theme. Every movement uses the
-// Web Animations API (el.animate), so nothing in the page layout is changed for real:
-// cancelling the animations is enough to put every element back where it was.
+// The whole Konami animation, about 21 s (slow, to watch the black hole and its supernova), then
+// 15 s of party theme. Every movement uses the Web Animations API (el.animate), so nothing in the
+// page layout is changed for real: cancelling the animations is enough to put every element back
+// where it was. The only DOM change, the letters split into spans, is undone by restore().
 async function rift() {
   if (riftBusy) return;
   riftBusy = true;

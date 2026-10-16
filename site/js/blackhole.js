@@ -13,6 +13,9 @@
 // front one (disk + shadow, over the page, transparent elsewhere). A third, tiny canvas is a copy of
 // the front one, scaled up and screen-blended: a cheap bloom.
 // Units: the horizon radius is 1. createBlackHole() returns null without WebGL (CSS fallback).
+// The caller drives it with tween(): grow (size, to open and implode it), heat (the gas
+// overheating before the supernova) and speed (how fast the gas turns). The canvases are rendered
+// below the screen resolution, lower still if frames come too slowly.
 
 const D0_CSS = 30;  // camera distance at full size, same as D0 in the shader
 
