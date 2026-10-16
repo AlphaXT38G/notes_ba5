@@ -2,7 +2,8 @@
 // Once the neon sign has gone dark letter by letter (jazz.js, jazz.css), the bartender comes over
 // the whole page to say the bar is closing (css/closing.css): the room darkens and he rises from
 // the bottom of the screen, life-size, under a hanging lamp that swings as it comes down, and
-// rings the last call bell. Any other phase sends him away at once.
+// rings the last call bell, then tells you the bar is closing. Any other phase sends him away at
+// once.
 //
 // He is one SVG drawing built from code: shirt and waistcoat, bow tie, a towel over his left arm,
 // his right arm raised with a brass hand bell, and a face with moving parts (.lid, .mouth).
@@ -76,8 +77,12 @@ const BARTENDER = `<svg class="bt" viewBox="0 0 520 600" aria-hidden="true">
 
 const closing = document.createElement("div");
 closing.id = "closing";
-closing.innerHTML = '<div class="shade"></div><div class="lamp"><div class="swing"><i class="cord"></i><i class="glow"></i><i class="cap"></i><i class="bulb"></i></div></div>' +
-  `<div class="stage">${BARTENDER}</div>`;
+// The lamp hangs right above his head (.who holds the drawing and the lamp, so it follows him
+// at any screen size), its light falling on him
+closing.innerHTML = `<div class="shade"></div><div class="stage"><div class="who">${BARTENDER}` +
+  '<div class="lamp"><div class="swing"><i class="cord"></i><i class="glow"></i><i class="cap"></i><i class="bulb"></i></div></div></div>' +
+  '<div class="talk"><p class="bubble"></p></div></div>';
+const bubble = closing.querySelector(".bubble");
 // Last call bell: a few strokes of a brass hand bell, made with the Web Audio API (no file to
 // load). A bell is a sum of inharmonic partials that ring and die away, the high ones faster.
 // Browsers only allow sound after a user gesture: without one the bell rings silently.
@@ -102,14 +107,34 @@ const ringBell = (strokes = 4) => {
   setTimeout(() => ac.close(), strokes * 300 + 2500);
 };
 
+// What he says, typed letter by letter in his speech bubble while his mouth moves (.talking)
+const CLOSING_WORDS = ["Mesdames, messieurs… on ferme !", "Dernier verre servi, les chaises montent sur les tables.",
+  "Rentrez bien. Le jazz reprend demain soir, 21h30."];
+const say = (lines, done) => {
+  const [line, ...rest] = lines, span = document.createElement("span");
+  bubble.append(span);
+  closing.classList.add("talking");
+  let n = 0;
+  const type = () => {
+    span.textContent = line.slice(0, ++n);
+    if (n < line.length) return later(line[n - 1].match(/[,.…!]/) ? 260 : 38, type);  // breathes at punctuation
+    closing.classList.remove("talking");
+    if (rest.length) later(650, () => say(rest, done)); else done?.();
+  };
+  type();
+};
+
 // The scene, step by step: timers are kept so that leaving the bar cancels whatever is planned
 let closingTimer = null, sceneTimers = [];
 const later = (ms, fn) => sceneTimers.push(setTimeout(fn, ms));
 const closeBar = () => {  // he arrives once the last letter of the sign (and the sax) is off
   closing.className = "";
+  bubble.replaceChildren();
+  bubble.classList.remove("on");
   document.body.append(closing);
   later(1500, () => { closing.classList.add("ring"); ringBell(); });  // up on his feet, he rings
   later(2700, () => closing.classList.remove("ring"));
+  later(2900, () => { bubble.classList.add("on"); say(CLOSING_WORDS); });
 };
 const leaveBar = () => {
   clearTimeout(closingTimer);
