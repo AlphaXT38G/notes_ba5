@@ -268,8 +268,10 @@ treeFront.id = "xtree-front";
 // Mountains filling the background, kept discreet (colours close to the sky's): three ranges, the
 // farther ones higher and paler, each ridge made natural by midpoint displacement between a few
 // chosen peaks, with snow on the tops (the range itself clips a jagged snow line), then the snowy
-// ground. Drawn once in a 1600 x 700 box, scaled to cover the bottom of the window. ridges keeps
-// each range's outline, to put things on the slopes.
+// ground. At night, small warm lights of chalets dot the slopes: a few hamlets and lone ones, smaller
+// and dimmer on the far ranges, drawn with their own range so the nearer ones hide them (CSS shows
+// them at night only, some flickering slowly). Drawn once in a 1600 x 700 box, scaled to cover the
+// bottom of the window. ridges keeps each range's outline.
 const ridges = [];
 const MOUNTAINS = (() => {
   const rnd = seeded(77), W = 1600, H = 700;
@@ -295,7 +297,8 @@ const MOUNTAINS = (() => {
     ["m1", [[0, 360], [150, 300], [300, 380], [470, 250], [640, 360], [820, 270], [1000, 390], [1160, 280], [1350, 370], [1600, 290]], 60, 55],
     ["m2", [[0, 470], [200, 420], [380, 480], [560, 430], [760, 500], [960, 440], [1180, 505], [1380, 445], [1600, 480]], 40, 0],
   ];
-  let svg = `<svg class="mountains" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMax slice"><defs>`;
+  let svg = `<svg class="mountains" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMax slice"><defs>` +
+    `<radialGradient id="xchalet"><stop offset="0" stop-color="rgba(255,200,110,.55)"/><stop offset="1" stop-color="rgba(255,200,110,0)"/></radialGradient>`;
   const bodies = RANGES.map(([cls, peaks, rough, snowDepth], i) => {
     const pts = ridge(peaks, rough);
     ridges.push({ cls, pts, y: x => yAt(pts, x) });
@@ -310,7 +313,19 @@ const MOUNTAINS = (() => {
       });
       snow = `<path class="caps ${cls}c" clip-path="url(#xclip${i})" d="M0,0 ${line.join(" ")} ${W},0Z"/>`;
     }
-    return `<path class="${cls}" d="${d}"/>${snow}`;
+    // chalets: hamlets of 2 to 5 lights, and lone ones, below the snow line and above the ground
+    const far = 1 - i * .35, lights = [];
+    for (let h = 0; h < 6 + i * 2; h++) {
+      const x0 = 20 + rnd() * (W - 40), n = rnd() < .4 ? 1 : 2 + ((rnd() * 4) | 0);
+      for (let k = 0; k < n; k++) {
+        const x = Math.min(W - 5, Math.max(5, x0 + (rnd() - .5) * 40)), y = yAt(pts, x) + 30 + snowDepth * .8 + rnd() * (90 - i * 25);
+        if (y > 630) continue;
+        const r = (1 + rnd() * .7) * (1.4 - far * .5);
+        lights.push(`<g class="chalet${rnd() < .3 ? " flicker" : ""}" style="--d:${f1(-rnd() * 6)}s;opacity:${f1(.55 + (1 - far) * .45)}">` +
+          `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r * 4)}" fill="url(#xchalet)"/><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="#ffd98a"/></g>`);
+      }
+    }
+    return `<path class="${cls}" d="${d}"/>${snow}<g class="chalets">${lights.join("")}</g>`;
   });
   return svg + `</defs>${bodies.join("")}` +
     `<path class="ground-shade" d="M0,662C200,636 380,652 560,646S900,632 1100,648 1450,638 1600,646V700H0Z"/>` +
