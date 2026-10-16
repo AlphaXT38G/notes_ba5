@@ -2181,4 +2181,14 @@ Encryption: \emph{anyone} can write to Alice, only Alice can read. Signature: on
 write (sign), \emph{anyone} can check it was Bob.
 \end{rembox}
 
+\begin{propbox}[title=Sign the hash of messages]
+Public-key operations are \textbf{computationally costly} compared with most symmetric
+key algorithms of equivalent security: signing and encrypting \textbf{is slow}. \\
+$\Rightarrow$ \textbf{Sign the hash} of messages instead of the message itself:
+\[
+  H = h(M), \qquad S = \mathrm{Sign}_{SK}(H), \qquad V_{PK}(H, S) = \checkmark ,
+\]
+where Alice recomputes $H = h(M)$ from the received $M$.
+\end{propbox}
+
 \end{document}
