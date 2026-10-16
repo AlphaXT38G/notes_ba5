@@ -4,7 +4,7 @@
    token is set: the visitor may be in light or dark mode. */
 body.christmas{--bg:#eaf2fa;--fg:#1d2433;--card:rgba(255,255,255,.93);--line:#d5e1ee;--mut:#5b6a80;--acc:#b3122e;--acc-bg:#fde7eb;--new:#fff;--new-bg:#c8102e;background:var(--bg)}
 body.christmas::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(#c9def2,#eaf2fa 55%,#f5f9fd)}
-body.christmas .wrap{position:relative;z-index:1;padding-top:6.2rem}
+body.christmas .wrap{position:relative;z-index:1;padding-top:9.8rem}
 body.christmas[data-phase=christmas-night]{--bg:#0a1324;--fg:#eef2f8;--card:rgba(16,28,50,.9);--line:rgba(180,210,255,.15);--mut:#9fb0c8;--acc:#f2c14e;--acc-bg:rgba(242,193,78,.12);--new:#fff;--new-bg:#c8102e}
 /* Night sky: stars, the moon in the top left with its halo, a cold glow over the mountains */
 body.christmas{--moon:radial-gradient(circle at 13% 15%,#fffbe6 0 2.1rem,rgba(255,248,215,.35) 2.3rem,rgba(255,248,215,.08) 5rem,transparent 9rem)}
@@ -31,22 +31,27 @@ body.christmas #search,body.christmas .view,body.christmas .tools button{box-sha
 body.christmas footer::after{content:" · Merry Christmas, and happy revising!"}
 body.christmas[data-phase=christmas-night] footer{color:#b9c6da}
 
-/* Garland across the top (js buildGarland): fir swags, snow, red bows, glass bulbs */
-#garland{position:absolute;left:0;right:0;top:0;height:100px;z-index:3;pointer-events:none;overflow:hidden}
+/* Garland across the top (js buildGarland): fir swags, gold ribbon, pine cones, velvet bows,
+   fairy lights and glass baubles */
+#garland{position:absolute;left:0;right:0;top:0;height:170px;z-index:3;pointer-events:none;overflow:hidden}
 #garland svg{display:block}
-#garland .fir{fill:none;stroke:#123f22;stroke-width:15;stroke-linecap:round}
+#garland .fir{fill:none;stroke:#0f3a20;stroke-width:20;stroke-linecap:round}
 #garland .needles{fill:none;stroke-width:2.2;stroke-linecap:round}
-#garland .snow circle{fill:#fff}
-#garland .bow path,#garland .bow circle{fill:#c8102e;stroke:#7d0a1d;stroke-width:1}
-#garland .wire{fill:none;stroke:#0d2616;stroke-width:1.6}
-#garland .cap{fill:#3c4a3e}
-#garland .gloss{fill:#fff;opacity:.55}
-#garland .halo,#garland .lit{opacity:0}
-/* At night the bulbs light up: lit glass and a halo, each twinkling at its own pace (--t, --d) */
-body[data-phase=christmas-night] #garland .lit{opacity:1;animation:twinkle var(--t) ease-in-out var(--d) infinite}
-body[data-phase=christmas-night] #garland .halo{opacity:1;animation:twinkle var(--t) ease-in-out var(--d) infinite}
-body[data-phase=christmas-night] #garland .gloss{opacity:.8}
-body[data-phase=christmas-night] #garland .fir{stroke:#0b2a17}
+#garland .ribbon{fill:none;stroke:url(#ribbon);stroke-width:3;stroke-dasharray:22 16;stroke-linecap:round}
+#garland .cone ellipse{fill:#6b3f1d}
+#garland .cone path{fill:none;stroke:#3e220d;stroke-width:1.4}
+#garland .snow{fill:#fff}
+#garland .thread{fill:none;stroke:#c9a23a;stroke-width:1}
+#garland .cap{fill:#d4a630}
+#garland .shine{fill:#fff;opacity:.7}
+#garland .glass{fill:#d9cfae}
+#garland .halo,#garland .lit,#garland .refl{opacity:0}
+/* At night the fairy lights glow and twinkle each at its own pace (--t, --d), the baubles get
+   darker and mirror the lights next to them */
+body[data-phase=christmas-night] #garland :is(.lit,.halo,.refl){opacity:1;animation:twinkle var(--t) ease-in-out var(--d) infinite}
+body[data-phase=christmas-night] #garland .fir{stroke:#0a2716}
+body[data-phase=christmas-night] #garland .bauble circle:not(.refl){filter:brightness(.7)}
+body[data-phase=christmas-night] #garland .shine{opacity:.45}
 @keyframes twinkle{0%,100%{opacity:1}45%{opacity:.55}55%{opacity:.9}70%{opacity:.4}}
 
 /* Winter scene behind the page: mountains and snowy ground, the tree with its snowman and gifts */
@@ -90,7 +95,7 @@ body[data-phase=christmas-night] #xtree .branch-snow{stroke:#c9d6ea}
 #xsax:hover svg,#xsax:focus-visible svg{filter:drop-shadow(0 0 5px rgba(255,215,110,.9))}
 body[data-phase=christmas-night] #xsax{display:block}
 /* Where the tree is behind the cards, the sax hangs on the garland instead (js placeSax) */
-#garland #xsax{top:30px;width:22px;height:38px}
+#garland #xsax{top:64px;width:24px;height:42px}
 
 /* The snowman, a big companion in the left margin beside the courses (behind the cards, faded,
    on narrow screens). It sways gently, blinks and waves now and then; only transforms are animated. */
@@ -156,4 +161,4 @@ body[data-phase=christmas-night] #xsnowman .k4{stop-color:#566b90}
 @keyframes vt-snow-in{from{opacity:0;filter:brightness(1.8) blur(6px)}}
 
 /* Reduced motion */
-@media(prefers-reduced-motion:reduce){#xsnowman .head,#xsnowman .eyes,#xsnowman .wave{animation:none}body[data-phase=christmas-night] #garland .lit,body[data-phase=christmas-night] #garland .halo{animation:none}#sleigh{display:none}#xmusic.playing .disc{animation:none}}
+@media(prefers-reduced-motion:reduce){#xsnowman .head,#xsnowman .eyes,#xsnowman .wave{animation:none}body[data-phase=christmas-night] #garland :is(.lit,.halo,.refl){animation:none}#sleigh{display:none}#xmusic.playing .disc{animation:none}}
