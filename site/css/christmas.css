@@ -62,9 +62,10 @@ body[data-phase=christmas-night] #xscene .m2{fill:#15223d}
 body[data-phase=christmas-night] #xscene .caps{fill:#9db0d0}
 body[data-phase=christmas-night] #xscene .ground-shade{fill:#7f93b6}
 body[data-phase=christmas-night] #xscene .ground{fill:#b9c8e0}
-/* The tree box, in the right margin on wide screens; behind the cards (faded) on narrow ones.
-   #xtree-front is the same box above the page, holding only the hidden sax. */
-#xtree,#xtree-front{position:fixed;right:0;bottom:1vh;width:min(clamp(260px,calc((100vw - 960px) / 2 + 150px),520px),66vh);aspect-ratio:520/640}
+/* The tree box: almost the full height of the window, always on the right, sticking out past the
+   right edge (the SVG is bottom-aligned, so the tree stands on the ground). On narrow screens it is
+   behind the cards (faded). #xtree-front is the same box above the page, holding only the hidden sax. */
+#xtree,#xtree-front{--tw:min(calc(96vh * 520 / 640),120vw);position:fixed;right:calc(var(--tw) * -.14);bottom:0;width:var(--tw);aspect-ratio:520/640}
 #xtree svg,#xtree canvas{position:absolute;inset:0;width:100%;height:100%}
 #xtree .s1{stop-color:#2f8a4a}
 #xtree .s2{stop-color:#1c6b38}
