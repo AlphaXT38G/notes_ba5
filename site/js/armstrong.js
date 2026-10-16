@@ -15,7 +15,8 @@ let armstrongPos = 0,     // how many letters of the word have been typed so far
 const inBar = phase => SCREENS[phase]?.className === "night";
 OVERRIDES.push(phase => {
   if (jazzEgg && xmasEgg !== jazzEggXmas) jazzEgg = false;  // yeti typed since: Christmas wins
-  if (!jazzEgg) return phase;
+  // Only the day and Christmas are replaced: a show on the clock (metal at 01:00) still wins
+  if (!jazzEgg || phase && !inBar(phase) && SCREENS[phase]?.className !== "christmas") return phase;
   // Keeps "closing" when the clock says so, even if Christmas had replaced it before this override
   const clock = scheduledPhase();
   return inBar(phase) ? phase : inBar(clock) ? clock : "evening";
