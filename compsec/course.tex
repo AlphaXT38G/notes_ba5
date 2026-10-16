@@ -2125,4 +2125,20 @@ avoiding Eve in the middle? Bob wants to talk to Alice; Alice wants to make sure
 talking to Bob.
 \end{defnbox}
 
+\begin{defnbox}[title=Public-key cryptography: key pairs and PKI]
+Each user has a \textbf{key pair}:
+\begin{itemize}
+  \item a \textbf{secret key} $SK$ (kept private), e.g.\ Bob's $SK = b$;
+  \item a \textbf{public key} $PK$ (published), e.g.\ Bob's $PK = B = g^b$.
+\end{itemize}
+Public keys are published in a \textbf{Public Key Infrastructure (PKI)}, from which
+anyone can fetch the public key of the person they want to talk to.
+\end{defnbox}
+
+\begin{rembox}[title=Link with Diffie-Hellman]
+A DH public value $B = g^b$ \emph{is} a public key, and $b$ the secret key. The PKI
+(e.g.\ Certificate Authorities, Lecture 5) is what binds a public key to an
+\textbf{identity}: it answers ``is this really Alice's key?''.
+\end{rembox}
+
 \end{document}
