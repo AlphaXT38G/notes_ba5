@@ -180,6 +180,9 @@ def build_index():
     }.items():
         page = page.replace("{{" + key + "}}", value)
     DIST.mkdir(exist_ok=True)
+    # Images of the page (site/img/) are the only files it loads besides itself: too heavy to inline
+    if (SITE / "img").is_dir():
+        shutil.copytree(SITE / "img", DIST / "img", dirs_exist_ok=True)
     (DIST / "index.html").write_text(page, encoding="utf-8")
     ok("dist/index.html")
     check_script()
