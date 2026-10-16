@@ -2257,4 +2257,13 @@ encrypting with Alice's \textbf{encryption public key} and signing with his own
 \textbf{verification public key}.
 \end{defnbox}
 
+\section{Problem II: Integrity}
+
+\begin{defnbox}[title=Integrity]
+Information cannot be \textbf{modified} by unauthorized parties. \\
+Eve now \textbf{writes} on the channel: Bob sends ``Banana'', Eve tampers with the
+ciphertext, and Alice decrypts ``Apple'' without noticing (recall the bit-flipping attack
+on the OTP, Lecture 5).
+\end{defnbox}
+
 \end{document}
