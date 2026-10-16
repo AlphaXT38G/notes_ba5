@@ -2141,4 +2141,21 @@ A DH public value $B = g^b$ \emph{is} a public key, and $b$ the secret key. The 
 \textbf{identity}: it answers ``is this really Alice's key?''.
 \end{rembox}
 
+\begin{defnbox}[title=Public-key encryption (confidentiality)]
+To send a confidential message to Alice, Bob fetches Alice's \textbf{public key} from the
+PKI and encrypts:
+\[
+  C = E_{PK_{\text{Alice}}}(M), \qquad M = D_{SK_{\text{Alice}}}(C).
+\]
+Only Alice, who holds $SK_{\text{Alice}}$, can decrypt. Eve also knows $PK$, but trying to
+decrypt with the public key gives garbage. Example: \textbf{RSA-OAEP}.
+\textbf{Don't design your own!}
+\end{defnbox}
+
+\begin{rembox}[title=Intuition: the padlock]
+The public key is an \textbf{open padlock} that Alice hands out to everybody; the secret
+key is the only key that opens it. Anyone can lock a box for Alice, only Alice can open
+it.
+\end{rembox}
+
 \end{document}
