@@ -23,6 +23,7 @@ uniform float uFocal;    // focal length (canvas px)
 uniform float uTime;     // seconds since the start
 uniform float uGrow;     // apparent size of the hole: 0 = nothing, 1 = full size
 uniform float uElev;     // camera height above the disk plane (rad)
+uniform float uHeat;     // brightness of the gas: 1 = normal, more when it overheats before the end
 #define RIN 3.0          // inner edge of the disk: innermost stable circular orbit
 #define ROUT 13.0        // outer edge
 #define D0 30.0          // camera distance at full size
@@ -66,7 +67,7 @@ vec4 disk(vec3 p, vec3 dir) {
   float g = shift(p, r, dir, 1.);
   float f = flux(r) + .06 * smoothstep(2., RIN, r) * (1. - flux(r));  // faint plunging gas inside the ISCO
   float T = 4400. * pow(max(f, .02), .25);                                 // peak temperature
-  vec3 light = blackbody(T * g) * f * g * g * g * g * dens * .75;          // specific intensity ~ g^4
+  vec3 light = blackbody(T * g * (.8 + .2 * uHeat)) * f * g * g * g * g * dens * .75 * uHeat;          // specific intensity ~ g^4
   // Hot thin gas: it hides what is behind it about as much as it shines, so the dim parts of the
   // disk passing in front of the shadow stay see-through instead of a grey veil
   return vec4(light, clamp(dot(light, vec3(.3, .5, .2)) * 1.6 + dens * .03, 0., .97));
@@ -141,7 +142,7 @@ void main() {
   if (captured > 0.) alpha = 1.;                                 // the shadow hides the page
   // Premultiplied colour. Glow brighter than its opacity raises the opacity: the colour must stay
   // a valid premultiplied one, or the bloom copy (2D canvas) turns it white
-  vec3 c = tone(col + haze);
+  vec3 c = tone(col + haze * sqrt(uHeat));
   gl_FragColor = vec4(c, max(alpha, max(c.r, max(c.g, c.b))));
 #else
   gl_FragColor = vec4(captured > 0. ? vec3(0.) : tone(sky(normalize(vel))), 1.);
@@ -169,7 +170,7 @@ function createBlackHole() {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
     gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
     const u = {};
-    ["uRes", "uFocal", "uTime", "uGrow", "uElev"].forEach(n => u[n] = gl.getUniformLocation(p, n));
+    ["uRes", "uFocal", "uTime", "uGrow", "uElev", "uHeat"].forEach(n => u[n] = gl.getUniformLocation(p, n));
     return { gl, u };
   };
   const pb = program(gb, ""), pf = program(gf, "#define FRONT\n");
@@ -189,35 +190,38 @@ function createBlackHole() {
   // Size: the shadow (2.6 horizon radii seen from 30) is 13 % of the smaller side of the screen
   const focal = Math.min(Math.min(innerWidth, innerHeight) * .13, 120) * D0_CSS / 2.6;
 
-  // Size animation: keyframes of uGrow played on the clock, like el.animate() but for a uniform
-  let grow = 0, tween = null;
+  // Animated values, played on the clock like el.animate() but for uniforms: grow (size of the
+  // hole), heat (brightness of the gas) and speed (how fast the gas turns, as a time multiplier)
+  const val = { grow: 0, heat: 1, speed: 1 }, tweens = {};
   const t0 = performance.now();
+  let t = 0;
   const draw = ({ gl, u }, c, t) => {
     gl.viewport(0, 0, c.width, c.height);
     gl.uniform2f(u.uRes, c.width, c.height);
     gl.uniform1f(u.uFocal, focal * c.width / innerWidth);
     gl.uniform1f(u.uTime, t);
-    gl.uniform1f(u.uGrow, grow);
+    gl.uniform1f(u.uGrow, val.grow);
+    gl.uniform1f(u.uHeat, val.heat);
     gl.uniform1f(u.uElev, .075 + .09 * Math.exp(-t / 5));  // slowly sinking towards the disk plane
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   };
   let raf = 0, slow = 0, last = t0;
   const frame = now => {
     raf = requestAnimationFrame(frame);
-    if (tween) {
-      const k = Math.min(1, (now - tween.start) / tween.duration), e = tween.ease(k), f = tween.frames;
+    for (const [name, tw] of Object.entries(tweens)) {
+      const k = Math.min(1, (now - tw.start) / tw.duration), e = tw.ease(k), f = tw.frames;
       let i = 1;
       while (i < f.length - 1 && f[i][0] < e) i++;
-      grow = f[i - 1][1] + (f[i][1] - f[i - 1][1]) * Math.min(1, Math.max(0, (e - f[i - 1][0]) / (f[i][0] - f[i - 1][0])));
-      if (k === 1) tween = null;
+      val[name] = f[i - 1][1] + (f[i][1] - f[i - 1][1]) * Math.min(1, Math.max(0, (e - f[i - 1][0]) / (f[i][0] - f[i - 1][0])));
+      if (k === 1) delete tweens[name];
     }
     // Too slow (many frames over 40 ms): render fewer pixels from now on. Much longer gaps are a
     // hidden or throttled tab, not a slow GPU
     const gap = now - last;
     slow = gap > 40 && gap < 200 ? slow + 1 : Math.max(0, slow - 1);
+    t += Math.min(gap, 100) / 1000 * val.speed;
     last = now;
     if (slow > 10 && scale > .45) { scale *= .85; slow = 0; resize(); }
-    const t = (now - t0) / 1000;
     draw(pb, back, t);
     draw(pf, front, t);
     bctx.clearRect(0, 0, bloom.width, bloom.height);
@@ -226,8 +230,9 @@ function createBlackHole() {
   return {
     back, front, bloom,
     start() { raf = requestAnimationFrame(frame); },
-    // frames: [[offset 0-1, size], ...], eased as a whole like a CSS animation
-    size(frames, duration, ease = k => k) { tween = { frames, duration, ease, start: performance.now() }; },
+    // Animate grow, heat or speed. frames: [[offset 0-1, value], ...], eased as a whole like a CSS
+    // animation; it replaces the running animation of the same value
+    tween(name, frames, duration, ease = k => k) { tweens[name] = { frames, duration, ease, start: performance.now() }; },
     destroy() {
       cancelAnimationFrame(raf);
       [gb, gf].forEach(gl => { const x = gl.getExtension("WEBGL_lose_context"); if (x) x.loseContext(); });  // free the GPU now

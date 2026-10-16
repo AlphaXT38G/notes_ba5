@@ -133,7 +133,7 @@ async function rift() {
   await wait(800);
 
   // 2. The black hole opens
-  if (bh) bh.size([[0, 0], [.7, 1.12], [1, 1]], 1800, k => 1 - (1 - k) ** 3);
+  if (bh) bh.tween("grow", [[0, 0], [.7, 1.12], [1, 1]], 1800, k => 1 - (1 - k) ** 3);
   else hole.animate([{ transform: "scale(0)" }, { transform: "scale(1.12)", offset: .7 }, { transform: "scale(1)" }],
     { duration: 900, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" });
   await wait(1800);  // a moment to look at it before it starts eating
@@ -168,7 +168,7 @@ async function rift() {
   await Promise.all(anims.map(a => a.finished));
 
   // 4. The hole collapses in a flash of light
-  if (bh) bh.size([[0, 1], [.3, 1.4], [1, 0]], 500, k => k * k);
+  if (bh) bh.tween("grow", [[0, 1], [.3, 1.4], [1, 0]], 500, k => k * k);
   else hole.animate([{ transform: "scale(1)" }, { transform: "scale(1.4)", offset: .3 }, { transform: "scale(0)" }],
     { duration: 500, easing: "ease-in", fill: "forwards" });
   await wait(350);
