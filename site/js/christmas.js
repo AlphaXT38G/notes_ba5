@@ -265,12 +265,57 @@ scene.id = "xscene";
 scene.setAttribute("aria-hidden", "true");
 tree.id = "xtree";
 treeFront.id = "xtree-front";
-const MOUNTAINS = `<svg class="mountains" viewBox="0 0 1600 300" preserveAspectRatio="xMidYMax slice">` +
-  `<path class="m1" d="M0,190 120,120 210,160 330,70 430,140 520,95 640,165 760,60 880,150 990,100 1110,170 1230,80 1340,145 1450,105 1600,160V300H0Z"/>` +
-  `<path class="caps" d="M300,92 330,70 362,94 345,90 330,100 316,88ZM728,84 760,60 792,86 774,82 760,94 744,80ZM1200,102 1230,80 1262,104 1244,99 1230,110 1214,98Z"/>` +
-  `<path class="m2" d="M0,230 140,170 260,210 400,150 540,215 690,160 820,220 980,165 1120,225 1260,170 1400,215 1600,180V300H0Z"/>` +
-  `<path class="ground-shade" d="M0,262C200,236 380,252 560,246S900,232 1100,248 1450,238 1600,246V300H0Z"/>` +
-  `<path class="ground" d="M0,270C220,246 400,262 580,256S920,244 1120,258 1460,248 1600,256V300H0Z"/></svg>`;
+// Mountains filling the background, kept discreet (colours close to the sky's): three ranges, the
+// farther ones higher and paler, each ridge made natural by midpoint displacement between a few
+// chosen peaks, with snow on the tops (the range itself clips a jagged snow line), then the snowy
+// ground. Drawn once in a 1600 x 700 box, scaled to cover the bottom of the window. ridges keeps
+// each range's outline, to put things on the slopes.
+const ridges = [];
+const MOUNTAINS = (() => {
+  const rnd = seeded(77), W = 1600, H = 700;
+  const ridge = (peaks, rough) => {  // peaks: [x, y] control points, rough: displacement amplitude
+    let pts = peaks;
+    for (let level = 0, amp = rough; level < 6; level++, amp *= .55) {
+      const next = [pts[0]];
+      for (let i = 1; i < pts.length; i++) {
+        const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
+        next.push([(x0 + x1) / 2, (y0 + y1) / 2 + (rnd() - .5) * amp], [x1, y1]);
+      }
+      pts = next;
+    }
+    return pts;
+  };
+  const yAt = (pts, x) => {
+    const i = Math.max(1, pts.findIndex(([px]) => px >= x));
+    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
+    return y0 + (y1 - y0) * ((x - x0) / ((x1 - x0) || 1));
+  };
+  const RANGES = [
+    ["m0", [[0, 300], [180, 170], [330, 250], [520, 95], [700, 230], [860, 130], [1040, 210], [1230, 70], [1420, 200], [1600, 140]], 70, 70],
+    ["m1", [[0, 360], [150, 300], [300, 380], [470, 250], [640, 360], [820, 270], [1000, 390], [1160, 280], [1350, 370], [1600, 290]], 60, 55],
+    ["m2", [[0, 470], [200, 420], [380, 480], [560, 430], [760, 500], [960, 440], [1180, 505], [1380, 445], [1600, 480]], 40, 0],
+  ];
+  let svg = `<svg class="mountains" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMax slice"><defs>`;
+  const bodies = RANGES.map(([cls, peaks, rough, snowDepth], i) => {
+    const pts = ridge(peaks, rough);
+    ridges.push({ cls, pts, y: x => yAt(pts, x) });
+    const d = `M${pts.map(([x, y]) => `${f1(x)},${f1(y)}`).join(" ")} ${W},${H}H0Z`;
+    svg += `<clipPath id="xclip${i}"><path d="${d}"/></clipPath>`;
+    let snow = "";
+    if (snowDepth) {  // jagged snow line, running a little below the tops
+      const top = Math.min(...pts.map(([, y]) => y));
+      const line = Array.from({ length: 81 }, (_, k) => {
+        const x = k * W / 80, y = Math.max(top + snowDepth * .6, yAt(pts, x) + snowDepth * (.5 + rnd() * .6));
+        return `${f1(x)},${f1(y)}`;
+      });
+      snow = `<path class="caps ${cls}c" clip-path="url(#xclip${i})" d="M0,0 ${line.join(" ")} ${W},0Z"/>`;
+    }
+    return `<path class="${cls}" d="${d}"/>${snow}`;
+  });
+  return svg + `</defs>${bodies.join("")}` +
+    `<path class="ground-shade" d="M0,662C200,636 380,652 560,646S900,632 1100,648 1450,638 1600,646V700H0Z"/>` +
+    `<path class="ground" d="M0,670C220,646 400,662 580,656S920,644 1120,658 1460,648 1600,656V700H0Z"/></svg>`;
+})();
 // The snowman: a big companion standing in the left margin, beside the columns of courses, seen in
 // three-quarter view, face turned to the right as if about to look at the courses. Drawn in a
 // 300 x 520 box, lit from the top left: lumpy hand-packed snowballs (wobbly outlines) shaded round,

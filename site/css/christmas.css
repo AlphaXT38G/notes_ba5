@@ -56,15 +56,20 @@ body[data-phase=christmas-night] #garland .shine{opacity:.45}
 
 /* Winter scene behind the page: mountains and snowy ground, the tree with its snowman and gifts */
 #xscene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-#xscene .mountains{position:absolute;left:0;bottom:0;width:100%;height:32vh}
-#xscene .m1{fill:#b6c9df}
-#xscene .m2{fill:#9fb4cd}
-#xscene .caps{fill:#fff}
+/* Mountains: most of the window's height, in colours close to the sky so they stay in the background */
+#xscene .mountains{position:absolute;left:0;bottom:0;width:100%;height:78vh}
+#xscene .m0{fill:#bfd1e5}
+#xscene .m1{fill:#afc3da}
+#xscene .m2{fill:#a3b8d1}
+#xscene .m0c{fill:#e9f0f8}
+#xscene .m1c{fill:#f1f6fb}
 #xscene .ground-shade{fill:#d4e0ee}
 #xscene .ground{fill:#fbfdff}
-body[data-phase=christmas-night] #xscene .m1{fill:#0f1f55}
-body[data-phase=christmas-night] #xscene .m2{fill:#0b1847}
-body[data-phase=christmas-night] #xscene .caps{fill:#9db0d0}
+body[data-phase=christmas-night] #xscene .m0{fill:#0c1a49}
+body[data-phase=christmas-night] #xscene .m1{fill:#0a1740}
+body[data-phase=christmas-night] #xscene .m2{fill:#081336}
+body[data-phase=christmas-night] #xscene .m0c{fill:#1e2f66}
+body[data-phase=christmas-night] #xscene .m1c{fill:#26386f}
 body[data-phase=christmas-night] #xscene .ground-shade{fill:#6d7cad}
 body[data-phase=christmas-night] #xscene .ground{fill:#b5c0df}
 /* The tree box: taller than the window, always on the right, sticking out past the right edge and
