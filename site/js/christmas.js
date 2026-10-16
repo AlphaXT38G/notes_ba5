@@ -27,8 +27,9 @@ SCREENS["christmas-night"] = { className: "christmas", subtitle: xmasSubtitle, t
 const isXmasDate = (d = new Date()) => (d.getMonth() === 11 && d.getDate() >= 10) || (d.getMonth() === 0 && d.getDate() <= 3);
 const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && t < 18 * 3600; };
 // Easter egg: typing y e t i (outside the search field) brings Christmas at any time of the year, day
-// or night by the clock as usual, for the rest of the visit; typing it again ends it. It also
-// overrides a forced ?night=.
+// or night by the clock as usual, for the rest of the visit. Outside the Christmas period, typing it
+// on a Christmas screen (from the egg or a forced ?night=christmas...) goes back to the normal
+// screen; during the period it does nothing, Christmas is there anyway. It overrides a forced ?night=.
 let xmasJazz = false, xmasEgg = false;
 OVERRIDES.push(phase => {
   let p = phase;
@@ -46,7 +47,13 @@ document.addEventListener("keydown", e => {
   if (e.target.matches("input")) return;  // typing in the search field never triggers it
   const k = e.key.toLowerCase();
   yetiPos = k === YETI[yetiPos] ? yetiPos + 1 : (k === YETI[0] ? 1 : 0);
-  if (yetiPos === YETI.length) { yetiPos = 0; xmasEgg = !xmasEgg; applyScreen(); }
+  if (yetiPos !== YETI.length) return;
+  yetiPos = 0;
+  if (isXmasDate()) return;
+  const onXmas = xmasEgg || document.body.classList.contains("christmas");
+  xmasEgg = !onXmas;
+  if (onXmas && forced?.startsWith("christmas")) forcedDismissed = true;  // also leaves a forced Christmas
+  applyScreen();
 });
 
 // Same pseudo-random numbers on every visit, so the scene is always drawn the same way

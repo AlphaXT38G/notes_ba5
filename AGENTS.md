@@ -66,7 +66,7 @@ The night screens follow the clock. Force one with the URL:
 
 Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑↑↓↓←→←→BA,
 `yeti` typed anywhere but the search field (Christmas day or night by the clock, any time of the
-year, until typed again),
+year; outside the Christmas period, typed on a Christmas screen it goes back to the normal one),
 a random surprise banner on some visits, and on the Christmas night a small golden sax hidden
 among the tree ornaments (on the garland on narrow screens) that opens the jazz bar; a little fir
 in the bar's bottom right corner brings Christmas back.
