@@ -2288,4 +2288,19 @@ key, typically \textbf{128/256 bits}. \\
 $\Rightarrow$ block ciphers have a \textbf{mode of operation}.
 \end{defnbox}
 
+\begin{defnbox}[title={Mode 1: Electronic Code Book (ECB)}]
+Straightforward scheme: split $M = M_1 M_2 M_3 M_4$ into blocks (each the size of the key)
+and encrypt and decrypt \textbf{each block independently}:
+\[
+  C_i = E_K(M_i), \qquad M_i = D_K(C_i).
+\]
+\end{defnbox}
+
+\begin{warnbox}[title=The problem with ECB]
+If $M_i = M_j$ then $C_i = C_j$! Identical plaintext blocks give identical ciphertext
+blocks: \textbf{large information leakage} due to the lack of randomness across blocks'
+encryption (the same issue as substitution ciphers, but on whole blocks). Classic
+illustration: an image encrypted with ECB still shows its outline.
+\end{warnbox}
+
 \end{document}
