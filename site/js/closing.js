@@ -1,8 +1,8 @@
 // ── Closing time (screen "closing", the jazz bar from 0:45 to 1:00) ──────────────────────────
 // Once the neon sign has gone dark letter by letter (jazz.js, jazz.css), the bartender comes over
 // the whole page to say the bar is closing (css/closing.css): the room darkens and he rises from
-// the bottom of the screen, life-size, under a hanging lamp that swings as it comes down. Any other
-// phase sends him away at once.
+// the bottom of the screen, life-size, under a hanging lamp that swings as it comes down, and
+// rings the last call bell. Any other phase sends him away at once.
 //
 // He is one SVG drawing built from code: shirt and waistcoat, bow tie, a towel over his left arm,
 // his right arm raised with a brass hand bell, and a face with moving parts (.lid, .mouth).
@@ -78,13 +78,43 @@ const closing = document.createElement("div");
 closing.id = "closing";
 closing.innerHTML = '<div class="shade"></div><div class="lamp"><div class="swing"><i class="cord"></i><i class="glow"></i><i class="cap"></i><i class="bulb"></i></div></div>' +
   `<div class="stage">${BARTENDER}</div>`;
-let closingTimer = null;
+// Last call bell: a few strokes of a brass hand bell, made with the Web Audio API (no file to
+// load). A bell is a sum of inharmonic partials that ring and die away, the high ones faster.
+// Browsers only allow sound after a user gesture: without one the bell rings silently.
+const ringBell = (strokes = 4) => {
+  if (!(navigator.userActivation?.hasBeenActive) || !window.AudioContext) return;
+  const ac = new AudioContext(), out = ac.createGain();
+  out.gain.value = .35;
+  out.connect(ac.destination);
+  for (let i = 0; i < strokes; i++) {
+    const t = ac.currentTime + .05 + i * .3, pitch = i % 2 ? 1.02 : 1;  // the bell swings both ways
+    [[1, .5], [2.76, .25], [5.4, .12], [8.93, .06]].forEach(([ratio, level], k) => {
+      const osc = ac.createOscillator(), env = ac.createGain();
+      osc.frequency.value = 1150 * pitch * ratio;
+      env.gain.setValueAtTime(.0001, t);
+      env.gain.exponentialRampToValueAtTime(level, t + .004);
+      env.gain.exponentialRampToValueAtTime(.0001, t + 1.8 / (1 + k));
+      osc.connect(env).connect(out);
+      osc.start(t);
+      osc.stop(t + 2);
+    });
+  }
+  setTimeout(() => ac.close(), strokes * 300 + 2500);
+};
+
+// The scene, step by step: timers are kept so that leaving the bar cancels whatever is planned
+let closingTimer = null, sceneTimers = [];
+const later = (ms, fn) => sceneTimers.push(setTimeout(fn, ms));
 const closeBar = () => {  // he arrives once the last letter of the sign (and the sax) is off
-  closing.classList.remove("bye");
+  closing.className = "";
   document.body.append(closing);
+  later(1500, () => { closing.classList.add("ring"); ringBell(); });  // up on his feet, he rings
+  later(2700, () => closing.classList.remove("ring"));
 };
 const leaveBar = () => {
   clearTimeout(closingTimer);
+  sceneTimers.forEach(clearTimeout);
+  sceneTimers = [];
   closing.remove();
 };
 closing.addEventListener("click", leaveBar);
