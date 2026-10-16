@@ -15,6 +15,7 @@
     "js/ui.js",
     "js/flames.js",
     "js/surprise.js",
+    "js/blackhole.js",
     "js/konami.js",
     "js/screens.js",
     "js/jazz.js",
