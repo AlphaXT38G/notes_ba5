@@ -31,6 +31,10 @@ body.rift #vinyl,body.rift #amp,body.rift #xmusic{z-index:2}
 #hole.gl::before{content:none}
 #void canvas,#hole canvas{position:absolute;inset:0;width:100%;height:100%}
 #hole .bh-bloom{mix-blend-mode:screen;opacity:.45;filter:blur(6px)}
+/* Supernova (supernova.js): the core, a point of light just before the detonation, then the
+   full-screen canvas of the explosion, over the page but under the confetti */
+#sn-core{position:fixed;left:50%;top:50%;z-index:61;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;pointer-events:none;background:#fff;box-shadow:0 0 12px 4px #cfe4ff,0 0 40px 14px rgba(140,180,255,.6);transform:scale(0)}
+#supernova{position:fixed;inset:0;z-index:60;width:100%;height:100%;pointer-events:none}
 /* White flash when the hole collapses, and the confetti canvas drawn on top of everything */
 #flash{position:fixed;inset:0;z-index:65;background:#fff;opacity:0;pointer-events:none}
 .confetti{position:fixed;inset:0;z-index:70;width:100%;height:100%;pointer-events:none}
