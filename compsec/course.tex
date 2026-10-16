@@ -2449,4 +2449,29 @@ together.
 \end{itemize}
 \end{defnbox}
 
+\begin{defnbox}[title=Encrypt-then-MAC]
+Send $C \,\|\, MAC_K(C)$ with $C = E_K(M)$: encrypt first, then MAC the
+\textbf{ciphertext}.
+\begin{itemize}
+  \item[$\checkmark$] \textbf{Integrity of the ciphertext} $\to$ ensures you only read
+        valid messages! The cipher cannot be attacked.
+  \item[$\checkmark$] Integrity of the plaintext can be verified.
+  \item[$\checkmark$] No information on the plaintext either, since it is encrypted.
+\end{itemize}
+\end{defnbox}
+
+\begin{keybox}[title=Which composition to use?]
+\begin{center}
+\begin{tabular}{l|c|c|c}
+                     & \textbf{E\&M} & \textbf{MtE} & \textbf{EtM} \\ \hline
+Ciphertext integrity & $\times$      & $\times$     & $\checkmark$ \\
+Plaintext integrity  & $\checkmark$  & $\checkmark$ & $\checkmark$ \\
+Hides the plaintext  & $\times$      & $\checkmark$ & $\checkmark$
+\end{tabular}
+\end{center}
+\textbf{Encrypt-then-MAC} wins: the receiver checks the MAC \emph{before} decrypting, so
+forged ciphertexts are rejected without ever being fed to the decryption algorithm
+(fail-safe default, Lecture 2). Use separate keys for encryption and MAC.
+\end{keybox}
+
 \end{document}
