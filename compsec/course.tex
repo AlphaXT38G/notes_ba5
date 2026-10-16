@@ -2423,4 +2423,19 @@ Since every block is chained into the next, the last block depends on the whole 
 it is a short ``keyed fingerprint'' of $M$.
 \end{rembox}
 
+\subsection{All together: confidentiality and integrity (symmetric)}
+
+\begin{defnbox}[title=Encrypt-and-MAC]
+Send $E_K(M) \,\|\, MAC_K(M)$: encrypt the plaintext and MAC the \textbf{plaintext},
+in parallel.
+\begin{itemize}
+  \item[$\times$] \textbf{No integrity on the ciphertext} $\to$ the cipher can be
+        attacked; need to decrypt to know if valid.
+  \item[$\checkmark$] Integrity of the plaintext can be verified.
+  \item[$\times$] \textbf{May reveal information about the plaintext} $\to$ repeated
+        messages give repeated MACs (the IV of the MAC is fixed; can be solved with a
+        counter).
+\end{itemize}
+\end{defnbox}
+
 \end{document}
