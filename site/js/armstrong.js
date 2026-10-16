@@ -33,7 +33,7 @@ const normalPhase = () => {
 // egg's Christmas), so the screen goes back to what the clock gives
 const backToClock = () => {
   jazzEgg = xmasEgg = xmasJazz = false;
-  if (inBar(forced)) forcedDismissed = true;  // also leaves a ?night=evening / closing
+  if (forced) forcedDismissed = true;  // also leaves a forced ?night=... (the bar, Christmas...)
 };
 const armstrong = () => {
   if (!inBar(document.body.dataset.phase)) {
