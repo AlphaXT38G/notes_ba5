@@ -10,8 +10,9 @@ LaTeX notes for the BA5 IN semester at EPFL. `build.py` compiles every subject t
 04:00 UTC (so the "New" badges expire), the GitHub Pages workflow (`.github/workflows/pages.yml`)
 runs the build and publishes `dist/` at <https://alphaxt38g.github.io/notes_ba5/>.
 
-The index page has grown a lot of personality: a flame mode, a jazz bar at night, a metal show at
-01:00, an epic finale, Christmas screens in December, easter eggs. Most of the code is there, in `site/`.
+The index page has grown a lot of personality: a flame mode, a jazz bar at night (closed by a
+life-size Gigachad bartender at 00:45), a metal show at 01:00, an epic finale, Christmas screens
+in December, easter eggs. Most of the code is there, in `site/`.
 
 ## Repository layout
 
@@ -23,11 +24,13 @@ builder/              the Python behind build.py
   previews.py           first-page thumbnails of the PDFs (poppler)
   page.py               dist/index.html: cards from dist/, assembled with site/
   log.py                coloured console output
-site/                 the index page (HTML, CSS, JS), inlined into one dist/index.html
+site/                 the index page (HTML, CSS, JS inlined into one dist/index.html, images)
   template.html         the HTML skeleton, with {{placeholders}}
   manifest.json         which CSS / JS files go in the page, IN ORDER
   css/                  one file per theme / screen
   js/                   one file per feature / screen
+  img/                  images, copied as files to dist/img/ (too heavy to inline); gigachad.webp
+                        is the meme photo, used as an illustration in this non-commercial project
 subjects.json         subjects: id, display name, exam rules, optional "weeks" and "color"
 <subject>/            course.tex, cheatsheet.tex, week/weekNN.tex, extra PDFs...
 _shared/              course.sty and cheatsheet.sty, shared by every course / cheat sheet
@@ -59,7 +62,7 @@ The night screens follow the clock. Force one with the URL:
 |---|---|
 | `?night=0` | the day, whatever the time |
 | `?night=1` | the first scheduled screen (the jazz bar) |
-| `?night=evening` / `?night=closing` | jazz bar / bar closing |
+| `?night=evening` / `?night=closing` | jazz bar / bar closing (the bartender comes ~9 s in, once the sign is dark) |
 | `?night=metal` | metal show (does not end by itself when forced) |
 | `?night=epic` | epic finale (until "Back to normal") |
 | `?night=christmas` / `?night=christmas-night` | Christmas day / Christmas night |
@@ -69,7 +72,9 @@ Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑
 year; outside the Christmas period, typed on a Christmas screen it goes back to the normal one),
 a random surprise banner on some visits, and on the Christmas night a small golden sax hidden
 among the tree ornaments (on the garland on narrow screens) that opens the jazz bar; a little fir
-in the bar's bottom right corner brings Christmas back.
+in the bar's bottom right corner brings Christmas back. `armstrong` typed anywhere but the search
+field opens the jazz bar at any time (over Christmas too); typed again in the bar it goes back to
+the normal screen, unless the normal screen at that moment is the bar itself (21:30 – 01:00).
 
 ## How the index page is built
 
@@ -86,7 +91,8 @@ in the bar's bottom right corner brings Christmas back.
 - `{{head_js}}`: `site/js/head.js`, in `<head>`, applies the saved light/dark theme and view
   before the first paint.
 
-The result is a single self-contained `dist/index.html`: no request for CSS or JS.
+The result is a single self-contained `dist/index.html`: no request for CSS or JS. Only images
+(`site/img/`, e.g. the bartender's head) are separate files, copied to `dist/img/`.
 
 ### JS files, in load order
 
@@ -97,16 +103,18 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `surprise.js` | random surprise banner |
 | `konami.js` | Konami code: black hole, confetti, party theme |
 | `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()` |
-| `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable, bartender |
+| `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable, neon sign going out |
+| `closing.js` | closing time: the life-size bartender (SVG layers pre-rendered as `<img>`, with the Gigachad photo `img/gigachad.webp` as head), swinging lamp, last call bell (Web Audio), typed speech, chalkboard with countdown, "Good night" |
 | `fx.js` | the effects canvas: `fxLayers`, `blob()`, the animation loop |
 | `christmas.js` | Christmas screens: date override and `yeti` code, garland (with mouse physics), winter scene (mountains and chalets, moon, tree, snowman), tree lights canvas, snow, sleigh, music, hidden sax |
+| `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win) |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song |
 | `epic.js` | epic finale: blue fire, motes, rune circle, "More epicness ?", "Back to normal" |
 | `start.js` | **last**: first `applyScreen()`, then the every-second clock check |
 
 ### CSS files, in cascade order
 
-`base.css` (layout, cards, search, previews) → `flames.css` → `surprise.css` → `jazz.css` →
+`base.css` (layout, cards, search, previews) → `flames.css` → `surprise.css` → `jazz.css` → `closing.css` →
 `metal.css` → `epic.css` → `christmas.css` → `screens.css` (effects canvas, view transitions) → `konami.css`.
 The Konami file is last on purpose: during its animation `body.rift .wrap` must win over every
 theme's `.wrap` rule.
@@ -141,8 +149,8 @@ Current screens:
 
 | Screen | Class | When | Files |
 |---|---|---|---|
-| `evening` | `night` | 21:30 – 00:45 | `jazz.js`, `jazz.css` |
-| `closing` | `night` | 00:45 – 01:00 | `jazz.js`, `jazz.css` |
+| `evening` | `night` | 21:30 – 00:45, or the `armstrong` code | `jazz.js`, `jazz.css`, `armstrong.js` |
+| `closing` | `night` | 00:45 – 01:00 | `jazz.js`, `jazz.css`, `closing.js`, `closing.css` |
 | `metal` | `metal` | 01:00:00 – 01:01:51, or 20 flame clicks | `metal.js`, `metal.css` |
 | `epic` | `epic` | after a metal show, if "More epicness ?" was clicked | `epic.js`, `epic.css` |
 | `christmas` | `christmas` | Dec 10 – Jan 3, 06:00 – 18:00 (replaces the day) | `christmas.js`, `christmas.css` |
@@ -234,6 +242,8 @@ Example: a calm "dawn" screen from 06:00 to 07:00.
 - Draw many moving things on the **effects canvas** (`fx.js`) rather than as DOM elements. The
   canvas is 1x even on high-density screens; pre-render expensive shapes once (see the rune
   circle in `epic.js`) and avoid `shadowBlur` in per-frame drawing.
+- Heavy SVG filters (textures, blurs, grain) are fine in an SVG shown as an `<img>`: it is rendered
+  once into a bitmap, and animating the `<img>` never re-runs them (see the bartender in `closing.js`).
 - Remove a screen's extras (elements, timers, players) when its class turns off.
 
 ### Workflow

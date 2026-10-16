@@ -1,0 +1,98 @@
+/* Closing time (body.night[data-phase=closing], see js/closing.js): over the whole page the room
+   darkens and the bartender rises from the bottom of the screen, life-size */
+#closing{position:fixed;inset:0;z-index:55;overflow:hidden;color:#f3e3c3}
+#closing .shade{position:absolute;inset:0;background:radial-gradient(70% 70% at 45% 40%,rgba(24,18,30,.72),rgba(4,3,8,.95));opacity:0;animation:cl-fade .9s ease forwards}
+#closing .stage{position:absolute;left:50%;bottom:0;width:min(1100px,100%);display:flex;align-items:flex-end;justify-content:center;gap:1rem;padding:0 1rem;transform:translateX(-50%)}
+#closing .bt{position:relative;display:block;flex:none;height:min(84vh,720px);aspect-ratio:520/600;margin-bottom:-2px;filter:drop-shadow(0 0 40px rgba(0,0,0,.7));animation:cl-rise 1.4s cubic-bezier(.2,.9,.3,1.08) .35s both}
+/* The lamp, hanging from the ceiling above his head: it drops in, swings, then sways gently, its
+   light flickering a little. The swing turns around the ceiling, far above, so the angles are small. */
+#closing .who{position:relative;flex:none}
+#closing .lamp{position:absolute;left:50%;bottom:calc(100% + 1.2rem);width:0;height:100vh;animation:cl-drop 1s cubic-bezier(.3,1.3,.5,1) both}
+#closing .swing{position:absolute;inset:0;will-change:transform;transform-origin:0 0;animation:cl-swing 4s ease-out .7s both,cl-sway 7s ease-in-out 4.7s infinite alternate}
+#closing .cord{position:absolute;left:-1px;top:0;bottom:2.4rem;width:2px;background:#1c1a1e}
+#closing .cap{position:absolute;left:-3.2rem;bottom:0;width:6.4rem;height:2.6rem;border-radius:3.2rem 3.2rem .4rem .4rem;background:linear-gradient(100deg,#13241a,#3a5f48 40%,#16291e);box-shadow:inset 0 -3px 0 #c9a24a}
+#closing .bulb{position:absolute;left:-1rem;top:calc(100% - .4rem);width:2rem;height:1.1rem;border-radius:0 0 1rem 1rem;background:radial-gradient(circle at 50% 10%,#fffbe8,#ffd27a 55%,#d08a2a)}
+#closing .glow{position:absolute;left:-45vw;top:100%;width:90vw;height:100vh;background:radial-gradient(60% 95% at 50% 0,rgba(255,206,130,.3),rgba(255,180,90,.08) 50%,transparent 80%);clip-path:polygon(47% 0,53% 0,100% 100%,0 100%);filter:blur(10px);animation:cl-flicker 6s infinite}
+@keyframes cl-drop{from{transform:translateY(-110%)}}
+@keyframes cl-swing{0%{transform:rotate(4deg)}18%{transform:rotate(-2.8deg)}36%{transform:rotate(1.8deg)}55%{transform:rotate(-1deg)}75%{transform:rotate(.6deg)}100%{transform:rotate(-.3deg)}}
+@keyframes cl-sway{from{transform:rotate(-.3deg)}to{transform:rotate(.3deg)}}
+@keyframes cl-flicker{0%,40%,44%,100%{opacity:1}42%{opacity:.7}43%{opacity:.95}}
+/* What he says: a speech bubble beside his head, popping up when he starts talking */
+#closing .talk{flex:0 1 25rem;align-self:flex-start;margin-top:5%}
+#closing .bubble{position:relative;margin:0;padding:1rem 1.4rem;color:#2a1c14;background:#fff8ec;border-radius:1.4rem;box-shadow:0 14px 40px rgba(0,0,0,.6);font:italic 600 1.3rem/1.45 Georgia,serif;opacity:0;transform-origin:0 2rem}
+#closing .bubble::before{content:"";position:absolute;left:-.9rem;top:1.4rem;border:.6rem solid transparent;border-right:.9rem solid #fff8ec;border-left:0}
+#closing .bubble span{display:block}
+#closing .bubble span+span{margin-top:.35rem}
+#closing .bubble.on{animation:cl-pop .45s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes cl-pop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+/* The chalkboard: when the bar closes and reopens, in chalk on a slate with a wooden frame */
+#closing .board{margin-top:1.4rem;padding:1rem 1.3rem 1.1rem;color:#f2efe6;background:radial-gradient(120% 90% at 30% 20%,#33463b,#1c2a22 70%);border:.65rem solid #6b4423;border-radius:.5rem;box-shadow:inset 0 0 18px rgba(0,0,0,.55),0 16px 40px rgba(0,0,0,.65);font:1.05rem/1.5 "Segoe Print","Bradley Hand","Chalkboard SE",cursive;text-shadow:0 0 1px rgba(255,255,255,.55);opacity:0;transform:translateY(2rem) rotate(-2deg)}
+#closing .board h2{margin:0 0 .4rem;font:inherit;font-size:1.45rem;letter-spacing:.04em;text-transform:uppercase;color:#ffe9a8}
+#closing .board ul{margin:0;padding:0;list-style:none}
+#closing .board.on{animation:cl-board .7s cubic-bezier(.34,1.4,.64,1) forwards}
+@keyframes cl-board{to{opacity:1;transform:rotate(-1deg)}}
+#closing .night-btn{margin-top:.8rem;padding:.35rem 1rem;color:#1c2a22;background:#ffe9a8;border:0;border-radius:999px;font:700 .95rem system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 0 #b8964a}
+#closing .night-btn:hover{background:#fff3c8}
+/* Good night: he waves with his bell, then goes back down while the lamp goes up and the room
+   comes back (.bye, then .gone, set by js/closing.js) */
+#closing.bye .arm{animation:cl-wave .35s ease-in-out 4 alternate}
+#closing.bye .bell{animation:cl-ring .35s ease-in-out 4 alternate}
+#closing.gone .bt{animation:cl-leave .9s ease-in forwards}
+#closing.gone .lamp{animation:cl-lift .9s ease-in forwards}
+#closing.gone .talk{opacity:0;transition:opacity .5s}
+#closing.gone .shade{animation:cl-unfade 1s ease .2s both}
+@keyframes cl-wave{from{transform:rotate(-4deg)}to{transform:rotate(9deg)}}
+@keyframes cl-leave{to{transform:translateY(105%)}}
+@keyframes cl-lift{to{transform:translateY(-110%)}}
+@keyframes cl-unfade{from{opacity:1}to{opacity:0}}
+/* The layers of the bartender (js/closing.js), all on the same 520 x 600 canvas: positions and
+   pivots are in % of it (e.g. the bell turns around his hand, at 102,206 = 19.6% 34.3%) */
+#closing .bt img,#closing .arm,#closing .bell{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+#closing .bt img.head{left:34.23%;top:7.33%;width:34.23%;height:38.17%;transform-origin:47.2% 95.2%}
+#closing.talking .head{animation:cl-nod .45s ease-in-out infinite alternate}
+@keyframes cl-nod{from{transform:rotate(-1.5deg)}to{transform:rotate(2deg) translateY(-.3%)}}
+/* Last call: the bell swings from his hand, its clapper the other way, his arm shakes with it */
+#closing .arm{transform-origin:32.69% 50%}
+#closing .bell{transform-origin:19.62% 34.33%}
+#closing .bt img.clapper{transform-origin:19.62% 38.33%}
+#closing.ring .arm{animation:cl-shake .3s ease-in-out infinite alternate}
+#closing.ring .bell{animation:cl-ring .3s ease-in-out infinite alternate}
+#closing.ring .clapper{animation:cl-ring .3s ease-in-out infinite alternate-reverse}
+@keyframes cl-shake{from{transform:rotate(-2deg)}to{transform:rotate(2.5deg)}}
+@keyframes cl-ring{from{transform:rotate(-16deg)}to{transform:rotate(16deg)}}
+@keyframes cl-fade{to{opacity:1}}
+@keyframes cl-rise{from{transform:translateY(105%)}}
+/* Phones and other screens taller than wide (tablets): what he says on top, him below, smaller;
+   no lamp (its cord would cross the bubble) */
+@media(max-width:760px),(max-aspect-ratio:9/10){
+  #closing .stage{flex-direction:column-reverse;align-items:center;gap:.6rem}
+  #closing .talk{flex:none;align-self:auto;width:100%;max-width:24rem;margin:0}
+  /* Sizes follow the screen height, so that the bubble, the board and him fit even on a small
+     phone (320 x 640) */
+  #closing .bt{height:min(40vh,92vw)}
+  #closing .lamp{display:none}
+  #closing .bubble{font-size:clamp(.85rem,2.3vh,1.05rem);line-height:1.35;padding:.7rem 1rem;transform-origin:50% 100%}
+  #closing .bubble::before{left:50%;top:100%;margin-left:-.6rem;border:.6rem solid transparent;border-top:.8rem solid #fff8ec;border-bottom:0}
+  #closing .board{margin-top:.6rem;font-size:clamp(.78rem,2vh,.92rem);line-height:1.35;padding:.55rem .9rem .65rem;border-width:.5rem}
+  #closing .board h2{font-size:clamp(1rem,2.5vh,1.2rem);margin-bottom:.2rem}
+  #closing .night-btn{margin-top:.5rem}
+}
+/* Phones held sideways (wider than tall, short): him at full height, smaller words beside him,
+   back in a row whatever the width */
+@media(max-height:560px) and (min-aspect-ratio:1/1){
+  #closing .stage{flex-direction:row;align-items:flex-end;gap:.6rem}
+  #closing .bt{height:94vh}
+  #closing .lamp{display:none}
+  #closing .talk{flex:0 1 21rem;align-self:flex-start;width:auto;margin:3vh 0 0}
+  #closing .bubble{font-size:.85rem;line-height:1.35;padding:.55rem .9rem;transform-origin:0 2rem}
+  #closing .bubble::before{left:-.9rem;top:1rem;margin-left:0;border:.6rem solid transparent;border-right:.9rem solid #fff8ec;border-left:0}
+  #closing .board{margin-top:.6rem;font-size:.8rem;line-height:1.35;padding:.45rem .8rem .55rem;border-width:.45rem}
+  #closing .board h2{font-size:1rem;margin-bottom:.1rem}
+  #closing .night-btn{margin-top:.4rem;font-size:.85rem}
+}
+/* Reduced motion: no rising, swinging nor nodding; everything is simply there */
+@media(prefers-reduced-motion:reduce){
+  #closing *,#closing .bubble.on,#closing .board.on{animation:none!important}
+  #closing .shade{opacity:1}
+  #closing .bubble.on,#closing .board.on{opacity:1;transform:none}
+}
