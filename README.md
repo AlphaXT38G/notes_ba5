@@ -54,7 +54,7 @@ page has had one it plays muted and the sound comes on at the first click or key
 press. The turntable in the bottom left corner plays / pauses it.
 
 Jazz plays until 00:45, then the bar closes until 01:00 (darker light, the neon goes
-out letter by letter, then the bartender comes over the whole screen, life-size,
+out letter by letter, then the bartender, a Gigachad, comes over the whole screen, life-size,
 under a swinging lamp: he rings the last call bell, tells you the bar is closing and
 shows a chalkboard counting down to 01:00; "Good night" sends him away). At **01:00:00** a metal
 song takes over for 1 min 51 s 🤘: chrome title, red light pulsing on the beat,

@@ -28,6 +28,7 @@ site/                 the index page (HTML, CSS, JS), inlined into one dist/inde
   manifest.json         which CSS / JS files go in the page, IN ORDER
   css/                  one file per theme / screen
   js/                   one file per feature / screen
+  img/                  images, copied as files to dist/img/ (too heavy to inline)
 subjects.json         subjects: id, display name, exam rules, optional "weeks" and "color"
 <subject>/            course.tex, cheatsheet.tex, week/weekNN.tex, extra PDFs...
 _shared/              course.sty and cheatsheet.sty, shared by every course / cheat sheet
@@ -88,7 +89,8 @@ the normal screen, unless the normal screen at that moment is the bar itself (21
 - `{{head_js}}`: `site/js/head.js`, in `<head>`, applies the saved light/dark theme and view
   before the first paint.
 
-The result is a single self-contained `dist/index.html`: no request for CSS or JS.
+The result is a single self-contained `dist/index.html`: no request for CSS or JS. Only images
+(`site/img/`, e.g. the bartender's head) are separate files, copied to `dist/img/`.
 
 ### JS files, in load order
 
@@ -100,7 +102,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `konami.js` | Konami code: black hole, confetti, party theme |
 | `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()` |
 | `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable, neon sign going out |
-| `closing.js` | closing time: the life-size bartender (SVG), swinging lamp, last call bell (Web Audio), typed speech, chalkboard with countdown, "Good night" |
+| `closing.js` | closing time: the life-size bartender (SVG with the Gigachad photo `img/gigachad.webp` as head), swinging lamp, last call bell (Web Audio), typed speech, chalkboard with countdown, "Good night" |
 | `fx.js` | the effects canvas: `fxLayers`, `blob()`, the animation loop |
 | `christmas.js` | Christmas screens: date override and `yeti` code, garland (with mouse physics), winter scene (mountains and chalets, moon, tree, snowman), tree lights canvas, snow, sleigh, music, hidden sax |
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win) |
