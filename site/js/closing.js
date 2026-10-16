@@ -2,8 +2,8 @@
 // Once the neon sign has gone dark letter by letter (jazz.js, jazz.css), the bartender comes over
 // the whole page to say the bar is closing (css/closing.css): the room darkens and he rises from
 // the bottom of the screen, life-size, under a hanging lamp that swings as it comes down, and
-// rings the last call bell, then tells you the bar is closing. Any other phase sends him away at
-// once.
+// rings the last call bell, then tells you the bar is closing, with a chalkboard of what to know.
+// Any other phase sends him away at once.
 //
 // He is one SVG drawing built from code: shirt and waistcoat, bow tie, a towel over his left arm,
 // his right arm raised with a brass hand bell, and a face with moving parts (.lid, .mouth).
@@ -81,8 +81,20 @@ closing.id = "closing";
 // at any screen size), its light falling on him
 closing.innerHTML = `<div class="shade"></div><div class="stage"><div class="who">${BARTENDER}` +
   '<div class="lamp"><div class="swing"><i class="cord"></i><i class="glow"></i><i class="cap"></i><i class="bulb"></i></div></div></div>' +
-  '<div class="talk"><p class="bubble"></p></div></div>';
-const bubble = closing.querySelector(".bubble");
+  '<div class="talk"><p class="bubble"></p><div class="board"><h2>Closing time</h2><ul>' +
+  '<li>🕐 <span class="left"></span></li><li>🍸 Last orders: served</li><li>🎷 Reopens at 21:30<span class="reopen"></span></li></ul></div></div></div>';
+const bubble = closing.querySelector(".bubble"), board = closing.querySelector(".board");
+
+// The chalkboard tells how long is left before 1:00, live, when the clock is in the closing slot
+// (a forced ?night=closing or the armstrong code can show it at any time: then no countdown),
+// and when the bar reopens
+const paintBoard = () => {
+  const t = clockSeconds(), inSlot = t >= 45 * 60 && t < 3600;
+  const left = 3600 - t, reopen = (21 * 3600 + 30 * 60 - t + 86400) % 86400;
+  board.querySelector(".left").textContent = inSlot ? `Closing at 1:00, ${Math.floor(left / 60)} min ${String(left % 60).padStart(2, "0")} s left` : "The bar is closing";
+  board.querySelector(".reopen").textContent = reopen ? ` (in ${Math.floor(reopen / 3600)} h ${String(Math.floor(reopen / 60) % 60).padStart(2, "0")})` : "";
+};
+everySecond.push(() => { if (closing.isConnected) paintBoard(); });
 // Last call bell: a few strokes of a brass hand bell, made with the Web Audio API (no file to
 // load). A bell is a sum of inharmonic partials that ring and die away, the high ones faster.
 // Browsers only allow sound after a user gesture: without one the bell rings silently.
@@ -131,10 +143,12 @@ const closeBar = () => {  // he arrives once the last letter of the sign (and th
   closing.className = "";
   bubble.replaceChildren();
   bubble.classList.remove("on");
+  board.classList.remove("on");
+  paintBoard();
   document.body.append(closing);
   later(1500, () => { closing.classList.add("ring"); ringBell(); });  // up on his feet, he rings
   later(2700, () => closing.classList.remove("ring"));
-  later(2900, () => { bubble.classList.add("on"); say(CLOSING_WORDS); });
+  later(2900, () => { bubble.classList.add("on"); say(CLOSING_WORDS, () => board.classList.add("on")); });
 };
 const leaveBar = () => {
   clearTimeout(closingTimer);

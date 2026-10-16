@@ -25,6 +25,12 @@
 #closing .bubble span+span{margin-top:.35rem}
 #closing .bubble.on{animation:cl-pop .45s cubic-bezier(.34,1.56,.64,1) forwards}
 @keyframes cl-pop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+/* The chalkboard: when the bar closes and reopens, in chalk on a slate with a wooden frame */
+#closing .board{margin-top:1.4rem;padding:1rem 1.3rem 1.1rem;color:#f2efe6;background:radial-gradient(120% 90% at 30% 20%,#33463b,#1c2a22 70%);border:.65rem solid #6b4423;border-radius:.5rem;box-shadow:inset 0 0 18px rgba(0,0,0,.55),0 16px 40px rgba(0,0,0,.65);font:1.05rem/1.5 "Segoe Print","Bradley Hand","Chalkboard SE",cursive;text-shadow:0 0 1px rgba(255,255,255,.55);opacity:0;transform:translateY(2rem) rotate(-2deg)}
+#closing .board h2{margin:0 0 .4rem;font:inherit;font-size:1.45rem;letter-spacing:.04em;text-transform:uppercase;color:#ffe9a8}
+#closing .board ul{margin:0;padding:0;list-style:none}
+#closing .board.on{animation:cl-board .7s cubic-bezier(.34,1.4,.64,1) forwards}
+@keyframes cl-board{to{opacity:1;transform:rotate(-1deg)}}
 /* Moving parts of the drawing: their origins are in the SVG's own units (viewBox 0 0 520 600) */
 #closing .lid{transform:scaleY(0);transform-origin:center 138px;animation:cl-blink 4.3s 2s infinite}
 @keyframes cl-blink{0%,93%,100%{transform:scaleY(0)}96%{transform:scaleY(1)}}
