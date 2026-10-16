@@ -57,7 +57,7 @@ const btrLayer = (parts, relief = "", paint = "") => ({
 });
 
 // ── Body: neck, torso, left arm (on the right of the picture) with its towel ──
-const BTR_NECK = "M216,196 C214,236 208,264 192,294 L332,294 C316,264 310,236 308,196 Z";
+const BTR_NECK = "M198,200 C202,236 202,262 190,294 L334,294 C320,262 316,236 318,200 Z";
 const BTR_TORSO = "M204,270 C178,281 152,290 132,300 C112,310 102,332 106,362 C108,394 122,420 130,442 " +
   "C136,500 144,560 148,600 L376,600 C380,560 388,500 394,442 C402,420 412,392 414,362 C416,332 408,310 390,300 C370,290 346,281 320,270 Z";
 const BTR_SLEEVE_R = "M386,306 C426,304 456,334 462,376 C466,408 468,440 464,468 L408,474 C404,440 398,412 392,392 C388,360 384,330 386,306 Z";
@@ -69,7 +69,7 @@ const BTR_VEST_L = "M232,292 L262,436 L262,600 L150,600 C146,560 140,500 136,452
 const BTR_VEST_R = "M292,292 L262,436 L262,600 L374,600 C378,560 384,500 388,452 C376,420 368,382 358,352 C348,324 330,304 312,296 Z";
 const BTR_LAPEL_L = "M212,296 C224,338 244,392 258,432 L262,436 L232,292 Z";
 const BTR_LAPEL_R = "M312,296 C300,338 280,392 266,432 L262,436 L292,292 Z";
-const BTR_COLLAR = "M204,266 C228,284 296,284 320,266 L324,290 C298,306 226,306 200,290 Z";
+const BTR_COLLAR = "M198,256 C224,276 300,276 326,256 L330,292 C300,306 224,306 194,292 Z";
 const BTR_COLLAR_TIPS = "M214,286 C226,300 244,312 258,318 L250,300 Z M310,286 C298,300 280,312 266,318 L274,300 Z";
 const BTR_BOW = "M262,292 Q242,276 222,280 Q212,294 222,309 Q242,310 262,300 Z M262,292 Q282,276 302,280 Q312,294 302,309 Q282,310 262,300 Z";
 const BTR_KNOT = "M253,286 h18 a3,3 0 0 1 3,3 v12 a3,3 0 0 1 -3,3 h-18 a3,3 0 0 1 -3,-3 v-12 a3,3 0 0 1 3,-3 Z";
@@ -89,8 +89,8 @@ const BTR_BODY = btrLayer([
   [BTR_LAPEL_L, "satin", 2, .05],
   [BTR_LAPEL_R, "satin", 2, .05],
   [BTR_POCKETS, "pocket", 1, 0],
-  [BTR_COLLAR, "shirt", 3, .1],
-  [BTR_COLLAR_TIPS, "shirt", 2, .06],
+  [BTR_COLLAR, "shirt", 4, .32],
+  [BTR_COLLAR_TIPS, "shirt", 3, .2],
   [BTR_BOW, "satin", 4, .14],
   [BTR_KNOT, "satin", 2, .1],
   ...[330, 370, 410].map(y => [`<circle cx="262" cy="${y}" r="2.6"/>`, "shell", 1, .05]),
@@ -134,9 +134,8 @@ const BTR_BODY = btrLayer([
   // Colour touches: the head's shadow on the neck and collar, the shadow side of the neck, the
   // towel's stripes, the gold watch chain
   `<path d="M120,300 C150,312 186,318 204,334 C190,360 150,370 116,368 Z" fill="#000" opacity=".4" filter="${btrBlur(12)}"/>` +
-  `<ellipse cx="262" cy="226" rx="70" ry="40" fill="#000" opacity=".35" filter="${btrBlur(18)}"/>` +
+  `<ellipse cx="270" cy="222" rx="60" ry="36" fill="#000" opacity=".28" filter="${btrBlur(18)}"/>` +
   `<ellipse cx="262" cy="270" rx="56" ry="10" fill="#000" opacity=".15" filter="${btrBlur(8)}"/>` +
-  `<path d="M210,200 C208,240 204,268 196,294 L232,294 C230,260 228,230 228,200 Z" fill="#000" opacity=".12" filter="${btrBlur(8)}"/>` +
   `<path d="M397,522 Q436,512 478,520 L478,526 Q436,518 397,528 Z M397,534 Q436,524 479,532 L479,538 Q436,530 397,540 Z" fill="${BTR_MATS.stripe[0]}"/>` +
   `<path d="M262,488 Q296,524 332,500" fill="none" stroke="${BTR_MATS.gold[0]}" stroke-width="2.6" stroke-dasharray="2.6 1.2"/>`
 );

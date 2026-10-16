@@ -50,6 +50,9 @@
 #closing .bt img,#closing .arm,#closing .bell{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 #closing .bt img.head{left:34.23%;top:7.33%;width:34.23%;height:38.17%;transform-origin:47.2% 95.2%}
 #closing.talking .head{animation:cl-nod .45s ease-in-out infinite alternate}
+/* With the photo-like body (.real), the photo's cut edge at the bottom left of the neck fades
+   into the painted neck instead of showing a seam */
+#closing .bt.real img.head{-webkit-mask-image:linear-gradient(35deg,transparent 12%,#000 26%);mask-image:linear-gradient(35deg,transparent 12%,#000 26%)}
 @keyframes cl-nod{from{transform:rotate(-1.5deg)}to{transform:rotate(2deg) translateY(-.3%)}}
 /* Last call: the bell swings from his hand, its clapper the other way, his arm shakes with it */
 #closing .arm{transform-origin:32.69% 50%}
