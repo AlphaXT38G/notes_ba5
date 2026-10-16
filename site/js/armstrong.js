@@ -28,14 +28,18 @@ const normalPhase = () => {
   [jazzEgg, xmasJazz, forcedDismissed] = saved;
   return phase;
 };
+// Leaving the bar: drop what keeps it open, so the screen goes back to what the clock gives
+const backToClock = () => {
+  jazzEgg = xmasJazz = false;
+  if (inBar(forced)) forcedDismissed = true;  // also leaves a ?night=evening / closing
+};
 const armstrong = () => {
   if (!inBar(document.body.dataset.phase)) {
     jazzEgg = true;
     jazzEggXmas = xmasEgg;
   } else {
     if (inBar(normalPhase())) return;  // the bar is the normal screen now: stay
-    jazzEgg = xmasJazz = false;
-    if (inBar(forced)) forcedDismissed = true;  // also leaves a ?night=evening / closing
+    backToClock();
   }
   applyScreen();
 };
