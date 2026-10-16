@@ -142,6 +142,19 @@ closing.innerHTML = `<div class="shade"></div><div class="stage"><div class="who
   '<button type="button" class="night-btn">Good night 👋</button></div></div></div>';
 const bubble = closing.querySelector(".bubble"), board = closing.querySelector(".board");
 
+// The photo-like body (bartender.js, relief.js) replaces this drawing when it can: it is rendered
+// as soon as the bar starts closing, long before he comes up, and swapped in all at once once every
+// layer is decoded. Without WebGL the drawing above simply stays. .real marks the swap (CSS).
+const realBartender = () => renderBartender().then(async urls => {
+  if (!urls) return;
+  const bt = closing.querySelector(".bt"), q = s => bt.querySelector(s);
+  const layers = { body: q(":scope > img.body"), arm: q(".arm > img:first-child"), bell: q(".bell > img:first-child"),
+    clapper: q("img.clapper"), hand: q(".arm > img:last-child") };
+  await Promise.all(Object.values(urls).map(u => { const i = new Image(); i.src = u; return i.decode(); }));
+  for (const [name, img] of Object.entries(layers)) img.src = urls[name];
+  bt.classList.add("real");
+}).catch(() => {});
+
 // The chalkboard tells how long is left before 1:00, live, when the clock is in the closing slot
 // (a forced ?night=closing or the armstrong code can show it at any time: then no countdown),
 // and when the bar reopens
@@ -241,5 +254,7 @@ closing.addEventListener("click", byeBar);
 document.addEventListener("keydown", e => { if (e.key === "Escape") byeBar(); });
 document.addEventListener("phase", e => {
   leaveBar();
-  if (e.detail === "closing") closingTimer = setTimeout(closeBar, (1 + (titleText.length + 1) * .7 + .5) * 1000);
+  if (e.detail !== "closing") return;
+  realBartender();
+  closingTimer = setTimeout(closeBar, (1 + (titleText.length + 1) * .7 + .5) * 1000);
 });
