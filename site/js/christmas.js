@@ -335,6 +335,47 @@ const MOUNTAINS = (() => {
     `<path class="ground-shade" d="M0,662C200,636 380,652 560,646S900,632 1100,648 1450,638 1600,646V700H0Z"/>` +
     `<path class="ground" d="M0,670C220,646 400,662 580,656S920,644 1120,658 1460,648 1600,656V700H0Z"/></svg>`;
 })();
+// The moon (night only, CSS), as we see it from here: a full moon with its dark seas (Oceanus
+// Procellarum, the Mare Imbrium, Serenitatis, Tranquillitatis, Crisium, Fecunditatis, Nectaris,
+// Nubium, Humorum, Frigoris) softly blurred, the bright craters Tycho (with its rays), Copernicus
+// and Kepler, dark Plato, a scatter of small craters, and a darker rim (limb darkening).
+const MOON = (() => {
+  const rnd = seeded(5);
+  const seas = [
+    "M-44,-14C-46,0-42,18-30,28-24,30-18,24-16,14-14,6-18,-2-14,-10-16,-20-24,-28-34,-26-40,-22-42,-18-44,-14Z",  // Oceanus Procellarum
+    "M-28,-22C-28,-32-16,-36-6,-32 2,-28 2,-18-4,-12-10,-8-22,-10-28,-22Z",  // Imbrium
+    "M0,-26C2,-32 12,-32 15,-25 16,-18 10,-14 4,-15-1,-17-2,-22 0,-26Z",  // Serenitatis
+    "M6,-12C10,-16 22,-14 25,-6 27,2 20,6 13,4 6,2 2,-6 6,-12Z",  // Tranquillitatis
+    "M30,-18C34,-21 41,-19 41,-13 41,-8 35,-6 31,-8 28,-10 27,-15 30,-18Z",  // Crisium
+    "M24,0C28,-2 34,1 34,7 33,13 26,14 23,10 21,6 21,2 24,0Z",  // Fecunditatis
+    "M14,10C17,8 22,10 21,15 20,19 15,19 13,16 12,13 12,11 14,10Z",  // Nectaris
+    "M-20,14C-14,10-4,12-2,19-1,26-8,30-16,28-22,26-24,18-20,14Z",  // Nubium
+    "M-34,14C-31,11-25,12-25,17-25,22-31,23-34,20-36,18-36,16-34,14Z",  // Humorum
+    "M-30,-36C-16,-41 12,-41 26,-35 24,-32 10,-34-2,-34-14,-34-24,-32-30,-36Z",  // Frigoris
+  ];
+  const small = Array.from({ length: 26 }, () => {
+    const a = rnd() * Math.PI * 2, d = Math.sqrt(rnd()) * 44, r = .8 + rnd() * 1.6;
+    return `<circle cx="${f1(Math.cos(a) * d)}" cy="${f1(Math.sin(a) * d)}" r="${f1(r)}"/>`;
+  }).join("");
+  const rays = Array.from({ length: 12 }, (_, i) => {
+    const a = i / 12 * Math.PI * 2 + rnd() * .3, l = 12 + rnd() * 22;
+    return `M-6,36l${f1(Math.cos(a) * l)},${f1(Math.sin(a) * l)}`;
+  }).join("");
+  return `<svg viewBox="-50 -50 100 100" aria-hidden="true"><defs>` +
+    `<radialGradient id="moon-disc" cx=".45" cy=".42" r=".6"><stop offset="0" stop-color="#fffbea"/><stop offset=".7" stop-color="#f4ecd2"/><stop offset="1" stop-color="#d8cca8"/></radialGradient>` +
+    `<clipPath id="moon-clip"><circle r="49"/></clipPath><filter id="moon-soft"><feGaussianBlur stdDeviation="1"/></filter></defs>` +
+    `<circle r="49" fill="url(#moon-disc)"/><g clip-path="url(#moon-clip)">` +
+    `<g fill="#a99f86" opacity=".5" filter="url(#moon-soft)">${seas.map(d => `<path d="${d}"/>`).join("")}</g>` +
+    `<path d="${rays}" stroke="rgba(255,255,245,.35)" stroke-width=".9" fill="none" stroke-linecap="round"/>` +
+    `<g fill="rgba(140,130,110,.25)" stroke="rgba(255,255,245,.35)" stroke-width=".5">${small}</g>` +
+    `<circle cx="-6" cy="36" r="2.2" fill="#fffef6"/><circle cx="-18" cy="-4" r="2.6" fill="#fdf8e6" stroke="#cfc5a6" stroke-width=".5"/>` +
+    `<circle cx="-30" cy="-4" r="1.6" fill="#fdf8e6"/><ellipse cx="-6" cy="-37" rx="2.6" ry="1.6" fill="#8e8670"/>` +
+    `<circle r="49" fill="none" stroke="rgba(150,135,100,.25)" stroke-width="3"/></g></svg>`;
+})();
+const moon = document.createElement("div");
+moon.id = "xmoon";
+moon.innerHTML = MOON;
+
 // The snowman: a big companion standing in the left margin, beside the columns of courses, seen in
 // three-quarter view, face turned to the right as if about to look at the courses. Drawn in a
 // 300 x 520 box, lit from the top left: lumpy hand-packed snowballs (wobbly outlines) shaded round,
@@ -833,7 +874,7 @@ const setChristmas = on => {
   if (!treeBuilt) {
     tree.innerHTML = buildTree();
     scene.innerHTML = MOUNTAINS;
-    scene.append(tree, snowman);
+    scene.append(moon, tree, snowman);
     treeBuilt = true;
   }
   buildGarland();

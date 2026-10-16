@@ -7,7 +7,7 @@ body.christmas::before{content:"";position:fixed;inset:0;z-index:0;pointer-event
 body.christmas .wrap{position:relative;z-index:1;padding-top:9.8rem}
 body.christmas[data-phase=christmas-night]{--bg:#071233;--fg:#eef2f8;--card:rgba(9,22,62,.92);--line:rgba(150,175,240,.15);--mut:#9eabd2;--acc:#f2c14e;--acc-bg:rgba(242,193,78,.12);--new:#fff;--new-bg:#c8102e}
 /* Night sky: a very deep navy blue, stars, the moon in the top left with its halo, a cold glow over the mountains */
-body.christmas{--moon:radial-gradient(circle at 13% 15%,#fffbe6 0 2.1rem,rgba(255,248,215,.35) 2.3rem,rgba(255,248,215,.08) 5rem,transparent 9rem)}
+body.christmas{--moon:radial-gradient(circle at 13% 15%,rgba(255,248,215,.4) 0 2.3rem,rgba(255,248,215,.08) 5rem,transparent 9rem)}  /* halo of the moon (#xmoon) */
 @media(max-width:700px){body.christmas{--moon:linear-gradient(transparent,transparent)}}  /* no room beside the title */
 body.christmas[data-phase=christmas-night]::before{background:var(--moon),radial-gradient(1.5px 1.5px at 8% 32%,#fff,transparent),radial-gradient(1px 1px at 22% 8%,#fff,transparent),radial-gradient(1.5px 1.5px at 31% 26%,#fff,transparent),radial-gradient(1px 1px at 42% 12%,#fff,transparent),radial-gradient(1.5px 1.5px at 55% 30%,#fff,transparent),radial-gradient(1px 1px at 63% 6%,#fff,transparent),radial-gradient(1.5px 1.5px at 74% 20%,#fff,transparent),radial-gradient(1px 1px at 86% 10%,#fff,transparent),radial-gradient(1.5px 1.5px at 93% 34%,#fff,transparent),radial-gradient(1px 1px at 37% 40%,#fff,transparent),radial-gradient(1px 1px at 68% 44%,#fff,transparent),radial-gradient(1px 1px at 4% 52%,#fff,transparent),radial-gradient(80% 45% at 50% 100%,rgba(80,110,220,.22),transparent 70%),linear-gradient(#02061a,#08143f 55%,#122463)}
 
@@ -72,6 +72,11 @@ body[data-phase=christmas-night] #xscene .m0c{fill:#1e2f66}
 body[data-phase=christmas-night] #xscene .m1c{fill:#26386f}
 body[data-phase=christmas-night] #xscene .ground-shade{fill:#6d7cad}
 body[data-phase=christmas-night] #xscene .ground{fill:#b5c0df}
+/* The moon, drawn with its seas and craters (js MOON), centred on its halo; night only */
+#xmoon{position:absolute;left:calc(13vw - 2.2rem);top:calc(15vh - 2.2rem);width:4.4rem;height:4.4rem;display:none}
+#xmoon svg{width:100%;height:100%}
+body[data-phase=christmas-night] #xmoon{display:block}
+@media(max-width:700px){body[data-phase=christmas-night] #xmoon{display:none}}
 /* Chalet lights on the slopes, at night only; some flicker slowly like a fire behind a window */
 #xscene .chalets{display:none}
 body[data-phase=christmas-night] #xscene .chalets{display:inline}
