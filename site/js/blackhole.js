@@ -198,7 +198,7 @@ function createBlackHole() {
     gl.uniform1f(u.uFocal, focal * c.width / innerWidth);
     gl.uniform1f(u.uTime, t);
     gl.uniform1f(u.uGrow, grow);
-    gl.uniform1f(u.uElev, .075 + .09 * Math.exp(-t / 2.2));  // slowly sinking towards the disk plane
+    gl.uniform1f(u.uElev, .075 + .09 * Math.exp(-t / 5));  // slowly sinking towards the disk plane
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   };
   let raf = 0, slow = 0, last = t0;

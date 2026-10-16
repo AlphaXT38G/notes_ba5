@@ -80,7 +80,7 @@ function splitLetters(roots) {
   return { letters, restore: () => swaps.forEach(([box, n]) => box.replaceWith(n)) };
 }
 
-// The whole Konami animation, about 5 s, then 15 s of party theme. Every movement uses the
+// The whole Konami animation, about 16 s (slow, to watch the black hole), then 15 s of party theme. Every movement uses the
 // Web Animations API (el.animate), so nothing in the page layout is changed for real:
 // cancelling the animations is enough to put every element back where it was.
 async function rift() {
@@ -97,9 +97,9 @@ async function rift() {
 
   // What gets swallowed: first every letter of the page on its own, then the boxes that held them,
   // innermost first (badges, progress bars, buttons, rows, then the course cards; the title too,
-  // for its decorations drawn in CSS), and the music
-  // player of the screen (hidden ones, e.g. inside closed sections, have no size and are left
-  // out). What comes back out at the end are the big pieces, once the letters are put back together.
+  // for its decorations drawn in CSS), and the music player of the screen. Hidden ones (e.g. in
+  // closed sections) have no size and are left out. What comes back out at the end are the big
+  // pieces, once the letters are put back together.
   const wrap = document.querySelector(".wrap");
   const shown = sel => [...document.querySelectorAll(sel)].filter(el => el.getBoundingClientRect().width > 0);
   const music = shown("#vinyl, #amp, #xmusic");
@@ -133,10 +133,10 @@ async function rift() {
   await wait(800);
 
   // 2. The black hole opens
-  if (bh) bh.size([[0, 0], [.7, 1.12], [1, 1]], 1100, k => 1 - (1 - k) ** 3);
+  if (bh) bh.size([[0, 0], [.7, 1.12], [1, 1]], 1800, k => 1 - (1 - k) ** 3);
   else hole.animate([{ transform: "scale(0)" }, { transform: "scale(1.12)", offset: .7 }, { transform: "scale(1)" }],
     { duration: 900, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" });
-  await wait(400);
+  await wait(1800);  // a moment to look at it before it starts eating
 
   // 3. The page spirals into it, closest first. Each piece orbits the hole (all the same way,
   //    like the gas of its disk), faster and faster as it falls in, flattens towards the disk
@@ -157,10 +157,13 @@ async function rift() {
     }
     return el.animate(frames, { duration, delay, easing: "cubic-bezier(.4,0,.85,.6)", fill: "forwards" });
   };
-  const near = el => { const b = el.getBoundingClientRect(); return Math.min(Math.hypot(hx - b.left - b.width / 2, hy - b.top - b.height / 2), 900); };
+  //    Timing: the closest go first (up to 4.5 s later for the farthest), each fall takes about
+  //    2 s, and a box leaves 2.6 s after its own letters, plus 1.6 s per level of boxes inside it.
+  const near = el => { const b = el.getBoundingClientRect(); return Math.min(Math.hypot(hx - b.left - b.width / 2, hy - b.top - b.height / 2), 900) * 5; };
+  const fall = () => 1800 + Math.random() * 800;
   const anims = [
-    ...letters.map(l => swallow(l, near(l) * 1.1 + Math.random() * 200, 900 + Math.random() * 500, false)),
-    ...boxes.map(el => swallow(el, near(el) * 1.1 + 1300 + (level(el) - 1) * 1100, 900 + Math.random() * 500, true))
+    ...letters.map(l => swallow(l, near(l) + Math.random() * 400, fall(), false)),
+    ...boxes.map(el => swallow(el, near(el) + 2600 + (level(el) - 1) * 1600, fall(), true))
   ];
   await Promise.all(anims.map(a => a.finished));
 
