@@ -6,15 +6,18 @@
 // "Good night" sends him away, waving; any other phase sends him away at once.
 //
 // He is one SVG drawing built from code: shirt and waistcoat, bow tie, a towel over his left arm,
-// his right arm raised with a brass hand bell, and a face with moving parts (.lid, .mouth).
+// his right arm raised with a brass hand bell, and the head of the Gigachad meme, drawn in black
+// and white like its photo (square jaw, slicked-back hair, side glance, huge neck), with moving
+// parts (.lid, .mouth).
 const BARTENDER = `<svg class="bt" viewBox="0 0 520 600" aria-hidden="true">
 <defs>
-<radialGradient id="bt-skin" cx=".42" cy=".36" r=".72"><stop offset="0" stop-color="#f3c9a5"/><stop offset=".6" stop-color="#dba079"/><stop offset="1" stop-color="#b5755a"/></radialGradient>
-<linearGradient id="bt-arm" x1="0" x2="1"><stop offset="0" stop-color="#c48463"/><stop offset=".5" stop-color="#e8b18c"/><stop offset="1" stop-color="#b9795b"/></linearGradient>
+<linearGradient id="bt-skin" x1="0" x2="1"><stop offset="0" stop-color="#3e3e3e"/><stop offset=".4" stop-color="#8e8e8e"/><stop offset=".72" stop-color="#d6d6d6"/><stop offset="1" stop-color="#7c7c7c"/></linearGradient>
+<filter id="bt-soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3.5"/></filter>
+<linearGradient id="bt-arm" x1="0" x2="1"><stop offset="0" stop-color="#5a5a5a"/><stop offset=".5" stop-color="#a8a8a8"/><stop offset="1" stop-color="#555"/></linearGradient>
 <linearGradient id="bt-shirt" x1="0" x2="1"><stop offset="0" stop-color="#cfc9bf"/><stop offset=".45" stop-color="#fbf8f2"/><stop offset="1" stop-color="#c9c2b6"/></linearGradient>
 <linearGradient id="bt-vest" x1="0" x2="1"><stop offset="0" stop-color="#0b0a0b"/><stop offset=".5" stop-color="#2b2427"/><stop offset="1" stop-color="#0b0a0b"/></linearGradient>
 <linearGradient id="bt-brass" x1="0" x2="1"><stop offset="0" stop-color="#6e470d"/><stop offset=".3" stop-color="#f6d27a"/><stop offset=".55" stop-color="#d9a637"/><stop offset="1" stop-color="#5e3b0a"/></linearGradient>
-<linearGradient id="bt-hair" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3d2c21"/><stop offset="1" stop-color="#1a120d"/></linearGradient>
+<linearGradient id="bt-hair" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e2e2e"/><stop offset="1" stop-color="#0e0e0e"/></linearGradient>
 <linearGradient id="bt-bow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b5283f"/><stop offset="1" stop-color="#6e1222"/></linearGradient>
 </defs>
 <g class="left-arm">
@@ -33,32 +36,37 @@ const BARTENDER = `<svg class="bt" viewBox="0 0 520 600" aria-hidden="true">
 <g fill="#9c8660"><circle cx="260" cy="445" r="5"/><circle cx="260" cy="485" r="5"/><circle cx="260" cy="525" r="5"/><circle cx="260" cy="565" r="5"/></g>
 <path d="M160,470H200" stroke="#3a3236" stroke-width="3"/>
 <path d="M180,470Q215,505 255,482" fill="none" stroke="#e1b84e" stroke-width="2.5" stroke-dasharray="3 2"/>
-<path d="M232,205V262Q260,284 288,262V205Z" fill="#c98b67"/>
-<ellipse cx="260" cy="228" rx="30" ry="10" fill="#a76a4f" opacity=".6"/>
+<path d="M216,200 210,268Q260,292 310,268L304,200Z" fill="url(#bt-arm)"/>
+<path d="M226,214Q244,246 254,272M296,214Q278,246 268,272" fill="none" stroke="#3a3a3a" stroke-width="3" opacity=".6"/>
+<ellipse cx="262" cy="250" rx="7" ry="9" fill="#9a9a9a" opacity=".6"/>
 <path d="M232,250 260,282 240,294 222,258ZM288,250 260,282 280,294 298,258Z" fill="#fffdf8" stroke="#cfc8bc"/>
 <path d="M260,274 226,258 229,294ZM260,274 294,258 291,294Z" fill="url(#bt-bow)"/>
 <rect x="251" y="265" width="18" height="18" rx="5" fill="#8f1a2e"/>
-<ellipse cx="198" cy="158" rx="12" ry="20" fill="#d29672"/><ellipse cx="322" cy="158" rx="12" ry="20" fill="#d29672"/>
-<path d="M200,150Q195,160 200,170M320,150Q325,160 320,170" fill="none" stroke="#a96a4e" stroke-width="2"/>
-<path d="M198,140Q196,215 236,238Q260,250 284,238Q324,215 322,140Q322,70 260,70Q198,70 198,140Z" fill="url(#bt-skin)"/>
-<path d="M204,178Q212,222 240,238Q260,248 280,238Q308,222 316,178Q300,216 260,222Q220,216 204,178Z" fill="#4a3022" opacity=".13"/>
-<path d="M196,142Q192,70 260,62Q328,70 324,142Q320,104 294,98Q262,88 228,98Q200,104 196,142Z" fill="url(#bt-hair)"/>
-<path d="M214,92Q250,80 300,90M222,100Q258,88 296,98" fill="none" stroke="#5a4535" stroke-width="2" opacity=".7"/>
-<path d="M196,142Q195,122 204,110L206,140ZM324,142Q325,122 316,110L314,140Z" fill="#9a948e"/>
-<path d="M222,127Q238,116 253,124M267,124Q282,116 298,127" fill="none" stroke="#2a1c14" stroke-width="7" stroke-linecap="round"/>
-<ellipse cx="238" cy="145" rx="11" ry="6.5" fill="#f7f1ea"/><ellipse cx="282" cy="145" rx="11" ry="6.5" fill="#f7f1ea"/>
-<g class="eyes"><circle cx="239" cy="145" r="5" fill="#4a3020"/><circle cx="281" cy="145" r="5" fill="#4a3020"/>
-<circle cx="239" cy="145" r="2.4" fill="#120a06"/><circle cx="281" cy="145" r="2.4" fill="#120a06"/>
-<circle cx="241" cy="143" r="1.4" fill="#fff"/><circle cx="283" cy="143" r="1.4" fill="#fff"/></g>
-<ellipse class="lid" cx="238" cy="145" rx="12" ry="7.5" fill="#d69c77"/><ellipse class="lid" cx="282" cy="145" rx="12" ry="7.5" fill="#d69c77"/>
-<path d="M226,143Q238,134 250,143M270,143Q282,134 294,143" fill="none" stroke="#6b4030" stroke-width="2.2"/>
-<path d="M228,155Q238,159 248,155M272,155Q282,159 292,155" fill="none" stroke="#8a5038" stroke-width="1.5" opacity=".45"/>
-<ellipse cx="224" cy="180" rx="14" ry="9" fill="#e0646a" opacity=".16"/><ellipse cx="296" cy="180" rx="14" ry="9" fill="#e0646a" opacity=".16"/>
-<path d="M258,140 252,182Q260,190 270,182" fill="none" stroke="#9a5a3e" stroke-width="2.5" opacity=".7"/>
-<ellipse cx="262" cy="176" rx="6" ry="4" fill="#ffe2c6" opacity=".45"/>
-<path d="M240,186Q232,200 236,214M280,186Q288,200 284,214" fill="none" stroke="#9a5a3e" stroke-width="1.6" opacity=".4"/>
-<g class="mouth"><ellipse cx="260" cy="213" rx="11" ry="8" fill="#4a1712"/><ellipse cx="260" cy="218" rx="7" ry="3" fill="#c0525a"/><rect x="252" y="205" width="16" height="3" rx="1.5" fill="#f2ece2"/></g>
-<path d="M260,196Q244,190 230,200Q214,210 206,198Q204,208 214,212Q232,216 246,206Q254,203 260,206Q266,203 274,206Q288,216 306,212Q316,208 314,198Q306,210 290,200Q276,190 260,196Z" fill="#2b1d16"/>
+<ellipse cx="208" cy="164" rx="9" ry="17" fill="#4e4e4e"/><ellipse cx="326" cy="160" rx="6" ry="15" fill="#6a6a6a"/>
+<path d="M210,118Q206,160 212,196L224,236Q244,266 276,266Q306,262 317,236L325,200Q331,160 323,116Q314,70 266,66Q214,70 210,118Z" fill="url(#bt-skin)"/>
+<g filter="url(#bt-soft)">
+<path d="M212,120Q208,170 216,200L228,236Q240,256 256,262Q236,230 232,200Q226,160 232,120Z" fill="#1c1c1c" opacity=".55"/>
+<ellipse cx="236" cy="190" rx="10" ry="18" fill="#222" opacity=".5"/>
+<ellipse cx="306" cy="186" rx="7" ry="16" fill="#2a2a2a" opacity=".45"/>
+<path d="M292,120Q300,150 296,176" stroke="#f2f2f2" stroke-width="8" opacity=".35"/>
+<ellipse cx="282" cy="250" rx="18" ry="6" fill="#efefef" opacity=".25"/>
+</g>
+<path d="M212,190Q214,214 224,236Q244,266 276,266Q306,262 317,236L325,196Q316,214 302,216Q292,206 278,204Q264,202 252,206Q240,214 228,210Q216,204 212,190Z" fill="#181818" opacity=".5"/>
+<path d="M210,124Q200,70 250,50Q296,38 324,78Q336,100 326,128Q320,96 300,86Q268,74 238,86Q214,98 212,126Z" fill="url(#bt-hair)"/>
+<path d="M216,92Q246,58 306,64M220,102Q254,72 316,78M228,108Q262,86 320,92M240,96Q270,70 312,70" fill="none" stroke="#a0a0a0" stroke-width="2" opacity=".5"/>
+<g filter="url(#bt-soft)"><ellipse cx="246" cy="146" rx="15" ry="8" fill="#141414" opacity=".8"/><ellipse cx="297" cy="145" rx="13" ry="8" fill="#141414" opacity=".7"/></g>
+<path d="M226,138Q244,130 262,136L261,141Q244,137 228,143ZM280,136Q296,129 314,134L313,139Q297,136 281,141Z" fill="#0c0c0c"/>
+<path d="M240,147Q247,144 254,147Q247,149 240,147ZM291,146Q298,143 304,146Q298,148 291,146Z" fill="#bdbdbd"/>
+<g class="eyes"><circle cx="250" cy="146.6" r="1.9" fill="#050505"/><circle cx="300" cy="145.6" r="1.8" fill="#050505"/></g>
+<ellipse class="lid" cx="247" cy="147" rx="9" ry="4" fill="#3c3c3c"/><ellipse class="lid" cx="297" cy="146" rx="8" ry="4" fill="#4a4a4a"/>
+<path d="M272,138 268,184Q276,192 288,186" fill="none" stroke="#1e1e1e" stroke-width="2.6"/>
+<path d="M276,142 279,178" stroke="#f4f4f4" stroke-width="3.2" opacity=".5"/>
+<ellipse cx="281" cy="188" rx="4" ry="1.8" fill="#0e0e0e"/>
+<g class="mouth"><ellipse cx="274" cy="217" rx="11" ry="7" fill="#0e0e0e"/><rect x="266" y="211" width="16" height="3" rx="1.5" fill="#d0d0d0"/></g>
+<path d="M258,215Q274,218 292,211" fill="none" stroke="#0e0e0e" stroke-width="2.6"/>
+<path d="M292,209Q297,213 294,219" fill="none" stroke="#1a1a1a" stroke-width="1.8"/>
+<ellipse cx="275" cy="226" rx="9" ry="2.4" fill="#c4c4c4" opacity=".35"/>
+<path d="M276,246V258" stroke="#111" stroke-width="2"/>
 <g class="arm">
 <path d="M170,300 80,345" stroke="url(#bt-shirt)" stroke-width="56" stroke-linecap="round"/>
 <path d="M150,296Q130,318 112,316M136,330Q118,340 104,334" fill="none" stroke="#bdb5a8" stroke-width="2.5"/>
@@ -70,8 +78,8 @@ const BARTENDER = `<svg class="bt" viewBox="0 0 520 600" aria-hidden="true">
 <ellipse cx="102" cy="286" rx="36" ry="6" fill="#8a5e18"/><circle class="clapper" cx="102" cy="293" r="6" fill="#4e3109"/>
 <path d="M96,232Q92,256 80,278" fill="none" stroke="#fff3c4" stroke-width="3" opacity=".6"/>
 </g>
-<ellipse cx="102" cy="206" rx="22" ry="18" fill="#dca07a"/>
-<path d="M86,198Q100,194 116,198M85,207Q100,203 118,207M87,216Q100,212 116,216" fill="none" stroke="#a96a4e" stroke-width="1.8"/>
+<ellipse cx="102" cy="206" rx="22" ry="18" fill="#9a9a9a"/>
+<path d="M86,198Q100,194 116,198M85,207Q100,203 118,207M87,216Q100,212 116,216" fill="none" stroke="#555" stroke-width="1.8"/>
 </g>
 </svg>`;
 

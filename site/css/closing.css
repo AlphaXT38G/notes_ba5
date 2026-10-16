@@ -48,7 +48,7 @@
 /* Moving parts of the drawing: their origins are in the SVG's own units (viewBox 0 0 520 600) */
 #closing .lid{transform:scaleY(0);transform-origin:center 138px;animation:cl-blink 4.3s 2s infinite}
 @keyframes cl-blink{0%,93%,100%{transform:scaleY(0)}96%{transform:scaleY(1)}}
-#closing .mouth{transform:scaleY(.12);transform-origin:260px 207px}
+#closing .mouth{transform:scaleY(.12);transform-origin:274px 212px}
 #closing.talking .mouth{animation:cl-talk .19s ease-in-out infinite alternate}
 @keyframes cl-talk{from{transform:scaleY(.15)}to{transform:scaleY(1)}}
 /* Last call: the bell swings from his hand, its clapper the other way, his arm shakes with it */
