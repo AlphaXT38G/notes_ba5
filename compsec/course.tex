@@ -2402,4 +2402,25 @@ Speed                    & fast               & slow
 \end{center}
 \end{keybox}
 
+\begin{defnbox}[title=CBC-MAC]
+Turning a block cipher into a MAC:
+\[
+  C_0 = 0 \ \text{[any fixed IV]}, \qquad C_i = E_K(M_i \oplus C_{i-1}), \qquad
+  MAC_K(M_1 \ldots M_n) = C_n .
+\]
+Differences with respect to CBC encryption:
+\begin{itemize}
+  \item CBC-MAC is \textbf{deterministic} (fixed IV);
+  \item only the \textbf{last block} is output.
+\end{itemize}
+\textbf{Limitation}: only secure if the length of message $M$ is known (fixed).
+\end{defnbox}
+
+\begin{rembox}[title=Why a fixed IV and why only the last block?]
+A MAC must be \textbf{recomputable} by the verifier: with a random IV, Alice could not
+recompute the same tag (and an attacker could adjust the IV to fix the first block).
+Since every block is chained into the next, the last block depends on the whole message:
+it is a short ``keyed fingerprint'' of $M$.
+\end{rembox}
+
 \end{document}
