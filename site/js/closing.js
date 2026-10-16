@@ -1,7 +1,8 @@
 // ── Closing time (screen "closing", the jazz bar from 0:45 to 1:00) ──────────────────────────
 // Once the neon sign has gone dark letter by letter (jazz.js, jazz.css), the bartender comes over
 // the whole page to say the bar is closing (css/closing.css): the room darkens and he rises from
-// the bottom of the screen, life-size. Any other phase sends him away at once.
+// the bottom of the screen, life-size, under a hanging lamp that swings as it comes down. Any other
+// phase sends him away at once.
 //
 // He is one SVG drawing built from code: shirt and waistcoat, bow tie, a towel over his left arm,
 // his right arm raised with a brass hand bell, and a face with moving parts (.lid, .mouth).
@@ -75,7 +76,8 @@ const BARTENDER = `<svg class="bt" viewBox="0 0 520 600" aria-hidden="true">
 
 const closing = document.createElement("div");
 closing.id = "closing";
-closing.innerHTML = `<div class="shade"></div><div class="stage">${BARTENDER}</div>`;
+closing.innerHTML = '<div class="shade"></div><div class="lamp"><div class="swing"><i class="cord"></i><i class="glow"></i><i class="cap"></i><i class="bulb"></i></div></div>' +
+  `<div class="stage">${BARTENDER}</div>`;
 let closingTimer = null;
 const closeBar = () => {  // he arrives once the last letter of the sign (and the sax) is off
   closing.classList.remove("bye");
