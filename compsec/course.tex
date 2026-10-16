@@ -2438,4 +2438,15 @@ in parallel.
 \end{itemize}
 \end{defnbox}
 
+\begin{defnbox}[title=MAC-then-Encrypt]
+Send $E_K\big(M \,\|\, MAC_K(M)\big)$: MAC the plaintext, then encrypt plaintext and MAC
+together.
+\begin{itemize}
+  \item[$\times$] \textbf{No integrity of the ciphertext}: (in theory) possible to change
+        the ciphertext and still have a valid MAC; need to decrypt to know if valid.
+  \item[$\checkmark$] Integrity of the plaintext can be verified.
+  \item[$\checkmark$] No information on the plaintext either, since it is encrypted.
+\end{itemize}
+\end{defnbox}
+
 \end{document}
