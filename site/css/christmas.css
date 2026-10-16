@@ -5,11 +5,11 @@
 body.christmas{--bg:#eaf2fa;--fg:#1d2433;--card:rgba(255,255,255,.93);--line:#d5e1ee;--mut:#5b6a80;--acc:#b3122e;--acc-bg:#fde7eb;--new:#fff;--new-bg:#c8102e;background:var(--bg)}
 body.christmas::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(#c9def2,#eaf2fa 55%,#f5f9fd)}
 body.christmas .wrap{position:relative;z-index:1;padding-top:9.8rem}
-body.christmas[data-phase=christmas-night]{--bg:#13306a;--fg:#eef2f8;--card:rgba(22,48,102,.9);--line:rgba(170,210,255,.19);--mut:#b0c4e2;--acc:#f2c14e;--acc-bg:rgba(242,193,78,.12);--new:#fff;--new-bg:#c8102e}
-/* Night sky: a deep winter blue, stars, the moon in the top left with its halo, a cold glow over the mountains */
+body.christmas[data-phase=christmas-night]{--bg:#0c1a3d;--fg:#eef2f8;--card:rgba(16,32,72,.9);--line:rgba(160,190,255,.16);--mut:#a3b4d6;--acc:#f2c14e;--acc-bg:rgba(242,193,78,.12);--new:#fff;--new-bg:#c8102e}
+/* Night sky: a deep midnight blue, stars, the moon in the top left with its halo, a cold glow over the mountains */
 body.christmas{--moon:radial-gradient(circle at 13% 15%,#fffbe6 0 2.1rem,rgba(255,248,215,.35) 2.3rem,rgba(255,248,215,.08) 5rem,transparent 9rem)}
 @media(max-width:700px){body.christmas{--moon:linear-gradient(transparent,transparent)}}  /* no room beside the title */
-body.christmas[data-phase=christmas-night]::before{background:var(--moon),radial-gradient(1.5px 1.5px at 8% 32%,#fff,transparent),radial-gradient(1px 1px at 22% 8%,#fff,transparent),radial-gradient(1.5px 1.5px at 31% 26%,#fff,transparent),radial-gradient(1px 1px at 42% 12%,#fff,transparent),radial-gradient(1.5px 1.5px at 55% 30%,#fff,transparent),radial-gradient(1px 1px at 63% 6%,#fff,transparent),radial-gradient(1.5px 1.5px at 74% 20%,#fff,transparent),radial-gradient(1px 1px at 86% 10%,#fff,transparent),radial-gradient(1.5px 1.5px at 93% 34%,#fff,transparent),radial-gradient(1px 1px at 37% 40%,#fff,transparent),radial-gradient(1px 1px at 68% 44%,#fff,transparent),radial-gradient(1px 1px at 4% 52%,#fff,transparent),radial-gradient(80% 45% at 50% 100%,rgba(120,175,255,.35),transparent 70%),linear-gradient(#0b1f4a,#1a4290 55%,#2a62b8)}
+body.christmas[data-phase=christmas-night]::before{background:var(--moon),radial-gradient(1.5px 1.5px at 8% 32%,#fff,transparent),radial-gradient(1px 1px at 22% 8%,#fff,transparent),radial-gradient(1.5px 1.5px at 31% 26%,#fff,transparent),radial-gradient(1px 1px at 42% 12%,#fff,transparent),radial-gradient(1.5px 1.5px at 55% 30%,#fff,transparent),radial-gradient(1px 1px at 63% 6%,#fff,transparent),radial-gradient(1.5px 1.5px at 74% 20%,#fff,transparent),radial-gradient(1px 1px at 86% 10%,#fff,transparent),radial-gradient(1.5px 1.5px at 93% 34%,#fff,transparent),radial-gradient(1px 1px at 37% 40%,#fff,transparent),radial-gradient(1px 1px at 68% 44%,#fff,transparent),radial-gradient(1px 1px at 4% 52%,#fff,transparent),radial-gradient(80% 45% at 50% 100%,rgba(100,140,230,.28),transparent 70%),linear-gradient(#060d24,#0f2352 55%,#1d3b78)}
 
 /* Title: Christmas red, serif italic, with a sprig of holly; gold and glowing at night */
 body.christmas h1{font:italic 700 2.5rem Georgia,"Palatino Linotype",serif;color:#b3122e;letter-spacing:.01em;text-shadow:0 2px 0 rgba(255,255,255,.8)}
@@ -62,11 +62,11 @@ body[data-phase=christmas-night] #garland .shine{opacity:.45}
 #xscene .caps{fill:#fff}
 #xscene .ground-shade{fill:#d4e0ee}
 #xscene .ground{fill:#fbfdff}
-body[data-phase=christmas-night] #xscene .m1{fill:#25478c}
-body[data-phase=christmas-night] #xscene .m2{fill:#1c3b77}
+body[data-phase=christmas-night] #xscene .m1{fill:#1b3366}
+body[data-phase=christmas-night] #xscene .m2{fill:#142a56}
 body[data-phase=christmas-night] #xscene .caps{fill:#9db0d0}
-body[data-phase=christmas-night] #xscene .ground-shade{fill:#89a3cf}
-body[data-phase=christmas-night] #xscene .ground{fill:#c3d4ef}
+body[data-phase=christmas-night] #xscene .ground-shade{fill:#7e95c0}
+body[data-phase=christmas-night] #xscene .ground{fill:#c0cde6}
 /* The tree box: taller than the window, always on the right, sticking out past the right edge and
    a little below the bottom one (the SVG is bottom-aligned, so the gifts are partly cut). On narrow screens it is
    behind the cards (faded). #xtree-front is the same box above the page, holding only the hidden sax. */
