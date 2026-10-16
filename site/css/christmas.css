@@ -58,11 +58,11 @@ body[data-phase=christmas-night] #garland .shine{opacity:.45}
 #xscene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 /* Mountains: most of the window's height, in colours close to the sky so they stay in the background */
 #xscene .mountains{position:absolute;left:0;bottom:0;width:100%;height:78vh}
-#xscene .m0{fill:#bfd1e5}
-#xscene .m1{fill:#afc3da}
-#xscene .m2{fill:#a3b8d1}
-#xscene .m0c{fill:#e9f0f8}
-#xscene .m1c{fill:#f1f6fb}
+#xscene .m0{fill:#bccde2}
+#xscene .m1{fill:#a9bed7}
+#xscene .m2{fill:#9ab0cb}
+#xscene .m0c{fill:#cddaea}
+#xscene .m1c{fill:#bfcfe2}
 #xscene .ground-shade{fill:#d4e0ee}
 #xscene .ground{fill:#fbfdff}
 body[data-phase=christmas-night] #xscene .m0{fill:#0c1a49}
