@@ -2,40 +2,38 @@
 // Typing a r m s t r o n g (outside the search field), like the Konami code, opens the jazz bar
 // ("evening" screen) at any time of the day or the year, for the rest of the visit. It runs after
 // the Christmas override (this file is loaded after christmas.js) so it wins over Christmas, and
-// before the metal and epic ones, so the shows still take over.
-// Typed again in the jazz bar, it goes back to the normal screen, but only if the normal screen at
-// that moment is not the jazz bar itself (at 22:00 the bar stays: it is where we should be).
-// "Normal" means what the clock gives without any easter egg nor forced screen: the bar opened
-// from the Christmas sax or by ?night=evening is left the same way. Typing yeti in the bar
-// (Christmas egg) closes it too, so that Christmas actually shows up (jazzEggXmas).
+// before the metal and epic ones, so the shows still take over (the metal show at 01:00 too: only
+// the day and Christmas are replaced).
+// Typed again in the jazz bar, it goes back to the normal screen of that moment: what the clock
+// gives without any easter egg nor forced screen. So it drops the jazz egg, the yeti egg, the
+// Christmas sax and a forced ?night=..., and shows the day, the jazz bar at bar time (it then
+// stays), or Christmas during the Christmas period. Typing yeti in the bar (Christmas egg)
+// closes it too, so that Christmas actually shows up (jazzEggXmas).
 const ARMSTRONG = [..."armstrong"];
 let armstrongPos = 0,     // how many letters of the word have been typed so far
     jazzEgg = false,      // the code was typed: the jazz bar stays open
     jazzEggXmas = false;  // the Christmas egg (xmasEgg) when it was typed
+const inBar = phase => SCREENS[phase]?.className === "night";
 OVERRIDES.push(phase => {
   if (jazzEgg && xmasEgg !== jazzEggXmas) jazzEgg = false;  // yeti typed since: Christmas wins
-  if (!jazzEgg) return phase;
-  return SCREENS[phase]?.className === "night" ? phase : "evening";  // keeps "closing" when the clock says so
+  // Only the day and Christmas are replaced: a show on the clock (metal at 01:00) still wins
+  if (!jazzEgg || phase && !inBar(phase) && SCREENS[phase]?.className !== "christmas") return phase;
+  // Keeps "closing" when the clock says so, even if Christmas had replaced it before this override
+  const clock = scheduledPhase();
+  return inBar(phase) ? phase : inBar(clock) ? clock : "evening";
 });
-const inBar = phase => SCREENS[phase]?.className === "night";
-// The screen we would have without the jazz egg, the sax and a forced screen. Running the
-// overrides only to look is harmless: they only forget easter eggs that are over anyway.
-const normalPhase = () => {
-  const saved = [jazzEgg, xmasJazz, forcedDismissed];
-  jazzEgg = xmasJazz = false;
-  forcedDismissed = true;
-  const phase = phaseNow();
-  [jazzEgg, xmasJazz, forcedDismissed] = saved;
-  return phase;
+// Leaving the bar: drop the easter eggs that kept it open or that would replace it (the yeti
+// egg's Christmas), so the screen goes back to what the clock gives
+const backToClock = () => {
+  jazzEgg = xmasEgg = xmasJazz = false;
+  if (forced) forcedDismissed = true;  // also leaves a forced ?night=... (the bar, Christmas...)
 };
 const armstrong = () => {
   if (!inBar(document.body.dataset.phase)) {
     jazzEgg = true;
     jazzEggXmas = xmasEgg;
   } else {
-    if (inBar(normalPhase())) return;  // the bar is the normal screen now: stay
-    jazzEgg = xmasJazz = false;
-    if (inBar(forced)) forcedDismissed = true;  // also leaves a ?night=evening / closing
+    backToClock();  // at bar time the clock gives the bar: it stays, but the eggs are gone
   }
   applyScreen();
 };
