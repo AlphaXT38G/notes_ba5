@@ -67,6 +67,7 @@ const cubic = (p, t) => {
   const u = 1 - t;
   return [0, 1].map(k => u * u * u * p[0][k] + 3 * u * u * t * p[1][k] + 3 * u * t * t * p[2][k] + t * t * t * p[3][k]);
 };
+let garlandSwags = [], garlandBobs = [];  // moving parts, with their physics state (see below)
 const buildGarland = () => {
   const W = Math.max(320, document.documentElement.clientWidth), rnd = seeded(12);
   // irregular swags: widths from 240 to 420 px, depths from 45 to 82 px, hooks at slightly different heights
@@ -74,14 +75,13 @@ const buildGarland = () => {
   while (hooks.at(-1)[0] < W) hooks.push([hooks.at(-1)[0] + 240 + rnd() * 180, 3 + rnd() * 9]);
   const scale = W / hooks.at(-1)[0];  // stretch so the last hook lands on the right edge
   hooks.forEach(h => { h[0] *= scale; });
-  const needles = NEEDLES.map(() => []), snow = [], cones = [], lights = [], baubles = [];
-  let base = "", ribbon = "";
+  const swags = [], lights = [], baubles = [];
   for (let k = 0; k + 1 < hooks.length; k++) {
     const [x0, y0] = hooks[k], [x1, y1] = hooks[k + 1], w = x1 - x0, sag = 45 + rnd() * 37, lean = (rnd() - .5) * .25;
     const curve = [[x0, y0], [x0 + w * (.28 + lean), y0 + sag * 1.3], [x0 + w * (.72 + lean), y1 + sag * 1.3], [x1, y1]];
-    base += `M${f1(x0)},${f1(y0)}C${curve.slice(1).map(([x, y]) => `${f1(x)},${f1(y)}`).join(" ")}`;
+    const needles = NEEDLES.map(() => []), snow = [], cones = [];
+    let ribbon = "";
     const n = Math.round(w / 2.2);
-    let rib = "";
     for (let i = 0; i <= n; i++) {
       const tt = i / n, [x, y] = cubic(curve, tt), [xa, ya] = cubic(curve, Math.min(1, tt + .01)), [xb, yb] = cubic(curve, Math.max(0, tt - .01));
       const len = Math.hypot(xa - xb, ya - yb) || 1, nx = -(ya - yb) / len, ny = (xa - xb) / len;  // normal, pointing down-ish
@@ -92,9 +92,8 @@ const buildGarland = () => {
       }
       if (i % 5 === 0 && rnd() < .55) snow.push(`<ellipse cx="${f1(x - nx * (thick - 2) + (rnd() - .5) * 6)}" cy="${f1(y - ny * (thick - 2))}" rx="${f1(2.5 + rnd() * 3.5)}" ry="${f1(1.6 + rnd() * 1.6)}"/>`);
       const wob = Math.sin(tt * Math.PI * 2 * (w / 90)) * thick * .8;
-      rib += `${i ? "L" : "M"}${f1(x + nx * wob)},${f1(y + ny * wob)}`;
+      ribbon += `${i ? "L" : "M"}${f1(x + nx * wob)},${f1(y + ny * wob)}`;
     }
-    ribbon += rib;
     // pine cones, here and there
     if (rnd() < .7) {
       const [x, y] = cubic(curve, .2 + rnd() * .6), a = f1((rnd() - .5) * 60);
@@ -105,19 +104,22 @@ const buildGarland = () => {
     const nl = Math.round(w / 34);
     for (let i = 0; i < nl; i++) {
       const tt = (i + .3 + rnd() * .4) / nl, [x, y] = cubic(curve, tt), dx = (rnd() - .5) * 10, dy = (rnd() - .3) * 14;
-      const c = FAIRY[(rnd() * FAIRY.length) | 0];
-      lights.push({ x: x + dx, y: y + dy, c, d: f1(-rnd() * 5), t: f1(1.6 + rnd() * 2.6) });
+      lights.push({ k, x: x + dx, y: y + dy, c: FAIRY[(rnd() * FAIRY.length) | 0], d: f1(-rnd() * 5), t: f1(1.6 + rnd() * 2.6) });
     }
     // glass baubles hanging below, two or three per swag
     const nb = 2 + (rnd() < .5);
     for (let i = 0; i < nb; i++) {
       const tt = (i + .25 + rnd() * .5) / nb, [x, y] = cubic(curve, tt), thread = 8 + rnd() * 28, r = 8 + rnd() * 6;
-      baubles.push({ x, y: y + 6, cy: y + 6 + thread + r, r, c: (rnd() * GLASS.length) | 0 });
+      baubles.push({ k, x, y: y + 6, cy: y + 6 + thread + r, r, c: (rnd() * GLASS.length) | 0 });
     }
+    const fir = `<path class="fir" d="M${f1(x0)},${f1(y0)}C${curve.slice(1).map(([x, y]) => `${f1(x)},${f1(y)}`).join(" ")}"/>` +
+      needles.map((d, i) => `<path stroke="${NEEDLES[i]}" class="needles" d="${d.join("")}"/>`).join("") +
+      `<path class="ribbon" d="${ribbon}"/>${cones.join("")}<g class="snow">${snow.join("")}</g>`;
+    swags.push({ fir, x0, x1, top: (y0 + y1) / 2, bottom: Math.max(y0, y1) + sag });
   }
-  const lightSvg = lights.map(l => `<g class="fl" style="--d:${l.d}s;--t:${l.t}s"><circle class="halo" cx="${f1(l.x)}" cy="${f1(l.y)}" r="17" fill="url(#fl${FAIRY.indexOf(l.c)})"/>` +
-    `<circle class="glass" cx="${f1(l.x)}" cy="${f1(l.y)}" r="2.6"/><circle class="lit" cx="${f1(l.x)}" cy="${f1(l.y)}" r="3.2" fill="${l.c}"/></g>`).join("");
-  const baubleSvg = baubles.map(b => {
+  const lightSvg = l => `<g class="fl" style="--d:${l.d}s;--t:${l.t}s"><circle class="halo" cx="${f1(l.x)}" cy="${f1(l.y)}" r="17" fill="url(#fl${FAIRY.indexOf(l.c)})"/>` +
+    `<circle class="glass" cx="${f1(l.x)}" cy="${f1(l.y)}" r="2.6"/><circle class="lit" cx="${f1(l.x)}" cy="${f1(l.y)}" r="3.2" fill="${l.c}"/></g>`;
+  const baubleSvg = b => {
     // the two nearest lights, mirrored on the side of the glass facing them
     const near = lights.map(l => [Math.hypot(l.x - b.x, l.y - b.cy), l]).sort((a, z) => a[0] - z[0]).slice(0, 2);
     const glints = near.map(([d, l]) => {
@@ -129,7 +131,7 @@ const buildGarland = () => {
       `<rect class="cap" x="${f1(b.x - 2.8)}" y="${f1(b.cy - b.r - 4)}" width="5.6" height="5" rx="1"/>` +
       `<circle cx="${f1(b.x)}" cy="${f1(b.cy)}" r="${f1(b.r)}" fill="url(#gb${b.c})"/>${glints}` +
       `<ellipse class="shine" cx="${f1(b.x - b.r * .38)}" cy="${f1(b.cy - b.r * .4)}" rx="${f1(b.r * .22)}" ry="${f1(b.r * .32)}" transform="rotate(-30 ${f1(b.x - b.r * .38)} ${f1(b.cy - b.r * .4)})"/></g>`;
-  }).join("");
+  };
   const bows = hooks.map(([x, y]) => `<g class="bow" transform="translate(${f1(x)},${f1(y + 4)})">` +
     `<path d="M-3,3C-9,24-13,34-15,42L-9,38-6,44C-4,30-1,18 1,4ZM3,3C9,24 13,34 15,42L9,38 6,44C4,30 1,18-1,4Z" fill="url(#bowtail)"/>` +
     `<path d="M0,0C-20,-18-34,4-6,6ZM0,0C20,-18 34,4 6,6Z" fill="url(#bowloop)"/><ellipse rx="5" ry="4.5" fill="#9b0d22"/></g>`).join("");
@@ -139,9 +141,15 @@ const buildGarland = () => {
     `<linearGradient id="bowloop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2384f"/><stop offset=".6" stop-color="#b3122e"/><stop offset="1" stop-color="#7d0a1d"/></linearGradient>` +
     `<linearGradient id="bowtail" x1="0" x2="1"><stop offset="0" stop-color="#8a0c20"/><stop offset=".5" stop-color="#c8102e"/><stop offset="1" stop-color="#8a0c20"/></linearGradient>` +
     `<linearGradient id="ribbon" x1="0" x2="1"><stop offset="0" stop-color="#f6dc8a"/><stop offset=".5" stop-color="#d4a630"/><stop offset="1" stop-color="#f6dc8a"/></linearGradient>`;
-  garland.innerHTML = `<svg width="${W}" height="170" viewBox="0 0 ${W} 170"><defs>${defs}</defs>${baubleSvg}` +
-    `<path class="fir" d="${base}"/>` + needles.map((d, i) => `<path stroke="${NEEDLES[i]}" class="needles" d="${d.join("")}"/>`).join("") +
-    `<path class="ribbon" d="${ribbon}"/>${cones.join("")}<g class="snow">${snow.join("")}</g>${lightSvg}${bows}</svg>`;
+  // one group per swag (its baubles behind the fir, its lights in front), so each can move on its own;
+  // the bows stay nailed to the hooks, on top
+  garland.innerHTML = `<svg width="${W}" height="170" viewBox="0 0 ${W} 170"><defs>${defs}</defs>` +
+    swags.map((s, k) => `<g class="swag">${baubles.filter(b => b.k === k).map(baubleSvg).join("")}${s.fir}${lights.filter(l => l.k === k).map(lightSvg).join("")}</g>`).join("") +
+    `${bows}</svg>`;
+  const swagEls = garland.querySelectorAll(".swag");
+  garlandSwags = swags.map((s, k) => ({ ...s, el: swagEls[k], a: 0, va: 0, s: 0, vs: 0 }));
+  const bobEls = garland.querySelectorAll(".bauble");
+  garlandBobs = baubles.sort((a, z) => a.k - z.k).map((b, i) => ({ el: bobEls[i], px: b.x, py: b.y, cy: b.cy, r: b.r, len: b.cy - b.y, th: 0, w: 0 }));
   garland.w = W;
   placeSax();  // the sax may hang on the garland, which was just rebuilt
 };
@@ -563,6 +571,58 @@ everySecond.push(() => {
   if (document.body.dataset.phase !== "christmas-night") { sleighFlight?.cancel(); sleighIn = 20 + Math.random() * 60; return; }
   if (--sleighIn <= 0) { sleighIn = 40 + Math.random() * 200; flySleigh(); }
 });
+
+// The garland reacts to the mouse, like the metal show's chains: passing the pointer through a swag
+// makes it swing (a sideways shear from its hooks) and bounce (a vertical stretch), and knocks the
+// baubles near the pointer, which then swing on their threads like pendulums. Springs bring
+// everything back to rest; the loop only runs while something moves.
+let garlandRaf = null, garlandLast = 0, gPrev = null;
+const garlandStep = now => {
+  const dt = Math.min(.033, (now - garlandLast) / 1000);
+  garlandLast = now;
+  let moving = false;
+  for (const s of garlandSwags) {
+    s.va += (-60 * s.a - 3.2 * s.va) * dt; s.a += s.va * dt;
+    s.vs += (-90 * s.s - 4 * s.vs) * dt; s.s += s.vs * dt;
+    s.a = Math.max(-.35, Math.min(.35, s.a));
+    const still = Math.abs(s.a) + Math.abs(s.va) + Math.abs(s.s) + Math.abs(s.vs) < 1e-3;
+    if (still) { s.a = s.va = s.s = s.vs = 0; s.el.removeAttribute("transform"); continue; }
+    moving = true;
+    s.el.setAttribute("transform", `translate(0 ${f1(s.top)}) skewX(${(s.a * 57.3).toFixed(2)}) scale(1 ${(1 + s.s).toFixed(4)}) translate(0 ${f1(-s.top)})`);
+  }
+  for (const b of garlandBobs) {
+    b.w += (-(1500 / b.len) * Math.sin(b.th) - 1.6 * b.w) * dt; b.th += b.w * dt;
+    b.th = Math.max(-1.1, Math.min(1.1, b.th));  // a thread, not a rod: never over the top
+    if (Math.abs(b.th) + Math.abs(b.w) < 2e-3) { b.th = b.w = 0; b.el.removeAttribute("transform"); continue; }
+    moving = true;
+    b.el.setAttribute("transform", `rotate(${(b.th * 57.3).toFixed(2)} ${f1(b.px)} ${f1(b.py)})`);
+  }
+  garlandRaf = moving ? requestAnimationFrame(garlandStep) : null;
+};
+const garlandTouch = e => {
+  if (!garland.isConnected || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const x = e.clientX, y = e.clientY + scrollY, now = performance.now();  // the garland is at the top of the page
+  const prev = gPrev;
+  gPrev = { x, y, now };
+  if (!prev || y > 190 || now - prev.now > 100) return;
+  const ms = Math.max(8, now - prev.now), vx = (x - prev.x) / ms, vy = (y - prev.y) / ms;  // px per ms
+  let hit = false;
+  for (const s of garlandSwags) {
+    if (x < s.x0 || x > s.x1 || y < s.top - 10 || y > s.bottom + 40) continue;
+    const mid = 1 - Math.abs((x - (s.x0 + s.x1) / 2) / ((s.x1 - s.x0) / 2));  // strongest in the middle of the swag
+    s.va += vx * .5 * (.4 + mid);
+    s.vs += vy * .25 * (.4 + mid);
+    hit = true;
+  }
+  for (const b of garlandBobs) {
+    const bx = b.px - Math.sin(b.th) * b.len, by = b.py + Math.cos(b.th) * b.len;  // where the bauble is now (SVG rotate: + turns it left)
+    if (Math.hypot(x - bx, y - by) > b.r + 26) continue;
+    b.w = Math.max(-5, Math.min(5, b.w - vx * 2.2 / Math.sqrt(b.len / 30)));  // pushed the way the pointer goes
+    hit = true;
+  }
+  if (hit && !garlandRaf) { garlandLast = now; garlandRaf = requestAnimationFrame(garlandStep); }
+};
+addEventListener("pointermove", garlandTouch, { passive: true });
 
 // Christmas music: a live of Christmas songs from YouTube, on a Christmas turntable in the bottom
 // left corner (red lacquer and gold, snow on the lid, holly, a candy-cane tonearm). It starts with
