@@ -2338,4 +2338,33 @@ decryption algorithm?''), blocks can be processed \textbf{in parallel}, and --- 
 any pad --- a nonce must \textbf{never be reused} with the same key.
 \end{rembox}
 
+\begin{propbox}[title=Block ciphers: strengths and weaknesses]
+\textbf{Strengths}:
+\begin{itemize}
+  \item \textbf{High diffusion} --- information from one plaintext symbol is diffused
+        into several ciphertext symbols;
+  \item \textbf{Immunity to tampering} --- difficult to insert symbols without detection.
+\end{itemize}
+\textbf{Weaknesses}:
+\begin{itemize}
+  \item \textbf{Slow} --- an entire block must be accumulated before encryption /
+        decryption can begin;
+  \item \textbf{Error propagation} --- in some modes of operation errors affect several
+        bits/blocks.
+\end{itemize}
+Individual modes may not fall in these categories and may offer a different trade-off.
+It is the opposite profile of stream ciphers (Lecture 5).
+\end{propbox}
+
+\begin{keybox}[title=Modes of operation: summary]
+\begin{itemize}
+  \item \textbf{ECB} --- directly encrypt and decrypt single blocks. Large information
+        leakage due to lack of randomness across blocks' encryption.
+  \item \textbf{CBC} --- avoids ECB problems by using previous blocks to add randomness to
+        every encryption. Propagates errors and prevents single-block decryption.
+  \item \textbf{CTR} --- uses an increasing ``nonce'' to introduce randomness across
+        blocks' encryptions. Enables parallel encryption and decryption.
+\end{itemize}
+\end{keybox}
+
 \end{document}
