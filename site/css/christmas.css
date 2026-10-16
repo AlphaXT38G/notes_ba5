@@ -80,7 +80,7 @@ body[data-phase=christmas-night] #xscene .chalets{display:inline}
 /* The tree box: taller than the window, always on the right, sticking out past the right edge and
    a little below the bottom one (the SVG is bottom-aligned, so the gifts are partly cut). On narrow screens it is
    behind the cards (faded). #xtree-front is the same box above the page, holding only the hidden sax. */
-#xtree,#xtree-front{--tw:min(calc(114vh * 520 / 640),135vw);position:fixed;right:calc(var(--tw) * -.14);bottom:-10vh;width:var(--tw);aspect-ratio:520/640}
+#xtree,#xtree-front{--tw:min(calc(114vh * 520 / 640),135vw);position:fixed;right:calc(var(--tw) * -.14);bottom:-16vh;width:var(--tw);aspect-ratio:520/640}
 #xtree svg,#xtree canvas{position:absolute;inset:0;width:100%;height:100%}
 #xtree .s1{stop-color:#2f8a4a}
 #xtree .s2{stop-color:#1c6b38}
