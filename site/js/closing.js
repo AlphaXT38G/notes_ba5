@@ -3,7 +3,7 @@
 // the whole page to say the bar is closing (css/closing.css): the room darkens and he rises from
 // the bottom of the screen, life-size, under a hanging lamp that swings as it comes down, and
 // rings the last call bell, then tells you the bar is closing, with a chalkboard of what to know.
-// Any other phase sends him away at once.
+// "Good night" sends him away, waving; any other phase sends him away at once.
 //
 // He is one SVG drawing built from code: shirt and waistcoat, bow tie, a towel over his left arm,
 // his right arm raised with a brass hand bell, and a face with moving parts (.lid, .mouth).
@@ -82,7 +82,8 @@ closing.id = "closing";
 closing.innerHTML = `<div class="shade"></div><div class="stage"><div class="who">${BARTENDER}` +
   '<div class="lamp"><div class="swing"><i class="cord"></i><i class="glow"></i><i class="cap"></i><i class="bulb"></i></div></div></div>' +
   '<div class="talk"><p class="bubble"></p><div class="board"><h2>Closing time</h2><ul>' +
-  '<li>🕐 <span class="left"></span></li><li>🍸 Last orders: served</li><li>🎷 Reopens at 21:30<span class="reopen"></span></li></ul></div></div></div>';
+  '<li>🕐 <span class="left"></span></li><li>🍸 Last orders: served</li><li>🎷 Reopens at 21:30<span class="reopen"></span></li></ul>' +
+  '<button type="button" class="night-btn">Good night 👋</button></div></div></div>';
 const bubble = closing.querySelector(".bubble"), board = closing.querySelector(".board");
 
 // The chalkboard tells how long is left before 1:00, live, when the clock is in the closing slot
@@ -123,12 +124,12 @@ const ringBell = (strokes = 4) => {
 const CLOSING_WORDS = ["Mesdames, messieurs… on ferme !", "Dernier verre servi, les chaises montent sur les tables.",
   "Rentrez bien. Le jazz reprend demain soir, 21h30."];
 const say = (lines, done) => {
-  const [line, ...rest] = lines, span = document.createElement("span");
+  const [text, ...rest] = lines, line = [...text], span = document.createElement("span");  // [...]: emoji stay whole
   bubble.append(span);
   closing.classList.add("talking");
   let n = 0;
   const type = () => {
-    span.textContent = line.slice(0, ++n);
+    span.textContent = line.slice(0, ++n).join("");
     if (n < line.length) return later(line[n - 1].match(/[,.…!]/) ? 260 : 38, type);  // breathes at punctuation
     closing.classList.remove("talking");
     if (rest.length) later(650, () => say(rest, done)); else done?.();
@@ -156,7 +157,23 @@ const leaveBar = () => {
   sceneTimers = [];
   closing.remove();
 };
-closing.addEventListener("click", leaveBar);
+// Good night: the button, a click anywhere or Escape. He waves with his bell, says good night, then
+// goes back down, the lamp goes up and the room comes back.
+const byeBar = () => {
+  if (!closing.isConnected || closing.classList.contains("bye")) return;
+  sceneTimers.forEach(clearTimeout);
+  sceneTimers = [];
+  closing.classList.remove("ring", "talking");
+  closing.classList.add("bye");
+  bubble.replaceChildren();
+  bubble.classList.add("on");
+  ringBell(2);
+  say(["Bonne nuit ! 👋"]);
+  later(1500, () => closing.classList.add("gone"));
+  later(2700, leaveBar);
+};
+closing.addEventListener("click", byeBar);
+document.addEventListener("keydown", e => { if (e.key === "Escape") byeBar(); });
 document.addEventListener("phase", e => {
   leaveBar();
   if (e.detail === "closing") closingTimer = setTimeout(closeBar, (1 + (titleText.length + 1) * .7 + .5) * 1000);

@@ -31,6 +31,20 @@
 #closing .board ul{margin:0;padding:0;list-style:none}
 #closing .board.on{animation:cl-board .7s cubic-bezier(.34,1.4,.64,1) forwards}
 @keyframes cl-board{to{opacity:1;transform:rotate(-1deg)}}
+#closing .night-btn{margin-top:.8rem;padding:.35rem 1rem;color:#1c2a22;background:#ffe9a8;border:0;border-radius:999px;font:700 .95rem system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 0 #b8964a}
+#closing .night-btn:hover{background:#fff3c8}
+/* Good night: he waves with his bell, then goes back down while the lamp goes up and the room
+   comes back (.bye, then .gone, set by js/closing.js) */
+#closing.bye .arm{animation:cl-wave .35s ease-in-out 4 alternate}
+#closing.bye .bell{animation:cl-ring .35s ease-in-out 4 alternate}
+#closing.gone .bt{animation:cl-leave .9s ease-in forwards}
+#closing.gone .lamp{animation:cl-lift .9s ease-in forwards}
+#closing.gone .talk{opacity:0;transition:opacity .5s}
+#closing.gone .shade{animation:cl-unfade 1s ease .2s both}
+@keyframes cl-wave{from{transform:rotate(-4deg)}to{transform:rotate(9deg)}}
+@keyframes cl-leave{to{transform:translateY(105%)}}
+@keyframes cl-lift{to{transform:translateY(-110%)}}
+@keyframes cl-unfade{from{opacity:1}to{opacity:0}}
 /* Moving parts of the drawing: their origins are in the SVG's own units (viewBox 0 0 520 600) */
 #closing .lid{transform:scaleY(0);transform-origin:center 138px;animation:cl-blink 4.3s 2s infinite}
 @keyframes cl-blink{0%,93%,100%{transform:scaleY(0)}96%{transform:scaleY(1)}}
