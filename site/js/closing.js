@@ -140,6 +140,8 @@ const say = (lines, done) => {
 // The scene, step by step: timers are kept so that leaving the bar cancels whatever is planned
 let closingTimer = null, sceneTimers = [];
 const later = (ms, fn) => sceneTimers.push(setTimeout(fn, ms));
+// With reduced motion he is simply there, everything said at once, and leaves at once.
+const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const closeBar = () => {  // he arrives once the last letter of the sign (and the sax) is off
   closing.className = "";
   bubble.replaceChildren();
@@ -147,6 +149,12 @@ const closeBar = () => {  // he arrives once the last letter of the sign (and th
   board.classList.remove("on");
   paintBoard();
   document.body.append(closing);
+  if (calm()) {
+    bubble.innerHTML = CLOSING_WORDS.map(w => `<span>${w}</span>`).join("");
+    bubble.classList.add("on");
+    board.classList.add("on");
+    return;
+  }
   later(1500, () => { closing.classList.add("ring"); ringBell(); });  // up on his feet, he rings
   later(2700, () => closing.classList.remove("ring"));
   later(2900, () => { bubble.classList.add("on"); say(CLOSING_WORDS, () => board.classList.add("on")); });
@@ -161,6 +169,7 @@ const leaveBar = () => {
 // goes back down, the lamp goes up and the room comes back.
 const byeBar = () => {
   if (!closing.isConnected || closing.classList.contains("bye")) return;
+  if (calm()) return leaveBar();
   sceneTimers.forEach(clearTimeout);
   sceneTimers = [];
   closing.classList.remove("ring", "talking");
