@@ -136,7 +136,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable playing `audio/jazz.mp3`, neon sign going out |
 | `closing.js` | closing time: the life-size bartender behind his bar (photo layers from `img/bartender/`: head nodding, forearm tapping the desk bell, chest breathing), swinging lamp, desk bell "ding" (Web Audio), typed speech, chalkboard with countdown, "Good night" |
 | `fx.js` | the effects canvas of every screen: `fxLayers` (by `<body>` class), `blob()`, the animation loop |
-| `christmas.js` | Christmas screens: date override and `yeti` code, garland (with mouse physics), winter scene (mountains and chalets, moon, tree, snowman), tree lights canvas, snow, sleigh, music (Jingle Bell Rock or the YouTube Christmas radio, swapped with the sleeve behind the turntable, or paused), hidden sax |
+| `christmas.js` | Christmas screens: date override and `yeti` code, garland (with mouse physics), winter scene (mountains and chalets, moon, tree, snowman), night lights canvases (tree, garland halos), snow, sleigh, music (Jingle Bell Rock or the YouTube Christmas radio, swapped with the sleeve behind the turntable, or paused), hidden sax |
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
 | `epic.js` | epic finale: blue fire, motes, rune circle, "More epicness ?", "Back to normal" |
@@ -306,6 +306,10 @@ Android WebViews). One syntax they do not know makes the browser reject a whole 
   circle in `epic.js`) and avoid `shadowBlur` in per-frame drawing.
 - Heavy SVG filters (textures, blurs, grain) are fine in an SVG shown as an `<img>`: it is rendered
   once into a bitmap, and animating the `<img>` never re-runs them.
+- Inside an inline `<svg>`, an animated element is restyled and redrawn on the main thread on
+  every frame, with what lies under it (and any filter on it). A few are fine; dozens (lights
+  that twinkle each at its own pace) are not: draw them on a canvas, as the Christmas garland's
+  halos (`paintGarlandGlow` in `christmas.js`), and keep blur filters off what animates.
 - A photo that moves (the closing bartender) is cut into layers at its joints, all at the photo's
   size so they stack exactly, and only `transform` / `translate` / `scale` animate them. Each moving
   layer reaches under the one that hides its joint (the forearm goes up under the rolled sleeve),
