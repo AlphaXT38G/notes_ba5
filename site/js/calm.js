@@ -294,7 +294,8 @@ const startCrickets = () => {
   calmWind(ac, master);
   calmAudio = { ac, master, crickets, timer: setInterval(() => calmTick(), 150) };
   calmTick();
-  calmAudio.ac.onstatechange = paintCalmJar;
+  ac.onstatechange = paintCalmJar;
+  if (calmPaused) ac.suspend();
 };
 const stopCrickets = () => {
   if (!calmAudio) return;
@@ -309,23 +310,41 @@ const calmJar = document.createElement("button");
 calmJar.id = "jar";
 calmJar.type = "button";
 calmJar.innerHTML = '<span class="glass"><i class="lid"></i><i class="fly"></i></span><span class="label"></span>';
+// Browsers only allow sound after a user gesture: without one yet, the audio clock waits
+// (suspended) and the sound comes on at the first click or key press anywhere. calmPaused: the
+// jar was clicked to pause, the sound stays off until it is clicked again.
+let calmPaused = false, calmSoundAt = 0;
 const paintCalmJar = () => {
-  const on = calmAudio?.ac.state === "running";
+  const on = calmAudio?.ac.state === "running", waiting = !on && !calmPaused;
   calmJar.classList.toggle("playing", on);
-  calmJar.querySelector(".label").textContent = on ? "🦗 Crickets — click to pause" : "🦗 Click for the crickets";
+  calmJar.querySelector(".label").textContent = on ? "🦗 Crickets — click to pause"
+    : waiting ? "🔇 Click anywhere for sound" : "🦗 Click for the crickets";
   calmJar.title = on ? "Pause the sounds of the night" : "Play the sounds of the night";
+};
+const calmSound = () => {  // the first gesture: let the night be heard
+  if (!calmAudio || calmPaused || calmAudio.ac.state === "running") return;
+  calmAudio.ac.resume();
+  calmSoundAt = performance.now();
 };
 calmJar.addEventListener("click", e => {
   e.stopPropagation();
-  if (!calmAudio) startCrickets();
-  else if (calmAudio.ac.state === "running") calmAudio.ac.suspend().then(paintCalmJar);
-  else calmAudio.ac.resume().then(paintCalmJar);
+  if (performance.now() - calmSoundAt < 600) return;  // this same click just turned the sound on
+  calmPaused = calmAudio?.ac.state === "running";
+  if (calmPaused) calmAudio.ac.suspend();
+  else if (calmAudio) calmAudio.ac.resume();
+  else startCrickets();
   paintCalmJar();
 });
 const setCrickets = on => {
+  document.removeEventListener("pointerdown", calmSound);
+  document.removeEventListener("keydown", calmSound);
   if (!on) { stopCrickets(); calmJar.remove(); return; }
   document.body.append(calmJar);
   startCrickets();
+  if (calmAudio?.ac.state !== "running") {
+    document.addEventListener("pointerdown", calmSound, { once: true });
+    document.addEventListener("keydown", calmSound, { once: true });
+  }
   paintCalmJar();
 };
 setCrickets(document.body.classList.contains("calm"));
