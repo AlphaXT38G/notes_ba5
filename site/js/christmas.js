@@ -44,7 +44,7 @@ const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && 
 let xmasJazz = false, xmasEgg = false;
 OVERRIDES.push(phase => {
   let p = phase;
-  if ((xmasEgg || (!forced || forcedDismissed) && isXmasDate()) && (isNormal(p) || SCREENS[p]?.className === "night")) {
+  if ((xmasEgg || (!forced || forcedDismissed) && isXmasDate()) && (isNormal(p) || screenClass(p) === "night")) {
     p = isXmasDaytime() ? "christmas" : "christmas-night";
   }
   if (p === "christmas") xmasJazz = false;
@@ -63,7 +63,7 @@ document.addEventListener("keydown", e => {
   if (isXmasDate()) return;
   const onXmas = xmasEgg || document.body.classList.contains("christmas");
   xmasEgg = !onXmas;
-  if (onXmas && forced?.startsWith("christmas")) forcedDismissed = true;  // also leaves a forced Christmas
+  if (onXmas && forced && forced.startsWith("christmas")) forcedDismissed = true;  // also leaves a forced Christmas
   applyScreen();
 });
 
@@ -751,7 +751,7 @@ const flySleigh = () => {
   sleighFlight.onfinish = sleighFlight.oncancel = () => sleighEl.remove();
 };
 everySecond.push(() => {
-  if (document.body.dataset.phase !== "christmas-night") { sleighFlight?.cancel(); sleighIn = 20 + Math.random() * 60; return; }
+  if (document.body.dataset.phase !== "christmas-night") { if (sleighFlight) sleighFlight.cancel(); sleighIn = 20 + Math.random() * 60; return; }
   if (--sleighIn <= 0) { sleighIn = 40 + Math.random() * 200; flySleigh(); }
 });
 
@@ -863,7 +863,7 @@ xmasDeck.addEventListener("click", e => {
 const setCarols = on => {
   document.removeEventListener("pointerdown", carolsSound);
   document.removeEventListener("keydown", carolsSound);
-  if (!on) { carols?.remove(); carols = null; carolsPlaying = carolsMuted = false; xmasDeck.remove(); return; }
+  if (!on) { if (carols) carols.remove(); carols = null; carolsPlaying = carolsMuted = false; xmasDeck.remove(); return; }
   document.body.append(xmasDeck);
   if (!carolsOff()) {
     const canSound = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
@@ -892,7 +892,7 @@ firBtn.addEventListener("click", e => {
   applyScreen();
 });
 document.addEventListener("phase", e => {
-  if (xmasJazz && SCREENS[e.detail]?.className === "night") document.body.append(firBtn); else firBtn.remove();
+  if (xmasJazz && screenClass(e.detail) === "night") document.body.append(firBtn); else firBtn.remove();
   if (e.detail === "christmas" || e.detail === "christmas-night") setTreeLights(e.detail === "christmas-night");
 });
 
