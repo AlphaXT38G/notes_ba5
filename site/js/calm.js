@@ -211,12 +211,13 @@ const makeCricket = (ac, out, { freq, vol, pan, pulses, every }) => {
   osc.start();
   return { osc, gain, freq, vol, pulses, every, next: ac.currentTime + Math.random() * every };
 };
-const chirp = (c, t) => {  // one chirp of cricket c starting at time t (audio clock)
+const chirp = (c, t, loud) => {  // one chirp of cricket c starting at time t (audio clock), loud: 0 - 1
+  const vol = c.vol * loud;
   for (let p = 0; p < c.pulses; p++) {
     const t0 = t + p * .038, g = c.gain.gain;
     g.setValueAtTime(0, t0);
-    g.linearRampToValueAtTime(c.vol, t0 + .004);
-    g.linearRampToValueAtTime(c.vol * .7, t0 + .012);
+    g.linearRampToValueAtTime(vol, t0 + .004);
+    g.linearRampToValueAtTime(vol * .7, t0 + .012);
     g.linearRampToValueAtTime(0, t0 + .016);
     c.osc.frequency.setValueAtTime(c.freq * (1 - p * .004), t0);  // each pulse a hair lower
   }
@@ -225,7 +226,7 @@ const calmTick = ({ ac, crickets }) => {  // also runs while the audio fades out
   const until = ac.currentTime + CALM_AHEAD;
   for (const c of crickets) {
     while (c.next < until) {
-      chirp(c, c.next);
+      chirp(c, c.next, 1 - calmDawn * .6);  // the crickets quieten as the dawn comes
       c.next += c.every * (.92 + Math.random() * .16);
       // now and then a cricket falls silent for a few seconds, as real ones do
       if (Math.random() < .012) c.next += 2 + Math.random() * 6;
