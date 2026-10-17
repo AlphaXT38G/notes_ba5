@@ -111,6 +111,8 @@ body[data-phase=christmas-night] #xtree .branch-snow{stroke:#c9d6ea}
 #xsax{position:absolute;display:none;padding:0;background:none;border:0;cursor:pointer;pointer-events:auto}
 #xsax svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
 #xsax:hover svg,#xsax:focus-visible svg{filter:drop-shadow(0 0 5px rgba(255,215,110,.9))}
+/* Where the tree is faded behind the cards, the sax fades with it (it is above the page), until hovered */
+@media(max-width:1240px){#xsax{opacity:.5;transition:opacity .2s}#xsax:hover,#xsax:focus-visible{opacity:1}}
 body.christmas #xsax{display:block}
 
 /* The snowman, a big companion in the left margin beside the courses (behind the cards, faded,
