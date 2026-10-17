@@ -49,10 +49,11 @@ The thumbnails are made by `pdftoppm` and `pdftotext` (poppler); without them,
 the build still works and the page shows names only.
 
 From **21:30 to 01:00** the page turns into a jazz bar 🎷 (neon title, smoke,
-floating notes) and plays background jazz from YouTube. The music (jazz, then the
-metal song) starts by itself; browsers only allow sound after a click, so until the
-page has had one it plays muted and the sound comes on at the first click or key
-press. The turntable in the bottom left corner plays / pauses it.
+floating notes) and plays background jazz ("Just One More Drink", jazz noir). The
+music of every screen is an mp3 served with the page (`site/audio/`). It starts by
+itself; browsers only allow sound after a click, so until the page has had one it
+plays muted and the sound comes on at the first click or key press. The turntable in
+the bottom left corner plays / pauses it.
 
 Jazz plays until 00:45, then the bar closes until 01:00 (darker light, the neon goes
 out letter by letter, then the bartender, a Gigachad, comes over the whole screen, life-size
@@ -70,16 +71,16 @@ back to the day) in browsers that support view transitions.
 After the show, from **01:01:51 to 05:30**, the night goes quiet 🌙: a calm blue
 night with the moon as it really is tonight (its phase computed from the true new
 moons), twinkling stars, a shooting star now and then, fireflies, mist drifting
-over dark hills, and the sound of crickets in a forest at night from YouTube, a
-little quieter and slower than recorded. From 04:45 the dawn rises from the
-horizon, the crickets quieten and the first birds sing. A firefly jar in the bottom
+over dark hills, and the sounds of a forest at night ("Mystical Forest"), a
+little quieter than the other music. From 04:45 the dawn rises from the
+horizon, the forest quietens and the first birds sing. A firefly jar in the bottom
 left corner pauses / resumes the sounds. The epic finale and Christmas nights come
 before it.
 
 10 seconds before a metal show ends, a **"More epicness ?"** button shows up. Click
 it and, instead of going back to the day, the page turns into an epic fantasy finale ⚔️:
 a blue and violet night with an aurora, realistic blue fire, embers, floating arcane
-lights and a rune circle, while the amp (now blue) plays epic music in a loop. It lasts
+lights and a rune circle, while the amp (now blue) plays Two Steps From Hell in a loop. It lasts
 until you click the small **"Back to normal"** button in the bottom right corner, which
 brings back the usual look for the time of day (day, the calm night after the show,
 or the jazz bar at night).
@@ -89,11 +90,13 @@ calm night: a
 Christmas day from 06:00 to 18:00 and a Christmas night from 18:00 to 06:00. A
 garland across the top that swings under the mouse (lit at night), falling snow,
 big snowy mountains, a decorated tree with gifts, a snowman companion beside the
-courses, a countdown to Christmas in the subtitle, and Christmas music from YouTube
-on a Christmas turntable. At night the moon rises, chalets light up on the
-mountains, the tree lights play changing patterns and Santa's sleigh crosses the
-sky now and then. Look closely at the
-ornaments at night. The metal show at 01:00 and the easter eggs still happen.
+courses, a countdown to Christmas in the subtitle, and Christmas music on a
+Christmas turntable: Jingle Bell Rock or a live Christmas radio from YouTube (the
+other record waits in its sleeve behind the turntable: click it to swap them), or
+paused. At night the moon rises, chalets light up on the mountains, the tree lights
+play changing patterns and Santa's sleigh crosses the sky now and then. Look closely
+at the ornaments of the tree. The metal show at 01:00 and the easter eggs still
+happen.
 
 Add `?night=evening`, `?night=closing`, `?night=metal`, `?night=epic`, `?night=calm`,
 `?night=christmas` or `?night=christmas-night` (or `1` / `0`) to the URL to force a

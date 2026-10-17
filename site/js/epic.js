@@ -164,40 +164,25 @@ moreBtn.addEventListener("click", e => {
   moreBtn.classList.add("queued");
   moreBtn.textContent = "⚔️ Epicness incoming…";
 });
-// Epic music: the epic video, looped, on the same amp (turned blue). The player is loaded as soon
-// as the button is clicked (paused), so it starts at once when the metal ends; the click also
-// counts as the gesture browsers need for sound.
-const EPIC = "pCUzn7WbUb4";
-let epicRiff = null, epicPlaying = false, epicMuted = false;
-const epicCommand = (func, args = []) => epicRiff && epicRiff.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
-const makeEpicRiff = (autoplay, muted) => {
-  epicRiff = document.createElement("iframe");
-  epicRiff.id = "epicriff";
-  epicRiff.title = "Epic song";
-  epicRiff.allow = "autoplay; encrypted-media";
-  epicRiff.src = `https://www.youtube.com/embed/${EPIC}?autoplay=${autoplay}&mute=${muted ? 1 : 0}` +
-    `&loop=1&playlist=${EPIC}&controls=0&enablejsapi=1`;
-  document.body.append(epicRiff);
-  epicMuted = muted;
-};
-const preloadEpic = () => { if (!epicRiff) makeEpicRiff(0, false); };
+// Epic music: a Two Steps From Hell mix (audio/epic.mp3, 25 tracks), looped, on the same amp
+// (turned blue). The song is loaded as soon as the button is clicked (paused), so it starts at once
+// when the metal ends; the click also counts as the gesture browsers need for sound.
+let epicRiff = null, epicPlaying = false;
+const epicMuted = () => !!epicRiff && epicRiff.muted;
+const preloadEpic = () => { if (!epicRiff) epicRiff = preloadTrack("epic.mp3"); };
 const epicPlay = () => {
-  if (!epicRiff) {
-    const canSound = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
-    makeEpicRiff(1, !canSound);  // without any gesture yet (e.g. ?night=epic) it starts muted
-  } else epicCommand("playVideo");
+  if (!epicRiff) epicRiff = screenTrack("epic.mp3", { muted: !screenGesture() });  // e.g. ?night=epic: muted until a click
+  else epicRiff.play().catch(() => {});
   epicPlaying = true;
-  // a player that has only just been created ignores commands until it is ready: say "play"
-  // again a few times (harmless if it is already playing)
-  [1500, 3000, 5000, 8000].forEach(ms => setTimeout(() => { if (epicPlaying) epicCommand("playVideo"); }, ms));
   paintAmp();
 };
-const epicSound = () => { if (epicRiff && epicMuted) { epicCommand("unMute"); epicMuted = false; soundAt = performance.now(); paintAmp(); } };
+const epicSound = () => { if (epicMuted()) { epicRiff.muted = false; soundAt = performance.now(); paintAmp(); } };
 const setEpicMusic = on => {
   document.removeEventListener("pointerdown", epicSound);
+  document.removeEventListener("keydown", epicSound);
   if (!on) {
-    if (epicRiff) epicRiff.remove();
-    epicRiff = null; epicPlaying = epicMuted = false;
+    dropTrack(epicRiff);
+    epicRiff = null; epicPlaying = false;
     amp.classList.remove("epic");
     if (!document.body.classList.contains("metal")) amp.remove();
     return;
@@ -205,7 +190,10 @@ const setEpicMusic = on => {
   amp.classList.add("epic");
   document.body.append(amp);
   epicPlay();
-  if (epicMuted) document.addEventListener("pointerdown", epicSound, { once: true });
+  if (epicMuted()) {
+    document.addEventListener("pointerdown", epicSound, { once: true });
+    document.addEventListener("keydown", epicSound, { once: true });
+  }
 };
 setEpicMusic(document.body.classList.contains("epic"));
 document.addEventListener("epic", e => setEpicMusic(e.detail));

@@ -30,7 +30,6 @@ body.metal h1{animation:riff .12s steps(2) infinite}
 #amp .cone{width:2.1rem;height:2.1rem;border-radius:50%;background:radial-gradient(circle,#555 0 12%,#111 16%,#262626 40%,#0e0e0e 42%,#222 70%,#000 72%)}
 #amp.playing .cone{animation:pump .23s ease-out infinite alternate}
 #amp .label{padding:.3rem .6rem;border-radius:.3rem;background:rgba(30,4,4,.9);border:1px solid rgba(255,60,30,.5);text-transform:uppercase;letter-spacing:.04em}
-#riff{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}  /* the YouTube player, kept invisible behind the amp */
 @keyframes pump{from{transform:scale(1)}to{transform:scale(1.12)}}
 @keyframes headbang{from{transform:rotate(-.7deg) translateY(0)}to{transform:rotate(.7deg) translateY(4px)}}
 @keyframes riff{0%{transform:skew(-10deg) translate(0,0)}50%{transform:skew(-10deg) translate(2px,-1px)}}

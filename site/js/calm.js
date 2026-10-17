@@ -4,8 +4,8 @@
 //   - behind the page: the moon as it is tonight, hills with pines and a lone tree, drifting mist,
 //     and from 4:45 the dawn rising from the horizon,
 //   - on the effects canvas (fx.js): twinkling stars, a shooting star now and then, fireflies,
-//   - the sounds of the night: a recording of crickets in a forest from YouTube, a little quieter
-//     and slower than recorded, and the first birds at dawn (Web Audio); a firefly jar in the
+//   - the sounds of the night: a recording of a forest at night (audio/calm.mp3), a little
+//     quieter than the other music, and the first birds at dawn (Web Audio); a firefly jar in the
 //     bottom left corner pauses / resumes them.
 // It is a "normal" screen (screens.js): the usual look of those hours, which Christmas and the
 // armstrong code replace like the day. The metal show and the epic finale come before it.
@@ -235,43 +235,23 @@ fxLayers.push({
 });
 
 // ── Sounds of the night ──
-// The crickets are a recording from YouTube: three hours of a forest at night, crickets and the
-// night around them, in a hidden player, looped, started at a random point so that each night
-// sounds a little different. It plays a bit quieter than the other music (volume 60 %) and 25 %
-// slower than recorded, which makes the chirps calmer and lower. From the dawn it fades a little,
-// and the first birds sing over it (made in the page with Web Audio, below). Browsers only allow
-// sound after a user gesture: without one yet the player starts muted and the sound comes on at
-// the first click or key press anywhere (the birds' audio clock waits suspended until then).
-// Everything is removed when the calm night ends.
-const CALM_TUBE = "0aay6rLcEdU", CALM_VOLUME = 60, CALM_RATE = .75;
-let calmTube = null, calmPlaying = false, calmMuted = false, calmVolume = -1;
+// The night is a recording: "Mystical Forest", the sounds of a forest at night (audio/calm.mp3),
+// looped, started at a random point so that each night sounds a little different. It plays a bit
+// quieter than the other music (volume 60 %). From the dawn it fades a little, and the first birds
+// sing over it (made in the page with Web Audio, below). Browsers only allow sound after a user
+// gesture: without one yet it starts muted and the sound comes on at the first click or key press
+// anywhere (the birds' audio clock waits suspended until then). Everything is removed when the
+// calm night ends.
+const CALM_VOLUME = .6;
+let calmTrack = null, calmPlaying = false;
 let calmAudio = null;  // { ac, master, timer, birdAt }: the birds' Web Audio, while the calm night runs
-const calmCommand = (func, args = []) => calmTube && calmTube.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
+const calmMuted = () => !!calmTrack && calmTrack.muted;
 const calmClock = how => { if (calmAudio) calmAudio.ac[how](); };  // "resume" / "suspend" the birds' audio
-const paintCalmVolume = () => {  // the volume, lower as the dawn comes; sent only when it changes
-  const v = Math.round(CALM_VOLUME * (1 - calmDawn * .5));
-  if (v !== calmVolume) { calmVolume = v; calmCommand("setVolume", [v]); }
-};
-everySecond.push(() => { if (calmTube) paintCalmVolume(); });
-// A player that has only just been created ignores commands until it is ready: the speed and the
-// volume are sent again a few times (harmless once it has them)
-const calmTune = () => [800, 1500, 3000, 5000, 8000].forEach(ms => setTimeout(() => {
-  if (!calmTube) return;
-  calmCommand("setPlaybackRate", [CALM_RATE]);
-  calmVolume = -1;
+const paintCalmVolume = () => { calmTrack.volume = CALM_VOLUME * (1 - calmDawn * .5); };  // lower as the dawn comes
+everySecond.push(() => { if (calmTrack) paintCalmVolume(); });
+const makeCalmTrack = muted => {
+  calmTrack = screenTrack("calm.mp3", { muted, start: duration => Math.random() * duration * .9 });
   paintCalmVolume();
-  if (calmPlaying) calmCommand("playVideo");
-}, ms));
-const makeCalmTube = muted => {
-  calmTube = document.createElement("iframe");
-  calmTube.id = "crickets";
-  calmTube.title = "Night sounds";
-  calmTube.allow = "autoplay; encrypted-media";
-  calmTube.src = `https://www.youtube.com/embed/${CALM_TUBE}?autoplay=1&mute=${muted ? 1 : 0}&loop=1&playlist=${CALM_TUBE}` +
-    `&start=${Math.floor(Math.random() * 9000)}&controls=0&enablejsapi=1`;
-  document.body.append(calmTube);
-  calmMuted = muted;
-  calmTune();
 };
 
 // The first birds: once the dawn is well on its way (from about 5:05), a bird sings now and then
@@ -326,34 +306,33 @@ calmJar.innerHTML = '<span class="glass"><i class="lid"></i><i class="fly"></i><
 let calmPaused = (() => { try { return localStorage.getItem("crickets") === "off"; } catch (e) { return false; } })();
 let calmSoundAt = 0;
 const paintCalmJar = () => {
-  const on = calmPlaying && !calmMuted;
+  const on = calmPlaying && !calmMuted();
   calmJar.classList.toggle("playing", on);
   calmJar.querySelector(".label").textContent = on ? "🦗 Crickets — click to pause"
     : calmPlaying ? "🔇 Click anywhere for sound" : "🦗 Click for the crickets";
   calmJar.title = on ? "Pause the sounds of the night" : "Play the sounds of the night";
 };
 const calmPlay = (muted = false) => {
-  if (!calmTube) makeCalmTube(muted); else calmCommand("playVideo");
+  if (!calmTrack) makeCalmTrack(muted); else calmTrack.play().catch(() => {});
   calmClock("resume");
   calmPlaying = true;
   paintCalmJar();
 };
 const calmSound = () => {  // the first gesture: let the night be heard
-  if (!calmTube || !calmMuted) return;
-  calmCommand("unMute");
+  if (!calmMuted()) return;
+  calmTrack.muted = false;
   calmClock("resume");
-  calmMuted = false;
   calmSoundAt = performance.now();
   paintCalmJar();
 };
 calmJar.addEventListener("click", e => {
   e.stopPropagation();
   if (performance.now() - calmSoundAt < 600) return;  // this same click just turned the sound on
-  if (calmMuted) return calmSound();
+  if (calmMuted()) return calmSound();
   calmPaused = calmPlaying;
   try { calmPaused ? localStorage.setItem("crickets", "off") : localStorage.removeItem("crickets"); } catch (e) {}
   if (calmPaused) {
-    calmCommand("pauseVideo");
+    calmTrack.pause();
     calmClock("suspend");
     calmPlaying = false;
     paintCalmJar();
@@ -363,9 +342,9 @@ const setCrickets = on => {
   document.removeEventListener("pointerdown", calmSound);
   document.removeEventListener("keydown", calmSound);
   if (!on) {
-    if (calmTube) calmTube.remove();
-    calmTube = null;
-    calmPlaying = calmMuted = false;
+    dropTrack(calmTrack);
+    calmTrack = null;
+    calmPlaying = false;
     stopCalmBirds();
     calmJar.remove();
     return;
@@ -373,7 +352,7 @@ const setCrickets = on => {
   document.body.append(calmJar);
   startCalmBirds();
   if (!calmPaused) {
-    const canSound = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
+    const canSound = screenGesture();
     calmPlay(!canSound);
     if (!canSound) {
       document.addEventListener("pointerdown", calmSound, { once: true });

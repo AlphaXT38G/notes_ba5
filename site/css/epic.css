@@ -21,7 +21,6 @@ body.epic section::after{box-shadow:-10px 0 34px -10px rgba(170,90,255,.9);anima
 #leave:hover,#leave:focus-visible{color:#fff;border-color:#b9c8ff;box-shadow:0 0 12px rgba(120,150,255,.6)}
 @keyframes more-in{from{opacity:0;transform:translate(-50%,20%) scale(.6)}}
 @keyframes more-glow{to{box-shadow:0 0 45px rgba(140,170,255,1),0 0 120px rgba(170,90,255,.8),inset 0 0 22px rgba(255,255,255,.5)}}
-#epicriff{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}  /* the YouTube player, kept invisible behind the amp */
 body.epic #fire{display:none}  /* no flame mode during the finale */
 /* The amp during the epic finale: same cabinet, lit by arcane blue light */
 #amp.epic .cab{box-shadow:0 6px 20px rgba(0,0,0,.8),0 0 0 2px #2b2b55,0 0 26px rgba(110,140,255,.8),0 0 60px rgba(150,80,255,.45)}

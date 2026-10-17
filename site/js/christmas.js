@@ -6,10 +6,11 @@
 //   - snow falling on the effects canvas (fx.js),
 //   - a winter scene behind the page: big discreet mountains, a decorated tree on the right with
 //     gifts, a snowman companion on the left (and at night the moon and chalet lights),
-//   - a Christmas turntable playing a live of Christmas music.
-// At night the tree lights play changing patterns, Santa's sleigh crosses the sky now and then,
-// and a small golden sax hidden among the ornaments opens the jazz bar (a little fir in the bar
-// brings Christmas back). The metal show at 1:00 and the other easter eggs still take over.
+//   - a Christmas turntable playing Jingle Bell Rock or a live of Christmas music,
+//   - a small golden sax hidden among the tree's ornaments, which opens the jazz bar (a little
+//     fir in the bar brings Christmas back).
+// At night the tree lights play changing patterns and Santa's sleigh crosses the sky now and then.
+// The metal show at 1:00 and the other easter eggs still take over.
 //
 // In this file, in order: screens and override, the yeti code, shared helpers, the garland, the
 // tree and its sax ornament, the mountains, the moon, the snowman, the sax button, the tree lights
@@ -33,8 +34,8 @@ SCREENS["christmas-night"] = { className: "christmas", subtitle: xmasSubtitle, t
 // it runs before the metal and epic ones (this file is loaded before metal.js), so those still
 // win. A forced ?night=... is left alone (?night=christmas and ?night=christmas-night force these
 // screens), unless the yeti code was typed (xmasEgg).
-// xmasJazz: the hidden sax was clicked, the night goes on in the jazz bar until the fir is clicked
-// or Christmas day comes back at 6:00.
+// xmasJazz: the hidden sax was clicked on that Christmas screen ("christmas" or "christmas-night"):
+// the jazz bar replaces it until the fir is clicked or the other one comes (18:00 or 6:00).
 const isXmasDate = (d = new Date()) => (d.getMonth() === 11 && d.getDate() >= 10) || (d.getMonth() === 0 && d.getDate() <= 3);
 const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && t < 18 * 3600; };
 // Easter egg: typing y e t i (outside the search field) brings Christmas at any time of the year, day
@@ -47,8 +48,8 @@ OVERRIDES.push(phase => {
   if ((xmasEgg || (!forced || forcedDismissed) && isXmasDate()) && (isNormal(p) || screenClass(p) === "night")) {
     p = isXmasDaytime() ? "christmas" : "christmas-night";
   }
-  if (p === "christmas") xmasJazz = false;
-  if (xmasJazz && p === "christmas-night") return phase === "closing" ? "closing" : "evening";
+  if (xmasJazz && xmasJazz !== p && (p === "christmas" || p === "christmas-night")) xmasJazz = false;
+  if (xmasJazz && p === xmasJazz) return phase === "closing" ? "closing" : "evening";
   return p;
 });
 
@@ -183,7 +184,6 @@ const buildGarland = () => {
   const bobEls = garland.querySelectorAll(".bauble");
   garlandBobs = baubles.sort((a, z) => a.k - z.k).map((b, i) => ({ el: bobEls[i], px: b.x, py: b.y, cy: b.cy, r: b.r, len: b.cy - b.y, th: 0, w: 0 }));
   garland.w = W;
-  placeSax();  // the sax may hang on the garland, which was just rebuilt
 };
 
 // The tree, on the right of the winter scene behind the page (#xscene): tiers of fir with snow on
@@ -282,9 +282,9 @@ const buildTree = () => {
   parts.push(`<polygon points="${star}" fill="url(#xstar)" stroke="#a8740a" stroke-width="1.2" stroke-linejoin="round"/>`);
   return `<svg viewBox="0 0 ${TREE_W} ${TREE_H}" preserveAspectRatio="xMidYMax meet"><defs>${defs.join("")}</defs>${parts.join("")}</svg>`;
 };
-// The hidden sax (night only), hanging on the right side of the tree like an ornament:
+// The hidden sax, hanging on the right side of the tree like an ornament:
 // golden body bent in a J, bell, neck and mouthpiece, a few keys, a ribbon loop to hang it.
-const SAX = { x: 384, y: 300, w: 30, h: 52 };
+const SAX = { x: 388, y: 306, w: 22, h: 38 };  // small: an ornament among others, to be found
 const SAX_SVG = `<svg viewBox="0 0 30 52" aria-hidden="true"><path d="M15,0v6" stroke="#c8102e" stroke-width="1.6"/>` +
   `<path d="M6,9 11,6 14,10" fill="none" stroke="#b8860b" stroke-width="2.4" stroke-linecap="round"/>` +
   `<path d="M13,10C14,22 13,34 11,40 9,46 13,50 18,49 23,48 24,43 24,37" fill="none" stroke="url(#saxgold)" stroke-width="5.5" stroke-linecap="round"/>` +
@@ -502,22 +502,13 @@ saxBtn.type = "button";
 saxBtn.title = "A sax among the ornaments?";
 saxBtn.setAttribute("aria-label", "Go to the jazz bar");
 saxBtn.innerHTML = SAX_SVG;
-// Where the tree sits behind the cards (narrow screens), the sax would cover their text: it hangs
-// on the garland instead, among the baubles (placed again each time the garland is rebuilt)
-const saxOnGarland = matchMedia("(max-width: 1240px)");
-const placeSax = () => {
-  if (saxOnGarland.matches) {
-    saxBtn.style.cssText = `left:${Math.round(garland.w * .78)}px`;
-    garland.append(saxBtn);
-  } else {
-    saxBtn.style.cssText = `left:${SAX.x / TREE_W * 100}%;top:${SAX.y / TREE_H * 100}%;width:${SAX.w / TREE_W * 100}%;height:${SAX.h / TREE_H * 100}%`;
-    treeFront.append(saxBtn);
-  }
-};
-saxOnGarland.addEventListener("change", placeSax);
+// Always in the tree, even where the tree is behind the cards (narrow screens): its layer is above
+// the page, so it stays clickable there, over the cards
+saxBtn.style.cssText = `left:${SAX.x / TREE_W * 100}%;top:${SAX.y / TREE_H * 100}%;width:${SAX.w / TREE_W * 100}%;height:${SAX.h / TREE_H * 100}%`;
+treeFront.append(saxBtn);
 saxBtn.addEventListener("click", e => {
   e.stopPropagation();
-  xmasJazz = true;
+  xmasJazz = document.body.dataset.phase;  // the Christmas screen it replaces
   applyScreen();
 });
 
@@ -807,12 +798,19 @@ const garlandTouch = e => {
 };
 addEventListener("pointermove", garlandTouch, { passive: true });
 
-// Christmas music: a live of Christmas songs from YouTube, on a Christmas turntable in the bottom
-// left corner (red lacquer and gold, snow on the lid, holly, a candy-cane tonearm). It starts with
-// the screen and keeps playing from day to night. As for the jazz, without a user gesture yet it
-// starts muted and the sound comes on at the first click or key press; pausing is remembered.
+// Christmas music, on a Christmas turntable in the bottom left corner (red lacquer and gold, snow
+// on the lid, holly, a candy-cane tonearm). Two records: "Jingle Bell Rock"
+// (audio/jingle-bell-rock.mp3, looped, red label) or a live of Christmas songs from YouTube (the
+// only music of the page still from YouTube: a radio that never ends, no file; green label). The
+// other record waits in its sleeve, leaning behind the turntable: clicking the sleeve swaps them
+// and plays the new one. The turntable plays / pauses the record on; the choice and the pause
+// are remembered. It starts with the screen and
+// keeps playing from day to night. As for the jazz, without a user gesture yet it starts muted
+// and the sound comes on at the first click or key press.
 const XMAS_LIVE = "XSXEaikz0Bc";
-let carols = null, carolsPlaying = false, carolsMuted = false, carolsSoundAt = 0;
+let carolsRock = null, carolsRadio = null;  // the record's player: an <audio>, or the YouTube <iframe>
+let carolsPlaying = false, carolsMuted = false, carolsSoundAt = 0;
+let carolsRecord = (() => { try { return localStorage.getItem("xmas-record") === "radio" ? "radio" : "rock"; } catch (e) { return "rock"; } })();
 const xmasDeck = document.createElement("button");
 xmasDeck.id = "xmusic";
 xmasDeck.type = "button";
@@ -820,31 +818,62 @@ xmasDeck.innerHTML = '<span class="deck"><span class="lid"></span><span class="d
   '<svg class="holly" viewBox="0 0 40 26" aria-hidden="true"><path d="M20,14C14,4 6,8 1,4 4,9 2,12 6,14 3,16 6,20 4,24 10,20 14,22 20,14Z" fill="#1f7a3e"/>' +
   '<path d="M20,14C26,4 34,8 39,4 36,9 38,12 34,14 37,16 34,20 36,24 30,20 26,22 20,14Z" fill="#17643a"/>' +
   '<circle cx="17" cy="15" r="3" fill="#d6203a"/><circle cx="23" cy="15" r="3" fill="#c8102e"/><circle cx="20" cy="11" r="3" fill="#e0263f"/></svg></span><span class="label"></span>';
+// The sleeve of the other record, behind the turntable: its cover shows what it would put on
+const XMAS_RECORDS = { rock: { icon: "🔔", short: "Rock", name: "Jingle Bell Rock" }, radio: { icon: "📻", short: "Radio", name: "Christmas radio" } };
+const xmasSleeve = document.createElement("button");
+xmasSleeve.id = "xsleeve";
+xmasSleeve.type = "button";
+xmasSleeve.innerHTML = '<span class="rec"></span><span class="cover"><i></i><b></b></span>';
 const carolsOff = () => { try { return localStorage.getItem("xmas-music") === "off"; } catch (e) { return false; } };
 const paintDeck = () => {
+  const name = XMAS_RECORDS[carolsRecord].name, other = carolsRecord === "rock" ? "radio" : "rock";
   xmasDeck.classList.toggle("playing", carolsPlaying);
+  xmasDeck.classList.toggle("radio", carolsRecord === "radio");
   xmasDeck.querySelector(".label").textContent = !carolsPlaying ? "♪ Click for Christmas songs"
-    : carolsMuted ? "🔇 Click anywhere for sound" : "♪ Christmas radio — click to pause";
+    : carolsMuted ? "🔇 Click anywhere for sound" : `♪ ${name} — click to pause`;
   xmasDeck.title = !carolsPlaying ? "Play the music" : carolsMuted ? "Turn the sound on" : "Pause the music";
+  xmasSleeve.classList.toggle("rock", other === "rock");
+  xmasSleeve.classList.toggle("radio", other === "radio");
+  xmasSleeve.querySelector("i").textContent = XMAS_RECORDS[other].icon;
+  xmasSleeve.querySelector("b").textContent = XMAS_RECORDS[other].short;
+  xmasSleeve.title = `Put on ${XMAS_RECORDS[other].name}`;
+  xmasSleeve.setAttribute("aria-label", xmasSleeve.title);
 };
-const carolsCommand = func => carols && carols.contentWindow.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
+const carolsCommand = func => carolsRadio && carolsRadio.contentWindow.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
+const carolsStart = muted => {  // puts the chosen record on, playing
+  if (carolsRecord === "rock") carolsRock = screenTrack("jingle-bell-rock.mp3", { muted });
+  else {
+    carolsRadio = document.createElement("iframe");
+    carolsRadio.id = "carols";
+    carolsRadio.title = "Christmas music";
+    carolsRadio.allow = "autoplay; encrypted-media";
+    carolsRadio.src = `https://www.youtube.com/embed/${XMAS_LIVE}?autoplay=1&mute=${muted ? 1 : 0}&controls=0&enablejsapi=1`;
+    document.body.append(carolsRadio);
+  }
+  carolsMuted = muted;
+};
+const carolsStop = () => {  // takes the record off
+  dropTrack(carolsRock);
+  if (carolsRadio) carolsRadio.remove();
+  carolsRock = carolsRadio = null;
+};
 const carolsPlay = (muted = false) => {
-  if (!carols) {
-    carols = document.createElement("iframe");
-    carols.id = "carols";
-    carols.title = "Christmas music";
-    carols.allow = "autoplay; encrypted-media";
-    carols.src = `https://www.youtube.com/embed/${XMAS_LIVE}?autoplay=1&mute=${muted ? 1 : 0}&controls=0&enablejsapi=1`;
-    document.body.append(carols);
-    carolsMuted = muted;
-  } else carolsCommand("playVideo");
+  if (carolsRock) carolsRock.play().catch(() => {});
+  else if (carolsRadio) carolsCommand("playVideo");
+  else carolsStart(muted);
   carolsPlaying = true;
   try { localStorage.removeItem("xmas-music"); } catch (e) {}
   paintDeck();
 };
+const carolsPause = () => {
+  if (carolsRock) carolsRock.pause(); else carolsCommand("pauseVideo");
+  carolsPlaying = false;
+  try { localStorage.setItem("xmas-music", "off"); } catch (e) {}
+  paintDeck();
+};
 const carolsSound = () => {
-  if (!carols || !carolsMuted) return;
-  carolsCommand("unMute");
+  if (!carolsMuted) return;
+  if (carolsRock) carolsRock.muted = false; else carolsCommand("unMute");
   carolsMuted = false;
   carolsSoundAt = performance.now();
   paintDeck();
@@ -853,20 +882,29 @@ xmasDeck.addEventListener("click", e => {
   e.stopPropagation();
   if (performance.now() - carolsSoundAt < 600) return;  // this same click just turned the sound on
   if (carolsMuted) carolsSound();
-  else if (carolsPlaying) {
-    carolsCommand("pauseVideo");
-    carolsPlaying = false;
-    try { localStorage.setItem("xmas-music", "off"); } catch (e) {}
-    paintDeck();
-  } else carolsPlay();
+  else if (carolsPlaying) carolsPause();
+  else carolsPlay();
+});
+let xmasSwapEnd = null;
+xmasSleeve.addEventListener("click", e => {  // the records swap: the one on goes in the sleeve, the other plays
+  e.stopPropagation();
+  carolsStop();
+  carolsRecord = carolsRecord === "rock" ? "radio" : "rock";
+  try { localStorage.setItem("xmas-record", carolsRecord); } catch (e) {}
+  carolsPlay();
+  // the swap, seen: the record lands on the turntable, the sleeve dips (class removed, reflow, put
+  // back); once over, the record may spin again
+  for (const el of [xmasDeck, xmasSleeve]) { el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap"); }
+  clearTimeout(xmasSwapEnd);
+  xmasSwapEnd = setTimeout(() => { xmasDeck.classList.remove("swap"); xmasSleeve.classList.remove("swap"); }, 600);
 });
 const setCarols = on => {
   document.removeEventListener("pointerdown", carolsSound);
   document.removeEventListener("keydown", carolsSound);
-  if (!on) { if (carols) carols.remove(); carols = null; carolsPlaying = carolsMuted = false; xmasDeck.remove(); return; }
-  document.body.append(xmasDeck);
+  if (!on) { carolsStop(); carolsPlaying = carolsMuted = false; xmasDeck.remove(); xmasSleeve.remove(); return; }
+  document.body.append(xmasSleeve, xmasDeck);
   if (!carolsOff()) {
-    const canSound = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
+    const canSound = screenGesture();
     carolsPlay(!canSound);
     if (!canSound) {
       document.addEventListener("pointerdown", carolsSound, { once: true });

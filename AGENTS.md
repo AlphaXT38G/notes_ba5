@@ -33,6 +33,8 @@ site/                 the index page (HTML, CSS, JS inlined into one dist/index.
                         holds the closing bartender's layers (the Gigachad meme photo, dressed as a
                         bartender by an image generator, used as an illustration in this
                         non-commercial project)
+  audio/                the screens' music, mp3 files copied to dist/audio/: jazz, metal, epic,
+                        calm (the night's forest) and jingle-bell-rock (Christmas)
 tools/bartender/      remakes the bartender's layers from source.webp (open it through a local
                       server, see below): cut-out, joints, bar counter and desk bell
 subjects.json         subjects: id, display name, exam rules, optional "weeks" and "color"
@@ -90,8 +92,8 @@ The night screens follow the clock. Force one with the URL:
 Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑↑↓↓←→←→BA,
 `yeti` typed anywhere but the search field (Christmas day or night by the clock, any time of the
 year; outside the Christmas period, typed on a Christmas screen it goes back to the normal one),
-a random surprise banner on some visits, and on the Christmas night a small golden sax hidden
-among the tree ornaments (on the garland on narrow screens) that opens the jazz bar; a little fir
+a random surprise banner on some visits, and on both Christmas screens (day and night) a small golden sax
+hidden among the tree ornaments that opens the jazz bar; a little fir
 in the bar's bottom right corner brings Christmas back. `armstrong` typed anywhere but the search
 field opens the jazz bar at any time (over Christmas and the calm night too, but not over the
 shows); typed again in the bar it goes back to the normal screen of that moment, by the clock
@@ -129,15 +131,15 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `blackhole.js` | `createBlackHole()`: the Konami black hole, ray-traced in WebGL (light bent by gravity, disk with Doppler beaming, lensed stars), on two canvases so the page falls between its sky and its disk |
 | `supernova.js` | `createSupernova()`: the multi-stage supernova that ends the Konami black hole (flash, shock wave, ejecta, nebula, pulsar), one WebGL canvas over the page |
 | `konami.js` | Konami code: black hole (CSS drawing as a fallback without WebGL) swallowing the page letter by letter, then its boxes and the music player, until it overheats, implodes and explodes in a supernova; confetti, party theme |
-| `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()` |
-| `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable, neon sign going out |
+| `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()`; `screenTrack()` / `preloadTrack()` / `dropTrack()` for the screens' music |
+| `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable playing `audio/jazz.mp3`, neon sign going out |
 | `closing.js` | closing time: the life-size bartender behind his bar (photo layers from `img/bartender/`: head nodding, forearm tapping the desk bell, chest breathing), swinging lamp, desk bell "ding" (Web Audio), typed speech, chalkboard with countdown, "Good night" |
 | `fx.js` | the effects canvas of every screen: `fxLayers` (by `<body>` class), `blob()`, the animation loop |
-| `christmas.js` | Christmas screens: date override and `yeti` code, garland (with mouse physics), winter scene (mountains and chalets, moon, tree, snowman), tree lights canvas, snow, sleigh, music, hidden sax |
+| `christmas.js` | Christmas screens: date override and `yeti` code, garland (with mouse physics), winter scene (mountains and chalets, moon, tree, snowman), tree lights canvas, snow, sleigh, music (Jingle Bell Rock or the YouTube Christmas radio, swapped with the sleeve behind the turntable, or paused), hidden sax |
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
 | `epic.js` | epic finale: blue fire, motes, rune circle, "More epicness ?", "Back to normal" |
-| `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, crickets from YouTube (quieter, 0.75 speed), dawn birds made with Web Audio, firefly jar |
+| `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, night forest sounds (`audio/calm.mp3`, quieter), dawn birds made with Web Audio, firefly jar |
 | `start.js` | **last**: first `applyScreen()`, then the every-second clock check |
 
 ### CSS files, in cascade order
@@ -266,9 +268,11 @@ Example: a calm "dawn" screen from 06:00 to 07:00.
 - **localStorage can throw** (private mode): always `try { ... } catch (e) {}`.
 - **Sound needs a user gesture**: players start muted when there was none, and unmute on the
   first click (see `jazz.js`, `metal.js`); a Web Audio context waits suspended and is resumed
-  on the first click (see the dawn birds in `calm.js`). YouTube players are hidden `<iframe>`s
-  driven by `postMessage` commands; a fresh player ignores commands until ready, so they are
-  repeated.
+  on the first click (see the dawn birds in `calm.js`). Music is an mp3 in `site/audio/`,
+  played with `screenTrack()` (`screens.js`, or loaded ahead with `preloadTrack()` when a show
+  is coming), never put in the page, and stopped with `dropTrack()` when its screen ends. The
+  one YouTube player left (the Christmas radio) is a hidden `<iframe>` driven by `postMessage`
+  commands; a fresh player ignores commands until ready.
 
 ### Phones and older browsers
 

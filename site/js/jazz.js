@@ -50,65 +50,56 @@ const setAir = on => {
 setAir(document.body.classList.contains("night"));
 document.addEventListener("night", e => setAir(e.detail));
 
-// Night music: jazz from YouTube, looped. It starts by itself when the night begins. Browsers
-// only allow sound after a user gesture, so if the page has not had one yet it autoplays muted
-// and the sound comes on at the first click or key press anywhere. The vinyl button then plays /
-// pauses it (through the YouTube iframe API messages). Pausing is remembered: no autoplay on the
-// next visits until it is played again.
-const JAZZ = "7gtIh5dF9Xk";
-let jazz = null, playing = false, jazzMuted = false, jazzSoundAt = 0;
+// Night music: "Just One More Drink", jazz noir (audio/jazz.mp3), looped. It starts by itself when
+// the night begins. Browsers only allow sound after a user gesture, so if the page has not had one
+// yet it autoplays muted and the sound comes on at the first click or key press anywhere. The
+// vinyl button then plays / pauses it. Pausing is remembered: no autoplay on the next visits until
+// it is played again.
+let jazz = null, playing = false, jazzSoundAt = 0;
 const vinyl = document.createElement("button");
 vinyl.id = "vinyl";
 vinyl.type = "button";
 vinyl.innerHTML = '<span class="deck"><span class="disc"></span><span class="arm"></span></span><span class="label"></span>';
 const jazzOff = () => { try { return localStorage.getItem("jazz") === "off"; } catch (e) { return false; } };
+const jazzMuted = () => !!jazz && jazz.muted;
 const paintVinyl = () => {
   vinyl.classList.toggle("playing", playing);
   vinyl.querySelector(".label").textContent = !playing ? "♪ Click to play some jazz"
-    : jazzMuted ? "🔇 Click anywhere for sound" : "♪ Jazz on — click to pause";
-  vinyl.title = !playing ? "Play the music" : jazzMuted ? "Turn the sound on" : "Pause the music";
+    : jazzMuted() ? "🔇 Click anywhere for sound" : "♪ Jazz on — click to pause";
+  vinyl.title = !playing ? "Play the music" : jazzMuted() ? "Turn the sound on" : "Pause the music";
 };
-const command = func => jazz && jazz.contentWindow.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
 const play = (muted = false) => {
-  if (!jazz) {  // first time: create the player, it autoplays (muted when there was no gesture yet)
-    jazz = document.createElement("iframe");
-    jazz.id = "jazz";
-    jazz.title = "Background jazz";
-    jazz.allow = "autoplay; encrypted-media";
-    jazz.src = `https://www.youtube.com/embed/${JAZZ}?autoplay=1&mute=${muted ? 1 : 0}&loop=1&playlist=${JAZZ}&controls=0&enablejsapi=1`;
-    document.body.append(jazz);
-    jazzMuted = muted;
-  } else command("playVideo");
+  if (!jazz) jazz = screenTrack("jazz.mp3", { muted });  // first time: muted when there was no gesture yet
+  else jazz.play().catch(() => {});
   playing = true;
   try { localStorage.removeItem("jazz"); } catch (e) {}
   paintVinyl();
 };
 const pause = () => {
-  command("pauseVideo");
+  if (jazz) jazz.pause();
   playing = false;
   try { localStorage.setItem("jazz", "off"); } catch (e) {}
   paintVinyl();
 };
 const jazzSound = () => {  // unmute a jazz that autoplayed muted
-  if (!jazz || !jazzMuted) return;
-  command("unMute");
-  jazzMuted = false;
+  if (!jazzMuted()) return;
+  jazz.muted = false;
   jazzSoundAt = performance.now();
   paintVinyl();
 };
 vinyl.addEventListener("click", e => {
   e.stopPropagation();
   if (performance.now() - jazzSoundAt < 600) return;  // this same click just turned the sound on
-  if (jazzMuted) jazzSound();
+  if (jazzMuted()) jazzSound();
   else playing ? pause() : play();
 });
 const setMusic = on => {
   document.removeEventListener("pointerdown", jazzSound);
   document.removeEventListener("keydown", jazzSound);
-  if (!on) { if (playing) command("pauseVideo"); playing = false; vinyl.remove(); return; }
+  if (!on) { dropTrack(jazz); jazz = null; playing = false; vinyl.remove(); return; }  // the next night starts it again
   document.body.append(vinyl);
   if (!jazz && !jazzOff()) {
-    const canSound = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
+    const canSound = screenGesture();
     play(!canSound);
     if (!canSound) {
       document.addEventListener("pointerdown", jazzSound, { once: true });

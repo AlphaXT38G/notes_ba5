@@ -15,8 +15,7 @@ body.night:not(.rift) .wrap{position:relative;z-index:1}
 .air .note{position:absolute;bottom:-2rem;color:#f5b041;text-shadow:0 0 8px rgba(245,176,65,.6);animation:float linear forwards}
 @keyframes drift{0%{transform:translate(-30vw,0) scale(1)}50%{transform:translate(20vw,-8vh) scale(1.25)}100%{transform:translate(70vw,4vh) scale(1)}}
 @keyframes float{0%{transform:translate(0,0) rotate(0);opacity:0}15%{opacity:var(--o)}50%{transform:translate(var(--sway),-55vh) rotate(var(--r))}100%{transform:translate(0,-110vh) rotate(0);opacity:0}}
-/* Night music: a vinyl record in the bottom left corner, spinning while the jazz plays.
-   The YouTube player itself is kept invisible behind it. */
+/* Night music: a vinyl record in the bottom left corner, spinning while the jazz plays. */
 #vinyl{position:fixed;left:1.1rem;bottom:1.1rem;z-index:40;display:flex;align-items:center;gap:.6rem;padding:0;color:#f3e3c3;font:600 .78rem system-ui,sans-serif;background:none;border:0;cursor:pointer}
 /* Turntable: wooden plinth, record on the left, tonearm hanging from a pivot in the top right.
    At rest the arm sits beside the record; when playing it swings onto the outer grooves. */
@@ -28,7 +27,6 @@ body.night:not(.rift) .wrap{position:relative;z-index:1}
 #vinyl .arm::after{content:"";position:absolute;left:50%;bottom:-.2rem;width:.45rem;height:.3rem;margin-left:-.3rem;border-radius:1px;background:#cfc8bb;transform:rotate(18deg)}
 #vinyl.playing .arm{transform:rotate(25deg)}
 #vinyl .label{padding:.3rem .6rem;border-radius:999px;background:rgba(48,26,18,.85);border:1px solid rgba(245,176,65,.3)}
-#jazz{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 /* Closing time: darker, colder light and a blue-violet neon */
 body.night[data-phase=closing]{--bg:#08080f;--card:rgba(22,22,40,.85);--line:rgba(150,160,255,.14);--mut:#9a97b8}
