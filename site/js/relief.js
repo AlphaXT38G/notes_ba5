@@ -20,6 +20,7 @@ precision highp float;
 uniform sampler2D uAlb, uHgt, uMat, uTex;
 uniform vec2 uRes;      // bitmap size (px)
 uniform float uUnit;    // bitmap px per drawing unit
+uniform vec3 uKey;      // direction of the key light (x right, y up, z towards us)
 varying vec2 vUv;
 #define DEPTH 80.      // drawing units between black and white in the height drawing
 
@@ -71,7 +72,7 @@ void main() {
   float ao = clamp(1. - occ * 1.1, .15, 1.);
 
   // Lights: key from the right (hard, casts shadows), fill from the left, bar lamp from above
-  vec3 key = normalize(vec3(.86, .3, .42)), fill = normalize(vec3(-.75, .1, .65)), lamp = normalize(vec3(-.1, .92, .38));
+  vec3 key = normalize(uKey), fill = normalize(vec3(-key.x, .1, .65)), lamp = normalize(vec3(-.1, .92, .38));
   // Cast shadow: walk towards the key light over the height; anything above the ray hides it
   float lit = 1.;
   vec2 dir = normalize(key.xy) * px * uUnit;
@@ -138,8 +139,9 @@ const reliefImage = svg => new Promise((ok, fail) => {
 });
 
 // layers: { name: { albedo, height, mat, tex } } SVG strings, all `width` x `height` drawing units,
-// rendered at `unit` bitmap pixels per unit. Returns { name: blob URL } or null.
-async function renderRelief(layers, width, height, unit = 2) {
+// rendered at `unit` bitmap pixels per unit; key: direction of the key light (the fill comes from
+// the other side). Returns { name: blob URL } or null.
+async function renderRelief(layers, width, height, unit = 2, key = [.86, .3, .42]) {
   const c = document.createElement("canvas"), W = width * unit, Hh = height * unit;
   c.width = W; c.height = Hh;
   const gl = c.getContext("webgl", { premultipliedAlpha: true, preserveDrawingBuffer: true, antialias: false });
@@ -199,7 +201,7 @@ async function renderRelief(layers, width, height, unit = 2) {
       pass(blur, targets[0].fb, [["uSrc", maps[1]]], { uStep: [1 / W, 0], uPacked: [0] });
       pass(blur, targets[1].fb, [["uSrc", targets[0].t]], { uStep: [0, 1 / Hh], uPacked: [1] });
       pass(light, null, [["uAlb", maps[0]], ["uHgt", targets[1].t], ["uMat", maps[2]], ["uTex", maps[3]]],
-        { uRes: [W, Hh], uUnit: [unit] });
+        { uRes: [W, Hh], uUnit: [unit], uKey: key });
       const blob = await new Promise(ok => c.toBlob(ok, "image/webp", .92));
       if (!blob) return null;
       urls[name] = URL.createObjectURL(blob);
