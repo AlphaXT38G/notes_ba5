@@ -235,7 +235,12 @@ const startCrickets = () => {
   const ac = new AudioContext(), master = ac.createGain();
   master.gain.value = .5;
   master.connect(ac.destination);
-  const crickets = [makeCricket(ac, master, { freq: 4600, vol: .12, pan: -.3, pulses: 4, every: .52 })];
+  // A chorus: each cricket has its own pitch, rhythm and place, near (loud) or farther (soft),
+  // spread from left to right, so they drift in and out of step with each other
+  const crickets = Array.from({ length: 7 }, (_, i) => makeCricket(ac, master, {
+    freq: 4100 + Math.random() * 1100, vol: i < 2 ? .1 + Math.random() * .04 : .025 + Math.random() * .05,
+    pan: (i / 6 - .5) * 1.6 + (Math.random() - .5) * .2, pulses: Math.random() < .5 ? 3 : 4, every: .4 + Math.random() * .4,
+  }));
   calmAudio = { ac, master, crickets, timer: setInterval(() => calmTick(), 150) };
   calmTick();
 };
