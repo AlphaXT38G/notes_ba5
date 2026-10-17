@@ -83,7 +83,8 @@ const setCalmSky = on => {
 // forced ?night=calm in the day), and is given to the CSS as --dawn.
 let calmDawn = 0;
 const paintCalmDawn = () => {
-  calmDawn = Math.min(1, Math.max(0, (clockSeconds() - (4 * 3600 + 45 * 60)) / (45 * 60)));
+  const t = clockSeconds() - (4 * 3600 + 45 * 60);
+  calmDawn = t >= 0 && t < 45 * 60 ? t / (45 * 60) : 0;
   calmSky.style.setProperty("--dawn", calmDawn.toFixed(3));
 };
 everySecond.push(() => { if (calmSky.isConnected) paintCalmDawn(); });
