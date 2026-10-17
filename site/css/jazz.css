@@ -28,7 +28,6 @@ body.night:not(.rift) .wrap{position:relative;z-index:1}
 #vinyl .arm::after{content:"";position:absolute;left:50%;bottom:-.2rem;width:.45rem;height:.3rem;margin-left:-.3rem;border-radius:1px;background:#cfc8bb;transform:rotate(18deg)}
 #vinyl.playing .arm{transform:rotate(25deg)}
 #vinyl .label{padding:.3rem .6rem;border-radius:999px;background:rgba(48,26,18,.85);border:1px solid rgba(245,176,65,.3)}
-#jazz{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 /* Closing time: darker, colder light and a blue-violet neon */
 body.night[data-phase=closing]{--bg:#08080f;--card:rgba(22,22,40,.85);--line:rgba(150,160,255,.14);--mut:#9a97b8}
