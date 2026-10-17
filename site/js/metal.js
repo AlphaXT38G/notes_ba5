@@ -3,7 +3,8 @@
 // stage, chrome title, headbanging cards, lightning, chains, fire and thrown silhouettes on the
 // effects canvas (fx.js), and a guitar amp playing the song. 20 clicks on the flame button
 // within a minute start it at any time of day (startMetalEgg, called by flames.js).
-const METAL_SECONDS = 111;  // the song plays from 1:50 to its end, 1 min 51 s later
+const METAL_SONG = 37, METAL_PLAYS = 3;          // the song lasts 37 s and is played 3 times
+const METAL_SECONDS = METAL_SONG * METAL_PLAYS;  // so the show lasts 1 min 51 s
 let metalEggAt = 0;         // when the easter egg started it (0 = not running)
 SCREENS.metal = {
   className: "metal",
