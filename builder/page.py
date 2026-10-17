@@ -28,6 +28,19 @@ def site_bundle(kind):
     files = json.loads((SITE / "manifest.json").read_text(encoding="utf-8"))[kind]
     return "".join(site_file(rel) for rel in files)
 
+def expand_inset(css):
+    """inset: as top / right / bottom / left, which every browser knows.
+
+    inset is the shorthand the screens use for their full-screen layers, but browsers built on
+    Chromium before 87 (Safari before 14.1) ignore it: those layers then lose their place.
+    """
+    def longhands(m):
+        v = m[2].split()
+        top, right, bottom, left = (v * 4)[:4] if len(v) == 1 else (v[0], v[1], v[0], v[1]) if len(v) == 2 \
+            else (v[0], v[1], v[2], v[1]) if len(v) == 3 else v
+        return f"{m[1]}top:{top};right:{right};bottom:{bottom};left:{left}"
+    return re.sub(r"([{;\s])inset:([^;}!]+)", longhands, css)
+
 def site_scripts():
     """The "js" files listed in site/manifest.json, in that order, each in its own <script>.
 
@@ -182,7 +195,7 @@ def build_index():
     page = (SITE / "template.html").read_text(encoding="utf-8").rstrip("\n")
     for key, value in {
         "head_js": site_file("js/head.js"),      # runs in <head>: saved theme / view before the first paint
-        "css": site_bundle("css"),               # site/css/*, in manifest order
+        "css": expand_inset(site_bundle("css")), # site/css/*, in manifest order
         "cards_left": "".join(cards[0::2]),
         "cards_right": "".join(cards[1::2]),
         "generated": f"{datetime.now():%Y-%m-%d %H:%M}",
