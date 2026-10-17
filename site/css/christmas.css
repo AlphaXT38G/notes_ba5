@@ -83,7 +83,7 @@ body[data-phase=christmas-night] #xmoon{display:block}
 /* Chalet lights on the slopes, at night only; some flicker slowly like a fire behind a window */
 #xscene .chalets{display:none}
 body[data-phase=christmas-night] #xscene .chalets{display:inline}
-#xscene .flicker circle{animation:chalet 5s ease-in-out var(--d) infinite}
+#xscene .flicker{animation:chalet 5s ease-in-out var(--d) infinite}
 @keyframes chalet{0%,100%{opacity:1}40%{opacity:.55}55%{opacity:.9}70%{opacity:.65}}
 /* The tree box: taller than the window, always on the right, sticking out past the right edge and
    a little below the bottom one (the SVG is bottom-aligned, so the gifts are partly cut). On narrow screens it is
@@ -216,4 +216,4 @@ body[data-phase=christmas-night] #xsnowman .k4{stop-color:#566b90}
 @keyframes vt-snow-in{from{opacity:0;filter:brightness(1.8) blur(6px)}}
 
 /* Reduced motion */
-@media(prefers-reduced-motion:reduce){#xscene .flicker circle{animation:none}#xsnowman .face,#xsnowman .eyes,#xsnowman .wave{animation:none}body[data-phase=christmas-night] #garland :is(.lit,.halo,.refl){animation:none}#sleigh{display:none}#xmusic.playing .disc,#xmusic.swap .disc,#xsleeve.swap{animation:none}#xsleeve,#xsleeve .rec{transition:none}}
+@media(prefers-reduced-motion:reduce){#xscene .flicker{animation:none}#xsnowman .face,#xsnowman .eyes,#xsnowman .wave{animation:none}body[data-phase=christmas-night] #garland :is(.lit,.halo,.refl){animation:none}#sleigh{display:none}#xmusic.playing .disc,#xmusic.swap .disc,#xsleeve.swap{animation:none}#xsleeve,#xsleeve .rec{transition:none}}
