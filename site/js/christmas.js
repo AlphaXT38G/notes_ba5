@@ -554,7 +554,11 @@ const treeResize = () => {
   treeCanvas.ox = (r.width - TREE_W * treeScale) / 2;
   treeCanvas.oy = r.height - TREE_H * treeScale;
 };
+// 30 frames a second are plenty for lights that fade and twinkle: half the drawing of a 60 Hz
+// screen (a quarter at 120 Hz).
 const treeFrame = now => {
+  treeRaf = requestAnimationFrame(treeFrame);
+  if (now - treeLast < 30) return;
   // never backwards: the first frame's time can be a little before the performance.now() of its
   // start, and a negative time would pick a pattern that does not exist
   treeT += Math.max(0, Math.min(.05, (now - treeLast) / 1000));
@@ -586,7 +590,6 @@ const treeFrame = now => {
     }
   }
   c.restore();
-  treeRaf = requestAnimationFrame(treeFrame);
 };
 const setTreeLights = on => {
   cancelAnimationFrame(treeRaf);
