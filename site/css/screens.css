@@ -24,3 +24,10 @@
 @keyframes vt-hush-in{from{opacity:0;filter:brightness(.4) blur(4px)}}
 @keyframes vt-fade-out{to{opacity:0}}
 @keyframes vt-dawn-in{from{opacity:0;filter:brightness(1.6)}}
+/* Phones: the music players of the screens (#vinyl, #amp, #jar, #xmusic) sit in the bottom left
+   corner, over the page. Room is left under the last card so it can be scrolled clear of them,
+   and their labels are smaller */
+@media(max-width:640px){
+  body.night .wrap,body.metal .wrap,body.epic .wrap,body.calm .wrap,body.christmas .wrap{padding-bottom:7rem}
+  #vinyl .label,#amp .label,#jar .label,#xmusic .label{font-size:.7rem;max-width:11rem}
+}
