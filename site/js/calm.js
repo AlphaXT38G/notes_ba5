@@ -274,6 +274,16 @@ const startCrickets = () => {
   const ac = new AudioContext(), master = ac.createGain();
   master.gain.value = .5;
   master.connect(ac.destination);
+  // The night air: a faint echo (a delay feeding back into itself, a little duller each time),
+  // so the chirps seem to come from a wide open field rather than from the speakers
+  const delay = ac.createDelay(), dull = ac.createBiquadFilter(), feedback = ac.createGain(), wet = ac.createGain();
+  delay.delayTime.value = .11;
+  dull.type = "lowpass";
+  dull.frequency.value = 5000;
+  feedback.gain.value = .3;
+  wet.gain.value = .25;
+  master.connect(delay).connect(dull).connect(feedback).connect(delay);
+  dull.connect(wet).connect(ac.destination);
   // A chorus: each cricket has its own pitch, rhythm and place, near (loud) or farther (soft),
   // spread from left to right, so they drift in and out of step with each other
   const crickets = Array.from({ length: 7 }, (_, i) => makeCricket(ac, master, {
