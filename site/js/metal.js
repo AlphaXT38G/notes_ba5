@@ -349,7 +349,7 @@ const paintAmp = () => {
   // which of the three plays is on (a forced show plays it forever: no count)
   const count = metalLeft() === Infinity ? "" : ` ${Math.min(METAL_PLAYS, riffPlay + 1)}/${METAL_PLAYS}`;
   amp.querySelector(".label").textContent = !rocking ? "🎸 Click to crank it up"
-    : riffMuted() ? "🔇 Click anywhere for sound" : `🎸 Rocking${count} — click to mute`;
+    : riffMuted() ? "🔇 Click anywhere for sound" : `🎸 Rocking${count} — click to pause`;
   amp.title = !rocking ? "Play the music" : riffMuted() ? "Turn the sound on" : "Pause the music";
 };
 // The song is a small file, but when the takeover is coming (10th click on the flame button, or
