@@ -90,8 +90,8 @@ Christmas day from 06:00 to 18:00 and a Christmas night from 18:00 to 06:00. A
 garland across the top that swings under the mouse (lit at night), falling snow,
 big snowy mountains, a decorated tree with gifts, a snowman companion beside the
 courses, a countdown to Christmas in the subtitle, and Christmas music on a
-Christmas turntable: Jingle Bell Rock or a live Christmas radio from YouTube, picked
-above it, or paused. At night the moon rises, chalets light up on the
+Christmas turntable: Jingle Bell Rock or a live Christmas radio from YouTube (the
+other record waits in its sleeve behind the turntable: click it to swap them), or paused. At night the moon rises, chalets light up on the
 mountains, the tree lights play changing patterns and Santa's sleigh crosses the
 sky now and then. Look closely at the
 ornaments at night. The metal show at 01:00 and the easter eggs still happen.
