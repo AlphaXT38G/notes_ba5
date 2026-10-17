@@ -232,6 +232,26 @@ const calmTick = () => {
     }
   }
 };
+// Far away, a tree cricket trills without a break: a lower tone (2.9 kHz) beating 48 times a
+// second (its volume shaken by a fast LFO), swelling and fading very slowly (a second, slow LFO)
+const calmLfo = (ac, freq, depth, param) => {  // param += depth x sin(2 pi freq t), forever
+  const lfo = ac.createOscillator(), amount = ac.createGain();
+  lfo.frequency.value = freq;
+  amount.gain.value = depth;
+  lfo.connect(amount).connect(param);
+  lfo.start();
+};
+const calmTrill = (ac, out) => {
+  const osc = ac.createOscillator(), beat = ac.createGain(), swell = ac.createGain(), vol = ac.createGain();
+  osc.frequency.value = 2900;
+  beat.gain.value = .5;
+  swell.gain.value = .6;
+  vol.gain.value = .035;
+  calmLfo(ac, 48, .5, beat.gain);
+  calmLfo(ac, .05, .4, swell.gain);
+  osc.connect(beat).connect(swell).connect(vol).connect(out);
+  osc.start();
+};
 const startCrickets = () => {
   if (calmAudio || !window.AudioContext) return;
   const ac = new AudioContext(), master = ac.createGain();
@@ -243,6 +263,7 @@ const startCrickets = () => {
     freq: 4100 + Math.random() * 1100, vol: i < 2 ? .1 + Math.random() * .04 : .025 + Math.random() * .05,
     pan: (i / 6 - .5) * 1.6 + (Math.random() - .5) * .2, pulses: Math.random() < .5 ? 3 : 4, every: .4 + Math.random() * .4,
   }));
+  calmTrill(ac, master);
   calmAudio = { ac, master, crickets, timer: setInterval(() => calmTick(), 150) };
   calmTick();
 };
