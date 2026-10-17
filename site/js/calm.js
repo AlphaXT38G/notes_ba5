@@ -222,7 +222,30 @@ const chirp = (c, t, loud) => {  // one chirp of cricket c starting at time t (a
     c.osc.frequency.setValueAtTime(c.freq * (1 - p * .004), t0);  // each pulse a hair lower
   }
 };
-const calmTick = ({ ac, crickets }) => {  // also runs while the audio fades out, after calmAudio is gone
+// The first birds: once the dawn is well on its way (from about 5:05), a bird sings now and then
+// (every 4 - 14 s), a short phrase of 3 to 6 whistled notes, each a quick slide of pitch between
+// 2 and 5 kHz, somewhere on the left or the right
+const calmBird = (ac, out, t) => {
+  const pan = ac.createStereoPanner();
+  pan.pan.value = (Math.random() - .5) * 1.6;
+  pan.connect(out);
+  const notes = 3 + Math.floor(Math.random() * 4);
+  for (let i = 0; i < notes; i++) {
+    const osc = ac.createOscillator(), gain = ac.createGain(), len = .07 + Math.random() * .12;
+    const f0 = 2000 + Math.random() * 3000, fEnd = f0 * (.7 + Math.random() * .6);
+    osc.frequency.setValueAtTime(f0, t);
+    osc.frequency.exponentialRampToValueAtTime(fEnd, t + len);
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(.045, t + .015);
+    gain.gain.linearRampToValueAtTime(0, t + len);
+    osc.connect(gain).connect(pan);
+    osc.start(t);
+    osc.stop(t + len + .02);
+    t += len + .03 + Math.random() * .08;
+  }
+};
+const calmTick = audio => {
+  const { ac, crickets } = audio;  // also runs while the audio fades out, after calmAudio is gone
   const until = ac.currentTime + CALM_AHEAD;
   for (const c of crickets) {
     while (c.next < until) {
@@ -231,6 +254,11 @@ const calmTick = ({ ac, crickets }) => {  // also runs while the audio fades out
       // now and then a cricket falls silent for a few seconds, as real ones do
       if (Math.random() < .012) c.next += 2 + Math.random() * 6;
     }
+  }
+  audio.birdAt ??= ac.currentTime + 2;
+  if (calmDawn > .45 && audio.birdAt < until) {
+    calmBird(ac, audio.master, Math.max(audio.birdAt, ac.currentTime));
+    audio.birdAt = ac.currentTime + 4 + Math.random() * 10;
   }
 };
 // Far away, a tree cricket trills without a break: a lower tone (2.9 kHz) beating 48 times a
