@@ -250,11 +250,8 @@ const calmClock = how => { if (calmAudio) calmAudio.ac[how](); };  // "resume" /
 const paintCalmVolume = () => { calmTrack.volume = CALM_VOLUME * (1 - calmDawn * .5); };  // lower as the dawn comes
 everySecond.push(() => { if (calmTrack) paintCalmVolume(); });
 const makeCalmTrack = muted => {
-  const track = calmTrack = screenTrack("calm.mp3", { muted });
+  calmTrack = screenTrack("calm.mp3", { muted, start: duration => Math.random() * duration * .9 });
   paintCalmVolume();
-  track.addEventListener("loadedmetadata", () => {
-    if (isFinite(track.duration)) track.currentTime = Math.random() * track.duration * .9;
-  }, { once: true });
 };
 
 // The first birds: once the dawn is well on its way (from about 5:05), a bird sings now and then
