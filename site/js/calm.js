@@ -290,7 +290,7 @@ const calmTrill = (ac, out) => {
   osc.frequency.value = 2900;
   beat.gain.value = .5;
   swell.gain.value = .6;
-  vol.gain.value = .035;
+  vol.gain.value = .01;  // barely there, under the field crickets
   calmLfo(ac, 48, .5, beat.gain);
   calmLfo(ac, .05, .4, swell.gain);
   osc.connect(beat).connect(swell).connect(vol).connect(out);
