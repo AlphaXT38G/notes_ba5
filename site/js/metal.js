@@ -339,8 +339,10 @@ const paintAmp = () => {
     return;
   }
   amp.classList.toggle("playing", rocking);
+  // which of the three plays is on (a forced show plays it forever: no count)
+  const count = metalLeft() === Infinity ? "" : ` ${Math.min(METAL_PLAYS, riffPlay + 1)}/${METAL_PLAYS}`;
   amp.querySelector(".label").textContent = !rocking ? "🎸 Click to crank it up"
-    : riffMuted ? "🔇 Click anywhere for sound" : "🎸 Rocking — click to mute";
+    : riffMuted ? "🔇 Click anywhere for sound" : `🎸 Rocking${count} — click to mute`;
   amp.title = !rocking ? "Play the music" : riffMuted ? "Turn the sound on" : "Pause the music";
 };
 const riffCommand = (func, args = []) => riff && riff.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
@@ -382,6 +384,7 @@ everySecond.push(() => {
   riffPlay = play;
   riffCommand("seekTo", [0, true]);
   riffCommand("playVideo");
+  paintAmp();
 });
 const rock = (muted = false) => {
   riffPlay = metalPlay();
