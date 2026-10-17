@@ -28,8 +28,8 @@ const xmasSubtitle = () => {
 SCREENS.christmas = { className: "christmas", subtitle: xmasSubtitle, transition: "christmas" };
 SCREENS["christmas-night"] = { className: "christmas", subtitle: xmasSubtitle, transition: "christmas" };
 
-// Christmas replaces the day and the jazz bar, not the shows: the override only rewrites "no
-// screen" and the jazz screens, and it runs before the metal and epic ones (this file is loaded
+// Christmas replaces the day, the calm night and the jazz bar, not the shows: the override only
+// rewrites the normal screens (no screen, the calm night, see isNormal) and the jazz screens, and it runs before the metal and epic ones (this file is loaded
 // before metal.js), so those still win. A forced ?night=... is left alone (?night=christmas and
 // ?night=christmas-night force these screens), unless the yeti code was typed (xmasEgg).
 // xmasJazz: the hidden sax was clicked, the night goes on in the jazz bar until the fir is clicked
@@ -43,7 +43,7 @@ const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && 
 let xmasJazz = false, xmasEgg = false;
 OVERRIDES.push(phase => {
   let p = phase;
-  if ((xmasEgg || (!forced || forcedDismissed) && isXmasDate()) && (p === null || SCREENS[p]?.className === "night")) {
+  if ((xmasEgg || (!forced || forcedDismissed) && isXmasDate()) && (isNormal(p) || SCREENS[p]?.className === "night")) {
     p = isXmasDaytime() ? "christmas" : "christmas-night";
   }
   if (p === "christmas") xmasJazz = false;
