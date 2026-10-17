@@ -21,13 +21,23 @@ def site_file(rel):
     return "\n" + (SITE / rel).read_text(encoding="utf-8")
 
 def site_bundle(kind):
-    """All the "css" or "js" files listed in site/manifest.json, in that order, as one text.
+    """All the "css" files listed in site/manifest.json, in that order, as one text.
 
-    The order matters: CSS rules later in the list win over earlier ones of the same weight, and
-    the JS files share one <script> (one scope), so a file can use what an earlier one defines.
+    The order matters: CSS rules later in the list win over earlier ones of the same weight.
     """
     files = json.loads((SITE / "manifest.json").read_text(encoding="utf-8"))[kind]
     return "".join(site_file(rel) for rel in files)
+
+def site_scripts():
+    """The "js" files listed in site/manifest.json, in that order, each in its own <script>.
+
+    Classic scripts share one global scope, so a file can still use what an earlier one defines
+    (const, let, functions). But each file is parsed and run on its own: a file that a browser
+    cannot run (a syntax it does not know, an API it lacks) stops alone, and the search, the
+    theme and the view switch (ui.js, first) keep working.
+    """
+    files = json.loads((SITE / "manifest.json").read_text(encoding="utf-8"))["js"]
+    return "".join(f"<script>{site_file(rel)}</script>" for rel in files)
 
 def label(p, root):
     """Display name of a PDF: "Course notes", "Week 03", or the file name with spaces."""
@@ -176,7 +186,7 @@ def build_index():
         "cards_left": "".join(cards[0::2]),
         "cards_right": "".join(cards[1::2]),
         "generated": f"{datetime.now():%Y-%m-%d %H:%M}",
-        "js": site_bundle("js"),                 # site/js/*, at the end of <body>, once every element exists
+        "js": site_scripts(),                    # site/js/*, at the end of <body>, once every element exists
     }.items():
         page = page.replace("{{" + key + "}}", value)
     DIST.mkdir(exist_ok=True)
@@ -190,8 +200,8 @@ def build_index():
 def check_script():
     """Check the syntax of the page's JavaScript with node, when node is installed.
 
-    All of site/js/ ends up in one <script>, so a single typo stops every feature of the page;
-    this catches it at build time instead of in the browser. Only a warning: the page is written.
+    A typo stops a whole site/js file (each is its own <script>), and the files after it that use
+    it; this catches it at build time instead of in the browser. Only a warning: the page is written.
     """
     node = shutil.which("node")
     if not node:
