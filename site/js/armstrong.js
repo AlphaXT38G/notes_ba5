@@ -8,15 +8,15 @@
 // gives without any easter egg nor forced screen. So it drops the jazz egg, the yeti egg, the
 // Christmas sax and a forced ?night=..., and shows the day (or the calm night after the metal
 // show), the jazz bar at bar time (it then stays), or Christmas during the Christmas period.
-// Typing yeti in the bar (Christmas egg) closes it too, so that Christmas actually shows up
-// (jazzEggXmas).
+// Typing yeti in the bar (Christmas egg) closes it too, so that Christmas actually shows up, even
+// when the bar was opened over Christmas (jazzEggYeti).
 const ARMSTRONG = [..."armstrong"];
-let armstrongPos = 0,     // how many letters of the word have been typed so far
-    jazzEgg = false,      // the code was typed: the jazz bar stays open
-    jazzEggXmas = false;  // the Christmas egg (xmasEgg) when it was typed
+let armstrongPos = 0,   // how many letters of the word have been typed so far
+    jazzEgg = false,    // the code was typed: the jazz bar stays open
+    jazzEggYeti = 0;    // how many times yeti had been typed then (yetiTyped, christmas.js)
 const inBar = phase => screenClass(phase) === "night";
 OVERRIDES.push(phase => {
-  if (jazzEgg && xmasEgg !== jazzEggXmas) jazzEgg = false;  // yeti typed since: Christmas wins
+  if (jazzEgg && yetiTyped !== jazzEggYeti) jazzEgg = false;  // yeti typed since: Christmas wins
   // Only the normal screens (the day, the calm night) and Christmas are replaced: a show on the
   // clock (metal at 01:00) still wins
   if (!jazzEgg || !isNormal(phase) && !inBar(phase) && screenClass(phase) !== "christmas") return phase;
@@ -33,7 +33,7 @@ const backToClock = () => {
 const armstrong = () => {
   if (!inBar(document.body.dataset.phase)) {
     jazzEgg = true;
-    jazzEggXmas = xmasEgg;
+    jazzEggYeti = yetiTyped;
   } else {
     backToClock();  // at bar time the clock gives the bar: it stays, but the eggs are gone
   }
