@@ -92,8 +92,8 @@ The night screens follow the clock. Force one with the URL:
 Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑↑↓↓←→←→BA,
 `yeti` typed anywhere but the search field (Christmas day or night by the clock, any time of the
 year; outside the Christmas period, typed on a Christmas screen it goes back to the normal one),
-a random surprise banner on some visits, and on the Christmas night a small golden sax hidden
-among the tree ornaments (on the garland on narrow screens) that opens the jazz bar; a little fir
+a random surprise banner on some visits, and on both Christmas screens (day and night) a small golden sax
+hidden among the tree ornaments that opens the jazz bar; a little fir
 in the bar's bottom right corner brings Christmas back. `armstrong` typed anywhere but the search
 field opens the jazz bar at any time (over Christmas and the calm night too, but not over the
 shows); typed again in the bar it goes back to the normal screen of that moment, by the clock
