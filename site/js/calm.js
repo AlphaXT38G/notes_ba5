@@ -100,9 +100,18 @@ const calmSky = document.createElement("div");
 calmSky.id = "calm-sky";
 calmSky.setAttribute("aria-hidden", "true");
 calmSky.innerHTML = `<div class="moon">${MOON}<div class="shade"></div></div><img class="hills" alt="" src="data:image/svg+xml,${encodeURIComponent(CALM_HILLS)}"><i class="mist"></i><i class="mist"></i>`;
+// The moon is drawn for now each time the calm night starts, and again every minute while it
+// lasts (its phase moves by about half a degree an hour: it is the same moon all night, but the
+// page may stay open from one night to the next)
+let calmMoonAt = 0;
+const paintCalmMoon = () => {
+  calmMoonAt = Date.now();
+  calmSky.querySelector(".moon .shade").innerHTML = calmMoonShade(calmMoonAge());
+};
+everySecond.push(() => { if (calmSky.isConnected && Date.now() - calmMoonAt > 60000) paintCalmMoon(); });
 const setCalmSky = on => {
   if (!on) return calmSky.remove();
-  calmSky.querySelector(".moon .shade").innerHTML = calmMoonShade(calmMoonAge());
+  paintCalmMoon();
   paintCalmDawn();
   document.body.prepend(calmSky);
 };
