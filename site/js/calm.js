@@ -312,8 +312,10 @@ calmJar.type = "button";
 calmJar.innerHTML = '<span class="glass"><i class="lid"></i><i class="fly"></i></span><span class="label"></span>';
 // Browsers only allow sound after a user gesture: without one yet, the audio clock waits
 // (suspended) and the sound comes on at the first click or key press anywhere. calmPaused: the
-// jar was clicked to pause, the sound stays off until it is clicked again.
-let calmPaused = false, calmSoundAt = 0;
+// jar was clicked to pause, the sound stays off until it is clicked again, on the next visits
+// too (remembered like the jazz).
+let calmPaused = (() => { try { return localStorage.getItem("crickets") === "off"; } catch (e) { return false; } })();
+let calmSoundAt = 0;
 const paintCalmJar = () => {
   const on = calmAudio?.ac.state === "running", waiting = !on && !calmPaused;
   calmJar.classList.toggle("playing", on);
@@ -330,6 +332,7 @@ calmJar.addEventListener("click", e => {
   e.stopPropagation();
   if (performance.now() - calmSoundAt < 600) return;  // this same click just turned the sound on
   calmPaused = calmAudio?.ac.state === "running";
+  try { calmPaused ? localStorage.setItem("crickets", "off") : localStorage.removeItem("crickets"); } catch (e) {}
   if (calmPaused) calmAudio.ac.suspend();
   else if (calmAudio) calmAudio.ac.resume();
   else startCrickets();
