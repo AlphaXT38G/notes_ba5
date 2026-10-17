@@ -18,7 +18,7 @@ const fxResize = () => {
   fxLayers.forEach(layer => layer.resize?.());
 };
 const fxFrame = now => {
-  const dt = Math.min(.05, (now - fxLast) / 1000);
+  const dt = Math.max(0, Math.min(.05, (now - fxLast) / 1000));  // never negative (first frame)
   fxLast = now;
   ctx.clearRect(0, 0, fxW, fxH);
   for (const layer of fxLayers) if (layer.mode === fxMode) { layer.update(dt); layer.draw(ctx); }
