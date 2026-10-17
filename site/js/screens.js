@@ -40,6 +40,8 @@ const scheduledPhase = () => {
 // The usual look of the moment: the day (no screen) or a "normal" screen
 // (no ?. nor ?? in this file: the engine must run on older browsers, Chromium before 80)
 const isNormal = phase => phase === null || !!(SCREENS[phase] && SCREENS[phase].normal);
+// The <body> class of a screen (null for the day or an unknown name)
+const screenClass = phase => SCREENS[phase] ? SCREENS[phase].className : null;
 const phaseNow = () => OVERRIDES.reduce((phase, override) => override(phase), scheduledPhase());
 
 // Switching screens. Changing style is animated with the View Transitions API: the browser
