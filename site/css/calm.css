@@ -45,3 +45,5 @@ body.calm #metalfx{z-index:0}
 @keyframes jar-fly{0%,100%{transform:translate(0,0)}25%{transform:translate(.4rem,-.6rem)}50%{transform:translate(-.3rem,-.9rem)}75%{transform:translate(-.45rem,.2rem)}}
 /* Phones: a smaller moon, lower, out of the way of the header buttons */
 @media(max-width:640px){#calm-sky .moon{right:1rem;top:5.5rem;width:4.2rem;height:4.2rem}#calm-sky .hills{height:16vh}}
+/* Reduced motion (the effects canvas does not start at all, see fx.js) */
+@media(prefers-reduced-motion:reduce){#calm-sky .mist,#calm-sky .moon::before,#jar.playing .fly,#jar.playing .fly::after{animation:none}}
