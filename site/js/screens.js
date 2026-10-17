@@ -38,7 +38,6 @@ const scheduledPhase = () => {
   return forced === "1" && SCHEDULE.length ? SCHEDULE[0][2] : null;
 };
 // The usual look of the moment: the day (no screen) or a "normal" screen
-// (no ?. nor ?? in this file: the engine must run on older browsers, Chromium before 80)
 const isNormal = phase => phase === null || !!(SCREENS[phase] && SCREENS[phase].normal);
 // The <body> class of a screen (null for the day or an unknown name)
 const screenClass = phase => SCREENS[phase] ? SCREENS[phase].className : null;
