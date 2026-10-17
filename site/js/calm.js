@@ -12,3 +12,7 @@ const calmSubtitle = () => {
 };
 SCREENS.calm = { className: "calm", subtitle: calmSubtitle, transition: "calm" };
 SCHEDULE.push([3600 + METAL_SECONDS, 5 * 3600 + 30 * 60, "calm"]);  // from the end of the show to 5:30
+// Every second: the subtitle follows the hour even though the screen stays the same
+everySecond.push(() => {
+  if (document.body.dataset.phase === "calm" && sub.textContent !== calmSubtitle()) sub.textContent = calmSubtitle();
+});
