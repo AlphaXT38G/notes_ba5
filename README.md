@@ -67,10 +67,13 @@ jazz bar, a slam into the metal show, a slow hush into the calm night, a soft fa
 back to the day) in browsers that support view transitions.
 
 After the show, from **01:01:51 to 05:30**, the night goes quiet 🌙: a calm blue
-night with the moon as it really is tonight, twinkling stars, a shooting star now
-and then, fireflies, mist drifting over dark hills, and the sound of crickets in a
-forest at night from YouTube, a little quieter and slower than recorded. From 04:45 the dawn rises from the horizon, the crickets quieten and the first
-birds sing. A firefly jar in the bottom left corner pauses / resumes the sounds.
+night with the moon as it really is tonight (its phase computed from the true new
+moons), twinkling stars, a shooting star now and then, fireflies, mist drifting
+over dark hills, and the sound of crickets in a forest at night from YouTube, a
+little quieter and slower than recorded. From 04:45 the dawn rises from the
+horizon, the crickets quieten and the first birds sing. A firefly jar in the bottom
+left corner pauses / resumes the sounds. The epic finale and Christmas nights come
+before it.
 
 10 seconds before a metal show ends, a **"More epicness ?"** button shows up. Click
 it and, instead of going back to the day, the page turns into an epic fantasy finale ⚔️:
