@@ -17,5 +17,9 @@
 [data-vt=epic]::view-transition-new(root){animation:vt-from-light 1.6s ease-out both}
 @keyframes vt-to-light{to{opacity:0;filter:brightness(3) saturate(0) blur(6px)}}
 @keyframes vt-from-light{from{opacity:0;filter:brightness(3) hue-rotate(60deg) blur(8px);transform:scale(1.04)}}
+[data-vt=calm]::view-transition-old(root){animation:vt-hush-out 2s ease-in both}
+[data-vt=calm]::view-transition-new(root){animation:vt-hush-in 3s ease-out both}
+@keyframes vt-hush-out{to{opacity:0;filter:brightness(.25) saturate(.4) hue-rotate(160deg)}}
+@keyframes vt-hush-in{from{opacity:0;filter:brightness(.4) blur(4px)}}
 @keyframes vt-fade-out{to{opacity:0}}
 @keyframes vt-dawn-in{from{opacity:0;filter:brightness(1.6)}}
