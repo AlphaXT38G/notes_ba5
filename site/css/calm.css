@@ -8,3 +8,8 @@ body.calm .wrap{position:relative;z-index:1}
 /* Title lit by the moon: pale silver blue, a soft halo, no neon */
 body.calm h1{color:#e8efff;font-family:Georgia,"Palatino Linotype",serif;font-weight:400;letter-spacing:.02em;text-shadow:0 0 10px rgba(150,185,255,.55),0 0 28px rgba(90,130,255,.35)}
 body.calm h1::after{content:" 🌙"}
+body.calm .sub{color:#a9b9dc;font-style:italic}
+/* Cards edged with a faint cold light, like paper left out under the moon */
+body.calm section{box-shadow:-8px 0 22px -14px rgba(120,160,255,.55)}
+body.calm .links a:hover{background:rgba(120,165,255,.08)}
+body.calm #fire{display:none}  /* no flame mode in the quiet night */
