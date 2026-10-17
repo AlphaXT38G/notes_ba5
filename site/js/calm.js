@@ -82,3 +82,34 @@ fxLayers.push({
   },
   reset() { calmStars.length = 0; calmStars.w = 0; },
 });
+// Shooting stars: now and then (every 6 - 20 s) a meteor crosses a part of the sky, downwards,
+// a bright head with a tail fading behind it, gone in less than a second
+let calmMeteor = null, calmMeteorIn = 4;
+fxLayers.push({
+  mode: "calm",
+  update(dt) {
+    if (calmMeteor) {
+      calmMeteor.age += dt;
+      if (calmMeteor.age > calmMeteor.life) calmMeteor = null;
+    } else if ((calmMeteorIn -= dt) <= 0) {
+      calmMeteorIn = 6 + Math.random() * 14;
+      const dir = Math.random() < .5 ? 1 : -1, a = (.35 + Math.random() * .4) * Math.PI / 2, speed = 700 + Math.random() * 500;
+      calmMeteor = { x: fxW * (.1 + Math.random() * .8), y: fxH * Math.random() * .35, vx: Math.cos(a) * speed * dir, vy: Math.sin(a) * speed,
+        age: 0, life: .5 + Math.random() * .4 };
+    }
+  },
+  draw(c) {
+    const m = calmMeteor;
+    if (!m) return;
+    const t = m.age / m.life, x = m.x + m.vx * m.age, y = m.y + m.vy * m.age, tail = .12;
+    const a = Math.sin(t * Math.PI);  // fades in, then out
+    const g = c.createLinearGradient(x, y, x - m.vx * tail, y - m.vy * tail);
+    g.addColorStop(0, `rgba(235,242,255,${a.toFixed(2)})`);
+    g.addColorStop(1, "rgba(150,180,255,0)");
+    c.strokeStyle = g;
+    c.lineWidth = 1.6;
+    c.lineCap = "round";
+    c.beginPath(); c.moveTo(x, y); c.lineTo(x - m.vx * tail, y - m.vy * tail); c.stroke();
+  },
+  reset() { calmMeteor = null; calmMeteorIn = 4; },
+});
