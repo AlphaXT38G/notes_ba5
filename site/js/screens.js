@@ -35,10 +35,11 @@ const scheduledPhase = () => {
   for (const [from, to, name] of SCHEDULE) {
     if (from <= to ? t >= from && t < to : t >= from || t < to) return name;
   }
-  return forced === "1" ? SCHEDULE[0]?.[2] ?? null : null;
+  return forced === "1" && SCHEDULE.length ? SCHEDULE[0][2] : null;
 };
 // The usual look of the moment: the day (no screen) or a "normal" screen
-const isNormal = phase => phase === null || !!SCREENS[phase]?.normal;
+// (no ?. nor ?? in this file: the engine must run on older browsers, Chromium before 80)
+const isNormal = phase => phase === null || !!(SCREENS[phase] && SCREENS[phase].normal);
 const phaseNow = () => OVERRIDES.reduce((phase, override) => override(phase), scheduledPhase());
 
 // Switching screens. Changing style is animated with the View Transitions API: the browser
@@ -53,7 +54,7 @@ const applyScreen = () => {
   const swap = () => {
     const body = document.body;
     if (phase) body.dataset.phase = phase; else delete body.dataset.phase;
-    const subtitle = typeof screen?.subtitle === "function" ? screen.subtitle() : screen?.subtitle;
+    const subtitle = !screen ? null : typeof screen.subtitle === "function" ? screen.subtitle() : screen.subtitle;
     sub.textContent = subtitle || daySub;
     // Flames on top of a screen are too many moving elements (the page lags): every screen turns
     // the flame mode off (its CSS may hide the button, the jazz bar keeps it only for clicks)
@@ -62,7 +63,7 @@ const applyScreen = () => {
     // extras are gone before the next one's arrive (e.g. the metal song stops before the epic one)
     for (const turningOn of [false, true]) {
       for (const cls of classes) {
-        const on = screen?.className === cls;
+        const on = !!screen && screen.className === cls;
         if (on === turningOn && on !== body.classList.contains(cls)) {
           body.classList.toggle(cls, on);
           document.dispatchEvent(new CustomEvent(cls, { detail: on }));
@@ -74,7 +75,7 @@ const applyScreen = () => {
   const animate = screenShown && document.startViewTransition && !document.hidden
     && !matchMedia("(prefers-reduced-motion: reduce)").matches;
   screenShown = true;
-  styleSwitch?.skipTransition();  // a previous change still animating ends at once
+  if (styleSwitch) styleSwitch.skipTransition();  // a previous change still animating ends at once
   if (!animate) { delete root.dataset.vt; return swap(); }
   root.dataset.vt = screen ? screen.transition : "day";
   const t = styleSwitch = document.startViewTransition(swap);
