@@ -192,3 +192,59 @@ fxLayers.push({
   },
   reset() { calmFlies.length = 0; },
 });
+
+// ── Crickets (Web Audio) ──
+// The sound of the calm night is made in the page, no recording to load: a field cricket chirps
+// in short bursts of a pure high tone (about 4.5 kHz): 3 or 4 pulses of 16 ms, 38 ms apart, and
+// a chirp every half second or so. Each cricket is one oscillator that never stops, whose volume
+// (a GainNode) is opened and closed for each pulse. The pulses are scheduled a little ahead on
+// the audio clock (tick, every 150 ms, schedules what falls in the next 1.2 s), so the rhythm
+// stays exact even when the page is busy or the timer is late.
+const CALM_AHEAD = 1.2;
+let calmAudio = null;  // { ac, master, crickets, timer } while the calm night plays
+const makeCricket = (ac, out, { freq, vol, pan, pulses, every }) => {
+  const osc = ac.createOscillator(), gain = ac.createGain(), panner = ac.createStereoPanner();
+  osc.frequency.value = freq;
+  gain.gain.value = 0;
+  panner.pan.value = pan;
+  osc.connect(gain).connect(panner).connect(out);
+  osc.start();
+  return { osc, gain, freq, vol, pulses, every, next: ac.currentTime + Math.random() * every };
+};
+const chirp = (c, t) => {  // one chirp of cricket c starting at time t (audio clock)
+  for (let p = 0; p < c.pulses; p++) {
+    const t0 = t + p * .038, g = c.gain.gain;
+    g.setValueAtTime(0, t0);
+    g.linearRampToValueAtTime(c.vol, t0 + .004);
+    g.linearRampToValueAtTime(c.vol * .7, t0 + .012);
+    g.linearRampToValueAtTime(0, t0 + .016);
+    c.osc.frequency.setValueAtTime(c.freq * (1 - p * .004), t0);  // each pulse a hair lower
+  }
+};
+const calmTick = () => {
+  const { ac, crickets } = calmAudio, until = ac.currentTime + CALM_AHEAD;
+  for (const c of crickets) {
+    while (c.next < until) {
+      chirp(c, c.next);
+      c.next += c.every * (.92 + Math.random() * .16);
+    }
+  }
+};
+const startCrickets = () => {
+  if (calmAudio || !window.AudioContext) return;
+  const ac = new AudioContext(), master = ac.createGain();
+  master.gain.value = .5;
+  master.connect(ac.destination);
+  const crickets = [makeCricket(ac, master, { freq: 4600, vol: .12, pan: -.3, pulses: 4, every: .52 })];
+  calmAudio = { ac, master, crickets, timer: setInterval(() => calmTick(), 150) };
+  calmTick();
+};
+const stopCrickets = () => {
+  if (!calmAudio) return;
+  clearInterval(calmAudio.timer);
+  calmAudio.ac.close();
+  calmAudio = null;
+};
+const setCrickets = on => on ? startCrickets() : stopCrickets();
+setCrickets(document.body.classList.contains("calm"));
+document.addEventListener("calm", e => setCrickets(e.detail));
