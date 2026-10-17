@@ -316,8 +316,9 @@ const setMetalStage = on => {
 setMetalStage(document.body.classList.contains("metal"));
 document.addEventListener("metal", e => setMetalStage(e.detail));
 
-// Metal music: a cover of the Master of Puppets solo from YouTube (37 s), in sync with the
-// takeover: opened late, it starts further into the song so both end together. It starts by
+// Metal music: a cover of the Master of Puppets solo from YouTube (37 s), played three times in a
+// row: the show ends with the third play. It is in sync with the takeover: opened late, it starts
+// at the right play, further into the song, so both end together. It starts by
 // itself when the phase begins. Browsers only allow sound after a user gesture, so if the page
 // has not had one yet the song autoplays muted and the sound comes on at the first click or key
 // press anywhere (the song keeps its place in time). The amp plays / pauses it; the end of the
@@ -370,7 +371,20 @@ everySecond.push(() => {  // 00:59:30: get the song ready for the 1:00 show
   const t = clockSeconds();
   if (t >= 3600 - 30 && t < 3600) preloadRiff();
 });
+// Each new play starts the song again from the top (the player has stopped at its end by then).
+// riffPlay: which play the player is on (0, 1, 2), so the song restarts once per play.
+let riffPlay = 0;
+const metalPlay = () => Math.floor(metalElapsed() / METAL_SONG);
+everySecond.push(() => {
+  if (!rocking || riffWaiting || !document.body.classList.contains("metal")) return;
+  const play = metalPlay();
+  if (play === riffPlay) return;
+  riffPlay = play;
+  riffCommand("seekTo", [0, true]);
+  riffCommand("playVideo");
+});
 const rock = (muted = false) => {
+  riffPlay = metalPlay();
   const late = Math.floor(metalElapsed()) % METAL_SONG;  // where the current play is in the song
   if (!riff) makeRiff(1, muted, late);
   else if (riffWaiting) {  // the preloaded player: jump to the right spot, sound on if allowed, play
