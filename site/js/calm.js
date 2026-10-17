@@ -27,11 +27,31 @@ everySecond.push(() => {
   if (document.body.dataset.phase === "calm" && sub.textContent !== calmSubtitle()) sub.textContent = calmSubtitle();
 });
 
-// The moon of tonight: its age in the lunar cycle (0 new, .5 full), counted from a known new
-// moon (2000-01-06 18:14 UTC) in synodic months of 29.53 days
-const calmMoonAge = () => {
-  const days = (Date.now() - Date.UTC(2000, 0, 6, 18, 14)) / 864e5;
-  return (days / 29.530588853 % 1 + 1) % 1;
+// The moon of tonight: its age in the lunar cycle (0 new, .5 full), between the true new moon
+// before now and the next one. A lunar month is not always 29.53 days (from about 29.3 to 29.8,
+// the Moon's orbit is an ellipse pulled by the Sun), so counting mean months can be wrong by
+// half a day: the new moons are computed as in Jean Meeus, Astronomical Algorithms (ch. 49),
+// the mean new moon number k plus its largest periodic corrections, right to a few minutes.
+const calmNewMoon = k => {  // time (ms) of new moon number k (k = 0: 2000-01-06)
+  const T = k / 1236.85, sin = deg => Math.sin(deg * Math.PI / 180);
+  const jde = 2451550.09766 + 29.530588861 * k + .00015437 * T ** 2 - .00000015 * T ** 3 + .00000000073 * T ** 4;
+  const E = 1 - .002516 * T - .0000074 * T ** 2;  // the Earth's orbit slowly getting rounder
+  const M = 2.5534 + 29.1053567 * k - .0000014 * T ** 2 - .00000011 * T ** 3;  // Sun's mean anomaly
+  const Mm = 201.5643 + 385.81693528 * k + .0107582 * T ** 2 + .00001238 * T ** 3 - .000000058 * T ** 4;  // Moon's
+  const F = 160.7108 + 390.67050284 * k - .0016118 * T ** 2 - .00000227 * T ** 3 + .000000011 * T ** 4;  // latitude
+  const N = 124.7746 - 1.56375588 * k + .0020672 * T ** 2 + .00000215 * T ** 3;  // ascending node
+  const fix = -.4072 * sin(Mm) + .17241 * E * sin(M) + .01608 * sin(2 * Mm) + .01039 * sin(2 * F)
+    + .00739 * E * sin(Mm - M) - .00514 * E * sin(Mm + M) + .00208 * E * E * sin(2 * M) - .00111 * sin(Mm - 2 * F)
+    - .00057 * sin(Mm + 2 * F) + .00056 * E * sin(2 * Mm + M) - .00042 * sin(3 * Mm) + .00042 * E * sin(M + 2 * F)
+    + .00038 * E * sin(M - 2 * F) - .00024 * E * sin(2 * Mm - M) - .00017 * sin(N);
+  return (jde + fix - 2440587.5) * 864e5;  // Julian day to Unix time
+};
+const calmMoonAge = (now = Date.now()) => {
+  let k = Math.floor((now - calmNewMoon(0)) / (29.530588861 * 864e5));
+  while (calmNewMoon(k) > now) k--;
+  while (calmNewMoon(k + 1) <= now) k++;
+  const prev = calmNewMoon(k);
+  return (now - prev) / (calmNewMoon(k + 1) - prev);
 };
 // The unlit part of the moon, drawn over the full moon of christmas.js in the same -50..50 box: a
 // half disc on the dark side, closed by the terminator, a half ellipse whose width follows the
