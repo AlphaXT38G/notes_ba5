@@ -269,10 +269,10 @@ Example: a calm "dawn" screen from 06:00 to 07:00.
 - **Sound needs a user gesture**: players start muted when there was none, and unmute on the
   first click (see `jazz.js`, `metal.js`); a Web Audio context waits suspended and is resumed
   on the first click (see the dawn birds in `calm.js`). Music is an mp3 in `site/audio/`,
-  played with `screenTrack()` (`screens.js`, or loaded ahead with `preloadTrack()` when a show is
-  coming), never put in the page, and stopped with `dropTrack()` when its screen ends. The one YouTube player left (the Christmas radio) is a
-  hidden `<iframe>` driven by `postMessage` commands; a fresh player ignores commands until
-  ready.
+  played with `screenTrack()` (`screens.js`, or loaded ahead with `preloadTrack()` when a show
+  is coming), never put in the page, and stopped with `dropTrack()` when its screen ends. The
+  one YouTube player left (the Christmas radio) is a hidden `<iframe>` driven by `postMessage`
+  commands; a fresh player ignores commands until ready.
 
 ### Phones and older browsers
 
