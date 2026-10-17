@@ -6,10 +6,11 @@
 //   - snow falling on the effects canvas (fx.js),
 //   - a winter scene behind the page: big discreet mountains, a decorated tree on the right with
 //     gifts, a snowman companion on the left (and at night the moon and chalet lights),
-//   - a Christmas turntable playing Jingle Bell Rock or a live of Christmas music.
-// At night the tree lights play changing patterns, Santa's sleigh crosses the sky now and then,
-// and a small golden sax hidden among the ornaments opens the jazz bar (a little fir in the bar
-// brings Christmas back). The metal show at 1:00 and the other easter eggs still take over.
+//   - a Christmas turntable playing Jingle Bell Rock or a live of Christmas music,
+//   - a small golden sax hidden among the tree's ornaments, which opens the jazz bar (a little
+//     fir in the bar brings Christmas back).
+// At night the tree lights play changing patterns and Santa's sleigh crosses the sky now and then.
+// The metal show at 1:00 and the other easter eggs still take over.
 //
 // In this file, in order: screens and override, the yeti code, shared helpers, the garland, the
 // tree and its sax ornament, the mountains, the moon, the snowman, the sax button, the tree lights
@@ -33,8 +34,8 @@ SCREENS["christmas-night"] = { className: "christmas", subtitle: xmasSubtitle, t
 // it runs before the metal and epic ones (this file is loaded before metal.js), so those still
 // win. A forced ?night=... is left alone (?night=christmas and ?night=christmas-night force these
 // screens), unless the yeti code was typed (xmasEgg).
-// xmasJazz: the hidden sax was clicked, the night goes on in the jazz bar until the fir is clicked
-// or Christmas day comes back at 6:00.
+// xmasJazz: the hidden sax was clicked on that Christmas screen ("christmas" or "christmas-night"):
+// the jazz bar replaces it until the fir is clicked or the other one comes (18:00 or 6:00).
 const isXmasDate = (d = new Date()) => (d.getMonth() === 11 && d.getDate() >= 10) || (d.getMonth() === 0 && d.getDate() <= 3);
 const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && t < 18 * 3600; };
 // Easter egg: typing y e t i (outside the search field) brings Christmas at any time of the year, day
@@ -47,8 +48,8 @@ OVERRIDES.push(phase => {
   if ((xmasEgg || (!forced || forcedDismissed) && isXmasDate()) && (isNormal(p) || screenClass(p) === "night")) {
     p = isXmasDaytime() ? "christmas" : "christmas-night";
   }
-  if (p === "christmas") xmasJazz = false;
-  if (xmasJazz && p === "christmas-night") return phase === "closing" ? "closing" : "evening";
+  if (xmasJazz && xmasJazz !== p && (p === "christmas" || p === "christmas-night")) xmasJazz = false;
+  if (xmasJazz && p === xmasJazz) return phase === "closing" ? "closing" : "evening";
   return p;
 });
 
@@ -282,7 +283,7 @@ const buildTree = () => {
   parts.push(`<polygon points="${star}" fill="url(#xstar)" stroke="#a8740a" stroke-width="1.2" stroke-linejoin="round"/>`);
   return `<svg viewBox="0 0 ${TREE_W} ${TREE_H}" preserveAspectRatio="xMidYMax meet"><defs>${defs.join("")}</defs>${parts.join("")}</svg>`;
 };
-// The hidden sax (night only), hanging on the right side of the tree like an ornament:
+// The hidden sax, hanging on the right side of the tree like an ornament:
 // golden body bent in a J, bell, neck and mouthpiece, a few keys, a ribbon loop to hang it.
 const SAX = { x: 384, y: 300, w: 30, h: 52 };
 const SAX_SVG = `<svg viewBox="0 0 30 52" aria-hidden="true"><path d="M15,0v6" stroke="#c8102e" stroke-width="1.6"/>` +
@@ -517,7 +518,7 @@ const placeSax = () => {
 saxOnGarland.addEventListener("change", placeSax);
 saxBtn.addEventListener("click", e => {
   e.stopPropagation();
-  xmasJazz = true;
+  xmasJazz = document.body.dataset.phase;  // the Christmas screen it replaces
   applyScreen();
 });
 
