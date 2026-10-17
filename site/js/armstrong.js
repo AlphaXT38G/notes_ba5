@@ -14,12 +14,13 @@ const ARMSTRONG = [..."armstrong"];
 let armstrongPos = 0,     // how many letters of the word have been typed so far
     jazzEgg = false,      // the code was typed: the jazz bar stays open
     jazzEggXmas = false;  // the Christmas egg (xmasEgg) when it was typed
-const inBar = phase => SCREENS[phase]?.className === "night";
+const classOf = phase => SCREENS[phase] ? SCREENS[phase].className : null;  // no ?.: older browsers
+const inBar = phase => classOf(phase) === "night";
 OVERRIDES.push(phase => {
   if (jazzEgg && xmasEgg !== jazzEggXmas) jazzEgg = false;  // yeti typed since: Christmas wins
   // Only the normal screens (the day, the calm night) and Christmas are replaced: a show on the
   // clock (metal at 01:00) still wins
-  if (!jazzEgg || !isNormal(phase) && !inBar(phase) && SCREENS[phase]?.className !== "christmas") return phase;
+  if (!jazzEgg || !isNormal(phase) && !inBar(phase) && classOf(phase) !== "christmas") return phase;
   // Keeps "closing" when the clock says so, even if Christmas had replaced it before this override
   const clock = scheduledPhase();
   return inBar(phase) ? phase : inBar(clock) ? clock : "evening";

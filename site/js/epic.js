@@ -196,7 +196,8 @@ const epicSound = () => { if (epicRiff && epicMuted) { epicCommand("unMute"); ep
 const setEpicMusic = on => {
   document.removeEventListener("pointerdown", epicSound);
   if (!on) {
-    epicRiff?.remove(); epicRiff = null; epicPlaying = epicMuted = false;
+    if (epicRiff) epicRiff.remove();
+    epicRiff = null; epicPlaying = epicMuted = false;
     amp.classList.remove("epic");
     if (!document.body.classList.contains("metal")) amp.remove();
     return;

@@ -439,7 +439,7 @@ amp.addEventListener("click", e => {
 const setMetalMusic = on => {
   document.removeEventListener("pointerdown", riffSound);
   document.removeEventListener("keydown", riffSound);
-  if (!on) { riff?.remove(); riff = null; rocking = riffMuted = riffWaiting = false; amp.remove(); return; }
+  if (!on) { if (riff) riff.remove(); riff = null; rocking = riffMuted = riffWaiting = false; amp.remove(); return; }
   document.body.append(amp);
   const canSound = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
   rock(!canSound);

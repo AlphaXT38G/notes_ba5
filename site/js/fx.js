@@ -15,7 +15,7 @@ const fxLayers = [], strikeHooks = [];  // strikeHooks: called with (x, y) where
 const fxResize = () => {
   fxW = innerWidth; fxH = innerHeight;
   fx.width = fxW; fx.height = fxH;
-  fxLayers.forEach(layer => layer.resize?.());
+  fxLayers.forEach(layer => { if (layer.resize) layer.resize(); });
 };
 const fxFrame = now => {
   const dt = Math.max(0, Math.min(.05, (now - fxLast) / 1000));  // never negative (first frame)
