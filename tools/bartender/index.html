@@ -12,9 +12,10 @@
 image into <code>site/img/bartender/</code>. The red background shows any leftover halo.</p>
 <p id="links">Working…</p>
 <div id="stack"></div>
-<script src="../../site/js/relief.js"></script>
-<script src="cut.js"></script>
-<script src="props.js"></script>
+<script>
+// Always the latest scripts (a simple local server lets the browser cache them)
+for (const src of ["../../site/js/relief.js", "cut.js", "props.js"]) document.write(`<script src="${src}?v=${Date.now()}"><\/script>`);
+</script>
 <script>
 // Order from back to front, as in the scene (see the layer list in props.js and cut.js)
 (async () => {
