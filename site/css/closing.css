@@ -3,7 +3,7 @@
 #closing{position:fixed;inset:0;z-index:55;overflow:hidden;color:#f3e3c3}
 #closing .shade{position:absolute;inset:0;background:radial-gradient(70% 70% at 45% 40%,rgba(24,18,30,.72),rgba(4,3,8,.95));opacity:0;animation:cl-fade .9s ease forwards}
 #closing .stage{position:absolute;left:50%;bottom:0;width:min(1100px,100%);display:flex;align-items:flex-end;justify-content:center;gap:1rem;padding:0 1rem;transform:translateX(-50%)}
-#closing .bt{position:relative;display:block;flex:none;height:min(84vh,720px);aspect-ratio:520/600;margin-bottom:-2px;filter:drop-shadow(0 0 40px rgba(0,0,0,.7));animation:cl-rise 1.4s cubic-bezier(.2,.9,.3,1.08) .35s both}
+#closing .bt{position:relative;display:block;flex:none;height:min(84vh,720px);aspect-ratio:1162/1354;margin-bottom:-2px;filter:drop-shadow(0 0 40px rgba(0,0,0,.7));transform-origin:50% 100%;animation:cl-rise 1.4s cubic-bezier(.2,.9,.3,1.08) .35s both,cl-lit 6s infinite}
 /* The lamp, hanging from the ceiling above his head: it drops in, swings, then sways gently, its
    light flickering a little. The swing turns around the ceiling, far above, so the angles are small. */
 #closing .who{position:relative;flex:none}
@@ -33,35 +33,43 @@
 @keyframes cl-board{to{opacity:1;transform:rotate(-1deg)}}
 #closing .night-btn{margin-top:.8rem;padding:.35rem 1rem;color:#1c2a22;background:#ffe9a8;border:0;border-radius:999px;font:700 .95rem system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 0 #b8964a}
 #closing .night-btn:hover{background:#fff3c8}
-/* Good night: he waves with his bell, then goes back down while the lamp goes up and the room
-   comes back (.bye, then .gone, set by js/closing.js) */
-#closing.bye .arm{animation:cl-wave .35s ease-in-out 4 alternate}
-#closing.bye .bell{animation:cl-ring .35s ease-in-out 4 alternate}
+/* Good night: two more taps on the bell, then he goes back down while the lamp goes up and the
+   room comes back (.bye, then .gone, set by js/closing.js) */
+#closing.bye .bt img.forearm{animation:cl-tap .42s 2,cl-breathe-arm 4.2s ease-in-out infinite}
+#closing.bye .bt img.bell{animation:cl-hit .42s 2}
 #closing.gone .bt{animation:cl-leave .9s ease-in forwards}
 #closing.gone .lamp{animation:cl-lift .9s ease-in forwards}
 #closing.gone .talk{opacity:0;transition:opacity .5s}
 #closing.gone .shade{animation:cl-unfade 1s ease .2s both}
-@keyframes cl-wave{from{transform:rotate(-4deg)}to{transform:rotate(9deg)}}
 @keyframes cl-leave{to{transform:translateY(105%)}}
 @keyframes cl-lift{to{transform:translateY(-110%)}}
 @keyframes cl-unfade{from{opacity:1}to{opacity:0}}
-/* The layers of the bartender (js/closing.js), all on the same 520 x 600 canvas: positions and
-   pivots are in % of it (e.g. the bell turns around his hand, at 102,206 = 19.6% 34.3%) */
-#closing .bt img,#closing .arm,#closing .bell{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
-#closing .bt img.head{left:34.23%;top:7.33%;width:34.23%;height:38.17%;transform-origin:47.2% 95.2%}
-#closing.talking .head{animation:cl-nod .45s ease-in-out infinite alternate}
-@keyframes cl-nod{from{transform:rotate(-1.5deg)}to{transform:rotate(2deg) translateY(-.3%)}}
-/* Last call: the bell swings from his hand, its clapper the other way, his arm shakes with it */
-#closing .arm{transform-origin:32.69% 50%}
-#closing .bell{transform-origin:19.62% 34.33%}
-#closing .bt img.clapper{transform-origin:19.62% 38.33%}
-#closing.ring .arm{animation:cl-shake .3s ease-in-out infinite alternate}
-#closing.ring .bell{animation:cl-ring .3s ease-in-out infinite alternate}
-#closing.ring .clapper{animation:cl-ring .3s ease-in-out infinite alternate-reverse}
-@keyframes cl-shake{from{transform:rotate(-2deg)}to{transform:rotate(2.5deg)}}
-@keyframes cl-ring{from{transform:rotate(-16deg)}to{transform:rotate(16deg)}}
 @keyframes cl-fade{to{opacity:1}}
 @keyframes cl-rise{from{transform:translateY(105%)}}
+/* The layers of the bartender (js/closing.js), all at the size of the photo (1162 x 1354), so
+   pivots are in % of it: the head turns under the beard (512,340), the forearm moves from under
+   the rolled sleeve, the chest breathes from the counter's top (y 1190) */
+#closing .bt img{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+#closing .bt img.head{transform-origin:44.06% 25.11%}
+#closing.talking .bt img.head{animation:cl-nod .45s ease-in-out infinite alternate,cl-breathe-head 4.2s ease-in-out infinite}
+@keyframes cl-nod{from{transform:rotate(-1.2deg)}to{transform:rotate(1.6deg) translateY(-.2%)}}
+/* Last call: he lifts his hand off the desk bell and brings it down on it, once per TAP (0.42 s,
+   the hand landing at 70 %, when js/closing.js plays the "ding"); the bell gives a little */
+#closing.ring .bt img.forearm{animation:cl-tap .42s infinite,cl-breathe-arm 4.2s ease-in-out infinite}
+#closing.ring .bt img.bell{animation:cl-hit .42s infinite}
+@keyframes cl-tap{0%{transform:none;animation-timing-function:ease-out}30%,52%{transform:translateY(-1.15%);animation-timing-function:ease-in}70%,100%{transform:none}}
+@keyframes cl-hit{0%,68%{transform:none}72%{transform:translateY(.22%)}84%,100%{transform:none}}
+/* Alive while he stands there: he breathes (the chest swells, the head and the forearm go up with
+   it), and the lamp's flicker dims him with the light (same 6 s as its glow). The breathing uses
+   the scale and translate properties, so it adds up with the rising, tapping and nodding above,
+   which use transform. The counter and the bell stay still. */
+#closing .bt img.body{transform-origin:50% 88%;animation:cl-breathe 4.2s ease-in-out infinite}
+#closing .bt img.head{animation:cl-breathe-head 4.2s ease-in-out infinite}
+#closing .bt img.forearm{animation:cl-breathe-arm 4.2s ease-in-out infinite}
+@keyframes cl-breathe{0%,100%{scale:1 1}45%{scale:1.003 1.007}}
+@keyframes cl-breathe-head{0%,100%{translate:0 0}45%{translate:0 -.41%}}
+@keyframes cl-breathe-arm{0%,100%{translate:0 0}45%{translate:0 -.25%}}
+@keyframes cl-lit{0%,40%,44%,100%{filter:drop-shadow(0 0 40px rgba(0,0,0,.7)) brightness(1)}42%{filter:drop-shadow(0 0 40px rgba(0,0,0,.7)) brightness(.8)}43%{filter:drop-shadow(0 0 40px rgba(0,0,0,.7)) brightness(.95)}}
 /* Phones and other screens taller than wide (tablets): what he says on top, him below, smaller;
    no lamp (its cord would cross the bubble) */
 @media(max-width:760px),(max-aspect-ratio:9/10){
