@@ -9,6 +9,7 @@
 //     bottom left corner pauses / resumes them.
 // It is a "normal" screen (screens.js): the usual look of those hours, which Christmas and the
 // armstrong code replace like the day. The metal show and the epic finale come before it.
+
 // The subtitle follows the hours of the night (a forced ?night=calm in the day gets the first one)
 const calmSubtitle = () => {
   const h = new Date().getHours();
@@ -94,8 +95,8 @@ const CALM_HILLS = (() => {
 
 // The night scene behind the page (#calm-sky, click-through): the moon in the top right corner,
 // as it is tonight (the full moon of the Christmas night, christmas.js, under its shade), the
-// hills, and two banks of mist drifting slowly along the bottom (CSS). Created when the calm night starts,
-// removed when it ends.
+// hills, and two banks of mist drifting slowly along the bottom (CSS). Created when the calm
+// night starts, removed when it ends.
 const calmSky = document.createElement("div");
 calmSky.id = "calm-sky";
 calmSky.setAttribute("aria-hidden", "true");
@@ -241,6 +242,7 @@ fxLayers.push({
 // and the first birds sing over it (made in the page with Web Audio, below). Browsers only allow
 // sound after a user gesture: without one yet the player starts muted and the sound comes on at
 // the first click or key press anywhere (the birds' audio clock waits suspended until then).
+// Everything is removed when the calm night ends.
 const CALM_TUBE = "0aay6rLcEdU", CALM_VOLUME = 60, CALM_RATE = .75;
 let calmTube = null, calmPlaying = false, calmMuted = false, calmVolume = -1;
 let calmAudio = null;  // { ac, master, timer, birdAt }: the birds' Web Audio, while the calm night runs
@@ -292,7 +294,8 @@ const calmBird = (ac, out, t) => {
     osc.stop(t + len + .02);
     t += len + .03 + Math.random() * .08;
   }
-};const startCalmBirds = () => {
+};
+const startCalmBirds = () => {
   if (calmAudio || !window.AudioContext) return;
   const ac = new AudioContext(), master = ac.createGain();
   master.gain.value = .5;
