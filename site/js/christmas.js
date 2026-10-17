@@ -2,7 +2,7 @@
 // From December 10 to January 3 the usual looks are replaced by Christmas (css/christmas.css):
 // the day screen from 6:00 to 18:00, the night screen from 18:00 to 6:00. Typing "yeti" brings
 // them at any time of the year. Both screens have:
-//   - a garland across the top that swings under the mouse (lit at night),
+//   - a garland across the top (lit at night),
 //   - snow falling on the effects canvas (fx.js),
 //   - a winter scene behind the page: big discreet mountains, a decorated tree on the right with
 //     gifts, a snowman companion on the left (and at night the moon and chalet lights),
@@ -14,7 +14,7 @@
 //
 // In this file, in order: screens and override, the yeti code, shared helpers, the garland, the
 // tree and its sax ornament, the mountains, the moon, the snowman, the sax button, the tree lights
-// canvas, the snow, the sleigh, the garland physics, the music, the fir back from the jazz bar,
+// canvas, the snow, the sleigh, the music, the fir back from the jazz bar,
 // and turning it all on and off.
 // Every drawing is SVG built once from code (seeded random, so it looks the same on every visit).
 const xmasSubtitle = () => {
@@ -106,7 +106,6 @@ const cubic = (p, t) => {
   const u = 1 - t;
   return [0, 1].map(k => u * u * u * p[0][k] + 3 * u * u * t * p[1][k] + 3 * u * t * t * p[2][k] + t * t * t * p[3][k]);
 };
-let garlandSwags = [], garlandBobs = [];  // moving parts, with their physics state (see below)
 const buildGarland = () => {
   const W = Math.max(320, document.documentElement.clientWidth), rnd = seeded(12);
   // irregular swags: widths from 240 to 420 px, depths from 45 to 82 px, hooks at slightly different heights
@@ -155,7 +154,7 @@ const buildGarland = () => {
     const fir = `<path class="fir" d="M${f1(x0)},${f1(y0)}C${curve.slice(1).map(([x, y]) => `${f1(x)},${f1(y)}`).join(" ")}"/>` +
       needles.map((d, i) => `<path stroke="${NEEDLES[i]}" class="needles" d="${d.join("")}"/>`).join("") +
       `<path class="ribbon" d="${ribbon}"/>${cones.join("")}<g class="snow">${snow.join("")}</g>`;
-    swags.push({ fir, x0, x1, top: (y0 + y1) / 2, bottom: Math.max(y0, y1) + sag });
+    swags.push(fir);
   }
   const lightSvg = l => `<circle class="glass" cx="${f1(l.x)}" cy="${f1(l.y)}" r="2.6"/><circle class="lit" cx="${f1(l.x)}" cy="${f1(l.y)}" r="3.2" fill="${l.c}"/>`;
   const baubleSvg = b => {
@@ -180,15 +179,11 @@ const buildGarland = () => {
     `<linearGradient id="bowloop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2384f"/><stop offset=".6" stop-color="#b3122e"/><stop offset="1" stop-color="#7d0a1d"/></linearGradient>` +
     `<linearGradient id="bowtail" x1="0" x2="1"><stop offset="0" stop-color="#8a0c20"/><stop offset=".5" stop-color="#c8102e"/><stop offset="1" stop-color="#8a0c20"/></linearGradient>` +
     `<linearGradient id="ribbon" x1="0" x2="1"><stop offset="0" stop-color="#f6dc8a"/><stop offset=".5" stop-color="#d4a630"/><stop offset="1" stop-color="#f6dc8a"/></linearGradient>`;
-  // one group per swag (its baubles behind the fir, its lights in front), so each can move on its own;
-  // the bows stay nailed to the hooks, on top
+  // swag by swag: its baubles behind the fir, its lights in front; the bows on top, at the hooks.
+  // The garland does not react to the mouse any more: it is drawn once and never redrawn.
   garland.innerHTML = `<svg width="${W}" height="170" viewBox="0 0 ${W} 170"><defs>${defs}</defs>` +
-    swags.map((s, k) => `<g class="swag">${baubles.filter(b => b.k === k).map(baubleSvg).join("")}${s.fir}${lights.filter(l => l.k === k).map(lightSvg).join("")}</g>`).join("") +
+    swags.map((fir, k) => baubles.filter(b => b.k === k).map(baubleSvg).join("") + fir + lights.filter(l => l.k === k).map(lightSvg).join("")).join("") +
     `${bows}</svg>`;
-  const swagEls = garland.querySelectorAll(".swag");
-  garlandSwags = swags.map((s, k) => ({ ...s, el: swagEls[k], a: 0, va: 0, s: 0, vs: 0 }));
-  const bobEls = garland.querySelectorAll(".bauble");
-  garlandBobs = baubles.sort((a, z) => a.k - z.k).map((b, i) => ({ el: bobEls[i], px: b.x, py: b.y, cy: b.cy, r: b.r, len: b.cy - b.y, th: 0, w: 0 }));
   garlandLights = lights.map(l => ({ ...l, c: FAIRY.indexOf(l.c) }));
   garlandGlow.width = W; garlandGlow.height = 170;  // also clears it
   garlandGlowShown = false;
@@ -198,8 +193,7 @@ const buildGarland = () => {
 
 // The halos of the garland's fairy lights at night, on a canvas over the garland, at 1x (they are
 // soft glows; the crisp lit bulbs stay in the SVG). Painted by the night lights loop (treeFrame,
-// below) with each light's twinkle, following its swag when the mouse swings it; painted once,
-// still, with reduced motion. Nothing is drawn while the page is scrolled past the garland.
+// below) with each light's twinkle; painted once, still, with reduced motion. Nothing is drawn while the page is scrolled past the garland.
 const garlandGlow = document.createElement("canvas"), gctx = garlandGlow.getContext("2d");
 // the halo of each colour: the same falloff as the baubles' reflections (#fl gradients)
 const FAIRY_GLOWS = FAIRY.map(hex => {
@@ -222,14 +216,10 @@ let garlandLights = [], garlandGlowShown = false;
 const paintGarlandGlow = time => {  // time in seconds, or null: still lights
   const shown = time === null || scrollY < 180;
   if (!shown && !garlandGlowShown) return;  // scrolled away and already cleared
-  gctx.setTransform(1, 0, 0, 1, 0, 0);
   gctx.clearRect(0, 0, garlandGlow.width, garlandGlow.height);
   garlandGlowShown = shown;
   if (!shown) return;
   for (const l of garlandLights) {
-    // the swag's swing, as on its SVG group: translate(0 top) skewX(a) scale(1 k) translate(0 -top)
-    const s = garlandSwags[l.k], k = 1 + s.s, sk = Math.tan(s.a) * k;
-    gctx.setTransform(1, 0, sk, k, -sk * s.top, s.top * (1 - k));
     gctx.globalAlpha = time === null ? 1 : twinkle((((time - l.d) / l.t) % 1 + 1) % 1);
     gctx.drawImage(FAIRY_GLOWS[l.c], l.x - 17, l.y - 17, 34, 34);
   }
@@ -803,58 +793,6 @@ everySecond.push(() => {
   if (document.body.dataset.phase !== "christmas-night") { if (sleighFlight) sleighFlight.cancel(); sleighIn = 20 + Math.random() * 60; return; }
   if (--sleighIn <= 0) { sleighIn = 40 + Math.random() * 200; flySleigh(); }
 });
-
-// The garland reacts to the mouse, like the metal show's chains: passing the pointer through a swag
-// makes it swing (a sideways shear from its hooks) and bounce (a vertical stretch), and knocks the
-// baubles near the pointer, which then swing on their threads like pendulums. Springs bring
-// everything back to rest; the loop only runs while something moves.
-let garlandRaf = null, garlandLast = 0, gPrev = null;
-const garlandStep = now => {
-  const dt = Math.min(.033, (now - garlandLast) / 1000);
-  garlandLast = now;
-  let moving = false;
-  for (const s of garlandSwags) {
-    s.va += (-60 * s.a - 3.2 * s.va) * dt; s.a += s.va * dt;
-    s.vs += (-90 * s.s - 4 * s.vs) * dt; s.s += s.vs * dt;
-    s.a = Math.max(-.35, Math.min(.35, s.a));
-    const still = Math.abs(s.a) + Math.abs(s.va) + Math.abs(s.s) + Math.abs(s.vs) < 1e-3;
-    if (still) { s.a = s.va = s.s = s.vs = 0; s.el.removeAttribute("transform"); continue; }
-    moving = true;
-    s.el.setAttribute("transform", `translate(0 ${f1(s.top)}) skewX(${(s.a * 57.3).toFixed(2)}) scale(1 ${(1 + s.s).toFixed(4)}) translate(0 ${f1(-s.top)})`);
-  }
-  for (const b of garlandBobs) {
-    b.w += (-(1500 / b.len) * Math.sin(b.th) - 1.6 * b.w) * dt; b.th += b.w * dt;
-    b.th = Math.max(-1.1, Math.min(1.1, b.th));  // a thread, not a rod: never over the top
-    if (Math.abs(b.th) + Math.abs(b.w) < 2e-3) { b.th = b.w = 0; b.el.removeAttribute("transform"); continue; }
-    moving = true;
-    b.el.setAttribute("transform", `rotate(${(b.th * 57.3).toFixed(2)} ${f1(b.px)} ${f1(b.py)})`);
-  }
-  garlandRaf = moving ? requestAnimationFrame(garlandStep) : null;
-};
-const garlandTouch = e => {
-  if (!garland.isConnected || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const x = e.clientX, y = e.clientY + scrollY, now = performance.now();  // the garland is at the top of the page
-  const prev = gPrev;
-  gPrev = { x, y, now };
-  if (!prev || y > 190 || now - prev.now > 100) return;
-  const ms = Math.max(8, now - prev.now), vx = (x - prev.x) / ms, vy = (y - prev.y) / ms;  // px per ms
-  let hit = false;
-  for (const s of garlandSwags) {
-    if (x < s.x0 || x > s.x1 || y < s.top - 10 || y > s.bottom + 40) continue;
-    const mid = 1 - Math.abs((x - (s.x0 + s.x1) / 2) / ((s.x1 - s.x0) / 2));  // strongest in the middle of the swag
-    s.va += vx * .5 * (.4 + mid);
-    s.vs += vy * .25 * (.4 + mid);
-    hit = true;
-  }
-  for (const b of garlandBobs) {
-    const bx = b.px - Math.sin(b.th) * b.len, by = b.py + Math.cos(b.th) * b.len;  // where the bauble is now (SVG rotate: + turns it left)
-    if (Math.hypot(x - bx, y - by) > b.r + 26) continue;
-    b.w = Math.max(-5, Math.min(5, b.w - vx * 2.2 / Math.sqrt(b.len / 30)));  // pushed the way the pointer goes
-    hit = true;
-  }
-  if (hit && !garlandRaf) { garlandLast = now; garlandRaf = requestAnimationFrame(garlandStep); }
-};
-addEventListener("pointermove", garlandTouch, { passive: true });
 
 // Christmas music, on a Christmas turntable in the bottom left corner (red lacquer and gold, snow
 // on the lid, holly, a candy-cane tonearm). Two records: "Jingle Bell Rock"

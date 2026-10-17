@@ -51,7 +51,7 @@ body.christmas[data-phase=christmas-night] footer{color:#b9c6da}
 #garland canvas{position:absolute;left:0;top:0;display:none}
 /* At night the fairy lights are lit, their halos twinkle on the canvas above (js paintGarlandGlow),
    the baubles get darker and mirror the lights next to them. Nothing in the SVG is animated: it
-   is redrawn only when the mouse swings it. */
+   is drawn once. */
 body[data-phase=christmas-night] #garland :is(.lit,.refl){opacity:1}
 body[data-phase=christmas-night] #garland canvas{display:block}
 body[data-phase=christmas-night] #garland .fir{stroke:#0a2716}
