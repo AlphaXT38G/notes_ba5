@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Bartender layers</title>
+<style>
+  body{margin:0;padding:1rem;background:#222;color:#eee;font:14px system-ui,sans-serif}
+  #stack{position:relative;width:min(90vw,581px);aspect-ratio:1162/1354;background:#3a1010}
+  #stack canvas{position:absolute;inset:0;width:100%;height:100%}
+  a{color:#ffd27a;margin-right:1rem}
+</style></head>
+<body>
+<p>Regenerates the closing bartender's layers from <code>source.webp</code>. Serve the repository root
+(<code>python -m http.server 8777</code>), open <code>/tools/bartender/</code>, then save each
+image into <code>site/img/bartender/</code>. The red background shows any leftover halo.</p>
+<p id="links">Working…</p>
+<div id="stack"></div>
+<script src="cut.js"></script>
+<script src="props.js"></script>
+<script>
+// Order from back to front, as in the scene (see the layer list in props.js and cut.js)
+(async () => {
+  const layers = { ...(await renderProps()), ...(await cutBartender()) };
+  const order = ["bell", "forearm", "body", "counter", "head"];
+  const stack = document.getElementById("stack"), links = document.getElementById("links");
+  links.textContent = "";
+  for (const name of order.filter(n => layers[n])) {
+    stack.append(layers[name]);
+    const a = document.createElement("a");
+    a.download = `${name}.webp`; a.textContent = `${name}.webp`;
+    a.href = layers[name].toDataURL("image/webp", .9);
+    links.append(a);
+  }
+  window.layers = layers;  // for scripts driving the page
+})();
+</script>
+</body></html>
