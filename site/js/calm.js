@@ -272,7 +272,10 @@ const calmWind = (ac, out) => {
 const startCrickets = () => {
   if (calmAudio || !window.AudioContext) return;
   const ac = new AudioContext(), master = ac.createGain();
-  master.gain.value = .5;
+  // the night fades in over 4 s (on the audio clock: if it waits for a first click, the fade
+  // happens then)
+  master.gain.setValueAtTime(0, ac.currentTime);
+  master.gain.linearRampToValueAtTime(.5, ac.currentTime + 4);
   master.connect(ac.destination);
   // The night air: a faint echo (a delay feeding back into itself, a little duller each time),
   // so the chirps seem to come from a wide open field rather than from the speakers
@@ -297,11 +300,14 @@ const startCrickets = () => {
   ac.onstatechange = paintCalmJar;
   if (calmPaused) ac.suspend();
 };
-const stopCrickets = () => {
+const stopCrickets = () => {  // fades out in 1.5 s, then the audio is closed
   if (!calmAudio) return;
-  clearInterval(calmAudio.timer);
-  calmAudio.ac.close();
+  const { ac, master, timer } = calmAudio;
   calmAudio = null;
+  master.gain.cancelScheduledValues(ac.currentTime);
+  master.gain.setValueAtTime(master.gain.value, ac.currentTime);
+  master.gain.linearRampToValueAtTime(0, ac.currentTime + 1.5);
+  setTimeout(() => { clearInterval(timer); ac.close(); }, ac.state === "running" ? 1600 : 0);
 };
 // The jar: a glass jar with a firefly inside, in the bottom left corner (where the jazz bar has
 // its turntable), lit while the crickets sing. Clicking it pauses / resumes the night's sounds
