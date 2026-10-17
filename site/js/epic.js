@@ -210,7 +210,8 @@ setEpicMusic(document.body.classList.contains("epic"));
 document.addEventListener("epic", e => setEpicMusic(e.detail));
 
 // "Back to normal": a small button in the bottom right corner during the epic finale. It ends the
-// epic and the page falls back to whatever the clock says (day, or the jazz bar at night).
+// epic and the page falls back to whatever the clock says (the calm night after the metal show,
+// the day, or the jazz bar at night). As long as the epic runs, the calm night waits.
 const leaveBtn = document.createElement("button");
 leaveBtn.id = "leave";
 leaveBtn.type = "button";

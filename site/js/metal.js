@@ -1,8 +1,9 @@
 // ── Metal takeover (screen "metal", body.metal) ───────────────────────────────────────────────
-// At 1:00:00 one metal song takes over the page for its last 1 min 51 s (css/metal.css): red
-// stage, chrome title, headbanging cards, lightning, chains, fire and thrown silhouettes on the
-// effects canvas (fx.js), and a guitar amp playing the song. 20 clicks on the flame button
-// within a minute start it at any time of day (startMetalEgg, called by flames.js).
+// At 1:00:00 one metal song, played three times in a row, takes over the page for 1 min 51 s
+// (css/metal.css): red stage, chrome title, headbanging cards, lightning, chains, fire and thrown
+// silhouettes on the effects canvas (fx.js), and a guitar amp playing the song. Then the calm
+// night comes (calm.js), unless the epic finale takes over (epic.js). 20 clicks on the flame
+// button within a minute start it at any time of day (startMetalEgg, called by flames.js).
 const METAL_SONG = 37, METAL_PLAYS = 3;          // the song lasts 37 s and is played 3 times
 const METAL_SECONDS = METAL_SONG * METAL_PLAYS;  // so the show lasts 1 min 51 s
 let metalEggAt = 0;         // when the easter egg started it (0 = not running)
