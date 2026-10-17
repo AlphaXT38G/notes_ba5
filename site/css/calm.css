@@ -5,3 +5,6 @@ body.calm{--bg:#050a17;--fg:#dbe5f6;--card:rgba(12,22,46,.8);--line:rgba(130,165
    almost black at the top to night blue at the horizon, with the moon's light in the top right */
 body.calm::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(40% 35% at 86% 8%,rgba(150,180,255,.16),transparent 70%),linear-gradient(#02050d,#071232 55%,#0d1f48)}
 body.calm .wrap{position:relative;z-index:1}
+/* Title lit by the moon: pale silver blue, a soft halo, no neon */
+body.calm h1{color:#e8efff;font-family:Georgia,"Palatino Linotype",serif;font-weight:400;letter-spacing:.02em;text-shadow:0 0 10px rgba(150,185,255,.55),0 0 28px rgba(90,130,255,.35)}
+body.calm h1::after{content:" 🌙"}
