@@ -207,7 +207,7 @@ fxLayers.push({
 // ── Crickets (Web Audio) ──
 // The sound of the calm night is made in the page, no recording to load: a field cricket chirps
 // in short bursts of a pure high tone (about 4.5 kHz): 3 or 4 pulses of 16 ms, 38 ms apart, and
-// a chirp every half second or so. Each cricket is one oscillator that never stops, whose volume
+// on a calm night, a chirp every 1.5 - 2.5 s, with long rests. Each cricket is one oscillator that never stops, whose volume
 // (a GainNode) is opened and closed for each pulse. The pulses are scheduled a little ahead on
 // the audio clock (tick, every 150 ms, schedules what falls in the next 1.2 s), so the rhythm
 // stays exact even when the page is busy or the timer is late.
@@ -261,9 +261,9 @@ const calmTick = audio => {
   for (const c of crickets) {
     while (c.next < until) {
       chirp(c, c.next, 1 - calmDawn * .6);  // the crickets quieten as the dawn comes
-      c.next += c.every * (.92 + Math.random() * .16);
-      // now and then a cricket falls silent for a few seconds, as real ones do
-      if (Math.random() < .012) c.next += 2 + Math.random() * 6;
+      c.next += c.every * (.85 + Math.random() * .3);
+      // often a cricket falls silent for a while, as real ones do
+      if (Math.random() < .1) c.next += 4 + Math.random() * 8;
     }
   }
   audio.birdAt ??= ac.currentTime + 2;
@@ -327,11 +327,10 @@ const startCrickets = () => {
   wet.gain.value = .25;
   master.connect(delay).connect(dull).connect(feedback).connect(delay);
   dull.connect(wet).connect(ac.destination);
-  // A chorus: each cricket has its own pitch, rhythm and place, near (loud) or farther (soft),
-  // spread from left to right, so they drift in and out of step with each other
-  const crickets = Array.from({ length: 7 }, (_, i) => makeCricket(ac, master, {
-    freq: 4100 + Math.random() * 1100, vol: i < 2 ? .1 + Math.random() * .04 : .025 + Math.random() * .05,
-    pan: (i / 6 - .5) * 1.6 + (Math.random() - .5) * .2, pulses: Math.random() < .5 ? 3 : 4, every: .4 + Math.random() * .4,
+  // Only three, a quiet night: one fairly near, two farther away (soft), on the left, the right and
+  // in the middle, each with its own pitch and slow rhythm, so they rarely chirp together
+  const crickets = [[-.5, .07], [.6, .03], [.1, .018]].map(([pan, vol]) => makeCricket(ac, master, {
+    freq: 4200 + Math.random() * 800, vol, pan, pulses: Math.random() < .5 ? 3 : 4, every: 1.4 + Math.random() * 1.2,
   }));
   calmTrill(ac, master);
   calmWind(ac, master);
