@@ -196,6 +196,44 @@ def build_index():
     (DIST / "index.html").write_text(page, encoding="utf-8")
     ok("dist/index.html")
     check_script()
+    check_compat()
+
+# Syntax and APIs that some phones still lack: browsers built on an older Chromium (Samsung
+# Internet, makers' browsers, old Android WebViews) or older Safari. The page aims at Chromium 73
+# / Safari 12.1 (2019): one of these in a site/js file stops that file there.
+TOO_NEW = {
+    r"\?\.(?=[\w$\[(])": "optional chaining ?. (Chromium 80)",
+    r"\?\?": "nullish ?? (Chromium 80)",
+    r"(\|\||&&|\?\?)=": "logical assignment (Chromium 85)",
+    r"\.at\(": "Array/String .at() (Chromium 92)",
+    r"\breplaceChildren\b": "replaceChildren (Chromium 86)",
+    r"\broundRect\b": "roundRect (Chromium 99)",
+    r"\breplaceAll\b": "replaceAll (Chromium 85)",
+    r"\bstructuredClone\b": "structuredClone (Chromium 98)",
+    r"\bObject\.hasOwn\b": "Object.hasOwn (Chromium 93)",
+    r"\bfindLast(Index)?\b": "findLast (Chromium 97)",
+    r"\bstatic\s*\{": "class static block (Chromium 94)",
+    r"\bthis\.#|^\s*#\w+\s*[=;]": "private class field (Chromium 74)",
+}
+
+def check_compat():
+    """Warn about syntax or APIs in site/js that older phone browsers do not know (TOO_NEW).
+
+    Comments are left out (a // after a space or at the start of a line, so URLs stay). Only a
+    warning: the page is written, but that file will not run on those browsers.
+    """
+    files = json.loads((SITE / "manifest.json").read_text(encoding="utf-8"))["js"] + ["js/head.js"]
+    found = []
+    for rel in files:
+        for n, line in enumerate((SITE / rel).read_text(encoding="utf-8").splitlines(), 1):
+            code = re.sub(r"(^|\s)//.*$", "", line)
+            found += [f"site/{rel}, line {n}: {what}" for pattern, what in TOO_NEW.items() if re.search(pattern, code)]
+    if not found:
+        ok("page JavaScript: runs on older phone browsers too")
+        return
+    err("page JavaScript: too new for some phone browsers (that file stops there):")
+    for line in found[:10]:
+        print(f"       {line}")
 
 def check_script():
     """Check the syntax of the page's JavaScript with node, when node is installed.
