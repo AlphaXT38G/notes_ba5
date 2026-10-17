@@ -193,8 +193,7 @@ const ringBell = (strokes = 4) => {
 };
 
 // What he says, typed letter by letter in his speech bubble while he nods (.talking)
-const CLOSING_WORDS = ["Mesdames, messieurs… on ferme !", "Dernier verre servi, les chaises montent sur les tables.",
-  "Rentrez bien. Le jazz reprend demain soir, 21h30."];
+const CLOSING_WORDS = ["Mesdames, messieurs… on ferme !", "Rentrez bien. Le jazz reprend demain soir, 21h30."];
 const say = (lines, done) => {
   const [text, ...rest] = lines, line = [...text], span = document.createElement("span");  // [...]: emoji stay whole
   bubble.append(span);
