@@ -88,7 +88,7 @@ or the jazz bar at night).
 From **December 10 to January 3** Christmas replaces the day, the jazz bar and the
 calm night: a
 Christmas day from 06:00 to 18:00 and a Christmas night from 18:00 to 06:00. A
-garland across the top that swings under the mouse (lit at night), falling snow,
+garland across the top (lit at night), falling snow,
 big snowy mountains, a decorated tree with gifts, a snowman companion beside the
 courses, a countdown to Christmas in the subtitle, and Christmas music on a
 Christmas turntable: Jingle Bell Rock or a live Christmas radio from YouTube (the

@@ -47,14 +47,16 @@ body.christmas[data-phase=christmas-night] footer{color:#b9c6da}
 #garland .cap{fill:#d4a630}
 #garland .shine{fill:#fff;opacity:.7}
 #garland .glass{fill:#d9cfae}
-#garland .halo,#garland .lit,#garland .refl{opacity:0}
-/* At night the fairy lights glow and twinkle each at its own pace (--t, --d), the baubles get
-   darker and mirror the lights next to them */
-body[data-phase=christmas-night] #garland :is(.lit,.halo,.refl){opacity:1;animation:twinkle var(--t) ease-in-out var(--d) infinite}
+#garland .lit,#garland .refl{opacity:0}
+#garland canvas{position:absolute;left:0;top:0;display:none}
+/* At night the fairy lights are lit, their halos twinkle on the canvas above (js paintGarlandGlow),
+   the baubles get darker and mirror the lights next to them. Nothing in the SVG is animated: it
+   is drawn once. */
+body[data-phase=christmas-night] #garland :is(.lit,.refl){opacity:1}
+body[data-phase=christmas-night] #garland canvas{display:block}
 body[data-phase=christmas-night] #garland .fir{stroke:#0a2716}
 body[data-phase=christmas-night] #garland .bauble circle:not(.refl){filter:brightness(.7)}
 body[data-phase=christmas-night] #garland .shine{opacity:.45}
-@keyframes twinkle{0%,100%{opacity:1}45%{opacity:.55}55%{opacity:.9}70%{opacity:.4}}
 
 /* Winter scene (#xscene), a fixed layer behind the page: the moon, the mountains and their
    chalets, the tree and the snowman. Click-through. */
@@ -83,7 +85,7 @@ body[data-phase=christmas-night] #xmoon{display:block}
 /* Chalet lights on the slopes, at night only; some flicker slowly like a fire behind a window */
 #xscene .chalets{display:none}
 body[data-phase=christmas-night] #xscene .chalets{display:inline}
-#xscene .flicker circle{animation:chalet 5s ease-in-out var(--d) infinite}
+#xscene .flicker{animation:chalet 5s ease-in-out var(--d) infinite}
 @keyframes chalet{0%,100%{opacity:1}40%{opacity:.55}55%{opacity:.9}70%{opacity:.65}}
 /* The tree box: taller than the window, always on the right, sticking out past the right edge and
    a little below the bottom one (the SVG is bottom-aligned, so the gifts are partly cut). On narrow screens it is
@@ -216,4 +218,4 @@ body[data-phase=christmas-night] #xsnowman .k4{stop-color:#566b90}
 @keyframes vt-snow-in{from{opacity:0;filter:brightness(1.8) blur(6px)}}
 
 /* Reduced motion */
-@media(prefers-reduced-motion:reduce){#xscene .flicker circle{animation:none}#xsnowman .face,#xsnowman .eyes,#xsnowman .wave{animation:none}body[data-phase=christmas-night] #garland :is(.lit,.halo,.refl){animation:none}#sleigh{display:none}#xmusic.playing .disc,#xmusic.swap .disc,#xsleeve.swap{animation:none}#xsleeve,#xsleeve .rec{transition:none}}
+@media(prefers-reduced-motion:reduce){#xscene .flicker{animation:none}#xsnowman .face,#xsnowman .eyes,#xsnowman .wave{animation:none}#sleigh{display:none}#xmusic.playing .disc,#xmusic.swap .disc,#xsleeve.swap{animation:none}#xsleeve,#xsleeve .rec{transition:none}}

@@ -2,7 +2,7 @@
 // From December 10 to January 3 the usual looks are replaced by Christmas (css/christmas.css):
 // the day screen from 6:00 to 18:00, the night screen from 18:00 to 6:00. Typing "yeti" brings
 // them at any time of the year. Both screens have:
-//   - a garland across the top that swings under the mouse (lit at night),
+//   - a garland across the top (lit at night),
 //   - snow falling on the effects canvas (fx.js),
 //   - a winter scene behind the page: big discreet mountains, a decorated tree on the right with
 //     gifts, a snowman companion on the left (and at night the moon and chalet lights),
@@ -14,7 +14,7 @@
 //
 // In this file, in order: screens and override, the yeti code, shared helpers, the garland, the
 // tree and its sax ornament, the mountains, the moon, the snowman, the sax button, the tree lights
-// canvas, the snow, the sleigh, the garland physics, the music, the fir back from the jazz bar,
+// canvas, the snow, the sleigh, the music, the fir back from the jazz bar,
 // and turning it all on and off.
 // Every drawing is SVG built once from code (seeded random, so it looks the same on every visit).
 const xmasSubtitle = () => {
@@ -91,9 +91,11 @@ const NEEDLES = ["#1b5a31", "#246b3c", "#123f22", "#2f7d48", "#2a6b5a"];  // gre
 // Garland across the top of the page: wide, heavy swags of fir of irregular widths and depths,
 // dusted with snow, a gold ribbon woven through, a few pine cones, velvet bows at the hooks. Small
 // fairy lights sit in the fir, and glass baubles hang below it on threads of different lengths.
-// By day the lights are unlit glass and the baubles plain; at night (CSS) the lights glow and
-// twinkle, and each bauble reflects its two nearest lights: a coloured glint on the side facing
-// each light, twinkling with it (same --d / --t). Rebuilt to the page width.
+// By day the lights are unlit glass and the baubles plain; at night (CSS) the lights are lit, each
+// bauble reflects its two nearest lights (a coloured glint on the side facing each light), and the
+// lights' halos twinkle each at its own pace on a canvas over the garland (paintGarlandGlow, below).
+// The halos used to be SVG circles with a CSS animation each: some 150 animated elements, which
+// restyled and redrew the whole garland, needles and all, on every frame. Rebuilt to the page width.
 const GLASS = [["#ff8a9a", "#b3122e", "#4d0512"], ["#ffe6a0", "#c99416", "#5c3b02"], ["#9ff0c8", "#16804a", "#053520"],
   ["#d6ecff", "#4f8fd6", "#11305e"], ["#ffffff", "#b9c2ce", "#4b5361"]];
 const FAIRY = ["#fff1c9", "#fff1c9", "#ffd86a", "#ff5a6e", "#7cc0ff", "#fff1c9"];  // mostly warm white
@@ -104,7 +106,6 @@ const cubic = (p, t) => {
   const u = 1 - t;
   return [0, 1].map(k => u * u * u * p[0][k] + 3 * u * u * t * p[1][k] + 3 * u * t * t * p[2][k] + t * t * t * p[3][k]);
 };
-let garlandSwags = [], garlandBobs = [];  // moving parts, with their physics state (see below)
 const buildGarland = () => {
   const W = Math.max(320, document.documentElement.clientWidth), rnd = seeded(12);
   // irregular swags: widths from 240 to 420 px, depths from 45 to 82 px, hooks at slightly different heights
@@ -142,7 +143,7 @@ const buildGarland = () => {
     const nl = Math.round(w / 34);
     for (let i = 0; i < nl; i++) {
       const tt = (i + .3 + rnd() * .4) / nl, [x, y] = cubic(curve, tt), dx = (rnd() - .5) * 10, dy = (rnd() - .3) * 14;
-      lights.push({ k, x: x + dx, y: y + dy, c: FAIRY[(rnd() * FAIRY.length) | 0], d: f1(-rnd() * 5), t: f1(1.6 + rnd() * 2.6) });
+      lights.push({ k, x: x + dx, y: y + dy, c: FAIRY[(rnd() * FAIRY.length) | 0], d: -rnd() * 5, t: 1.6 + rnd() * 2.6 });
     }
     // glass baubles hanging below, two or three per swag
     const nb = 2 + (rnd() < .5);
@@ -153,17 +154,16 @@ const buildGarland = () => {
     const fir = `<path class="fir" d="M${f1(x0)},${f1(y0)}C${curve.slice(1).map(([x, y]) => `${f1(x)},${f1(y)}`).join(" ")}"/>` +
       needles.map((d, i) => `<path stroke="${NEEDLES[i]}" class="needles" d="${d.join("")}"/>`).join("") +
       `<path class="ribbon" d="${ribbon}"/>${cones.join("")}<g class="snow">${snow.join("")}</g>`;
-    swags.push({ fir, x0, x1, top: (y0 + y1) / 2, bottom: Math.max(y0, y1) + sag });
+    swags.push(fir);
   }
-  const lightSvg = l => `<g class="fl" style="--d:${l.d}s;--t:${l.t}s"><circle class="halo" cx="${f1(l.x)}" cy="${f1(l.y)}" r="17" fill="url(#fl${FAIRY.indexOf(l.c)})"/>` +
-    `<circle class="glass" cx="${f1(l.x)}" cy="${f1(l.y)}" r="2.6"/><circle class="lit" cx="${f1(l.x)}" cy="${f1(l.y)}" r="3.2" fill="${l.c}"/></g>`;
+  const lightSvg = l => `<circle class="glass" cx="${f1(l.x)}" cy="${f1(l.y)}" r="2.6"/><circle class="lit" cx="${f1(l.x)}" cy="${f1(l.y)}" r="3.2" fill="${l.c}"/>`;
   const baubleSvg = b => {
     // the two nearest lights, mirrored on the side of the glass facing them
     const near = lights.map(l => [Math.hypot(l.x - b.x, l.y - b.cy), l]).sort((a, z) => a[0] - z[0]).slice(0, 2);
     const glints = near.map(([d, l]) => {
       const gx = b.x + (l.x - b.x) / d * b.r * .55, gy = b.cy + (l.y - b.cy) / d * b.r * .55;
-      return `<circle class="refl" style="--d:${l.d}s;--t:${l.t}s" cx="${f1(gx)}" cy="${f1(gy)}" r="${f1(b.r * .5)}" fill="url(#fl${FAIRY.indexOf(l.c)})"/>` +
-        `<circle class="refl" style="--d:${l.d}s;--t:${l.t}s" cx="${f1(gx)}" cy="${f1(gy)}" r="${f1(Math.max(1, b.r * .1))}" fill="${l.c}"/>`;
+      return `<circle class="refl" cx="${f1(gx)}" cy="${f1(gy)}" r="${f1(b.r * .5)}" fill="url(#fl${FAIRY.indexOf(l.c)})"/>` +
+        `<circle class="refl" cx="${f1(gx)}" cy="${f1(gy)}" r="${f1(Math.max(1, b.r * .1))}" fill="${l.c}"/>`;
     }).join("");
     return `<g class="bauble"><path class="thread" d="M${f1(b.x)},${f1(b.y)}V${f1(b.cy - b.r - 3)}"/>` +
       `<rect class="cap" x="${f1(b.x - 2.8)}" y="${f1(b.cy - b.r - 4)}" width="5.6" height="5" rx="1"/>` +
@@ -179,16 +179,52 @@ const buildGarland = () => {
     `<linearGradient id="bowloop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2384f"/><stop offset=".6" stop-color="#b3122e"/><stop offset="1" stop-color="#7d0a1d"/></linearGradient>` +
     `<linearGradient id="bowtail" x1="0" x2="1"><stop offset="0" stop-color="#8a0c20"/><stop offset=".5" stop-color="#c8102e"/><stop offset="1" stop-color="#8a0c20"/></linearGradient>` +
     `<linearGradient id="ribbon" x1="0" x2="1"><stop offset="0" stop-color="#f6dc8a"/><stop offset=".5" stop-color="#d4a630"/><stop offset="1" stop-color="#f6dc8a"/></linearGradient>`;
-  // one group per swag (its baubles behind the fir, its lights in front), so each can move on its own;
-  // the bows stay nailed to the hooks, on top
+  // swag by swag: its baubles behind the fir, its lights in front; the bows on top, at the hooks.
+  // The garland does not react to the mouse any more: it is drawn once and never redrawn.
   garland.innerHTML = `<svg width="${W}" height="170" viewBox="0 0 ${W} 170"><defs>${defs}</defs>` +
-    swags.map((s, k) => `<g class="swag">${baubles.filter(b => b.k === k).map(baubleSvg).join("")}${s.fir}${lights.filter(l => l.k === k).map(lightSvg).join("")}</g>`).join("") +
+    swags.map((fir, k) => baubles.filter(b => b.k === k).map(baubleSvg).join("") + fir + lights.filter(l => l.k === k).map(lightSvg).join("")).join("") +
     `${bows}</svg>`;
-  const swagEls = garland.querySelectorAll(".swag");
-  garlandSwags = swags.map((s, k) => ({ ...s, el: swagEls[k], a: 0, va: 0, s: 0, vs: 0 }));
-  const bobEls = garland.querySelectorAll(".bauble");
-  garlandBobs = baubles.sort((a, z) => a.k - z.k).map((b, i) => ({ el: bobEls[i], px: b.x, py: b.y, cy: b.cy, r: b.r, len: b.cy - b.y, th: 0, w: 0 }));
+  garlandLights = lights.map(l => ({ ...l, c: FAIRY.indexOf(l.c) }));
+  garlandGlow.width = W; garlandGlow.height = 170;  // also clears it
+  garlandGlowShown = false;
+  garland.append(garlandGlow);
   garland.w = W;
+};
+
+// The halos of the garland's fairy lights at night, on a canvas over the garland, at 1x (they are
+// soft glows; the crisp lit bulbs stay in the SVG). Painted by the night lights loop (treeFrame,
+// below) with each light's twinkle; painted once, still, with reduced motion. Nothing is drawn
+// while the page is scrolled past the garland.
+const garlandGlow = document.createElement("canvas"), gctx = garlandGlow.getContext("2d");
+// the halo of each colour: the same falloff as the baubles' reflections (#fl gradients)
+const FAIRY_GLOWS = FAIRY.map(hex => {
+  const s = document.createElement("canvas"), c = s.getContext("2d"), rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)).join(",");
+  s.width = s.height = 64;
+  const g = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+  g.addColorStop(0, `rgba(${rgb},.95)`); g.addColorStop(.35, `rgba(${rgb},.45)`); g.addColorStop(1, `rgba(${rgb},0)`);
+  c.fillStyle = g; c.fillRect(0, 0, 64, 64);
+  return s;
+});
+// opacity through one twinkle (p: 0 - 1), eased between these keyframes
+const TWINKLE = [[0, 1], [.45, .55], [.55, .9], [.7, .4], [1, 1]];
+const twinkle = p => {
+  let i = 1;
+  while (TWINKLE[i][0] < p) i++;
+  const [p0, a0] = TWINKLE[i - 1], [p1, a1] = TWINKLE[i], u = (p - p0) / (p1 - p0);
+  return a0 + (a1 - a0) * u * u * (3 - 2 * u);
+};
+let garlandLights = [], garlandGlowShown = false;
+const paintGarlandGlow = time => {  // time in seconds, or null: still lights
+  const shown = time === null || scrollY < 180;
+  if (!shown && !garlandGlowShown) return;  // scrolled away and already cleared
+  gctx.clearRect(0, 0, garlandGlow.width, garlandGlow.height);
+  garlandGlowShown = shown;
+  if (!shown) return;
+  for (const l of garlandLights) {
+    gctx.globalAlpha = time === null ? 1 : twinkle((((time - l.d) / l.t) % 1 + 1) % 1);
+    gctx.drawImage(FAIRY_GLOWS[l.c], l.x - 17, l.y - 17, 34, 34);
+  }
+  gctx.globalAlpha = 1;
 };
 
 // The tree, on the right of the winter scene behind the page (#xscene): tiers of fir with snow on
@@ -305,9 +341,11 @@ treeFront.id = "xtree-front";
 // Mountains filling the background, kept discreet (colours close to the sky's): three ranges, the
 // farther ones higher and paler, each ridge made natural by midpoint displacement between a few
 // chosen peaks, with snow on the tops (the range itself clips a jagged snow line), then the snowy
-// ground. At night, small yellow chalet lights, blurred as if seen through cold air, dot the
+// ground. At night, small yellow chalet lights, soft as if seen through cold air, dot the
 // slopes: a few hamlets and lone ones, smaller and dimmer on the far ranges, drawn with their own
 // range so the nearer ranges hide them (CSS shows them at night only, some flickering slowly).
+// The softness is in their gradients, not in blur filters: a flickering light is redrawn on every
+// frame, and a blur would run again each time.
 // Drawn once in a 1600 x 700 box, scaled to cover the bottom of the window. ridges keeps each
 // range's outline (y at a given x).
 const ridges = [];
@@ -336,10 +374,9 @@ const MOUNTAINS = (() => {
     ["m2", [[0, 470], [200, 420], [380, 480], [560, 430], [760, 500], [960, 440], [1180, 505], [1380, 445], [1600, 480]], 40, 0],
   ];
   let svg = `<svg class="mountains" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMax slice"><defs>` +
-    `<radialGradient id="xchalet"><stop offset="0" stop-color="rgba(255,205,40,.85)"/><stop offset=".45" stop-color="rgba(255,190,30,.35)"/><stop offset="1" stop-color="rgba(255,190,30,0)"/></radialGradient>` +
-    // blurs for the chalet lights, applied per light so a flickering one only redraws its own spot
-    `<filter id="xglowblur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5"/></filter>` +
-    `<filter id="xcoreblur" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation=".7"/></filter>`;
+    // the glow around a window, and the window itself with a soft edge
+    `<radialGradient id="xchalet"><stop offset="0" stop-color="rgba(255,205,40,.75)"/><stop offset=".4" stop-color="rgba(255,190,30,.32)"/><stop offset="1" stop-color="rgba(255,190,30,0)"/></radialGradient>` +
+    `<radialGradient id="xchaletcore"><stop offset=".45" stop-color="#ffd23a"/><stop offset="1" stop-color="rgba(255,210,58,0)"/></radialGradient>`;
   const bodies = RANGES.map(([cls, peaks, rough, snowDepth], i) => {
     const pts = ridge(peaks, rough);
     ridges.push({ cls, pts, y: x => yAt(pts, x) });
@@ -362,9 +399,10 @@ const MOUNTAINS = (() => {
         const x = Math.min(W - 5, Math.max(5, x0 + (rnd() - .5) * 40)), y = yAt(pts, x) + 30 + snowDepth * .8 + rnd() * (90 - i * 25);
         if (y > 630) continue;
         const r = (1.6 + rnd() * .9) * (1.4 - far * .5);
-        lights.push(`<g class="chalet${rnd() < .3 ? " flicker" : ""}" style="--d:${f1(-rnd() * 6)}s;opacity:${f1(.6 + (1 - far) * .4)}">` +
-          `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r * 4.5)}" fill="url(#xchalet)" filter="url(#xglowblur)"/>` +
-          `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="#ffd23a" filter="url(#xcoreblur)"/></g>`);
+        // dimmed with fill-opacity (inherited), so that the flicker can animate the group's opacity
+        lights.push(`<g class="chalet${rnd() < .3 ? " flicker" : ""}" style="--d:${f1(-rnd() * 6)}s;fill-opacity:${f1(.6 + (1 - far) * .4)}">` +
+          `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r * 5.5)}" fill="url(#xchalet)"/>` +
+          `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r * 1.8)}" fill="url(#xchaletcore)"/></g>`);
       }
     }
     return `<path class="${cls}" d="${d}"/>${snow}<g class="chalets">${lights.join("")}</g>`;
@@ -552,7 +590,11 @@ const treeResize = () => {
   treeCanvas.ox = (r.width - TREE_W * treeScale) / 2;
   treeCanvas.oy = r.height - TREE_H * treeScale;
 };
+// The same loop paints the garland's halos (paintGarlandGlow), at 30 frames a second: plenty for
+// lights that fade and twinkle, and half the drawing of a 60 Hz screen (a quarter at 120 Hz).
 const treeFrame = now => {
+  treeRaf = requestAnimationFrame(treeFrame);
+  if (now - treeLast < 30) return;
   // never backwards: the first frame's time can be a little before the performance.now() of its
   // start, and a negative time would pick a pattern that does not exist
   treeT += Math.max(0, Math.min(.05, (now - treeLast) / 1000));
@@ -584,13 +626,15 @@ const treeFrame = now => {
     }
   }
   c.restore();
-  treeRaf = requestAnimationFrame(treeFrame);
+  paintGarlandGlow(treeT);
 };
 const setTreeLights = on => {
   cancelAnimationFrame(treeRaf);
+  treeRaf = null;
   removeEventListener("resize", treeResize);
   treeCanvas.remove();
-  if (!on || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!on) return;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { paintGarlandGlow(null); return; }
   tree.append(treeCanvas);
   treeResize();
   addEventListener("resize", treeResize);
@@ -652,8 +696,8 @@ fxLayers.push({
       f.y += f.vy * dt;
       f.x += (snowWind * (.4 + f.r / 8) + Math.cos(snowT * .9 + f.phase) * f.sway) * dt;
       f.rot += f.vr * dt;
-      const dx = f.x - snowMouseX, dy = f.y - snowMouseY, d = Math.hypot(dx, dy);
-      if (d < 80 && d > 0) { f.x += dx / d * (80 - d) * .05; f.y += dy / d * (80 - d) * .02; }
+      const dx = f.x - snowMouseX, dy = f.y - snowMouseY, d2 = dx * dx + dy * dy;
+      if (d2 < 6400 && d2 > 0) { const d = Math.sqrt(d2); f.x += dx / d * (80 - d) * .05; f.y += dy / d * (80 - d) * .02; }  // within 80 px
       if (f.y > fxH + 20) Object.assign(f, newFlake(true));
       if (f.x < -20) f.x += fxW + 40; else if (f.x > fxW + 20) f.x -= fxW + 40;
     }
@@ -663,11 +707,11 @@ fxLayers.push({
     for (const f of flakes) {
       c.globalAlpha = f.crystal ? .9 : .55 + Math.min(.45, f.r / 9);
       if (f.crystal) {
-        c.save();
-        c.translate(f.x, f.y);
-        c.rotate(f.rot);
+        // turned in place with one setTransform rather than save / translate / rotate / restore
+        const cos = Math.cos(f.rot), sin = Math.sin(f.rot);
+        c.setTransform(cos, sin, -sin, cos, f.x, f.y);
         c.drawImage(star, -f.r * 1.6, -f.r * 1.6, f.r * 3.2, f.r * 3.2);
-        c.restore();
+        c.setTransform(1, 0, 0, 1, 0, 0);
       } else c.drawImage(dot, f.x - f.r * 1.6, f.y - f.r * 1.6, f.r * 3.2, f.r * 3.2);
     }
     c.globalAlpha = 1;
@@ -750,58 +794,6 @@ everySecond.push(() => {
   if (document.body.dataset.phase !== "christmas-night") { if (sleighFlight) sleighFlight.cancel(); sleighIn = 20 + Math.random() * 60; return; }
   if (--sleighIn <= 0) { sleighIn = 40 + Math.random() * 200; flySleigh(); }
 });
-
-// The garland reacts to the mouse, like the metal show's chains: passing the pointer through a swag
-// makes it swing (a sideways shear from its hooks) and bounce (a vertical stretch), and knocks the
-// baubles near the pointer, which then swing on their threads like pendulums. Springs bring
-// everything back to rest; the loop only runs while something moves.
-let garlandRaf = null, garlandLast = 0, gPrev = null;
-const garlandStep = now => {
-  const dt = Math.min(.033, (now - garlandLast) / 1000);
-  garlandLast = now;
-  let moving = false;
-  for (const s of garlandSwags) {
-    s.va += (-60 * s.a - 3.2 * s.va) * dt; s.a += s.va * dt;
-    s.vs += (-90 * s.s - 4 * s.vs) * dt; s.s += s.vs * dt;
-    s.a = Math.max(-.35, Math.min(.35, s.a));
-    const still = Math.abs(s.a) + Math.abs(s.va) + Math.abs(s.s) + Math.abs(s.vs) < 1e-3;
-    if (still) { s.a = s.va = s.s = s.vs = 0; s.el.removeAttribute("transform"); continue; }
-    moving = true;
-    s.el.setAttribute("transform", `translate(0 ${f1(s.top)}) skewX(${(s.a * 57.3).toFixed(2)}) scale(1 ${(1 + s.s).toFixed(4)}) translate(0 ${f1(-s.top)})`);
-  }
-  for (const b of garlandBobs) {
-    b.w += (-(1500 / b.len) * Math.sin(b.th) - 1.6 * b.w) * dt; b.th += b.w * dt;
-    b.th = Math.max(-1.1, Math.min(1.1, b.th));  // a thread, not a rod: never over the top
-    if (Math.abs(b.th) + Math.abs(b.w) < 2e-3) { b.th = b.w = 0; b.el.removeAttribute("transform"); continue; }
-    moving = true;
-    b.el.setAttribute("transform", `rotate(${(b.th * 57.3).toFixed(2)} ${f1(b.px)} ${f1(b.py)})`);
-  }
-  garlandRaf = moving ? requestAnimationFrame(garlandStep) : null;
-};
-const garlandTouch = e => {
-  if (!garland.isConnected || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const x = e.clientX, y = e.clientY + scrollY, now = performance.now();  // the garland is at the top of the page
-  const prev = gPrev;
-  gPrev = { x, y, now };
-  if (!prev || y > 190 || now - prev.now > 100) return;
-  const ms = Math.max(8, now - prev.now), vx = (x - prev.x) / ms, vy = (y - prev.y) / ms;  // px per ms
-  let hit = false;
-  for (const s of garlandSwags) {
-    if (x < s.x0 || x > s.x1 || y < s.top - 10 || y > s.bottom + 40) continue;
-    const mid = 1 - Math.abs((x - (s.x0 + s.x1) / 2) / ((s.x1 - s.x0) / 2));  // strongest in the middle of the swag
-    s.va += vx * .5 * (.4 + mid);
-    s.vs += vy * .25 * (.4 + mid);
-    hit = true;
-  }
-  for (const b of garlandBobs) {
-    const bx = b.px - Math.sin(b.th) * b.len, by = b.py + Math.cos(b.th) * b.len;  // where the bauble is now (SVG rotate: + turns it left)
-    if (Math.hypot(x - bx, y - by) > b.r + 26) continue;
-    b.w = Math.max(-5, Math.min(5, b.w - vx * 2.2 / Math.sqrt(b.len / 30)));  // pushed the way the pointer goes
-    hit = true;
-  }
-  if (hit && !garlandRaf) { garlandLast = now; garlandRaf = requestAnimationFrame(garlandStep); }
-};
-addEventListener("pointermove", garlandTouch, { passive: true });
 
 // Christmas music, on a Christmas turntable in the bottom left corner (red lacquer and gold, snow
 // on the lid, holly, a candy-cane tonearm). Two records: "Jingle Bell Rock"
@@ -943,7 +935,12 @@ document.addEventListener("phase", e => {
 let garlandResize = null;
 const onGarlandResize = () => {
   clearTimeout(garlandResize);
-  garlandResize = setTimeout(() => { if (garland.w !== document.documentElement.clientWidth) buildGarland(); }, 200);
+  garlandResize = setTimeout(() => {
+    if (garland.w === document.documentElement.clientWidth) return;
+    buildGarland();
+    // the night lights loop repaints the halos; without it (reduced motion), paint them still
+    if (!treeRaf && document.body.dataset.phase === "christmas-night") paintGarlandGlow(null);
+  }, 200);
 };
 const setChristmas = on => {
   removeEventListener("resize", onGarlandResize);
