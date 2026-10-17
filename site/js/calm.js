@@ -48,3 +48,33 @@ const setCalmSky = on => {
 };
 setCalmSky(document.body.classList.contains("calm"));
 document.addEventListener("calm", e => setCalmSky(e.detail));
+
+// ── Calm night effects (canvas layers of mode "calm", see fx.js) ──
+// Stars: a few hundred points, denser towards the top of the sky, each twinkling at its own slow
+// pace. They are made again when the window changes size (resize), so they always fill the sky.
+const calmStars = [];
+let calmTime = 0;
+const makeCalmStars = () => {
+  calmStars.length = 0;
+  const n = Math.min(420, Math.round(fxW * fxH / 3200));
+  for (let i = 0; i < n; i++) {
+    calmStars.push({ x: Math.random() * fxW, y: Math.random() ** 1.6 * fxH * .85, r: .5 + Math.random() ** 3 * 1.4,
+      a: .25 + Math.random() * .6, speed: .4 + Math.random() * 1.6, phase: Math.random() * 9, blue: Math.random() < .35 });
+  }
+  calmStars.w = fxW; calmStars.h = fxH;
+};
+fxLayers.push({
+  mode: "calm",
+  update(dt) {
+    calmTime += dt;
+    if (calmStars.w !== fxW || calmStars.h !== fxH) makeCalmStars();
+  },
+  draw(c) {
+    for (const s of calmStars) {
+      const a = s.a * (.65 + .35 * Math.sin(calmTime * s.speed + s.phase));
+      c.fillStyle = s.blue ? `rgba(180,205,255,${a.toFixed(2)})` : `rgba(240,244,255,${a.toFixed(2)})`;
+      c.fillRect(s.x - s.r, s.y - s.r, s.r * 2, s.r * 2);
+    }
+  },
+  reset() { calmStars.length = 0; calmStars.w = 0; },
+});
