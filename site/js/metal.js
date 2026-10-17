@@ -324,102 +324,80 @@ const setMetalStage = on => {
 setMetalStage(document.body.classList.contains("metal"));
 document.addEventListener("metal", e => setMetalStage(e.detail));
 
-// Metal music: a cover of the Master of Puppets solo from YouTube (37 s), played three times in a
-// row: the show ends with the third play. It is in sync with the takeover: opened late, it starts
-// at the right play, further into the song, so both end together. It starts by
-// itself when the phase begins. Browsers only allow sound after a user gesture, so if the page
-// has not had one yet the song autoplays muted and the sound comes on at the first click or key
-// press anywhere (the song keeps its place in time). The amp plays / pauses it; the end of the
-// phase stops it.
-const METAL = "mOqcq7DZo_U";
-let riff = null, rocking = false, riffMuted = false, soundAt = 0;
+// Metal music: a cover of the Master of Puppets solo (audio/metal.mp3, 37 s), played three times in
+// a row: the show ends with the third play. It is in sync with the takeover: opened late, it starts
+// at the right play, further into the song, so both end together. It starts by itself when the
+// phase begins. Browsers only allow sound after a user gesture, so if the page has not had one yet
+// the song autoplays muted and the sound comes on at the first click or key press anywhere (the
+// song keeps its place in time). The amp plays / pauses it; the end of the phase stops it.
+let riff = null, rocking = false, soundAt = 0;
 const amp = document.createElement("button");
 amp.id = "amp";
 amp.type = "button";
 amp.innerHTML = '<span class="cab"><span class="panel"><span class="logo">BA5</span><span class="knobs">' +
   "<i></i>".repeat(5) + '</span></span><span class="grille"><span class="cone"></span><span class="cone"></span></span></span><span class="label"></span>';
+const riffMuted = () => !!riff && riff.muted;
 const paintAmp = () => {
   if (amp.classList.contains("epic")) {  // the epic finale plays its own song on the same amp
     amp.classList.toggle("playing", epicPlaying);
     amp.querySelector(".label").textContent = !epicPlaying ? "✨ Click for epicness"
-      : epicMuted ? "🔇 Click anywhere for sound" : "✨ Epic — click to pause";
-    amp.title = !epicPlaying ? "Play the music" : epicMuted ? "Turn the sound on" : "Pause the music";
+      : epicMuted() ? "🔇 Click anywhere for sound" : "✨ Epic — click to pause";
+    amp.title = !epicPlaying ? "Play the music" : epicMuted() ? "Turn the sound on" : "Pause the music";
     return;
   }
   amp.classList.toggle("playing", rocking);
   // which of the three plays is on (a forced show plays it forever: no count)
   const count = metalLeft() === Infinity ? "" : ` ${Math.min(METAL_PLAYS, riffPlay + 1)}/${METAL_PLAYS}`;
   amp.querySelector(".label").textContent = !rocking ? "🎸 Click to crank it up"
-    : riffMuted ? "🔇 Click anywhere for sound" : `🎸 Rocking${count} — click to mute`;
-  amp.title = !rocking ? "Play the music" : riffMuted ? "Turn the sound on" : "Pause the music";
+    : riffMuted() ? "🔇 Click anywhere for sound" : `🎸 Rocking${count} — click to mute`;
+  amp.title = !rocking ? "Play the music" : riffMuted() ? "Turn the sound on" : "Pause the music";
 };
-const riffCommand = (func, args = []) => riff && riff.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
-const makeRiff = (autoplay, muted, start) => {
-  riff = document.createElement("iframe");
-  riff.id = "riff";
-  riff.title = "Metal song";
-  riff.allow = "autoplay; encrypted-media";
-  riff.src = `https://www.youtube.com/embed/${METAL}?autoplay=${autoplay}&mute=${muted ? 1 : 0}` +
-    `&start=${start}&controls=0&enablejsapi=1`;
-  document.body.append(riff);
-  riffMuted = muted;
-};
-// Loading the YouTube player takes a few seconds, so when the takeover is coming (10th click on
-// the flame button, or 00:59:30) the player is loaded in advance, hidden, paused and muted at
-// its start; starting it is then almost instant. Unused, it is dropped again after 75 s.
+// The song is a small file, but when the takeover is coming (10th click on the flame button, or
+// 00:59:30) it is loaded in advance, paused, so it starts at once. Unused, it is dropped after 75 s.
 let riffWaiting = false, riffDrop = null;
 const preloadRiff = () => {
   if (riff) return;
-  makeRiff(0, true, 0);
+  riff = new Audio("audio/metal.mp3");
+  riff.preload = "auto";
   riffWaiting = true;
   clearTimeout(riffDrop);
   riffDrop = setTimeout(() => {
-    if (riffWaiting && !document.body.classList.contains("metal")) { riff.remove(); riff = null; riffWaiting = false; }
+    if (riffWaiting && !document.body.classList.contains("metal")) { dropTrack(riff); riff = null; riffWaiting = false; }
   }, 75000);
 };
 everySecond.push(() => {  // 00:59:30: get the song ready for the 1:00 show
   const t = clockSeconds();
   if (t >= 3600 - 30 && t < 3600) preloadRiff();
 });
-// Each new play starts the song again from the top (the player has stopped at its end by then).
-// riffPlay: which play the player is on (0, 1, 2), so the song restarts once per play.
+// Each new play starts the song again from the top (it has stopped at its end by then).
+// riffPlay: which play the song is on (0, 1, 2), so it restarts once per play.
 let riffPlay = 0;
 const metalPlay = () => Math.floor(metalElapsed() / METAL_SONG);
 everySecond.push(() => {
-  if (!rocking || riffWaiting || !document.body.classList.contains("metal")) return;
+  if (!rocking || !riff || !document.body.classList.contains("metal")) return;
   const play = metalPlay();
   if (play === riffPlay) return;
   riffPlay = play;
-  riffCommand("seekTo", [0, true]);
-  riffCommand("playVideo");
+  riff.currentTime = 0;
+  riff.play().catch(() => {});
   paintAmp();
 });
 const rock = (muted = false) => {
   riffPlay = metalPlay();
   const late = Math.floor(metalElapsed()) % METAL_SONG;  // where the current play is in the song
-  if (!riff) makeRiff(1, muted, late);
-  else if (riffWaiting) {  // the preloaded player: jump to the right spot, sound on if allowed, play
+  if (!riff) riff = screenTrack("metal.mp3", { loop: false, muted, start: late });
+  else {  // the preloaded song, or paused by the amp (the show went on meanwhile): jump to the right spot
     riffWaiting = false;
-    if (late) riffCommand("seekTo", [late, true]);
-    if (!muted) { riffCommand("unMute"); riffMuted = false; }
-    riffCommand("playVideo");
-    // preloaded only a moment ago, it may not be ready for commands yet: repeat them a few times
-    [1500, 3000, 5000].forEach(ms => setTimeout(() => {
-      if (!rocking) return;
-      if (!riffMuted) riffCommand("unMute");
-      riffCommand("playVideo");
-    }, ms));
-  } else {  // paused by the amp: the show went on meanwhile, jump back in time with it
-    riffCommand("seekTo", [late, true]);
-    riffCommand("playVideo");
+    riff.muted = muted;
+    riff.currentTime = late;
+    riff.play().catch(() => {});
   }
   rocking = true;
   paintAmp();
 };
 const riffSound = () => {  // unmute a song that autoplayed muted
-  if (!riff || !riffMuted) return;
-  riffCommand("unMute");
-  riffMuted = false;
+  if (!riffMuted()) return;
+  riff.muted = false;
   soundAt = performance.now();
   paintAmp();
 };
@@ -427,21 +405,21 @@ amp.addEventListener("click", e => {
   e.stopPropagation();
   if (performance.now() - soundAt < 600) return;  // this same click just turned the sound on
   if (amp.classList.contains("epic")) {  // epic song (see the epic finale below)
-    if (epicMuted) epicSound();
-    else if (epicPlaying) { epicCommand("pauseVideo"); epicPlaying = false; paintAmp(); }
+    if (epicMuted()) epicSound();
+    else if (epicPlaying) { epicRiff.pause(); epicPlaying = false; paintAmp(); }
     else epicPlay();
     return;
   }
-  if (riffMuted) riffSound();
-  else if (rocking) { riffCommand("pauseVideo"); rocking = false; paintAmp(); }
+  if (riffMuted()) riffSound();
+  else if (rocking) { riff.pause(); rocking = false; paintAmp(); }
   else rock();
 });
 const setMetalMusic = on => {
   document.removeEventListener("pointerdown", riffSound);
   document.removeEventListener("keydown", riffSound);
-  if (!on) { if (riff) riff.remove(); riff = null; rocking = riffMuted = riffWaiting = false; amp.remove(); return; }
+  if (!on) { dropTrack(riff); riff = null; rocking = riffWaiting = false; amp.remove(); return; }
   document.body.append(amp);
-  const canSound = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
+  const canSound = screenGesture();
   rock(!canSound);
   if (!canSound) {
     document.addEventListener("pointerdown", riffSound, { once: true });
