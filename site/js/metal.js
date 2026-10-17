@@ -23,6 +23,11 @@ const metalLeft = () => {  // seconds before the current metal takeover ends (In
   if (forced === "metal") return Infinity;
   return 3600 + METAL_SECONDS - clockSeconds();
 };
+const metalElapsed = () => {  // seconds since the current metal takeover started
+  if (metalEggAt) return (Date.now() - metalEggAt) / 1000;
+  if (forced === "metal") return 0;
+  return Math.max(0, clockSeconds() - 3600);
+};
 
 // Metal stage: a white strobe, the equalizer and the effects canvas below, all created when the
 // metal phase starts and removed when it ends. A bolt strikes every 1.2 - 3.5 s at a random spot,
@@ -308,13 +313,13 @@ const setMetalStage = on => {
 setMetalStage(document.body.classList.contains("metal"));
 document.addEventListener("metal", e => setMetalStage(e.detail));
 
-// Metal music: one song from YouTube, from 1:50 to its end (METAL_SECONDS later), in sync with the
+// Metal music: a cover of the Master of Puppets solo from YouTube (37 s), in sync with the
 // takeover: opened late, it starts further into the song so both end together. It starts by
 // itself when the phase begins. Browsers only allow sound after a user gesture, so if the page
 // has not had one yet the song autoplays muted and the sound comes on at the first click or key
 // press anywhere (the song keeps its place in time). The amp plays / pauses it; the end of the
 // phase stops it.
-const METAL = "IAvgph1RjCc", METAL_START = 110;
+const METAL = "mOqcq7DZo_U";
 let riff = null, rocking = false, riffMuted = false, soundAt = 0;
 const amp = document.createElement("button");
 amp.id = "amp";
@@ -341,17 +346,17 @@ const makeRiff = (autoplay, muted, start) => {
   riff.title = "Metal song";
   riff.allow = "autoplay; encrypted-media";
   riff.src = `https://www.youtube.com/embed/${METAL}?autoplay=${autoplay}&mute=${muted ? 1 : 0}` +
-    `&start=${start}&end=${METAL_START + METAL_SECONDS}&controls=0&enablejsapi=1`;
+    `&start=${start}&controls=0&enablejsapi=1`;
   document.body.append(riff);
   riffMuted = muted;
 };
 // Loading the YouTube player takes a few seconds, so when the takeover is coming (10th click on
 // the flame button, or 00:59:30) the player is loaded in advance, hidden, paused and muted at
-// 1:50; starting it is then almost instant. Unused, it is dropped again after 75 s.
+// its start; starting it is then almost instant. Unused, it is dropped again after 75 s.
 let riffWaiting = false, riffDrop = null;
 const preloadRiff = () => {
   if (riff) return;
-  makeRiff(0, true, METAL_START);
+  makeRiff(0, true, 0);
   riffWaiting = true;
   clearTimeout(riffDrop);
   riffDrop = setTimeout(() => {
@@ -363,12 +368,11 @@ everySecond.push(() => {  // 00:59:30: get the song ready for the 1:00 show
   if (t >= 3600 - 30 && t < 3600) preloadRiff();
 });
 const rock = (muted = false) => {
-  const late = metalEggAt ? Math.floor((Date.now() - metalEggAt) / 1000)  // seconds since it started
-    : forced === "metal" ? 0 : Math.max(0, clockSeconds() - 3600);
-  if (!riff) makeRiff(1, muted, METAL_START + late);
+  const late = Math.floor(metalElapsed()) % METAL_SONG;  // where the current play is in the song
+  if (!riff) makeRiff(1, muted, late);
   else if (riffWaiting) {  // the preloaded player: jump to the right spot, sound on if allowed, play
     riffWaiting = false;
-    if (late) riffCommand("seekTo", [METAL_START + late, true]);
+    if (late) riffCommand("seekTo", [late, true]);
     if (!muted) { riffCommand("unMute"); riffMuted = false; }
     riffCommand("playVideo");
     // preloaded only a moment ago, it may not be ready for commands yet: repeat them a few times
