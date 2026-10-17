@@ -20,3 +20,6 @@ body.calm #fire{display:none}  /* no flame mode in the quiet night */
 #calm-sky .moon svg{position:relative;display:block;width:100%;height:100%}
 #calm-sky .moon::before{content:"";position:absolute;inset:-70%;border-radius:50%;background:radial-gradient(closest-side,rgba(190,210,255,.28),rgba(120,150,255,.08) 55%,transparent);animation:glow 9s ease-in-out infinite alternate}
 #calm-sky .moon .shade,#calm-sky .moon .shade svg{position:absolute;inset:0;width:100%;height:100%}
+/* The effects canvas (stars, fireflies...) stays behind the page in the calm night: the sky is
+   behind the courses, not over them */
+body.calm #metalfx{z-index:0}
