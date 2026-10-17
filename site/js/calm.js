@@ -113,3 +113,43 @@ fxLayers.push({
   },
   reset() { calmMeteor = null; calmMeteorIn = 4; },
 });
+// Fireflies: a handful of soft pale lights wandering in the lower half of the screen, each one
+// turning slowly (its heading drifts at random) and glowing for a few seconds, then going dark
+// for a while. The glow is a blob pre-drawn once (fx.js), only copied.
+const CALM_GLOW = blob(185, 255, 225, .9), calmFlies = [];
+fxLayers.push({
+  mode: "calm",
+  update(dt) {
+    const want = Math.min(18, Math.round(fxW / 80));
+    while (calmFlies.length < want) {
+      calmFlies.push({ x: Math.random() * fxW, y: fxH * (.45 + Math.random() * .55), heading: Math.random() * 7,
+        speed: 12 + Math.random() * 18, clock: Math.random() * 8, on: 2.5 + Math.random() * 2, off: 2 + Math.random() * 5 });
+    }
+    calmFlies.length = want;
+    for (const f of calmFlies) {
+      f.heading += (Math.random() - .5) * 2.4 * dt;
+      f.x += Math.cos(f.heading) * f.speed * dt;
+      f.y += Math.sin(f.heading) * f.speed * dt * .6;
+      if (f.x < -20) f.x = fxW + 20; else if (f.x > fxW + 20) f.x = -20;
+      // turn back inside the low sky: heading down from the top edge, up from the bottom one
+      if (f.y < fxH * .4) { f.y = fxH * .4; f.heading = Math.abs(f.heading % Math.PI); }
+      else if (f.y > fxH + 10) { f.y = fxH + 10; f.heading = -Math.abs(f.heading % Math.PI); }
+      f.clock = (f.clock + dt) % (f.on + f.off);
+    }
+  },
+  draw(c) {
+    c.save();
+    c.globalCompositeOperation = "lighter";
+    for (const f of calmFlies) {
+      if (f.clock > f.on) continue;  // dark for now
+      const a = Math.sin(f.clock / f.on * Math.PI);  // glows up, then fades
+      c.globalAlpha = a * .85;
+      c.drawImage(CALM_GLOW, f.x - 9, f.y - 9, 18, 18);
+      c.globalAlpha = a;
+      c.fillStyle = "#f2fff8";
+      c.fillRect(f.x - 1, f.y - 1, 2, 2);
+    }
+    c.restore();
+  },
+  reset() { calmFlies.length = 0; },
+});
