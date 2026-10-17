@@ -235,11 +235,18 @@ fxLayers.push({
 const SKULL = new Path2D("M50 6C28 6 12 22 12 44c0 13 6 22 14 28v14c0 4 3 7 7 7h4v-8h6v8h14v-8h6v8h4c4 0 7-3 7-7V72c8-6 14-15 14-28C88 22 72 6 50 6Z" +
   "M33 40c6 0 11 5 11 11s-5 10-11 10-11-4-11-10 5-11 11-11ZM67 40c6 0 11 5 11 11s-5 10-11 10-11-4-11-10 5-11 11-11ZM50 60l6 12H44Z");
 const FLYING_V = new Path2D("M44 2h12l-2 12h-2v30l28 46-15 10-15-26-15 26-15-10 28-46V14h-2Z");
+// rounded rectangle traced with arcTo (Path2D.roundRect is too new for some browsers: Chromium 99)
+const roundBox = (p, x, y, w, h, r) => {
+  p.moveTo(x + r, y);
+  p.arcTo(x + w, y, x + w, y + h, r); p.arcTo(x + w, y + h, x, y + h, r);
+  p.arcTo(x, y + h, x, y, r); p.arcTo(x, y, x + w, y, r);
+  p.closePath();
+};
 const HORNS = new Path2D();
-HORNS.roundRect(28, 48, 46, 46, 10);  // fist
-HORNS.roundRect(28, 6, 13, 52, 6);    // index finger, up
-HORNS.roundRect(61, 16, 12, 42, 6);   // little finger, up
-HORNS.roundRect(36, 58, 30, 11, 5);   // thumb folded over the other fingers
+roundBox(HORNS, 28, 48, 46, 46, 10);  // fist
+roundBox(HORNS, 28, 6, 13, 52, 6);    // index finger, up
+roundBox(HORNS, 61, 16, 12, 42, 6);   // little finger, up
+roundBox(HORNS, 36, 58, 30, 11, 5);   // thumb folded over the other fingers
 // [shape, fill rule]: even-odd cuts the skull's eyes and nose, non-zero merges the hand's parts
 const SHAPES = [[SKULL, "evenodd"], [FLYING_V, "nonzero"], [HORNS, "nonzero"]];
 const thrown = [];
