@@ -96,7 +96,7 @@ vinyl.addEventListener("click", e => {
 const setMusic = on => {
   document.removeEventListener("pointerdown", jazzSound);
   document.removeEventListener("keydown", jazzSound);
-  if (!on) { if (jazz) jazz.pause(); playing = false; vinyl.remove(); return; }
+  if (!on) { dropTrack(jazz); jazz = null; playing = false; vinyl.remove(); return; }  // the next night starts it again
   document.body.append(vinyl);
   if (!jazz && !jazzOff()) {
     const canSound = screenGesture();
