@@ -169,12 +169,7 @@ moreBtn.addEventListener("click", e => {
 // when the metal ends; the click also counts as the gesture browsers need for sound.
 let epicRiff = null, epicPlaying = false;
 const epicMuted = () => !!epicRiff && epicRiff.muted;
-const preloadEpic = () => {
-  if (epicRiff) return;
-  epicRiff = new Audio("audio/epic.mp3");
-  epicRiff.loop = true;
-  epicRiff.preload = "auto";
-};
+const preloadEpic = () => { if (!epicRiff) epicRiff = preloadTrack("epic.mp3"); };
 const epicPlay = () => {
   if (!epicRiff) epicRiff = screenTrack("epic.mp3", { muted: !screenGesture() });  // e.g. ?night=epic: muted until a click
   else epicRiff.play().catch(() => {});

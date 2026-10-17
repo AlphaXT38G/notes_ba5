@@ -357,8 +357,7 @@ const paintAmp = () => {
 let riffWaiting = false, riffDrop = null;
 const preloadRiff = () => {
   if (riff) return;
-  riff = new Audio("audio/metal.mp3");
-  riff.preload = "auto";
+  riff = preloadTrack("metal.mp3", { loop: false });
   riffWaiting = true;
   clearTimeout(riffDrop);
   riffDrop = setTimeout(() => {
