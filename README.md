@@ -41,7 +41,8 @@ Optional keys per subject in `subjects.json`:
 - `"weeks"`: length of the progress bar (default 14)
 - `"color"`: accent colour of the subject card (default: taken from a palette)
 
-The page also has a search field, a light/dark toggle and a flame mode 🔥.
+The page also has a search field, a light/dark toggle and a flame mode 🔥. It works
+on phones too, including older Android browsers.
 A **Names / Previews** switch shows every document as a small thumbnail of its
 first page instead (for course notes, the first page after the table of contents).
 The thumbnails are made by `pdftoppm` and `pdftotext` (poppler); without them,
