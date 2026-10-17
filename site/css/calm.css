@@ -20,9 +20,6 @@ body.calm #fire{display:none}  /* no flame mode in the quiet night */
 #calm-sky .moon svg{position:relative;display:block;width:100%;height:100%}
 #calm-sky .moon::before{content:"";position:absolute;inset:-70%;border-radius:50%;background:radial-gradient(closest-side,rgba(190,210,255,.28),rgba(120,150,255,.08) 55%,transparent);animation:glow 9s ease-in-out infinite alternate}
 #calm-sky .moon .shade,#calm-sky .moon .shade svg{position:absolute;inset:0;width:100%;height:100%}
-/* The effects canvas (stars, fireflies...) stays behind the page in the calm night: the sky is
-   behind the courses, not over them */
-body.calm #metalfx{z-index:0}
 /* Mist: two wide soft banks along the bottom, drifting slowly in opposite directions (transform
    only), so the bottom of the screen is never quite still */
 #calm-sky .mist{position:absolute;left:-30%;bottom:-6vh;width:160%;height:34vh;background:radial-gradient(30% 45% at 25% 60%,rgba(150,175,230,.12),transparent 70%),radial-gradient(28% 40% at 70% 55%,rgba(130,160,225,.1),transparent 70%);animation:calm-mist 70s ease-in-out infinite alternate}
@@ -32,6 +29,9 @@ body.calm #metalfx{z-index:0}
 #calm-sky .hills{position:absolute;left:0;bottom:0;width:100%;height:24vh;min-height:9rem;object-fit:cover;object-position:50% 100%}
 /* Dawn (from 4:45, --dawn from 0 to 1 set by js/calm.js): a pale glow rising from the horizon */
 #calm-sky::before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 35%,rgba(90,120,200,.35) 70%,rgba(255,180,150,.3));opacity:var(--dawn,0)}
+/* The effects canvas (stars, fireflies...) stays behind the page in the calm night: the sky is
+   behind the courses, not over them */
+body.calm #metalfx{z-index:0}
 /* The jar (js/calm.js), in the bottom left corner: a glass jar with a cork lid and a firefly
    inside, glowing while the crickets sing (its glow breathes: opacity only) */
 #jar{position:fixed;left:1.1rem;bottom:1.1rem;z-index:40;display:flex;align-items:center;gap:.6rem;padding:0;color:#dbe5f6;font:600 .78rem system-ui,sans-serif;background:none;border:0;cursor:pointer}
@@ -43,8 +43,8 @@ body.calm #metalfx{z-index:0}
 #jar.playing .fly::after{opacity:1;animation:glow 2.4s ease-in-out infinite alternate}
 #jar .label{padding:.3rem .6rem;border-radius:999px;background:rgba(12,22,46,.85);border:1px solid rgba(140,175,255,.35)}
 @keyframes jar-fly{0%,100%{transform:translate(0,0)}25%{transform:translate(.4rem,-.6rem)}50%{transform:translate(-.3rem,-.9rem)}75%{transform:translate(-.45rem,.2rem)}}
+#crickets{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}  /* the YouTube player, kept invisible behind the jar */
 /* Phones: a small moon in the gap between the title and the theme button, clear of the text */
 @media(max-width:640px){#calm-sky .moon{right:3.9rem;top:2.3rem;width:2.6rem;height:2.6rem}#calm-sky .hills{height:16vh}}
 /* Reduced motion (the effects canvas does not start at all, see fx.js) */
 @media(prefers-reduced-motion:reduce){#calm-sky .mist,#calm-sky .moon::before,#jar.playing .fly,#jar.playing .fly::after{animation:none}}
-#crickets{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}  /* the YouTube player, kept invisible behind the jar */
