@@ -134,7 +134,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
 | `epic.js` | epic finale: blue fire, motes, rune circle, "More epicness ?", "Back to normal" |
-| `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, crickets / wind / birds made with Web Audio, firefly jar |
+| `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, crickets from YouTube (quieter, 0.85 speed), dawn birds made with Web Audio, firefly jar |
 | `start.js` | **last**: first `applyScreen()`, then the every-second clock check |
 
 ### CSS files, in cascade order
@@ -257,7 +257,7 @@ Example: a calm "dawn" screen from 06:00 to 07:00.
 - **localStorage can throw** (private mode): always `try { ... } catch (e) {}`.
 - **Sound needs a user gesture**: players start muted when there was none, and unmute on the
   first click (see `jazz.js`, `metal.js`); a Web Audio context waits suspended and is resumed
-  on the first click (see `calm.js`, whose crickets are synthesized, nothing to load). YouTube players are hidden `<iframe>`s driven by
+  on the first click (see the dawn birds in `calm.js`). YouTube players are hidden `<iframe>`s driven by
   `postMessage` commands; a fresh player ignores commands until ready, so they are repeated.
 
 ### Performance (the page runs heavy effects; keep scrolling smooth)

@@ -68,9 +68,8 @@ back to the day) in browsers that support view transitions.
 
 After the show, from **01:01:51 to 05:30**, the night goes quiet 🌙: a calm blue
 night with the moon as it really is tonight, twinkling stars, a shooting star now
-and then, fireflies, mist drifting over dark hills, and the sound of crickets in the
-open, a tree cricket far away and a breath of wind, all made in the page with Web
-Audio. From 04:45 the dawn rises from the horizon, the crickets quieten and the first
+and then, fireflies, mist drifting over dark hills, and the sound of crickets in a
+forest at night from YouTube, a little quieter and slower than recorded. From 04:45 the dawn rises from the horizon, the crickets quieten and the first
 birds sing. A firefly jar in the bottom left corner pauses / resumes the sounds.
 
 10 seconds before a metal show ends, a **"More epicness ?"** button shows up. Click
