@@ -206,8 +206,9 @@ fxLayers.push({
 
 // ── Crickets (Web Audio) ──
 // The sound of the calm night is made in the page, no recording to load: a field cricket chirps
-// in short bursts of a pure high tone (about 4.5 kHz): 3 or 4 pulses of 16 ms, 38 ms apart, and
-// on a calm night, a chirp every 1.5 - 2.5 s, with long rests. Each cricket is one oscillator that never stops, whose volume
+// in short bursts of a high tone (about 4.5 kHz, with faint overtones, like a wing rubbed on a
+// file): 3 or 4 soft pulses of 22 ms, 48 ms apart, each sliding a little down in pitch, and on a
+// calm night a chirp every 1.5 - 2.5 s, with long rests. Each cricket is one oscillator that never stops, whose volume
 // (a GainNode) is opened and closed for each pulse. The pulses are scheduled a little ahead on
 // the audio clock (tick, every 150 ms, schedules what falls in the next 1.2 s), so the rhythm
 // stays exact even when the page is busy or the timer is late.
@@ -216,21 +217,24 @@ let calmAudio = null;  // { ac, master, crickets, timer } while the calm night p
 const makeCricket = (ac, out, { freq, vol, pan, pulses, every }) => {
   const osc = ac.createOscillator(), gain = ac.createGain(), panner = ac.createStereoPanner();
   osc.frequency.value = freq;
+  // a sine with faint 2nd and 3rd harmonics: less of an electronic beep than a pure sine
+  osc.setPeriodicWave(ac.createPeriodicWave(new Float32Array(4), new Float32Array([0, 1, .1, .04])));
   gain.gain.value = 0;
   panner.pan.value = pan;
   osc.connect(gain).connect(panner).connect(out);
   osc.start();
   return { osc, gain, freq, vol, pulses, every, next: ac.currentTime + Math.random() * every };
 };
+// The shape of one pulse: a smooth rise and fall (half a sine), no click at either end
+const PULSE = Float32Array.from({ length: 32 }, (_, i) => Math.sin(i / 31 * Math.PI) ** 1.5);
 const chirp = (c, t, loud) => {  // one chirp of cricket c starting at time t (audio clock), loud: 0 - 1
-  const vol = c.vol * loud;
+  const vol = c.vol * loud * (.8 + Math.random() * .2);  // never twice exactly the same
   for (let p = 0; p < c.pulses; p++) {
-    const t0 = t + p * .038, g = c.gain.gain;
-    g.setValueAtTime(0, t0);
-    g.linearRampToValueAtTime(vol, t0 + .004);
-    g.linearRampToValueAtTime(vol * .7, t0 + .012);
-    g.linearRampToValueAtTime(0, t0 + .016);
-    c.osc.frequency.setValueAtTime(c.freq * (1 - p * .004), t0);  // each pulse a hair lower
+    const t0 = t + p * .048, f = c.freq * (1 - p * .004);  // each pulse a hair lower
+    // the last pulse is softer, the chirp dies away
+    c.gain.gain.setValueCurveAtTime(PULSE.map(v => v * vol * (p === c.pulses - 1 ? .6 : 1)), t0, .022);
+    c.osc.frequency.setValueAtTime(f, t0);
+    c.osc.frequency.linearRampToValueAtTime(f * .985, t0 + .022);  // and sliding down within itself
   }
 };
 // The first birds: once the dawn is well on its way (from about 5:05), a bird sings now and then
