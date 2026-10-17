@@ -67,3 +67,6 @@ footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
    least 44 px high, the size of a fingertip */
 button,summary,.links a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 @media(pointer:coarse){.tools button{width:2.75rem;height:2.75rem}.view button{min-height:2.75rem}#search{min-height:2.75rem}}
+/* Phones: the search field takes the whole width, the Names / Previews switch goes below it,
+   split in two equal halves */
+@media(max-width:520px){.searchrow{flex-wrap:wrap}#search{flex-basis:100%}.view{flex:1}.view button{flex:1}}
