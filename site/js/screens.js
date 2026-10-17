@@ -91,14 +91,26 @@ const applyScreen = () => {
 // gesture, but they let a muted track autoplay: the screens start it muted when the page has had
 // no gesture yet, and unmute it on the first click or key press. The long tracks (jazz, epic,
 // night) only download what is played: the browser streams them by ranges.
-//   screenTrack(file, { loop, muted, start })   a new track, playing (start: seconds into it)
+//   screenTrack(file, { loop, muted, start })   a new track, playing. start: seconds into it, or a
+//                                               function of the track's duration giving them
+//   preloadTrack(file, { loop })                a new track, loading but paused: it starts at once
+//                                               when played (a show that is about to begin)
 //   dropTrack(track)                            stops it for good and lets the download go
+//   screenGesture()                             whether the page has had a click or key press yet
 const screenGesture = () => navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
-const screenTrack = (file, { loop = true, muted = false, start = 0 } = {}) => {
+const preloadTrack = (file, { loop = true } = {}) => {
   const track = new Audio(`audio/${file}`);
   track.loop = loop;
+  track.preload = "auto";
+  return track;
+};
+const screenTrack = (file, { loop = true, muted = false, start = 0 } = {}) => {
+  const track = preloadTrack(file, { loop });
   track.muted = muted;
-  if (start) track.addEventListener("loadedmetadata", () => { track.currentTime = start; }, { once: true });
+  if (start) track.addEventListener("loadedmetadata", () => {
+    const at = typeof start === "function" ? start(track.duration) : start;
+    if (isFinite(at)) track.currentTime = at;
+  }, { once: true });
   track.play().catch(() => {});  // refused (sound blocked by the browser): silent, its button can try again
   return track;
 };
