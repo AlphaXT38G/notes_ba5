@@ -41,8 +41,11 @@ const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && 
 // Easter egg: typing y e t i (outside the search field) brings Christmas at any time of the year, day
 // or night by the clock as usual, for the rest of the visit. Outside the Christmas period, typing it
 // on a Christmas screen (from the egg or a forced ?night=christmas...) goes back to the normal
-// screen; during the period it does nothing, Christmas is there anyway. It overrides a forced ?night=.
-let xmasJazz = false, xmasEgg = false;
+// screen; during the period it does nothing there, Christmas is there anyway. What counts is the
+// screen shown, not the egg: typed in a jazz bar opened over Christmas (armstrong code, sax), it
+// brings Christmas back. It overrides a forced ?night=.
+// yetiTyped: how many times it was typed, so that the armstrong code's bar gives way (armstrong.js)
+let xmasJazz = false, xmasEgg = false, yetiTyped = 0;
 OVERRIDES.push(phase => {
   let p = phase;
   if ((xmasEgg || (!forced || forcedDismissed) && isXmasDate()) && (isNormal(p) || screenClass(p) === "night")) {
@@ -61,9 +64,11 @@ document.addEventListener("keydown", e => {
   yetiPos = k === YETI[yetiPos] ? yetiPos + 1 : (k === YETI[0] ? 1 : 0);
   if (yetiPos !== YETI.length) return;
   yetiPos = 0;
-  if (isXmasDate()) return;
-  const onXmas = xmasEgg || document.body.classList.contains("christmas");
-  xmasEgg = !onXmas;
+  const onXmas = document.body.classList.contains("christmas");
+  if (onXmas && isXmasDate()) return;
+  yetiTyped++;
+  xmasJazz = false;  // a bar opened with the sax gives way too
+  if (!isXmasDate()) xmasEgg = !onXmas;
   if (onXmas && forced && forced.startsWith("christmas")) forcedDismissed = true;  // also leaves a forced Christmas
   applyScreen();
 });
