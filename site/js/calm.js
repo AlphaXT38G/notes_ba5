@@ -246,7 +246,8 @@ fxLayers.push({
 const CALM_TUBE = "0aay6rLcEdU", CALM_VOLUME = 60, CALM_RATE = .75;
 let calmTube = null, calmPlaying = false, calmMuted = false, calmVolume = -1;
 let calmAudio = null;  // { ac, master, timer, birdAt }: the birds' Web Audio, while the calm night runs
-const calmCommand = (func, args = []) => calmTube?.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
+const calmCommand = (func, args = []) => calmTube && calmTube.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
+const calmClock = how => { if (calmAudio) calmAudio.ac[how](); };  // "resume" / "suspend" the birds' audio
 const paintCalmVolume = () => {  // the volume, lower as the dawn comes; sent only when it changes
   const v = Math.round(CALM_VOLUME * (1 - calmDawn * .5));
   if (v !== calmVolume) { calmVolume = v; calmCommand("setVolume", [v]); }
@@ -333,14 +334,14 @@ const paintCalmJar = () => {
 };
 const calmPlay = (muted = false) => {
   if (!calmTube) makeCalmTube(muted); else calmCommand("playVideo");
-  calmAudio?.ac.resume();
+  calmClock("resume");
   calmPlaying = true;
   paintCalmJar();
 };
 const calmSound = () => {  // the first gesture: let the night be heard
   if (!calmTube || !calmMuted) return;
   calmCommand("unMute");
-  calmAudio?.ac.resume();
+  calmClock("resume");
   calmMuted = false;
   calmSoundAt = performance.now();
   paintCalmJar();
@@ -353,7 +354,7 @@ calmJar.addEventListener("click", e => {
   try { calmPaused ? localStorage.setItem("crickets", "off") : localStorage.removeItem("crickets"); } catch (e) {}
   if (calmPaused) {
     calmCommand("pauseVideo");
-    calmAudio?.ac.suspend();
+    calmClock("suspend");
     calmPlaying = false;
     paintCalmJar();
   } else calmPlay();
@@ -362,7 +363,7 @@ const setCrickets = on => {
   document.removeEventListener("pointerdown", calmSound);
   document.removeEventListener("keydown", calmSound);
   if (!on) {
-    calmTube?.remove();
+    if (calmTube) calmTube.remove();
     calmTube = null;
     calmPlaying = calmMuted = false;
     stopCalmBirds();
@@ -378,7 +379,7 @@ const setCrickets = on => {
       document.addEventListener("pointerdown", calmSound, { once: true });
       document.addEventListener("keydown", calmSound, { once: true });
     }
-  } else calmAudio?.ac.suspend();
+  } else calmClock("suspend");
   paintCalmJar();
 };
 setCrickets(document.body.classList.contains("calm"));
