@@ -17,7 +17,7 @@ const BARTENDER = `<div class="bt" aria-hidden="true">${BT_LAYERS.map(n => `<img
 
 const closing = document.createElement("div");
 closing.id = "closing";
-// The lamp hangs right above his head (.who holds the drawing and the lamp, so it follows him
+// The lamp hangs right above his head (.who holds him and the lamp, so it follows him
 // at any screen size), its light falling on him
 closing.innerHTML = `<div class="shade"></div><div class="stage"><div class="who">${BARTENDER}` +
   '<div class="lamp"><div class="swing"><i class="cord"></i><i class="glow"></i><i class="cap"></i><i class="bulb"></i></div></div></div>' +
