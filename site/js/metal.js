@@ -23,9 +23,12 @@ const metalLeft = () => {  // seconds before the current metal takeover ends (In
   if (forced === "metal") return Infinity;
   return 3600 + METAL_SECONDS - clockSeconds();
 };
+// A forced ?night=metal has no start on the clock: it counts from when the screen showed up
+let metalOnAt = 0;
+document.addEventListener("metal", e => { metalOnAt = e.detail ? Date.now() : 0; });
 const metalElapsed = () => {  // seconds since the current metal takeover started
   if (metalEggAt) return (Date.now() - metalEggAt) / 1000;
-  if (forced === "metal") return 0;
+  if (forced === "metal") return metalOnAt ? (Date.now() - metalOnAt) / 1000 : 0;
   return Math.max(0, clockSeconds() - 3600);
 };
 
