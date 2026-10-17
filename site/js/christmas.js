@@ -284,7 +284,7 @@ const buildTree = () => {
 };
 // The hidden sax, hanging on the right side of the tree like an ornament:
 // golden body bent in a J, bell, neck and mouthpiece, a few keys, a ribbon loop to hang it.
-const SAX = { x: 384, y: 300, w: 30, h: 52 };
+const SAX = { x: 388, y: 306, w: 22, h: 38 };  // small: an ornament among others, to be found
 const SAX_SVG = `<svg viewBox="0 0 30 52" aria-hidden="true"><path d="M15,0v6" stroke="#c8102e" stroke-width="1.6"/>` +
   `<path d="M6,9 11,6 14,10" fill="none" stroke="#b8860b" stroke-width="2.4" stroke-linecap="round"/>` +
   `<path d="M13,10C14,22 13,34 11,40 9,46 13,50 18,49 23,48 24,43 24,37" fill="none" stroke="url(#saxgold)" stroke-width="5.5" stroke-linecap="round"/>` +
