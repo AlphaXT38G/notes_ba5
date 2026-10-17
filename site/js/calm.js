@@ -227,6 +227,8 @@ const calmTick = () => {
     while (c.next < until) {
       chirp(c, c.next);
       c.next += c.every * (.92 + Math.random() * .16);
+      // now and then a cricket falls silent for a few seconds, as real ones do
+      if (Math.random() < .012) c.next += 2 + Math.random() * 6;
     }
   }
 };
