@@ -115,7 +115,7 @@ const makeChains = () => {
 const kick = power => chains.forEach(ch => ch.forEach(p => { p.px -= (Math.random() - .5) * power; }));  // moving px gives speed
 strikeHooks.push(() => kick(16));
 const steelCache = {};  // gradients are expressed in the link's own coordinates, so they can be reused
-const steel = (c, w) => steelCache[w] ||= steelGradient(c, w);
+const steel = (c, w) => steelCache[w] || (steelCache[w] = steelGradient(c, w));
 const steelGradient = (c, w) => {  // vertical steel gradient across a link of thickness w
   const g = c.createLinearGradient(0, -w, 0, w);
   g.addColorStop(0, "#f4f4f4"); g.addColorStop(.35, "#9a9a9a"); g.addColorStop(.55, "#3c3c3c"); g.addColorStop(.8, "#c8c8c8"); g.addColorStop(1, "#5a5a5a");
