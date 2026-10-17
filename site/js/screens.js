@@ -1,9 +1,10 @@
 // ── Screens ────────────────────────────────────────────────────────────────────────────────────
 // A screen is a special look the whole page takes for a while: the jazz bar, the metal show, the
-// epic finale... This file is the engine; each screen registers itself from its own file
-// (jazz.js, metal.js, epic.js), so adding one never means touching this code:
+// epic finale, the calm night, Christmas... This file is the engine; each screen registers itself
+// from its own file (jazz.js, metal.js, epic.js, calm.js, christmas.js), so adding one never
+// means touching this code:
 //
-//   SCREENS[name] = { className, subtitle, transition }
+//   SCREENS[name] = { className, subtitle, transition, normal }
 //     className   class put on <body> while the screen runs. Several screens can share one (the
 //                 jazz bar's "evening" and "closing" are both "night"). When it turns on or off, a
 //                 CustomEvent of that name is sent on document, with detail = true / false.
