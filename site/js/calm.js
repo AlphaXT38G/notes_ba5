@@ -4,9 +4,9 @@
 //   - behind the page: the moon as it is tonight, hills with pines and a lone tree, drifting mist,
 //     and from 4:45 the dawn rising from the horizon,
 //   - on the effects canvas (fx.js): twinkling stars, a shooting star now and then, fireflies,
-//   - the sounds of the night, made with Web Audio (nothing to load): a chorus of crickets, a tree
-//     cricket far away, a breath of wind, and the first birds at dawn; a firefly jar in the bottom
-//     left corner pauses / resumes them.
+//   - the sounds of the night: a recording of crickets in a forest from YouTube, a little quieter
+//     and slower than recorded, and the first birds at dawn (Web Audio); a firefly jar in the
+//     bottom left corner pauses / resumes them.
 // It is a "normal" screen (screens.js): the usual look of those hours, which Christmas and the
 // armstrong code replace like the day. The metal show and the epic finale come before it.
 // The subtitle follows the hours of the night (a forced ?night=calm in the day gets the first one)
@@ -204,39 +204,44 @@ fxLayers.push({
   reset() { calmFlies.length = 0; },
 });
 
-// ── Crickets (Web Audio) ──
-// The sound of the calm night is made in the page, no recording to load: a field cricket chirps
-// in short bursts of a high tone (about 4.5 kHz, with faint overtones, like a wing rubbed on a
-// file): 3 or 4 soft pulses of 22 ms, 48 ms apart, each sliding a little down in pitch, and on a
-// calm night a chirp every 1.5 - 2.5 s, with long rests. Each cricket is one oscillator that never stops, whose volume
-// (a GainNode) is opened and closed for each pulse. The pulses are scheduled a little ahead on
-// the audio clock (tick, every 150 ms, schedules what falls in the next 1.2 s), so the rhythm
-// stays exact even when the page is busy or the timer is late.
-const CALM_AHEAD = 1.2;
-let calmAudio = null;  // { ac, master, crickets, timer } while the calm night plays
-const makeCricket = (ac, out, { freq, vol, pan, pulses, every }) => {
-  const osc = ac.createOscillator(), gain = ac.createGain(), panner = ac.createStereoPanner();
-  osc.frequency.value = freq;
-  // a sine with faint 2nd and 3rd harmonics: less of an electronic beep than a pure sine
-  osc.setPeriodicWave(ac.createPeriodicWave(new Float32Array(4), new Float32Array([0, 1, .1, .04])));
-  gain.gain.value = 0;
-  panner.pan.value = pan;
-  osc.connect(gain).connect(panner).connect(out);
-  osc.start();
-  return { osc, gain, freq, vol, pulses, every, next: ac.currentTime + Math.random() * every };
+// ── Sounds of the night ──
+// The crickets are a recording from YouTube: three hours of a forest at night, crickets and the
+// night around them, in a hidden player, looped, started at a random point so that each night
+// sounds a little different. It plays a bit quieter than the other music (volume 60 %) and 15 %
+// slower than recorded, which makes the chirps calmer and lower. From the dawn it fades a little,
+// and the first birds sing over it (made in the page with Web Audio, below). Browsers only allow
+// sound after a user gesture: without one yet the player starts muted and the sound comes on at
+// the first click or key press anywhere (the birds' audio clock waits suspended until then).
+const CALM_TUBE = "0aay6rLcEdU", CALM_VOLUME = 60, CALM_RATE = .85;
+let calmTube = null, calmPlaying = false, calmMuted = false, calmVolume = -1;
+let calmAudio = null;  // { ac, master, timer, birdAt }: the birds' Web Audio, while the calm night runs
+const calmCommand = (func, args = []) => calmTube?.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
+const paintCalmVolume = () => {  // the volume, lower as the dawn comes; sent only when it changes
+  const v = Math.round(CALM_VOLUME * (1 - calmDawn * .5));
+  if (v !== calmVolume) { calmVolume = v; calmCommand("setVolume", [v]); }
 };
-// The shape of one pulse: a smooth rise and fall (half a sine), no click at either end
-const PULSE = Float32Array.from({ length: 32 }, (_, i) => Math.sin(i / 31 * Math.PI) ** 1.5);
-const chirp = (c, t, loud) => {  // one chirp of cricket c starting at time t (audio clock), loud: 0 - 1
-  const vol = c.vol * loud * (.8 + Math.random() * .2);  // never twice exactly the same
-  for (let p = 0; p < c.pulses; p++) {
-    const t0 = t + p * .048, f = c.freq * (1 - p * .004);  // each pulse a hair lower
-    // the last pulse is softer, the chirp dies away
-    c.gain.gain.setValueCurveAtTime(PULSE.map(v => v * vol * (p === c.pulses - 1 ? .6 : 1)), t0, .022);
-    c.osc.frequency.setValueAtTime(f, t0);
-    c.osc.frequency.linearRampToValueAtTime(f * .985, t0 + .022);  // and sliding down within itself
-  }
+everySecond.push(() => { if (calmTube) paintCalmVolume(); });
+// A player that has only just been created ignores commands until it is ready: the speed and the
+// volume are sent again a few times (harmless once it has them)
+const calmTune = () => [800, 1500, 3000, 5000, 8000].forEach(ms => setTimeout(() => {
+  if (!calmTube) return;
+  calmCommand("setPlaybackRate", [CALM_RATE]);
+  calmVolume = -1;
+  paintCalmVolume();
+  if (calmPlaying) calmCommand("playVideo");
+}, ms));
+const makeCalmTube = muted => {
+  calmTube = document.createElement("iframe");
+  calmTube.id = "crickets";
+  calmTube.title = "Night sounds";
+  calmTube.allow = "autoplay; encrypted-media";
+  calmTube.src = `https://www.youtube.com/embed/${CALM_TUBE}?autoplay=1&mute=${muted ? 1 : 0}&loop=1&playlist=${CALM_TUBE}` +
+    `&start=${Math.floor(Math.random() * 9000)}&controls=0&enablejsapi=1`;
+  document.body.append(calmTube);
+  calmMuted = muted;
+  calmTune();
 };
+
 // The first birds: once the dawn is well on its way (from about 5:05), a bird sings now and then
 // (every 4 - 14 s), a short phrase of 3 to 6 whistled notes, each a quick slide of pitch between
 // 2 and 5 kHz, somewhere on the left or the right
@@ -258,146 +263,90 @@ const calmBird = (ac, out, t) => {
     osc.stop(t + len + .02);
     t += len + .03 + Math.random() * .08;
   }
-};
-const calmTick = audio => {
-  const { ac, crickets } = audio;  // also runs while the audio fades out, after calmAudio is gone
-  const until = ac.currentTime + CALM_AHEAD;
-  for (const c of crickets) {
-    while (c.next < until) {
-      chirp(c, c.next, 1 - calmDawn * .6);  // the crickets quieten as the dawn comes
-      c.next += c.every * (.85 + Math.random() * .3);
-      // often a cricket falls silent for a while, as real ones do
-      if (Math.random() < .1) c.next += 4 + Math.random() * 8;
-    }
-  }
-  audio.birdAt ??= ac.currentTime + 2;
-  if (calmDawn > .45 && audio.birdAt < until) {
-    calmBird(ac, audio.master, Math.max(audio.birdAt, ac.currentTime));
-    audio.birdAt = ac.currentTime + 4 + Math.random() * 10;
-  }
-};
-// Far away, a tree cricket trills without a break: a lower tone (2.9 kHz) beating 48 times a
-// second (its volume shaken by a fast LFO), swelling and fading very slowly (a second, slow LFO)
-const calmLfo = (ac, freq, depth, param) => {  // param += depth x sin(2 pi freq t), forever
-  const lfo = ac.createOscillator(), amount = ac.createGain();
-  lfo.frequency.value = freq;
-  amount.gain.value = depth;
-  lfo.connect(amount).connect(param);
-  lfo.start();
-};
-const calmTrill = (ac, out) => {
-  const osc = ac.createOscillator(), beat = ac.createGain(), swell = ac.createGain(), vol = ac.createGain();
-  osc.frequency.value = 2900;
-  beat.gain.value = .5;
-  swell.gain.value = .6;
-  vol.gain.value = .01;  // barely there, under the field crickets
-  calmLfo(ac, 48, .5, beat.gain);
-  calmLfo(ac, .05, .4, swell.gain);
-  osc.connect(beat).connect(swell).connect(vol).connect(out);
-  osc.start();
-};
-// A breath of wind under it all: white noise through a low-pass filter (only the low rumble is
-// left), the filter and the volume wandering slowly so it comes and goes
-const calmWind = (ac, out) => {
-  const noise = ac.createBufferSource(), buffer = ac.createBuffer(1, ac.sampleRate * 3, ac.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
-  noise.buffer = buffer;
-  noise.loop = true;
-  const filter = ac.createBiquadFilter(), vol = ac.createGain();
-  filter.type = "lowpass";
-  filter.frequency.value = 380;
-  vol.gain.value = .05;
-  calmLfo(ac, .07, 160, filter.frequency);
-  calmLfo(ac, .043, .03, vol.gain);
-  noise.connect(filter).connect(vol).connect(out);
-  noise.start();
-};
-const startCrickets = () => {
+};const startCalmBirds = () => {
   if (calmAudio || !window.AudioContext) return;
   const ac = new AudioContext(), master = ac.createGain();
-  // the night fades in over 4 s (on the audio clock: if it waits for a first click, the fade
-  // happens then)
-  master.gain.setValueAtTime(0, ac.currentTime);
-  master.gain.linearRampToValueAtTime(.5, ac.currentTime + 4);
+  master.gain.value = .5;
   master.connect(ac.destination);
-  // The night air: a faint echo (a delay feeding back into itself, a little duller each time),
-  // so the chirps seem to come from a wide open field rather than from the speakers
-  const delay = ac.createDelay(), dull = ac.createBiquadFilter(), feedback = ac.createGain(), wet = ac.createGain();
-  delay.delayTime.value = .11;
-  dull.type = "lowpass";
-  dull.frequency.value = 5000;
-  feedback.gain.value = .3;
-  wet.gain.value = .25;
-  master.connect(delay).connect(dull).connect(feedback).connect(delay);
-  dull.connect(wet).connect(ac.destination);
-  // Only three, a quiet night: one fairly near, two farther away (soft), on the left, the right and
-  // in the middle, each with its own pitch and slow rhythm, so they rarely chirp together
-  const crickets = [[-.5, .07], [.6, .03], [.1, .018]].map(([pan, vol]) => makeCricket(ac, master, {
-    freq: 4200 + Math.random() * 800, vol, pan, pulses: Math.random() < .5 ? 3 : 4, every: 1.4 + Math.random() * 1.2,
-  }));
-  calmTrill(ac, master);
-  calmWind(ac, master);
-  const audio = calmAudio = { ac, master, crickets };
-  audio.timer = setInterval(() => calmTick(audio), 150);
-  calmTick(audio);
-  ac.onstatechange = paintCalmJar;
-  if (calmPaused) ac.suspend();
+  const audio = calmAudio = { ac, master, birdAt: 0 };
+  audio.timer = setInterval(() => {
+    if (calmDawn <= .45 || ac.state !== "running" || ac.currentTime < audio.birdAt) return;
+    calmBird(ac, master, ac.currentTime + .05);
+    audio.birdAt = ac.currentTime + 4 + Math.random() * 10;
+  }, 500);
 };
-const stopCrickets = () => {  // fades out in 1.5 s, then the audio is closed
+const stopCalmBirds = () => {
   if (!calmAudio) return;
-  const { ac, master, timer } = calmAudio;
+  clearInterval(calmAudio.timer);
+  calmAudio.ac.close();
   calmAudio = null;
-  master.gain.cancelScheduledValues(ac.currentTime);
-  master.gain.setValueAtTime(master.gain.value, ac.currentTime);
-  master.gain.linearRampToValueAtTime(0, ac.currentTime + 1.5);
-  setTimeout(() => { clearInterval(timer); ac.close(); }, ac.state === "running" ? 1600 : 0);
 };
+
 // The jar: a glass jar with a firefly inside, in the bottom left corner (where the jazz bar has
-// its turntable), lit while the crickets sing. Clicking it pauses / resumes the night's sounds
-// (the audio clock stops and starts again, the crickets keep their rhythm).
+// its turntable), lit while the crickets sing. Clicking it pauses / resumes the night's sounds.
+// calmPaused: it was clicked to pause, the sound stays off until it is clicked again, on the
+// next visits too (remembered like the jazz).
 const calmJar = document.createElement("button");
 calmJar.id = "jar";
 calmJar.type = "button";
 calmJar.innerHTML = '<span class="glass"><i class="lid"></i><i class="fly"></i></span><span class="label"></span>';
-// Browsers only allow sound after a user gesture: without one yet, the audio clock waits
-// (suspended) and the sound comes on at the first click or key press anywhere. calmPaused: the
-// jar was clicked to pause, the sound stays off until it is clicked again, on the next visits
-// too (remembered like the jazz).
 let calmPaused = (() => { try { return localStorage.getItem("crickets") === "off"; } catch (e) { return false; } })();
 let calmSoundAt = 0;
 const paintCalmJar = () => {
-  const on = calmAudio?.ac.state === "running", waiting = !on && !calmPaused;
+  const on = calmPlaying && !calmMuted;
   calmJar.classList.toggle("playing", on);
   calmJar.querySelector(".label").textContent = on ? "🦗 Crickets — click to pause"
-    : waiting ? "🔇 Click anywhere for sound" : "🦗 Click for the crickets";
+    : calmPlaying ? "🔇 Click anywhere for sound" : "🦗 Click for the crickets";
   calmJar.title = on ? "Pause the sounds of the night" : "Play the sounds of the night";
 };
+const calmPlay = (muted = false) => {
+  if (!calmTube) makeCalmTube(muted); else calmCommand("playVideo");
+  calmAudio?.ac.resume();
+  calmPlaying = true;
+  paintCalmJar();
+};
 const calmSound = () => {  // the first gesture: let the night be heard
-  if (!calmAudio || calmPaused || calmAudio.ac.state === "running") return;
-  calmAudio.ac.resume();
+  if (!calmTube || !calmMuted) return;
+  calmCommand("unMute");
+  calmAudio?.ac.resume();
+  calmMuted = false;
   calmSoundAt = performance.now();
+  paintCalmJar();
 };
 calmJar.addEventListener("click", e => {
   e.stopPropagation();
   if (performance.now() - calmSoundAt < 600) return;  // this same click just turned the sound on
-  calmPaused = calmAudio?.ac.state === "running";
+  if (calmMuted) return calmSound();
+  calmPaused = calmPlaying;
   try { calmPaused ? localStorage.setItem("crickets", "off") : localStorage.removeItem("crickets"); } catch (e) {}
-  if (calmPaused) calmAudio.ac.suspend();
-  else if (calmAudio) calmAudio.ac.resume();
-  else startCrickets();
-  paintCalmJar();
+  if (calmPaused) {
+    calmCommand("pauseVideo");
+    calmAudio?.ac.suspend();
+    calmPlaying = false;
+    paintCalmJar();
+  } else calmPlay();
 });
 const setCrickets = on => {
   document.removeEventListener("pointerdown", calmSound);
   document.removeEventListener("keydown", calmSound);
-  if (!on) { stopCrickets(); calmJar.remove(); return; }
-  document.body.append(calmJar);
-  startCrickets();
-  if (calmAudio?.ac.state !== "running") {
-    document.addEventListener("pointerdown", calmSound, { once: true });
-    document.addEventListener("keydown", calmSound, { once: true });
+  if (!on) {
+    calmTube?.remove();
+    calmTube = null;
+    calmPlaying = calmMuted = false;
+    stopCalmBirds();
+    calmJar.remove();
+    return;
   }
+  document.body.append(calmJar);
+  startCalmBirds();
+  if (!calmPaused) {
+    const canSound = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
+    calmPlay(!canSound);
+    if (!canSound) {
+      document.addEventListener("pointerdown", calmSound, { once: true });
+      document.addEventListener("keydown", calmSound, { once: true });
+    }
+  } else calmAudio?.ac.suspend();
   paintCalmJar();
 };
 setCrickets(document.body.classList.contains("calm"));

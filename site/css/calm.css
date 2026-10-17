@@ -47,3 +47,4 @@ body.calm #metalfx{z-index:0}
 @media(max-width:640px){#calm-sky .moon{right:3.9rem;top:2.3rem;width:2.6rem;height:2.6rem}#calm-sky .hills{height:16vh}}
 /* Reduced motion (the effects canvas does not start at all, see fx.js) */
 @media(prefers-reduced-motion:reduce){#calm-sky .mist,#calm-sky .moon::before,#jar.playing .fly,#jar.playing .fly::after{animation:none}}
+#crickets{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}  /* the YouTube player, kept invisible behind the jar */
