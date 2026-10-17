@@ -34,14 +34,42 @@ const calmMoonShade = age => {
   return `<svg viewBox="-50 -50 100 100"><path d="${d}" fill="rgba(4,9,26,.86)"${age > .5 ? ' transform="scale(-1,1)"' : ""}/></svg>`;
 };
 
+// The hills at the bottom of the night, SVG built once from code (seeded random, christmas.js, so
+// they are the same on every visit), in a 1600 x 260 box: a far ridge with small pines, lit a
+// little by the moon along its top, then a near hill almost black, edged with blades of grass and
+// a round tree. Shown as an <img>: rendered once into a bitmap.
+const CALM_HILLS = (() => {
+  const rnd = seeded(77);
+  const ridge = (base, amp, phase) => x => base - amp * (Math.sin(x / 260 + phase) * .6 + Math.sin(x / 97 + phase * 2) * .25 + Math.sin(x / 41) * .08);
+  const far = ridge(150, 40, 1), near = ridge(205, 26, 4);
+  const line = (f, step = 20) => Array.from({ length: 1600 / step + 1 }, (_, i) => `${i * step},${f1(f(i * step))}`).join("L");
+  const pines = Array.from({ length: 34 }, () => {
+    const x = rnd() * 1600, y = far(x) + 4, h = 10 + rnd() * 18, w = h * .38;
+    return `M${f1(x)},${f1(y - h)}L${f1(x + w)},${f1(y)}L${f1(x - w)},${f1(y)}Z`;
+  }).join("");
+  const grass = Array.from({ length: 420 }, () => {
+    const x = rnd() * 1600, y = near(x) + 3, h = 5 + rnd() * 13, lean = (rnd() - .4) * 9;
+    return `M${f1(x - 1.4)},${f1(y)}Q${f1(x + lean * .3)},${f1(y - h * .6)} ${f1(x + lean)},${f1(y - h)}Q${f1(x + lean * .2)},${f1(y - h * .5)} ${f1(x + 1.4)},${f1(y)}Z`;
+  }).join("");
+  const tx = 230, ty = near(tx);  // the round tree, on the left where the courses leave room
+  const crown = Array.from({ length: 9 }, () => `<circle cx="${f1(tx + (rnd() - .5) * 70)}" cy="${f1(ty - 70 - rnd() * 45)}" r="${f1(22 + rnd() * 16)}"/>`).join("");
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 260" preserveAspectRatio="xMidYMax slice">` +
+    `<defs><linearGradient id="h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14264f"/><stop offset=".25" stop-color="#0b1838"/></linearGradient></defs>` +
+    `<path d="M0,260L${line(far)}L1600,260Z" fill="url(#h)"/><path d="${pines}" fill="#0b1838"/>` +
+    `<path d="M${line(far)}" fill="none" stroke="rgba(170,195,255,.18)" stroke-width="1.2"/>` +
+    `<path d="M${f1(tx - 4)},${f1(ty + 4)}L${f1(tx - 2)},${f1(ty - 80)}L${f1(tx + 3)},${f1(ty - 80)}L${f1(tx + 5)},${f1(ty + 4)}Z" fill="#040916"/>` +
+    `<g fill="#040916">${crown}</g>` +
+    `<path d="M0,260L${line(near)}L1600,260Z" fill="#040916"/><path d="${grass}" fill="#040916"/></svg>`;
+})();
+
 // The night scene behind the page (#calm-sky, click-through): the moon in the top right corner,
-// as it is tonight (the full moon of the Christmas night, christmas.js, under its shade), and two
-// banks of mist drifting slowly along the bottom (CSS). Created when the calm night starts,
+// as it is tonight (the full moon of the Christmas night, christmas.js, under its shade), the
+// hills, and two banks of mist drifting slowly along the bottom (CSS). Created when the calm night starts,
 // removed when it ends.
 const calmSky = document.createElement("div");
 calmSky.id = "calm-sky";
 calmSky.setAttribute("aria-hidden", "true");
-calmSky.innerHTML = `<div class="moon">${MOON}<div class="shade"></div></div><i class="mist"></i><i class="mist"></i>`;
+calmSky.innerHTML = `<div class="moon">${MOON}<div class="shade"></div></div><img class="hills" alt="" src="data:image/svg+xml,${encodeURIComponent(CALM_HILLS)}"><i class="mist"></i><i class="mist"></i>`;
 const setCalmSky = on => {
   if (!on) return calmSky.remove();
   calmSky.querySelector(".moon .shade").innerHTML = calmMoonShade(calmMoonAge());
