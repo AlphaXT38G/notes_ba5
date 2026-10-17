@@ -91,9 +91,11 @@ const NEEDLES = ["#1b5a31", "#246b3c", "#123f22", "#2f7d48", "#2a6b5a"];  // gre
 // Garland across the top of the page: wide, heavy swags of fir of irregular widths and depths,
 // dusted with snow, a gold ribbon woven through, a few pine cones, velvet bows at the hooks. Small
 // fairy lights sit in the fir, and glass baubles hang below it on threads of different lengths.
-// By day the lights are unlit glass and the baubles plain; at night (CSS) the lights glow and
-// twinkle, and each bauble reflects its two nearest lights: a coloured glint on the side facing
-// each light, twinkling with it (same --d / --t). Rebuilt to the page width.
+// By day the lights are unlit glass and the baubles plain; at night (CSS) the lights are lit, each
+// bauble reflects its two nearest lights (a coloured glint on the side facing each light), and the
+// lights' halos twinkle each at its own pace on a canvas over the garland (paintGarlandGlow, below).
+// The halos used to be SVG circles with a CSS animation each: some 150 animated elements, which
+// restyled and redrew the whole garland, needles and all, on every frame. Rebuilt to the page width.
 const GLASS = [["#ff8a9a", "#b3122e", "#4d0512"], ["#ffe6a0", "#c99416", "#5c3b02"], ["#9ff0c8", "#16804a", "#053520"],
   ["#d6ecff", "#4f8fd6", "#11305e"], ["#ffffff", "#b9c2ce", "#4b5361"]];
 const FAIRY = ["#fff1c9", "#fff1c9", "#ffd86a", "#ff5a6e", "#7cc0ff", "#fff1c9"];  // mostly warm white
@@ -142,7 +144,7 @@ const buildGarland = () => {
     const nl = Math.round(w / 34);
     for (let i = 0; i < nl; i++) {
       const tt = (i + .3 + rnd() * .4) / nl, [x, y] = cubic(curve, tt), dx = (rnd() - .5) * 10, dy = (rnd() - .3) * 14;
-      lights.push({ k, x: x + dx, y: y + dy, c: FAIRY[(rnd() * FAIRY.length) | 0], d: f1(-rnd() * 5), t: f1(1.6 + rnd() * 2.6) });
+      lights.push({ k, x: x + dx, y: y + dy, c: FAIRY[(rnd() * FAIRY.length) | 0], d: -rnd() * 5, t: 1.6 + rnd() * 2.6 });
     }
     // glass baubles hanging below, two or three per swag
     const nb = 2 + (rnd() < .5);
@@ -155,15 +157,14 @@ const buildGarland = () => {
       `<path class="ribbon" d="${ribbon}"/>${cones.join("")}<g class="snow">${snow.join("")}</g>`;
     swags.push({ fir, x0, x1, top: (y0 + y1) / 2, bottom: Math.max(y0, y1) + sag });
   }
-  const lightSvg = l => `<g class="fl" style="--d:${l.d}s;--t:${l.t}s"><circle class="halo" cx="${f1(l.x)}" cy="${f1(l.y)}" r="17" fill="url(#fl${FAIRY.indexOf(l.c)})"/>` +
-    `<circle class="glass" cx="${f1(l.x)}" cy="${f1(l.y)}" r="2.6"/><circle class="lit" cx="${f1(l.x)}" cy="${f1(l.y)}" r="3.2" fill="${l.c}"/></g>`;
+  const lightSvg = l => `<circle class="glass" cx="${f1(l.x)}" cy="${f1(l.y)}" r="2.6"/><circle class="lit" cx="${f1(l.x)}" cy="${f1(l.y)}" r="3.2" fill="${l.c}"/>`;
   const baubleSvg = b => {
     // the two nearest lights, mirrored on the side of the glass facing them
     const near = lights.map(l => [Math.hypot(l.x - b.x, l.y - b.cy), l]).sort((a, z) => a[0] - z[0]).slice(0, 2);
     const glints = near.map(([d, l]) => {
       const gx = b.x + (l.x - b.x) / d * b.r * .55, gy = b.cy + (l.y - b.cy) / d * b.r * .55;
-      return `<circle class="refl" style="--d:${l.d}s;--t:${l.t}s" cx="${f1(gx)}" cy="${f1(gy)}" r="${f1(b.r * .5)}" fill="url(#fl${FAIRY.indexOf(l.c)})"/>` +
-        `<circle class="refl" style="--d:${l.d}s;--t:${l.t}s" cx="${f1(gx)}" cy="${f1(gy)}" r="${f1(Math.max(1, b.r * .1))}" fill="${l.c}"/>`;
+      return `<circle class="refl" cx="${f1(gx)}" cy="${f1(gy)}" r="${f1(b.r * .5)}" fill="url(#fl${FAIRY.indexOf(l.c)})"/>` +
+        `<circle class="refl" cx="${f1(gx)}" cy="${f1(gy)}" r="${f1(Math.max(1, b.r * .1))}" fill="${l.c}"/>`;
     }).join("");
     return `<g class="bauble"><path class="thread" d="M${f1(b.x)},${f1(b.y)}V${f1(b.cy - b.r - 3)}"/>` +
       `<rect class="cap" x="${f1(b.x - 2.8)}" y="${f1(b.cy - b.r - 4)}" width="5.6" height="5" rx="1"/>` +
@@ -188,7 +189,51 @@ const buildGarland = () => {
   garlandSwags = swags.map((s, k) => ({ ...s, el: swagEls[k], a: 0, va: 0, s: 0, vs: 0 }));
   const bobEls = garland.querySelectorAll(".bauble");
   garlandBobs = baubles.sort((a, z) => a.k - z.k).map((b, i) => ({ el: bobEls[i], px: b.x, py: b.y, cy: b.cy, r: b.r, len: b.cy - b.y, th: 0, w: 0 }));
+  garlandLights = lights.map(l => ({ ...l, c: FAIRY.indexOf(l.c) }));
+  garlandGlow.width = W; garlandGlow.height = 170;  // also clears it
+  garlandGlowShown = false;
+  garland.append(garlandGlow);
   garland.w = W;
+};
+
+// The halos of the garland's fairy lights at night, on a canvas over the garland, at 1x (they are
+// soft glows; the crisp lit bulbs stay in the SVG). Painted by the night lights loop (treeFrame,
+// below) with each light's twinkle, following its swag when the mouse swings it; painted once,
+// still, with reduced motion. Nothing is drawn while the page is scrolled past the garland.
+const garlandGlow = document.createElement("canvas"), gctx = garlandGlow.getContext("2d");
+// the halo of each colour: the same falloff as the baubles' reflections (#fl gradients)
+const FAIRY_GLOWS = FAIRY.map(hex => {
+  const s = document.createElement("canvas"), c = s.getContext("2d"), rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)).join(",");
+  s.width = s.height = 64;
+  const g = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+  g.addColorStop(0, `rgba(${rgb},.95)`); g.addColorStop(.35, `rgba(${rgb},.45)`); g.addColorStop(1, `rgba(${rgb},0)`);
+  c.fillStyle = g; c.fillRect(0, 0, 64, 64);
+  return s;
+});
+// opacity through one twinkle (p: 0 - 1), eased between these keyframes
+const TWINKLE = [[0, 1], [.45, .55], [.55, .9], [.7, .4], [1, 1]];
+const twinkle = p => {
+  let i = 1;
+  while (TWINKLE[i][0] < p) i++;
+  const [p0, a0] = TWINKLE[i - 1], [p1, a1] = TWINKLE[i], u = (p - p0) / (p1 - p0);
+  return a0 + (a1 - a0) * u * u * (3 - 2 * u);
+};
+let garlandLights = [], garlandGlowShown = false;
+const paintGarlandGlow = time => {  // time in seconds, or null: still lights
+  const shown = time === null || scrollY < 180;
+  if (!shown && !garlandGlowShown) return;  // scrolled away and already cleared
+  gctx.setTransform(1, 0, 0, 1, 0, 0);
+  gctx.clearRect(0, 0, garlandGlow.width, garlandGlow.height);
+  garlandGlowShown = shown;
+  if (!shown) return;
+  for (const l of garlandLights) {
+    // the swag's swing, as on its SVG group: translate(0 top) skewX(a) scale(1 k) translate(0 -top)
+    const s = garlandSwags[l.k], k = 1 + s.s, sk = Math.tan(s.a) * k;
+    gctx.setTransform(1, 0, sk, k, -sk * s.top, s.top * (1 - k));
+    gctx.globalAlpha = time === null ? 1 : twinkle((((time - l.d) / l.t) % 1 + 1) % 1);
+    gctx.drawImage(FAIRY_GLOWS[l.c], l.x - 17, l.y - 17, 34, 34);
+  }
+  gctx.globalAlpha = 1;
 };
 
 // The tree, on the right of the winter scene behind the page (#xscene): tiers of fir with snow on
@@ -554,8 +599,8 @@ const treeResize = () => {
   treeCanvas.ox = (r.width - TREE_W * treeScale) / 2;
   treeCanvas.oy = r.height - TREE_H * treeScale;
 };
-// 30 frames a second are plenty for lights that fade and twinkle: half the drawing of a 60 Hz
-// screen (a quarter at 120 Hz).
+// The same loop paints the garland's halos (paintGarlandGlow), at 30 frames a second: plenty for
+// lights that fade and twinkle, and half the drawing of a 60 Hz screen (a quarter at 120 Hz).
 const treeFrame = now => {
   treeRaf = requestAnimationFrame(treeFrame);
   if (now - treeLast < 30) return;
@@ -590,12 +635,15 @@ const treeFrame = now => {
     }
   }
   c.restore();
+  paintGarlandGlow(treeT);
 };
 const setTreeLights = on => {
   cancelAnimationFrame(treeRaf);
+  treeRaf = null;
   removeEventListener("resize", treeResize);
   treeCanvas.remove();
-  if (!on || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!on) return;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { paintGarlandGlow(null); return; }
   tree.append(treeCanvas);
   treeResize();
   addEventListener("resize", treeResize);
@@ -948,7 +996,12 @@ document.addEventListener("phase", e => {
 let garlandResize = null;
 const onGarlandResize = () => {
   clearTimeout(garlandResize);
-  garlandResize = setTimeout(() => { if (garland.w !== document.documentElement.clientWidth) buildGarland(); }, 200);
+  garlandResize = setTimeout(() => {
+    if (garland.w === document.documentElement.clientWidth) return;
+    buildGarland();
+    // the night lights loop repaints the halos; without it (reduced motion), paint them still
+    if (!treeRaf && document.body.dataset.phase === "christmas-night") paintGarlandGlow(null);
+  }, 200);
 };
 const setChristmas = on => {
   removeEventListener("resize", onGarlandResize);
