@@ -94,7 +94,7 @@ Christmas turntable: Jingle Bell Rock or a live Christmas radio from YouTube (th
 other record waits in its sleeve behind the turntable: click it to swap them), or paused. At night the moon rises, chalets light up on the
 mountains, the tree lights play changing patterns and Santa's sleigh crosses the
 sky now and then. Look closely at the
-ornaments at night. The metal show at 01:00 and the easter eggs still happen.
+ornaments of the tree. The metal show at 01:00 and the easter eggs still happen.
 
 Add `?night=evening`, `?night=closing`, `?night=metal`, `?night=epic`, `?night=calm`,
 `?night=christmas` or `?night=christmas-night` (or `1` / `0`) to the URL to force a
