@@ -6,7 +6,7 @@
 //   - snow falling on the effects canvas (fx.js),
 //   - a winter scene behind the page: big discreet mountains, a decorated tree on the right with
 //     gifts, a snowman companion on the left (and at night the moon and chalet lights),
-//   - a Christmas turntable playing a live of Christmas music.
+//   - a Christmas turntable playing Jingle Bell Rock or a live of Christmas music.
 // At night the tree lights play changing patterns, Santa's sleigh crosses the sky now and then,
 // and a small golden sax hidden among the ornaments opens the jazz bar (a little fir in the bar
 // brings Christmas back). The metal show at 1:00 and the other easter eggs still take over.
@@ -807,12 +807,17 @@ const garlandTouch = e => {
 };
 addEventListener("pointermove", garlandTouch, { passive: true });
 
-// Christmas music: a live of Christmas songs from YouTube, on a Christmas turntable in the bottom
-// left corner (red lacquer and gold, snow on the lid, holly, a candy-cane tonearm). It starts with
-// the screen and keeps playing from day to night. As for the jazz, without a user gesture yet it
-// starts muted and the sound comes on at the first click or key press; pausing is remembered.
+// Christmas music, on a Christmas turntable in the bottom left corner (red lacquer and gold, snow
+// on the lid, holly, a candy-cane tonearm). Two records to choose from, on top of it: "Jingle Bell
+// Rock" (audio/jingle-bell-rock.mp3, looped) or a live of Christmas songs from YouTube (the only
+// music of the page still from YouTube: a radio that never ends, no file). The turntable plays /
+// pauses the record on; the choice and the pause are remembered. It starts with the screen and
+// keeps playing from day to night. As for the jazz, without a user gesture yet it starts muted
+// and the sound comes on at the first click or key press.
 const XMAS_LIVE = "XSXEaikz0Bc";
-let carols = null, carolsPlaying = false, carolsMuted = false, carolsSoundAt = 0;
+let carolsRock = null, carolsRadio = null;  // the record's player: an <audio>, or the YouTube <iframe>
+let carolsPlaying = false, carolsMuted = false, carolsSoundAt = 0;
+let carolsRecord = (() => { try { return localStorage.getItem("xmas-record") === "radio" ? "radio" : "rock"; } catch (e) { return "rock"; } })();
 const xmasDeck = document.createElement("button");
 xmasDeck.id = "xmusic";
 xmasDeck.type = "button";
@@ -820,31 +825,55 @@ xmasDeck.innerHTML = '<span class="deck"><span class="lid"></span><span class="d
   '<svg class="holly" viewBox="0 0 40 26" aria-hidden="true"><path d="M20,14C14,4 6,8 1,4 4,9 2,12 6,14 3,16 6,20 4,24 10,20 14,22 20,14Z" fill="#1f7a3e"/>' +
   '<path d="M20,14C26,4 34,8 39,4 36,9 38,12 34,14 37,16 34,20 36,24 30,20 26,22 20,14Z" fill="#17643a"/>' +
   '<circle cx="17" cy="15" r="3" fill="#d6203a"/><circle cx="23" cy="15" r="3" fill="#c8102e"/><circle cx="20" cy="11" r="3" fill="#e0263f"/></svg></span><span class="label"></span>';
+// The two records, above the turntable: the one on is pressed
+const xmasRecords = document.createElement("div");
+xmasRecords.id = "xrecords";
+xmasRecords.innerHTML = '<button type="button" data-record="rock">🔔 Jingle Bell Rock</button>' +
+  '<button type="button" data-record="radio">📻 Christmas radio</button>';
 const carolsOff = () => { try { return localStorage.getItem("xmas-music") === "off"; } catch (e) { return false; } };
 const paintDeck = () => {
+  const name = carolsRecord === "rock" ? "Jingle Bell Rock" : "Christmas radio";
   xmasDeck.classList.toggle("playing", carolsPlaying);
   xmasDeck.querySelector(".label").textContent = !carolsPlaying ? "♪ Click for Christmas songs"
-    : carolsMuted ? "🔇 Click anywhere for sound" : "♪ Christmas radio — click to pause";
+    : carolsMuted ? "🔇 Click anywhere for sound" : `♪ ${name} — click to pause`;
   xmasDeck.title = !carolsPlaying ? "Play the music" : carolsMuted ? "Turn the sound on" : "Pause the music";
+  for (const btn of xmasRecords.children) btn.setAttribute("aria-pressed", btn.dataset.record === carolsRecord);
 };
-const carolsCommand = func => carols && carols.contentWindow.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
+const carolsCommand = func => carolsRadio && carolsRadio.contentWindow.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
+const carolsStart = muted => {  // puts the chosen record on, playing
+  if (carolsRecord === "rock") carolsRock = screenTrack("jingle-bell-rock.mp3", { muted });
+  else {
+    carolsRadio = document.createElement("iframe");
+    carolsRadio.id = "carols";
+    carolsRadio.title = "Christmas music";
+    carolsRadio.allow = "autoplay; encrypted-media";
+    carolsRadio.src = `https://www.youtube.com/embed/${XMAS_LIVE}?autoplay=1&mute=${muted ? 1 : 0}&controls=0&enablejsapi=1`;
+    document.body.append(carolsRadio);
+  }
+  carolsMuted = muted;
+};
+const carolsStop = () => {  // takes the record off
+  dropTrack(carolsRock);
+  if (carolsRadio) carolsRadio.remove();
+  carolsRock = carolsRadio = null;
+};
 const carolsPlay = (muted = false) => {
-  if (!carols) {
-    carols = document.createElement("iframe");
-    carols.id = "carols";
-    carols.title = "Christmas music";
-    carols.allow = "autoplay; encrypted-media";
-    carols.src = `https://www.youtube.com/embed/${XMAS_LIVE}?autoplay=1&mute=${muted ? 1 : 0}&controls=0&enablejsapi=1`;
-    document.body.append(carols);
-    carolsMuted = muted;
-  } else carolsCommand("playVideo");
+  if (carolsRock) carolsRock.play().catch(() => {});
+  else if (carolsRadio) carolsCommand("playVideo");
+  else carolsStart(muted);
   carolsPlaying = true;
   try { localStorage.removeItem("xmas-music"); } catch (e) {}
   paintDeck();
 };
+const carolsPause = () => {
+  if (carolsRock) carolsRock.pause(); else carolsCommand("pauseVideo");
+  carolsPlaying = false;
+  try { localStorage.setItem("xmas-music", "off"); } catch (e) {}
+  paintDeck();
+};
 const carolsSound = () => {
-  if (!carols || !carolsMuted) return;
-  carolsCommand("unMute");
+  if (!carolsMuted) return;
+  if (carolsRock) carolsRock.muted = false; else carolsCommand("unMute");
   carolsMuted = false;
   carolsSoundAt = performance.now();
   paintDeck();
@@ -853,20 +882,27 @@ xmasDeck.addEventListener("click", e => {
   e.stopPropagation();
   if (performance.now() - carolsSoundAt < 600) return;  // this same click just turned the sound on
   if (carolsMuted) carolsSound();
-  else if (carolsPlaying) {
-    carolsCommand("pauseVideo");
-    carolsPlaying = false;
-    try { localStorage.setItem("xmas-music", "off"); } catch (e) {}
-    paintDeck();
-  } else carolsPlay();
+  else if (carolsPlaying) carolsPause();
+  else carolsPlay();
+});
+xmasRecords.addEventListener("click", e => {  // another record: the one on is taken off, the new one plays
+  e.stopPropagation();
+  const btn = e.target.closest("button");
+  if (!btn) return;
+  if (btn.dataset.record !== carolsRecord) {
+    carolsStop();
+    carolsRecord = btn.dataset.record;
+    try { localStorage.setItem("xmas-record", carolsRecord); } catch (e) {}
+  }
+  carolsPlay();
 });
 const setCarols = on => {
   document.removeEventListener("pointerdown", carolsSound);
   document.removeEventListener("keydown", carolsSound);
-  if (!on) { if (carols) carols.remove(); carols = null; carolsPlaying = carolsMuted = false; xmasDeck.remove(); return; }
-  document.body.append(xmasDeck);
+  if (!on) { carolsStop(); carolsPlaying = carolsMuted = false; xmasDeck.remove(); xmasRecords.remove(); return; }
+  document.body.append(xmasDeck, xmasRecords);
   if (!carolsOff()) {
-    const canSound = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
+    const canSound = screenGesture();
     carolsPlay(!canSound);
     if (!canSound) {
       document.addEventListener("pointerdown", carolsSound, { once: true });

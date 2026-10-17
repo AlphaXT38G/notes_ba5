@@ -2,7 +2,7 @@
 body.rift{overflow:hidden}
 body.rift .wrap{position:relative;z-index:2}
 /* The music players fall in with the page: between the sky (1) and the disk (3) */
-body.rift #vinyl,body.rift #amp,body.rift #xmusic{z-index:2}
+body.rift #vinyl,body.rift #amp,body.rift #xmusic,body.rift #xrecords{z-index:2}
 /* Letters split to be swallowed one by one (konami.js): words stay whole, letters can move */
 .rw{white-space:nowrap}
 .rl{display:inline-block}
