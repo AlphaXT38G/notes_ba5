@@ -1,6 +1,14 @@
 // ── Calm night (screen "calm", body.calm) ─────────────────────────────────────────────────────
 // After the metal show, when nothing else takes over (no epic finale, no Christmas), the night
 // goes quiet until 5:30 (css/calm.css): a calm blue night, and the sound of crickets.
+//   - behind the page: the moon as it is tonight, hills with pines and a lone tree, drifting mist,
+//     and from 4:45 the dawn rising from the horizon,
+//   - on the effects canvas (fx.js): twinkling stars, a shooting star now and then, fireflies,
+//   - the sounds of the night, made with Web Audio (nothing to load): a chorus of crickets, a tree
+//     cricket far away, a breath of wind, and the first birds at dawn; a firefly jar in the bottom
+//     left corner pauses / resumes them.
+// It is a "normal" screen (screens.js): the usual look of those hours, which Christmas and the
+// armstrong code replace like the day. The metal show and the epic finale come before it.
 // The subtitle follows the hours of the night (a forced ?night=calm in the day gets the first one)
 const calmSubtitle = () => {
   const h = new Date().getHours();
