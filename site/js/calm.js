@@ -207,12 +207,12 @@ fxLayers.push({
 // ── Sounds of the night ──
 // The crickets are a recording from YouTube: three hours of a forest at night, crickets and the
 // night around them, in a hidden player, looped, started at a random point so that each night
-// sounds a little different. It plays a bit quieter than the other music (volume 60 %) and 15 %
+// sounds a little different. It plays a bit quieter than the other music (volume 60 %) and 25 %
 // slower than recorded, which makes the chirps calmer and lower. From the dawn it fades a little,
 // and the first birds sing over it (made in the page with Web Audio, below). Browsers only allow
 // sound after a user gesture: without one yet the player starts muted and the sound comes on at
 // the first click or key press anywhere (the birds' audio clock waits suspended until then).
-const CALM_TUBE = "0aay6rLcEdU", CALM_VOLUME = 60, CALM_RATE = .85;
+const CALM_TUBE = "0aay6rLcEdU", CALM_VOLUME = 60, CALM_RATE = .75;
 let calmTube = null, calmPlaying = false, calmMuted = false, calmVolume = -1;
 let calmAudio = null;  // { ac, master, timer, birdAt }: the birds' Web Audio, while the calm night runs
 const calmCommand = (func, args = []) => calmTube?.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
