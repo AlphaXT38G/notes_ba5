@@ -808,10 +808,12 @@ const garlandTouch = e => {
 addEventListener("pointermove", garlandTouch, { passive: true });
 
 // Christmas music, on a Christmas turntable in the bottom left corner (red lacquer and gold, snow
-// on the lid, holly, a candy-cane tonearm). Two records to choose from, on top of it: "Jingle Bell
-// Rock" (audio/jingle-bell-rock.mp3, looped) or a live of Christmas songs from YouTube (the only
-// music of the page still from YouTube: a radio that never ends, no file). The turntable plays /
-// pauses the record on; the choice and the pause are remembered. It starts with the screen and
+// on the lid, holly, a candy-cane tonearm). Two records: "Jingle Bell Rock"
+// (audio/jingle-bell-rock.mp3, looped, red label) or a live of Christmas songs from YouTube (the
+// only music of the page still from YouTube: a radio that never ends, no file; green label). The
+// other record waits in its sleeve, leaning behind the turntable: clicking the sleeve swaps them
+// and plays the new one. The turntable plays / pauses the record on; the choice and the pause
+// are remembered. It starts with the screen and
 // keeps playing from day to night. As for the jazz, without a user gesture yet it starts muted
 // and the sound comes on at the first click or key press.
 const XMAS_LIVE = "XSXEaikz0Bc";
@@ -825,19 +827,26 @@ xmasDeck.innerHTML = '<span class="deck"><span class="lid"></span><span class="d
   '<svg class="holly" viewBox="0 0 40 26" aria-hidden="true"><path d="M20,14C14,4 6,8 1,4 4,9 2,12 6,14 3,16 6,20 4,24 10,20 14,22 20,14Z" fill="#1f7a3e"/>' +
   '<path d="M20,14C26,4 34,8 39,4 36,9 38,12 34,14 37,16 34,20 36,24 30,20 26,22 20,14Z" fill="#17643a"/>' +
   '<circle cx="17" cy="15" r="3" fill="#d6203a"/><circle cx="23" cy="15" r="3" fill="#c8102e"/><circle cx="20" cy="11" r="3" fill="#e0263f"/></svg></span><span class="label"></span>';
-// The two records, above the turntable: the one on is pressed
-const xmasRecords = document.createElement("div");
-xmasRecords.id = "xrecords";
-xmasRecords.innerHTML = '<button type="button" data-record="rock">🔔 Jingle Bell Rock</button>' +
-  '<button type="button" data-record="radio">📻 Christmas radio</button>';
+// The sleeve of the other record, behind the turntable: its cover shows what it would put on
+const XMAS_RECORDS = { rock: { icon: "🔔", short: "Rock", name: "Jingle Bell Rock" }, radio: { icon: "📻", short: "Radio", name: "Christmas radio" } };
+const xmasSleeve = document.createElement("button");
+xmasSleeve.id = "xsleeve";
+xmasSleeve.type = "button";
+xmasSleeve.innerHTML = '<span class="rec"></span><span class="cover"><i></i><b></b></span>';
 const carolsOff = () => { try { return localStorage.getItem("xmas-music") === "off"; } catch (e) { return false; } };
 const paintDeck = () => {
-  const name = carolsRecord === "rock" ? "Jingle Bell Rock" : "Christmas radio";
+  const name = XMAS_RECORDS[carolsRecord].name, other = carolsRecord === "rock" ? "radio" : "rock";
   xmasDeck.classList.toggle("playing", carolsPlaying);
+  xmasDeck.classList.toggle("radio", carolsRecord === "radio");
   xmasDeck.querySelector(".label").textContent = !carolsPlaying ? "♪ Click for Christmas songs"
     : carolsMuted ? "🔇 Click anywhere for sound" : `♪ ${name} — click to pause`;
   xmasDeck.title = !carolsPlaying ? "Play the music" : carolsMuted ? "Turn the sound on" : "Pause the music";
-  for (const btn of xmasRecords.children) btn.setAttribute("aria-pressed", btn.dataset.record === carolsRecord);
+  xmasSleeve.classList.toggle("rock", other === "rock");
+  xmasSleeve.classList.toggle("radio", other === "radio");
+  xmasSleeve.querySelector("i").textContent = XMAS_RECORDS[other].icon;
+  xmasSleeve.querySelector("b").textContent = XMAS_RECORDS[other].short;
+  xmasSleeve.title = `Put on ${XMAS_RECORDS[other].name}`;
+  xmasSleeve.setAttribute("aria-label", xmasSleeve.title);
 };
 const carolsCommand = func => carolsRadio && carolsRadio.contentWindow.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
 const carolsStart = muted => {  // puts the chosen record on, playing
@@ -885,22 +894,24 @@ xmasDeck.addEventListener("click", e => {
   else if (carolsPlaying) carolsPause();
   else carolsPlay();
 });
-xmasRecords.addEventListener("click", e => {  // another record: the one on is taken off, the new one plays
+let xmasSwapEnd = null;
+xmasSleeve.addEventListener("click", e => {  // the records swap: the one on goes in the sleeve, the other plays
   e.stopPropagation();
-  const btn = e.target.closest("button");
-  if (!btn) return;
-  if (btn.dataset.record !== carolsRecord) {
-    carolsStop();
-    carolsRecord = btn.dataset.record;
-    try { localStorage.setItem("xmas-record", carolsRecord); } catch (e) {}
-  }
+  carolsStop();
+  carolsRecord = carolsRecord === "rock" ? "radio" : "rock";
+  try { localStorage.setItem("xmas-record", carolsRecord); } catch (e) {}
   carolsPlay();
+  // the swap, seen: the record lands on the turntable, the sleeve dips (class removed, reflow, put
+  // back); once over, the record may spin again
+  for (const el of [xmasDeck, xmasSleeve]) { el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap"); }
+  clearTimeout(xmasSwapEnd);
+  xmasSwapEnd = setTimeout(() => { xmasDeck.classList.remove("swap"); xmasSleeve.classList.remove("swap"); }, 600);
 });
 const setCarols = on => {
   document.removeEventListener("pointerdown", carolsSound);
   document.removeEventListener("keydown", carolsSound);
-  if (!on) { carolsStop(); carolsPlaying = carolsMuted = false; xmasDeck.remove(); xmasRecords.remove(); return; }
-  document.body.append(xmasDeck, xmasRecords);
+  if (!on) { carolsStop(); carolsPlaying = carolsMuted = false; xmasDeck.remove(); xmasSleeve.remove(); return; }
+  document.body.append(xmasSleeve, xmasDeck);
   if (!carolsOff()) {
     const canSound = screenGesture();
     carolsPlay(!canSound);
