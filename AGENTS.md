@@ -131,7 +131,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `blackhole.js` | `createBlackHole()`: the Konami black hole, ray-traced in WebGL (light bent by gravity, disk with Doppler beaming, lensed stars), on two canvases so the page falls between its sky and its disk |
 | `supernova.js` | `createSupernova()`: the multi-stage supernova that ends the Konami black hole (flash, shock wave, ejecta, nebula, pulsar), one WebGL canvas over the page |
 | `konami.js` | Konami code: black hole (CSS drawing as a fallback without WebGL) swallowing the page letter by letter, then its boxes and the music player, until it overheats, implodes and explodes in a supernova; confetti, party theme |
-| `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()`; `screenTrack()` / `dropTrack()` for the screens' music |
+| `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()`; `screenTrack()` / `preloadTrack()` / `dropTrack()` for the screens' music |
 | `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable playing `audio/jazz.mp3`, neon sign going out |
 | `closing.js` | closing time: the life-size bartender behind his bar (photo layers from `img/bartender/`: head nodding, forearm tapping the desk bell, chest breathing), swinging lamp, desk bell "ding" (Web Audio), typed speech, chalkboard with countdown, "Good night" |
 | `fx.js` | the effects canvas of every screen: `fxLayers` (by `<body>` class), `blob()`, the animation loop |
@@ -269,8 +269,8 @@ Example: a calm "dawn" screen from 06:00 to 07:00.
 - **Sound needs a user gesture**: players start muted when there was none, and unmute on the
   first click (see `jazz.js`, `metal.js`); a Web Audio context waits suspended and is resumed
   on the first click (see the dawn birds in `calm.js`). Music is an mp3 in `site/audio/`,
-  played with `screenTrack()` (`screens.js`), never put in the page, and stopped with
-  `dropTrack()` when its screen ends. The one YouTube player left (the Christmas radio) is a
+  played with `screenTrack()` (`screens.js`, or loaded ahead with `preloadTrack()` when a show is
+  coming), never put in the page, and stopped with `dropTrack()` when its screen ends. The one YouTube player left (the Christmas radio) is a
   hidden `<iframe>` driven by `postMessage` commands; a fresh player ignores commands until
   ready.
 
