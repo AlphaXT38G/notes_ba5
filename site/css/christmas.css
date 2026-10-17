@@ -112,8 +112,6 @@ body[data-phase=christmas-night] #xtree .branch-snow{stroke:#c9d6ea}
 #xsax svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
 #xsax:hover svg,#xsax:focus-visible svg{filter:drop-shadow(0 0 5px rgba(255,215,110,.9))}
 body.christmas #xsax{display:block}
-/* Where the tree is behind the cards, the sax hangs on the garland instead (js placeSax) */
-#garland #xsax{top:64px;width:24px;height:42px}
 
 /* The snowman, a big companion in the left margin beside the courses (behind the cards, faded,
    on narrow screens). It blinks, turns its face a bit more to the courses now and then, and waves;

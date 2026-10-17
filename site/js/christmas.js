@@ -184,7 +184,6 @@ const buildGarland = () => {
   const bobEls = garland.querySelectorAll(".bauble");
   garlandBobs = baubles.sort((a, z) => a.k - z.k).map((b, i) => ({ el: bobEls[i], px: b.x, py: b.y, cy: b.cy, r: b.r, len: b.cy - b.y, th: 0, w: 0 }));
   garland.w = W;
-  placeSax();  // the sax may hang on the garland, which was just rebuilt
 };
 
 // The tree, on the right of the winter scene behind the page (#xscene): tiers of fir with snow on
@@ -503,19 +502,10 @@ saxBtn.type = "button";
 saxBtn.title = "A sax among the ornaments?";
 saxBtn.setAttribute("aria-label", "Go to the jazz bar");
 saxBtn.innerHTML = SAX_SVG;
-// Where the tree sits behind the cards (narrow screens), the sax would cover their text: it hangs
-// on the garland instead, among the baubles (placed again each time the garland is rebuilt)
-const saxOnGarland = matchMedia("(max-width: 1240px)");
-const placeSax = () => {
-  if (saxOnGarland.matches) {
-    saxBtn.style.cssText = `left:${Math.round(garland.w * .78)}px`;
-    garland.append(saxBtn);
-  } else {
-    saxBtn.style.cssText = `left:${SAX.x / TREE_W * 100}%;top:${SAX.y / TREE_H * 100}%;width:${SAX.w / TREE_W * 100}%;height:${SAX.h / TREE_H * 100}%`;
-    treeFront.append(saxBtn);
-  }
-};
-saxOnGarland.addEventListener("change", placeSax);
+// Always in the tree, even where the tree is behind the cards (narrow screens): its layer is above
+// the page, so it stays clickable there, over the cards
+saxBtn.style.cssText = `left:${SAX.x / TREE_W * 100}%;top:${SAX.y / TREE_H * 100}%;width:${SAX.w / TREE_W * 100}%;height:${SAX.h / TREE_H * 100}%`;
+treeFront.append(saxBtn);
 saxBtn.addEventListener("click", e => {
   e.stopPropagation();
   xmasJazz = document.body.dataset.phase;  // the Christmas screen it replaces
