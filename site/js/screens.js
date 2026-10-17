@@ -85,3 +85,26 @@ const applyScreen = () => {
   t.finished.then(done, done);
   setTimeout(done, 2500);  // never leave data-vt behind
 };
+
+// Screen music: the mp3 files of site/audio/ (copied to dist/audio/ by the build), each played by
+// an <audio> that is never shown nor put in the page. Browsers only allow sound after a user
+// gesture, but they let a muted track autoplay: the screens start it muted when the page has had
+// no gesture yet, and unmute it on the first click or key press. The long tracks (jazz, epic,
+// night) only download what is played: the browser streams them by ranges.
+//   screenTrack(file, { loop, muted, start })   a new track, playing (start: seconds into it)
+//   dropTrack(track)                            stops it for good and lets the download go
+const screenGesture = () => navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
+const screenTrack = (file, { loop = true, muted = false, start = 0 } = {}) => {
+  const track = new Audio(`audio/${file}`);
+  track.loop = loop;
+  track.muted = muted;
+  if (start) track.addEventListener("loadedmetadata", () => { track.currentTime = start; }, { once: true });
+  track.play().catch(() => {});  // refused (sound blocked by the browser): silent, its button can try again
+  return track;
+};
+const dropTrack = track => {
+  if (!track) return;
+  track.pause();
+  track.removeAttribute("src");
+  track.load();
+};
