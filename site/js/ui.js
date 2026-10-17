@@ -37,7 +37,7 @@ q.addEventListener("input", () => {
     sec.querySelectorAll(".links a").forEach(a => {
       const ok = whole || hit(a);
       a.parentNode.hidden = !ok;
-      any ||= ok;
+      any = any || ok;  // not ||=: too new for some Android browsers (Chromium before 85)
     });
     // A collapsible section is hidden when nothing in it matches, and opened while it holds a
     // match found by document name (folder headings are hidden then, they would be misleading)
