@@ -555,7 +555,9 @@ const treeResize = () => {
   treeCanvas.oy = r.height - TREE_H * treeScale;
 };
 const treeFrame = now => {
-  treeT += Math.min(.05, (now - treeLast) / 1000);
+  // never backwards: the first frame's time can be a little before the performance.now() of its
+  // start, and a negative time would pick a pattern that does not exist
+  treeT += Math.max(0, Math.min(.05, (now - treeLast) / 1000));
   treeLast = now;
   const c = tctx, s = treeScale, idx = Math.floor(treeT / 12), fade = Math.min(1, (treeT % 12) / 1.2);
   const cur = PATTERNS[idx % PATTERNS.length], prev = PATTERNS[(idx + PATTERNS.length - 1) % PATTERNS.length];
