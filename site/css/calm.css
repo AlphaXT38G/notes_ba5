@@ -13,3 +13,9 @@ body.calm .sub{color:#a9b9dc;font-style:italic}
 body.calm section{box-shadow:-8px 0 22px -14px rgba(120,160,255,.55)}
 body.calm .links a:hover{background:rgba(120,165,255,.08)}
 body.calm #fire{display:none}  /* no flame mode in the quiet night */
+/* The night scene behind the page (js/calm.js): the moon, with a halo breathing very slowly
+   (its opacity only) */
+#calm-sky{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#calm-sky .moon{position:absolute;right:7%;top:6%;width:6.5rem;height:6.5rem}
+#calm-sky .moon svg{position:relative;display:block;width:100%;height:100%}
+#calm-sky .moon::before{content:"";position:absolute;inset:-70%;border-radius:50%;background:radial-gradient(closest-side,rgba(190,210,255,.28),rgba(120,150,255,.08) 55%,transparent);animation:glow 9s ease-in-out infinite alternate}

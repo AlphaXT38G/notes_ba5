@@ -16,3 +16,14 @@ SCHEDULE.push([3600 + METAL_SECONDS, 5 * 3600 + 30 * 60, "calm"]);  // from the 
 everySecond.push(() => {
   if (document.body.dataset.phase === "calm" && sub.textContent !== calmSubtitle()) sub.textContent = calmSubtitle();
 });
+
+// The night scene behind the page (#calm-sky, click-through): the moon in the top right corner
+// (the same full moon as the Christmas night, christmas.js). Created when the calm night starts,
+// removed when it ends.
+const calmSky = document.createElement("div");
+calmSky.id = "calm-sky";
+calmSky.setAttribute("aria-hidden", "true");
+calmSky.innerHTML = `<div class="moon">${MOON}</div>`;
+const setCalmSky = on => on ? document.body.prepend(calmSky) : calmSky.remove();
+setCalmSky(document.body.classList.contains("calm"));
+document.addEventListener("calm", e => setCalmSky(e.detail));
