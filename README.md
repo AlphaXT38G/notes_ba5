@@ -61,10 +61,17 @@ song takes over for 1 min 51 s 🤘: chrome title, red light pulsing on the beat
 headbanging cards and an equalizer, plus effects drawn on a canvas: branching
 lightning with sparks, physics-driven metal chains hanging in the margins, a curtain
 of fire and chrome skulls / Flying V guitars / horns thrown across the page. A
-guitar amp replaces the turntable and plays the song from 1:50 to its end. Then the
-page is back to its day look. Each change of style is animated (a warm fade into the
-jazz bar, a slam into the metal show, a soft fade back to the day) in browsers that
-support view transitions.
+guitar amp replaces the turntable and plays a cover of the Master of Puppets solo
+three times in a row (it shows which play is on); the show ends with the third. Each change of style is animated (a warm fade into the
+jazz bar, a slam into the metal show, a slow hush into the calm night, a soft fade
+back to the day) in browsers that support view transitions.
+
+After the show, from **01:01:51 to 05:30**, the night goes quiet 🌙: a calm blue
+night with the moon as it really is tonight, twinkling stars, a shooting star now
+and then, fireflies, mist drifting over dark hills, and the sound of crickets in the
+open, a tree cricket far away and a breath of wind, all made in the page with Web
+Audio. From 04:45 the dawn rises from the horizon, the crickets quieten and the first
+birds sing. A firefly jar in the bottom left corner pauses / resumes the sounds.
 
 10 seconds before a metal show ends, a **"More epicness ?"** button shows up. Click
 it and, instead of going back to the day, the page turns into an epic fantasy finale ⚔️:
