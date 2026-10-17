@@ -179,6 +179,7 @@ const epicPlay = () => {
 const epicSound = () => { if (epicMuted()) { epicRiff.muted = false; soundAt = performance.now(); paintAmp(); } };
 const setEpicMusic = on => {
   document.removeEventListener("pointerdown", epicSound);
+  document.removeEventListener("keydown", epicSound);
   if (!on) {
     dropTrack(epicRiff);
     epicRiff = null; epicPlaying = false;
@@ -189,7 +190,10 @@ const setEpicMusic = on => {
   amp.classList.add("epic");
   document.body.append(amp);
   epicPlay();
-  if (epicMuted()) document.addEventListener("pointerdown", epicSound, { once: true });
+  if (epicMuted()) {
+    document.addEventListener("pointerdown", epicSound, { once: true });
+    document.addEventListener("keydown", epicSound, { once: true });
+  }
 };
 setEpicMusic(document.body.classList.contains("epic"));
 document.addEventListener("epic", e => setEpicMusic(e.detail));
