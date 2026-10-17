@@ -1,5 +1,5 @@
 // The bar counter in front of the bartender and the desk bell under his open hand, painted for
-// the relief renderer (site/js/relief.js) and lit like the photo: key light from the upper left.
+// the relief renderer (relief.js) and lit like the photo: key light from the upper left.
 // Same canvas as the photo (1162 x 1354), so they stack exactly with the cut layers (cut.js).
 // The camera looks up at him, so the counter shows its front: a rounded varnished top edge, a
 // brass strip, raised panels, its ends fading out; the bell's base is hidden behind the top edge,

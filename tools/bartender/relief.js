@@ -1,5 +1,5 @@
-// Relief renderer: turns a flat drawing into a lit, photo-like bitmap (WebGL), used to paint the
-// closing-time bartender's body in the same style as the Gigachad photo of his head.
+// Relief renderer: turns a flat drawing into a lit, photo-like bitmap (WebGL). The bartender tool
+// uses it to paint the bar counter and the desk bell in the same light as the photo (props.js).
 // A layer is described by four SVG drawings on the same canvas:
 //   albedo   the colour of each thing, unlit, and its outline (alpha)
 //   height   how far each point stands out towards us, in grey (black = back, white = front).
