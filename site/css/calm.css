@@ -32,3 +32,14 @@ body.calm #metalfx{z-index:0}
 #calm-sky .hills{position:absolute;left:0;bottom:0;width:100%;height:24vh;min-height:9rem;object-fit:cover;object-position:50% 100%}
 /* Dawn (from 4:45, --dawn from 0 to 1 set by js/calm.js): a pale glow rising from the horizon */
 #calm-sky::before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 35%,rgba(90,120,200,.35) 70%,rgba(255,180,150,.3));opacity:var(--dawn,0)}
+/* The jar (js/calm.js), in the bottom left corner: a glass jar with a cork lid and a firefly
+   inside, glowing while the crickets sing (its glow breathes: opacity only) */
+#jar{position:fixed;left:1.1rem;bottom:1.1rem;z-index:40;display:flex;align-items:center;gap:.6rem;padding:0;color:#dbe5f6;font:600 .78rem system-ui,sans-serif;background:none;border:0;cursor:pointer}
+#jar .glass{position:relative;width:2.6rem;height:3.4rem;border-radius:.5rem .5rem .8rem .8rem;background:linear-gradient(90deg,rgba(190,215,255,.22),rgba(190,215,255,.06) 35%,rgba(190,215,255,.04) 65%,rgba(190,215,255,.18));border:1.5px solid rgba(190,215,255,.45);box-shadow:0 6px 18px rgba(0,0,0,.6),inset 0 -6px 10px rgba(120,160,255,.12)}
+#jar .lid{position:absolute;left:12%;right:12%;top:-.45rem;height:.5rem;border-radius:.15rem;background:linear-gradient(#a57a4e,#6b4a2a)}
+#jar .fly{position:absolute;left:50%;top:55%;width:.35rem;height:.35rem;margin:-.175rem;border-radius:50%;background:#3b4a40;transition:background .6s}
+#jar .fly::after{content:"";position:absolute;inset:-.8rem;border-radius:50%;background:radial-gradient(closest-side,rgba(200,255,225,.85),rgba(150,255,210,.25) 50%,transparent);opacity:0;transition:opacity .6s}
+#jar.playing .fly{background:#f2fff8;animation:jar-fly 7s ease-in-out infinite}
+#jar.playing .fly::after{opacity:1;animation:glow 2.4s ease-in-out infinite alternate}
+#jar .label{padding:.3rem .6rem;border-radius:999px;background:rgba(12,22,46,.85);border:1px solid rgba(140,175,255,.35)}
+@keyframes jar-fly{0%,100%{transform:translate(0,0)}25%{transform:translate(.4rem,-.6rem)}50%{transform:translate(-.3rem,-.9rem)}75%{transform:translate(-.45rem,.2rem)}}

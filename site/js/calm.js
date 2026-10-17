@@ -294,6 +294,7 @@ const startCrickets = () => {
   calmWind(ac, master);
   calmAudio = { ac, master, crickets, timer: setInterval(() => calmTick(), 150) };
   calmTick();
+  calmAudio.ac.onstatechange = paintCalmJar;
 };
 const stopCrickets = () => {
   if (!calmAudio) return;
@@ -301,6 +302,31 @@ const stopCrickets = () => {
   calmAudio.ac.close();
   calmAudio = null;
 };
-const setCrickets = on => on ? startCrickets() : stopCrickets();
+// The jar: a glass jar with a firefly inside, in the bottom left corner (where the jazz bar has
+// its turntable), lit while the crickets sing. Clicking it pauses / resumes the night's sounds
+// (the audio clock stops and starts again, the crickets keep their rhythm).
+const calmJar = document.createElement("button");
+calmJar.id = "jar";
+calmJar.type = "button";
+calmJar.innerHTML = '<span class="glass"><i class="lid"></i><i class="fly"></i></span><span class="label"></span>';
+const paintCalmJar = () => {
+  const on = calmAudio?.ac.state === "running";
+  calmJar.classList.toggle("playing", on);
+  calmJar.querySelector(".label").textContent = on ? "🦗 Crickets — click to pause" : "🦗 Click for the crickets";
+  calmJar.title = on ? "Pause the sounds of the night" : "Play the sounds of the night";
+};
+calmJar.addEventListener("click", e => {
+  e.stopPropagation();
+  if (!calmAudio) startCrickets();
+  else if (calmAudio.ac.state === "running") calmAudio.ac.suspend().then(paintCalmJar);
+  else calmAudio.ac.resume().then(paintCalmJar);
+  paintCalmJar();
+});
+const setCrickets = on => {
+  if (!on) { stopCrickets(); calmJar.remove(); return; }
+  document.body.append(calmJar);
+  startCrickets();
+  paintCalmJar();
+};
 setCrickets(document.body.classList.contains("calm"));
 document.addEventListener("calm", e => setCrickets(e.detail));
