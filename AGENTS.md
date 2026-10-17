@@ -11,8 +11,8 @@ LaTeX notes for the BA5 IN semester at EPFL. `build.py` compiles every subject t
 runs the build and publishes `dist/` at <https://alphaxt38g.github.io/notes_ba5/>.
 
 The index page has grown a lot of personality: a flame mode, a jazz bar at night (closed by a
-life-size Gigachad bartender at 00:45), a metal show at 01:00, an epic finale, Christmas screens
-in December, easter eggs. Most of the code is there, in `site/`.
+life-size Gigachad bartender at 00:45), a metal show at 01:00, an epic finale, a calm night with
+crickets until 05:30, Christmas screens in December, easter eggs. Most of the code is there, in `site/`.
 
 ## Repository layout
 
@@ -81,8 +81,9 @@ The night screens follow the clock. Force one with the URL:
 | `?night=0` | the day, whatever the time |
 | `?night=1` | the first scheduled screen (the jazz bar) |
 | `?night=evening` / `?night=closing` | jazz bar / bar closing (the bartender comes ~9 s in, once the sign is dark) |
-| `?night=metal` | metal show (does not end by itself when forced) |
+| `?night=metal` | metal show (does not end by itself when forced: the song plays on and on) |
 | `?night=epic` | epic finale (until "Back to normal") |
+| `?night=calm` | calm night (no dawn when forced outside 04:45 – 05:30) |
 | `?night=christmas` / `?night=christmas-night` | Christmas day / Christmas night |
 
 Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑↑↓↓←→←→BA,
