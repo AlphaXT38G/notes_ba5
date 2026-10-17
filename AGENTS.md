@@ -129,7 +129,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()` |
 | `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable, neon sign going out |
 | `closing.js` | closing time: the life-size bartender behind his bar (photo layers from `img/bartender/`: head nodding, forearm tapping the desk bell, chest breathing), swinging lamp, desk bell "ding" (Web Audio), typed speech, chalkboard with countdown, "Good night" |
-| `fx.js` | the effects canvas: `fxLayers`, `blob()`, the animation loop |
+| `fx.js` | the effects canvas of every screen: `fxLayers` (by `<body>` class), `blob()`, the animation loop |
 | `christmas.js` | Christmas screens: date override and `yeti` code, garland (with mouse physics), winter scene (mountains and chalets, moon, tree, snowman), tree lights canvas, snow, sleigh, music, hidden sax |
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
@@ -224,11 +224,13 @@ Example: a calm "dawn" screen from 06:00 to 07:00.
    For a new view transition, add `[data-vt=dawn]::view-transition-old(root)` / `-new(root)`
    rules and use `transition: "dawn"`.
 
-3. **`site/manifest.json`**: add `js/dawn.js` **before** `js/fx.js` / `js/start.js` (anywhere
-   after `screens.js`), and `css/dawn.css` before `css/screens.css`.
+3. **`site/manifest.json`**: add `js/dawn.js` after `screens.js` and **before** `js/start.js`
+   (after `js/fx.js` too if it draws on the effects canvas, step 4: it needs `fxLayers` at load,
+   like `calm.js`), and `css/dawn.css` before `css/screens.css`.
 
 4. **Canvas effects** (optional): push layers with `mode` = the screen's class; `fx.js` starts
-   the canvas while that class is on.
+   the canvas while that class is on. The canvas (`#metalfx`) is over the page; for a sky behind
+   the courses, put it behind (`body.dawn #metalfx{z-index:0}`, see `calm.css`).
 
    ```js
    fxLayers.push({ mode: "dawn", update(dt) {}, draw(ctx) {}, reset() {}, resize() {} });
@@ -238,7 +240,11 @@ Example: a calm "dawn" screen from 06:00 to 07:00.
    screen's name while it must run (see `metal.js` for an easter egg, `epic.js` for a screen
    queued by a button), then call `applyScreen()` to switch at once.
 
-6. Build, open `http://localhost:8765/?night=dawn`, check the console has no errors, and check
+6. **Normal screens** (optional): a screen that is simply the usual look of its hours, like the
+   calm night after the metal show, says `normal: true`. Christmas and the `armstrong` code then
+   replace it as they replace the day (`isNormal()` in `screens.js`).
+
+7. Build, open `http://localhost:8765/?night=dawn`, check the console has no errors, and check
    the switch from and to the day with a mocked clock if the screen is scheduled.
 
 ## Good practices
