@@ -9,6 +9,8 @@
 //                 CustomEvent of that name is sent on document, with detail = true / false.
 //     subtitle    replaces the usual subtitle: a string, a function returning one, or null
 //     transition  view transition used to enter the screen ([data-vt=...] in CSS)
+//     normal      true for a screen that is just the usual look of its hours, like the day (the calm
+//                 night): what replaces the day (Christmas, the armstrong code) replaces it too
 //   SCHEDULE.push([from, to, name])   a clock slot, in seconds since midnight (to < from wraps
 //                                     past midnight). Slots must not overlap.
 //   OVERRIDES.push(phase => phase)    something that changes the screen whatever the clock says
@@ -33,6 +35,8 @@ const scheduledPhase = () => {
   }
   return forced === "1" ? SCHEDULE[0]?.[2] ?? null : null;
 };
+// The usual look of the moment: the day (no screen) or a "normal" screen
+const isNormal = phase => phase === null || !!SCREENS[phase]?.normal;
 const phaseNow = () => OVERRIDES.reduce((phase, override) => override(phase), scheduledPhase());
 
 // Switching screens. Changing style is animated with the View Transitions API: the browser

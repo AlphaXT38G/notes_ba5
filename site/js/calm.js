@@ -10,7 +10,9 @@ const calmSubtitle = () => {
   if (h === 5) return "5 AM. The sky is thinking about the morning.";
   return "The show is over. Only the crickets are still up.";
 };
-SCREENS.calm = { className: "calm", subtitle: calmSubtitle, transition: "calm" };
+// normal: the calm night is the usual look of those hours, Christmas and the armstrong code
+// replace it as they replace the day (see screens.js)
+SCREENS.calm = { className: "calm", subtitle: calmSubtitle, transition: "calm", normal: true };
 SCHEDULE.push([3600 + METAL_SECONDS, 5 * 3600 + 30 * 60, "calm"]);  // from the end of the show to 5:30
 // Every second: the subtitle follows the hour even though the screen stays the same
 everySecond.push(() => {
