@@ -105,9 +105,7 @@ function cutOut(img) {
     return out;
   };
   const closed = grow(grow(fg, 1), 0);   // dilate the figure, then erode it
-  // (only where the pixel is not plain background grey: a narrow gap between the arm and the
-  // apron is filled by the closing too, but its pixels match the background and stay out)
-  for (let i = 0; i < n; i++) if (closed[i] && seen[i] && d[i] >= 6) seen[i] = 0;
+  for (let i = 0; i < n; i++) if (closed[i] && seen[i]) seen[i] = 0;
   // Near the background (within 2 px), opacity from the distance to its grey; inside, opaque
   const near = new Uint8Array(n);
   for (let i = 0; i < n; i++) if (seen[i]) {
