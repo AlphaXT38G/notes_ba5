@@ -193,7 +193,8 @@ const buildGarland = () => {
 
 // The halos of the garland's fairy lights at night, on a canvas over the garland, at 1x (they are
 // soft glows; the crisp lit bulbs stay in the SVG). Painted by the night lights loop (treeFrame,
-// below) with each light's twinkle; painted once, still, with reduced motion. Nothing is drawn while the page is scrolled past the garland.
+// below) with each light's twinkle; painted once, still, with reduced motion. Nothing is drawn
+// while the page is scrolled past the garland.
 const garlandGlow = document.createElement("canvas"), gctx = garlandGlow.getContext("2d");
 // the halo of each colour: the same falloff as the baubles' reflections (#fl gradients)
 const FAIRY_GLOWS = FAIRY.map(hex => {
