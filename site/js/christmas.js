@@ -30,8 +30,9 @@ SCREENS["christmas-night"] = { className: "christmas", subtitle: xmasSubtitle, t
 
 // Christmas replaces the day, the calm night and the jazz bar, not the shows: the override only
 // rewrites the normal screens (no screen, the calm night, see isNormal) and the jazz screens, and
-// it runs before the metal and epic ones (this file is loaded before metal.js), so those still win. A forced ?night=... is left alone (?night=christmas and
-// ?night=christmas-night force these screens), unless the yeti code was typed (xmasEgg).
+// it runs before the metal and epic ones (this file is loaded before metal.js), so those still
+// win. A forced ?night=... is left alone (?night=christmas and ?night=christmas-night force these
+// screens), unless the yeti code was typed (xmasEgg).
 // xmasJazz: the hidden sax was clicked, the night goes on in the jazz bar until the fir is clicked
 // or Christmas day comes back at 6:00.
 const isXmasDate = (d = new Date()) => (d.getMonth() === 11 && d.getDate() >= 10) || (d.getMonth() === 0 && d.getDate() <= 3);

@@ -7,8 +7,9 @@
 // Typed again in the jazz bar, it goes back to the normal screen of that moment: what the clock
 // gives without any easter egg nor forced screen. So it drops the jazz egg, the yeti egg, the
 // Christmas sax and a forced ?night=..., and shows the day (or the calm night after the metal
-// show), the jazz bar at bar time (it then stays), or Christmas during the Christmas period. Typing yeti in the bar (Christmas egg)
-// closes it too, so that Christmas actually shows up (jazzEggXmas).
+// show), the jazz bar at bar time (it then stays), or Christmas during the Christmas period.
+// Typing yeti in the bar (Christmas egg) closes it too, so that Christmas actually shows up
+// (jazzEggXmas).
 const ARMSTRONG = [..."armstrong"];
 let armstrongPos = 0,     // how many letters of the word have been typed so far
     jazzEgg = false,      // the code was typed: the jazz bar stays open

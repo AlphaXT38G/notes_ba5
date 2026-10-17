@@ -10,8 +10,9 @@
 //                 CustomEvent of that name is sent on document, with detail = true / false.
 //     subtitle    replaces the usual subtitle: a string, a function returning one, or null
 //     transition  view transition used to enter the screen ([data-vt=...] in CSS)
-//     normal      true for a screen that is just the usual look of its hours, like the day (the calm
-//                 night): what replaces the day (Christmas, the armstrong code) replaces it too
+//     normal      true for a screen that is just the usual look of its hours, like the day
+//                 (the calm night): what replaces the day (Christmas, the armstrong code)
+//                 replaces it too
 //   SCHEDULE.push([from, to, name])   a clock slot, in seconds since midnight (to < from wraps
 //                                     past midnight). Slots must not overlap.
 //   OVERRIDES.push(phase => phase)    something that changes the screen whatever the clock says
