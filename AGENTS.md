@@ -92,9 +92,10 @@ year; outside the Christmas period, typed on a Christmas screen it goes back to 
 a random surprise banner on some visits, and on the Christmas night a small golden sax hidden
 among the tree ornaments (on the garland on narrow screens) that opens the jazz bar; a little fir
 in the bar's bottom right corner brings Christmas back. `armstrong` typed anywhere but the search
-field opens the jazz bar at any time (over Christmas too, but not over the shows); typed again in
-the bar it goes back to the normal screen of that moment, by the clock alone: it drops the
-`armstrong` and `yeti` eggs, the sax and a forced `?night=`, so it shows the day, the bar itself
+field opens the jazz bar at any time (over Christmas and the calm night too, but not over the
+shows); typed again in the bar it goes back to the normal screen of that moment, by the clock
+alone: it drops the `armstrong` and `yeti` eggs, the sax and a forced `?night=`, so it shows the
+day (or the calm night), the bar itself
 at bar time (21:30 – 01:00), or Christmas during the Christmas period.
 
 ## How the index page is built
@@ -153,6 +154,7 @@ SCREENS.name = {
   className: "...",   // class put on <body> while it runs (screens may share one)
   subtitle: "...",    // replaces the subtitle: string, function returning one, or null
   transition: "...",  // view transition used to enter it: CSS [data-vt=...]
+  normal: true,       // optional: the usual look of its hours, replaced like the day (calm night)
 };
 SCHEDULE.push([from, to, "name"]);   // clock slot in seconds since midnight (to < from wraps)
 OVERRIDES.push(phase => phase);      // event-driven screens (easter eggs), applied in order
@@ -175,13 +177,15 @@ Current screens:
 |---|---|---|---|
 | `evening` | `night` | 21:30 – 00:45, or the `armstrong` code | `jazz.js`, `jazz.css`, `armstrong.js` |
 | `closing` | `night` | 00:45 – 01:00 | `jazz.js`, `jazz.css`, `closing.js`, `closing.css` |
-| `metal` | `metal` | 01:00:00 – 01:01:51, or 20 flame clicks | `metal.js`, `metal.css` |
+| `metal` | `metal` | 01:00:00 – 01:01:51 (the song 3 times), or 20 flame clicks | `metal.js`, `metal.css` |
 | `epic` | `epic` | after a metal show, if "More epicness ?" was clicked | `epic.js`, `epic.css` |
+| `calm` | `calm` | 01:01:51 – 05:30, unless the epic finale runs (a `normal` screen) | `calm.js`, `calm.css` |
 | `christmas` | `christmas` | Dec 10 – Jan 3, 06:00 – 18:00 (replaces the day) | `christmas.js`, `christmas.css` |
-| `christmas-night` | `christmas` | Dec 10 – Jan 3, 18:00 – 06:00 (replaces the day and the jazz bar) | `christmas.js`, `christmas.css` |
+| `christmas-night` | `christmas` | Dec 10 – Jan 3, 18:00 – 06:00 (replaces the day, the jazz bar and the calm night) | `christmas.js`, `christmas.css` |
 
 The Christmas screens depend on the date, so they are an override rather than a `SCHEDULE` slot:
-it only rewrites "no screen" and the jazz screens, and `christmas.js` is loaded before `metal.js`,
+it only rewrites the normal screens (no screen, the calm night: `isNormal()` in `screens.js`) and
+the jazz screens, and `christmas.js` is loaded before `metal.js`,
 so the metal show (01:00 or easter egg) and the epic finale still take over. A forced `?night=`
 turns it off, except `?night=christmas` / `?night=christmas-night` themselves and the `yeti` easter egg.
 
@@ -252,7 +256,8 @@ Example: a calm "dawn" screen from 06:00 to 07:00.
   keeps that mode's value (e.g. light text on a light background).
 - **localStorage can throw** (private mode): always `try { ... } catch (e) {}`.
 - **Sound needs a user gesture**: players start muted when there was none, and unmute on the
-  first click (see `jazz.js`, `metal.js`). YouTube players are hidden `<iframe>`s driven by
+  first click (see `jazz.js`, `metal.js`); a Web Audio context waits suspended and is resumed
+  on the first click (see `calm.js`, whose crickets are synthesized, nothing to load). YouTube players are hidden `<iframe>`s driven by
   `postMessage` commands; a fresh player ignores commands until ready, so they are repeated.
 
 ### Performance (the page runs heavy effects; keep scrolling smooth)
