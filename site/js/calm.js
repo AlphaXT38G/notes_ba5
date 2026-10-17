@@ -221,8 +221,8 @@ const chirp = (c, t) => {  // one chirp of cricket c starting at time t (audio c
     c.osc.frequency.setValueAtTime(c.freq * (1 - p * .004), t0);  // each pulse a hair lower
   }
 };
-const calmTick = () => {
-  const { ac, crickets } = calmAudio, until = ac.currentTime + CALM_AHEAD;
+const calmTick = ({ ac, crickets }) => {  // also runs while the audio fades out, after calmAudio is gone
+  const until = ac.currentTime + CALM_AHEAD;
   for (const c of crickets) {
     while (c.next < until) {
       chirp(c, c.next);
@@ -295,8 +295,9 @@ const startCrickets = () => {
   }));
   calmTrill(ac, master);
   calmWind(ac, master);
-  calmAudio = { ac, master, crickets, timer: setInterval(() => calmTick(), 150) };
-  calmTick();
+  const audio = calmAudio = { ac, master, crickets };
+  audio.timer = setInterval(() => calmTick(audio), 150);
+  calmTick(audio);
   ac.onstatechange = paintCalmJar;
   if (calmPaused) ac.suspend();
 };
