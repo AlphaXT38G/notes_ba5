@@ -398,7 +398,10 @@ const rock = (muted = false) => {
       if (!riffMuted) riffCommand("unMute");
       riffCommand("playVideo");
     }, ms));
-  } else riffCommand("playVideo");
+  } else {  // paused by the amp: the show went on meanwhile, jump back in time with it
+    riffCommand("seekTo", [late, true]);
+    riffCommand("playVideo");
+  }
   rocking = true;
   paintAmp();
 };
