@@ -654,8 +654,8 @@ fxLayers.push({
       f.y += f.vy * dt;
       f.x += (snowWind * (.4 + f.r / 8) + Math.cos(snowT * .9 + f.phase) * f.sway) * dt;
       f.rot += f.vr * dt;
-      const dx = f.x - snowMouseX, dy = f.y - snowMouseY, d = Math.hypot(dx, dy);
-      if (d < 80 && d > 0) { f.x += dx / d * (80 - d) * .05; f.y += dy / d * (80 - d) * .02; }
+      const dx = f.x - snowMouseX, dy = f.y - snowMouseY, d2 = dx * dx + dy * dy;
+      if (d2 < 6400 && d2 > 0) { const d = Math.sqrt(d2); f.x += dx / d * (80 - d) * .05; f.y += dy / d * (80 - d) * .02; }  // within 80 px
       if (f.y > fxH + 20) Object.assign(f, newFlake(true));
       if (f.x < -20) f.x += fxW + 40; else if (f.x > fxW + 20) f.x -= fxW + 40;
     }
@@ -665,11 +665,11 @@ fxLayers.push({
     for (const f of flakes) {
       c.globalAlpha = f.crystal ? .9 : .55 + Math.min(.45, f.r / 9);
       if (f.crystal) {
-        c.save();
-        c.translate(f.x, f.y);
-        c.rotate(f.rot);
+        // turned in place with one setTransform rather than save / translate / rotate / restore
+        const cos = Math.cos(f.rot), sin = Math.sin(f.rot);
+        c.setTransform(cos, sin, -sin, cos, f.x, f.y);
         c.drawImage(star, -f.r * 1.6, -f.r * 1.6, f.r * 3.2, f.r * 3.2);
-        c.restore();
+        c.setTransform(1, 0, 0, 1, 0, 0);
       } else c.drawImage(dot, f.x - f.r * 1.6, f.y - f.r * 1.6, f.r * 3.2, f.r * 3.2);
     }
     c.globalAlpha = 1;
