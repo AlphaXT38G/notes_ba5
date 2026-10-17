@@ -87,7 +87,7 @@ const later = (ms, fn) => sceneTimers.push(setTimeout(fn, ms));
 const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const closeBar = () => {  // he arrives once the last letter of the sign (and the sax) is off
   closing.className = "";
-  bubble.replaceChildren();
+  bubble.textContent = "";
   bubble.classList.remove("on");
   board.classList.remove("on");
   paintBoard();
@@ -117,7 +117,7 @@ const byeBar = () => {
   sceneTimers = [];
   closing.classList.remove("ring", "talking");
   closing.classList.add("bye");
-  bubble.replaceChildren();
+  bubble.textContent = "";
   bubble.classList.add("on");
   ringBell(2);
   say(["Bonne nuit ! 👋"]);

@@ -34,7 +34,7 @@ const note = () => {
 };
 const setAir = on => {
   clearInterval(noteTimer);
-  air.replaceChildren();
+  air.textContent = "";
   air.remove();
   if (!on) return;
   for (let i = 0; i < 3; i++) {
