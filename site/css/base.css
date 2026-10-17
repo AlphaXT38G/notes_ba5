@@ -63,3 +63,7 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 /* Shared animation: a glow layer whose opacity breathes (see flames.css and epic.css) */
 @keyframes glow{from{opacity:.35}to{opacity:1}}
+/* Touch screens: no grey flash on tap, no double-tap zoom delay on the controls, and buttons at
+   least 44 px high, the size of a fingertip */
+button,summary,.links a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+@media(pointer:coarse){.tools button{width:2.75rem;height:2.75rem}.view button{min-height:2.75rem}#search{min-height:2.75rem}}
