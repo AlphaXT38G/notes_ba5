@@ -23,3 +23,8 @@ body.calm #fire{display:none}  /* no flame mode in the quiet night */
 /* The effects canvas (stars, fireflies...) stays behind the page in the calm night: the sky is
    behind the courses, not over them */
 body.calm #metalfx{z-index:0}
+/* Mist: two wide soft banks along the bottom, drifting slowly in opposite directions (transform
+   only), so the bottom of the screen is never quite still */
+#calm-sky .mist{position:absolute;left:-30%;bottom:-6vh;width:160%;height:34vh;background:radial-gradient(30% 45% at 25% 60%,rgba(150,175,230,.12),transparent 70%),radial-gradient(28% 40% at 70% 55%,rgba(130,160,225,.1),transparent 70%);animation:calm-mist 70s ease-in-out infinite alternate}
+#calm-sky .mist + .mist{bottom:4vh;opacity:.7;animation-duration:95s;animation-direction:alternate-reverse}
+@keyframes calm-mist{from{transform:translateX(-8%)}to{transform:translateX(8%)}}

@@ -35,12 +35,13 @@ const calmMoonShade = age => {
 };
 
 // The night scene behind the page (#calm-sky, click-through): the moon in the top right corner,
-// as it is tonight (the full moon of the Christmas night, christmas.js, under its shade). Created
-// when the calm night starts, removed when it ends.
+// as it is tonight (the full moon of the Christmas night, christmas.js, under its shade), and two
+// banks of mist drifting slowly along the bottom (CSS). Created when the calm night starts,
+// removed when it ends.
 const calmSky = document.createElement("div");
 calmSky.id = "calm-sky";
 calmSky.setAttribute("aria-hidden", "true");
-calmSky.innerHTML = `<div class="moon">${MOON}<div class="shade"></div></div>`;
+calmSky.innerHTML = `<div class="moon">${MOON}<div class="shade"></div></div><i class="mist"></i><i class="mist"></i>`;
 const setCalmSky = on => {
   if (!on) return calmSky.remove();
   calmSky.querySelector(".moon .shade").innerHTML = calmMoonShade(calmMoonAge());
