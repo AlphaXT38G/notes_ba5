@@ -19,3 +19,4 @@ body.calm #fire{display:none}  /* no flame mode in the quiet night */
 #calm-sky .moon{position:absolute;right:7%;top:6%;width:6.5rem;height:6.5rem}
 #calm-sky .moon svg{position:relative;display:block;width:100%;height:100%}
 #calm-sky .moon::before{content:"";position:absolute;inset:-70%;border-radius:50%;background:radial-gradient(closest-side,rgba(190,210,255,.28),rgba(120,150,255,.08) 55%,transparent);animation:glow 9s ease-in-out infinite alternate}
+#calm-sky .moon .shade,#calm-sky .moon .shade svg{position:absolute;inset:0;width:100%;height:100%}
