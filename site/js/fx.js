@@ -1,10 +1,11 @@
-// Metal effects canvas: one full-screen, click-through canvas and one animation loop for the
-// lightning and the other drawn effects below (chains, fire, sparks, flying silhouettes). One
-// canvas is much lighter than dozens of animated elements. The loop only runs during the metal
-// phase, the browser pauses it in background tabs, and each step is capped at 50 ms, so nothing
-// piles up while the page is hidden. Each effect registers {mode, update(dt), draw(ctx), reset(),
-// optional resize()};
-// only the effects of the current mode ("metal" or "epic", fxMode) run.
+// The effects canvas: one full-screen, click-through canvas and one animation loop for what the
+// screens draw (the metal show's lightning, chains, fire and silhouettes, the epic blue fire,
+// the Christmas snow, the calm night's stars and fireflies). One canvas is much lighter than
+// dozens of animated elements. The loop only runs while a screen that has layers is on, the
+// browser pauses it in background tabs, and each step is capped at 50 ms, so nothing piles up
+// while the page is hidden. Each effect registers {mode, update(dt), draw(ctx), reset(), optional
+// resize()} where mode is the <body> class of its screen; only the layers of the current mode
+// (fxMode) run. The canvas keeps its first id, #metalfx: it was the metal show's.
 const fx = document.createElement("canvas"), ctx = fx.getContext("2d");
 fx.id = "metalfx";
 let fxW = 0, fxH = 0, fxRaf = null, fxLast = 0, fxMode = null;
