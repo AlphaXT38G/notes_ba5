@@ -73,8 +73,18 @@ calmSky.innerHTML = `<div class="moon">${MOON}<div class="shade"></div></div><im
 const setCalmSky = on => {
   if (!on) return calmSky.remove();
   calmSky.querySelector(".moon .shade").innerHTML = calmMoonShade(calmMoonAge());
+  paintCalmDawn();
   document.body.prepend(calmSky);
 };
+// Dawn: from 4:45 the sky slowly lightens towards the horizon, the stars fade, until 5:30 when the
+// day comes back. calmDawn goes from 0 to 1 over those 45 minutes (0 at any other time, e.g. a
+// forced ?night=calm in the day), and is given to the CSS as --dawn.
+let calmDawn = 0;
+const paintCalmDawn = () => {
+  calmDawn = Math.min(1, Math.max(0, (clockSeconds() - (4 * 3600 + 45 * 60)) / (45 * 60)));
+  calmSky.style.setProperty("--dawn", calmDawn.toFixed(3));
+};
+everySecond.push(() => { if (calmSky.isConnected) paintCalmDawn(); });
 setCalmSky(document.body.classList.contains("calm"));
 document.addEventListener("calm", e => setCalmSky(e.detail));
 
@@ -104,7 +114,7 @@ fxLayers.push({
   },
   draw(c) {
     for (const s of calmStars) {
-      const a = s.a * (.65 + .35 * Math.sin(calmTime * s.speed + s.phase));
+      const a = s.a * (.65 + .35 * Math.sin(calmTime * s.speed + s.phase)) * (1 - calmDawn * .8);  // fading at dawn
       c.fillStyle = s.blue ? `rgba(180,205,255,${a.toFixed(2)})` : `rgba(240,244,255,${a.toFixed(2)})`;
       c.fillRect(s.x - s.r, s.y - s.r, s.r * 2, s.r * 2);
     }

@@ -30,3 +30,5 @@ body.calm #metalfx{z-index:0}
 @keyframes calm-mist{from{transform:translateX(-8%)}to{transform:translateX(8%)}}
 /* The hills along the bottom (an SVG <img> built by js/calm.js), cut to the width of the screen */
 #calm-sky .hills{position:absolute;left:0;bottom:0;width:100%;height:24vh;min-height:9rem;object-fit:cover;object-position:50% 100%}
+/* Dawn (from 4:45, --dawn from 0 to 1 set by js/calm.js): a pale glow rising from the horizon */
+#calm-sky::before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 35%,rgba(90,120,200,.35) 70%,rgba(255,180,150,.3));opacity:var(--dawn,0)}
