@@ -252,6 +252,23 @@ const calmTrill = (ac, out) => {
   osc.connect(beat).connect(swell).connect(vol).connect(out);
   osc.start();
 };
+// A breath of wind under it all: white noise through a low-pass filter (only the low rumble is
+// left), the filter and the volume wandering slowly so it comes and goes
+const calmWind = (ac, out) => {
+  const noise = ac.createBufferSource(), buffer = ac.createBuffer(1, ac.sampleRate * 3, ac.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+  noise.buffer = buffer;
+  noise.loop = true;
+  const filter = ac.createBiquadFilter(), vol = ac.createGain();
+  filter.type = "lowpass";
+  filter.frequency.value = 380;
+  vol.gain.value = .05;
+  calmLfo(ac, .07, 160, filter.frequency);
+  calmLfo(ac, .043, .03, vol.gain);
+  noise.connect(filter).connect(vol).connect(out);
+  noise.start();
+};
 const startCrickets = () => {
   if (calmAudio || !window.AudioContext) return;
   const ac = new AudioContext(), master = ac.createGain();
@@ -264,6 +281,7 @@ const startCrickets = () => {
     pan: (i / 6 - .5) * 1.6 + (Math.random() - .5) * .2, pulses: Math.random() < .5 ? 3 : 4, every: .4 + Math.random() * .4,
   }));
   calmTrill(ac, master);
+  calmWind(ac, master);
   calmAudio = { ac, master, crickets, timer: setInterval(() => calmTick(), 150) };
   calmTick();
 };
