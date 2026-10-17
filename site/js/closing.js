@@ -44,7 +44,7 @@ everySecond.push(() => { if (closing.isConnected) paintBoard(); });
 // high ones faster. Browsers only allow sound after a user gesture: without one it is silent.
 const TAP = .42, TAP_HIT = .7;
 const ringBell = (taps = 3) => {
-  if (!(navigator.userActivation?.hasBeenActive) || !window.AudioContext) return;
+  if (!(navigator.userActivation && navigator.userActivation.hasBeenActive) || !window.AudioContext) return;
   const ac = new AudioContext(), out = ac.createGain();
   out.gain.value = .3;
   out.connect(ac.destination);
@@ -75,7 +75,7 @@ const say = (lines, done) => {
     span.textContent = line.slice(0, ++n).join("");
     if (n < line.length) return later(line[n - 1].match(/[,.…!]/) ? 260 : 38, type);  // breathes at punctuation
     closing.classList.remove("talking");
-    if (rest.length) later(650, () => say(rest, done)); else done?.();
+    if (rest.length) later(650, () => say(rest, done)); else if (done) done();
   };
   type();
 };
@@ -87,7 +87,7 @@ const later = (ms, fn) => sceneTimers.push(setTimeout(fn, ms));
 const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const closeBar = () => {  // he arrives once the last letter of the sign (and the sax) is off
   closing.className = "";
-  bubble.replaceChildren();
+  bubble.textContent = "";
   bubble.classList.remove("on");
   board.classList.remove("on");
   paintBoard();
@@ -117,7 +117,7 @@ const byeBar = () => {
   sceneTimers = [];
   closing.classList.remove("ring", "talking");
   closing.classList.add("bye");
-  bubble.replaceChildren();
+  bubble.textContent = "";
   bubble.classList.add("on");
   ringBell(2);
   say(["Bonne nuit ! 👋"]);

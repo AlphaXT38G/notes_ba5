@@ -1,9 +1,11 @@
 // ── Metal takeover (screen "metal", body.metal) ───────────────────────────────────────────────
-// At 1:00:00 one metal song takes over the page for its last 1 min 51 s (css/metal.css): red
-// stage, chrome title, headbanging cards, lightning, chains, fire and thrown silhouettes on the
-// effects canvas (fx.js), and a guitar amp playing the song. 20 clicks on the flame button
-// within a minute start it at any time of day (startMetalEgg, called by flames.js).
-const METAL_SECONDS = 111;  // the song plays from 1:50 to its end, 1 min 51 s later
+// At 1:00:00 one metal song, played three times in a row, takes over the page for 1 min 51 s
+// (css/metal.css): red stage, chrome title, headbanging cards, lightning, chains, fire and thrown
+// silhouettes on the effects canvas (fx.js), and a guitar amp playing the song. Then the calm
+// night comes (calm.js), unless the epic finale takes over (epic.js). 20 clicks on the flame
+// button within a minute start it at any time of day (startMetalEgg, called by flames.js).
+const METAL_SONG = 37, METAL_PLAYS = 3;          // the song lasts 37 s and is played 3 times
+const METAL_SECONDS = METAL_SONG * METAL_PLAYS;  // so the show lasts 1 min 51 s
 let metalEggAt = 0;         // when the easter egg started it (0 = not running)
 SCREENS.metal = {
   className: "metal",
@@ -21,6 +23,14 @@ const metalLeft = () => {  // seconds before the current metal takeover ends (In
   if (metalEggAt) return METAL_SECONDS - (Date.now() - metalEggAt) / 1000;
   if (forced === "metal") return Infinity;
   return 3600 + METAL_SECONDS - clockSeconds();
+};
+// A forced ?night=metal has no start on the clock: it counts from when the screen showed up
+let metalOnAt = 0;
+document.addEventListener("metal", e => { metalOnAt = e.detail ? Date.now() : 0; });
+const metalElapsed = () => {  // seconds since the current metal takeover started
+  if (metalEggAt) return (Date.now() - metalEggAt) / 1000;
+  if (forced === "metal") return metalOnAt ? (Date.now() - metalOnAt) / 1000 : 0;
+  return Math.max(0, clockSeconds() - 3600);
 };
 
 // Metal stage: a white strobe, the equalizer and the effects canvas below, all created when the
@@ -105,7 +115,7 @@ const makeChains = () => {
 const kick = power => chains.forEach(ch => ch.forEach(p => { p.px -= (Math.random() - .5) * power; }));  // moving px gives speed
 strikeHooks.push(() => kick(16));
 const steelCache = {};  // gradients are expressed in the link's own coordinates, so they can be reused
-const steel = (c, w) => steelCache[w] ||= steelGradient(c, w);
+const steel = (c, w) => steelCache[w] || (steelCache[w] = steelGradient(c, w));
 const steelGradient = (c, w) => {  // vertical steel gradient across a link of thickness w
   const g = c.createLinearGradient(0, -w, 0, w);
   g.addColorStop(0, "#f4f4f4"); g.addColorStop(.35, "#9a9a9a"); g.addColorStop(.55, "#3c3c3c"); g.addColorStop(.8, "#c8c8c8"); g.addColorStop(1, "#5a5a5a");
@@ -225,11 +235,18 @@ fxLayers.push({
 const SKULL = new Path2D("M50 6C28 6 12 22 12 44c0 13 6 22 14 28v14c0 4 3 7 7 7h4v-8h6v8h14v-8h6v8h4c4 0 7-3 7-7V72c8-6 14-15 14-28C88 22 72 6 50 6Z" +
   "M33 40c6 0 11 5 11 11s-5 10-11 10-11-4-11-10 5-11 11-11ZM67 40c6 0 11 5 11 11s-5 10-11 10-11-4-11-10 5-11 11-11ZM50 60l6 12H44Z");
 const FLYING_V = new Path2D("M44 2h12l-2 12h-2v30l28 46-15 10-15-26-15 26-15-10 28-46V14h-2Z");
+// rounded rectangle traced with arcTo (Path2D.roundRect is too new for some browsers: Chromium 99)
+const roundBox = (p, x, y, w, h, r) => {
+  p.moveTo(x + r, y);
+  p.arcTo(x + w, y, x + w, y + h, r); p.arcTo(x + w, y + h, x, y + h, r);
+  p.arcTo(x, y + h, x, y, r); p.arcTo(x, y, x + w, y, r);
+  p.closePath();
+};
 const HORNS = new Path2D();
-HORNS.roundRect(28, 48, 46, 46, 10);  // fist
-HORNS.roundRect(28, 6, 13, 52, 6);    // index finger, up
-HORNS.roundRect(61, 16, 12, 42, 6);   // little finger, up
-HORNS.roundRect(36, 58, 30, 11, 5);   // thumb folded over the other fingers
+roundBox(HORNS, 28, 48, 46, 46, 10);  // fist
+roundBox(HORNS, 28, 6, 13, 52, 6);    // index finger, up
+roundBox(HORNS, 61, 16, 12, 42, 6);   // little finger, up
+roundBox(HORNS, 36, 58, 30, 11, 5);   // thumb folded over the other fingers
 // [shape, fill rule]: even-odd cuts the skull's eyes and nose, non-zero merges the hand's parts
 const SHAPES = [[SKULL, "evenodd"], [FLYING_V, "nonzero"], [HORNS, "nonzero"]];
 const thrown = [];
@@ -307,13 +324,14 @@ const setMetalStage = on => {
 setMetalStage(document.body.classList.contains("metal"));
 document.addEventListener("metal", e => setMetalStage(e.detail));
 
-// Metal music: one song from YouTube, from 1:50 to its end (METAL_SECONDS later), in sync with the
-// takeover: opened late, it starts further into the song so both end together. It starts by
+// Metal music: a cover of the Master of Puppets solo from YouTube (37 s), played three times in a
+// row: the show ends with the third play. It is in sync with the takeover: opened late, it starts
+// at the right play, further into the song, so both end together. It starts by
 // itself when the phase begins. Browsers only allow sound after a user gesture, so if the page
 // has not had one yet the song autoplays muted and the sound comes on at the first click or key
 // press anywhere (the song keeps its place in time). The amp plays / pauses it; the end of the
 // phase stops it.
-const METAL = "IAvgph1RjCc", METAL_START = 110;
+const METAL = "mOqcq7DZo_U";
 let riff = null, rocking = false, riffMuted = false, soundAt = 0;
 const amp = document.createElement("button");
 amp.id = "amp";
@@ -329,8 +347,10 @@ const paintAmp = () => {
     return;
   }
   amp.classList.toggle("playing", rocking);
+  // which of the three plays is on (a forced show plays it forever: no count)
+  const count = metalLeft() === Infinity ? "" : ` ${Math.min(METAL_PLAYS, riffPlay + 1)}/${METAL_PLAYS}`;
   amp.querySelector(".label").textContent = !rocking ? "🎸 Click to crank it up"
-    : riffMuted ? "🔇 Click anywhere for sound" : "🎸 Rocking — click to mute";
+    : riffMuted ? "🔇 Click anywhere for sound" : `🎸 Rocking${count} — click to mute`;
   amp.title = !rocking ? "Play the music" : riffMuted ? "Turn the sound on" : "Pause the music";
 };
 const riffCommand = (func, args = []) => riff && riff.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
@@ -340,17 +360,17 @@ const makeRiff = (autoplay, muted, start) => {
   riff.title = "Metal song";
   riff.allow = "autoplay; encrypted-media";
   riff.src = `https://www.youtube.com/embed/${METAL}?autoplay=${autoplay}&mute=${muted ? 1 : 0}` +
-    `&start=${start}&end=${METAL_START + METAL_SECONDS}&controls=0&enablejsapi=1`;
+    `&start=${start}&controls=0&enablejsapi=1`;
   document.body.append(riff);
   riffMuted = muted;
 };
 // Loading the YouTube player takes a few seconds, so when the takeover is coming (10th click on
 // the flame button, or 00:59:30) the player is loaded in advance, hidden, paused and muted at
-// 1:50; starting it is then almost instant. Unused, it is dropped again after 75 s.
+// its start; starting it is then almost instant. Unused, it is dropped again after 75 s.
 let riffWaiting = false, riffDrop = null;
 const preloadRiff = () => {
   if (riff) return;
-  makeRiff(0, true, METAL_START);
+  makeRiff(0, true, 0);
   riffWaiting = true;
   clearTimeout(riffDrop);
   riffDrop = setTimeout(() => {
@@ -361,13 +381,26 @@ everySecond.push(() => {  // 00:59:30: get the song ready for the 1:00 show
   const t = clockSeconds();
   if (t >= 3600 - 30 && t < 3600) preloadRiff();
 });
+// Each new play starts the song again from the top (the player has stopped at its end by then).
+// riffPlay: which play the player is on (0, 1, 2), so the song restarts once per play.
+let riffPlay = 0;
+const metalPlay = () => Math.floor(metalElapsed() / METAL_SONG);
+everySecond.push(() => {
+  if (!rocking || riffWaiting || !document.body.classList.contains("metal")) return;
+  const play = metalPlay();
+  if (play === riffPlay) return;
+  riffPlay = play;
+  riffCommand("seekTo", [0, true]);
+  riffCommand("playVideo");
+  paintAmp();
+});
 const rock = (muted = false) => {
-  const late = metalEggAt ? Math.floor((Date.now() - metalEggAt) / 1000)  // seconds since it started
-    : forced === "metal" ? 0 : Math.max(0, clockSeconds() - 3600);
-  if (!riff) makeRiff(1, muted, METAL_START + late);
+  riffPlay = metalPlay();
+  const late = Math.floor(metalElapsed()) % METAL_SONG;  // where the current play is in the song
+  if (!riff) makeRiff(1, muted, late);
   else if (riffWaiting) {  // the preloaded player: jump to the right spot, sound on if allowed, play
     riffWaiting = false;
-    if (late) riffCommand("seekTo", [METAL_START + late, true]);
+    if (late) riffCommand("seekTo", [late, true]);
     if (!muted) { riffCommand("unMute"); riffMuted = false; }
     riffCommand("playVideo");
     // preloaded only a moment ago, it may not be ready for commands yet: repeat them a few times
@@ -376,7 +409,10 @@ const rock = (muted = false) => {
       if (!riffMuted) riffCommand("unMute");
       riffCommand("playVideo");
     }, ms));
-  } else riffCommand("playVideo");
+  } else {  // paused by the amp: the show went on meanwhile, jump back in time with it
+    riffCommand("seekTo", [late, true]);
+    riffCommand("playVideo");
+  }
   rocking = true;
   paintAmp();
 };
@@ -403,7 +439,7 @@ amp.addEventListener("click", e => {
 const setMetalMusic = on => {
   document.removeEventListener("pointerdown", riffSound);
   document.removeEventListener("keydown", riffSound);
-  if (!on) { riff?.remove(); riff = null; rocking = riffMuted = riffWaiting = false; amp.remove(); return; }
+  if (!on) { if (riff) riff.remove(); riff = null; rocking = riffMuted = riffWaiting = false; amp.remove(); return; }
   document.body.append(amp);
   const canSound = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
   rock(!canSound);

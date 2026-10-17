@@ -3,21 +3,23 @@
 // ("evening" screen) at any time of the day or the year, for the rest of the visit. It runs after
 // the Christmas override (this file is loaded after christmas.js) so it wins over Christmas, and
 // before the metal and epic ones, so the shows still take over (the metal show at 01:00 too: only
-// the day and Christmas are replaced).
+// the day, the calm night and Christmas are replaced).
 // Typed again in the jazz bar, it goes back to the normal screen of that moment: what the clock
 // gives without any easter egg nor forced screen. So it drops the jazz egg, the yeti egg, the
-// Christmas sax and a forced ?night=..., and shows the day, the jazz bar at bar time (it then
-// stays), or Christmas during the Christmas period. Typing yeti in the bar (Christmas egg)
-// closes it too, so that Christmas actually shows up (jazzEggXmas).
+// Christmas sax and a forced ?night=..., and shows the day (or the calm night after the metal
+// show), the jazz bar at bar time (it then stays), or Christmas during the Christmas period.
+// Typing yeti in the bar (Christmas egg) closes it too, so that Christmas actually shows up
+// (jazzEggXmas).
 const ARMSTRONG = [..."armstrong"];
 let armstrongPos = 0,     // how many letters of the word have been typed so far
     jazzEgg = false,      // the code was typed: the jazz bar stays open
     jazzEggXmas = false;  // the Christmas egg (xmasEgg) when it was typed
-const inBar = phase => SCREENS[phase]?.className === "night";
+const inBar = phase => screenClass(phase) === "night";
 OVERRIDES.push(phase => {
   if (jazzEgg && xmasEgg !== jazzEggXmas) jazzEgg = false;  // yeti typed since: Christmas wins
-  // Only the day and Christmas are replaced: a show on the clock (metal at 01:00) still wins
-  if (!jazzEgg || phase && !inBar(phase) && SCREENS[phase]?.className !== "christmas") return phase;
+  // Only the normal screens (the day, the calm night) and Christmas are replaced: a show on the
+  // clock (metal at 01:00) still wins
+  if (!jazzEgg || !isNormal(phase) && !inBar(phase) && screenClass(phase) !== "christmas") return phase;
   // Keeps "closing" when the clock says so, even if Christmas had replaced it before this override
   const clock = scheduledPhase();
   return inBar(phase) ? phase : inBar(clock) ? clock : "evening";

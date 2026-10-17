@@ -21,13 +21,36 @@ def site_file(rel):
     return "\n" + (SITE / rel).read_text(encoding="utf-8")
 
 def site_bundle(kind):
-    """All the "css" or "js" files listed in site/manifest.json, in that order, as one text.
+    """All the "css" files listed in site/manifest.json, in that order, as one text.
 
-    The order matters: CSS rules later in the list win over earlier ones of the same weight, and
-    the JS files share one <script> (one scope), so a file can use what an earlier one defines.
+    The order matters: CSS rules later in the list win over earlier ones of the same weight.
     """
     files = json.loads((SITE / "manifest.json").read_text(encoding="utf-8"))[kind]
     return "".join(site_file(rel) for rel in files)
+
+def expand_inset(css):
+    """inset: as top / right / bottom / left, which every browser knows.
+
+    inset is the shorthand the screens use for their full-screen layers, but browsers built on
+    Chromium before 87 (Safari before 14.1) ignore it: those layers then lose their place.
+    """
+    def longhands(m):
+        v = m[2].split()
+        top, right, bottom, left = (v * 4)[:4] if len(v) == 1 else (v[0], v[1], v[0], v[1]) if len(v) == 2 \
+            else (v[0], v[1], v[2], v[1]) if len(v) == 3 else v
+        return f"{m[1]}top:{top};right:{right};bottom:{bottom};left:{left}"
+    return re.sub(r"([{;\s])inset:([^;}!]+)", longhands, css)
+
+def site_scripts():
+    """The "js" files listed in site/manifest.json, in that order, each in its own <script>.
+
+    Classic scripts share one global scope, so a file can still use what an earlier one defines
+    (const, let, functions). But each file is parsed and run on its own: a file that a browser
+    cannot run (a syntax it does not know, an API it lacks) stops alone, and the search, the
+    theme and the view switch (ui.js, first) keep working.
+    """
+    files = json.loads((SITE / "manifest.json").read_text(encoding="utf-8"))["js"]
+    return "".join(f"<script>{site_file(rel)}</script>" for rel in files)
 
 def label(p, root):
     """Display name of a PDF: "Course notes", "Week 03", or the file name with spaces."""
@@ -172,11 +195,11 @@ def build_index():
     page = (SITE / "template.html").read_text(encoding="utf-8").rstrip("\n")
     for key, value in {
         "head_js": site_file("js/head.js"),      # runs in <head>: saved theme / view before the first paint
-        "css": site_bundle("css"),               # site/css/*, in manifest order
+        "css": expand_inset(site_bundle("css")), # site/css/*, in manifest order
         "cards_left": "".join(cards[0::2]),
         "cards_right": "".join(cards[1::2]),
         "generated": f"{datetime.now():%Y-%m-%d %H:%M}",
-        "js": site_bundle("js"),                 # site/js/*, at the end of <body>, once every element exists
+        "js": site_scripts(),                    # site/js/*, at the end of <body>, once every element exists
     }.items():
         page = page.replace("{{" + key + "}}", value)
     DIST.mkdir(exist_ok=True)
@@ -186,12 +209,50 @@ def build_index():
     (DIST / "index.html").write_text(page, encoding="utf-8")
     ok("dist/index.html")
     check_script()
+    check_compat()
+
+# Syntax and APIs that some phones still lack: browsers built on an older Chromium (Samsung
+# Internet, makers' browsers, old Android WebViews) or older Safari. The page aims at Chromium 73
+# / Safari 12.1 (2019): one of these in a site/js file stops that file there.
+TOO_NEW = {
+    r"\?\.(?=[\w$\[(])": "optional chaining ?. (Chromium 80)",
+    r"\?\?": "nullish ?? (Chromium 80)",
+    r"(\|\||&&|\?\?)=": "logical assignment (Chromium 85)",
+    r"\.at\(": "Array/String .at() (Chromium 92)",
+    r"\breplaceChildren\b": "replaceChildren (Chromium 86)",
+    r"\broundRect\b": "roundRect (Chromium 99)",
+    r"\breplaceAll\b": "replaceAll (Chromium 85)",
+    r"\bstructuredClone\b": "structuredClone (Chromium 98)",
+    r"\bObject\.hasOwn\b": "Object.hasOwn (Chromium 93)",
+    r"\bfindLast(Index)?\b": "findLast (Chromium 97)",
+    r"\bstatic\s*\{": "class static block (Chromium 94)",
+    r"\bthis\.#|^\s*#\w+\s*[=;]": "private class field (Chromium 74)",
+}
+
+def check_compat():
+    """Warn about syntax or APIs in site/js that older phone browsers do not know (TOO_NEW).
+
+    Comments are left out (a // after a space or at the start of a line, so URLs stay). Only a
+    warning: the page is written, but that file will not run on those browsers.
+    """
+    files = json.loads((SITE / "manifest.json").read_text(encoding="utf-8"))["js"] + ["js/head.js"]
+    found = []
+    for rel in files:
+        for n, line in enumerate((SITE / rel).read_text(encoding="utf-8").splitlines(), 1):
+            code = re.sub(r"(^|\s)//.*$", "", line)
+            found += [f"site/{rel}, line {n}: {what}" for pattern, what in TOO_NEW.items() if re.search(pattern, code)]
+    if not found:
+        ok("page JavaScript: runs on older phone browsers too")
+        return
+    err("page JavaScript: too new for some phone browsers (that file stops there):")
+    for line in found[:10]:
+        print(f"       {line}")
 
 def check_script():
     """Check the syntax of the page's JavaScript with node, when node is installed.
 
-    All of site/js/ ends up in one <script>, so a single typo stops every feature of the page;
-    this catches it at build time instead of in the browser. Only a warning: the page is written.
+    A typo stops a whole site/js file (each is its own <script>), and the files after it that use
+    it; this catches it at build time instead of in the browser. Only a warning: the page is written.
     """
     node = shutil.which("node")
     if not node:

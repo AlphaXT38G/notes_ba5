@@ -196,7 +196,8 @@ const epicSound = () => { if (epicRiff && epicMuted) { epicCommand("unMute"); ep
 const setEpicMusic = on => {
   document.removeEventListener("pointerdown", epicSound);
   if (!on) {
-    epicRiff?.remove(); epicRiff = null; epicPlaying = epicMuted = false;
+    if (epicRiff) epicRiff.remove();
+    epicRiff = null; epicPlaying = epicMuted = false;
     amp.classList.remove("epic");
     if (!document.body.classList.contains("metal")) amp.remove();
     return;
@@ -210,7 +211,8 @@ setEpicMusic(document.body.classList.contains("epic"));
 document.addEventListener("epic", e => setEpicMusic(e.detail));
 
 // "Back to normal": a small button in the bottom right corner during the epic finale. It ends the
-// epic and the page falls back to whatever the clock says (day, or the jazz bar at night).
+// epic and the page falls back to whatever the clock says (the calm night after the metal show,
+// the day, or the jazz bar at night). As long as the epic runs, the calm night waits.
 const leaveBtn = document.createElement("button");
 leaveBtn.id = "leave";
 leaveBtn.type = "button";

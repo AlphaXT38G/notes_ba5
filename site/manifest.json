@@ -8,6 +8,7 @@
     "css/metal.css",
     "css/epic.css",
     "css/christmas.css",
+    "css/calm.css",
     "css/screens.css",
     "css/konami.css"
   ],
@@ -26,6 +27,7 @@
     "js/armstrong.js",
     "js/metal.js",
     "js/epic.js",
+    "js/calm.js",
     "js/start.js"
   ]
 }

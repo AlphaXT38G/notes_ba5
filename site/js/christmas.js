@@ -28,10 +28,11 @@ const xmasSubtitle = () => {
 SCREENS.christmas = { className: "christmas", subtitle: xmasSubtitle, transition: "christmas" };
 SCREENS["christmas-night"] = { className: "christmas", subtitle: xmasSubtitle, transition: "christmas" };
 
-// Christmas replaces the day and the jazz bar, not the shows: the override only rewrites "no
-// screen" and the jazz screens, and it runs before the metal and epic ones (this file is loaded
-// before metal.js), so those still win. A forced ?night=... is left alone (?night=christmas and
-// ?night=christmas-night force these screens), unless the yeti code was typed (xmasEgg).
+// Christmas replaces the day, the calm night and the jazz bar, not the shows: the override only
+// rewrites the normal screens (no screen, the calm night, see isNormal) and the jazz screens, and
+// it runs before the metal and epic ones (this file is loaded before metal.js), so those still
+// win. A forced ?night=... is left alone (?night=christmas and ?night=christmas-night force these
+// screens), unless the yeti code was typed (xmasEgg).
 // xmasJazz: the hidden sax was clicked, the night goes on in the jazz bar until the fir is clicked
 // or Christmas day comes back at 6:00.
 const isXmasDate = (d = new Date()) => (d.getMonth() === 11 && d.getDate() >= 10) || (d.getMonth() === 0 && d.getDate() <= 3);
@@ -43,7 +44,7 @@ const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && 
 let xmasJazz = false, xmasEgg = false;
 OVERRIDES.push(phase => {
   let p = phase;
-  if ((xmasEgg || (!forced || forcedDismissed) && isXmasDate()) && (p === null || SCREENS[p]?.className === "night")) {
+  if ((xmasEgg || (!forced || forcedDismissed) && isXmasDate()) && (isNormal(p) || screenClass(p) === "night")) {
     p = isXmasDaytime() ? "christmas" : "christmas-night";
   }
   if (p === "christmas") xmasJazz = false;
@@ -62,7 +63,7 @@ document.addEventListener("keydown", e => {
   if (isXmasDate()) return;
   const onXmas = xmasEgg || document.body.classList.contains("christmas");
   xmasEgg = !onXmas;
-  if (onXmas && forced?.startsWith("christmas")) forcedDismissed = true;  // also leaves a forced Christmas
+  if (onXmas && forced && forced.startsWith("christmas")) forcedDismissed = true;  // also leaves a forced Christmas
   applyScreen();
 });
 
@@ -102,8 +103,9 @@ const buildGarland = () => {
   const W = Math.max(320, document.documentElement.clientWidth), rnd = seeded(12);
   // irregular swags: widths from 240 to 420 px, depths from 45 to 82 px, hooks at slightly different heights
   const hooks = [[0, 6]];
-  while (hooks.at(-1)[0] < W) hooks.push([hooks.at(-1)[0] + 240 + rnd() * 180, 3 + rnd() * 9]);
-  const scale = W / hooks.at(-1)[0];  // stretch so the last hook lands on the right edge
+  const last = () => hooks[hooks.length - 1];  // not .at(-1): Chromium 92+ only
+  while (last()[0] < W) hooks.push([last()[0] + 240 + rnd() * 180, 3 + rnd() * 9]);
+  const scale = W / last()[0];  // stretch so the last hook lands on the right edge
   hooks.forEach(h => { h[0] *= scale; });
   const swags = [], lights = [], baubles = [];
   for (let k = 0; k + 1 < hooks.length; k++) {
@@ -555,7 +557,9 @@ const treeResize = () => {
   treeCanvas.oy = r.height - TREE_H * treeScale;
 };
 const treeFrame = now => {
-  treeT += Math.min(.05, (now - treeLast) / 1000);
+  // never backwards: the first frame's time can be a little before the performance.now() of its
+  // start, and a negative time would pick a pattern that does not exist
+  treeT += Math.max(0, Math.min(.05, (now - treeLast) / 1000));
   treeLast = now;
   const c = tctx, s = treeScale, idx = Math.floor(treeT / 12), fade = Math.min(1, (treeT % 12) / 1.2);
   const cur = PATTERNS[idx % PATTERNS.length], prev = PATTERNS[(idx + PATTERNS.length - 1) % PATTERNS.length];
@@ -747,7 +751,7 @@ const flySleigh = () => {
   sleighFlight.onfinish = sleighFlight.oncancel = () => sleighEl.remove();
 };
 everySecond.push(() => {
-  if (document.body.dataset.phase !== "christmas-night") { sleighFlight?.cancel(); sleighIn = 20 + Math.random() * 60; return; }
+  if (document.body.dataset.phase !== "christmas-night") { if (sleighFlight) sleighFlight.cancel(); sleighIn = 20 + Math.random() * 60; return; }
   if (--sleighIn <= 0) { sleighIn = 40 + Math.random() * 200; flySleigh(); }
 });
 
@@ -859,7 +863,7 @@ xmasDeck.addEventListener("click", e => {
 const setCarols = on => {
   document.removeEventListener("pointerdown", carolsSound);
   document.removeEventListener("keydown", carolsSound);
-  if (!on) { carols?.remove(); carols = null; carolsPlaying = carolsMuted = false; xmasDeck.remove(); return; }
+  if (!on) { if (carols) carols.remove(); carols = null; carolsPlaying = carolsMuted = false; xmasDeck.remove(); return; }
   document.body.append(xmasDeck);
   if (!carolsOff()) {
     const canSound = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
@@ -888,7 +892,7 @@ firBtn.addEventListener("click", e => {
   applyScreen();
 });
 document.addEventListener("phase", e => {
-  if (xmasJazz && SCREENS[e.detail]?.className === "night") document.body.append(firBtn); else firBtn.remove();
+  if (xmasJazz && screenClass(e.detail) === "night") document.body.append(firBtn); else firBtn.remove();
   if (e.detail === "christmas" || e.detail === "christmas-night") setTreeLights(e.detail === "christmas-night");
 });
 

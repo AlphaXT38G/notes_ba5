@@ -41,7 +41,8 @@ Optional keys per subject in `subjects.json`:
 - `"weeks"`: length of the progress bar (default 14)
 - `"color"`: accent colour of the subject card (default: taken from a palette)
 
-The page also has a search field, a light/dark toggle and a flame mode 🔥.
+The page also has a search field, a light/dark toggle and a flame mode 🔥. It works
+on phones too, including older Android browsers.
 A **Names / Previews** switch shows every document as a small thumbnail of its
 first page instead (for course notes, the first page after the table of contents).
 The thumbnails are made by `pdftoppm` and `pdftotext` (poppler); without them,
@@ -61,19 +62,30 @@ song takes over for 1 min 51 s 🤘: chrome title, red light pulsing on the beat
 headbanging cards and an equalizer, plus effects drawn on a canvas: branching
 lightning with sparks, physics-driven metal chains hanging in the margins, a curtain
 of fire and chrome skulls / Flying V guitars / horns thrown across the page. A
-guitar amp replaces the turntable and plays the song from 1:50 to its end. Then the
-page is back to its day look. Each change of style is animated (a warm fade into the
-jazz bar, a slam into the metal show, a soft fade back to the day) in browsers that
-support view transitions.
+guitar amp replaces the turntable and plays a cover of the Master of Puppets solo
+three times in a row (it shows which play is on); the show ends with the third. Each change of style is animated (a warm fade into the
+jazz bar, a slam into the metal show, a slow hush into the calm night, a soft fade
+back to the day) in browsers that support view transitions.
+
+After the show, from **01:01:51 to 05:30**, the night goes quiet 🌙: a calm blue
+night with the moon as it really is tonight (its phase computed from the true new
+moons), twinkling stars, a shooting star now and then, fireflies, mist drifting
+over dark hills, and the sound of crickets in a forest at night from YouTube, a
+little quieter and slower than recorded. From 04:45 the dawn rises from the
+horizon, the crickets quieten and the first birds sing. A firefly jar in the bottom
+left corner pauses / resumes the sounds. The epic finale and Christmas nights come
+before it.
 
 10 seconds before a metal show ends, a **"More epicness ?"** button shows up. Click
 it and, instead of going back to the day, the page turns into an epic fantasy finale ⚔️:
 a blue and violet night with an aurora, realistic blue fire, embers, floating arcane
 lights and a rune circle, while the amp (now blue) plays epic music in a loop. It lasts
 until you click the small **"Back to normal"** button in the bottom right corner, which
-brings back the usual look for the time of day (day, or the jazz bar at night).
+brings back the usual look for the time of day (day, the calm night after the show,
+or the jazz bar at night).
 
-From **December 10 to January 3** Christmas replaces the day and the jazz bar: a
+From **December 10 to January 3** Christmas replaces the day, the jazz bar and the
+calm night: a
 Christmas day from 06:00 to 18:00 and a Christmas night from 18:00 to 06:00. A
 garland across the top that swings under the mouse (lit at night), falling snow,
 big snowy mountains, a decorated tree with gifts, a snowman companion beside the
@@ -83,7 +95,7 @@ mountains, the tree lights play changing patterns and Santa's sleigh crosses the
 sky now and then. Look closely at the
 ornaments at night. The metal show at 01:00 and the easter eggs still happen.
 
-Add `?night=evening`, `?night=closing`, `?night=metal`, `?night=epic`,
+Add `?night=evening`, `?night=closing`, `?night=metal`, `?night=epic`, `?night=calm`,
 `?night=christmas` or `?night=christmas-night` (or `1` / `0`) to the URL to force a
 screen (or the day) at any time.
 
@@ -93,4 +105,4 @@ takeover at any time of day if you click the flame button 20 times within a minu
 Christmas at any time of the year if you type `yeti` (outside the Christmas
 period, type it again on a Christmas screen to leave), and the jazz bar at any time
 if you type `armstrong` (type it again in the bar to go back to the screen of the
-moment: the day, the bar at bar time, or Christmas in December).
+moment: the day, the calm night, the bar at bar time, or Christmas in December).

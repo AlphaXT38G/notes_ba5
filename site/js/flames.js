@@ -27,7 +27,7 @@ const setFire = on => {
   if (on) {
     for (let i = 0; i < 25; i++) flame(Math.random() * 100, 1 + Math.random() * 2, 2 + Math.random() * 3);
     timer = setInterval(() => flame(Math.random() * 100, .8 + Math.random() * 1.8, 3 + Math.random() * 4), 140);
-  } else layer.replaceChildren();  // drop the flames still rising, right away
+  } else layer.textContent = "";  // drop the flames still rising, right away
   try { localStorage.setItem("fire", on ? "1" : ""); } catch (e) {}
 };
 // 20 clicks on the flame button within a minute start the metal takeover (easter egg, see

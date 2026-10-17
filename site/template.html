@@ -5,11 +5,11 @@
 <link rel="preconnect" href="https://www.youtube.com"><link rel="preconnect" href="https://i.ytimg.com">
 <script>{{head_js}}</script>
 <style>{{css}}</style></head><body><div class="wrap">
-<header><div class="tools"><button id="fire" type="button" aria-label="Flame mode" title="Flame mode" aria-pressed="false">🔥</button><button id="theme" type="button" aria-label="Toggle dark mode"></button></div>
+<header><div class="tools"><button id="fire" type="button" aria-label="Flame mode" title="Flame mode" aria-pressed="false">🔥</button><button id="theme" type="button" aria-label="Toggle dark mode">◐</button></div>
 <h1>Notes BA5</h1><p class="sub">EPFL IN, autumn semester: course notes, weekly notes and cheat sheets</p>
 <div class="searchrow"><input id="search" type="search" placeholder="Search a course, a week, a sheet…" aria-label="Search documents" autocomplete="off">
-<div class="view" role="group" aria-label="Display"><button type="button" data-view="names">Names</button><button type="button" data-view="previews">Previews</button></div></div></header>
+<div class="view" role="group" aria-label="Display"><button type="button" data-view="names" aria-pressed="true">Names</button><button type="button" data-view="previews" aria-pressed="false">Previews</button></div></div></header>
 <main class="grid"><div class="col">{{cards_left}}</div><div class="col">{{cards_right}}</div></main>
 <p id="empty" hidden>No document matches this search.</p>
 <footer>Generated {{generated}} by build.py</footer>
-</div><script>{{js}}</script></body></html>
+</div>{{js}}</body></html>
