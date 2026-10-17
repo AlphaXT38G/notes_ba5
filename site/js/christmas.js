@@ -103,8 +103,9 @@ const buildGarland = () => {
   const W = Math.max(320, document.documentElement.clientWidth), rnd = seeded(12);
   // irregular swags: widths from 240 to 420 px, depths from 45 to 82 px, hooks at slightly different heights
   const hooks = [[0, 6]];
-  while (hooks.at(-1)[0] < W) hooks.push([hooks.at(-1)[0] + 240 + rnd() * 180, 3 + rnd() * 9]);
-  const scale = W / hooks.at(-1)[0];  // stretch so the last hook lands on the right edge
+  const last = () => hooks[hooks.length - 1];  // not .at(-1): Chromium 92+ only
+  while (last()[0] < W) hooks.push([last()[0] + 240 + rnd() * 180, 3 + rnd() * 9]);
+  const scale = W / last()[0];  // stretch so the last hook lands on the right edge
   hooks.forEach(h => { h[0] *= scale; });
   const swags = [], lights = [], baubles = [];
   for (let k = 0; k + 1 < hooks.length; k++) {
