@@ -328,6 +328,77 @@ in the ocean, and keeps \textbf{98 coins}.
 
 
 
+%=========================================================
+\section{The Centipede Game}
+
+
+\begin{center}
+
+\includegraphics[
+width=\linewidth
+]{../images/week04_01.png}
+
+\end{center}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item Players: 1 and 2, moving in turn: Continue (C) or Stop (S).
+
+\item In each period, the total payout (sum of the payouts of Player 1 and Player 2)
+increases by 2 units. One would think players would want to continue playing as long as
+possible.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{important}
+
+\textbf{Backward induction}
+
+\begin{itemize}
+
+\item At the last node, it's optimal for Player 2 to stop: (99,101) instead of (102,100).
+
+\item At each node, knowing that at the next node the other player will stop, the player who
+moves at that time finds it optimal to stop.
+
+\item The unique SPE involves Player 1 stopping at the first node, with payout
+\textbf{(2,0)}: each player quits at every node.
+
+\end{itemize}
+
+Lost opportunity to gain a total of up to 202 for the players! Is backward induction
+realistic?
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{The Centipede game in the lab}
+
+\begin{itemize}
+
+\item People asked to play this game typically do not quit in the first stages.
+
+\item Interpretation: people have a higher tendency to collaborate than predicted by the
+model. They understand that if they both continue, their payout will increase over time, so
+they take the risk to continue, which pays off if also the other player continues.
+
+\item Different from the Prisoner Dilemma: one player has an incentive to cooperate if also
+the other player cooperates.
+
+\end{itemize}
+
+\end{example}
+
+
+
 \end{multicols}
 
 
