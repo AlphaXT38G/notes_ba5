@@ -152,17 +152,51 @@ fxLayers.push({
 
 // "More epicness ?": 10 s before a metal takeover ends this button rises in the middle of the
 // screen. Clicking it queues the epic finale (epicQueued, see the override above) and gets its song ready
-// (preloadEpic, below); it stays as "Epicness incoming…" until the metal ends, then goes away.
+// (preloadEpic, below); it stays, counting down, until the metal ends, then goes away.
+// It is a medallion forged in blue fire (css/epic.css), on a pool of darkness that hides the show behind: light rays turning behind it, a ring of
+// runes (an SVG shown as an <img>, its glow rendered once), ten charge pips around it that light up
+// one by one as the end of the show nears once it was clicked, sparks rising, a shine sweeping
+// its face. Every moving part only turns, scales or fades.
+const MORE_SIGIL = (() => {
+  const runes = Array.from({ length: 30 }, (_, i) => {
+    let d = "";
+    for (let k = 0; k < 3; k++) {
+      const r = () => (Math.random() * 7 - 3.5).toFixed(1);
+      d += `M${r()},${r()}L${r()},${r()}`;
+    }
+    return `<path transform="rotate(${i * 12}) translate(0,-83)" d="${d}"/>`;
+  }).join("");
+  const ticks = Array.from({ length: 72 }, (_, i) => `<path transform="rotate(${i * 5})" d="M0,-96v${i % 6 ? 3 : 6}"/>`).join("");
+  const star = [0, 45].map(a => `<rect transform="rotate(${a})" x="-50" y="-50" width="100" height="100"/>`).join("");
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 200 200"><defs><filter id="g" x="-20%" y="-20%" width="140%" height="140%">` +
+    `<feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>` +
+    `<g filter="url(#g)" fill="none" stroke="#a9c8ff" stroke-linecap="round"><circle r="92" stroke-width="1.6"/><circle r="74" stroke-width="1.2"/>` +
+    `<circle r="99" stroke-width=".6" stroke-dasharray="2 5"/><g stroke-width="1">${ticks}</g><g stroke-width="1.3" stroke="#d6c4ff">${runes}</g>` +
+    `<g stroke-width="1" stroke="#7fa6ff" opacity=".8">${star}</g></g></svg>`;
+  return "data:image/svg+xml," + encodeURIComponent(svg);
+})();
 const moreBtn = document.createElement("button");
 moreBtn.id = "more";
 moreBtn.type = "button";
+moreBtn.innerHTML = `<span class="m-void"></span><span class="m-burst"></span><span class="m-rays"></span><span class="m-halo"></span><img class="m-sigil" src="${MORE_SIGIL}" alt="">` +
+  `<span class="m-pips">${Array.from({ length: 10 }, (_, i) => `<i style="transform:rotate(${i * 36}deg)"></i>`).join("")}</span>` +
+  `<span class="m-sparks">${Array.from({ length: 12 }, (_, i) => `<i style="transform:rotate(${i * 30 + 8}deg)"><b style="animation-delay:${(i * .37 % 2).toFixed(2)}s"></b></i>`).join("")}</span>` +
+  `<span class="m-face"><small class="m-kick"></small><b class="m-title"></b><small class="m-hint"></small><span class="m-shine"></span></span>`;
+const paintMore = () => {
+  const queued = moreBtn.classList.contains("queued"), left = Math.max(0, Math.ceil(metalLeft()));
+  moreBtn.querySelector(".m-kick").textContent = queued ? "Summoning" : "The show is ending";
+  moreBtn.querySelector(".m-title").innerHTML = queued ? `<span class="m-count">${left}</span>` : "More<br>epicness ?";
+  moreBtn.querySelector(".m-hint").textContent = queued ? "Epicness incoming…" : "⚔️ Click to summon";
+  moreBtn.setAttribute("aria-label", queued ? `Epic finale in ${left} seconds` : "More epicness");
+  moreBtn.querySelectorAll(".m-pips i").forEach((pip, i) => pip.classList.toggle("on", queued && i < 10 - left));
+};
 moreBtn.addEventListener("click", e => {
   e.stopPropagation();
   if (epicQueued) return;
   epicQueued = true;
   preloadEpic();
   moreBtn.classList.add("queued");
-  moreBtn.textContent = "⚔️ Epicness incoming…";
+  paintMore();
 });
 // Epic music: a Two Steps From Hell mix (audio/epic.mp3, 25 tracks), looped, on the same amp
 // (turned blue). The song is loaded as soon as the button is clicked (paused), so it starts at once
@@ -220,9 +254,9 @@ everySecond.push(() => {  // show / hide "More epicness ?" in the last 10 s of a
   if (left > 0 && left <= 10) {
     if (!moreBtn.isConnected) {
       moreBtn.classList.remove("queued");
-      moreBtn.textContent = "✨ More epicness ?";
       document.body.append(moreBtn);
     }
+    paintMore();
   } else moreBtn.remove();
 });
 

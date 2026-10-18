@@ -12,15 +12,43 @@ body.epic section{box-shadow:-8px 0 24px -12px rgba(90,140,255,.8)}
 body.epic section::after{box-shadow:-10px 0 34px -10px rgba(170,90,255,.9);animation-duration:4s}
 @keyframes aurora{from{transform:translateX(-4%) rotate(-2deg)}to{transform:translateX(4%) rotate(2deg)}}
 @keyframes shimmer{to{background-position:200% 0}}
-/* "More epicness ?" button, rising in the middle of the metal show 10 s before it ends */
-#more{position:fixed;left:50%;top:50%;z-index:60;padding:1rem 2rem;transform:translate(-50%,-50%);color:#fff;font:700 1.4rem "Palatino Linotype",Georgia,serif;letter-spacing:.05em;background:radial-gradient(circle at 50% 30%,#6c7bff,#3b1f9e 70%);border:2px solid #b9c8ff;border-radius:999px;box-shadow:0 0 30px rgba(110,140,255,.9),0 0 80px rgba(150,80,255,.6),inset 0 0 18px rgba(255,255,255,.35);cursor:pointer;animation:more-in .6s cubic-bezier(.34,1.56,.64,1) both,more-glow 1.2s ease-in-out .6s infinite alternate}
-#more:hover{filter:brightness(1.2)}
-#more.queued{cursor:default;animation:none;background:radial-gradient(circle at 50% 30%,#3e4bbf,#1e0f5e 70%)}
+/* "More epicness ?" (js/epic.js), rising in the middle of the metal show 10 s before it ends: a
+   medallion forged in blue fire. Its parts stack in one square (--d wide): a pool of darkness, turning light rays, a
+   breathing halo, the ring of runes (an <img>), the charge pips, rising sparks, and the face in the
+   middle with the words and a sweeping shine. Only transform and opacity animate. Clicked, it
+   counts down (.queued): the runes and rays spin faster and the pips light up one by one. */
+#more{--d:min(17rem,78vw);position:fixed;left:50%;top:50%;z-index:60;width:var(--d);height:var(--d);margin:calc(var(--d) / -2) 0 0 calc(var(--d) / -2);padding:0;color:#fff;background:none;border:0;border-radius:50%;cursor:pointer;animation:more-in 1s cubic-bezier(.34,1.56,.64,1) both}
+#more>span,#more>img{position:absolute;inset:0;pointer-events:none}
+#more .m-void{inset:-45%;border-radius:50%;background:radial-gradient(closest-side,rgba(4,3,18,.92) 45%,rgba(4,3,18,.6) 70%,transparent)}
+#more .m-rays{inset:-38%;border-radius:50%;background:repeating-conic-gradient(rgba(150,180,255,0) 0deg 8deg,rgba(160,185,255,.3) 11deg,rgba(150,180,255,0) 14deg 20deg);-webkit-mask-image:radial-gradient(closest-side,#000 25%,transparent);mask-image:radial-gradient(closest-side,#000 25%,transparent);animation:more-spin 30s linear infinite}
+#more .m-halo{inset:-14%;border-radius:50%;background:radial-gradient(closest-side,rgba(120,150,255,.6),rgba(150,80,255,.28) 55%,transparent);animation:more-breathe 1.4s ease-in-out infinite alternate}
+#more .m-sigil{width:100%;height:100%;animation:more-spin 24s linear infinite}
+#more .m-burst{border:3px solid rgba(210,225,255,.95);border-radius:50%;box-shadow:0 0 30px rgba(140,170,255,.9),inset 0 0 30px rgba(140,170,255,.7);opacity:0;animation:more-burst 1s ease-out both}
+#more .m-pips i,#more .m-sparks i{position:absolute;left:50%;top:50%;width:0;height:0}
+#more .m-pips i::before,#more .m-pips i::after{content:"";position:absolute;left:-.27rem;top:calc(var(--d) * -.345 - .27rem);width:.54rem;height:.54rem;border-radius:50%;background:#262a66;border:1px solid rgba(170,190,255,.55)}
+#more .m-pips i::after{background:#eef4ff;border-color:#fff;box-shadow:0 0 8px #a9c8ff,0 0 18px #8a6bff;opacity:0;transition:opacity .35s}
+#more .m-pips i.on::after{opacity:1}
+#more .m-sparks b{position:absolute;left:-2px;top:calc(var(--d) * -.43);width:4px;height:4px;border-radius:50%;background:#e6f2ff;box-shadow:0 0 6px 2px rgba(140,180,255,.9);opacity:0;animation:more-spark 2s ease-out infinite}
+#more .m-face{inset:19%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;overflow:hidden;pointer-events:auto;background:radial-gradient(circle at 50% 28%,#6273ff,#2c1880 60%,#120838);border:2px solid #cdd9ff;border-radius:50%;box-shadow:0 0 0 4px rgba(18,10,56,.95),0 0 0 5px rgba(170,190,255,.6),0 0 40px rgba(110,140,255,.9),inset 0 0 22px rgba(255,255,255,.3);transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+#more:hover .m-face,#more:focus-visible .m-face{transform:scale(1.07)}
+#more .m-kick{font:600 calc(var(--d) * .036) system-ui,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#bcd0ff}
+#more .m-title{font:700 calc(var(--d) * .072)/1.05 "Cinzel","Trajan Pro","Palatino Linotype","Book Antiqua",Georgia,serif;letter-spacing:.06em;text-align:center;text-transform:uppercase;text-shadow:0 0 10px rgba(160,190,255,.9),0 0 24px rgba(150,90,255,.75)}
+#more .m-count{font-size:calc(var(--d) * .17);line-height:1}
+#more .m-hint{font:italic calc(var(--d) * .043) "Palatino Linotype",Georgia,serif;color:#dbe4ff}
+#more .m-shine{position:absolute;top:-20%;bottom:-20%;left:-60%;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:more-shine 3.2s ease-in-out 1s infinite}
+#more.queued{cursor:default}
+#more.queued .m-sigil{animation-duration:5s}
+#more.queued .m-rays{animation-duration:9s}
+#more.queued .m-halo{animation-duration:.5s}
+@keyframes more-in{from{opacity:0;transform:scale(.2) rotate(-40deg)}}
+@keyframes more-burst{0%{opacity:1;transform:scale(.4)}100%{opacity:0;transform:scale(2.3)}}
+@keyframes more-spin{to{transform:rotate(360deg)}}
+@keyframes more-breathe{from{opacity:.5}}
+@keyframes more-spark{0%{opacity:0;transform:none}15%{opacity:1}100%{opacity:0;transform:translateY(-4.5rem) scale(.3)}}
+@keyframes more-shine{0%{transform:skewX(-20deg)}45%,100%{transform:skewX(-20deg) translateX(480%)}}
 /* "Back to normal", small and discreet in the bottom right corner of the epic finale */
 #leave{position:fixed;right:1rem;bottom:1rem;z-index:45;padding:.35rem .7rem;color:#c9d4ff;font:600 .75rem system-ui,sans-serif;background:rgba(12,10,40,.75);border:1px solid rgba(140,160,255,.45);border-radius:999px;cursor:pointer}
 #leave:hover,#leave:focus-visible{color:#fff;border-color:#b9c8ff;box-shadow:0 0 12px rgba(120,150,255,.6)}
-@keyframes more-in{from{opacity:0;transform:translate(-50%,20%) scale(.6)}}
-@keyframes more-glow{to{box-shadow:0 0 45px rgba(140,170,255,1),0 0 120px rgba(170,90,255,.8),inset 0 0 22px rgba(255,255,255,.5)}}
 body.epic #fire{display:none}  /* no flame mode during the finale */
 /* The amp during the epic finale: same cabinet, lit by arcane blue light */
 #amp.epic .cab{box-shadow:0 6px 20px rgba(0,0,0,.8),0 0 0 2px #2b2b55,0 0 26px rgba(110,140,255,.8),0 0 60px rgba(150,80,255,.45)}
@@ -28,4 +56,4 @@ body.epic #fire{display:none}  /* no flame mode during the finale */
 #amp.epic .cone{background:radial-gradient(circle,#9fd8ff 0 10%,#11112a 14%,#24245a 40%,#0b0b20 42%,#1d1d46 70%,#000 72%)}
 #amp.epic .label{background:rgba(12,10,40,.9);border-color:rgba(140,160,255,.6)}
 /* Reduced motion */
-@media(prefers-reduced-motion:reduce){body.epic section::after,body.epic::before,body.epic h1{animation:none}}
+@media(prefers-reduced-motion:reduce){body.epic section::after,body.epic::before,body.epic h1{animation:none}#more,#more>span,#more>img,#more .m-sparks b,#more .m-shine{animation:none}#more .m-sparks{display:none}}
