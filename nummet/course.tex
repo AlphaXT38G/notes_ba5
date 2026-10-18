@@ -747,4 +747,18 @@ way forward is \textbf{more processors} (multi-core CPUs, GPUs). (Ed Catmull pla
 Story'' on the exponential curve of computing speed: 14-15 years, almost exactly right.)
 \end{propbox}
 
+
+\section{The cost of the interpreter}
+
+\begin{exbox}[title=Model problem: psum]
+Sum the positive elements of a vector (not natively supported by NumPy). In Python, each
+bytecode instruction goes through a big interpreter loop: \texttt{COMPARE\_OP} alone involves
+type dispatch, reference counting and error handling --- a lot of code for something so simple.
+\end{exbox}
+
+\begin{keybox}[title=Vectorize in Python]
+The interpreter overhead is negligible only when each operation does a lot of work: replace
+loops by array operations, e.g.\ \texttt{X = A + np.where(B < 0, C, D)}.
+\end{keybox}
+
 \end{document}
