@@ -95,12 +95,17 @@ year; outside the Christmas period, typed on a Christmas screen it goes back to 
 typed in a jazz bar opened over Christmas, it brings Christmas back),
 a random surprise banner on some visits, and on both Christmas screens (day and night) a small golden sax
 hidden among the tree ornaments that opens the jazz bar; a little fir
-in the bar's bottom right corner brings Christmas back. `armstrong` typed anywhere but the search
+in the bar's bottom right corner brings Christmas back. A little red guitar leaning against the
+gifts under the tree starts the metal show (then Christmas comes back). `armstrong` typed anywhere but the search
 field opens the jazz bar at any time (over Christmas and the calm night too, but not over the
 shows); typed again in the bar it goes back to the normal screen of that moment, by the clock
 alone: it drops the `armstrong` and `yeti` eggs, the sax and a forced `?night=`, so it shows the
 day (or the calm night), the bar itself
-at bar time (21:30 – 01:00), or Christmas during the Christmas period.
+at bar time (21:30 – 01:00), or Christmas during the Christmas period. `peace` typed anywhere but
+the search field brings the calm night at any time, like `yeti` (over the day, the jazz bar and
+Christmas, not over the shows, which it comes back after); `yeti` or `armstrong` typed after it
+wins, and typed again on the calm night it goes back to the normal screen of that moment (on the
+calm night of the clock, it does nothing).
 
 ## How the index page is built
 
@@ -131,16 +136,16 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `surprise.js` | random surprise banner |
 | `blackhole.js` | `createBlackHole()`: the Konami black hole, ray-traced in WebGL (light bent by gravity, disk with Doppler beaming, lensed stars), on two canvases so the page falls between its sky and its disk |
 | `supernova.js` | `createSupernova()`: the multi-stage supernova that ends the Konami black hole (flash, shock wave, ejecta, nebula, pulsar), one WebGL canvas over the page |
-| `konami.js` | Konami code: black hole (CSS drawing as a fallback without WebGL) swallowing the page letter by letter, then its boxes and the music player, until it overheats, implodes and explodes in a supernova; confetti, party theme |
+| `konami.js` | Konami code: black hole (CSS drawing as a fallback without WebGL) swallowing the page letter by letter, then its boxes, the music player and the Christmas tree's hidden buttons, until it overheats, implodes and explodes in a supernova; confetti, party theme |
 | `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()`; `screenTrack()` / `preloadTrack()` / `dropTrack()` for the screens' music |
 | `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable playing `audio/jazz.mp3`, neon sign going out |
 | `closing.js` | closing time: the life-size bartender behind his bar (photo layers from `img/bartender/`: head nodding, forearm tapping the desk bell, chest breathing), swinging lamp, desk bell "ding" (Web Audio), typed speech, chalkboard with countdown, "Good night" |
 | `fx.js` | the effects canvas of every screen: `fxLayers` (by `<body>` class), `blob()`, the animation loop |
-| `christmas.js` | Christmas screens: date override and `yeti` code, garland, winter scene (mountains and chalets, moon, tree, snowman), night lights canvases (tree, garland halos), snow, sleigh, music (Jingle Bell Rock or the YouTube Christmas radio, swapped with the sleeve behind the turntable, or paused), hidden sax |
+| `christmas.js` | Christmas screens: date override and `yeti` code, garland, winter scene (mountains and chalets, moon, tree, snowman), night lights canvases (tree, garland halos), snow, sleigh, music (Jingle Bell Rock or the YouTube Christmas radio, swapped with the sleeve behind the turntable, or paused), hidden sax and guitar |
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
 | `epic.js` | epic finale: blue fire, motes, rune circle, "More epicness ?", "Back to normal" |
-| `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, night forest sounds (`audio/calm.mp3`, quieter), dawn birds made with Web Audio, firefly jar |
+| `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, night forest sounds (`audio/calm.mp3`, quieter), dawn birds made with Web Audio, firefly jar; the `peace` code (the last override: the calm night at any time) |
 | `start.js` | **last**: first `applyScreen()`, then the every-second clock check |
 
 ### CSS files, in cascade order
@@ -183,9 +188,9 @@ Current screens:
 |---|---|---|---|
 | `evening` | `night` | 21:30 – 00:45, or the `armstrong` code | `jazz.js`, `jazz.css`, `armstrong.js` |
 | `closing` | `night` | 00:45 – 01:00 | `jazz.js`, `jazz.css`, `closing.js`, `closing.css` |
-| `metal` | `metal` | 01:00:00 – 01:01:51 (the song 3 times), or 20 flame clicks | `metal.js`, `metal.css` |
+| `metal` | `metal` | 01:00:00 – 01:01:51 (the song 3 times), or 20 flame clicks, or the Christmas guitar | `metal.js`, `metal.css` |
 | `epic` | `epic` | after a metal show, if "More epicness ?" was clicked | `epic.js`, `epic.css` |
-| `calm` | `calm` | 01:01:51 – 05:30, unless the epic finale runs (a `normal` screen) | `calm.js`, `calm.css` |
+| `calm` | `calm` | 01:01:51 – 05:30, unless the epic finale runs (a `normal` screen), or the `peace` code | `calm.js`, `calm.css` |
 | `christmas` | `christmas` | Dec 10 – Jan 3, 06:00 – 18:00 (replaces the day) | `christmas.js`, `christmas.css` |
 | `christmas-night` | `christmas` | Dec 10 – Jan 3, 18:00 – 06:00 (replaces the day, the jazz bar and the calm night) | `christmas.js`, `christmas.css` |
 

@@ -95,18 +95,19 @@ Christmas turntable: Jingle Bell Rock or a live Christmas radio from YouTube (th
 other record waits in its sleeve behind the turntable: click it to swap them), or
 paused. At night the moon rises, chalets light up on the mountains, the tree lights
 play changing patterns and Santa's sleigh crosses the sky now and then. Look closely
-at the ornaments of the tree. The metal show at 01:00 and the easter eggs still
+at the ornaments of the tree, and under it. The metal show at 01:00 and the easter eggs still
 happen.
 
 Add `?night=evening`, `?night=closing`, `?night=metal`, `?night=epic`, `?night=calm`,
 `?night=christmas` or `?night=christmas-night` (or `1` / `0`) to the URL to force a
 screen (or the day) at any time.
 
-It hides five easter eggs: a surprise banner that shows up on some visits,
+It hides six easter eggs: a surprise banner that shows up on some visits,
 something that happens when you type the Konami code (↑↑↓↓←→←→BA), the metal
 takeover at any time of day if you click the flame button 20 times within a minute,
 Christmas at any time of the year if you type `yeti` (outside the Christmas
 period, type it again on a Christmas screen to leave; in the jazz bar, it brings
 Christmas back), and the jazz bar at any time
 if you type `armstrong` (type it again in the bar to go back to the screen of the
-moment: the day, the calm night, the bar at bar time, or Christmas in December).
+moment: the day, the calm night, the bar at bar time, or Christmas in December), and the
+calm night at any time if you type `peace` (type it again to leave).
