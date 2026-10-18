@@ -759,6 +759,43 @@ Returns a pivot element vector and a single 2D array: the diagonal elements of $
 
 
 
+%=========================================================
+\section{Cholesky Decomposition}
+
+
+\begin{definition}
+
+\textbf{CHOLESKY DECOMPOSITION} (symmetric positive definite matrices)
+
+\[
+\mathbf{A} = \mathbf{L}\mathbf{L}^T
+\]
+
+Almost the same as an LU decomposition, but half as expensive (storage, compute).
+
+\end{definition}
+
+
+\begin{formula}
+
+2$\times$2 example:
+
+\[
+\begin{bmatrix} A_{11} & A_{21} \\ A_{21} & A_{22} \end{bmatrix}
+= \begin{bmatrix} L_{11} & 0 \\ L_{21} & L_{22} \end{bmatrix}
+\begin{bmatrix} L_{11} & L_{21} \\ 0 & L_{22} \end{bmatrix}
+\]
+
+\[
+L_{11} = \sqrt{A_{11}}, \quad
+L_{21} = \frac{A_{21}}{L_{11}}, \quad
+L_{22} = \sqrt{A_{22} - L_{21}^2}
+\]
+
+\end{formula}
+
+
+
 \end{multicols}
 
 
