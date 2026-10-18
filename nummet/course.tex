@@ -399,4 +399,24 @@ la.lu\_solve((lu, piv), b)}; $\mathbf{L}$ has a unit diagonal, so both factors a
 one array.
 \end{propbox}
 
+
+\begin{defnbox}[title=Cholesky decomposition]
+For symmetric positive definite matrices, $\mathbf{A} = \mathbf{L}\mathbf{L}^T$: almost the same
+as LU but half as expensive (storage, compute). In $2 \times 2$:
+\[
+L_{11} = \sqrt{A_{11}}, \quad L_{21} = \frac{A_{21}}{L_{11}}, \quad
+L_{22} = \sqrt{A_{22} - L_{21}^2}.
+\]
+\end{defnbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Matrices are linear functions; vectorized code is orders of magnitude faster.
+  \item Sparse matrices (CSR/CSC) skip the zeros.
+  \item Never invert: factor $\mathbf{A} = \mathbf{P}\mathbf{L}\mathbf{U}$ once in
+        $\mathcal{O}(n^3)$, then substitute in $\mathcal{O}(n^2)$ per right-hand side.
+  \item SPD matrices: Cholesky.
+\end{itemize}
+\end{keybox}
+
 \end{document}
