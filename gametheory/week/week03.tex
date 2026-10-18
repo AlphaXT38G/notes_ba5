@@ -324,6 +324,50 @@ width=0.95\linewidth
 
 
 
+%=========================================================
+\section{Pure Strategies and Normal Form}
+
+
+\begin{definition}
+
+\textbf{PURE STRATEGY (SEQUENTIAL GAME)}
+
+A pure strategy for Player $i$ in a sequential game of perfect information is a
+\textbf{contingent plan} that specifies an action at \textbf{each decision node} of
+Player $i$.
+
+\end{definition}
+
+
+\begin{example}
+
+Ultimatum game: a pure strategy for Player 1 could be simply ``Offer 1''. A pure strategy for
+Player 2 could be ``Reject if the offer is 1 or 2, and accept if the offer is 3''.
+
+\end{example}
+
+
+\textbf{Normal-form representation of the Ultimatum game}
+
+\begin{center}
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{c|cccccccc}
+$1 \backslash 2$ & RRR & RRA & RAA & AAA & ARR & RAR & AAR & ARA \\
+\hline
+Offer 1 & (0,0) & (0,0) & (0,0) & (2,1) & (2,1) & (0,0) & (2,1) & (2,1) \\
+Offer 2 & (0,0) & (0,0) & (1,2) & (1,2) & (0,0) & (1,2) & (1,2) & (0,0) \\
+Offer 3 & (0,0) & (0,3) & (0,3) & (0,3) & (0,0) & (0,0) & (0,0) & (0,3) \\
+\end{tabular}
+\end{center}
+
+
+The eight choices for Player 2 are his eight possible pure strategies: e.g.\ `RRR' means
+Reject if offered 1, 2 or 3; `RAR' means Reject if offered 1, Accept if offered 2, Reject if
+offered 3.
+
+
+
 \end{multicols}
 
 
