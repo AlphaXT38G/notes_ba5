@@ -96,6 +96,17 @@ body[data-phase=christmas-night] #xscene .chalets{display:inline}
 #xtree .s2{stop-color:#1c6b38}
 #xtree .s3{stop-color:#0b3b20}
 #xtree .tier-shadow{fill:rgba(0,20,10,.28)}
+#xtree .tier-lip{fill:#06260f}
+#xtree .ndsh{fill:rgba(0,22,8,.32)}
+#xtree .nd1{fill:#3d9d5a}
+#xtree .nd2{fill:#25793f}
+#xtree .nd3{fill:#0f4b27}
+#xtree .nf1,#xtree .nf2,#xtree .nf3{fill:none;stroke-width:1.2;stroke-linecap:round}
+#xtree .nf1{stroke:#5bb873}
+#xtree .nf2{stroke:#33904f}
+#xtree .nf3{stroke:#17613a}
+#xtree .rim{fill:none;stroke-width:2.2;stroke-linecap:round}
+#xtree .bauble-shadow{fill:rgba(0,22,8,.35)}
 #xtree .tips{fill:none;stroke:#3a9a58;stroke-width:1.6;stroke-linecap:round;opacity:.8}
 #xtree .branch-snow{fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;opacity:.9}
 #xtree .beads{fill:none;stroke:#f3c64f;stroke-width:3.6;stroke-linecap:round;stroke-dasharray:0 6.5}
@@ -108,6 +119,13 @@ body[data-phase=christmas-night] #xtree .s1{stop-color:#1f6a3a}
 body[data-phase=christmas-night] #xtree .s2{stop-color:#124d29}
 body[data-phase=christmas-night] #xtree .s3{stop-color:#062413}
 body[data-phase=christmas-night] #xtree .branch-snow{stroke:#c9d6ea}
+body[data-phase=christmas-night] #xtree .nd1{fill:#2a7443}
+body[data-phase=christmas-night] #xtree .nd2{fill:#185733}
+body[data-phase=christmas-night] #xtree .nd3{fill:#082d18}
+body[data-phase=christmas-night] #xtree .nf1{stroke:#3a8a52}
+body[data-phase=christmas-night] #xtree .nf2{stroke:#226a3d}
+body[data-phase=christmas-night] #xtree .nf3{stroke:#0e3f22}
+body[data-phase=christmas-night] #xtree .rim{opacity:.45}
 @media(max-width:1240px){#xtree{opacity:.5}}
 #xtree-front{z-index:3;pointer-events:none}
 /* The hidden sax (among the ornaments), guitar and firefly jar (among the gifts), glowing gold / red /

@@ -233,7 +233,12 @@ const paintGarlandGlow = time => {  // time in seconds, or null: still lights
 
 // The tree, on the right of the winter scene behind the page (#xscene): tiers of fir with snow on
 // the branches, tinsel, baubles, candy canes, light strings and a star, a red skirt and gifts below
-// it. Drawn once as SVG in a 520 x 640 box. The lights are also listed (treeLights) for the night
+// it. Drawn once as SVG in a 520 x 640 box, lit from the top left like the rest of the scene and
+// shaded for volume: each tier is rounded by gradients (darker under the tier above it and towards
+// its edges), carries rows of hanging branches layered like scales (light on the lit side, dark
+// on the far side), a lip under its edge and a rim of light along the lit half; the trunk is a cylinder, the
+// skirt a lit cloth, the baubles have their reflection and their shadow on the needles, the star is
+// cut in facets. All of it is static (no blur, no animation), so it costs nothing once drawn. The lights are also listed (treeLights) for the night
 // canvas that lights them up. The sax ornament and the guitar are in a separate layer above the
 // page (#xtree-front), so they can be clicked even where the cards cover the tree.
 const TREE_W = 520, TREE_H = 640, TREE_X = 330;
@@ -243,13 +248,26 @@ const buildTree = () => {
   const rnd = seeded(2025), parts = [];
   const defs = [`<linearGradient id="xfir" x1="0" x2="1"><stop class="s1" offset="0"/><stop class="s2" offset=".45"/><stop class="s3" offset="1"/></linearGradient>`,
     `<linearGradient id="xstar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3b0"/><stop offset=".5" stop-color="#ffc93c"/><stop offset="1" stop-color="#c98a0c"/></linearGradient>`,
-    `<linearGradient id="xgold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset=".45" stop-color="#e3a923"/><stop offset="1" stop-color="#8a5a08"/></linearGradient>`];
+    `<linearGradient id="xgold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset=".45" stop-color="#e3a923"/><stop offset="1" stop-color="#8a5a08"/></linearGradient>`,
+    // volume of a tier: in the shadow of the tier above at its top, rounded like a cone (lit on the
+    // left, darker towards the edges), a rim of light along the lit half of its edge
+    `<linearGradient id="xfirdepth" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(0,18,6,.55)"/><stop offset=".4" stop-color="rgba(0,18,6,0)"/><stop offset=".85" stop-color="rgba(0,18,6,0)"/><stop offset="1" stop-color="rgba(0,18,6,.25)"/></linearGradient>`,
+    `<radialGradient id="xfirround" cx=".34" cy=".62" r=".72"><stop offset="0" stop-color="rgba(220,255,200,.16)"/><stop offset=".55" stop-color="rgba(220,255,200,0)"/><stop offset="1" stop-color="rgba(0,15,5,.4)"/></radialGradient>`,
+    `<linearGradient id="xrim" x1="0" x2="1"><stop offset="0" stop-color="rgba(190,245,170,.75)"/><stop offset=".45" stop-color="rgba(190,245,170,.25)"/><stop offset=".6" stop-color="rgba(190,245,170,0)"/></linearGradient>`,
+    `<linearGradient id="xtrunk" x1="0" x2="1"><stop offset="0" stop-color="#8a5a2c"/><stop offset=".35" stop-color="#6b4220"/><stop offset="1" stop-color="#2e1808"/></linearGradient>`,
+    `<radialGradient id="xskirt" cx=".32" cy=".25" r=".8"><stop offset="0" stop-color="#ea3048"/><stop offset=".5" stop-color="#c8102e"/><stop offset="1" stop-color="#7e0a1d"/></radialGradient>`,
+    `<radialGradient id="xtrunkfoot"><stop offset="0" stop-color="rgba(40,0,8,.55)"/><stop offset="1" stop-color="rgba(40,0,8,0)"/></radialGradient>`];
   const BAUBLES = [["#ff6b7d", "#c8102e", "#5c0614"], ["#fff1a6", "#e2a81e", "#6b4504"], ["#bfe1ff", "#2f7ed8", "#0b2d5c"], ["#ffffff", "#c7ced8", "#59626e"], ["#e9b8ff", "#8e3cc8", "#3a0c5a"]];
   BAUBLES.forEach(([a, b, c], i) => defs.push(`<radialGradient id="xb${i}" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="${a}"/><stop offset=".45" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></radialGradient>`));
 
-  // Tree skirt and trunk, then the tiers from the bottom up, each casting a shadow on the one below
-  parts.push(`<rect x="${TREE_X - 15}" y="512" width="30" height="40" fill="#5a3418"/><ellipse cx="${TREE_X}" cy="560" rx="150" ry="22" fill="#a30d26"/>` +
-    `<ellipse cx="${TREE_X}" cy="556" rx="150" ry="19" fill="#c8102e"/><path d="M${TREE_X - 150},556a150,19 0 0 0 300,0" fill="none" stroke="#fff" stroke-width="6" stroke-dasharray="1 9" stroke-linecap="round"/>`);
+  // Tree skirt (a lit cloth with a few soft folds) and trunk (a cylinder standing in it), then the
+  // tiers from the bottom up, each casting a shadow on the one below
+  const folds = [-110, -62, -18, 30, 76, 118].map(dx => `M${TREE_X + dx * .55},541Q${TREE_X + dx * .8},556 ${TREE_X + dx},${f1(556 + 17 * Math.sqrt(1 - (dx / 150) ** 2))}`).join("");
+  parts.push(`<ellipse cx="${TREE_X}" cy="560" rx="150" ry="22" fill="#7e0a1d"/><ellipse cx="${TREE_X}" cy="556" rx="150" ry="19" fill="url(#xskirt)"/>` +
+    `<path d="${folds}" fill="none" stroke="rgba(70,0,12,.28)" stroke-width="3" stroke-linecap="round"/>` +
+    `<path d="M${TREE_X - 150},556a150,19 0 0 0 300,0" fill="none" stroke="#fff" stroke-width="6" stroke-dasharray="1 9" stroke-linecap="round"/>` +
+    `<ellipse cx="${TREE_X + 6}" cy="551" rx="30" ry="6" fill="url(#xtrunkfoot)"/><rect x="${TREE_X - 15}" y="512" width="30" height="40" fill="url(#xtrunk)"/>` +
+    `<ellipse cx="${TREE_X}" cy="552" rx="15" ry="3" fill="#2e1808"/><path d="M${TREE_X - 8},516v32M${TREE_X + 3},514v34" stroke="rgba(0,0,0,.18)" stroke-width="1.2"/>`);
   const TIERS = [[290, 525, 184], [222, 438, 150], [160, 350, 118], [106, 262, 86], [62, 178, 52]];
   TIERS.forEach(([top, bottom, hw], i) => {
     const n = 7 + (4 - i) * 2, step = hw * 2 / n;
@@ -261,7 +279,31 @@ const buildTree = () => {
     const path = `M${TREE_X},${top - 34}C${TREE_X - hw * .35},${f1(top + (bottom - top) * .45)} ${f1(TREE_X - hw * .8)},${f1(bottom - 20)} ${f1(TREE_X - hw)},${bottom}${edge}` +
       `C${f1(TREE_X + hw * .8)},${f1(bottom - 20)} ${TREE_X + hw * .35},${f1(top + (bottom - top) * .45)} ${TREE_X},${top - 34}Z`;
     if (i) parts.push(`<path d="${path}" transform="translate(0,9)" class="tier-shadow"/>`);
-    parts.push(`<path d="${path}" fill="url(#xfir)"/>`);
+    // the lip: the underside of the branches, seen just below their edge
+    parts.push(`<path d="${path}" transform="translate(0,3.5)" class="tier-lip"/><path d="${path}" fill="url(#xfir)"/>` +
+      `<path d="${path}" fill="url(#xfirdepth)"/><path d="${path}" fill="url(#xfirround)"/>`);
+    // rows of drooping branches inside the tier, layered like scales: each branch is a hanging
+    // crescent with its shadow under it and a fringe of needles along its edge, in three tones by
+    // where it is (lit on the left, in the shade on the right and in the shadow of the tier above)
+    const tones = ["", "", ""], fringe = ["", "", ""];
+    let shade = "";
+    for (let r = 1; r <= 3; r++) {
+      const y = top + (bottom - top) * (r / 4) - 6, half = hw * (.3 + .7 * (y - top + 34) / (bottom - top + 34)) * .88;
+      const count = Math.max(3, Math.round(half * 2 / 26)), w = half * 2 / count;
+      for (let k = 0; k < count; k++) {
+        const x = TREE_X - half + k * w + (rnd() - .5) * 5, yy = y + (rnd() - .5) * 6, out = (x + w / 2 - TREE_X) / hw;
+        const lit = (1 - out) / 2 - (r === 1 ? .22 : 0) + (rnd() - .5) * .2, tone = lit > .55 ? 0 : lit > .28 ? 1 : 2;
+        const ww = w + 6, sag = 9 + rnd() * 4, x0 = x - 3;
+        tones[tone] += `M${f1(x0)},${f1(yy)}Q${f1(x0 + ww / 2)},${f1(yy + sag * 2)} ${f1(x0 + ww)},${f1(yy)}Q${f1(x0 + ww / 2)},${f1(yy + sag * .5)} ${f1(x0)},${f1(yy)}Z`;
+        shade += `M${f1(x0 + 1)},${f1(yy + 3)}Q${f1(x0 + ww / 2 + 1)},${f1(yy + sag * 2 + 4)} ${f1(x0 + ww + 1)},${f1(yy + 3)}Q${f1(x0 + ww / 2)},${f1(yy + sag + 2)} ${f1(x0 + 1)},${f1(yy + 3)}Z`;
+        for (let q = 1; q < 6; q++) {  // needles along the bottom of the crescent
+          const t = q / 6, nx = x0 + ww * t, ny = yy + 2 * sag * t * (1 - t) * 2 * .98;
+          fringe[tone] += `M${f1(nx)},${f1(ny - 1)}l${f1(out * 2 + (rnd() - .5) * 1.6)},${f1(3 + rnd() * 2.5)}`;
+        }
+      }
+    }
+    parts.push(`<path class="ndsh" d="${shade}"/>` + tones.map((d, t) => `<path class="nd${t + 1}" d="${d}"/><path class="nf${t + 1}" d="${fringe[t]}"/>`).join(""));
+    parts.push(`<path class="rim" d="M${f1(TREE_X - hw)},${bottom}${edge}" stroke="url(#xrim)"/>`);
     // needle tips along the bottom edge, and snow resting on some branches
     let tips = "", snow = "";
     for (let j = 0; j < n * 5; j++) {
@@ -302,8 +344,11 @@ const buildTree = () => {
     taken.push([x, y, r]);
     placed++;
     const c = (rnd() * BAUBLES.length) | 0;
-    parts.push(`<g class="bauble"><path d="M${f1(x)},${f1(y - r - 9)}v6" class="hook"/><rect x="${f1(x - 2.6)}" y="${f1(y - r - 4)}" width="5.2" height="4.5" rx="1" fill="url(#xgold)"/>` +
+    parts.push(`<g class="bauble"><ellipse cx="${f1(x + r * .45)}" cy="${f1(y + r * .75)}" rx="${f1(r * .95)}" ry="${f1(r * .45)}" class="bauble-shadow"/>` +
+      `<path d="M${f1(x)},${f1(y - r - 9)}v6" class="hook"/><rect x="${f1(x - 2.6)}" y="${f1(y - r - 4)}" width="5.2" height="4.5" rx="1" fill="url(#xgold)"/>` +
       `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="url(#xb${c})"/>` +
+      `<ellipse cx="${f1(x - r * .38)}" cy="${f1(y - r * .42)}" rx="${f1(r * .3)}" ry="${f1(r * .2)}" transform="rotate(-35 ${f1(x - r * .38)} ${f1(y - r * .42)})" fill="rgba(255,255,255,.75)"/>` +
+      `<path d="M${f1(x + r * .3)},${f1(y + r * .75)}a${f1(r)},${f1(r)} 0 0 0 ${f1(r * .5)},${f1(-r * .6)}" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1"/>` +
       (rnd() < .35 ? `<path d="M${f1(x - r)},${f1(y)}a${f1(r)},${f1(r * .35)} 0 0 0 ${f1(r * 2)},0" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="1.6"/>` : "") + `</g>`);
   }
   // Candy canes
@@ -320,11 +365,25 @@ const buildTree = () => {
   });
   defs.push(`<linearGradient id="xshade" x1="0" x2="1"><stop offset="0" stop-color="rgba(255,255,255,.18)"/><stop offset=".6" stop-color="rgba(0,0,0,0)"/><stop offset="1" stop-color="rgba(0,0,0,.25)"/></linearGradient>`);
   // Star on the top
-  const star = Array.from({ length: 10 }, (_, i) => {
+  // Star on the top, cut in facets: each point is two triangles from the centre, the one facing the
+  // light (top left) bright, the other in shade
+  const starPts = Array.from({ length: 10 }, (_, i) => {
     const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? 11 : 27;
-    return `${f1(TREE_X + Math.cos(a) * r)},${f1(30 + Math.sin(a) * r)}`;
-  }).join(" ");
-  parts.push(`<polygon points="${star}" fill="url(#xstar)" stroke="#a8740a" stroke-width="1.2" stroke-linejoin="round"/>`);
+    return [TREE_X + Math.cos(a) * r, 30 + Math.sin(a) * r, a];
+  });
+  const star = starPts.map(([x, y]) => `${f1(x)},${f1(y)}`).join(" ");
+  let facets = "";
+  starPts.forEach(([x, y, a], i) => {
+    if (i % 2) return;
+    [starPts[(i + 9) % 10], starPts[i + 1]].forEach(([ix, iy], k) => {
+      // how much this facet faces the top left: its middle direction from the centre
+      const mid = a + (k ? 1 : -1) * Math.PI / 10, lit = Math.cos(mid - Math.PI * 1.25);
+      const fill = lit > .3 ? "#fff6c4" : lit > -.3 ? "#ffd04a" : "#c98a0c";
+      facets += `<polygon points="${TREE_X},30 ${f1(x)},${f1(y)} ${f1(ix)},${f1(iy)}" fill="${fill}"/>`;
+    });
+  });
+  parts.push(`<polygon points="${star}" fill="url(#xstar)"/>${facets}<polygon points="${star}" fill="none" stroke="#a8740a" stroke-width="1.2" stroke-linejoin="round"/>` +
+    `<circle cx="${TREE_X - 6}" cy="22" r="2.2" fill="rgba(255,255,255,.85)"/>`);
   return `<svg viewBox="0 0 ${TREE_W} ${TREE_H}" preserveAspectRatio="xMidYMax meet"><defs>${defs.join("")}</defs>${parts.join("")}</svg>`;
 };
 // The hidden sax, hanging on the right side of the tree like an ornament:
