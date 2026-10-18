@@ -81,7 +81,8 @@ before it.
 blue fire (a turning ring of runes, light rays, sparks). Click it and it counts down; in
 the last seconds of the show the room goes dark, a huge rune circle and pillars of light
 rise, the medallion implodes and bursts in a white flash and a shock wave right as the
-song ends, with a whoosh and a boom. Instead of going back to the day, the page turns into an epic fantasy finale ⚔️:
+song ends, with a whoosh and a boom. Instead of going back to the day, the page turns into
+an epic fantasy finale ⚔️:
 a blue and violet night with an aurora, realistic blue fire, embers, floating arcane
 lights and a rune circle, while the amp (now blue) plays Two Steps From Hell in a loop. It lasts
 until you click the small **"Back to normal"** button in the bottom right corner, which
@@ -98,8 +99,8 @@ Christmas turntable: Jingle Bell Rock or a live Christmas radio from YouTube (th
 other record waits in its sleeve behind the turntable: click it to swap them), or
 paused. At night the moon rises, chalets light up on the mountains, the tree lights
 play changing patterns and Santa's sleigh crosses the sky now and then. Look closely
-at the ornaments of the tree, under it, and along the garland. The metal show at 01:00 and the easter eggs still
-happen.
+at the ornaments of the tree, under it, and along the garland. The metal show at 01:00
+and the easter eggs still happen.
 
 Add `?screen=evening`, `?screen=closing`, `?screen=metal`, `?screen=epic`, `?screen=calm`,
 `?screen=christmas` or `?screen=christmas-night` (or `1` / `0`) to the URL to force a
