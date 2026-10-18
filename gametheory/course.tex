@@ -1376,4 +1376,23 @@ CD can only be used from C to D. Three routes from A to B: AC+CB, AD+DB and AC+C
 added.
 \end{propbox}
 
+
+\section{Existence of a pure-strategy NE in every network}
+
+\begin{defnbox}[title=Potential energy]
+The potential energy of an edge $e$ when $x_e$ cars travel on it is
+\[
+E_e(x_e) = T_e(1) + T_e(2) + \ldots + T_e(x_e),
+\]
+and the potential energy of a network $\mathcal{N}$ is the sum over all its edges:
+\[
+E_{\mathcal{N}} = \sum_{e \in \mathcal{N}} E_e(x_e).
+\]
+\end{defnbox}
+
+\begin{warnbox}[title=Not the total travel time]
+Potential energy is different from the aggregate travel time on an edge (total time spent on
+it by the cars traveling on it), which is $x\,T_e(x)$.
+\end{warnbox}
+
 \end{document}
