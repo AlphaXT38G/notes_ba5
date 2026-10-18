@@ -107,7 +107,10 @@ sax and a forced `?screen=`, so it shows the day (or the calm night), the bar it
 field brings the calm night at any time, like `yeti` (over the day, the jazz bar and Christmas, not
 over the shows, which it comes back after); `yeti` or `armstrong` typed after it wins, and typed
 again on the calm night it goes back to the normal screen of that moment (on the calm night of the
-clock, it does nothing).
+clock, it does nothing). `normal` typed anywhere but the search field brings back the day at any
+time, over every screen, the shows included: it drops every other egg and a forced `?screen=`, and
+keeps the day even when the clock brings a screen; an egg typed or clicked after it wins, and typed
+again it lets the clock decide.
 
 ## How the index page is built
 
@@ -148,6 +151,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
 | `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), "Back to normal" |
 | `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, night forest sounds (`audio/calm.mp3`, quieter), dawn birds made with Web Audio, firefly jar; the `peace` code (the last override: the calm night at any time; `startPeace()`, also called by the Christmas jar) |
+| `normal.js` | `normal` code: the day at any time, over every screen (the very last override, after `calm.js`); typed again, back to the clock's screen |
 | `tapes.js` | the day's cassette deck (no screen only): an early-80s hi-fi deck (VU meters, LED counter, piano keys ⏏ ◀◀ ▶❚❚ ▶▶ and the station key) whose music comes in bands (`TAPE_BANDS`): Lofi Girl mixes, then the screens' music (jazz, late night, metal, epic, Christmas), then Radio Impuls live. A tape is a YouTube video (hidden `<iframe>` driven by `postMessage`), an mp3 of `site/audio/` or a live stream (`<audio>`). The station key goes to the next band, ⏏ or the next tape's case behind the deck to the next tape of the band (door opens, tape out, new one in, door closes); never plays by itself, the tape is remembered |
 | `start.js` | **last**: first `applyScreen()`, then the every-second clock check |
 
