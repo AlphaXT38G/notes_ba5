@@ -425,6 +425,51 @@ width=0.8\linewidth
 
 
 
+%=========================================================
+\section{Runge Function and Chebyshev Points}
+
+
+Demo: the Runge function, fitted by polynomials through uniformly spaced points.
+
+
+\begin{definition}
+
+\textbf{TAYLOR'S THEOREM}
+
+Approximation of a function around a point $a$. The residual of the approximation is equal to the
+$k{+}1^{\text{st}}$ derivative \emph{somewhere} between the expansion point and where the function
+is evaluated. What about the error away from this point?
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Taylor's theorem for polynomials} (approximation around a sequence of points
+$x_i$ used for the fit):
+
+\[
+R_{k-1}(x) = \frac{f^k(y)}{k!}\prod_{i=1}^{k}|x - x_i|
+\]
+
+\textbf{Idea}: try to make $\prod_{i=1}^{k}|x - x_i|$ small. \textbf{Optimal} set of points
+that achieve this (\textbf{Chebyshev points}):
+
+\[
+x_i = \cos\left(\frac{2k - 1}{2n}\pi\right)
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+Demo, Runge function part II: using Chebyshev points instead of uniformly spaced ones.
+
+\end{important}
+
+
+
 \end{multicols}
 
 
