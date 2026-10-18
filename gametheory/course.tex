@@ -1024,4 +1024,30 @@ Coins of (A, B, C, D, E), ``--'' for a pirate already killed:
 Captain A is not thrown in the ocean and keeps \textbf{98 coins}.
 \end{propbox}
 
+
+\section{The centipede game}
+
+\begin{exbox}[title=The centipede game]
+Players 1 and 2 move in turn and can Continue (C) or Stop (S). In each period, the total
+payout (sum of the payouts of Player 1 and Player 2) increases by 2 units: one would think
+players want to continue playing as long as possible.
+\begin{center}
+\includegraphics[width=0.8\linewidth]{images/week04_01.png}
+\end{center}
+\end{exbox}
+
+\begin{propbox}[title=Unique SPE]
+At the last node, it's optimal for Player 2 to stop. At each node, knowing that at the next
+node the other player will stop, the player who moves finds it optimal to stop. The unique
+SPE has each player quitting at every node: Player 1 stops at the first node, with payout
+\textbf{(2,0)} --- a lost opportunity to gain a total of up to 202!
+\end{propbox}
+
+\begin{warnbox}[title=Is backward induction realistic?]
+People asked to play this game in a lab typically do not quit in the first stages. They have a
+higher tendency to collaborate than predicted: if both continue, their payout increases, so
+they take the risk to continue, which pays off if the other player continues too. Unlike the
+Prisoner Dilemma, one player has an incentive to cooperate if the other player cooperates.
+\end{warnbox}
+
 \end{document}
