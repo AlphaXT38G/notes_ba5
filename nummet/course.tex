@@ -797,4 +797,16 @@ guess means undoing all those steps. In the naive psum, the 50/50 random signs m
 mispredict all the time; a branchless version (\texttt{r += fmaxf(x[i], 0.f)}) avoids it.
 \end{defnbox}
 
+
+\begin{defnbox}[title=SIMD]
+Single instruction, multiple data: process e.g.\ 16 elements in the time of one, through
+intrinsics (SSE, AVX, AVX512, NEON, SVE). Compiler auto-vectorization never really worked well
+enough.
+\end{defnbox}
+
+\begin{keybox}[title=Break the dependency chain]
+Each sum depends on the previous one, so the pipeline starves: keep 4 (or 8, 16) partial sums
+and add them at the end.
+\end{keybox}
+
 \end{document}
