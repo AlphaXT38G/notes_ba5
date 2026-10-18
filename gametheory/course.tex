@@ -906,4 +906,24 @@ replacing them with their payout, we obtain the reduced game:
 Only Player 1 needs to choose, and will choose `Offer 1'. SPE: \textbf{(Offer 1, AAA)}.
 \end{exbox}
 
+
+\begin{exbox}[title=A game with two SPE]
+New version of the Ultimatum game: Player 1 still has 3 coins, but can now also offer 0
+coins (so he can offer 0, 1, 2 or 3 coins).
+\begin{center}
+\includegraphics[width=0.75\linewidth]{images/week03_05.png}
+\end{center}
+In the subgame after `Offer 0', Player 2 gets 0 whether he accepts or rejects: `Accept' and
+`Reject' are two pure-strategy NE of this subgame. In the other three subgames, the only NE
+is `Accept'.
+\begin{itemize}
+  \item \textbf{Solution 1}: choose `Accept' in all 4 subgames. Reduced game: $(3,0)$,
+        $(2,1)$, $(1,2)$, $(0,3)$; Player 1 chooses `Offer 0' (payout 3).
+        SPE: \textbf{(Offer 0, AAAA)}.
+  \item \textbf{Solution 2}: choose `Reject' after `Offer 0' and `Accept' in the other 3
+        subgames. Reduced game: $(0,0)$, $(2,1)$, $(1,2)$, $(0,3)$; Player 1 chooses
+        `Offer 1' (payout 2). SPE: \textbf{(Offer 1, RAAA)}.
+\end{itemize}
+\end{exbox}
+
 \end{document}
