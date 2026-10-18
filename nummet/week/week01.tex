@@ -672,6 +672,69 @@ accuracy difference.
 
 
 
+%=========================================================
+\section{Types of Errors}
+
+
+\begin{example}
+
+\textbf{Catastrophic numerical errors}: Ariane 5 rocket failure (June 14, 1996); Patriot missile
+failure (1991, Dhahran, Saudi Arabia): \emph{rounding error accumulation}, the battery failed to
+intercept a missile, 28 people died, 96 injured.
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{MODEL ERROR}: the mathematical model is only an approximation (computing the surface of
+the earth with $A = 4\pi r^2$, but the earth is not a sphere).
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{DISCRETIZATION ERROR}: e.g.\ a fluid simulation represented at different spatial
+resolutions (50: bake 3 minutes; 400: bake 13 hours). Effectively a type of model error.
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{TRUNCATION ERROR}: happens when we approximate an infinite calculation with something
+finite.
+\[
+\sum_{i=1}^{10} \frac{1}{3^i} \approx 0.499991532, \qquad
+\sum_{i=1}^{\infty} \frac{1}{3^i} = 0.5
+\]
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{ROUNDING ERROR}
+\[
+\sum_{k=1}^{\infty} \frac{1}{k} = 15.403683 \ ?!?!
+\]
+The series value is infinite but \emph{converges} in IEEE-754 arithmetic!
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{The issue here} (8 mantissa bits after the point): adding $3.14 = +2^1\,1.10010010_2$ to
+$1024 = +2^{10}\,1.00000000_2$ requires shifting 3.14 to align the exponents
+($+2^{10}\,0.00000000110010010_2$): the low bits are \textbf{dropped} (rounding error). Once the
+sum is large, the small terms $1/k$ are dropped entirely.
+
+\end{example}
+
+
+
 \end{multicols}
 
 
