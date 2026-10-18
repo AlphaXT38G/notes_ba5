@@ -536,6 +536,60 @@ $\epsilon = 10^{-1}$ to $10^{-10}$, $10^{-50}$, $0$.
 
 
 
+%=========================================================
+\section{Gaussian Elimination}
+
+
+\begin{definition}
+
+\textbf{GAUSSIAN ELIMINATION} (MATH-111 style)
+
+On the augmented matrix $[\,\mathbf{A} \mid \mathbf{b}\,]$, three ingredients:
+
+\begin{itemize}
+
+\item \textbf{permute rows};
+
+\item \textbf{scale rows};
+
+\item \textbf{add a (scaled) version of a row} to another.
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{example}
+
+Add $-5\times$ row 1 to row 2:
+\[
+\left[\begin{array}{ccc|c} 1 & 0 & 3 & 1 \\ 5 & 1 & 1 & 2 \\ 4 & 2 & 0 & 3 \end{array}\right]
+\rightarrow
+\left[\begin{array}{ccc|c} 1 & 0 & 3 & 1 \\ 0 & 1 & -14 & -3 \\ 4 & 2 & 0 & 3 \end{array}\right]
+\]
+
+\end{example}
+
+
+\begin{important}
+
+Each step uses a \textbf{pivot element} on the diagonal. Observation: the values of $\mathbf{b}$
+are updated but don't really influence the process.
+
+\end{important}
+
+
+\begin{warning}
+
+Instabilities can occur even for nonzero elements (e.g.\ a tiny pivot $\varepsilon$): the pivot
+element must be chosen carefully.
+
+\textbf{Practical solution}: pick the element with the largest absolute value.
+
+\end{warning}
+
+
+
 \end{multicols}
 
 
