@@ -761,4 +761,27 @@ The interpreter overhead is negligible only when each operation does a lot of wo
 loops by array operations, e.g.\ \texttt{X = A + np.where(B < 0, C, D)}.
 \end{keybox}
 
+
+\section{How a CPU executes code}
+
+\begin{defnbox}[title=Latency and throughput]
+\textbf{Latency}: number of cycles before the result of an operation is available.
+\textbf{Throughput}: number of operations that can be started per cycle. Pipelined units (like
+doing laundry in stages) have a long latency but a high throughput.
+\end{defnbox}
+
+\begin{propbox}[title={Intel ``Ice Lake'' (1 cycle at 3 GHz = 0.33 ns)}]
+\begin{center}
+\begin{tabular}{l|cc}
+Instruction & Latency & Throughput \\ \hline
+\texttt{int64} add, sub & 1 & 4 \\
+\texttt{int64} mul & 3 & 1 \\
+\texttt{int64} div & 15 & 1/14 \\
+\texttt{float32} add, sub, mul & 4 & 2 \\
+\texttt{float32} div & 17 & 1/10
+\end{tabular}
+\end{center}
+Loading memory, division and square root are really expensive.
+\end{propbox}
+
 \end{document}
