@@ -1025,9 +1025,9 @@ everySecond.push(() => {
 // only music of the page still from YouTube: a radio that never ends, no file; green label). The
 // other record waits in its sleeve, leaning behind the turntable: clicking the sleeve swaps them
 // and plays the new one. The turntable plays / pauses the record on; the choice and the pause
-// are remembered. It starts with the screen and
-// keeps playing from day to night. As for the jazz, without a user gesture yet it starts muted
-// and the sound comes on at the first click or key press.
+// are remembered. It starts with the screen and keeps playing from day to night. As for the
+// jazz, without a user gesture yet it starts muted and the sound comes on at the first click or
+// key press.
 const XMAS_LIVE = "XSXEaikz0Bc";
 let carolsRock = null, carolsRadio = null;  // the record's player: an <audio>, or the YouTube <iframe>
 let carolsPlaying = false, carolsMuted = false, carolsSoundAt = 0;
