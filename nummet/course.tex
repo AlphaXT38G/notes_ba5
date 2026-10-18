@@ -322,4 +322,27 @@ rank, sparse; also positive definite and orthogonal matrices.
 \end{center}
 \end{rembox}
 
+
+\section{Linear systems}
+
+\begin{defnbox}[title=Linear system]
+$\mathbf{A}\mathbf{x} = \mathbf{b}$, $\mathbf{A} \in \mathbb{R}^{m \times n}$: can $\mathbf{b}$
+be expressed as a linear combination of the columns of $\mathbf{A}$? The solution may not exist
+or may not be unique. This lecture: the square case $m = n$.
+\end{defnbox}
+
+\begin{propbox}[title=Geometric interpretations]
+\begin{itemize}
+  \item \textbf{Column view}: reach $\mathbf{b}$ with a combination of the columns
+        $\mathbf{a}^{(i)}$; $\mathbf{x}$ tells how much of each one we need.
+  \item \textbf{Row view}: intersect the planes $\mathbf{a}^{(i)} \cdot \mathbf{x} = b_i$.
+\end{itemize}
+\end{propbox}
+
+\begin{warnbox}[title=Pure vs numerical mathematics]
+$\begin{pmatrix} 1 & 0 \\ 1 & \epsilon \end{pmatrix}$ is singular only for $\epsilon = 0$, but in
+floating point it becomes gradually ``more singular'' as $\epsilon$ goes to $10^{-10}$,
+$10^{-50}$, \dots
+\end{warnbox}
+
 \end{document}
