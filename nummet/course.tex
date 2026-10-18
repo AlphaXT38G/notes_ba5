@@ -345,4 +345,17 @@ floating point it becomes gradually ``more singular'' as $\epsilon$ goes to $10^
 $10^{-50}$, \dots
 \end{warnbox}
 
+
+\begin{algbox}[title=Gaussian elimination]
+On the augmented matrix $[\,\mathbf{A} \mid \mathbf{b}\,]$: permute rows, scale rows, add a
+(scaled) row to another, until $\mathbf{A}$ is triangular; each step uses a \textbf{pivot}
+element on the diagonal. The values of $\mathbf{b}$ are updated but do not influence the
+process.
+\end{algbox}
+
+\begin{warnbox}[title=Pivoting]
+Instabilities can occur even for nonzero (tiny) pivots: pick the element with the
+\textbf{largest absolute value} as pivot.
+\end{warnbox}
+
 \end{document}
