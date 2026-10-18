@@ -8,13 +8,14 @@
 //     gifts, a snowman companion on the left (and at night the moon and chalet lights),
 //   - a Christmas turntable playing Jingle Bell Rock or a live of Christmas music,
 //   - a small golden sax hidden among the tree's ornaments, which opens the jazz bar (a little
-//     fir in the bar brings Christmas back), and a little red guitar leaning against the gifts,
-//     which starts the metal show.
+//     fir in the bar brings Christmas back), a little red guitar set down against the gifts,
+//     which starts the metal show, and a firefly jar in front of them, which opens the calm night
+//     (the same fir brings Christmas back).
 // At night the tree lights play changing patterns and Santa's sleigh crosses the sky now and then.
 // The metal show at 1:00 and the other easter eggs still take over.
 //
 // In this file, in order: screens and override, the yeti code, shared helpers, the garland, the
-// tree and its sax ornament, the mountains, the moon, the snowman, the sax and guitar buttons, the
+// tree and its sax ornament, the mountains, the moon, the snowman, the sax, guitar and jar buttons, the
 // tree lights canvas, the snow, the sleigh, the music, the fir back from the jazz bar, and turning
 // it all on and off.
 // Every drawing is SVG built once from code (seeded random, so it looks the same on every visit).

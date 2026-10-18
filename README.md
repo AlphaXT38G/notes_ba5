@@ -77,8 +77,11 @@ horizon, the forest quietens and the first birds sing. A firefly jar in the bott
 left corner pauses / resumes the sounds. The epic finale and Christmas nights come
 before it.
 
-10 seconds before a metal show ends, a **"More epicness ?"** button shows up. Click
-it and, instead of going back to the day, the page turns into an epic fantasy finale ⚔️:
+10 seconds before a metal show ends, a **"More epicness ?"** medallion rises, forged in
+blue fire (a turning ring of runes, light rays, sparks). Click it and it counts down; in
+the last seconds of the show the room goes dark, a huge rune circle and pillars of light
+rise, the medallion implodes and bursts in a white flash and a shock wave right as the
+song ends, with a whoosh and a boom. Instead of going back to the day, the page turns into an epic fantasy finale ⚔️:
 a blue and violet night with an aurora, realistic blue fire, embers, floating arcane
 lights and a rune circle, while the amp (now blue) plays Two Steps From Hell in a loop. It lasts
 until you click the small **"Back to normal"** button in the bottom right corner, which

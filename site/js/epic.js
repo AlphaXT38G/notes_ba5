@@ -1,8 +1,9 @@
 // ── Epic finale (screen "epic", body.epic) ────────────────────────────────────────────────────
-// 10 s before a metal show ends, a "More epicness ?" button shows up. Clicked, it queues the epic
-// finale, which takes over right when the metal ends (css/epic.css): a blue and violet fantasy
-// night with blue fire on the effects canvas (fx.js), the amp playing epic music in a loop. It
-// lasts until its "Back to normal" button is clicked.
+// 10 s before a metal show ends, a "More epicness ?" medallion shows up. Clicked, it queues the
+// epic finale, summoned in the last seconds of the show, which takes over right when the metal
+// ends (css/epic.css): a blue and violet fantasy night with blue fire on the effects canvas
+// (fx.js), the amp playing epic music in a loop. It lasts until its "Back to normal" button is
+// clicked.
 let epicQueued = false, epicAt = 0;  // epicAt: when it started (0 = not running)
 SCREENS.epic = { className: "epic", subtitle: "Behold… more epicness.", transition: "epic" };
 OVERRIDES.push(phase => {  // runs after the metal override (metal.js is loaded first)
