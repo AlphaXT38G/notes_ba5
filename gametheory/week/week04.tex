@@ -514,6 +514,120 @@ continue, and Player 1 will always quit.
 
 
 
+%=========================================================
+\section{Dollar Auction: Infinite-Horizon Version}
+
+
+In the finite game, one player is sure to be the one that bids in the ``final period'' (when
+bids reach or exceed the \$10 threshold), so he is sure to win if nobody quits. The other
+player is sure to lose: he stays out from the beginning.
+
+What if there is no final time and the auction continues until somebody drops out? (Player 1
+moves in every odd period, Player 2 in every even period.)
+
+
+\begin{important}
+
+If nobody quits between a certain time $t$ and $t+2$, \textbf{nothing has changed between $t$
+and $t+2$}, except the fact that both players have already committed to pay 10c more than at
+period $t$.
+
+But this is a \textbf{sunk cost} that should not affect the continuation of the game!
+
+\end{important}
+
+
+\textbf{Stationary strategies}: each player quits or continues with the same probability at
+each of her decision nodes. At a node where Player $i$ has already committed to pay $x$:
+
+
+\begin{formula}
+
+If she continues:
+
+\[
+P_i(x) =
+\begin{cases}
+-0.1 + P_i(x) & \text{if Player } -i \text{ continues} \\
+-x + 0.9 & \text{if Player } -i \text{ quits}
+\end{cases}
+\]
+
+If she quits:
+
+\[
+P_i(x) = -x
+\]
+
+\end{formula}
+
+
+\begin{itemize}
+
+\item If Player $-i$ always continues, $P_i(x) = -\infty$ $\rightarrow$ optimal to quit.
+
+\item If Player $-i$ always quits, optimal to continue.
+
+\end{itemize}
+
+
+\textbf{Mixed strategies}: for one player to randomize, she needs to be indifferent between
+quit and continue, which is only possible if the other player also randomizes. If Player $-i$
+continues with probability $q$:
+
+
+\begin{formula}
+
+\[
+P_i(x; C) = q(-0.1 + P_i(x)) + (1-q)(0.9 - x)
+\]
+
+\[
+P_i(x; Q) = -x
+\]
+
+Player $i$ is indifferent if the two payouts are the same:
+
+\[
+q = 0.9
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{3 strategy profiles that are NE}:
+\begin{itemize}
+
+\item $(Quit, Continue)$
+
+\item $(Continue, Quit)$
+
+\item $((0.9C, 0.1Q), (0.9C, 0.1Q))$
+
+\end{itemize}
+
+Only one of these three, \textbf{(Continue, Quit)}, survives if the game has a finite
+horizon -- even if the final time is after, say, 1 million periods, and no player would ever
+want to get there! Problematic feature of backward induction\dots
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{In lab experiments}: people continue to bid without problem until the highest bid
+reaches \$1. Afterwards, they start to feel uncomfortable but often continue to outbid each
+other for a while. Typically the dollar ends up being sold for \$3 (plus almost \$3 paid by
+the second bidder).
+
+The concept of \textbf{sunk cost} is difficult to digest for non-experienced players.
+
+\end{example}
+
+
+
 \end{multicols}
 
 
