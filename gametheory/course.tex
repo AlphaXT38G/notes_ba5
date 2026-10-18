@@ -1247,4 +1247,55 @@ regardless of $p$, and Player 2 then prefers not to work: \textbf{$(W, NN)$ is a
 \end{itemize}
 \end{propbox}
 
+
+\section{Harsanyi's representation}
+
+\begin{rembox}[title=Harsanyi's idea]
+Imagine that ``Efficient'' and ``Inefficient'' are two states of the same person (e.g.\
+depending on whether the player slept well the previous night). \textbf{Nature} is a third
+player who moves first and draws the type of Player 2 (prob $p$ Efficient, prob $(1-p)$
+Inefficient). Player 2 needs a strategy for the two possible states (e.g.\ ``Work if
+efficient, Not Work if Inefficient'') that maximizes his \textbf{ex-ante expected payout}.
+\end{rembox}
+
+\begin{defnbox}[title=Harsanyi representation]
+Collapses all the payout tables contingent on the players' types into \textbf{one table},
+whose columns are the strategies of Player 2 conditional on his type (`WN' = ``Work if
+efficient, Not Work if Inefficient''). The payout of $(A_1, A_2A_2')$ is $p$ times the payout
+of $(A_1, A_2)$ in the table of the Efficient Player 2, plus $(1-p)$ times the payout of
+$(A_1, A_2')$ in the table of the Inefficient Player 2.
+\end{defnbox}
+
+\begin{exbox}[title=Public good game]
+\begin{center}
+\small
+\begin{tabular}{c|cccc}
+$1 \backslash 2$ & WN & NN & NW & WW \\ \hline
+W & (0.5, 1-0.2p) & (0.5, 1) & (0.5, 1.2p-0.2) & (0.5, p-0.2) \\
+N & (p, 0.8p) & (0,0) & (1-p, -0.2(1-p)) & (1, p-0.2)
+\end{tabular}
+\end{center}
+After elimination of the dominated strategy W for the Inefficient Player 2, only WN and NN
+remain:
+\begin{center}
+\begin{tabular}{c|cc}
+$1 \backslash 2$ & WN & NN \\ \hline
+W & (0.5, 1-0.2p) & (0.5, 1) \\
+N & (p, 0.8p) & (0,0)
+\end{tabular}
+\end{center}
+Solving it the standard way gives the same pure-strategy equilibria as before: $(W, NN)$ if
+$p < 0.5$, $(W, NN)$ and $(N, WN)$ for $p > 0.5$.
+\end{exbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Backward induction can lead to unrealistic solutions (centipede, dollar auction).
+  \item \textbf{Sunk costs} should not affect the continuation of a game.
+  \item \textbf{Bayesian games}: players have types; a strategy is a plan for each type;
+        \textbf{BNE} compares expected payouts over the types of the others.
+  \item \textbf{Harsanyi}: Nature draws the types; one table of type-contingent strategies.
+\end{itemize}
+\end{keybox}
+
 \end{document}
