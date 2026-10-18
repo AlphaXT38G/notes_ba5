@@ -602,6 +602,63 @@ $\rightarrow$ Strategy $R$ is \textbf{not a dominated strategy}.
 
 
 
+%=========================================================
+\section{Iterated Elimination of Dominated Strategies}
+
+
+\begin{definition}
+
+\textbf{ITERATED ELIMINATION OF DOMINATED STRATEGIES}
+
+A \textbf{solution concept} that allows to simplify (sometimes solve) a game.
+
+Idea: if a strategy is (strictly) dominated, I should never choose it. The game should be
+equivalent if I discard this strategy altogether.
+
+\end{definition}
+
+
+\begin{example}
+
+\begin{center}
+\begin{tabular}{c|ccc}
+ & L & M & R \\
+\hline
+U & (1,0) & (1,2) & (0,1) \\
+D & (0,3) & (0,1) & (2,0) \\
+\end{tabular}
+\end{center}
+
+\textbf{Step 1}: for Player 2, strategy $R$ is dominated by strategy $M$ $\rightarrow$ we
+can eliminate strategy $R$:
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & L & M \\
+\hline
+U & (1,0) & (1,2) \\
+D & (0,3) & (0,1) \\
+\end{tabular}
+\end{center}
+
+\textbf{Step 2}: given that $R$ was discarded, for Player 1 strategy $D$ is dominated by
+strategy $U$:
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & L & M \\
+\hline
+U & (1,0) & (1,2) \\
+\end{tabular}
+\end{center}
+
+The game is greatly simplified: the NE is clearly $(U,M)$ (Player 1 plays $U$, Player 2
+plays $M$).
+
+\end{example}
+
+
+
 \end{multicols}
 
 
