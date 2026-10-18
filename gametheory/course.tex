@@ -548,4 +548,22 @@ go through the 11 levels of reasoning and instead stop at level 4-5. If other pe
 follow the reasoning, playing 1 is not the best strategy.
 \end{warnbox}
 
+
+\section{Dominant strategies}
+
+\begin{defnbox}[title=Strictly dominant strategy]
+For player $i$, a strategy $\tilde{s}^{(i)}$ is \textbf{strictly dominant} if it results in
+a strictly higher payout for player $i$ than any other strategy, \emph{no matter what
+strategy the other players adopt}:
+\[
+\mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)}) > \mathcal{P}^{(i)}(s^{(i)}, s^{(-i)}),
+\qquad \forall s^{(-i)}, \ \forall s^{(i)} \ne \tilde{s}^{(i)}.
+\]
+\end{defnbox}
+
+\begin{exbox}[title=Prisoner Dilemma]
+In the Prisoner Dilemma, D is strictly dominant for both players: against C, $0 > -1$;
+against D, $-3 > -5$.
+\end{exbox}
+
 \end{document}
