@@ -46,4 +46,36 @@ damage.
 \end{itemize}
 \end{rembox}
 
+
+\section{What is a numerical method?}
+
+\begin{defnbox}[title=CS-328]
+The \textbf{computer implementation} of abstract concepts from linear algebra
+($\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$) and analysis
+($\frac{\partial}{\partial \mathbf{x}} f(\mathbf{x})$, $y = \int_\Omega f(x)\,\mathrm{d}x$).
+Typical computer science works with $\mathbb{N}$ (graphs, databases, protocols, cryptography);
+numerical methods work with $\mathbb{R}^n$.
+\end{defnbox}
+
+\begin{exbox}[title=Numerical methods everywhere]
+\begin{itemize}
+  \item \textbf{Rendering}: visual effects $\simeq$ solving integrals,
+        $\text{pixel color} = \int \text{light}\,\mathrm{d}x$.
+  \item \textbf{Fluid simulation}: each timestep solves an enormous linear system
+        $\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$.
+  \item \textbf{Character animation}: attaching a body to a skeleton by optimization,
+        $\mathbf{x} = \mathbf{A}^{+}\mathbf{b}$.
+  \item \textbf{Computer vision}: learned convolutions (CNNs), a type of linear transformation.
+  \item \textbf{Machine learning}: derivatives of software,
+        $\frac{\partial}{\partial \mathbf{x}} f(\mathbf{x})$ with $f$ a computer program.
+\end{itemize}
+\end{exbox}
+
+\begin{propbox}[title=Many layers (top to bottom)]
+Applications; frameworks (NumPy, PyTorch, TensorFlow, JAX); optimization algorithms (gradient
+descent, Newton, Broyden, Gauss-Newton, Levenberg-Marquardt); matrix factorizations (the ``Big
+3'': LU, QR, SVD); compilation (JIT: JAX, XLA); floating point arithmetic (IEEE-754, error
+propagation); processor architecture (superscalar, vectorization, memory hierarchy, GPUs).
+\end{propbox}
+
 \end{document}
