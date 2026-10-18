@@ -436,6 +436,80 @@ If other people do not follow the reasoning, playing 1 is not the best strategy\
 
 
 
+%=========================================================
+\section{Dominant Strategies}
+
+
+\begin{definition}
+
+\textbf{STRICTLY DOMINANT STRATEGY}
+
+For player $i$, a strategy $\tilde{s}^{(i)}$ is strictly dominant if it results in a
+strictly higher payout for player $i$ than any other strategy, \emph{no matter what strategy
+the other players adopt}:
+
+\[
+\mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)}) > \mathcal{P}^{(i)}(s^{(i)}, s^{(-i)}),
+\quad \forall s^{(-i)}, \ \forall s^{(i)} \ne \tilde{s}^{(i)}
+\]
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{WEAKLY DOMINANT STRATEGY}
+
+For player $i$, a strategy $\tilde{s}^{(i)}$ is weakly dominant if it results in a weakly
+higher payout for player $i$ than any other strategy, \emph{no matter what strategy the
+other players adopt}:
+
+\[
+\mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)}) \ge \mathcal{P}^{(i)}(s^{(i)}, s^{(-i)}),
+\quad \forall s^{(-i)}, \ \forall s^{(i)}
+\]
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Prisoner Dilemma}
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & C & D \\
+\hline
+C & (-1,-1) & (-5,0) \\
+D & (0,-5) & (-3,-3) \\
+\end{tabular}
+\end{center}
+
+D is \textbf{strictly dominant} for both players ($0 > -1$ and $-3 > -5$).
+
+\end{example}
+
+
+\begin{example}
+
+\textbf{Split or Steal}
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & Split & Steal \\
+\hline
+Split & (1,1) & (0,2) \\
+Steal & (2,0) & (0,0) \\
+\end{tabular}
+\end{center}
+
+No strictly dominant strategy. Steal is \textbf{weakly dominant} ($2 > 1$ against Split,
+$0 = 0$ against Steal).
+
+\end{example}
+
+
+
 \end{multicols}
 
 
