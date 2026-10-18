@@ -348,6 +348,48 @@ Good: \texttt{X = A + np.where(B < 0, C, D)}
 
 
 
+%=========================================================
+\section{First Version in C++}
+
+
+\begin{example}
+
+\begin{verbatim}
+float psum_0(float *x, size_t size) {
+  float r { 0.f };
+  for (size_t i = 0; i < size; ++i) {
+    if (x[i] >= 0) {
+      r += x[i];
+      if (std::isinf(r))
+        abort();
+    }
+  }
+  return r;
+}
+\end{verbatim}
+
+Everything has types: \texttt{float} (single precision), \texttt{size\_t} (64-bit integer),
+\texttt{float*} (pointer to a float array). Glued to Python with \textbf{nanobind}.
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{DISASSEMBLER}
+
+Reveals the processor instructions (``assembly code'') in a compiled executable (IDA Home,
+Ghidra). Used here to understand the performance differences between \texttt{psum} versions.
+
+\end{definition}
+
+
+The disassembly of \texttt{psum\_0} shows a loop of \texttt{LDR} (load), \texttt{FCMP} +
+\texttt{B.LT} (compare and branch), \texttt{FADD}, the infinity check (\texttt{FABS},
+\texttt{FCMP}, \texttt{B.EQ}), then the loop counter.
+
+
+
 \end{multicols}
 
 
