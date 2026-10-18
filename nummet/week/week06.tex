@@ -285,6 +285,63 @@ card presented in detail below). Unreal Engine scenes.
 
 
 
+%=========================================================
+\section{Graphics is Brutal}
+
+
+Rendering a triangle: a small program (\emph{shader}) computes the color of each pixel, e.g.\
+load a texture value and multiply it by $\max(0, \texttt{dot(light\_dir, normal)})$. Compiled to
+(hypothetical) machine instructions: \texttt{LOAD\_TEXTURE}, \texttt{MUL}, \texttt{FMA},
+\texttt{FMA}, \texttt{MAX}, \texttt{MUL}, \texttt{MUL}, \texttt{MUL}.
+
+
+\begin{formula}
+
+\textbf{Modern requirements}
+
+\begin{itemize}
+
+\item 4K resolution (3840 $\times$ 2160 pixels), 60 frames per second
+
+\item That's $\sim$\textbf{500 million} pixels per second\dots
+
+\begin{itemize}
+
+\item $\times$ the number of instructions to produce a color (complex shaders have many
+more instructions)
+
+\item $\times$ overdraw, multiple passes
+
+\end{itemize}
+
+\item Millions of triangles in the scene
+
+\end{itemize}
+
+Bottom line: \textbf{$\frac{1}{2}$ - $1\frac{1}{2}$ trillion operations per second}. Normal
+processors can't keep up with that.
+
+\end{formula}
+
+
+\begin{definition}
+
+\textbf{EMBARRASSINGLY PARALLEL PROBLEM}
+
+Rendering is one: let's compute all the pixels in parallel.
+
+\end{definition}
+
+
+\begin{warning}
+
+\textbf{Problem}: CPU-style processors are \textbf{too big}, we can only have a few. We will have
+to make some tough compromises\dots
+
+\end{warning}
+
+
+
 \end{multicols}
 
 
