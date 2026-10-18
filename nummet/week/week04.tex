@@ -333,6 +333,47 @@ width=\linewidth
 
 
 
+%=========================================================
+\section{Gram-Schmidt Orthogonalization}
+
+
+\begin{definition}
+
+\textbf{GRAM-SCHMIDT STEP}
+
+\[
+\hat{\mathbf{y}} := \mathbf{y} - \frac{\langle \mathbf{x}, \mathbf{y} \rangle}
+{\langle \mathbf{x}, \mathbf{x} \rangle}\mathbf{x}
+\]
+
+Then $\langle \mathbf{x}, \hat{\mathbf{y}} \rangle = 0$: remove from $\mathbf{y}$ its projection
+on $\mathbf{x}$.
+
+\end{definition}
+
+
+\begin{example}
+
+$\mathbf{x} = (1, 2, 3)^T$, $\mathbf{y} = (4, 5, 6)^T$:
+$\langle \mathbf{x}, \mathbf{y} \rangle = 1 \cdot 4 + 2 \cdot 5 + 3 \cdot 6 = 32$.
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{INNER PRODUCTS ARE MORE GENERAL}
+
+\[
+\langle \mathbf{x}, \mathbf{y} \rangle := \sum_{i=1}^{n} x_i y_i
+\qquad
+\langle f, g \rangle := \int_a^b f(x) g(x)\,\mathrm{d}x
+\]
+
+\end{definition}
+
+
+
 \end{multicols}
 
 
