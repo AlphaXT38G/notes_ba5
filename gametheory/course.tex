@@ -566,4 +566,20 @@ In the Prisoner Dilemma, D is strictly dominant for both players: against C, $0 
 against D, $-3 > -5$.
 \end{exbox}
 
+
+\begin{defnbox}[title=Weakly dominant strategy]
+For player $i$, a strategy $\tilde{s}^{(i)}$ is \textbf{weakly dominant} if it results in a
+weakly higher payout for player $i$ than any other strategy, \emph{no matter what strategy
+the other players adopt}:
+\[
+\mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)}) \ge \mathcal{P}^{(i)}(s^{(i)}, s^{(-i)}),
+\qquad \forall s^{(-i)}, \ \forall s^{(i)}.
+\]
+\end{defnbox}
+
+\begin{exbox}[title=Split or Steal]
+There is no strictly dominant strategy. Steal is weakly dominant: against Split, $2 > 1$;
+against Steal, $0 = 0$.
+\end{exbox}
+
 \end{document}
