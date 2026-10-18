@@ -618,6 +618,90 @@ multiplication per solve, $\mathbf{x}^{(i)} = \mathbf{A}^{-1}\mathbf{b}^{(i)}$.
 
 
 
+%=========================================================
+\section{LU Factorization}
+
+
+\begin{definition}
+
+\textbf{LU FACTORIZATION} (our first decomposition)
+
+Run Gaussian elimination on $\mathbf{A}$ alone (no right-hand side $\mathbf{b}$), keeping track
+of the transformations it performs. They can be written as matrices $\mathbf{L}$ (lower
+triangular) and $\mathbf{U}$ (upper triangular):
+
+\[
+\mathbf{A} = \mathbf{L}\mathbf{U}
+\]
+
+Then ``apply'' $\mathbf{L}$ and $\mathbf{U}$ to any right-hand side $\mathbf{b}$ very
+efficiently.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{A single elimination step is a matrix}:
+
+\[
+\begin{bmatrix} 1 & 0 & 0 \\ c & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+\mathbf{A}
+\ \text{adds } c \times \text{row 1 to row 2}
+\]
+
+Its inverse is simple:
+
+\[
+\begin{bmatrix} 1 & 0 & 0 \\ c & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}^{-1}
+= \begin{bmatrix} 1 & 0 & 0 \\ -c & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+\]
+
+A lower triangular matrix; the product of lower-triangular matrices is always lower-triangular.
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Putting things together}: $\mathbf{U}$ is the traditional output of Gaussian
+elimination, $\mathbf{L}$ reconstructs $\mathbf{A}$:
+
+\begin{align*}
+\mathbf{U} &= \mathbf{E}_6\mathbf{E}_5\mathbf{E}_4\mathbf{E}_3\mathbf{E}_2\mathbf{E}_1\mathbf{A}
+\\
+\mathbf{L} &= (\mathbf{E}_6\mathbf{E}_5\mathbf{E}_4\mathbf{E}_3\mathbf{E}_2\mathbf{E}_1)^{-1} \\
+&= \mathbf{E}_1^{-1}\mathbf{E}_2^{-1}\mathbf{E}_3^{-1}\mathbf{E}_4^{-1}\mathbf{E}_5^{-1}
+\mathbf{E}_6^{-1}
+\end{align*}
+
+\end{formula}
+
+
+\begin{example}
+
+\[
+\mathbf{A} = \begin{bmatrix} 1 & 1 \\ 2 & 4 \end{bmatrix}, \quad
+\mathbf{E}_1 = \begin{bmatrix} 1 & 0 \\ -2 & 1 \end{bmatrix} \ (\text{row 2} -= 2 \times
+\text{row 1})
+\]
+\[
+\mathbf{U} = \mathbf{E}_1\mathbf{A} = \begin{bmatrix} 1 & 1 \\ 0 & 2 \end{bmatrix}, \quad
+\mathbf{L} = \mathbf{E}_1^{-1} = \begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix}
+\ \rightarrow \ \mathbf{A} = \mathbf{L}\mathbf{U}
+\]
+
+\end{example}
+
+
+\begin{warning}
+
+We won't look at low-level details of how the LU factorization is computed (ditto for others).
+
+\end{warning}
+
+
+
 \end{multicols}
 
 
