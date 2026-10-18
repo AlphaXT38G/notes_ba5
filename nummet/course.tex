@@ -666,4 +666,17 @@ Least squares seeks the point of $\operatorname{span}(\mathbf{A})$ \emph{closest
 a non-isometric transformation of the problem changes the answer.
 \end{warnbox}
 
+
+\begin{defnbox}[title=Householder reflection]
+To zero out all elements of a column except the first using only reflections, reflect
+$\mathbf{x}$ across the axis perpendicular to $\mathbf{v}$ ($\|\mathbf{v}\| = 1$):
+\[
+\tilde{\mathbf{x}} = \mathbf{x} - 2(\mathbf{v}^T\mathbf{x})\mathbf{v} = \mathbf{Q}\mathbf{x},
+\qquad \mathbf{Q} = \mathbf{I} - 2\frac{\mathbf{v}\mathbf{v}^T}{\mathbf{v}^T\mathbf{v}}.
+\]
+\begin{center}
+\includegraphics[width=0.45\linewidth]{images/week04_04.png}
+\end{center}
+\end{defnbox}
+
 \end{document}
