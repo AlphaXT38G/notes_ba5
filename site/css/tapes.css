@@ -43,19 +43,24 @@
 /* Tape counter: red LED digits, lit while a tape is in */
 #tapedeck .counter{flex:1;display:grid;place-items:center;border-radius:1px;background:#140907;color:#5a1d14;font:700 .68rem ui-monospace,Consolas,monospace;letter-spacing:.08em;box-shadow:inset 0 0 0 1px #000,0 1px 0 rgba(255,255,255,.7)}
 #tapedeck.playing .counter,#tapedeck.paused .counter{color:#ff4a2a;text-shadow:0 0 4px rgba(255,74,42,.75)}
-#tapedeck .badges{display:flex;align-items:center;gap:.3rem}
-#tapedeck .badges span{padding:.06rem .15rem;border:1px solid #6b6f76;border-radius:1px}
-#tapedeck .power{width:.3rem;height:.3rem;margin-right:-.15rem;border-radius:50%;background:#ff3b30;box-shadow:0 0 4px #ff3b30}
+#tapedeck .badges{display:flex;align-items:center;gap:.22rem;letter-spacing:.05em}
+#tapedeck .badges span{padding:.06rem .1rem;border:1px solid #6b6f76;border-radius:1px}
+#tapedeck .power{flex:none;width:.3rem;height:.3rem;margin-right:-.08rem;border-radius:50%;background:#ff3b30;box-shadow:0 0 4px #ff3b30}
 
-/* Piano keys on their black bed: pushed down while latched (▶ playing, ❚❚ paused), with a small
-   lit bar on top */
-#tapedeck .keys{grid-column:1/-1;display:grid;grid-template-columns:repeat(6,1fr);gap:.15rem;padding:.12rem;border-radius:2px;background:#1d1f23}
+/* Piano keys on their black bed. ▶❚❚ is pushed down while it plays, with a small green bar lit on
+   top (amber when paused); the station key bears a broadcast mark */
+#tapedeck .keys{grid-column:1/-1;display:grid;grid-template-columns:repeat(5,1fr);gap:.15rem;padding:.12rem;border-radius:2px;background:#1d1f23}
 #tapedeck .key{position:relative;height:1.2rem;color:#2a2c30;font:700 .55rem/1 system-ui,sans-serif;letter-spacing:-.08em;border-radius:1px 1px 2px 2px;background:linear-gradient(#fbfbfb,#d6d9dd 60%,#c0c4c9);box-shadow:inset 0 -3px 0 rgba(0,0,0,.2),0 1px 0 rgba(0,0,0,.6);transition:transform .08s}
 #tapedeck .key::after{content:"";position:absolute;left:30%;right:30%;top:.12rem;height:2px;border-radius:1px;background:rgba(0,0,0,.12)}
-#tapedeck .key:active,#tapedeck.playing .key.play,#tapedeck.paused .key.pause{transform:translateY(2px);background:linear-gradient(#e4e6e9,#c4c7cc);box-shadow:inset 0 -1px 0 rgba(0,0,0,.2),0 0 0 rgba(0,0,0,.6)}
+#tapedeck .key:active,#tapedeck.playing .key.play{transform:translateY(2px);background:linear-gradient(#e4e6e9,#c4c7cc);box-shadow:inset 0 -1px 0 rgba(0,0,0,.2),0 0 0 rgba(0,0,0,.6)}
 #tapedeck.playing .key.play::after{background:#2ecc71;box-shadow:0 0 4px #2ecc71}
-#tapedeck.paused .key.pause::after{background:#f5a623;box-shadow:0 0 4px #f5a623}
+#tapedeck.paused .key.play::after{background:#f5a623;box-shadow:0 0 4px #f5a623}
 #tapedeck .key.eject{color:#5a5e66}
+#tapedeck .key small{margin-left:.15em;font-size:.8em;letter-spacing:-.05em}
+#tapedeck .key svg{width:.95rem;height:.65rem;vertical-align:middle}
+#tapedeck .key svg circle{fill:currentColor}
+#tapedeck .key svg path{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round}
+#tapedeck .key.band{color:#b3121f}
 #tapedeck .key:disabled{color:#9a9ea5;cursor:default}
 #tapedeck .key:disabled:active{transform:none}
 #tapedeck .key:focus-visible{outline:2px solid var(--acc);outline-offset:1px;z-index:1}
@@ -71,6 +76,7 @@
 /* The next tape, in its clear case leaning behind the deck (its label shows over the top). Hovered
    it rises a little; clicked, it dips while the tapes swap. */
 #tapedeck .case{position:absolute;left:7.4rem;bottom:4.25rem;z-index:-1;padding:.14rem;border-radius:2px;background:linear-gradient(135deg,rgba(235,242,250,.55),rgba(200,210,225,.25));box-shadow:inset 0 0 0 1px rgba(255,255,255,.6),0 3px 10px rgba(0,0,0,.3);transform:rotate(7deg);transform-origin:50% 100%;transition:transform .3s cubic-bezier(.3,.7,.4,1.3)}
+#tapedeck.single .case{display:none}
 #tapedeck .case .cassette{font-size:.55rem}
 #tapedeck .case .cassette b{font-size:.9em;line-height:1.5em;height:1.5em}
 #tapedeck .case:hover,#tapedeck .case:focus-visible{transform:rotate(3deg) translateY(-.4rem)}
