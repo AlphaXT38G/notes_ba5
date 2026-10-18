@@ -673,6 +673,66 @@ RTX 5090 & 75.0\% & 87.49\% & 93.8\% \\
 
 
 
+%=========================================================
+\section{Tensor Core on Consumer GPUs: HMMA.16816}
+
+
+\begin{definition}
+
+\textbf{HMMA.16816}
+
+$16 \times 8 \times 16$ half precision matrix multiplication: \textbf{256 flops/cycle per SM
+partition}. Reads 768 bytes of input registers, keeps the tensor core busy for 16 cycles (4096
+FLOPs), writes 256 bytes of output registers.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Some data for Ada A6000}
+
+\begin{itemize}
+
+\item \textbf{64 TB/s bandwidth} needed just for inputs!
+
+\item Global memory: 960 GB/s (ideal)
+
+\item L2 cache: 5 TB/s (measured)
+
+\item Shared memory: 45.5 TB/s (ideal)
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{warning}
+
+Not even shared memory is fast enough. How can one even use this operation?
+
+\end{warning}
+
+
+\begin{important}
+
+\textbf{Block matrix multiplication}: each block of $C$ is computed from a band of blocks of
+$A$ and of $B$ (16$\times$16 blocks for HMMA.16816), loaded into shared memory and reused for
+many products.
+
+\end{important}
+
+
+\begin{center}
+
+\includegraphics[
+width=\linewidth
+]{../images/week06_04.png}
+
+\end{center}
+
+
+
 \end{multicols}
 
 
