@@ -1,0 +1,948 @@
+\documentclass[11pt,a4paper,openany]{book}
+
+\makeatletter\def\input@path{{../_shared/}}\makeatother
+\usepackage{course}
+
+\begin{document}
+\raggedbottom
+
+\coursetitle{Numerical Methods for Visual Computing and ML}{BA5}{2026--2027}
+
+\tableofcontents
+\clearpage
+
+These notes cover CS-328 (Prof.\ Wenzel Jakob, Realistic Graphics Lab): how the abstract
+concepts of linear algebra and analysis are implemented on a computer --- floating point
+arithmetic, linear systems and their factorizations, least squares, and how to write efficient
+numerical code for CPUs and GPUs.
+
+
+% =========================================================
+\chapter{Lecture 1 : Admin and floating point}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} What numerical methods are and where they are used, how
+real numbers are stored in a computer (\textbf{IEEE 754 floating point}), and which kinds of
+errors this causes. \\
+\textbf{Why is it useful?} Every later algorithm runs on floating point numbers: knowing their
+limits tells you why a program ``no longer computes the correct answer'' and how to measure the
+damage.
+\end{rembox}
+
+\begin{rembox}[title=Course organisation]
+\begin{itemize}
+  \item Lecture on Thursday in CE13, exercise session on Thursday in BC07/08 (first 3 weeks:
+        tutorials, then homework Q\&A).
+  \item \textbf{Grading}: 4 homeworks, \textbf{10\%} of the final grade; pen \& paper exam in
+        the January session, \textbf{90\%}. Optional practice midterm, graded but 0\% weight.
+        Grades on a 1-6 scale, raw percentages mapped with a curve.
+  \item Homeworks: (1) basics, floating point, error analysis, Monte Carlo; (2) processing a
+        RAW image (demosaicing, least squares to sRGB); (3) inverse kinematics with the SVD;
+        (4) autodiff \& a tiny ML framework (``MyTorch''). Plus 6-7 ungraded exercise sheets.
+  \item Late policy: 25\% penalty per extra started late day. Python 3.14, Jupyter Lab.
+  \item Survey course: many methods, none in depth. LLMs can solve all problems, but reviewing
+        their output does not teach you anything: ``to learn, you must struggle''.
+\end{itemize}
+\end{rembox}
+
+
+\section{What is a numerical method?}
+
+\begin{defnbox}[title=CS-328]
+The \textbf{computer implementation} of abstract concepts from linear algebra
+($\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$) and analysis
+($\frac{\partial}{\partial \mathbf{x}} f(\mathbf{x})$, $y = \int_\Omega f(x)\,\mathrm{d}x$).
+Typical computer science works with $\mathbb{N}$ (graphs, databases, protocols, cryptography);
+numerical methods work with $\mathbb{R}^n$.
+\end{defnbox}
+
+\begin{exbox}[title=Numerical methods everywhere]
+\begin{itemize}
+  \item \textbf{Rendering}: visual effects $\simeq$ solving integrals,
+        $\text{pixel color} = \int \text{light}\,\mathrm{d}x$.
+  \item \textbf{Fluid simulation}: each timestep solves an enormous linear system
+        $\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$.
+  \item \textbf{Character animation}: attaching a body to a skeleton by optimization,
+        $\mathbf{x} = \mathbf{A}^{+}\mathbf{b}$.
+  \item \textbf{Computer vision}: learned convolutions (CNNs), a type of linear transformation.
+  \item \textbf{Machine learning}: derivatives of software,
+        $\frac{\partial}{\partial \mathbf{x}} f(\mathbf{x})$ with $f$ a computer program.
+\end{itemize}
+\end{exbox}
+
+\begin{propbox}[title=Many layers (top to bottom)]
+Applications; frameworks (NumPy, PyTorch, TensorFlow, JAX); optimization algorithms (gradient
+descent, Newton, Broyden, Gauss-Newton, Levenberg-Marquardt); matrix factorizations (the ``Big
+3'': LU, QR, SVD); compilation (JIT: JAX, XLA); floating point arithmetic (IEEE-754, error
+propagation); processor architecture (superscalar, vectorization, memory hierarchy, GPUs).
+\end{propbox}
+
+
+\section{Number systems}
+
+\begin{keybox}[title=The compromise]
+$\pi$ has infinitely many digits, and there are infinitely many such numbers between any two
+numbers: we cannot store them. The compromise is that \textbf{the program will no longer
+compute the correct answer}.
+\end{keybox}
+
+\begin{defnbox}[title=Integers]
+Unsigned: $11000101_2 = 2^7 + 2^6 + 2^2 + 2^0 = 197$. Signed (two's complement), the top bit
+weighs $-2^7$: $11000101_2 = -2^7 + 2^6 + 2^2 + 2^0 = -59$. Typical sizes: \texttt{int8}
+($-128..127$), \texttt{uint8} ($0..255$), \texttt{int16}, \texttt{int32}
+($-2147483648..2147483647$), \texttt{int64}, and their unsigned versions.
+\end{defnbox}
+
+\begin{defnbox}[title=Fixed point arithmetic]
+Allow negative exponents: $1100.0101_2 = 2^3 + 2^2 + 2^{-2} + 2^{-4} = 12.3125$.
+\end{defnbox}
+
+\begin{warnbox}[title=Drawbacks of fixed point]
+Big numbers need a lot of storage ($4 \cdot 10^{80}$: $\sim$268 bits), and the exponent range
+grows during operations: a product of two numbers with exponents in $[-k, k]$ has exponents in
+$[-2k, 2k]$.
+\end{warnbox}
+
+\begin{defnbox}[title=Rational numbers]
+$\mathbb{Q} = \{a/b : a, b \in \mathbb{Z}\}$, with $a/b + c/d = (ad + cb)/bd$: an exact
+representation, which is generally not a good thing (the numbers grow).
+\end{defnbox}
+
+
+\section{Floating point numbers}
+
+\begin{defnbox}[title=Floating point number]
+Numbers whose resolution follows their magnitude (from the Planck length to the universe):
+\[
+\underbrace{\pm}_{\text{sign}} \ \underbrace{2^E}_{\text{exponent}}
+\ \underbrace{\sum_{i=0}^{n} 2^{-i} A_i}_{\text{mantissa}}
+\]
+E.g.\ $-0.75 = -2^{-1}(2^{-0} + 2^{-1}) = -2^{-1}\,1.1_2$, and
+$3.14 \approx +2^1\,1.1001001_2$. The leading digit is always 1, so it is not stored.
+\end{defnbox}
+
+\begin{propbox}[title=Standard formats (sign | exponent | mantissa)]
+\begin{center}
+\includegraphics[width=\linewidth]{images/week01_01.png}
+\end{center}
+The density of representable numbers decreases with the magnitude; there is overflow beyond
+the usable range and underflow near zero (``please don't memorize these numbers'').
+\end{propbox}
+
+
+\section{The IEEE 754 standard}
+
+\begin{defnbox}[title=IEEE 754]
+Standard by William Kahan, published in 1985. Its behavior is \textbf{fully specified}: every
+arithmetic operation produces a result, whether it is mathematically expected or not, and
+exceptional operations raise a signal.
+\begin{itemize}
+  \item \textbf{Zero}: don't store the leading one; zero is \textbf{signed}.
+  \item \textbf{Too big}: special number $\pm$\textbf{infinity}.
+  \item \textbf{Too small}: gradual underflow through \textbf{denormalized numbers}
+        ($2^E \cdot 0.xxx$).
+  \item \textbf{Nonsensical} ($\text{Inf} \cdot 0$, \dots): \textbf{NaN}, which is infectious.
+  \item \textbf{Not representable}: \textbf{Banker's rounding} (round-to-nearest-tie-to-even)
+        by default.
+\end{itemize}
+\end{defnbox}
+
+\begin{thmbox}[title=Accuracy guarantee]
+The elementary operations $+, -, *, /, \sqrt{}$ are computed in infinite precision and then
+\textbf{rounded} to a representable number.
+\end{thmbox}
+
+\begin{warnbox}[title=Danger zone]
+\begin{itemize}
+  \item Comparison against NaN is always false: \texttt{if x < 0 or x > 1: raise} lets a NaN
+        through, \texttt{if not (x >= 0 and x <= 1): raise} does not.
+  \item Transcendental operations (sin, exp, log\dots) are much slower (50-300 cycles) and less
+        accurate.
+  \item Fused multiply-add (\texttt{a*b+c}, one rounding) and compiler optimizations can change
+        the expected rounding.
+  \item Denormals are handled badly by processors (100-1000$\times$ slower); careful with
+        float/integer conversions.
+\end{itemize}
+\end{warnbox}
+
+
+\section{Errors}
+
+\begin{defnbox}[title=Types of errors]
+\begin{itemize}
+  \item \textbf{Model error}: the model approximates reality ($A = 4\pi r^2$, but the earth is
+        not a sphere).
+  \item \textbf{Discretization error}: e.g.\ a fluid simulated at a finite resolution (a kind of
+        model error).
+  \item \textbf{Truncation error}: an infinite calculation approximated by a finite one,
+        $\sum_{i=1}^{10} 3^{-i} \approx 0.499991532$ vs.\ $\sum_{i=1}^{\infty} 3^{-i} = 0.5$.
+  \item \textbf{Rounding error}: $\sum_{k=1}^{\infty} \frac{1}{k} = 15.403683$ in IEEE-754 (the
+        series diverges!): once the sum is large, aligning the exponents drops the small terms.
+\end{itemize}
+\end{defnbox}
+
+\begin{exbox}[title=Catastrophic numerical errors]
+Ariane 5 rocket failure (June 14, 1996); Patriot missile failure (1991, Dhahran):
+\emph{rounding error accumulation}, the battery failed to intercept a missile, 28 people died.
+\end{exbox}
+
+
+\begin{defnbox}[title=Catastrophic cancellation]
+The especially dangerous case $a - b$ with $a \approx b$ (or $a + b$ with $a \approx -b$). Even
+when the subtraction itself is exact, it ``reveals'' the imprecision of the operands: with 8
+mantissa bits, $3.140 - 3.148 = -2^{-7}\,1.0_2$ keeps only ``1 bit of information''.
+\end{defnbox}
+
+\begin{exbox}[title={$f(x) = (1 - \cos x)/x^2$}]
+$f(1.2 \cdot 10^{-5}) = \frac{1 - 0.9999999999}{1.44 \cdot 10^{-10}} \approx 0.694$: the last
+digit is the only bit of accuracy left, but one can show that $f(x) < 1/2$ for $x > 0$.
+Arithmetic transformations that are ``pointless'' on paper can make a huge accuracy difference.
+\end{exbox}
+
+
+\section{Quantifying error}
+
+\begin{defnbox}[title=Absolute and relative error]
+Absolute error: $|\text{true value} - \text{approximate value}|$. Relative error: absolute error
+$/ |\text{true value}|$, also written $(\text{true value})(1 \pm \text{relative error})$. The
+error is generally unknown.
+\end{defnbox}
+
+\begin{defnbox}[title=Forward and backward error]
+The actual algorithm returns $\hat{y}$ instead of $y = f(x)$; $\hat{y} = f(x + \Delta x)$ is what
+the ideal algorithm returns for a perturbed input. The \textbf{forward error} is the distance
+between $y$ and $\hat{y}$ (output space), the \textbf{backward error} is $\Delta x$ (input
+space).
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week01_03.png}
+\end{center}
+E.g.\ for $f(x) = \sqrt{x}$: forward error $y - \hat{y}$, backward error
+$x - (f_{\text{IEEE754}}(x))^2$.
+\end{defnbox}
+
+\begin{defnbox}[title=Condition number]
+\[
+\text{condition number} = \frac{\text{forward error}}{\text{backward error}}
+\]
+\end{defnbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Floating point = sign, exponent, mantissa; IEEE 754 specifies every operation (signed
+        zero, infinities, NaN, denormals, correct rounding).
+  \item Errors: model, discretization, truncation, rounding, catastrophic cancellation.
+  \item Forward vs backward error, condition number.
+\end{itemize}
+\end{keybox}
+
+
+% =========================================================
+\chapter{Lecture 2 : Linear systems I}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Vectors and matrices as linear functions, the cost of
+matrix operations, sparse matrices, and how to solve a square linear system with Gaussian
+elimination and the \textbf{LU factorization}. \\
+\textbf{Why is it useful?} Linear systems are one of the few numerical problems we know to solve
+really well, and almost everything boils down to one at some point.
+\end{rembox}
+
+\section{Vectors, matrices and linear functions}
+
+\begin{defnbox}[title={Scalars, vectors, matrices, tensors}]
+Key numerical data structures organized by dimension. All are \textbf{nd-arrays} (general
+n-dimensional storage); vectors and matrices are representations of \emph{linear functions}.
+\end{defnbox}
+
+\begin{defnbox}[title=Linear function]
+$f$ is linear iff $f(\mathbf{x} + \mathbf{y}) = f(\mathbf{x}) + f(\mathbf{y})$ (additivity) and
+$f(\alpha\mathbf{x}) = \alpha f(\mathbf{x})$ (homogeneity). Then $f(\mathbf{x}) =
+\mathbf{A}\mathbf{x}$ fully encodes everything that $f$ does, with
+\[
+(\mathbf{A}\mathbf{x})_i = \sum_{k=1}^{n} A_{ik} x_k, \qquad
+\mathbf{A}\mathbf{x} = \mathbf{a}^{(1)} x_1 + \mathbf{a}^{(2)} x_2 + \ldots
+\]
+a linear combination of the columns.
+\end{defnbox}
+
+\begin{defnbox}[title=Matrix multiplication]
+$(\mathbf{A}\mathbf{B})_{ij} = \sum_{k} A_{ik} B_{kj}$: if $f \leftrightarrow \mathbf{A}$ and
+$g \leftrightarrow \mathbf{B}$, then the composition $g \circ f \leftrightarrow
+\mathbf{B}\mathbf{A}$.
+\end{defnbox}
+
+\begin{exbox}[title=Basic matrix transformations in 2D]
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week02_01.png}
+\end{center}
+\end{exbox}
+
+
+\section{Cost of matrix operations}
+
+\begin{propbox}[title=Complexity]
+Matrix-vector multiplication is $\mathcal{O}(n^2)$, matrix-matrix multiplication
+$\mathcal{O}(n^3)$. On an M1 Mac, \texttt{A @ x} with $n = 10000$ takes 11 ms, a double Python
+loop 30'282 ms ($\sim$2'752$\times$ slower); \texttt{A @ B} with $n = 1000$ takes 19 ms, a triple
+loop 341'495 ms ($\sim$17'973$\times$).
+\end{propbox}
+
+\begin{rembox}[title={Is $\mathcal{O}(n^3)$ really true?}]
+Strassen (1969): $O(n^{2.8074})$; Williams et al.\ (2023): $O(n^{2.371552})$. The true cost
+might be $O(n^2)$, \emph{nobody knows}. Many of these are \emph{galactic} algorithms: in practice
+the naïve algorithm tends to be fastest.
+\end{rembox}
+
+
+\section{Sparse matrices}
+
+\begin{defnbox}[title=Sparse matrix]
+A matrix where \emph{almost all} ($> 99\%$) entries are zero: we can avoid storing the zeros and
+skip them during computation. Encodings: \textbf{Compressed Sparse Row} (CSR) and
+\textbf{Compressed Sparse Column} (CSC), \texttt{scipy.sparse.csr\_matrix} / \texttt{csc\_matrix}.
+\begin{center}
+\includegraphics[width=0.8\linewidth]{images/week02_03.png}
+\end{center}
+\end{defnbox}
+
+\begin{exbox}[title=Where sparsity comes from]
+Protein models, social networks, triangle meshes: most things \emph{aren't} connected.
+Discretized equations: the 1D heat equation $\frac{\partial^2 f}{\partial x^2} = 0$ becomes
+$-f(x_{i-1}) + 2f(x_i) - f(x_{i+1}) = 0$, one row $(\ldots\ {-1}\ 2\ {-1}\ \ldots)$ of a huge
+matrix.
+\end{exbox}
+
+\begin{rembox}[title=Matrix zoo]
+Dense, symmetric, diagonal, tridiagonal, permutation, upper / lower triangular, block, low
+rank, sparse; also positive definite and orthogonal matrices.
+\begin{center}
+\includegraphics[width=0.7\linewidth]{images/week02_02.png}
+\end{center}
+\end{rembox}
+
+
+\section{Linear systems}
+
+\begin{defnbox}[title=Linear system]
+$\mathbf{A}\mathbf{x} = \mathbf{b}$, $\mathbf{A} \in \mathbb{R}^{m \times n}$: can $\mathbf{b}$
+be expressed as a linear combination of the columns of $\mathbf{A}$? The solution may not exist
+or may not be unique. This lecture: the square case $m = n$.
+\end{defnbox}
+
+\begin{propbox}[title=Geometric interpretations]
+\begin{itemize}
+  \item \textbf{Column view}: reach $\mathbf{b}$ with a combination of the columns
+        $\mathbf{a}^{(i)}$; $\mathbf{x}$ tells how much of each one we need.
+  \item \textbf{Row view}: intersect the planes $\mathbf{a}^{(i)} \cdot \mathbf{x} = b_i$.
+\end{itemize}
+\end{propbox}
+
+\begin{warnbox}[title=Pure vs numerical mathematics]
+$\begin{pmatrix} 1 & 0 \\ 1 & \epsilon \end{pmatrix}$ is singular only for $\epsilon = 0$, but in
+floating point it becomes gradually ``more singular'' as $\epsilon$ goes to $10^{-10}$,
+$10^{-50}$, \dots
+\end{warnbox}
+
+
+\begin{algbox}[title=Gaussian elimination]
+On the augmented matrix $[\,\mathbf{A} \mid \mathbf{b}\,]$: permute rows, scale rows, add a
+(scaled) row to another, until $\mathbf{A}$ is triangular; each step uses a \textbf{pivot}
+element on the diagonal. The values of $\mathbf{b}$ are updated but do not influence the
+process.
+\end{algbox}
+
+\begin{warnbox}[title=Pivoting]
+Instabilities can occur even for nonzero (tiny) pivots: pick the element with the
+\textbf{largest absolute value} as pivot.
+\end{warnbox}
+
+
+\section{The LU factorization}
+
+\begin{warnbox}[title=Don't compute the inverse]
+To solve many systems with the same $\mathbf{A}$, do not precompute $\mathbf{A}^{-1}$: it can
+be numerically unstable, costs slightly more FLOPs than LU, and the inverse of a sparse matrix
+is generally dense (out of memory).
+\end{warnbox}
+
+\begin{defnbox}[title=LU factorization]
+Run Gaussian elimination on $\mathbf{A}$ alone and record the steps: each step is a lower
+triangular matrix $\mathbf{E}_i$ (adding $c \times$ row 1 to row 2 is the identity with $c$ at
+position $(2,1)$, inverted by $-c$), so
+\begin{align*}
+\mathbf{U} &= \mathbf{E}_k \cdots \mathbf{E}_1\mathbf{A} \quad \text{(upper triangular)}, \\
+\mathbf{L} &= \mathbf{E}_1^{-1} \cdots \mathbf{E}_k^{-1} \quad \text{(lower triangular)}, \qquad
+\mathbf{A} = \mathbf{L}\mathbf{U}.
+\end{align*}
+\end{defnbox}
+
+\begin{exbox}[title=$2 \times 2$ example]
+$\mathbf{A} = \begin{bmatrix} 1 & 1 \\ 2 & 4 \end{bmatrix}$,
+$\mathbf{E}_1 = \begin{bmatrix} 1 & 0 \\ -2 & 1 \end{bmatrix}$,
+$\mathbf{U} = \begin{bmatrix} 1 & 1 \\ 0 & 2 \end{bmatrix}$,
+$\mathbf{L} = \begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix}$.
+\end{exbox}
+
+
+\begin{propbox}[title=Using an LU decomposition]
+With partial pivoting, $\mathbf{A} = \mathbf{P}\mathbf{L}\mathbf{U}$ ($\mathbf{P}$ a
+permutation matrix, a single 1 per row/column) and
+\[
+\mathbf{x} = \mathbf{U}^{-1}(\mathbf{L}^{-1}(\mathbf{P}^{-1}\mathbf{b})),
+\]
+where $\cdot^{-1}$ means \emph{solving} a triangular system (forward / back substitution), not
+computing an inverse. Substitution costs $\mathcal{O}(n^2)$: all the hard work ($\mathcal{O}(n^3)$)
+is in the factorization. SciPy: \texttt{lu, piv = la.lu\_factor(A)}, \texttt{x =
+la.lu\_solve((lu, piv), b)}; $\mathbf{L}$ has a unit diagonal, so both factors are packed in
+one array.
+\end{propbox}
+
+
+\begin{defnbox}[title=Cholesky decomposition]
+For symmetric positive definite matrices, $\mathbf{A} = \mathbf{L}\mathbf{L}^T$: almost the same
+as LU but half as expensive (storage, compute). In $2 \times 2$:
+\[
+L_{11} = \sqrt{A_{11}}, \quad L_{21} = \frac{A_{21}}{L_{11}}, \quad
+L_{22} = \sqrt{A_{22} - L_{21}^2}.
+\]
+\end{defnbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Matrices are linear functions; vectorized code is orders of magnitude faster.
+  \item Sparse matrices (CSR/CSC) skip the zeros.
+  \item Never invert: factor $\mathbf{A} = \mathbf{P}\mathbf{L}\mathbf{U}$ once in
+        $\mathcal{O}(n^3)$, then substitute in $\mathcal{O}(n^2)$ per right-hand side.
+  \item SPD matrices: Cholesky.
+\end{itemize}
+\end{keybox}
+
+
+% =========================================================
+\chapter{Lecture 3 : Linear systems II}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Where linear systems come from (regression), how much error
+a solver can make (\textbf{matrix norm} and \textbf{condition number}), and what to do when there
+are more equations than unknowns (\textbf{linear least squares}). \\
+\textbf{Why is it useful?} The condition number tells whether a system can be solved accurately
+at all; least squares is the workhorse of data fitting.
+\end{rembox}
+
+\begin{rembox}[title=Which solver?]
+$\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$ means ``call a solver for $\mathbf{A}\mathbf{x} =
+\mathbf{b}$'': diagonal (divide), permutation (reorder), triangular (substitution), dense
+(e.g.\ LU).
+\end{rembox}
+
+\section{Regression}
+
+\begin{defnbox}[title=Regression]
+We have a model of the \textbf{expected behaviour} with unknown parameters, and data that
+\emph{may} be supported by it. Goal: find the parameters that best support the data. When this
+is a linear system: \textbf{linear regression}.
+\end{defnbox}
+
+\begin{exbox}[title=Ideal ballistic motion]
+A thrown ball follows $y = ax^2 + bx + c$. Each measured position $(x_i, y_i)$ gives one equation,
+linear in the unknowns $a, b, c$, so 3 measurements give
+\[
+\begin{bmatrix} x_1^2 & x_1 & 1 \\ x_2^2 & x_2 & 1 \\ x_3^2 & x_3 & 1 \end{bmatrix}
+\begin{bmatrix} a \\ b \\ c \end{bmatrix} = \begin{bmatrix} y_1 \\ y_2 \\ y_3 \end{bmatrix}.
+\]
+\end{exbox}
+
+\begin{defnbox}[title=Polynomial regression and Vandermonde matrix]
+Find a polynomial that \emph{perfectly interpolates} given points, $y(t_i) = p_i$: the matrix of
+powers $t_i^3, t_i^2, t_i, 1$ is a \textbf{Vandermonde matrix}.
+\end{defnbox}
+
+\begin{warnbox}[title=What could go wrong?]
+Weak observations (all close together), more than 3 observations, noise, a model that violates
+the assumptions\dots\ Deconvolution (removing blur from an image) is a classical ``bad'' linear
+system: solving it exactly gives pure noise, a regularized solution recovers the image.
+\end{warnbox}
+
+
+\section{Error of linear solvers}
+
+\begin{defnbox}[title=Residual]
+For the ideal solver $\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$ (inverse $f^{-1}(\mathbf{x}) =
+\mathbf{A}\mathbf{x}$) and the actual one $\hat{\mathbf{x}} = \hat{f}(\mathbf{b})$,
+\[
+r(\hat{\mathbf{x}}) = \mathbf{A}\hat{\mathbf{x}} - \mathbf{b}
+\]
+gives an approximation of the \textbf{backward error} of the solver.
+\end{defnbox}
+
+\begin{defnbox}[title=Matrix norm (operator norm)]
+\[
+\|\mathbf{A}\| = \max\{\|\mathbf{A}\mathbf{x}\|, \text{ where } \|\mathbf{x}\| = 1\},
+\]
+the maximum radius of the ellipse that $\mathbf{A}$ makes of the unit circle. Then
+$\|\mathbf{A}\mathbf{x}\| \le \|\mathbf{A}\|\,\|\mathbf{x}\|$ and
+$\|\mathbf{A}\mathbf{B}\| \le \|\mathbf{A}\|\,\|\mathbf{B}\|$.
+\end{defnbox}
+
+
+\section{Condition number}
+
+\begin{thmbox}[title=Perturbed linear system]
+If $\mathbf{A}\mathbf{x} = \mathbf{b}$ and $\mathbf{A}(\mathbf{x} + \Delta\mathbf{x}) =
+\mathbf{b} + \Delta\mathbf{b}$, then from $\|\mathbf{x}\| \ge \|\mathbf{b}\|/\|\mathbf{A}\|$ and
+$\|\Delta\mathbf{x}\| \le \|\mathbf{A}^{-1}\|\,\|\Delta\mathbf{b}\|$:
+\[
+\frac{\|\Delta\mathbf{x}\|}{\|\mathbf{x}\|} \le
+\|\mathbf{A}^{-1}\| \cdot \|\mathbf{A}\| \cdot \frac{\|\Delta\mathbf{b}\|}{\|\mathbf{b}\|}.
+\]
+\end{thmbox}
+
+\begin{defnbox}[title=Condition number]
+\[
+\operatorname{cond}(\mathbf{A}) = \kappa(\mathbf{A}) = \|\mathbf{A}\| \cdot \|\mathbf{A}^{-1}\|
+\]
+It measures how much $\mathbf{A}$ distorts the unit circle.
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week03_02.png}
+\end{center}
+\end{defnbox}
+
+\begin{propbox}[title=Properties]
+$\operatorname{cond}(\mathbf{A}) = \infty$ iff $\mathbf{A}$ is singular;
+$\operatorname{cond}(\mathbf{I}) = 1$;
+$\operatorname{cond}(\gamma\mathbf{A}) = \operatorname{cond}(\mathbf{A})$;
+$\operatorname{cond}(\mathbf{Q}\mathbf{A}) = \operatorname{cond}(\mathbf{A})$ for a rotation
+$\mathbf{Q}$.
+\end{propbox}
+
+\begin{warnbox}[title=Not the determinant]
+$\mathbf{A} = \frac{1}{10}\mathbf{I} \in \mathbb{R}^{1000 \times 1000}$ has
+$\det(\mathbf{A}) = 10^{-1000}$, yet the system is trivial to solve:
+$\operatorname{cond}(\mathbf{A}) = 1$.
+\end{warnbox}
+
+\begin{thmbox}[title=Implications (without proof)]
+With a good solver and an accurate $\mathbf{b}$,
+$\frac{\|\Delta\mathbf{x}\|}{\|\mathbf{x}\|} \lesssim \operatorname{cond}(\mathbf{A})
+\operatorname{ulp}(1)$, with $\operatorname{ulp}(1) \approx 2^{-23}$ (single) or $2^{-52}$
+(double precision).
+\end{thmbox}
+
+\begin{exbox}[title=Badly conditioned systems]
+Nearly parallel rows: small errors on each plane give a huge region of possible intersections.
+The Vandermonde matrix for $n = 100$ uniform points on $[0, 1]$ has
+$\operatorname{cond}(\mathbf{A}) = 7.31 \cdot 10^{19}$. And computing
+$\operatorname{cond}(\mathbf{A})$ requires an inverse and a matrix norm: a chicken-and-egg
+problem (stay tuned).
+\end{exbox}
+
+
+\section{Linear least squares}
+
+\begin{defnbox}[title=Linear least squares]
+With $n$ constraint equations (many) and $m$ parameters (few), the tall system
+$\mathbf{A}\mathbf{x} = \mathbf{b}$ is not solvable for almost all $\mathbf{b}$. Compromise:
+minimize the residual,
+\[
+\min_{\mathbf{x}} \|\mathbf{A}\mathbf{x} - \mathbf{b}\|^2.
+\]
+\end{defnbox}
+
+\begin{thmbox}[title=Normal equations]
+Expanding $\|\mathbf{A}\mathbf{x} - \mathbf{b}\|^2 = \mathbf{x}^T\mathbf{A}^T\mathbf{A}\mathbf{x}
+- 2\mathbf{b}^T\mathbf{A}\mathbf{x} + \|\mathbf{b}\|^2$, its derivative is
+$2\mathbf{A}^T\mathbf{A}\mathbf{x} - 2\mathbf{A}^T\mathbf{b}$; setting it to zero (Gauss):
+\[
+\mathbf{A}^T\mathbf{A}\mathbf{x} = \mathbf{A}^T\mathbf{b},
+\]
+a smaller square system. ``Normal'': at the optimum the residual is perpendicular to
+$\operatorname{span}(\mathbf{A})$.
+\begin{center}
+\includegraphics[width=0.5\linewidth]{images/week03_04.png}
+\end{center}
+\end{thmbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Regression with a model linear in the unknowns is a linear system.
+  \item $\operatorname{cond}(\mathbf{A}) = \|\mathbf{A}\|\,\|\mathbf{A}^{-1}\|$ bounds the
+        relative error; the determinant does not measure difficulty.
+  \item Least squares: normal equations $\mathbf{A}^T\mathbf{A}\mathbf{x} =
+        \mathbf{A}^T\mathbf{b}$.
+\end{itemize}
+\end{keybox}
+
+
+% =========================================================
+\chapter{Lecture 4 : Linear systems III}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Least squares problems, orthogonality and polynomial
+regression: why the normal equations are badly conditioned, how orthogonal bases (Legendre,
+Chebyshev) and the \textbf{QR factorization} fix it, and \textbf{Tikhonov regularization}. \\
+\textbf{Why is it useful?} Orthogonal transformations do not amplify errors: they give
+accurate least squares solutions.
+\end{rembox}
+
+\section{Limits of the normal equations}
+
+\begin{warnbox}[title=The catch]
+\[
+\operatorname{cond}(\mathbf{A}^T\mathbf{A}) \approx \operatorname{cond}(\mathbf{A})^2
+\]
+The normal equations are often much worse conditioned than the original problem. Goal: solve
+the same problem without ever building $\mathbf{A}^T\mathbf{A}$. (Regression also suffers from
+overfitting and from wrong models.)
+\end{warnbox}
+
+
+\section{Orthogonality}
+
+\begin{rembox}[title=The issue with the Vandermonde matrix]
+Monomials of different powers look more and more alike: almost parallel columns. Idea: make the
+problem more ``orthogonal''.
+\begin{center}
+\includegraphics[width=0.8\linewidth]{images/week04_02.png}
+\end{center}
+\end{rembox}
+
+\begin{defnbox}[title=Inner product]
+$\langle \mathbf{a}, \mathbf{b} \rangle = \mathbf{a}^T\mathbf{b} = \|\mathbf{a}\|\,\|\mathbf{b}\|
+\cos\theta$ measures a projection: $\mathbf{a}^T\mathbf{a} = 1$ for a unit vector,
+$\mathbf{a}^T\mathbf{b} = 0$ for perpendicular vectors. More generally,
+$\langle f, g \rangle := \int_a^b f(x) g(x)\,\mathrm{d}x$ for functions.
+\end{defnbox}
+
+\begin{algbox}[title=Gram-Schmidt orthogonalization]
+\[
+\hat{\mathbf{y}} := \mathbf{y} - \frac{\langle \mathbf{x}, \mathbf{y} \rangle}
+{\langle \mathbf{x}, \mathbf{x} \rangle}\mathbf{x} \quad \Rightarrow \quad
+\langle \mathbf{x}, \hat{\mathbf{y}} \rangle = 0.
+\]
+On $[-1, 1]$ with $f = 1$, $g = x$, $h = x^2$: $\langle f, g \rangle = \langle g, h \rangle = 0$,
+$\langle f, h \rangle = 2/3$, so $\hat{h}(x) = x^2 - \frac{1}{3}$.
+\end{algbox}
+
+\begin{defnbox}[title=Legendre polynomials]
+Span the same space as the monomials, but are \textbf{orthogonal to each other}: the poor
+conditioning disappears. Use them to fit a smooth function to data.
+\begin{center}
+\includegraphics[width=0.55\linewidth]{images/week04_03.png}
+\end{center}
+\end{defnbox}
+
+
+\begin{thmbox}[title=Taylor's theorem for polynomials]
+When fitting a polynomial through points $x_i$ (Runge function demo), the residual is
+\[
+R_{k-1}(x) = \frac{f^k(y)}{k!}\prod_{i=1}^{k}|x - x_i|.
+\]
+The \textbf{Chebyshev points} $x_i = \cos\left(\frac{2k - 1}{2n}\pi\right)$ are the optimal set
+of points to make the product small.
+\end{thmbox}
+
+
+\section{The QR factorization}
+
+\begin{defnbox}[title=QR factorization]
+$\mathbf{A} = \mathbf{Q}\mathbf{R}$ with $\mathbf{Q}$ \textbf{orthogonal}
+($\mathbf{Q}^T\mathbf{Q} = \mathbf{I}$, i.e.\ $\mathbf{q}_i^T\mathbf{q}_j = \delta_{ij}$) and
+$\mathbf{R}$ upper (``right'') triangular. Flavors: Gram-Schmidt, Givens rotations,
+\textbf{Householder transformations}. Compared to LU, one triangular factor is replaced by an
+orthogonal matrix.
+\end{defnbox}
+
+\begin{defnbox}[title=Isometry]
+A transformation that preserves angles and distances (rotation, mirror; not shear or scaling).
+Orthogonal transformations are isometries: they do \textbf{not} amplify error.
+\end{defnbox}
+
+\begin{warnbox}[title=Why not LU for least squares]
+Least squares seeks the point of $\operatorname{span}(\mathbf{A})$ \emph{closest} to $\mathbf{b}$:
+a non-isometric transformation of the problem changes the answer.
+\end{warnbox}
+
+
+\begin{defnbox}[title=Householder reflection]
+To zero out all elements of a column except the first using only reflections, reflect
+$\mathbf{x}$ across the axis perpendicular to $\mathbf{v}$ ($\|\mathbf{v}\| = 1$):
+\[
+\tilde{\mathbf{x}} = \mathbf{x} - 2(\mathbf{v}^T\mathbf{x})\mathbf{v} = \mathbf{Q}\mathbf{x},
+\qquad \mathbf{Q} = \mathbf{I} - 2\frac{\mathbf{v}\mathbf{v}^T}{\mathbf{v}^T\mathbf{v}}.
+\]
+\begin{center}
+\includegraphics[width=0.45\linewidth]{images/week04_04.png}
+\end{center}
+\end{defnbox}
+
+
+\begin{propbox}[title=Least squares with QR]
+For a tall $\mathbf{A}$, the \textbf{economy-size} QR keeps only the columns of $\mathbf{Q}$
+that multiply $\mathbf{R}$. Then
+\[
+\mathbf{x} = \mathbf{R}^{-1}(\mathbf{Q}^T\mathbf{b}):
+\]
+solve $\mathbf{R}\mathbf{x} = \mathbf{Q}^T\mathbf{b}$ by back-substitution (never invert
+$\mathbf{R}$). About 2$\times$ the cost of LU, but it gives the least squares solution
+\emph{without the normal equations}, is numerically extremely well-behaved, and works even for
+singular (or zero) matrices. Geometrically: rotate, project, then unwarp.
+\end{propbox}
+
+
+\section{Regularization}
+
+\begin{defnbox}[title=Regularization]
+Methods that \emph{improve the condition number} of a problem. No free lunch: better
+conditioning costs accuracy, bias, etc.
+\end{defnbox}
+
+\begin{defnbox}[title=Tikhonov regularization]
+Penalize solutions with large $L_2$ norm (a symptom of instability), with a factor $\lambda$:
+\[
+\operatorname{argmin}\left[\|\mathbf{A}\mathbf{x} - \mathbf{b}\|_2^2 +
+\lambda\|\mathbf{x}\|_2^2\right],
+\]
+i.e.\ $\lambda\mathbf{x}^T\mathbf{I}^T\mathbf{I}\mathbf{x}$ merged into
+$\mathbf{A}^T\mathbf{A}$: the matrix scales input vectors more uniformly in all directions.
+\begin{itemize}
+  \item LU: add $\lambda\mathbf{I}$ to $\mathbf{A}^T\mathbf{A}$ and solve.
+  \item QR: factorize $\begin{bmatrix} \mathbf{A} \\ \sqrt{\lambda}\mathbf{I} \end{bmatrix}$
+        and append $n$ zeros to $\mathbf{b}$.
+\end{itemize}
+\end{defnbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item $\operatorname{cond}(\mathbf{A}^T\mathbf{A}) \approx \operatorname{cond}(\mathbf{A})^2$:
+        avoid the normal equations when accuracy matters.
+  \item Orthogonality: Gram-Schmidt, Legendre polynomials, Chebyshev points.
+  \item QR (Householder): $\mathbf{R}\mathbf{x} = \mathbf{Q}^T\mathbf{b}$.
+  \item Tikhonov: $+\lambda\|\mathbf{x}\|_2^2$.
+\end{itemize}
+\end{keybox}
+
+
+% =========================================================
+\chapter{Lecture 5 : Processor architecture and efficiency}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} How to write efficient numerical code for today's hardware:
+what the Python interpreter costs, and how a CPU really executes code (pipelining, superscalar
+execution, branch prediction, SIMD, caches). \\
+\textbf{Why is it useful?} Processors no longer get faster by themselves: performance comes from
+designing the algorithm for the hardware, and order-of-magnitude speedups are easy to get.
+\end{rembox}
+
+\section{Processor trends}
+
+\begin{propbox}[title=The power wall]
+Transistor counts keep growing (``Moore's law''), but we hit a power wall at
+$\sim$100 W/cm$^2$: frequency is fixed, single-thread performance has flattened, and the only
+way forward is \textbf{more processors} (multi-core CPUs, GPUs). (Ed Catmull planned ``Toy
+Story'' on the exponential curve of computing speed: 14-15 years, almost exactly right.)
+\end{propbox}
+
+
+\section{The cost of the interpreter}
+
+\begin{exbox}[title=Model problem: psum]
+Sum the positive elements of a vector (not natively supported by NumPy). In Python, each
+bytecode instruction goes through a big interpreter loop: \texttt{COMPARE\_OP} alone involves
+type dispatch, reference counting and error handling --- a lot of code for something so simple.
+\end{exbox}
+
+\begin{keybox}[title=Vectorize in Python]
+The interpreter overhead is negligible only when each operation does a lot of work: replace
+loops by array operations, e.g.\ \texttt{X = A + np.where(B < 0, C, D)}.
+\end{keybox}
+
+
+\section{How a CPU executes code}
+
+\begin{defnbox}[title=Latency and throughput]
+\textbf{Latency}: number of cycles before the result of an operation is available.
+\textbf{Throughput}: number of operations that can be started per cycle. Pipelined units (like
+doing laundry in stages) have a long latency but a high throughput.
+\end{defnbox}
+
+\begin{propbox}[title={Intel ``Ice Lake'' (1 cycle at 3 GHz = 0.33 ns)}]
+\begin{center}
+\begin{tabular}{l|cc}
+Instruction & Latency & Throughput \\ \hline
+\texttt{int64} add, sub & 1 & 4 \\
+\texttt{int64} mul & 3 & 1 \\
+\texttt{int64} div & 15 & 1/14 \\
+\texttt{float32} add, sub, mul & 4 & 2 \\
+\texttt{float32} div & 17 & 1/10
+\end{tabular}
+\end{center}
+Loading memory, division and square root are really expensive.
+\end{propbox}
+
+
+\begin{defnbox}[title=Superscalar execution (Tomasulo's algorithm)]
+Instead of running a program step by step, try to do everything at once while respecting data
+dependencies; units wait for their inputs in ``reservation stations''. Recent CPUs look at the 8
+next instructions per cycle and run several loop iterations ahead.
+\end{defnbox}
+
+\begin{defnbox}[title=Branch prediction]
+At each branch the CPU guesses the direction and starts executing it; N cycles later, a wrong
+guess means undoing all those steps. In the naive psum, the 50/50 random signs make it
+mispredict all the time; a branchless version (\texttt{r += fmaxf(x[i], 0.f)}) avoids it.
+\end{defnbox}
+
+
+\begin{defnbox}[title=SIMD]
+Single instruction, multiple data: process e.g.\ 16 elements in the time of one, through
+intrinsics (SSE, AVX, AVX512, NEON, SVE). Compiler auto-vectorization never really worked well
+enough.
+\end{defnbox}
+
+\begin{keybox}[title=Break the dependency chain]
+Each sum depends on the previous one, so the pipeline starves: keep 4 (or 8, 16) partial sums
+and add them at the end.
+\end{keybox}
+
+
+\begin{propbox}[title=Memory hierarchy]
+A load costs $\sim$5-300 cycles depending on where the data is: registers, L1, L2 (SRAM), main
+memory (DRAM), disks, remote storage --- smaller, faster and costlier per byte at the top.
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week05_01.png}
+\end{center}
+\end{propbox}
+
+\begin{defnbox}[title=Locality]
+\textbf{Temporal locality}: the same memory is accessed again soon. \textbf{Spatial locality}:
+nearby memory is accessed soon. \textbf{Prefetchers} exploit regular access patterns to turn
+misses into hits.
+\end{defnbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Design for the hardware; correctness first, use good libraries, always measure the
+        bottlenecks.
+  \item Avoid interpreter overhead, unpredictable branches and dependency chains; use SIMD and
+        locality.
+  \item CPU = a cheetah (complex, fast cores); GPU = an army of snails.
+\end{itemize}
+\end{keybox}
+
+
+% =========================================================
+\chapter{Lecture 6 : GPUs}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} How GPU cores differ from CPU cores, and which workloads
+run better on GPUs. \\
+\textbf{Why is it useful?} Matrix multiplication, the key operation of ML/AI, runs far faster on
+GPUs --- if the algorithm keeps them busy.
+\end{rembox}
+
+\section{CPUs vs GPUs}
+
+\begin{propbox}[title=Two designs]
+\textbf{CPUs} run single-threaded code as fast as possible (plus $\sim$4-16 cores) and
+optimize \textbf{latency}. \textbf{GPUs} run massively parallel code, need 10K -- millions of
+work items, and optimize \textbf{throughput}.
+\end{propbox}
+
+\begin{exbox}[title=Graphics is brutal]
+4K at 60 frames per second is $\sim$500 million pixels per second, times the instructions per
+pixel (shader), overdraw and passes: $\frac{1}{2}$ -- $1\frac{1}{2}$ trillion operations per
+second. Rendering is an \textbf{embarrassingly parallel} problem, but CPU-style cores are too
+big to have many.
+\end{exbox}
+
+
+\section{From CPU to GPU cores}
+
+\begin{rembox}[title=Throw away what makes single threads fast]
+No branch predictor, no out-of-order execution, no big caches: every jump and every load is
+slow. But all pixels run \textbf{in lockstep}, so many tiny processors can share one instruction
+decoder.
+\begin{center}
+\includegraphics[width=0.75\linewidth]{images/week06_01.png}
+\end{center}
+\end{rembox}
+
+\begin{defnbox}[title=SM partition and streaming multiprocessor]
+An \textbf{SM partition}: 32 tiny processors (own registers and units) sharing one instruction
+fetch + decode. A \textbf{streaming multiprocessor (SM)}: 4 partitions sharing an L1 cache /
+shared memory (128 KiB). The NVIDIA RTX 5090 has 170 SMs $\times$ 4 $\times$ 32 = 21'760
+``cores'', a hardware scheduler, a 96 MiB L2 and 32 GiB of memory.
+\end{defnbox}
+
+\begin{propbox}[title={Slow, simple circuits}]
+\begin{center}
+\begin{tabular}{l|cc}
+ & RTX 5090 & Core Ultra 9 285K \\ \hline
+Clock & 2.4 GHz & 5.7 GHz \\
+Load (L1 hit) & 30 cycles & 4 cycles \\
+Load (L2 hit) & 200 cycles & 17 cycles \\
+Load (miss) & 800 cycles & 565 cycles
+\end{tabular}
+\end{center}
+\end{propbox}
+
+
+\section{Latency hiding and shared memory}
+
+\begin{defnbox}[title=Warp and latency hiding]
+A \textbf{warp} is a group of 32 threads executed by an SM partition. The simple cores stall all
+the time, so each partition keeps \textbf{many} warps (huge register file) and switches to
+another one whenever a warp stalls (300-1000 cycles), for free: useful work at every cycle ---
+optimizing throughput, not latency.
+\begin{center}
+\includegraphics[width=0.8\linewidth]{images/week06_03.png}
+\end{center}
+\end{defnbox}
+
+\begin{defnbox}[title=Shared memory]
+Programs that read and write a lot of memory stall constantly: copy a small part of the problem
+into local (``shared'') memory, do \textbf{a lot of work} with it, then write back the result.
+\end{defnbox}
+
+
+\begin{defnbox}[title=Kernel]
+A GPU only accelerates tasks; its basic unit of work is a \textbf{kernel}, launched with a
+\textbf{launch grid} that says how many instances to run (e.g.\ $128 \times 128 \times 32$).
+GPUs started with triangles only; today CUDA (NVIDIA), ROCm (AMD) and SYCL (Intel) make general
+purpose GPU programming easier.
+\end{defnbox}
+
+
+\section{AI and tensor cores}
+
+\begin{defnbox}[title=Tensor core]
+A matrix multiplication unit, like an FMA for matrices: \texttt{D = A @ B + C} on a fixed size.
+Most of a GPU's FLOP/s are in tensor cores (98.4\% in 16 bit on a B200, 75.0\% on an RTX 5090),
+with ever lower precision (16 $\to$ 8 $\to$ 4 bit floats). \textbf{HMMA.16816}: a
+$16 \times 8 \times 16$ half-precision product, 256 flops/cycle per SM partition.
+\end{defnbox}
+
+\begin{keybox}[title=Block matrix multiplication]
+Feeding a tensor core needs $\sim$64 TB/s, more than even shared memory (45.5 TB/s on an Ada
+A6000). Matrix multiplication does $O(n^3)$ compute on $O(n^2)$ data: fetch blocks into shared
+memory and reuse each one for many products, so the computation is \textbf{compute-bound} instead
+of memory-bound.
+\begin{center}
+\includegraphics[width=0.8\linewidth]{images/week06_04.png}
+\end{center}
+\end{keybox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item GPUs: many simple cores in lockstep, latency hidden by switching warps, shared memory.
+  \item GPUs are much better than CPUs at multiplying big matrices, the key operation of ML/AI.
+\end{itemize}
+\end{keybox}
+
+\end{document}

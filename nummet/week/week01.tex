@@ -1,0 +1,889 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Numerical Methods}}
+\fancyhead[C]{\small Admin and Floating Point}
+\fancyhead[R]{\small Week 01 --- 07-13/09/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+% DEFINITION - blue
+\newtcolorbox{definition}{
+enhanced,
+unbreakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+% IMPORTANT - pink
+\newtcolorbox{important}{
+enhanced,
+unbreakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+% FORMULAS - green
+\newtcolorbox{formula}{
+enhanced,
+unbreakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+% WARNING - orange
+\newtcolorbox{warning}{
+enhanced,
+unbreakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+% EXAMPLE - purple
+\newtcolorbox{example}{
+enhanced,
+unbreakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+% SUMMARY - orange
+\newtcolorbox{summary}{
+enhanced,
+unbreakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+%\footnotesize   --> To reduce the size of the text
+
+\thispagestyle{fancy}
+
+
+
+% Columns keep their natural height: boxes are unbreakable, stretching would open gaps.
+\raggedcolumns
+\begin{multicols}{2}
+
+
+%=========================================================
+\section{Course Organisation}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item \textbf{CS-328}, Prof.\ Wenzel Jakob (Realistic Graphics Lab, RGL).
+
+\item \textbf{Lecture}: Thursday, CE13, 10\string:15-12\string:00 (concepts, live examples,
+general Q\&A).
+
+\item \textbf{Exercise session}: Thursday, BC07/08, 16\string:15-18\string:00 (first 3 weeks:
+tutorials, then homework Q\&A; ignore the INF3 room).
+
+\item TAs: Dongsu Zhang, Ekrem Yilmazer (PhD); Jordan Warne, Felix Burchardt, Arthur Herbette
+(AEs).
+
+\end{itemize}
+
+\end{summary}
+
+
+\begin{formula}
+
+\textbf{Grading}
+
+\begin{itemize}
+
+\item 4 homeworks during the semester: \textbf{10\%} of the final grade.
+
+\item Pen \& paper exam during the January exam session: \textbf{90\%} of the final grade.
+
+\item Optional practice midterm: graded but 0\% weight.
+
+\item Homework and exam graded on a 1-6 scale, then averaged with these weights (mapping from
+raw percentages generally uses a curve).
+
+\end{itemize}
+
+\end{formula}
+
+
+\textbf{Homeworks}
+
+\begin{enumerate}
+
+\item Basics: NumPy, SciPy, Matplotlib, floating point arithmetic, error analysis, first steps
+with a Monte Carlo method.
+
+\item Processing a RAW image: demosaic \& process RAW Bayer grid data from a Canon DSLR, solve a
+least squares problem from ``Native Camera'' to human (sRGB) color space.
+
+\item Inverse kinematics: simple IK ``chain'' (a worm body being pulled), SVD to solve a
+rank-deficient linear system.
+
+\item Autodiff \& machine learning: build a tiny ML framework (``MyTorch'') and train a tiny
+neural network.
+
+\end{enumerate}
+
+Plus 6-7 ungraded exercise sheets. No text book (optional readings); recommended: \emph{Essence
+of Linear Algebra} (3Blue1Brown).
+
+
+\begin{warning}
+
+\begin{itemize}
+
+\item Late policy: 25\% penalty for each extra started late day (no points after 4 days).
+
+\item Survey course: many methods, none in depth. Not a programming language course.
+
+\item Any modern LLM can solve all problems of this course, but reviewing LLM output does not
+work to learn: ``to learn, you must struggle''. Huge drop in exam performance in 2026; the exam
+will not be curved up this year.
+
+\end{itemize}
+
+\end{warning}
+
+
+\textbf{Python}: reference version \textbf{3.14} (standard Python or Conda); an interpreted
+language with an unusual indentation-based syntax. ``Jupyter notebook'' means \textbf{Jupyter
+Lab}.
+
+
+
+%=========================================================
+\section{What is a Numerical Method?}
+
+
+\begin{important}
+
+Computer graphics, computer vision, machine learning, computational photography, weather
+simulation, geometric information systems\dots: \textbf{all of them have some kind of numerical
+method at their core}, running on number crunchers (CPUs, GPUs).
+
+\end{important}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item \textbf{Rendering}: visual effects $\simeq$ solving integrals,
+$\text{pixel color} = \int \text{light}\,\mathrm{d}x$.
+
+\item \textbf{Fluid simulation}: to compute the next frame (``timestep''), solve an enormous
+linear system $\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$ (HUGE matrix).
+
+\item \textbf{Character animation}: attaching a virtual body to a skeleton using optimization,
+$\mathbf{x} = \mathbf{A}^{+}\mathbf{b}$ (pseudoinverse).
+
+\item \textbf{Computer vision}: quickly process images using learned convolutions (``CNNs''); a
+convolution is a particular type of linear transformation.
+
+\item \textbf{Machine learning}: computing derivatives of software,
+$\frac{\partial}{\partial \mathbf{x}} f(\mathbf{x})$ where $f$ is a computer program.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{CS-328}
+
+About the \textbf{computer implementation} of abstract concepts from MATH-111 (Linear Algebra:
+$\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$) and MATH-101/106 (Analysis:
+$\frac{\partial}{\partial \mathbf{x}} f(\mathbf{x})$, $y = \int_\Omega f(x)\,\mathrm{d}x$).
+
+Typical computer science works with $\mathbb{N}$ (graph theory, databases, network protocols,
+cryptography); numerical methods work with $\mathbb{R}^n$.
+
+\end{definition}
+
+
+\begin{summary}
+
+\textbf{Many layers} (top to bottom)
+
+\begin{itemize}
+
+\item Applications
+
+\item Frameworks: NumPy, PyTorch, TensorFlow, JAX
+
+\item Optimization algorithms: gradient descent, Newton's method in N dimensions, Broyden's
+method, Gauss-Newton, Levenberg-Marquardt
+
+\item Matrix factorizations: the ``Big 3'' LU, QR, SVD
+
+\item Compilation: of floating point math, just-in-time (JAX, XLA, etc.)
+
+\item Floating point arithmetic: history, IEEE-754, error propagation (\emph{today})
+
+\item Processor architecture: superscalar processors, vectorization, memory hierarchy, shared
+memory (GPUs)
+
+\end{itemize}
+
+\end{summary}
+
+
+
+%=========================================================
+\section{Number Systems}
+
+
+\begin{important}
+
+$\pi$ has infinitely many digits: we cannot store it, and there are infinitely many numbers of
+this type between any two numbers. The compromise: \textbf{the program will no longer compute
+the correct answer}.
+
+\end{important}
+
+
+\begin{definition}
+
+\textbf{INTEGERS}
+
+\begin{itemize}
+
+\item Positive: $11000101_2 = 2^7 + 2^6 + 2^2 + 2^0 = 197$.
+
+\item Signed (two's complement), top bit weighs $-2^7$:
+$11000101_2 = -2^7 + 2^6 + 2^2 + 2^0 = -59$.
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{center}
+\small
+\begin{tabular}{l|rr}
+Type & Min & Max \\
+\hline
+\texttt{uint8} & 0 & 255 \\
+\texttt{int8} & -128 & 127 \\
+\texttt{uint16} & 0 & 65535 \\
+\texttt{int16} & -32768 & 32767 \\
+\texttt{uint32} & 0 & 4294967295 \\
+\texttt{int32} & -2147483648 & 2147483647 \\
+\texttt{uint64} & 0 & 18446744073709551615 \\
+\texttt{int64} & -9223372036854775808 & 9223372036854775807 \\
+\end{tabular}
+\end{center}
+
+
+\begin{definition}
+
+\textbf{FIXED POINT ARITHMETIC}
+
+Allow negative exponents: $1100.0101_2 = 2^3 + 2^2 + 2^{-2} + 2^{-4} = 12.3125$.
+
+\end{definition}
+
+
+\begin{warning}
+
+\begin{itemize}
+
+\item Drawback 1: big numbers require a lot of storage ($4 \times 10^{80}$: $\sim$268 bits).
+
+\item Drawback 2: growth of the exponent range during operations:
+\[
+\Big(\sum_{i=-k}^{k} a_i 2^i\Big)\Big(\sum_{i=-k}^{k} b_i 2^i\Big)
+= a_{-k}b_{-k}2^{-2k} + \dots + a_k b_k 2^{2k}
+\]
+
+\end{itemize}
+
+\end{warning}
+
+
+\begin{definition}
+
+\textbf{RATIONAL NUMBERS}
+
+$\mathbb{Q} = \{a/b : a, b \in \mathbb{Z}\}$: exact representation,
+$a/b + c/d = (ad + cb)/bd$. Generally not a good thing (numerators and denominators grow).
+
+\end{definition}
+
+
+
+%=========================================================
+\section{Floating Point Numbers}
+
+
+Different scales, from the Planck length ($10^{-33}$ cm) to the universe: we need numbers whose
+resolution follows their magnitude.
+
+
+\begin{definition}
+
+\textbf{FLOATING POINT NUMBER} (``baby version'')
+
+\[
+\underbrace{\pm}_{\text{sign}} \ \underbrace{2^E}_{\text{exponent}}
+\ \underbrace{\sum_{i=0}^{n} 2^{-i} A_i}_{\text{mantissa}}
+\]
+
+\end{definition}
+
+
+\begin{example}
+
+\begin{align*}
+1.0 &= +2^0 (2^{-0}) = +2^0\,1.00000_2 \\
+0.5 &= +2^{-1} (2^{-0}) = +2^{-1}\,1.00000_2 \\
+-0.75 &= -2^{-1} (2^{-0} + 2^{-1}) = -2^{-1}\,1.10000_2 \\
+3.14 &\approx +2^1 (2^{-0} + 2^{-1} + 2^{-4} + 2^{-7}) = +2^1\,1.1001001_2
+\end{align*}
+
+The leading digit is always 1: no need to store it.
+
+\end{example}
+
+
+\textbf{Standard floating point formats} (sign | exponent | mantissa)
+
+\begin{center}
+
+\includegraphics[
+width=\linewidth
+]{../images/week01_01.png}
+
+\end{center}
+
+
+\begin{warning}
+
+``Please don't memorize these numbers for the exam.''
+
+\end{warning}
+
+
+\begin{important}
+
+\textbf{Number resolution changes with magnitude}: representable numbers are dense near zero and
+sparse for large magnitudes; overflow beyond $\pm 10^{308}$, underflow near 0 (float64).
+
+\end{important}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.9\linewidth
+]{../images/week01_02.png}
+
+\end{center}
+
+
+
+%=========================================================
+\section{The IEEE 754 Standard}
+
+
+\textbf{Problems with the baby version}: how to represent zero? What if the number becomes too
+big, or too small, during a calculation? What if the calculation is nonsensical? What if the
+result cannot be represented exactly?
+
+
+\begin{definition}
+
+\textbf{IEEE 754} (William Kahan; published in 1985, developed for many years)
+
+Super-ambitious proposal at the time. Behavior is \textbf{fully specified}: every arithmetic
+operation produces a result, whether it is mathematically expected or not, and exceptional
+operations raise a signal.
+
+\end{definition}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item \textbf{Zero}: easy, just don't store the leading one. Zero is \textbf{signed} in IEEE754.
+
+\item \textbf{Too big}: return the special number ``infinity'' (positive or negative).
+
+\item \textbf{Too small}: gradual underflow through \textbf{denormalized numbers}.
+
+\item \textbf{Nonsensical}: return the special number \textbf{NaN} (Not a Number). NaN is
+infectious.
+
+\item \textbf{Not representable}: \textbf{Banker's rounding} (round-to-nearest-tie-to-even) by
+default, other modes available.
+
+\end{itemize}
+
+\end{summary}
+
+
+\begin{important}
+
+\textbf{Major innovations}
+
+\begin{itemize}
+
+\item \textbf{Accuracy guarantees}: elementary operations ($+, -, *, /, \sqrt{}$) are done in
+infinite precision and then \emph{rounded} to a representable number.
+
+\item \textbf{Denormalized numbers} ($+2^E \cdot 0.xxx$ instead of $+2^E \cdot 1.xxx$): fill
+the gap around zero, enable gradual underflow. Most controversial feature of IEEE 754: handled
+badly by current processors, can make a calculation 100-1000$\times$ slower.
+
+\end{itemize}
+
+\end{important}
+
+
+
+%=========================================================
+\section{Special Cases and Danger Zone}
+
+
+\begin{center}
+\small
+\begin{tabular}{c|cccccc}
+$*$ & -Inf & -0 & 0 & Inf & NaN \\
+\hline
+-Inf & Inf & NaN & NaN & -Inf & NaN \\
+-0 & NaN & 0 & -0 & NaN & NaN \\
+0 & NaN & -0 & 0 & NaN & NaN \\
+Inf & -Inf & NaN & NaN & Inf & NaN \\
+NaN & NaN & NaN & NaN & NaN & NaN \\
+\end{tabular}
+\end{center}
+
+
+Common sense: $(-\text{Inf}) * (-\text{Inf}) = \text{Inf}$,
+$\text{Inf} * x = \text{sign}(x) * \text{Inf}$, $\text{Inf} * 0 = \text{NaN}$,
+$\text{NaN} * x = \text{NaN}$.
+
+
+\begin{warning}
+
+\textbf{Comparison against NaN is always false}: \texttt{if x < 0 or x > 1: raise} lets a NaN
+through, while \texttt{if not (x >= 0 and x <= 1): raise} rejects it.
+
+\end{warning}
+
+
+\begin{warning}
+
+\textbf{Danger zone}
+
+\begin{itemize}
+
+\item \textbf{Transcendental operations} (sin, cos, atan, exp, log) are much slower (50-300
+clock cycles) and less accurate.
+
+\item \textbf{Fused Multiply-Add} (FMA) computes \texttt{a*b+c} directly (faster, one rounding
+step), but now there are two ways to do the same thing (e.g.\ clang-14 inserting FMAs can make
+\texttt{(u*600000) - int(u*600000)} negative).
+
+\item \textbf{Compiler optimizations} may violate expected IEEE 754 rounding behavior.
+
+\item \textbf{Denormalized numbers} are often very slow and cause surprises. Can turn them off.
+
+\item Careful when converting floats to integers, and vice versa.
+
+\item Arithmetic transformations that are ``pointless'' on pencil and paper can make a huge
+accuracy difference.
+
+\end{itemize}
+
+\end{warning}
+
+
+
+%=========================================================
+\section{Types of Errors}
+
+
+\begin{example}
+
+\textbf{Catastrophic numerical errors}: Ariane 5 rocket failure (June 14, 1996); Patriot missile
+failure (1991, Dhahran, Saudi Arabia): \emph{rounding error accumulation}, the battery failed to
+intercept a missile, 28 people died, 96 injured.
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{MODEL ERROR}: the mathematical model is only an approximation (computing the surface of
+the earth with $A = 4\pi r^2$, but the earth is not a sphere).
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{DISCRETIZATION ERROR}: e.g.\ a fluid simulation represented at different spatial
+resolutions (50: bake 3 minutes; 400: bake 13 hours). Effectively a type of model error.
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{TRUNCATION ERROR}: happens when we approximate an infinite calculation with something
+finite.
+\[
+\sum_{i=1}^{10} \frac{1}{3^i} \approx 0.499991532, \qquad
+\sum_{i=1}^{\infty} \frac{1}{3^i} = 0.5
+\]
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{ROUNDING ERROR}
+\[
+\sum_{k=1}^{\infty} \frac{1}{k} = 15.403683 \ ?!?!
+\]
+The series value is infinite but \emph{converges} in IEEE-754 arithmetic!
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{The issue here} (8 mantissa bits after the point): adding $3.14 = +2^1\,1.10010010_2$ to
+$1024 = +2^{10}\,1.00000000_2$ requires shifting 3.14 to align the exponents
+($+2^{10}\,0.00000000110010010_2$): the low bits are \textbf{dropped} (rounding error). Once the
+sum is large, the small terms $1/k$ are dropped entirely.
+
+\end{example}
+
+
+
+%=========================================================
+\section{Catastrophic Cancellation}
+
+
+\begin{definition}
+
+\textbf{CATASTROPHIC CANCELLATION}
+
+The especially dangerous case $a - b$ with $a \approx b$ (also $a + b$ with $a \approx -b$). Can
+happen even if the subtraction is done without error: it ``reveals'' the imprecision of the
+operands.
+
+\end{definition}
+
+
+\begin{example}
+
+8 mantissa bits after the point:
+\begin{align*}
+3.140 &\approx +2^1\,1.10010010_2 \\
+3.148 &= +2^1\,1.10010011_2 \\
+3.140 - 3.148 &= -2^1\,0.00000001_2 = -2^{-7}\,1.0_2
+\end{align*}
+The exponent must be adjusted to re-establish the implicit leading 1. Not a wrong answer given
+the approximations, but only ``1 bit of information'' is left from much more accurate inputs.
+
+\end{example}
+
+
+\begin{example}
+
+\[
+f(x) = \frac{1 - \cos x}{x^2}
+\]
+\begin{align*}
+f(1.2 \cdot 10^{-5}) &= \frac{1 - 0.9999999999}{1.44 \cdot 10^{-10}} \\
+&= \frac{0.0000000001}{1.44 \cdot 10^{-10}} \approx 0.694
+\end{align*}
+The last digit is the only bit of accuracy left. BUT one can show that $f(x) < 1/2$ for
+$x > 0$.
+
+\end{example}
+
+
+
+%=========================================================
+\section{Quantifying Error}
+
+
+\begin{definition}
+
+\textbf{ABSOLUTE ERROR}: $|\text{true value} - \text{approximate value}|$
+(e.g.\ 2 cm $\pm$ 0.1 cm).
+
+\textbf{RELATIVE ERROR}: $(\text{absolute error}) / |\text{true value}|$ (e.g.\ 2 cm $\pm$
+0.1\%). Other notation: $(\text{true value})(1 \pm \text{relative error})$.
+
+\end{definition}
+
+
+\begin{warning}
+
+The error is generally unknown.
+
+\end{warning}
+
+
+\begin{definition}
+
+\textbf{FORWARD AND BACKWARD ERROR}
+
+The actual algorithm maps $x$ to $\hat{y}$ instead of $y = f(x)$; $\hat{y}$ is what the ideal
+algorithm returns for a perturbed input: $\hat{y} = f(x + \Delta x)$.
+
+\begin{itemize}
+
+\item \textbf{Forward error}: the distance between $y$ and $\hat{y}$ (output space).
+
+\item \textbf{Backward error}: $\Delta x$, the distance between $x$ and $x + \Delta x$ (input
+space).
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.85\linewidth
+]{../images/week01_03.png}
+
+\end{center}
+
+
+\begin{example}
+
+$f(x) := \sqrt{x}$, $y = f(x)$, $\hat{y} = f_{\text{IEEE754}}(x)$:
+\begin{align*}
+\text{forward error} &= y - \hat{y} \\
+\hat{x} &= f^{-1}(\hat{y}) = \hat{y}^2 \\
+\text{backward error} &= x - (f_{\text{IEEE754}}(x))^2
+\end{align*}
+
+\end{example}
+
+
+\begin{formula}
+
+\textbf{Conditioning of numerical problems}
+
+\[
+\text{Condition number: ratio } \frac{\text{forward error}}{\text{backward error}}
+\]
+
+\end{formula}
+
+
+
+%=========================================================
+\section{Weekly Summary}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item Numerical methods = computer implementation of linear algebra and analysis, over many
+layers down to the processor.
+
+\item Integers, fixed point, rationals, \textbf{floating point}: sign, exponent, mantissa
+(implicit leading 1).
+
+\item \textbf{IEEE 754}: signed zero, infinities, NaN, denormals, round-to-nearest-tie-to-even,
+correctly rounded elementary operations.
+
+\item Errors: model, discretization, truncation, \textbf{rounding}; \textbf{catastrophic
+cancellation}.
+
+\item Absolute vs relative error; forward vs backward error; condition number = forward /
+backward.
+
+\end{itemize}
+
+\end{summary}
+
+
+
+\end{multicols}
+
+
+\end{document}

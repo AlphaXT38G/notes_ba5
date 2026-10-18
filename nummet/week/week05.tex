@@ -1,0 +1,612 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Numerical Methods}}
+\fancyhead[C]{\small Processor Architecture \& Efficiency}
+\fancyhead[R]{\small Week 05 --- 05-11/10/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+% DEFINITION - blue
+\newtcolorbox{definition}{
+enhanced,
+unbreakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+% IMPORTANT - pink
+\newtcolorbox{important}{
+enhanced,
+unbreakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+% FORMULAS - green
+\newtcolorbox{formula}{
+enhanced,
+unbreakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+% WARNING - orange
+\newtcolorbox{warning}{
+enhanced,
+unbreakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+% EXAMPLE - purple
+\newtcolorbox{example}{
+enhanced,
+unbreakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+% SUMMARY - orange
+\newtcolorbox{summary}{
+enhanced,
+unbreakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+%\footnotesize   --> To reduce the size of the text
+
+\thispagestyle{fancy}
+
+
+
+% Columns keep their natural height: boxes are unbreakable, stretching would open gaps.
+\raggedcolumns
+\begin{multicols}{2}
+
+
+%=========================================================
+\section{Processor Trends}
+
+
+\begin{example}
+
+\textbf{A story of nonlinear growth} (Ed Catmull, 2020 ACM Turing Award)
+
+In 1979 Catmull wanted to make a digital movie: it would have needed the power of 1000
+CRAY-1 supercomputers (10 million US\$ each), with a budget of 1M\$. Based on the exponential
+curve of computing speed, he estimated it would take another 14-15 years: ``Toy Story'' came
+out about 15 years later, very close to the estimate.
+
+\end{example}
+
+
+\begin{important}
+
+50 years of microprocessor trends (``Moore's Law''): the number of transistors keeps growing,
+but frequency and single-thread performance have flattened.
+
+\begin{itemize}
+
+\item We hit a \textbf{power wall at $\sim$100 W/cm$^2$}: frequency is fixed because raising
+it increases power usage \& temperature.
+
+\item Our processors aren't getting much faster anymore.
+
+\item The only thing we can do is to have \textbf{more processors} (multi-core CPUs, GPUs).
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{summary}
+
+\textbf{Why this history lesson?}
+
+\begin{itemize}
+
+\item The only way to get good performance nowadays is to anticipate how an algorithm will run
+on a particular piece of hardware and then \emph{design for it}.
+
+\item Sometimes: use a good implementation of a common building block (e.g.\ a matrix
+factorization by Intel/NVIDIA). When your needs are more special, you will likely have to make
+it yourself.
+
+\item Order-of-magnitude speedups are easy to get.
+
+\end{itemize}
+
+\end{summary}
+
+
+\begin{warning}
+
+You don't have to learn C++ or assembly code for the CS328 final exam, but you should know that
+these things exist and how they \emph{roughly} work.
+
+\end{warning}
+
+
+
+%=========================================================
+\section{Model Problem: psum}
+
+
+\begin{definition}
+
+\textbf{psum(x)}: sum the positive elements of the input vector \texttt{x}. A simple
+operation, but one that isn't ``natively'' supported by NumPy.
+
+\end{definition}
+
+
+\textbf{Tip of the iceberg}: below the Python code (browser, Jupyter, NumPy, bytecode
+interpreter, OS) lie instruction decoding, Tomasulo's algorithm, speculative execution, caches
+and prefetch, DRAM, physical bits. On a GPU: CUDA/Vulkan, kernels, hardware scheduler, shared
+memory, latency hiding.
+
+
+\textbf{Python bytecode}: \texttt{dis.dis(psum)} shows the stack-machine instructions
+(\texttt{LOAD\_FAST}, \texttt{BINARY\_SUBSCR}, \texttt{COMPARE\_OP}, \dots).
+
+
+\begin{important}
+
+\textbf{Dissecting the interpreter}: a big loop fetches the next \emph{opcode} and jumps to one of
+$\sim$130 code blocks. \texttt{COMPARE\_OP} pops two operands, calls
+\texttt{PyObject\_RichCompare} (stack overflow check, type dispatch, reference counting, error
+management), down to \texttt{float\_richcompare} (``Comparison is pretty much a nightmare'').
+
+\begin{itemize}
+
+\item That's \emph{a lot} of code for something so simple: the overhead dwarfs the actual
+operation.
+
+\item Inherent compromise of an interpreted language. Overheads are usually negligible when the
+operation does more work.
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Vectorization in Python}
+
+Bad: a Python loop \texttt{if B[i] < 0: X[i] = A[i] + C[i] else: X[i] = A[i] + D[i]}
+
+Good: \texttt{X = A + np.where(B < 0, C, D)}
+
+\end{example}
+
+
+
+%=========================================================
+\section{First Version in C++}
+
+
+\begin{example}
+
+\begin{verbatim}
+float psum_0(float *x, size_t size) {
+  float r { 0.f };
+  for (size_t i = 0; i < size; ++i) {
+    if (x[i] >= 0) {
+      r += x[i];
+      if (std::isinf(r))
+        abort();
+    }
+  }
+  return r;
+}
+\end{verbatim}
+
+Everything has types: \texttt{float} (single precision), \texttt{size\_t} (64-bit integer),
+\texttt{float*} (pointer to a float array). Glued to Python with \textbf{nanobind}.
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{DISASSEMBLER}
+
+Reveals the processor instructions (``assembly code'') in a compiled executable (IDA Home,
+Ghidra). Used here to understand the performance differences between \texttt{psum} versions.
+
+\end{definition}
+
+
+The disassembly of \texttt{psum\_0} shows a loop of \texttt{LDR} (load), \texttt{FCMP} +
+\texttt{B.LT} (compare and branch), \texttt{FADD}, the infinity check (\texttt{FABS},
+\texttt{FCMP}, \texttt{B.EQ}), then the loop counter.
+
+
+
+%=========================================================
+\section{Pipelining, Latency and Throughput}
+
+
+\begin{example}
+
+\textbf{Laundry day}: 3 batches (Dark, Light, Color), 3 steps (Wash, Dry, Fold). Naive schedule:
+9 cycles. Better (pipelined) schedule: \textbf{4 cycles}.
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{LATENCY}: number of cycles before the result of an operation is available.
+
+\textbf{THROUGHPUT}: number of operations that can be started per cycle.
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{Pipelining within processing units}: a unit split into 5 stages has latency 5 but
+throughput 1 (one new input per cycle); with 5 independent inputs it keeps all stages busy.
+
+\end{important}
+
+
+\begin{formula}
+
+\textbf{Intel ``Ice Lake''} (1 cycle on a 3 GHz CPU = 0.33 ns; light moves 10 cm)
+
+\begin{center}
+\begin{tabular}{l|cc}
+Instruction & Latency & Throughput \\
+\hline
+\multicolumn{3}{l}{\texttt{int64} integers} \\
+add, sub & 1 & 4 \\
+mul & 3 & 1 \\
+div & 15 & 1/14 \\
+\hline
+\multicolumn{3}{l}{\texttt{float32} vectors} \\
+add, sub, mul & 4 & 2 \\
+div & 17 & 1/10 \\
+\end{tabular}
+\end{center}
+
+Throughput 4: can start 4 additions every cycle. 1/14: busy for 14 cycles before new input can
+be accepted. \textbf{Loading memory, division and square root are really expensive.}
+
+\end{formula}
+
+
+
+%=========================================================
+\section{Superscalar Execution}
+
+
+\begin{definition}
+
+\textbf{TOMASULO'S ALGORITHM} (``superscalar execution'')
+
+Aggressively parallelizes the execution of a program: instead of running it step by step, try
+to do everything at once while respecting data dependencies. Processing units must wait for
+their inputs to be ready (``reservation stations'').
+
+\end{definition}
+
+
+\begin{itemize}
+
+\item LOADs are \textbf{extremely} slow: helpful to do multiple in parallel.
+
+\item Newer architectures (e.g.\ Apple M1) look at the eight next instructions per clock cycle;
+in a loop, they can run ahead several iterations.
+
+\item The CPU is like a high-speed train: to keep the pipeline fed, it must look far ahead
+(decode, schedule and execute different instructions at the same time).
+
+\end{itemize}
+
+
+\begin{definition}
+
+\textbf{BRANCH PREDICTION}
+
+At each branch, the processor must decide what to do a long time in advance (waiting would be
+too slow): ask the oracle (jump or not?), go that way and begin executing; N cycles later we
+know if it was right. Correct: all good. Wrong: pull the emergency brake and undo all steps.
+
+\end{definition}
+
+
+\begin{warning}
+
+In the naive \texttt{psum\_0}, mispredictions happen all the time: the input values are random
+and positive with 50\% probability.
+
+\end{warning}
+
+
+\begin{example}
+
+\textbf{Improved version} (no branch):
+\texttt{for (...) r += fmaxf(x[i], 0.f);} -- compiled to \texttt{FMAXNM} + \texttt{FADD}.
+
+\end{example}
+
+
+
+%=========================================================
+\section{SIMD and Partial Sums}
+
+
+\begin{definition}
+
+\textbf{SIMD} (single instruction, multiple data)
+
+CPUs can process vectors: in the same amount of time, add $x[0]+y[0]$ or 16 elements at once.
+Accessible through \textbf{intrinsics} (Intel/AMD: SSE, AVX, AVX512; ARM: NEON, SVE).
+
+\end{definition}
+
+
+\begin{warning}
+
+The idea was that compilers would magically insert vector instructions (``auto-vectorization'').
+It never really worked, and still does not work well enough.
+
+\end{warning}
+
+
+\begin{important}
+
+\textbf{What's missing?} Each SUM depends on the previous SUM: the program is still not parallel
+enough to keep the pipeline fed. Break these connections: compute \textbf{4 (or 8 or 16) partial
+sums} and add them up at the end (\texttt{psum\_3}: 4 vector accumulators).
+
+\end{important}
+
+
+
+%=========================================================
+\section{Memory \& Caches}
+
+
+\begin{formula}
+
+\textbf{Load instruction}: latency $\sim$5-300 cycles, throughput 2. Depends on where we go in
+the memory hierarchy: registers, L1, L2 (SRAM), main memory (DRAM), local disks, remote storage
+-- smaller, faster, costlier per byte at the top.
+
+\end{formula}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.9\linewidth
+]{../images/week05_01.png}
+
+\end{center}
+
+
+\begin{definition}
+
+\textbf{Temporal locality}: the same memory is accessed again soon.
+
+\textbf{Spatial locality}: nearby memory is accessed soon.
+
+\textbf{Prefetchers} exploit spatial \& temporal regularity: after a few misses on a regular
+access pattern, loads become hits.
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Cache hit}: get something predictable from the corner store. \textbf{Cache miss}: weird
+unpredictable access, wait a long time (but can order multiple packages in parallel).
+
+\end{example}
+
+
+\begin{important}
+
+\textbf{CPUs vs GPUs}: multiple instructions per cycle, huge caches, branch prediction,
+speculative execution\dots\ GPUs don't have it! A CPU is a cheetah; a GPU is an army of snails:
+each core much simpler, smaller and slower, but lots of them.
+
+\end{important}
+
+
+\begin{summary}
+
+\textbf{General advice} -- when optimizing, be wary of
+
+\begin{itemize}
+
+\item sacrificing correctness for speed (ensure correctness first, e.g.\ tests);
+
+\item reinventing the wheel (use the right tools, libraries);
+
+\item valuing computer time over your own time (maybe optimization isn't needed).
+
+\end{itemize}
+
+\textbf{Always measure}: most time is spent in a few bottlenecks; locate them and focus on them.
+
+\end{summary}
+
+
+
+\end{multicols}
+
+
+\end{document}
