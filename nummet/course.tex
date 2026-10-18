@@ -200,4 +200,40 @@ digit is the only bit of accuracy left, but one can show that $f(x) < 1/2$ for $
 Arithmetic transformations that are ``pointless'' on paper can make a huge accuracy difference.
 \end{exbox}
 
+
+\section{Quantifying error}
+
+\begin{defnbox}[title=Absolute and relative error]
+Absolute error: $|\text{true value} - \text{approximate value}|$. Relative error: absolute error
+$/ |\text{true value}|$, also written $(\text{true value})(1 \pm \text{relative error})$. The
+error is generally unknown.
+\end{defnbox}
+
+\begin{defnbox}[title=Forward and backward error]
+The actual algorithm returns $\hat{y}$ instead of $y = f(x)$; $\hat{y} = f(x + \Delta x)$ is what
+the ideal algorithm returns for a perturbed input. The \textbf{forward error} is the distance
+between $y$ and $\hat{y}$ (output space), the \textbf{backward error} is $\Delta x$ (input
+space).
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week01_03.png}
+\end{center}
+E.g.\ for $f(x) = \sqrt{x}$: forward error $y - \hat{y}$, backward error
+$x - (f_{\text{IEEE754}}(x))^2$.
+\end{defnbox}
+
+\begin{defnbox}[title=Condition number]
+\[
+\text{condition number} = \frac{\text{forward error}}{\text{backward error}}
+\]
+\end{defnbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Floating point = sign, exponent, mantissa; IEEE 754 specifies every operation (signed
+        zero, infinities, NaN, denormals, correct rounding).
+  \item Errors: model, discretization, truncation, rounding, catastrophic cancellation.
+  \item Forward vs backward error, condition number.
+\end{itemize}
+\end{keybox}
+
 \end{document}
