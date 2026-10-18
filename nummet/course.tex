@@ -279,4 +279,20 @@ $g \leftrightarrow \mathbf{B}$, then the composition $g \circ f \leftrightarrow
 \end{center}
 \end{exbox}
 
+
+\section{Cost of matrix operations}
+
+\begin{propbox}[title=Complexity]
+Matrix-vector multiplication is $\mathcal{O}(n^2)$, matrix-matrix multiplication
+$\mathcal{O}(n^3)$. On an M1 Mac, \texttt{A @ x} with $n = 10000$ takes 11 ms, a double Python
+loop 30'282 ms ($\sim$2'752$\times$ slower); \texttt{A @ B} with $n = 1000$ takes 19 ms, a triple
+loop 341'495 ms ($\sim$17'973$\times$).
+\end{propbox}
+
+\begin{rembox}[title={Is $\mathcal{O}(n^3)$ really true?}]
+Strassen (1969): $O(n^{2.8074})$; Williams et al.\ (2023): $O(n^{2.371552})$. The true cost
+might be $O(n^2)$, \emph{nobody knows}. Many of these are \emph{galactic} algorithms: in practice
+the naïve algorithm tends to be fastest.
+\end{rembox}
+
 \end{document}
