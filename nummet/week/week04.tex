@@ -647,6 +647,91 @@ a simpler \emph{square} 2D problem; then $\mathbf{x} = \mathbf{R}^{-1}\mathbf{b}
 
 
 
+%=========================================================
+\section{Regularization}
+
+
+\begin{definition}
+
+\textbf{REGULARIZATION}
+
+Methods that \emph{improve the condition number} of a problem.
+
+\begin{itemize}
+
+\item There are many different ways to do so.
+
+\item No free lunch: better conditioning will come at the cost of decreased accuracy, bias, etc.
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{TIKHONOV REGULARIZATION}
+
+Assuming that a symptom of an unstable solution is that the solution $\mathbf{x}$'s magnitude
+becomes too large, penalize solutions with large $L_2$ norms. The regularization factor
+$\lambda$ controls the degree to which we prefer smaller solutions.
+
+\end{definition}
+
+
+\begin{formula}
+
+\begin{align*}
+&\operatorname{argmin}\left[\mathbf{x}^T\mathbf{A}^T\mathbf{A}\mathbf{x}
+- 2\mathbf{b}^T\mathbf{A}\mathbf{x} + \|\mathbf{b}\|_2^2 + \lambda\|\mathbf{x}\|_2^2\right] \\
+={}& \operatorname{argmin}\left[\mathbf{x}^T\mathbf{A}^T\mathbf{A}\mathbf{x}
+- 2\mathbf{b}^T\mathbf{A}\mathbf{x} + \|\mathbf{b}\|_2^2
++ \lambda\mathbf{x}^T\mathbf{I}^T\mathbf{I}\mathbf{x}\right]
+\end{align*}
+
+\textbf{Trick}: merge the identity into $\mathbf{A}^T\mathbf{A}$ and then just use the normal
+solver.
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Geometric interpretation}: the addition of an identity matrix causes the matrix to scale
+input vectors more uniformly in different directions (small $\lambda$: thin ellipse; big
+$\lambda$: almost a circle).
+
+\end{important}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.75\linewidth
+]{../images/week04_06.png}
+
+\end{center}
+
+
+\begin{summary}
+
+\textbf{Technical details}
+
+\begin{itemize}
+
+\item \textbf{LU factorization}: simply add $\lambda\mathbf{I}$ to $\mathbf{A}^T\mathbf{A}$ (via
+normal equations)\dots\ and solve!
+
+\item \textbf{QR factorization}: factorize the extended matrix
+$\begin{bmatrix} \mathbf{A} \\ \sqrt{\lambda}\mathbf{I} \end{bmatrix}$ instead of $\mathbf{A}$,
+append $n$ zeros to the right hand side $\mathbf{b}$.
+
+\end{itemize}
+
+\end{summary}
+
+
+
 \end{multicols}
 
 
