@@ -533,6 +533,68 @@ sums} and add them up at the end (\texttt{psum\_3}: 4 vector accumulators).
 
 
 
+%=========================================================
+\section{Memory \& Caches}
+
+
+\begin{formula}
+
+\textbf{Load instruction}: latency $\sim$5-300 cycles, throughput 2. Depends on where we go in
+the memory hierarchy: registers, L1, L2 (SRAM), main memory (DRAM), local disks, remote storage
+-- smaller, faster, costlier per byte at the top.
+
+\end{formula}
+
+
+\begin{definition}
+
+\textbf{Temporal locality}: the same memory is accessed again soon.
+
+\textbf{Spatial locality}: nearby memory is accessed soon.
+
+\textbf{Prefetchers} exploit spatial \& temporal regularity: after a few misses on a regular
+access pattern, loads become hits.
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Cache hit}: get something predictable from the corner store. \textbf{Cache miss}: weird
+unpredictable access, wait a long time (but can order multiple packages in parallel).
+
+\end{example}
+
+
+\begin{important}
+
+\textbf{CPUs vs GPUs}: multiple instructions per cycle, huge caches, branch prediction,
+speculative execution\dots\ GPUs don't have it! A CPU is a cheetah; a GPU is an army of snails:
+each core much simpler, smaller and slower, but lots of them.
+
+\end{important}
+
+
+\begin{summary}
+
+\textbf{General advice} -- when optimizing, be wary of
+
+\begin{itemize}
+
+\item sacrificing correctness for speed (ensure correctness first, e.g.\ tests);
+
+\item reinventing the wheel (use the right tools, libraries);
+
+\item valuing computer time over your own time (maybe optimization isn't needed).
+
+\end{itemize}
+
+\textbf{Always measure}: most time is spent in a few bottlenecks; locate them and focus on them.
+
+\end{summary}
+
+
+
 \end{multicols}
 
 
