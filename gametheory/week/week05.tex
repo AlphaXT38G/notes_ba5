@@ -385,6 +385,92 @@ before the route was added.
 
 
 
+%=========================================================
+\section{A Pure-Strategy NE for Every Network}
+
+
+\begin{definition}
+
+\textbf{POTENTIAL ENERGY}
+
+Potential energy of an edge $e$ when $x_e$ cars travel on this edge:
+
+\[
+E_e(x_e) = T_e(1) + T_e(2) + \dots + T_e(x_e)
+\]
+
+Potential energy of a network $\mathcal{N}$: the sum of the potential energy of all its
+edges:
+
+\[
+E_{\mathcal{N}} = \sum_{e \in \mathcal{N}} E_e(x_e)
+\]
+
+\end{definition}
+
+
+\begin{warning}
+
+Potential energy is different from the aggregate travel time (total time spent on this edge
+by the cars traveling on it), which is $x\,T_e(x)$.
+
+\end{warning}
+
+
+\begin{important}
+
+\textbf{If one single car leaves the network, potential energy decreases by exactly the
+traveling time of this car.}
+
+\end{important}
+
+
+\begin{example}
+
+3 cars, one on AC+CB and 2 on AD+DB:
+
+\begin{align*}
+E_{\mathcal{N}} ={}& T_{AC}(1) + T_{CB}(1) \\
+&+ (T_{AD}(1) + T_{AD}(2)) + (T_{DB}(1) + T_{DB}(2))
+\end{align*}
+
+One car traveling on AD+DB leaves the network:
+
+\[
+E_{\mathcal{N}} = T_{AC}(1) + T_{CB}(1) + T_{AD}(1) + T_{DB}(1)
+\]
+
+The difference is $T_{AD}(2) + T_{DB}(2)$: the traveling time of this car.
+
+If this car re-enters on another route, e.g.\ AC+CB, the potential energy increases by its
+traveling time on the new route, $T_{AC}(2) + T_{CB}(2)$:
+
+\begin{align*}
+E_{\mathcal{N}} ={}& (T_{AC}(1) + T_{AC}(2)) + (T_{CB}(1) + T_{CB}(2)) \\
+&+ T_{AD}(1) + T_{DB}(1)
+\end{align*}
+
+\end{example}
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item When one car switches to a better route (which decreases its traveling time),
+\textbf{potential energy decreases}.
+
+\item (Pure-strategy) Nash equilibrium corresponds to a \textbf{min of potential energy}.
+
+\item Only a finite number of configurations $\rightarrow$ there is necessarily a min of
+potential energy. So \textbf{there is necessarily a pure-strategy NE}.
+
+\end{itemize}
+
+\end{important}
+
+
+
 \end{multicols}
 
 
