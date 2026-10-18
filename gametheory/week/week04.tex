@@ -253,6 +253,81 @@ also lead to unrealistic and unintuitive solutions}.
 
 
 
+%=========================================================
+\section{The Pirate Game}
+
+
+\begin{example}
+
+\textbf{Rules} -- 5 pirates A, B, C, D, E share 100 coins.
+
+\begin{itemize}
+
+\item Captain A proposes how to split the 100 coins. If at least \textbf{half} (3 in this
+case, including himself) the pirates vote yes, the vote passes.
+
+\item If the vote does not pass, A is killed and B becomes captain, and makes a new proposal,
+that needs to be voted by at least half (2 in this case) of the remaining pirates, otherwise B
+is killed and C becomes captain\dots
+
+\item A pirate needs to be \textbf{strictly better off} with the proposed plan than in the
+continuation of the game to vote yes.
+
+\end{itemize}
+
+What's the Subgame-Perfect equilibrium? Will captain Amaro be thrown in the ocean? If not,
+how many of the 100 coins will he be able to keep?
+
+\end{example}
+
+
+\textbf{Pirates left at each time}
+
+\begin{center}
+\begin{tabular}{ccccc}
+t=1 & t=2 & t=3 & t=4 & t=5 \\
+\hline
+A & B & C & D & E \\
+B & C & D & E & \\
+C & D & E & & \\
+D & E & & & \\
+E & & & & \\
+\end{tabular}
+\end{center}
+
+
+\begin{formula}
+
+\textbf{Backward induction} (coins of A, B, C, D, E; ``--'' = already killed)
+
+\begin{itemize}
+
+\item \textbf{t=4} (D, E): D's own vote is half of 2: D keeps everything.
+\hfill (--, --, --, 100, 0)
+
+\item \textbf{t=3} (C, D, E): C needs 2 votes. E gets 0 at t=4, so 1 coin makes him strictly
+better off. \hfill (--, --, 99, 0, 1)
+
+\item \textbf{t=2} (B, C, D, E): B needs 2 votes. D gets 0 at t=3: 1 coin buys his vote.
+\hfill (--, 99, 0, 1, 0)
+
+\item \textbf{t=1} (A, \dots, E): A needs 3 votes. C and E get 0 at t=2: 1 coin each.
+\hfill (98, 0, 1, 0, 1)
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{SPE}: captain A proposes $(98, 0, 1, 0, 1)$; A, C and E vote yes. He is not thrown
+in the ocean, and keeps \textbf{98 coins}.
+
+\end{important}
+
+
+
 \end{multicols}
 
 
