@@ -1334,4 +1334,24 @@ for everybody}.
 \end{itemize}
 \end{exbox}
 
+
+\begin{exbox}[title=Initial situation]
+\begin{center}
+\includegraphics[width=0.45\linewidth]{images/week05_01.png}
+\end{center}
+\textbf{N = 4000 cars} (players), two \textbf{directed} routes from A to B. The travel time on
+an edge $e$ is a function of its number of cars, $T_e = T_e(x)$, and the payout of each car is
+$-T_e(x)$: each car \textbf{minimizes} its travel time.
+\end{exbox}
+
+\begin{propbox}[title=NE before the new route]
+All cars on the same route is not a NE: if all go through C (AC+CB), travel time is
+$4000/100 + 45 = 85$ minutes, and a car would switch to AD+DB ($1/100 + 45 = 45.01$). Since
+all cars are identical, different cars take different routes only if travel time is the same
+on both routes (in the limit $N \to \infty$, where a single car cannot affect the travel time
+of a route). \textbf{2000 cars on each route is a (pure-strategy) NE}, with travel time
+$2000/100 + 45 = 65$ minutes. With an odd number of cars, e.g.\ 7 (3 on AC+CB, 4 on AD+DB), it
+is still a NE: for a car on AD+DB, switching to AC+CB leaves its travel time unchanged.
+\end{propbox}
+
 \end{document}
