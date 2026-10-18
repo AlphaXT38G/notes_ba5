@@ -1072,4 +1072,28 @@ they end up paying much more than a dollar!
 \includegraphics[width=0.8\linewidth]{images/week04_03.png}
 \end{center}
 
+
+\begin{propbox}[title=SPE in finite horizon]
+The longer the game continues, the worse off is the total payout. From the end:
+\begin{itemize}
+  \item T=199 (last period): Player 1 is sure to get the dollar if he bids, so by bidding he
+        gains \$0.90 for sure (relative to not bidding).
+  \item T=198: Player 2 quits for sure: if he bids, Player 1 bids again at T=199 and gets the
+        dollar, so bidding loses \$0.10 for sure.
+  \item T=197: Player 1 bids for sure, since Player 2 quits at T=198 (gain \$0.90).
+  \item T=196: Player 2 quits for sure, since Player 1 bids at T=197 (saves \$0.10).
+  \item \ldots\ same reasoning until the beginning of the game.
+\end{itemize}
+SPE: Player 1 bids at every one of his decision nodes, Player 2 quits at every one of his.
+Player 1 bids \$0.10 at T=1, Player 2 quits at T=2: payout \textbf{(0.90, 0)}.
+\end{propbox}
+
+\begin{exbox}[title=New version: the game ends when a bid exceeds \$10]
+Then the last player (if nobody quits before) is Player 2, when he bids \$10.05. From the
+end: Player 2 continues in the last period (T=200), so Player 1 quits at T=199, so Player 2
+continues at T=198\dots\ SPE: Player 2, with the advantage of being the last, always
+continues, and Player 1 always quits. Since Player 1 starts, he will not even enter the
+game: the payout is \textbf{(0,0)}.
+\end{exbox}
+
 \end{document}
