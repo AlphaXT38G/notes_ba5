@@ -1,0 +1,915 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Game Theory and Strategic Decisions}}
+\fancyhead[C]{\small Backward Induction Paradoxes and Bayesian Games}
+\fancyhead[R]{\small Week 04 --- 28/09-04/10/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+% DEFINITION - blue
+\newtcolorbox{definition}{
+enhanced,
+unbreakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+% IMPORTANT - pink
+\newtcolorbox{important}{
+enhanced,
+unbreakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+% FORMULAS - green
+\newtcolorbox{formula}{
+enhanced,
+unbreakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+% WARNING - orange
+\newtcolorbox{warning}{
+enhanced,
+unbreakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+% EXAMPLE - purple
+\newtcolorbox{example}{
+enhanced,
+unbreakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+% SUMMARY - orange
+\newtcolorbox{summary}{
+enhanced,
+unbreakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+%\footnotesize   --> To reduce the size of the text
+
+\thispagestyle{fancy}
+
+
+
+\begin{multicols}{2}
+
+
+
+%=========================================================
+\section{This Week's Plan}
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item Last week: the Nash equilibrium is unsatisfactory for sequential games; we introduced
+\textbf{Subgame-perfect equilibria}, found by \textbf{backward induction}.
+
+\item This week: more sequential games, with a common theme: \textbf{backward induction can
+also lead to unrealistic and unintuitive solutions}.
+
+\item New topic: games of incomplete information, also called \textbf{Bayesian games}.
+
+\end{itemize}
+
+\end{important}
+
+
+
+%=========================================================
+\section{The Pirate Game}
+
+
+\begin{example}
+
+\textbf{Rules} -- 5 pirates A, B, C, D, E share 100 coins.
+
+\begin{itemize}
+
+\item Captain A proposes how to split the 100 coins. If at least \textbf{half} (3 in this
+case, including himself) the pirates vote yes, the vote passes.
+
+\item If the vote does not pass, A is killed and B becomes captain, and makes a new proposal,
+that needs to be voted by at least half (2 in this case) of the remaining pirates, otherwise B
+is killed and C becomes captain\dots
+
+\item A pirate needs to be \textbf{strictly better off} with the proposed plan than in the
+continuation of the game to vote yes.
+
+\end{itemize}
+
+What's the Subgame-Perfect equilibrium? Will captain Amaro be thrown in the ocean? If not,
+how many of the 100 coins will he be able to keep?
+
+\end{example}
+
+
+\textbf{Pirates left at each time}
+
+\begin{center}
+\begin{tabular}{ccccc}
+t=1 & t=2 & t=3 & t=4 & t=5 \\
+\hline
+A & B & C & D & E \\
+B & C & D & E & \\
+C & D & E & & \\
+D & E & & & \\
+E & & & & \\
+\end{tabular}
+\end{center}
+
+
+\begin{formula}
+
+\textbf{Backward induction} (coins of A, B, C, D, E; ``--'' = already killed)
+
+\begin{itemize}
+
+\item \textbf{t=4} (D, E): D's own vote is half of 2: D keeps everything.
+\hfill (--, --, --, 100, 0)
+
+\item \textbf{t=3} (C, D, E): C needs 2 votes. E gets 0 at t=4, so 1 coin makes him strictly
+better off. \hfill (--, --, 99, 0, 1)
+
+\item \textbf{t=2} (B, C, D, E): B needs 2 votes. D gets 0 at t=3: 1 coin buys his vote.
+\hfill (--, 99, 0, 1, 0)
+
+\item \textbf{t=1} (A, \dots, E): A needs 3 votes. C and E get 0 at t=2: 1 coin each.
+\hfill (98, 0, 1, 0, 1)
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{SPE}: captain A proposes $(98, 0, 1, 0, 1)$; A, C and E vote yes. He is not thrown
+in the ocean, and keeps \textbf{98 coins}.
+
+\end{important}
+
+
+
+%=========================================================
+\section{The Centipede Game}
+
+
+\begin{center}
+
+\includegraphics[
+width=\linewidth
+]{../images/week04_01.png}
+
+\end{center}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item Players: 1 and 2, moving in turn: Continue (C) or Stop (S).
+
+\item In each period, the total payout (sum of the payouts of Player 1 and Player 2)
+increases by 2 units. One would think players would want to continue playing as long as
+possible.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{important}
+
+\textbf{Backward induction}
+
+\begin{itemize}
+
+\item At the last node, it's optimal for Player 2 to stop: (99,101) instead of (102,100).
+
+\item At each node, knowing that at the next node the other player will stop, the player who
+moves at that time finds it optimal to stop.
+
+\item The unique SPE involves Player 1 stopping at the first node, with payout
+\textbf{(2,0)}: each player quits at every node.
+
+\end{itemize}
+
+Lost opportunity to gain a total of up to 202 for the players! Is backward induction
+realistic?
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{The Centipede game in the lab}
+
+\begin{itemize}
+
+\item People asked to play this game typically do not quit in the first stages.
+
+\item Interpretation: people have a higher tendency to collaborate than predicted by the
+model. They understand that if they both continue, their payout will increase over time, so
+they take the risk to continue, which pays off if also the other player continues.
+
+\item Different from the Prisoner Dilemma: one player has an incentive to cooperate if also
+the other player cooperates.
+
+\end{itemize}
+
+\end{example}
+
+
+
+%=========================================================
+\section{The Dollar Auction Game}
+
+
+How much would you pay to get one dollar? When people play this game in lab experiments,
+they end up paying much more than a dollar!
+
+
+\begin{center}
+
+\includegraphics[
+width=0.6\linewidth
+]{../images/week04_02.png}
+
+\end{center}
+
+
+\begin{definition}
+
+\textbf{DOLLAR AUCTION -- FINITE-HORIZON VERSION}
+
+\begin{itemize}
+
+\item Players: 1 and 2.
+
+\item Player 1 starts and can decide to bid or stay out. If she stays out, the game is over
+and everybody gets 0. Otherwise she bids 10 cents.
+
+\item Then at each period, the player that did not play last period can decide to quit or
+outbid the other player by 5 cents.
+
+\item When a player quits, the other player gets the dollar, but \textbf{both players need
+to pay their highest bid}.
+
+\item If no player quit before, the game ends when one player's bid reaches \$10.
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{center}
+
+\includegraphics[
+width=\linewidth
+]{../images/week04_03.png}
+
+\end{center}
+
+
+\begin{important}
+
+The longer the game continues, the worse off is the total payout.
+
+\end{important}
+
+
+\textbf{Backward induction} (from the end):
+
+\begin{itemize}
+
+\item \textbf{T=199} (last period): Player 1 is sure to get the dollar if he bids, so by
+bidding he gains \$0.90 for sure (relative to not bidding).
+
+\item \textbf{T=198}: Player 2 quits for sure: if he bids, in the last period Player 1 will
+bid again for sure and get the dollar. By bidding, Player 2 loses \$0.10 for sure (relative
+to not bidding).
+
+\item \textbf{T=197}: Player 1 bids for sure, because, since Player 2 quits for sure at
+T=198, by bidding at T=197 Player 1 gains \$0.90 for sure.
+
+\item \textbf{T=196}: Player 2 quits for sure, because at T=197 Player 1 bids for sure
+$\rightarrow$ by quitting, Player 2 saves \$0.10 relative to bidding.
+
+\item \dots\ Same reasoning until the beginning of the game.
+
+\end{itemize}
+
+
+\begin{important}
+
+\textbf{SPE}: Player 1 bids in every one of his decision nodes, Player 2 quits in every one of
+his decision nodes.
+
+Player 1 bids \$0.10 at T=1, Player 2 quits at T=2: the payout is \textbf{(0.90, 0)}.
+
+\end{important}
+
+
+\separator
+
+
+\textbf{New version}: the game ends when a bid \emph{exceeds} \$10. Then the last player (if
+nobody quits before) would be Player 2, when he bids \$10.05.
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item From the end: Player 2 will continue in the last period (T=200), so Player 1 will quit
+at T=199, so Player 2 will continue at T=198\dots
+
+\item SPE: Player 2, with the advantage of being the last if nobody quits before, will always
+continue, and Player 1 will always quit.
+
+\item But since Player 1 starts, he will not even enter the game: the payout is
+\textbf{(0,0)}.
+
+\end{itemize}
+
+\end{important}
+
+
+
+%=========================================================
+\section{Dollar Auction: Infinite-Horizon Version}
+
+
+In the finite game, one player is sure to be the one that bids in the ``final period'' (when
+bids reach or exceed the \$10 threshold), so he is sure to win if nobody quits. The other
+player is sure to lose: he stays out from the beginning.
+
+What if there is no final time and the auction continues until somebody drops out? (Player 1
+moves in every odd period, Player 2 in every even period.)
+
+
+\begin{important}
+
+If nobody quits between a certain time $t$ and $t+2$, \textbf{nothing has changed between $t$
+and $t+2$}, except the fact that both players have already committed to pay 10c more than at
+period $t$.
+
+But this is a \textbf{sunk cost} that should not affect the continuation of the game!
+
+\end{important}
+
+
+\textbf{Stationary strategies}: each player quits or continues with the same probability at
+each of her decision nodes. At a node where Player $i$ has already committed to pay $x$:
+
+
+\begin{formula}
+
+If she continues:
+
+\[
+P_i(x) =
+\begin{cases}
+-0.1 + P_i(x) & \text{if Player } -i \text{ continues} \\
+-x + 0.9 & \text{if Player } -i \text{ quits}
+\end{cases}
+\]
+
+If she quits:
+
+\[
+P_i(x) = -x
+\]
+
+\end{formula}
+
+
+\begin{itemize}
+
+\item If Player $-i$ always continues, $P_i(x) = -\infty$ $\rightarrow$ optimal to quit.
+
+\item If Player $-i$ always quits, optimal to continue.
+
+\end{itemize}
+
+
+\textbf{Mixed strategies}: for one player to randomize, she needs to be indifferent between
+quit and continue, which is only possible if the other player also randomizes. If Player $-i$
+continues with probability $q$:
+
+
+\begin{formula}
+
+\[
+P_i(x; C) = q(-0.1 + P_i(x)) + (1-q)(0.9 - x)
+\]
+
+\[
+P_i(x; Q) = -x
+\]
+
+Player $i$ is indifferent if the two payouts are the same:
+
+\[
+q = 0.9
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{3 strategy profiles that are NE}:
+\begin{itemize}
+
+\item $(Quit, Continue)$
+
+\item $(Continue, Quit)$
+
+\item $((0.9C, 0.1Q), (0.9C, 0.1Q))$
+
+\end{itemize}
+
+Only one of these three, \textbf{(Continue, Quit)}, survives if the game has a finite
+horizon -- even if the final time is after, say, 1 million periods, and no player would ever
+want to get there! Problematic feature of backward induction\dots
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{In lab experiments}: people continue to bid without problem until the highest bid
+reaches \$1. Afterwards, they start to feel uncomfortable but often continue to outbid each
+other for a while. Typically the dollar ends up being sold for \$3 (plus almost \$3 paid by
+the second bidder).
+
+The concept of \textbf{sunk cost} is difficult to digest for non-experienced players.
+
+\end{example}
+
+
+
+%=========================================================
+\section{Games of Incomplete Information (Bayesian Games)}
+
+
+So far, everything about the game was \textbf{common knowledge}: who are the players, what are
+their preferences, what are the payouts. But players might have private information about
+their own payout, their ``type'' or preferences, etc.
+
+
+\begin{definition}
+
+\textbf{BAYESIAN GAME} (simultaneous-move game of incomplete information)
+
+Defined by:
+
+\begin{itemize}
+
+\item Players
+
+\item Action set for each player
+
+\item Possible types $\theta_i$ for each player $i$ and a probability distribution over
+player $i$ types $p(\theta_i)$.
+
+\end{itemize}
+
+A pure strategy is a plan of action \textbf{for each type of player}.
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{BAYESIAN NASH EQUILIBRIUM (BNE)}
+
+A strategy profile $(s_1(\theta_1), s_2(\theta_2), \dots, s_N(\theta_N))$ is a BNE of a
+Bayesian game with $N$ players iff, for each player $i$, her \textbf{expected payout} using
+strategy $i$ is higher than or equal to her expected payout using any of the other available
+strategies, keeping fixed the strategies of the other players, which \textbf{depend on their
+types}:
+
+\[
+E[\mathcal{P}_i(s_i(\theta_i), s_{-i}(\theta_{-i}) | \theta_i)] \ge
+E[\mathcal{P}_i(\tilde{s}_i(\theta_i), s_{-i}(\theta_{-i}) | \theta_i)]
+\]
+
+The expected value is taken over all possible types of the other players.
+
+\end{definition}
+
+
+
+%=========================================================
+\section{Example: Public Good and Free Riding}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item Two players can work (W) or not work (N) to produce a public good, that would give
+utility 1 to both players.
+
+\item If at least one player works, the public good is available for both. If nobody works,
+it is not available.
+
+\item Working has a cost $c_1$ for Player 1 and $c_2$ for Player 2.
+
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{c|cc}
+$1 \backslash 2$ & W & N \\
+\hline
+W & $(1-c_1, 1-c_2)$ & $(1-c_1, 1)$ \\
+N & $(1, 1-c_2)$ & $(0,0)$ \\
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+
+\item $c_1 = 0.5$, known to everybody.
+
+\item $c_2$ is known to Player 2 but not to Player 1: it can be 0.2 with probability $p$
+and 1.2 with probability $1-p$.
+
+\item \textbf{The value of $p$ is common knowledge.}
+
+\end{itemize}
+
+\end{example}
+
+
+Equivalently, Player 2 can be of two \textbf{types}: \textbf{Efficient} (E, cost of working
+$c_2 = 0.2$, probability $p$) or \textbf{Inefficient} (I, $c_2 = 1.2$, probability $1-p$).
+
+
+\begin{center}
+\small
+\begin{tabular}{c|cc}
+\multicolumn{3}{c}{prob $p$} \\
+$1 \backslash$ 2E & W & N \\
+\hline
+W & (0.5,0.8) & (0.5,1) \\
+N & (1,0.8) & (0,0) \\
+\end{tabular}
+\quad
+\begin{tabular}{c|cc}
+\multicolumn{3}{c}{prob $(1-p)$} \\
+$1 \backslash$ 2I & W & N \\
+\hline
+W & (0.5,-0.2) & (0.5,1) \\
+N & (1,-0.2) & (0,0) \\
+\end{tabular}
+\end{center}
+
+
+\begin{important}
+
+`Work' is a \textbf{dominated} strategy for the Inefficient type of Player 2.
+
+\end{important}
+
+
+\separator
+
+
+\textbf{Scenario 1: Efficient Player 2 works, Inefficient Player 2 does not work.}
+Player 1's best reaction?
+
+\begin{formula}
+
+\begin{itemize}
+
+\item Player 1 works: $\mathcal{P}_1 = 0.5$ for sure.
+
+\item Player 1 does not work: payout 1 if Player 2 works (E type), 0 otherwise (I type):
+
+\[
+\mathcal{P}_1 = p \times 1 + (1-p) \times 0 = p
+\]
+
+\end{itemize}
+
+$\Rightarrow$ Player 1 works if $p < 0.5$, and does not work if $p > 0.5$ (indifferent if
+$p = 0.5$).
+
+\end{formula}
+
+
+\begin{itemize}
+
+\item For $p > 0.5$ Player 1 does not work (for $p = 0.5$ he may not work). Knowing this,
+Player 2 works when he is of type E: the starting point was correct.
+
+$\Rightarrow$ \textbf{If $p \ge 0.5$, one BNE is $(N, WN)$}: N for Player 1, W for Player 2
+of type E, N for Player 2 of type I.
+
+\item If $p < 0.5$, Player 1 works; but then Player 2 will not work even if he is of
+efficient type\dots Hence for $p < 0.5$ this scenario is not a BNE.
+
+\end{itemize}
+
+
+\textbf{Scenario 2: Player 2 never works.} Player 1 gets $1 - c_1 = 0.5$ if he works and 0
+if he does not $\Rightarrow$ regardless of $p$, Player 1 works; and when Player 1 works,
+Player 2 prefers not to work (1 > 0.8 and 1 > -0.2). \textbf{BNE: $(W, NN)$}.
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item If $p < 0.5$: unique pure-strategy BNE \textbf{$(W, NN)$}.
+
+\item If $p \ge 0.5$: two pure-strategy BNE \textbf{$(W, NN)$} and \textbf{$(N, WN)$}.
+
+\end{itemize}
+
+\end{important}
+
+
+
+%=========================================================
+\section{Harsanyi's Idea}
+
+
+\begin{important}
+
+Imagine that ``Efficient'' and ``Inefficient'' are two states of the same person (e.g.\
+depending on whether the player slept well the previous night).
+
+\textbf{Nature} is a third player who moves first and draws the type of Player 2 (prob $p$
+Efficient, prob $(1-p)$ Inefficient). Player 2 needs to find a strategy in the two possible
+states (e.g.\ ``Work if efficient, Not Work if Inefficient'') to maximize his
+\textbf{ex-ante expected payout}.
+
+\end{important}
+
+
+\begin{definition}
+
+\textbf{HARSANYI REPRESENTATION}
+
+Collapses all the payout tables contingent on the players' types into \textbf{one table}. The
+columns contain the strategy of Player 2 conditional on his type: e.g.\ `WN' means ``Work if
+efficient, Not Work if Inefficient''.
+
+\end{definition}
+
+
+\begin{center}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{c|cccc}
+$1 \backslash 2$ & WN & NN & NW & WW \\
+\hline
+W & (0.5, 1-0.2p) & (0.5, 1) & (0.5, 1.2p-0.2) & (0.5, p-0.2) \\
+N & (p, 0.8p) & (0,0) & (1-p, -0.2(1-p)) & (1, p-0.2) \\
+\end{tabular}
+\end{center}
+
+
+\begin{formula}
+
+Payout for the $(A_1, A_2A_2')$ strategy $=$ $p$ $\times$ payout of $(A_1, A_2)$ in the table
+of the Efficient Player 2 $+$ $(1-p)$ $\times$ payout of $(A_1, A_2')$ in the table of the
+Inefficient Player 2 ($A_1$, $A_2$, $A_2'$ can be W or N).
+
+\end{formula}
+
+
+After elimination of the dominated strategy W for the Inefficient Player 2:
+
+\begin{center}
+\begin{tabular}{c|cc}
+$1 \backslash 2$ & WN & NN \\
+\hline
+W & (0.5, 1-0.2p) & (0.5, 1) \\
+N & (p, 0.8p) & (0,0) \\
+\end{tabular}
+\end{center}
+
+
+\begin{important}
+
+Find the BNE the standard way on the big table: we find the same pure-strategy equilibria as
+before: $(W, NN)$ if $p < 0.5$, $(W, NN)$ and $(N, WN)$ for $p > 0.5$.
+
+\end{important}
+
+
+
+%=========================================================
+\section{Weekly Summary}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item \textbf{Pirate game}: solved by backward induction, captain A keeps 98 coins.
+
+\item \textbf{Centipede game}: the unique SPE stops at the first node, while people in the lab
+continue.
+
+\item \textbf{Dollar auction}: in finite horizon the SPE has the dollar sold for 10c (or no
+entry); in infinite horizon three NE; sunk costs should not matter.
+
+\item Backward induction can lead to unrealistic and unintuitive solutions.
+
+\item \textbf{Bayesian games}: types, a strategy for each type, Bayesian Nash equilibrium.
+
+\item \textbf{Harsanyi}: Nature draws the types; one table with type-contingent strategies.
+
+\end{itemize}
+
+\end{summary}
+
+
+
+\end{multicols}
+
+
+\end{document}

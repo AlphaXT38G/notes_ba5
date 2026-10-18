@@ -1,0 +1,1093 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Game Theory and Strategic Decisions}}
+\fancyhead[C]{\small Introduction and Nash Equilibrium}
+\fancyhead[R]{\small Week 01 --- 07-13/09/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+% DEFINITION - blue
+\newtcolorbox{definition}{
+enhanced,
+unbreakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+% IMPORTANT - pink
+\newtcolorbox{important}{
+enhanced,
+unbreakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+% FORMULAS - green
+\newtcolorbox{formula}{
+enhanced,
+unbreakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+% WARNING - orange
+\newtcolorbox{warning}{
+enhanced,
+unbreakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+% EXAMPLE - purple
+\newtcolorbox{example}{
+enhanced,
+unbreakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+% SUMMARY - orange
+\newtcolorbox{summary}{
+enhanced,
+unbreakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+%\footnotesize   --> To reduce the size of the text
+
+\thispagestyle{fancy}
+
+
+
+\begin{multicols}{2}
+
+
+
+%=========================================================
+\section{Course Essentials}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item 14 lectures, on Tuesday from 1\string:15pm to 3pm (one 15-minute break around 2pm).
+
+\item Assistant: Luiz Bissoto (\href{mailto:luiz.bissoto@epfl.ch}{luiz.bissoto@epfl.ch}).
+
+\item Grading based on \textbf{3 problem sets}, weights \textbf{40\%, 40\%, 20\%}.
+Assignments can be done in groups of up to 3 people.
+
+\end{itemize}
+
+\end{summary}
+
+
+\textbf{Three parts of the course}
+
+\begin{itemize}
+
+\item Basics of non-cooperative game theory (approximately 7 lectures)
+
+\item Auction theory with applications to Ebay and Google advertising auctions (approx.\ 4 lectures)
+
+\item Evolutionary game theory (approx.\ 2 lectures)
+
+\end{itemize}
+
+
+
+%=========================================================
+\section{Cooperative vs Non-Cooperative Games}
+
+
+\begin{definition}
+
+\textbf{NON-COOPERATIVE GAME}
+
+There is \textbf{no external authority enforcing rules of cooperative behavior}.
+
+Each player tries to maximize her benefit at any time, even by damaging others. Even when a
+contract between two players could be beneficial to both, they cannot stipulate it, because
+no authority is able to enforce it.
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{COOPERATIVE GAME}
+
+Involves negotiation, bargaining, contracts,\dots
+
+\end{definition}
+
+
+\begin{important}
+
+Classical game theory focuses on \textbf{non-cooperative games}: this is what we study in
+this course.
+
+\end{important}
+
+
+
+%=========================================================
+\section{What is a Game?}
+
+
+\begin{definition}
+
+\textbf{GAME}
+
+A mathematical model of strategic interaction, defined by:
+
+\begin{itemize}
+
+\item \textbf{Players} -- people, businesses, countries\dots
+
+\item \textbf{Choices} -- players make one or multiple choices between different possible
+actions. A player's \textbf{strategy} is her rule for choosing actions.
+
+\item \textbf{Outcomes} -- when players have made their choices, an outcome is realized
+and the game ends. An outcome is expressed in terms of a \textbf{payout} to the players
+(e.g.\ Player 1 wins \$1, Player 2 loses \$2).
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{important}
+
+Common to all games: \textbf{ALL PLAYERS CARE ABOUT IS THEIR OWN PAYOUT!!}
+
+\end{important}
+
+
+\separator
+
+
+\textbf{Elements distinguishing different types of game}
+
+\begin{itemize}
+
+\item \textbf{Timing} -- do players choose once (e.g.\ rock-paper-scissors) or repeatedly
+over time (e.g.\ chess)? Does the game eventually end, or continue forever? Do they choose
+\textbf{simultaneously} or in turn?
+
+\item \textbf{Observation} -- can the players observe each other's choices?
+
+\end{itemize}
+
+
+\textbf{This week: the simplest type of games}
+
+\begin{itemize}
+
+\item 2 players;
+
+\item each player makes one choice;
+
+\item all choose simultaneously (so do not observe the other's action).
+
+\end{itemize}
+
+
+
+%=========================================================
+\section{Normal Form Representation}
+
+
+\begin{definition}
+
+\textbf{NORMAL FORM}
+
+A table with one row per action of Player 1, one column per action of Player 2, and in each
+cell the payouts \textbf{(Player 1, Player 2)}.
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Rock-Paper-Scissors}
+
+\begin{center}
+\begin{tabular}{c|ccc}
+$1 \backslash 2$ & R & P & S \\
+\hline
+R & (0,0) & (-1,1) & (1,-1) \\
+P & (1,-1) & (0,0) & (-1,1) \\
+S & (-1,1) & (1,-1) & (0,0) \\
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+
+\item Players: 1, 2
+
+\item Possible actions for Player 1 (and for Player 2): R(ock), P(aper), S(cissors).
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{formula}
+
+Payout notation:
+
+\[
+\mathcal{P}^{(1)}(R,P) = -1
+\]
+
+Payout for Player 1 if 1 chooses R and 2 chooses P.
+
+\[
+\mathcal{P}^{(2)}(S,R) = 1
+\]
+
+Payout for Player 2 if 1 chooses S and 2 chooses R.
+
+\end{formula}
+
+
+
+%=========================================================
+\section{Pure vs Mixed Strategies}
+
+
+Player $i$ can choose between $M$ \textbf{actions} $(a_1^{(i)}, a_2^{(i)}, \dots, a_M^{(i)})$.
+
+
+\begin{definition}
+
+\textbf{MIXED STRATEGY}
+
+An $M$-component vector
+
+\[
+s^{(i)} = (p_1^{(i)}, p_2^{(i)}, \dots, p_M^{(i)})
+\]
+
+with $0 \le p_j^{(i)} \le 1$ for $j = 1, \dots, M$ and $\sum_{j=1}^{M} p_j^{(i)} = 1$.
+
+Each component $j$ is the probability of choosing action $a_j^{(i)}$.
+
+\textbf{Different players choose their actions independently.}
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{PURE STRATEGY}
+
+A vector with one component equal to one, and the others equal to zero.
+
+\end{definition}
+
+
+
+%=========================================================
+\section{Actions vs Strategies}
+
+
+\begin{warning}
+
+\begin{itemize}
+
+\item \textbf{Action} (letter $a$): what a player ends up playing.
+
+\item \textbf{Strategy} (letter $s$): the $M$-component vector containing the
+\emph{ex-ante} probability of playing each of the different actions.
+
+\end{itemize}
+
+\end{warning}
+
+
+\begin{important}
+
+When players use mixed strategies, their objective is to maximize their \textbf{expected
+payout}.
+
+Expected value of a random variable: weighted average over possible outcomes, weighed with
+their respective probabilities.
+
+\end{important}
+
+
+\begin{formula}
+
+2 players, each choosing between actions $A$ and $B$:
+$s^{(1)} = (p_A^{(1)}, p_B^{(1)})$, $s^{(2)} = (p_A^{(2)}, p_B^{(2)})$.
+
+\begin{align*}
+E[\mathcal{P}^{(1)}(s^{(1)}, s^{(2)})] ={}& Prob(A,A)\,\mathcal{P}^{(1)}(A,A) \\
+&+ Prob(A,B)\,\mathcal{P}^{(1)}(A,B) \\
+&+ Prob(B,A)\,\mathcal{P}^{(1)}(B,A) \\
+&+ Prob(B,B)\,\mathcal{P}^{(1)}(B,B)
+\end{align*}
+
+The choices are independent: $Prob(A,A) = p_A^{(1)} p_A^{(2)}$,
+$Prob(A,B) = p_A^{(1)} p_B^{(2)}$, etc. Hence
+
+\begin{align*}
+E[\mathcal{P}^{(1)}(s^{(1)}, s^{(2)})] ={}& p_A^{(1)} p_A^{(2)} \mathcal{P}^{(1)}(A,A) \\
+&+ p_A^{(1)} p_B^{(2)} \mathcal{P}^{(1)}(A,B) \\
+&+ p_B^{(1)} p_A^{(2)} \mathcal{P}^{(1)}(B,A) \\
+&+ p_B^{(1)} p_B^{(2)} \mathcal{P}^{(1)}(B,B)
+\end{align*}
+
+\end{formula}
+
+
+\begin{important}
+
+In the simultaneous-move games of this week, each player \textbf{knows the other players'
+strategy, but not their actions}.
+
+\end{important}
+
+
+\begin{example}
+
+In Rock-Paper-Scissors, I may know that my opponent plays the three actions with probability
+$(0.3, 0.3, 0.4)$ -- e.g.\ because we already played together many times -- but I don't know
+what she will play this time.
+
+\end{example}
+
+
+
+%=========================================================
+\section{Nash Equilibrium}
+
+
+\begin{definition}
+
+\textbf{NASH EQUILIBRIUM (NE)}
+
+The most widely used \textbf{solution concept}.
+
+Given a game with $N$ players, a \textbf{strategy profile} (the set of the strategies taken
+by each of the players) $(s^{(1)}, s^{(2)}, \dots, s^{(N)})$ is a Nash equilibrium iff the
+payout of each player $i$ is such that
+
+\[
+\mathcal{P}^{(i)}(s^{(i)}, s^{(-i)}) \ge \mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)})
+\quad \text{for every possible } \tilde{s}^{(i)}
+\]
+
+where $s^{(-i)}$ denotes the strategies of all players \emph{other than} $i$.
+
+\end{definition}
+
+
+\begin{important}
+
+A NE is the best that one player can do \emph{given the strategies of all the other
+players}.
+
+\end{important}
+
+
+\separator
+
+
+\textbf{Pure-strategy Nash equilibrium}
+
+NE obtained when we restrict ourselves to the case in which all players adopt pure strategies
+(i.e.\ always play the same action): a profile in which the action of each player is the
+\textbf{best response} to the action of the other players.
+
+
+\begin{example}
+
+\begin{center}
+\begin{tabular}{c|cc}
+$1 \backslash 2$ & L & R \\
+\hline
+U & (8,7) & (4,6) \\
+D & (6,5) & (7,8) \\
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+
+\item \textbf{Player 1}: if 2 moves Left, 1 should move Up; if 2 moves Right, 1 should
+move Down.
+
+\item \textbf{Player 2}: if 1 moves Up, 2 should move Left; if 1 moves Down, 2 should
+move Right.
+
+\end{itemize}
+
+Circling each best response, the cells where both payouts are circled are the NE:
+
+\begin{center}
+
+\includegraphics[
+width=0.6\linewidth
+]{../images/week01_01.png}
+
+\end{center}
+
+\textbf{2 NE}: $(U,L)$ and $(D,R)$.
+
+\end{example}
+
+
+\begin{warning}
+
+Game with two equilibria: the theory cannot tell which one will be chosen.
+
+\end{warning}
+
+
+
+%=========================================================
+\section{Classical Example 1 -- Prisoner Dilemma (PD)}
+
+
+Developed at the RAND corporation in 1950 (organization started immediately after WWII to
+develop research for military strategy and planning), as one of the first steps in thinking
+about cold war strategy.
+
+
+\begin{example}
+
+\textbf{Classic story}
+
+Two suspects of a crime are placed in different rooms and interrogated by the police.
+
+\begin{itemize}
+
+\item Both \textbf{cooperate (C)} with each other and stay silent: 1 year of prison each.
+
+\item One \textbf{defects (D)} and denounces the other, who stays silent (C): the one
+denounced gets 5 years, the denouncer walks away.
+
+\item Both defect (D): 3 years of prison each.
+
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & C & D \\
+\hline
+C & (-1,-1) & (-5,0) \\
+D & (0,-5) & (-3,-3) \\
+\end{tabular}
+\end{center}
+
+\end{example}
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item Each player strictly prefers to Defect no matter what the other does
+(\textbf{Defect is a ``dominant strategy''}).
+
+\item Defect-Defect is the \textbf{only Nash Equilibrium}, and it's at the same time the
+outcome that maximizes social loss!
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{definition}
+
+\textbf{PRISONER DILEMMA -- GENERAL FORM}
+
+Payouts can change, but we call ``Prisoner Dilemma'' a game of the form
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & C & D \\
+\hline
+C & $(X_2,Y_2)$ & $(X_4,Y_1)$ \\
+D & $(X_1,Y_4)$ & $(X_3,Y_3)$ \\
+\end{tabular}
+\end{center}
+
+with $X_1 > X_2 > X_3 > X_4$ and $Y_1 > Y_2 > Y_3 > Y_4$.
+
+\end{definition}
+
+
+\separator
+
+
+\textbf{Applications}
+
+\begin{example}
+
+\textbf{Coke-Pepsi advertising war}
+
+\begin{itemize}
+
+\item Without any advertising, each company earns \$5b/year.
+
+\item Each company can choose to spend \$2b/year on advertising.
+
+\item Advertising does not increase total sales, but if one company advertises while the
+other doesn't, it captures \$3b/year from the competitor.
+
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & No Ad & Ad \\
+\hline
+No Ad & (5,5) & (2,6) \\
+Ad & (6,2) & (3,3) \\
+\end{tabular}
+\end{center}
+
+The only NE is (Ad, Ad), with payout (3,3), while (No Ad, No Ad) would give (5,5) to both.
+
+\end{example}
+
+
+\begin{example}
+
+\textbf{Doping in sports} (same matrix: No Dop / Dop)
+
+\begin{itemize}
+
+\item Two professional athletes of similar ability compete in 10 tournaments per year,
+winning on average 5 each.
+
+\item If only one of them takes the medication, he wins 8 of the 10 tournaments, leaving
+only 2 to the opponent. The long-term health cost makes his final utility the same as
+winning only 6 tournaments and staying healthy.
+
+\item If both take it, they both win 5 tournaments each and both pay the health cost
+(equivalent to 2 tournaments).
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{example}
+
+\textbf{Is disarmament possible?} Two ``great powers'':
+
+\begin{itemize}
+
+\item Is it possible to reach an agreement to dramatically reduce weapons? Who is going to
+enforce the agreement if one deviates?
+
+\item Deviating is the best course of action for each player, both to be able to
+``strike first'' and to be able to defend itself.
+
+\item Unfortunately, disarmament is not a Nash Equilibrium.
+
+\end{itemize}
+
+\end{example}
+
+
+
+%=========================================================
+\section{Classical Example 2 -- Matching Pennies}
+
+
+\begin{example}
+
+Two players choose Head or Tail. Player 1 wins 1 if the two choices match (2 Heads or 2
+Tails) and loses 1 otherwise. The other way around for Player 2: she wins 1 in case of
+mismatch and loses 1 in case of a match.
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & H & T \\
+\hline
+H & (1,-1) & (-1,1) \\
+T & (-1,1) & (1,-1) \\
+\end{tabular}
+\end{center}
+
+This is a \textbf{zero sum game}.
+
+\end{example}
+
+
+\begin{warning}
+
+At first sight, it looks like there is no Nash Equilibrium\dots But what is true is that
+\textbf{there is no Nash Equilibrium in pure strategy}.
+
+\end{warning}
+
+
+\separator
+
+
+\textbf{Mixed strategy NE}
+
+Player 1 plays $H$ with probability $p_H^{(1)}$ (and $T$ with probability $1 - p_H^{(1)}$).
+What should Player 2 do?
+
+
+\begin{formula}
+
+If Player 2 plays $H$, his expected payout is
+
+\[
+-p_H^{(1)} + (1 - p_H^{(1)}) = 1 - 2p_H^{(1)}
+\]
+
+If Player 2 plays $T$, his expected payout is
+
+\[
+p_H^{(1)} - (1 - p_H^{(1)}) = -1 + 2p_H^{(1)}
+\]
+
+\end{formula}
+
+
+\begin{itemize}
+
+\item If $p_H^{(1)} > \frac{1}{2}$, playing $T$ gives Player 2 a higher expected payout:
+he should play $T$ with probability 1.
+
+\item If $p_H^{(1)} < \frac{1}{2}$, Player 2 should play $H$ with probability 1.
+
+\item The only possibility to induce Player 2 to randomize is $p_H^{(1)} = \frac{1}{2}$: to
+randomize, he must be \textbf{indifferent} between the two strategies.
+
+\item Same reasoning for the reaction of Player 1 to Player 2's strategy.
+
+\end{itemize}
+
+
+\begin{important}
+
+\textbf{NE: both players play $H$ and $T$ with probability $\frac{1}{2}$.}
+
+\end{important}
+
+
+\begin{summary}
+
+\textbf{Logic of a mixed-strategy equilibrium}
+
+\begin{itemize}
+
+\item At least one player plays a mixed strategy, i.e.\ randomizes between at least two
+actions.
+
+\item To randomize between two actions, a player must be \textbf{indifferent} between the
+two, otherwise she would play the one with higher expected payout.
+
+\item For Player 1 to randomize, Player 2 must play H/T with probability 50\% each.
+
+\item For Player 2 to randomize with 50\% each, he must also be indifferent between H and T.
+
+\item If both play H/T with probability 50\% each, both are indifferent: \textbf{both are
+making an optimal choice} (they could not do anything better) $\rightarrow$ it is a NE.
+
+\end{itemize}
+
+\end{summary}
+
+
+\begin{example}
+
+\textbf{Real life: penalty kicks}
+
+The goalkeeper has a higher probability of stopping the ball if he jumps on the side where
+the ball is kicked (Left/Right); the kicker has a higher probability of scoring if he kicks
+on the opposite side.
+
+Chiappori, Levitt, Groseclose (2002): statistical study of actual penalty kicks, with three
+possible actions (Left/Middle/Right) -- finds evidence of randomization but also of player
+heterogeneity (some players prefer to kick on the left, others on the right).
+
+Other applications: tennis, baseball, etc.
+
+\end{example}
+
+
+
+%=========================================================
+\section{Classical Example 3 -- Asymmetric Matching Pennies}
+
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & H & T \\
+\hline
+H & (X,-X) & (-1,1) \\
+T & (-1,1) & (1,-1) \\
+\end{tabular}
+\end{center}
+
+$X$ is a big number, such as 1000 or 1 million.
+
+
+\begin{example}
+
+\textbf{Intuition}
+
+\begin{itemize}
+
+\item Player 1 might think: I'll play $H$, just in case Player 2 also plays $H$: I'll be
+rich! (and if not, I lose just 1).
+
+\item But then Player 2 will never play $H$, he will always play $T$! So Player 1 playing $H$
+loses 1 for sure.
+
+\item So Player 1 should play $T$ and win 1 for sure\dots Then Player 2 will not play $T$
+for sure, because he doesn't want to lose for sure\dots
+
+\item After all, also in this case \textbf{both players should randomize}.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{important}
+
+In a mixed-strategy NE, \textbf{each player must be indifferent between playing $H$ and
+$T$}.
+
+\end{important}
+
+
+\begin{formula}
+
+\textbf{Player 2 indifferent} (given $p_H^{(1)}$):
+
+\begin{itemize}
+
+\item 2 plays $H$: $-Xp_H^{(1)} + (1 - p_H^{(1)}) = 1 - (1+X)p_H^{(1)}$
+
+\item 2 plays $T$: $p_H^{(1)} - (1 - p_H^{(1)}) = 2p_H^{(1)} - 1$
+
+\end{itemize}
+
+\[
+\Rightarrow \quad p_H^{(1)} = \frac{2}{3+X}
+\]
+
+\textbf{Player 1 indifferent} (given $p_H^{(2)}$):
+
+\begin{itemize}
+
+\item 1 plays $H$: $Xp_H^{(2)} - (1 - p_H^{(2)}) = -1 + (1+X)p_H^{(2)}$
+
+\item 1 plays $T$: $-p_H^{(2)} + (1 - p_H^{(2)}) = 1 - 2p_H^{(2)}$
+
+\end{itemize}
+
+\[
+\Rightarrow \quad p_H^{(2)} = \frac{2}{3+X}
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+NE for
+
+\[
+s^{(1)} = s^{(2)} = \left(\frac{2}{3+X},\ 1 - \frac{2}{3+X}\right)
+\]
+
+The probability of the big gain for Player 1 (and big loss for Player 2) is
+$\left(\frac{2}{3+X}\right)^2$.
+
+\end{important}
+
+
+
+%=========================================================
+\section{Classical Example 4 -- Split or Steal}
+
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & Split & Steal \\
+\hline
+Split & (1,1) & (0,2) \\
+Steal & (2,0) & (0,0) \\
+\end{tabular}
+\end{center}
+
+
+\begin{important}
+
+Main difference with the Prisoner Dilemma: if the opponent steals, I am
+\textbf{indifferent} between stealing or splitting (I get nothing in both cases).
+
+\textbf{Three pure-strategy Nash equilibria}: (Split, Steal), (Steal, Split) and
+(Steal, Steal).
+
+\end{important}
+
+
+\textbf{Which equilibrium would be more plausible?}
+
+\begin{itemize}
+
+\item If I am uncertain about what the opponent will play, it's better to play Steal.
+
+\item If the opponent steals, I am more likely to want to ``punish'' him.
+
+\end{itemize}
+
+
+\begin{example}
+
+\textbf{Split or Steal on British TV}
+
+The game is played in a show on British TV
+(\href{https://www.youtube.com/watch?v=S0qjK3TWZE8}{episode watched in class}).
+
+One player manages to steer the opponent toward Split, by convincing him that he will play
+Steal! Why does it work?
+
+\begin{itemize}
+
+\item When the opponent knows you will play Steal, he will want to punish you.
+
+\item But if he knows that you play Steal and he is rational, he is indifferent between
+Split and Steal. So even a promise that is not fully credible of splitting the win outside
+the game can steer him toward Split.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{warning}
+
+``Fairness'' and ``promises'' are outside the scope of the theory.
+
+\end{warning}
+
+
+
+%=========================================================
+\section{Weekly Summary}
+
+
+\begin{summary}
+
+\textbf{Main concepts}
+
+\begin{itemize}
+
+\item Cooperative vs non-cooperative games
+
+\item Actions vs strategies
+
+\item Pure strategies vs mixed strategies
+
+\item Normal form representation of a game
+
+\item Nash equilibrium
+
+\end{itemize}
+
+\textbf{Classical games}
+
+\begin{itemize}
+
+\item Prisoner Dilemma
+
+\item Matching Pennies
+
+\item Asymmetric Matching Pennies
+
+\item Split or Steal
+
+\end{itemize}
+
+\end{summary}
+
+
+
+\end{multicols}
+
+
+\end{document}

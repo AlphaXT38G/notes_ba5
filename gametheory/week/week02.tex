@@ -1,0 +1,830 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Game Theory and Strategic Decisions}}
+\fancyhead[C]{\small Dominance and Iterated Elimination}
+\fancyhead[R]{\small Week 02 --- 14-20/09/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+% DEFINITION - blue
+\newtcolorbox{definition}{
+enhanced,
+unbreakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+% IMPORTANT - pink
+\newtcolorbox{important}{
+enhanced,
+unbreakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+% FORMULAS - green
+\newtcolorbox{formula}{
+enhanced,
+unbreakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+% WARNING - orange
+\newtcolorbox{warning}{
+enhanced,
+unbreakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+% EXAMPLE - purple
+\newtcolorbox{example}{
+enhanced,
+unbreakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+% SUMMARY - orange
+\newtcolorbox{summary}{
+enhanced,
+unbreakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+%\footnotesize   --> To reduce the size of the text
+
+\thispagestyle{fancy}
+
+
+
+\begin{multicols}{2}
+
+
+
+%=========================================================
+\section{Recap: the Battle of the Sexes}
+
+
+This game summarizes the techniques of the previous lecture: how to find a pure-strategy NE,
+how to find a mixed-strategy NE, and that the same game can have both types of NE.
+
+
+\begin{example}
+
+\textbf{Story}
+
+Two friends prefer to go out together than to go out alone. But Adam prefers to go to a
+soccer game and Bob prefers to go to the opera. They don't have phones so cannot
+communicate before deciding where to go.
+
+\begin{center}
+\begin{tabular}{c|cc}
+Adam $\backslash$ Bob & Soccer & Opera \\
+\hline
+Soccer & (2,1) & (0,0) \\
+Opera & (0,0) & (1,2) \\
+\end{tabular}
+\end{center}
+
+\end{example}
+
+
+\textbf{Pure-strategy NE}
+
+\begin{itemize}
+
+\item If Adam goes to soccer, also Bob prefers to go to soccer. If Adam goes to the opera,
+also Bob prefers to go to the opera.
+
+\item If Bob goes to soccer, also Adam prefers to go to soccer. If Bob goes to the opera,
+also Adam prefers to go to the opera.
+
+\end{itemize}
+
+
+\begin{important}
+
+\textbf{Soccer-Soccer} and \textbf{Opera-Opera} are the two pure-strategy NE.
+
+\end{important}
+
+
+
+%=========================================================
+\section{Mixed-Strategy Nash Equilibria}
+
+
+\begin{important}
+
+In a game with $N$ actions, to adopt a mixed strategy
+$s^{(i)} = (p^{(1)}, p^{(2)}, \dots, p^{(N)})$, a player must be \textbf{indifferent
+between all the actions to which the strategy assigns non-zero probability}.
+
+\textbf{Why?} Because if one of these actions gave lower expected payout than the other
+actions, the player would never adopt it.
+
+\end{important}
+
+
+This is the principle that guides us to find mixed-strategy Nash Equilibria.
+
+
+\begin{formula}
+
+\textbf{Bob indifferent}: Adam plays $s^{(A)} = (p_S^{(A)}, 1 - p_S^{(A)})$.
+
+\begin{itemize}
+
+\item Bob goes to soccer:
+$p_S^{(A)} \times 1 + (1 - p_S^{(A)}) \times 0 = p_S^{(A)}$
+
+\item Bob goes to the opera:
+$p_S^{(A)} \times 0 + (1 - p_S^{(A)}) \times 2 = 2 - 2p_S^{(A)}$
+
+\end{itemize}
+
+\[
+\Rightarrow \quad p_S^{(A)} = 2/3, \quad s^{(A)} = (2/3, 1/3)
+\]
+
+\textbf{Adam indifferent}: Bob plays $s^{(B)} = (p_S^{(B)}, 1 - p_S^{(B)})$.
+
+\begin{itemize}
+
+\item Adam goes to soccer:
+$p_S^{(B)} \times 2 + (1 - p_S^{(B)}) \times 0 = 2p_S^{(B)}$
+
+\item Adam goes to the opera:
+$p_S^{(B)} \times 0 + (1 - p_S^{(B)}) \times 1 = 1 - p_S^{(B)}$
+
+\end{itemize}
+
+\[
+\Rightarrow \quad p_S^{(B)} = 1/3, \quad s^{(B)} = (1/3, 2/3)
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Mixed-strategy Nash equilibrium}:
+\[
+s^{(A)} = (2/3, 1/3), \qquad s^{(B)} = (1/3, 2/3)
+\]
+
+\end{important}
+
+
+
+%=========================================================
+\section{Beauty Contest Game}
+
+
+\begin{definition}
+
+\textbf{BEAUTY CONTEST GAME}
+
+\begin{itemize}
+
+\item $N$ players, e.g.\ all the students in a class.
+
+\item Each has to pick a number between 1 and 100.
+
+\item The player whose number is closest to \textbf{2/3 of the average of all the numbers}
+wins 1.
+
+\item If $m > 1$ players pick the same number, which is the closest to 2/3 of the average,
+they split the gain.
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Concept introduced by Keynes}
+
+How do stock traders choose which stocks to buy and sell? Not by naively thinking about their
+fundamental value, but by trying to guess how other people guess their value, which in turn
+will be based on how they think other people guess their value\dots
+
+Keynes' analogy: a newspaper contest, in which entrants choose the six most attractive faces
+from a hundred photographs; those who picked the most popular faces are eligible for a prize.
+The point is not to pick the faces you find the prettiest, nor those average opinion finds
+the prettiest, but to anticipate what average opinion expects average opinion to be (the
+``third degree''), and some go to the fourth, fifth and higher degrees (Keynes,
+\emph{General Theory of Employment, Interest and Money}, 1936).
+
+\end{example}
+
+
+\separator
+
+
+\textbf{What should you have played?}
+
+\begin{itemize}
+
+\item \textbf{\#1} Never play a number $> 67$: even if all the others choose 100, 2/3 of the
+average will be $< 68$.
+
+\item \textbf{\#2} If everybody else understood \#1, the highest they will ever play is 67.
+So never play a number $> 45$ (even if all the others play 67, 2/3 of the average would be
+$< 45$).
+
+\item \textbf{\#3} If everybody else understood \#2 (everybody understood that everybody
+understood \#1), the highest they will ever play is 45: never choose a number $> 30$.
+
+\item \textbf{\#4} If everybody else understood \#3: never play a number $> 20$.
+
+\item \textbf{\#5} \dots\ $> 13$, \textbf{\#6} \dots\ $> 9$, \textbf{\#7} \dots\ $> 6$,
+\textbf{\#8} \dots\ $> 4$, \textbf{\#9} \dots\ $> 3$, \textbf{\#10} \dots\ $> 2$,
+\textbf{\#11} \dots\ $> 1$.
+
+\end{itemize}
+
+
+\begin{important}
+
+After 11 levels of reasoning: \textbf{you should play 1!!}
+
+\textbf{The unique Nash equilibrium is: everybody plays 1 and everybody shares the prize.}
+
+\end{important}
+
+
+\begin{warning}
+
+Most lab experiments find that the winning number is usually between 10 and 20: people don't
+go through the 11 levels of reasoning and instead stop at level 4-5\dots
+
+If other people do not follow the reasoning, playing 1 is not the best strategy\dots
+
+\end{warning}
+
+
+
+%=========================================================
+\section{Dominant Strategies}
+
+
+\begin{definition}
+
+\textbf{STRICTLY DOMINANT STRATEGY}
+
+For player $i$, a strategy $\tilde{s}^{(i)}$ is strictly dominant if it results in a
+strictly higher payout for player $i$ than any other strategy, \emph{no matter what strategy
+the other players adopt}:
+
+\[
+\mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)}) > \mathcal{P}^{(i)}(s^{(i)}, s^{(-i)}),
+\quad \forall s^{(-i)}, \ \forall s^{(i)} \ne \tilde{s}^{(i)}
+\]
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{WEAKLY DOMINANT STRATEGY}
+
+For player $i$, a strategy $\tilde{s}^{(i)}$ is weakly dominant if it results in a weakly
+higher payout for player $i$ than any other strategy, \emph{no matter what strategy the
+other players adopt}:
+
+\[
+\mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)}) \ge \mathcal{P}^{(i)}(s^{(i)}, s^{(-i)}),
+\quad \forall s^{(-i)}, \ \forall s^{(i)}
+\]
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Prisoner Dilemma}
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & C & D \\
+\hline
+C & (-1,-1) & (-5,0) \\
+D & (0,-5) & (-3,-3) \\
+\end{tabular}
+\end{center}
+
+D is \textbf{strictly dominant} for both players ($0 > -1$ and $-3 > -5$).
+
+\end{example}
+
+
+\begin{example}
+
+\textbf{Split or Steal}
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & Split & Steal \\
+\hline
+Split & (1,1) & (0,2) \\
+Steal & (2,0) & (0,0) \\
+\end{tabular}
+\end{center}
+
+No strictly dominant strategy. Steal is \textbf{weakly dominant} ($2 > 1$ against Split,
+$0 = 0$ against Steal).
+
+\end{example}
+
+
+
+%=========================================================
+\section{Dominated Strategies}
+
+
+\begin{definition}
+
+\textbf{STRICTLY DOMINATED STRATEGY}
+
+For player $i$, a strategy $\bar{s}^{(i)}$ is strictly dominated if, for any strategy
+adopted by the other players, there is at least another strategy $\tilde{s}^{(i)}$ that
+gives a strictly higher payout for Player $i$:
+
+\[
+\forall s^{(-i)} \ \exists \tilde{s}^{(i)} \ s.t. \
+\mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)}) > \mathcal{P}^{(i)}(\bar{s}^{(i)}, s^{(-i)})
+\]
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{WEAKLY DOMINATED STRATEGY}
+
+$\bar{s}^{(i)}$ is weakly dominated iff
+
+\[
+\forall s^{(-i)} \ \exists \tilde{s}^{(i)} \ s.t. \
+\mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)}) \ge \mathcal{P}^{(i)}(\bar{s}^{(i)}, s^{(-i)})
+\]
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Example 1} -- Is $R$ a dominated strategy for Player 2?
+
+\begin{center}
+\begin{tabular}{c|ccc}
+ & L & M & R \\
+\hline
+U & $(x_1,0)$ & $(x_2,3)$ & $(x_3,1)$ \\
+D & $(x_4,3)$ & $(x_5,0)$ & $(x_6,1)$ \\
+\end{tabular}
+\end{center}
+
+The most general strategy for Player 1 is $s^{(1)} = (p_U^{(1)}, 1 - p_U^{(1)})$.
+
+\begin{itemize}
+
+\item If $p_U > 1/3$, strategy $R$ is dominated by strategy $M$.
+
+\item If $p_U < 2/3$, strategy $R$ is dominated by strategy $L$.
+
+\end{itemize}
+
+$\rightarrow$ Strategy $R$ is \textbf{strictly dominated}.
+
+\end{example}
+
+
+\begin{example}
+
+\textbf{Example 2} -- Is $R$ a dominated strategy for Player 2?
+
+\begin{center}
+\begin{tabular}{c|ccc}
+ & L & M & R \\
+\hline
+U & $(x_1,0)$ & $(x_2,3)$ & $(x_3,2)$ \\
+D & $(x_4,3)$ & $(x_5,0)$ & $(x_6,2)$ \\
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+
+\item If $p_U > 2/3$, strategy $R$ is dominated by strategy $M$.
+
+\item If $p_U < 1/3$, strategy $R$ is dominated by strategy $L$.
+
+\item However, for $1/3 \le p_U \le 2/3$ strategy $R$ is an optimal strategy (strictly the
+best for $1/3 < p_U < 2/3$).
+
+\end{itemize}
+
+$\rightarrow$ Strategy $R$ is \textbf{not a dominated strategy}.
+
+\end{example}
+
+
+
+%=========================================================
+\section{Iterated Elimination of Dominated Strategies}
+
+
+\begin{definition}
+
+\textbf{ITERATED ELIMINATION OF DOMINATED STRATEGIES}
+
+A \textbf{solution concept} that allows to simplify (sometimes solve) a game.
+
+Idea: if a strategy is (strictly) dominated, I should never choose it. The game should be
+equivalent if I discard this strategy altogether.
+
+\end{definition}
+
+
+\begin{example}
+
+\begin{center}
+\begin{tabular}{c|ccc}
+ & L & M & R \\
+\hline
+U & (1,0) & (1,2) & (0,1) \\
+D & (0,3) & (0,1) & (2,0) \\
+\end{tabular}
+\end{center}
+
+\textbf{Step 1}: for Player 2, strategy $R$ is dominated by strategy $M$ $\rightarrow$ we
+can eliminate strategy $R$:
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & L & M \\
+\hline
+U & (1,0) & (1,2) \\
+D & (0,3) & (0,1) \\
+\end{tabular}
+\end{center}
+
+\textbf{Step 2}: given that $R$ was discarded, for Player 1 strategy $D$ is dominated by
+strategy $U$:
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & L & M \\
+\hline
+U & (1,0) & (1,2) \\
+\end{tabular}
+\end{center}
+
+The game is greatly simplified: the NE is clearly $(U,M)$ (Player 1 plays $U$, Player 2
+plays $M$).
+
+\end{example}
+
+
+
+%=========================================================
+\section{Theorem -- Strict Elimination}
+
+
+\begin{important}
+
+Given an $N$-player game $G$, call $G_1$ the game obtained from $G$ after iterated
+elimination of one or more \textbf{strictly} dominated strategies.
+
+\begin{itemize}
+
+\item If the strategy profile $(s^{(1)}, s^{(2)}, \dots, s^{(N)})$ is a Nash equilibrium of
+$G$, it is a Nash equilibrium of $G_1$.
+
+\item If $G$ is finite and $(s^{(1)}, s^{(2)}, \dots, s^{(N)})$ is a Nash equilibrium of
+$G_1$, it is a Nash equilibrium of $G$.
+
+\end{itemize}
+
+\end{important}
+
+
+
+%=========================================================
+\section{Iterated Elimination of Weakly Dominated Strategies}
+
+
+\begin{warning}
+
+In the Split or Steal game, we could eliminate the weakly dominated Split strategy. However,
+only one out of the three equilibria, \textbf{(Steal, Steal)}, would be preserved!
+
+\end{warning}
+
+
+\begin{important}
+
+\textbf{Theorem (weak)}
+
+Consider a finite game $G$ and a game $G_1$ obtained from $G$ after iterated elimination of
+\textbf{weakly} dominated strategies. If $(s^{(1)}, s^{(2)}, \dots, s^{(N)})$ is a Nash
+equilibrium of $G_1$, it is a Nash equilibrium of $G$.
+
+\end{important}
+
+
+\begin{warning}
+
+\begin{itemize}
+
+\item Only some Nash Equilibria are preserved by the iterated elimination of weakly
+dominated strategies.
+
+\item Which equilibria are preserved \textbf{can depend on the order of elimination}.
+
+\end{itemize}
+
+\end{warning}
+
+
+\begin{example}
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & L & R \\
+\hline
+U & (5,1) & (4,0) \\
+M & (6,0) & (3,1) \\
+D & (6,4) & (4,4) \\
+\end{tabular}
+\end{center}
+
+Two NE: $(D,L)$ and $(D,R)$.
+
+\textbf{Solution 1}
+
+\begin{itemize}
+
+\item Player 1 eliminates $M$, weakly dominated by $D$.
+
+\item Player 2 eliminates $R$, weakly dominated by $L$.
+
+\item The game becomes $U$: (5,1), $D$: (6,4) in column $L$: the unique NE is
+$\boldsymbol{(D,L)}$.
+
+\end{itemize}
+
+\textbf{Solution 2}
+
+\begin{itemize}
+
+\item Player 1 eliminates $U$, weakly dominated by $D$.
+
+\item Player 2 eliminates $L$, weakly dominated by $R$.
+
+\item The game becomes $M$: (3,1), $D$: (4,4) in column $R$: the unique NE is
+$\boldsymbol{(D,R)}$.
+
+\end{itemize}
+
+\end{example}
+
+
+
+%=========================================================
+\section{Beauty Contest and Iterated Elimination}
+
+
+\begin{important}
+
+The 11 levels of reasoning can be interpreted as \textbf{Iterated Elimination of (Weakly)
+Dominated Strategies}.
+
+\begin{itemize}
+
+\item Everybody eliminates the choices $> 67$, which are weakly dominated.
+
+\item After this elimination, the choices $> 45$ become weakly dominated, so we can
+eliminate them\dots
+
+\item In the end, we find the Nash equilibrium in which everybody plays 1, and everybody
+gets $1/N$ of the prize.
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{warning}
+
+Iterated deletion of weakly dominated strategies may lose some equilibria, so there could be
+other Nash equilibria of this game; but it can be proved that this is the only one.
+
+\end{warning}
+
+
+
+%=========================================================
+\section{Weekly Summary}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item A game can have both pure- and mixed-strategy NE (Battle of the Sexes).
+
+\item To randomize, a player must be indifferent between all the actions she plays with
+non-zero probability.
+
+\item Beauty Contest: unique NE in which everybody plays 1.
+
+\item Strictly / weakly \textbf{dominant} and \textbf{dominated} strategies.
+
+\item Iterated elimination of strictly dominated strategies keeps all the NE (finite game).
+
+\item Iterated elimination of weakly dominated strategies can lose NE, and the result can
+depend on the order of elimination.
+
+\end{itemize}
+
+\end{summary}
+
+
+
+\end{multicols}
+
+
+\end{document}

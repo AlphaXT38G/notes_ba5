@@ -1,0 +1,840 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Game Theory and Strategic Decisions}}
+\fancyhead[C]{\small Sequential Games and Subgame-Perfect Equilibrium}
+\fancyhead[R]{\small Week 03 --- 21-27/09/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+% DEFINITION - blue
+\newtcolorbox{definition}{
+enhanced,
+unbreakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+% IMPORTANT - pink
+\newtcolorbox{important}{
+enhanced,
+unbreakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+% FORMULAS - green
+\newtcolorbox{formula}{
+enhanced,
+unbreakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+% WARNING - orange
+\newtcolorbox{warning}{
+enhanced,
+unbreakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+% EXAMPLE - purple
+\newtcolorbox{example}{
+enhanced,
+unbreakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+% SUMMARY - orange
+\newtcolorbox{summary}{
+enhanced,
+unbreakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+%\footnotesize   --> To reduce the size of the text
+
+\thispagestyle{fancy}
+
+
+
+\begin{multicols}{2}
+
+
+
+%=========================================================
+\section{Sequential Games}
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item Lectures 1-2: each player makes only one choice, and all choose simultaneously.
+
+\item This week: players make (one or multiple) choices \textbf{sequentially}, as in chess.
+
+\item Main message: the Nash equilibrium solution concept is \textbf{not fully satisfactory}
+for sequential games. We refine it with the \textbf{Subgame-perfect equilibrium}.
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{definition}
+
+\textbf{SEQUENTIAL GAME}
+
+Needs to specify:
+
+\begin{itemize}
+
+\item the players;
+
+\item the order of moves (which player moves at time 0, 1, 2\dots?);
+
+\item the possible moves of each player at each of her decision points;
+
+\item the information available to players throughout the game.
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{PERFECT INFORMATION}
+
+At each time 0, 1, 2, \dots\ each player knows the actions taken by the other players up to
+that time (assumed in this lecture).
+
+\end{definition}
+
+
+
+%=========================================================
+\section{Example: Ultimatum Game}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item Players: 1 and 2.
+
+\item Player 1 has 3 coins, but needs to share them with Player 2.
+
+\item First, Player 1 makes an offer to Player 2: he can offer 1, 2 or 3 coins.
+
+\item Next, Player 2 can accept or reject the offer. If he accepts, he gets the $n$ (1, 2 or
+3) coins offered and Player 1 keeps the rest. If Player 2 rejects, nobody gets anything.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{EXTENSIVE FORM}
+
+Sequential games are best represented in extensive form (= as \textbf{decision trees}).
+
+\end{definition}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.95\linewidth
+]{../images/week03_01.png}
+
+\end{center}
+
+
+
+%=========================================================
+\section{Pure Strategies and Normal Form}
+
+
+\begin{definition}
+
+\textbf{PURE STRATEGY (SEQUENTIAL GAME)}
+
+A pure strategy for Player $i$ in a sequential game of perfect information is a
+\textbf{contingent plan} that specifies an action at \textbf{each decision node} of
+Player $i$.
+
+\end{definition}
+
+
+\begin{example}
+
+Ultimatum game: a pure strategy for Player 1 could be simply ``Offer 1''. A pure strategy for
+Player 2 could be ``Reject if the offer is 1 or 2, and accept if the offer is 3''.
+
+\end{example}
+
+
+\textbf{Normal-form representation of the Ultimatum game}
+
+\begin{center}
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{c|cccccccc}
+$1 \backslash 2$ & RRR & RRA & RAA & AAA & ARR & RAR & AAR & ARA \\
+\hline
+Offer 1 & (0,0) & (0,0) & (0,0) & (2,1) & (2,1) & (0,0) & (2,1) & (2,1) \\
+Offer 2 & (0,0) & (0,0) & (1,2) & (1,2) & (0,0) & (1,2) & (1,2) & (0,0) \\
+Offer 3 & (0,0) & (0,3) & (0,3) & (0,3) & (0,0) & (0,0) & (0,0) & (0,3) \\
+\end{tabular}
+\end{center}
+
+
+The eight choices for Player 2 are his eight possible pure strategies: e.g.\ `RRR' means
+Reject if offered 1, 2 or 3; `RAR' means Reject if offered 1, Accept if offered 2, Reject if
+offered 3.
+
+
+
+%=========================================================
+\section{Nash Equilibrium of Sequential Games}
+
+
+\begin{definition}
+
+\textbf{NASH EQUILIBRIUM}
+
+Defined the same way as for simultaneous-move games: a strategy profile
+$(s^{(1)}, s^{(2)}, \dots, s^{(N)})$ is a Nash equilibrium iff
+
+\[
+\mathcal{P}^{(i)}(s^{(i)}, s^{(-i)}) \ge \mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)})
+\quad \text{for every possible } \tilde{s}^{(i)}
+\]
+
+i.e.\ the best that one player can do \emph{given the strategies of all the other players}.
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{The Ultimatum game has many pure-strategy NE} (underlined):
+
+\begin{center}
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{c|cccccccc}
+$1 \backslash 2$ & RRR & RRA & RAA & AAA & ARR & RAR & AAR & ARA \\
+\hline
+Offer 1 & (0,0) & (0,0) & (0,0) & \underline{(2,1)} & \underline{(2,1)} & (0,0) & \underline{(2,1)} & \underline{(2,1)} \\
+Offer 2 & (0,0) & (0,0) & \underline{(1,2)} & (1,2) & (0,0) & \underline{(1,2)} & (1,2) & (0,0) \\
+Offer 3 & (0,0) & \underline{(0,3)} & (0,3) & (0,3) & (0,0) & (0,0) & (0,0) & (0,3) \\
+\end{tabular}
+\end{center}
+
+Take for example the NE (Offer 2, RAA): Player 2 will not accept unless he is offered at
+least 2. Player 1 knows it, and therefore offers 2.
+
+\end{example}
+
+
+
+%=========================================================
+\section{Non-credible Threats}
+
+
+\begin{warning}
+
+The NE (Offer 2, RAA) involves a \textbf{non-credible threat} by Player 2: that he will
+Reject (and therefore get nothing) if he is offered 1.
+
+But once Player 1 offers 1, it would be irrational for Player 2 to reject the offer and walk
+away with nothing!
+
+\end{warning}
+
+
+
+%=========================================================
+\section{The Entry-Deterrence Game}
+
+
+\begin{definition}
+
+\textbf{STRATEGIC ENTRY DETERRENCE}
+
+In business, any action taken by an existing business in a particular market that discourages
+potential entrants from entering into competition in that market (barriers to entry: hostile
+takeovers, heavy spending on new product development, predatory pricing\dots).
+
+\end{definition}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.75\linewidth
+]{../images/week03_02.png}
+
+\end{center}
+
+
+\begin{center}
+\begin{tabular}{c|cc}
+New Firm $\backslash$ Old Firm & Accept & Fight \\
+\hline
+Not Enter & (0,0) & \underline{(0,0)} \\
+Enter & \underline{(1,-1)} & (-3,-3) \\
+\end{tabular}
+\end{center}
+
+NE underlined.
+
+
+\begin{important}
+
+Two pure-strategy NE: \textbf{(Not Enter, Fight)} and \textbf{(Enter, Accept)}.
+
+But (Not Enter, Fight) is again a \textbf{non-credible threat}.
+
+\end{important}
+
+
+
+%=========================================================
+\section{Sequential Rationality}
+
+
+\begin{definition}
+
+\textbf{SEQUENTIAL RATIONALITY}
+
+A player's equilibrium strategy should specify \textbf{optimal actions at every decision
+node} in a tree.
+
+\end{definition}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item \textbf{Entry deterrence}: Fight is a suboptimal decision in the decision node that
+starts after New Firm chooses `Enter'. Therefore, the NE (Not Enter, Fight) is not
+realistic.
+
+\item \textbf{Ultimatum game}: the NE (Offer 2, RAA) -- and also (Offer 2, RAR) and
+(Offer 3, RRA) -- do not satisfy the Sequential Rationality principle either.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{important}
+
+We need a refinement of the concept of Nash equilibrium for a sequential game, that satisfies
+sequential rationality.
+
+\end{important}
+
+
+
+%=========================================================
+\section{Subgames}
+
+
+\begin{definition}
+
+\textbf{SUBGAME}
+
+Given a game $G$, a subgame $G_1$ is the portion of the game $G$ starting at one of the
+decision nodes and containing all its successor nodes.
+
+\end{definition}
+
+
+\begin{example}
+
+Subgames of the Ultimatum game: the whole game (yellow) and the three subgames starting at
+the decision nodes of Player 2 (green).
+
+\begin{center}
+
+\includegraphics[
+width=0.85\linewidth
+]{../images/week03_03.png}
+
+\end{center}
+
+\end{example}
+
+
+
+%=========================================================
+\section{Subgame-Perfect Equilibrium (SPE)}
+
+
+\begin{definition}
+
+\textbf{SUBGAME-PERFECT EQUILIBRIUM}
+
+A subgame-perfect equilibrium of an extensive-form game $G$ is a strategy profile $s$ such
+that for any subgame $G'$, the restriction of $s$ to $G'$ is a Nash equilibrium for $G'$.
+
+\end{definition}
+
+
+\begin{important}
+
+A subgame-perfect equilibrium is a special kind of Nash equilibrium (obvious since $G$ is a
+subgame of itself).
+
+\end{important}
+
+
+
+%=========================================================
+\section{Backward Induction}
+
+
+\begin{summary}
+
+\textbf{Backward induction} -- the technique to obtain a Subgame-Perfect equilibrium:
+
+\begin{enumerate}
+
+\item Find the Nash equilibria of the smallest subgames.
+
+\item Replace each subgame with the payoff of (one of) its NE.
+
+\item Repeat the procedure with the reduced game.
+
+\end{enumerate}
+
+\end{summary}
+
+
+\begin{example}
+
+\textbf{Entry-Deterrence game}
+
+\begin{itemize}
+
+\item The smallest subgame (after `Enter') has only one player, Old Firm, who will choose
+`Accept'. We replace this subgame with the payout of (Enter, Accept): $(1,-1)$.
+
+\item The reduced game (Not Enter: $(0,0)$, (Enter, A): $(1,-1)$) has only itself as a
+subgame. It is a one-player game (New Firm), who will choose Enter.
+
+\end{itemize}
+
+SPE: \textbf{(Enter, Accept)}.
+
+\end{example}
+
+
+\begin{example}
+
+\textbf{Ultimatum game}
+
+\begin{itemize}
+
+\item In each of the smallest subgames there is only Player 2, and in each of these the only
+NE is `Accept'.
+
+\item After replacing them with the payout of their NE, we obtain the reduced game:
+
+\end{itemize}
+
+\begin{center}
+
+\includegraphics[
+width=0.75\linewidth
+]{../images/week03_04.png}
+
+\end{center}
+
+\begin{itemize}
+
+\item Only Player 1 needs to choose, and will choose `Offer 1'.
+
+\end{itemize}
+
+SPE: \textbf{(Offer 1, AAA)}.
+
+\end{example}
+
+
+
+%=========================================================
+\section{An Example with two SPE}
+
+
+\begin{example}
+
+New version of the Ultimatum Game: Player 1 still has 3 coins, but can now also offer 0 coins
+to Player 2 (so can offer 0, 1, 2, or 3 coins).
+
+\begin{center}
+
+\includegraphics[
+width=0.95\linewidth
+]{../images/week03_05.png}
+
+\end{center}
+
+\end{example}
+
+
+\begin{itemize}
+
+\item In the subgame starting after `Offer 0', Player 2 gets 0 whether he accepts or rejects:
+`Accept' and `Reject' are \textbf{two pure-strategy NE} of this subgame.
+
+\item In the other three subgames, the only NE is `Accept'.
+
+\end{itemize}
+
+
+\begin{important}
+
+\textbf{Solution 1}: choose the NE `Accept' for all 4 subgames. Reduced game: (Offer 0,A)
+$(3,0)$, (Offer 1,A) $(2,1)$, (Offer 2,A) $(1,2)$, (Offer 3,A) $(0,3)$. Player 1 chooses
+`Offer 0', which gives her the highest payout (3).
+
+SPE: \textbf{(Offer 0, AAAA)}.
+
+\separator
+
+\textbf{Solution 2}: choose the NE `Reject' for the subgame starting after `Offer 0', and the
+(only) NE `Accept' for the other 3 subgames. Reduced game: (Offer 0,R) $(0,0)$, (Offer 1,A)
+$(2,1)$, (Offer 2,A) $(1,2)$, (Offer 3,A) $(0,3)$. Player 1 chooses `Offer 1', which gives
+her the highest payout (2).
+
+SPE: \textbf{(Offer 1, RAAA)}.
+
+\end{important}
+
+
+
+%=========================================================
+\section{Threat Credibility: Cuban Missile Crisis (1962)}
+
+
+Threat credibility is very important in politics and international relations. Game theory
+tools have been used to analyze the \textbf{Cuban missile crisis in 1962}: one of the most
+dramatic points in the Cold War, unfolding over 13 days, in which many feared that a nuclear
+war might be approaching.
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item The USA, led by President JFK, discovered that \textbf{the USSR was in the process of
+installing missiles in Cuba}, to deter US attacks to the island and more generally to provoke
+and threaten the USA.
+
+\item The main ``punishments'' the USA discussed were a \textbf{naval blockade to Cuba} and
+an \textbf{air-strike to destroy the missiles}.
+
+\item The USSR, hoping that the USA would just accept the missiles without retaliation, made
+it known that both these options would be acts of war, that would \textbf{inevitably lead to
+a nuclear war between USA and USSR}.
+
+\end{itemize}
+
+\end{example}
+
+
+\textbf{Order of preference over final outcomes}
+
+\textbf{USSR}:
+
+\begin{enumerate}
+
+\item Missiles installed, USA accepts without retaliation
+
+\item Status Quo (No Missiles installed)
+
+\item Missiles installed, USA retaliation through naval blockade, no war
+
+\item Missiles installed, USA retaliation through air strike, no war
+
+\item Nuclear War
+
+\end{enumerate}
+
+\textbf{USA}:
+
+\begin{enumerate}
+
+\item Status Quo (No Missiles installed)
+
+\item Missiles installed, USA retaliation through naval blockade, no war
+
+\item Missiles installed, USA retaliation through air strike, no war
+
+\item Missiles installed, USA accepts without retaliation
+
+\item Nuclear War
+
+\end{enumerate}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.8\linewidth
+]{../images/week03_06.png}
+
+\end{center}
+
+
+\begin{warning}
+
+Different payouts preserving the same preference ranking for USA and USSR would lead to the
+same NE and SPE.
+
+\end{warning}
+
+
+\textbf{Normal form and NE} (underlined). USSR strategies: first letter = first move (N:
+Do Nothing, M: Missiles), then the answer (W: War, A: Accept) after an Air Strike, then after
+a Blockade.
+
+\begin{center}
+\begin{tabular}{c|ccc}
+USSR $\backslash$ USA & Air Strike & Blockade & Accept \\
+\hline
+NWW & \underline{(4,5)} & \underline{(4,5)} & (4,5) \\
+NWA & \underline{(4,5)} & \underline{(4,5)} & (4,5) \\
+NAW & \underline{(4,5)} & \underline{(4,5)} & (4,5) \\
+NAA & \underline{(4,5)} & \underline{(4,5)} & (4,5) \\
+MWW & (1,1) & (1,1) & \underline{(5,2)} \\
+MWA & (1,1) & (3,4) & (5,2) \\
+MAW & (2,3) & (1,1) & (5,2) \\
+MAA & (2,3) & (3,4) & (5,2) \\
+\end{tabular}
+\end{center}
+
+
+\begin{important}
+
+Of all the NE, only \textbf{(NAA, Blockade)} is a SPE.
+
+The USSR was counting on the USA to believe that the MWW strategy would be credible, so that
+the realized NE would be (MWW, Accept). Eventually, the USSR agreed to remove the missiles,
+consistently with the (NAA, Blockade) SPE.
+
+\end{important}
+
+
+
+%=========================================================
+\section{Weekly Summary}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item Sequential games are represented in extensive form (decision trees).
+
+\item A pure strategy is a contingent plan: an action at each decision node of the player.
+
+\item The NE of sequential games can rely on \textbf{non-credible threats}.
+
+\item \textbf{Sequential rationality}: optimal actions at every decision node.
+
+\item \textbf{SPE}: the restriction to any subgame is a NE of that subgame.
+
+\item SPE are found by \textbf{backward induction}; a game can have several SPE.
+
+\item If we have time: the ``pirate game'' video, a 5-person game solved by backward
+induction (see week 04).
+
+\end{itemize}
+
+\end{summary}
+
+
+
+\end{multicols}
+
+
+\end{document}

@@ -1,0 +1,1541 @@
+\documentclass[11pt,a4paper,openany]{book}
+
+\makeatletter\def\input@path{{../_shared/}}\makeatother
+\usepackage{course}
+
+\begin{document}
+\raggedbottom
+
+\coursetitle{Game Theory and Strategic Decisions}{BA5}{2026--2027}
+
+\tableofcontents
+\clearpage
+
+These notes cover the course by Elena Perazzi (EPFL, Fall 2026): how to model strategic
+interactions as games, and how to predict their outcome with solution concepts --- Nash
+equilibrium, dominance, subgame-perfect and Bayesian Nash equilibria.
+
+
+% =========================================================
+\chapter{Lecture 1 : Games and Nash equilibrium}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} What a game is (players, choices, payouts), how to write
+a simultaneous game as a table (\emph{normal form}), the difference between actions and
+(pure or mixed) strategies, and the central solution concept of the course: the
+\textbf{Nash equilibrium}. \\
+\textbf{Why is it useful?} Every later lecture refines or reuses these notions. The classical
+games seen here (Prisoner Dilemma, Matching Pennies, Split or Steal) are the reference
+examples of the whole course.
+\end{rembox}
+
+\begin{rembox}[title=Course organisation]
+\begin{itemize}
+  \item 14 lectures, on Tuesday from 1:15pm to 3pm (one 15-minute break around 2pm).
+  \item Assistant: Luiz Bissoto (\href{mailto:luiz.bissoto@epfl.ch}{luiz.bissoto@epfl.ch}).
+  \item Grading based on \textbf{3 problem sets}, weights \textbf{40\%, 40\%, 20\%};
+        assignments can be done in groups of up to 3 people.
+  \item Three parts: basics of non-cooperative game theory (approx.\ 7 lectures), auction
+        theory with applications to Ebay and Google advertising auctions (approx.\ 4
+        lectures), evolutionary game theory (approx.\ 2 lectures).
+\end{itemize}
+\end{rembox}
+
+
+\section{Cooperative vs non-cooperative games}
+
+\begin{defnbox}[title=Non-cooperative game]
+A game in which there is \textbf{no external authority enforcing rules of cooperative
+behavior}. Each player tries to maximize her benefit at any time, even by damaging others.
+Even when a contract between two players could be beneficial to both, they cannot stipulate
+it, because no authority is able to enforce it.
+\end{defnbox}
+
+\begin{defnbox}[title=Cooperative game]
+A game that involves negotiation, bargaining, contracts, \ldots
+\end{defnbox}
+
+\begin{rembox}[title=Scope of the course]
+Classical game theory focuses on \textbf{non-cooperative games}: this is what we study in
+this course.
+\end{rembox}
+
+
+\section{What is a game?}
+
+\begin{defnbox}[title=Game]
+A mathematical model of strategic interaction, defined by
+\begin{itemize}
+  \item \textbf{Players} --- people, businesses, countries, \ldots
+  \item \textbf{Choices} --- players make one or multiple choices between different possible
+        actions. A player's \textbf{strategy} is her rule for choosing actions.
+  \item \textbf{Outcomes} --- when players have made their choices, an outcome is realized
+        and the game ends. An outcome is expressed in terms of a \textbf{payout} to the
+        players (e.g.\ Player 1 wins \$1, Player 2 loses \$2).
+\end{itemize}
+\end{defnbox}
+
+\begin{keybox}[title=The one assumption common to all games]
+\textbf{All players care about is their own payout!}
+\end{keybox}
+
+\begin{propbox}[title=What distinguishes types of games]
+\begin{itemize}
+  \item \textbf{Timing} --- do players choose once (e.g.\ rock-paper-scissors) or repeatedly
+        over time (e.g.\ chess)? Does the game eventually end, or continue forever? Do they
+        choose \textbf{simultaneously} or in turn?
+  \item \textbf{Observation} --- can the players observe each other's choices?
+\end{itemize}
+\end{propbox}
+
+\begin{rembox}[title=Lecture 1 setting]
+The simplest type of games: 2 players, each player makes one choice, and all choose
+simultaneously (so they do not observe the other's action).
+\end{rembox}
+
+
+\section{Normal form representation}
+
+\begin{defnbox}[title=Normal form]
+A table with one row per action of Player 1, one column per action of Player 2, and in each
+cell the pair of payouts \textbf{(Player 1, Player 2)}. We write
+$\mathcal{P}^{(i)}(a^{(1)}, a^{(2)})$ for the payout of Player $i$ when Player 1 plays
+$a^{(1)}$ and Player 2 plays $a^{(2)}$.
+\end{defnbox}
+
+\begin{exbox}[title=Rock-Paper-Scissors]
+\begin{center}
+\begin{tabular}{c|ccc}
+$1 \backslash 2$ & R & P & S \\ \hline
+R & (0,0)  & (-1,1) & (1,-1) \\
+P & (1,-1) & (0,0)  & (-1,1) \\
+S & (-1,1) & (1,-1) & (0,0)
+\end{tabular}
+\end{center}
+Players 1 and 2 can both play R(ock), P(aper) or S(cissors). For example
+$\mathcal{P}^{(1)}(R,P) = -1$ (payout for Player 1 if 1 chooses R and 2 chooses P) and
+$\mathcal{P}^{(2)}(S,R) = 1$ (payout for Player 2 if 1 chooses S and 2 chooses R).
+\end{exbox}
+
+
+\section{Actions and strategies}
+
+Player $i$ can choose between $M$ \textbf{actions} $(a_1^{(i)}, a_2^{(i)}, \ldots,
+a_M^{(i)})$.
+
+\begin{defnbox}[title=Mixed strategy]
+A (mixed) \textbf{strategy} is an $M$-component vector
+\[
+s^{(i)} = (p_1^{(i)}, p_2^{(i)}, \ldots, p_M^{(i)}), \qquad 0 \le p_j^{(i)} \le 1, \qquad
+\sum_{j=1}^{M} p_j^{(i)} = 1,
+\]
+where each component $j$ is the probability of choosing action $a_j^{(i)}$.
+\textbf{Different players choose their actions independently.}
+\end{defnbox}
+
+\begin{defnbox}[title=Pure strategy]
+A strategy vector with one component equal to one, and the others equal to zero: the player
+always plays the same action.
+\end{defnbox}
+
+\begin{warnbox}[title=Action $\ne$ strategy]
+An \textbf{action} (letter $a$) is what a player ends up playing. A \textbf{strategy}
+(letter $s$) is the vector of the \emph{ex-ante} probabilities of playing each action.
+\end{warnbox}
+
+
+\begin{propbox}[title=Expected payout]
+When players use mixed strategies, their objective is to maximize their \textbf{expected
+payout} (weighted average over the possible outcomes, weighed with their probabilities).
+With 2 players choosing between $A$ and $B$, $s^{(1)} = (p_A^{(1)}, p_B^{(1)})$ and
+$s^{(2)} = (p_A^{(2)}, p_B^{(2)})$:
+\begin{align*}
+E[\mathcal{P}^{(1)}(s^{(1)}, s^{(2)})]
+&= Prob(A,A)\,\mathcal{P}^{(1)}(A,A) + Prob(A,B)\,\mathcal{P}^{(1)}(A,B) \\
+&\quad + Prob(B,A)\,\mathcal{P}^{(1)}(B,A) + Prob(B,B)\,\mathcal{P}^{(1)}(B,B).
+\end{align*}
+The choices are independent, so $Prob(A,A) = p_A^{(1)} p_A^{(2)}$,
+$Prob(A,B) = p_A^{(1)} p_B^{(2)}$, etc.:
+\begin{align*}
+E[\mathcal{P}^{(1)}(s^{(1)}, s^{(2)})]
+&= p_A^{(1)} p_A^{(2)} \mathcal{P}^{(1)}(A,A) + p_A^{(1)} p_B^{(2)} \mathcal{P}^{(1)}(A,B) \\
+&\quad + p_B^{(1)} p_A^{(2)} \mathcal{P}^{(1)}(B,A) + p_B^{(1)} p_B^{(2)} \mathcal{P}^{(1)}(B,B).
+\end{align*}
+\end{propbox}
+
+\begin{rembox}[title=What players know]
+In the simultaneous-move games of this lecture, each player \textbf{knows the other players'
+strategy, but not their actions}. E.g.\ in Rock-Paper-Scissors I may know that my opponent
+plays the three actions with probability $(0.3, 0.3, 0.4)$ --- because we already played
+together many times --- but I don't know what she will play this time.
+\end{rembox}
+
+
+\section{Nash equilibrium}
+
+\begin{defnbox}[title=Nash equilibrium (NE)]
+Given a game with $N$ players, a \textbf{strategy profile} (the set of the strategies taken
+by each of the players) $(s^{(1)}, s^{(2)}, \ldots, s^{(N)})$ is a \textbf{Nash equilibrium}
+iff the payout of each player $i$ is such that
+\[
+\mathcal{P}^{(i)}(s^{(i)}, s^{(-i)}) \ge \mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)})
+\qquad \text{for every possible } \tilde{s}^{(i)},
+\]
+where $s^{(-i)}$ denotes the strategies of all players \emph{other than} $i$.
+\end{defnbox}
+
+\begin{keybox}[title=Meaning]
+The most widely used \textbf{solution concept}: in a NE, each player does the best she can
+\emph{given the strategies of all the other players}. Nobody gains by deviating alone.
+\end{keybox}
+
+
+\begin{defnbox}[title=Pure-strategy Nash equilibrium]
+A Nash equilibrium obtained when we restrict ourselves to the case in which all players adopt
+pure strategies (always play the same action): a profile in which the action of each player
+is the \textbf{best response} to the actions of the other players.
+\end{defnbox}
+
+\begin{exbox}[title=Finding pure-strategy NE by circling best responses]
+\begin{center}
+\begin{tabular}{c|cc}
+$1 \backslash 2$ & L & R \\ \hline
+U & (8,7) & (4,6) \\
+D & (6,5) & (7,8)
+\end{tabular}
+\end{center}
+\begin{itemize}
+  \item Player 1: if 2 moves Left, 1 should move Up; if 2 moves Right, 1 should move Down.
+  \item Player 2: if 1 moves Up, 2 should move Left; if 1 moves Down, 2 should move Right.
+\end{itemize}
+Circle each best response; the cells where both payouts are circled are the NE:
+\begin{center}
+\includegraphics[width=0.45\linewidth]{images/week01_01.png}
+\end{center}
+Two NE: $(U,L)$ and $(D,R)$.
+\end{exbox}
+
+\begin{warnbox}[title=Multiple equilibria]
+When a game has two equilibria, the theory cannot tell which one will be chosen.
+\end{warnbox}
+
+
+\section{Classical game 1: the Prisoner Dilemma}
+
+Developed at the RAND corporation in 1950 (an organization started immediately after WWII to
+develop research for military strategy and planning), as one of the first steps in thinking
+about cold war strategy.
+
+\begin{exbox}[title=The classic story]
+Two suspects of a crime are placed in different rooms and interrogated by the police. If
+both \textbf{cooperate (C)} with each other and stay silent, they each get 1 year of prison.
+If one \textbf{defects (D)} and denounces the other, who stays silent, the one denounced gets
+5 years and the denouncer walks away. If both defect, they both get 3 years.
+\begin{center}
+\begin{tabular}{c|cc}
+ & C & D \\ \hline
+C & (-1,-1) & (-5,0) \\
+D & (0,-5)  & (-3,-3)
+\end{tabular}
+\end{center}
+\end{exbox}
+
+\begin{keybox}[title=Why it is a dilemma]
+Each player strictly prefers to Defect no matter what the other does (\textbf{Defect is a
+``dominant strategy''}). Defect-Defect is the \textbf{only Nash Equilibrium}, and at the
+same time the outcome that maximizes social loss!
+\end{keybox}
+
+\begin{defnbox}[title=Prisoner Dilemma (general form)]
+Payouts can change, but we call ``Prisoner Dilemma'' any game of the form
+\begin{center}
+\begin{tabular}{c|cc}
+ & C & D \\ \hline
+C & $(X_2, Y_2)$ & $(X_4, Y_1)$ \\
+D & $(X_1, Y_4)$ & $(X_3, Y_3)$
+\end{tabular}
+\end{center}
+with $X_1 > X_2 > X_3 > X_4$ and $Y_1 > Y_2 > Y_3 > Y_4$.
+\end{defnbox}
+
+
+\begin{exbox}[title=Application: Coke-Pepsi advertising war]
+Without any advertising, each company earns \$5b/year. Each company can choose to spend
+\$2b/year on advertising. Advertising does not increase total sales, but if one company
+advertises while the other doesn't, it captures \$3b/year from the competitor.
+\begin{center}
+\begin{tabular}{c|cc}
+ & No Ad & Ad \\ \hline
+No Ad & (5,5) & (2,6) \\
+Ad    & (6,2) & (3,3)
+\end{tabular}
+\end{center}
+The companies end up in (Ad, Ad) with $(3,3)$, while the feasible outcome (No Ad, No Ad)
+would give $(5,5)$.
+\end{exbox}
+
+\begin{exbox}[title=Application: doping in sports]
+Same matrix (No Dop / Dop). Two professional athletes of similar ability compete in 10
+tournaments per year, winning on average 5 each. If only one of them takes the medication, he
+wins 8 of the 10 tournaments, leaving only 2 to the opponent; the cost in long-term health
+makes his final utility the same as winning only 6 tournaments and staying healthy. If both
+take it, they both win 5 tournaments each and pay the health cost (equivalent to 2
+tournaments).
+\end{exbox}
+
+\begin{exbox}[title=Application: is disarmament possible?]
+Two ``great powers'': is it possible to reach an agreement to dramatically reduce weapons?
+Who is going to enforce the agreement if one deviates? Deviating is the best course of action
+for each player, both to be able to ``strike first'' and to be able to defend itself.
+Unfortunately, disarmament is not a Nash Equilibrium.
+\end{exbox}
+
+
+\section{Classical game 2: Matching Pennies}
+
+\begin{exbox}[title=Matching Pennies]
+Two players choose Head or Tail. Player 1 wins 1 if the two choices match (2 Heads or 2
+Tails) and loses 1 otherwise. The other way around for Player 2: she wins 1 in case of
+mismatch and loses 1 in case of a match.
+\begin{center}
+\begin{tabular}{c|cc}
+ & H & T \\ \hline
+H & (1,-1) & (-1,1) \\
+T & (-1,1) & (1,-1)
+\end{tabular}
+\end{center}
+\end{exbox}
+
+\begin{defnbox}[title=Zero sum game]
+A game in which, in every outcome, what one player wins is exactly what the other loses
+(the payouts sum to zero), like Matching Pennies.
+\end{defnbox}
+
+\begin{warnbox}[title=No pure-strategy NE]
+At first sight, it looks like there is no Nash Equilibrium. What is true is that
+\textbf{there is no Nash Equilibrium in pure strategy}.
+\end{warnbox}
+
+
+\begin{propbox}[title=Mixed-strategy NE of Matching Pennies]
+Suppose Player 1 plays $H$ with probability $p_H^{(1)}$ (and $T$ with probability
+$1 - p_H^{(1)}$). Player 2's expected payouts:
+\begin{itemize}
+  \item plays $H$: $-p_H^{(1)} + (1 - p_H^{(1)}) = 1 - 2p_H^{(1)}$;
+  \item plays $T$: $p_H^{(1)} - (1 - p_H^{(1)}) = -1 + 2p_H^{(1)}$.
+\end{itemize}
+If $p_H^{(1)} > \frac12$, Player 2 should play $T$ with probability 1; if
+$p_H^{(1)} < \frac12$, he should play $H$ with probability 1. The only possibility to induce
+Player 2 to randomize is $p_H^{(1)} = \frac12$: he must be \textbf{indifferent} between his
+two actions. Same reasoning for Player 1's reaction to Player 2's strategy:
+\[
+\textbf{NE: both players play } H \textbf{ and } T \textbf{ with probability } \tfrac12.
+\]
+\end{propbox}
+
+\begin{keybox}[title=Logic of a mixed-strategy equilibrium]
+\begin{itemize}
+  \item At least one player plays a mixed strategy: she randomizes between at least two
+        actions.
+  \item To randomize between two actions, a player must be \textbf{indifferent} between
+        them, otherwise she would play the one with the higher expected payout.
+  \item In Matching Pennies, for Player 1 to randomize, Player 2 must play H/T with
+        probability 50\% each --- and for Player 2 to do so, he must also be indifferent
+        between H and T.
+  \item If both play H/T with probability 50\% each, both are indifferent: \textbf{both are
+        making an optimal choice} (they could not do anything better) $\rightarrow$ it is a
+        NE.
+\end{itemize}
+\end{keybox}
+
+\begin{exbox}[title=Real life: penalty kicks]
+The goalkeeper has a higher probability of stopping the ball if he jumps on the side where
+the ball is kicked (Left/Right); the kicker has a higher probability of scoring if he kicks
+on the opposite side. Chiappori, Levitt, Groseclose (2002): statistical study of actual
+penalty kicks, with three possible actions (Left/Middle/Right); finds evidence of
+randomization but also of player heterogeneity (some players prefer to kick on the left,
+others on the right). Obvious applications to other sports: tennis, baseball, etc.
+\end{exbox}
+
+
+\section{Classical game 3: Asymmetric Matching Pennies}
+
+\begin{exbox}[title=Asymmetric Matching Pennies]
+\begin{center}
+\begin{tabular}{c|cc}
+ & H & T \\ \hline
+H & (X,-X) & (-1,1) \\
+T & (-1,1) & (1,-1)
+\end{tabular}
+\end{center}
+$X$ is a big number, such as 1000 or 1 million. Player 1 might think: ``I'll play $H$:
+just in case Player 2 also plays $H$, I'll be rich (and if not, I lose just 1)''. But then
+Player 2 will always play $T$, so Player 1 loses 1 for sure; so Player 1 should play $T$ and
+win 1 for sure; then Player 2 will not play $T$ for sure\dots\ After all, also here
+\textbf{both players should randomize}.
+\end{exbox}
+
+\begin{propbox}[title=Mixed-strategy NE]
+In a mixed-strategy NE, \textbf{each player must be indifferent between $H$ and $T$}.
+\begin{itemize}
+  \item Player 2 indifferent, given $p_H^{(1)}$: $H$ gives
+        $-Xp_H^{(1)} + (1 - p_H^{(1)}) = 1 - (1+X)p_H^{(1)}$, $T$ gives
+        $p_H^{(1)} - (1 - p_H^{(1)}) = 2p_H^{(1)} - 1$; equal for
+        $p_H^{(1)} = \frac{2}{3+X}$.
+  \item Player 1 indifferent, given $p_H^{(2)}$: $H$ gives
+        $Xp_H^{(2)} - (1 - p_H^{(2)}) = -1 + (1+X)p_H^{(2)}$, $T$ gives
+        $-p_H^{(2)} + (1 - p_H^{(2)}) = 1 - 2p_H^{(2)}$; equal for
+        $p_H^{(2)} = \frac{2}{3+X}$.
+\end{itemize}
+\[
+s^{(1)} = s^{(2)} = \left(\frac{2}{3+X},\ 1 - \frac{2}{3+X}\right)
+\]
+The probability of the big gain for Player 1 (and big loss for Player 2) is
+$\left(\frac{2}{3+X}\right)^2$.
+\end{propbox}
+
+
+\section{Classical game 4: Split or Steal}
+
+\begin{exbox}[title=Split or Steal]
+\begin{center}
+\begin{tabular}{c|cc}
+ & Split & Steal \\ \hline
+Split & (1,1) & (0,2) \\
+Steal & (2,0) & (0,0)
+\end{tabular}
+\end{center}
+Main difference with the Prisoner Dilemma: if the opponent steals, I am
+\textbf{indifferent} between stealing or splitting (I get nothing in both cases).
+\end{exbox}
+
+\begin{propbox}[title=Equilibria]
+\textbf{Three pure-strategy Nash equilibria}: (Split, Steal), (Steal, Split) and
+(Steal, Steal). Which is more plausible? If I am uncertain about what the opponent will
+play, it's better to play Steal; if the opponent steals, I am more likely to want to
+``punish'' him.
+\end{propbox}
+
+\begin{exbox}[title=Split or Steal on British TV]
+The game is played in a show on British TV
+(\href{https://www.youtube.com/watch?v=S0qjK3TWZE8}{episode watched in class}). One player
+manages to steer the opponent toward Split by convincing him that he will play Steal! When
+the opponent knows you will play Steal, he will want to punish you; but if he is rational, he
+is indifferent between Split and Steal, so even a not fully credible promise of splitting the
+win outside the game can steer him toward Split.
+\end{exbox}
+
+\begin{warnbox}[title=Limits of the theory]
+``Fairness'' and ``promises'' are outside the scope of the theory.
+\end{warnbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Cooperative vs non-cooperative games; actions vs strategies; pure vs mixed
+        strategies.
+  \item Normal form representation of a game.
+  \item \textbf{Nash equilibrium}: nobody gains by deviating alone; pure-strategy NE found
+        by best responses, mixed-strategy NE found by indifference.
+  \item Classical games: Prisoner Dilemma, Matching Pennies, Asymmetric Matching Pennies,
+        Split or Steal.
+\end{itemize}
+\end{keybox}
+
+
+% =========================================================
+\chapter{Lecture 2 : Dominance and iterated elimination}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} A recap of NE on the Battle of the Sexes, the Beauty
+Contest game, \textbf{dominant} and \textbf{dominated} strategies, and a new solution
+concept: the \textbf{iterated elimination of dominated strategies}. \\
+\textbf{Why is it useful?} Discarding strategies that a rational player would never use
+simplifies --- and sometimes solves --- a game, but eliminating \emph{weakly} dominated
+strategies must be done with care.
+\end{rembox}
+
+\section{Recap: the Battle of the Sexes}
+
+\begin{exbox}[title=Battle of the Sexes]
+Two friends prefer to go out together than to go out alone. But Adam prefers to go to a
+soccer game and Bob prefers to go to the opera. They don't have phones so cannot communicate
+before deciding where to go.
+\begin{center}
+\begin{tabular}{c|cc}
+Adam $\backslash$ Bob & Soccer & Opera \\ \hline
+Soccer & (2,1) & (0,0) \\
+Opera  & (0,0) & (1,2)
+\end{tabular}
+\end{center}
+If Adam goes to soccer, also Bob prefers soccer; if Adam goes to the opera, also Bob prefers
+the opera (and the other way around). \textbf{Soccer-Soccer} and \textbf{Opera-Opera} are the
+two pure-strategy NE.
+\end{exbox}
+
+
+\begin{thmbox}[title=Indifference principle]
+In a game with $N$ actions, to adopt a mixed strategy
+$s^{(i)} = (p^{(1)}, p^{(2)}, \ldots, p^{(N)})$, a player must be \textbf{indifferent
+between all the actions to which the strategy assigns non-zero probability}. Otherwise, if
+one of these actions gave a lower expected payout than the others, the player would never
+adopt it.
+\end{thmbox}
+
+\begin{propbox}[title=Mixed-strategy NE of the Battle of the Sexes]
+\textbf{Bob indifferent.} Adam plays $s^{(A)} = (p_S^{(A)}, 1 - p_S^{(A)})$. Bob's expected
+payout is $p_S^{(A)} \times 1 + (1 - p_S^{(A)}) \times 0 = p_S^{(A)}$ at soccer and
+$p_S^{(A)} \times 0 + (1 - p_S^{(A)}) \times 2 = 2 - 2p_S^{(A)}$ at the opera: indifferent
+if $p_S^{(A)} = 2/3$. \\
+\textbf{Adam indifferent.} Bob plays $s^{(B)} = (p_S^{(B)}, 1 - p_S^{(B)})$. Adam's expected
+payout is $p_S^{(B)} \times 2 + (1 - p_S^{(B)}) \times 0 = 2p_S^{(B)}$ at soccer and
+$p_S^{(B)} \times 0 + (1 - p_S^{(B)}) \times 1 = 1 - p_S^{(B)}$ at the opera: indifferent
+if $p_S^{(B)} = 1/3$.
+\[
+s^{(A)} = (2/3, 1/3), \qquad s^{(B)} = (1/3, 2/3).
+\]
+The same game has both pure- and mixed-strategy NE.
+\end{propbox}
+
+
+\section{The Beauty Contest game}
+
+\begin{defnbox}[title=Beauty Contest game]
+\begin{itemize}
+  \item $N$ players, e.g.\ all the students in a class.
+  \item Each has to pick a number between 1 and 100.
+  \item The player whose number is closest to \textbf{2/3 of the average of all the numbers}
+        wins 1.
+  \item If $m > 1$ players pick the same number, which is the closest to 2/3 of the average,
+        they split the gain.
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title=Keynes' beauty contest]
+Concept introduced by Keynes: stock traders do not choose which stocks to buy and sell by
+naively thinking about their fundamental value, but by trying to guess how other people guess
+their value, which in turn is based on how they think other people guess it\dots\ His analogy
+is a newspaper contest in which entrants choose the six most attractive faces from a hundred
+photographs, and those who picked the most popular faces win. The point is not to pick the
+faces one finds the prettiest, nor those average opinion finds the prettiest, but to
+anticipate what average opinion expects average opinion to be (the ``third degree''), and
+some practice even higher degrees (\emph{General Theory of Employment, Interest and Money},
+1936).
+\end{rembox}
+
+
+\begin{propbox}[title=Levels of reasoning]
+\begin{itemize}
+  \item \textbf{\#1} Never play a number $> 67$: even if all the others choose 100, 2/3 of
+        the average will be $< 68$.
+  \item \textbf{\#2} If everybody else understood \#1, the highest they will ever play is
+        67, so never play a number $> 45$ (even if all the others play 67, 2/3 of the
+        average would be $< 45$).
+  \item \textbf{\#3} If everybody understood that everybody understood \#1, the highest they
+        will play is 45: never choose a number $> 30$.
+  \item \textbf{\#4} \ldots\ never play a number $> 20$; \textbf{\#5} $> 13$; \textbf{\#6}
+        $> 9$; \textbf{\#7} $> 6$; \textbf{\#8} $> 4$; \textbf{\#9} $> 3$; \textbf{\#10}
+        $> 2$; \textbf{\#11} $> 1$.
+\end{itemize}
+After 11 levels of reasoning: \textbf{you should play 1}. The \textbf{unique Nash
+equilibrium} is: everybody plays 1 and everybody shares the prize.
+\end{propbox}
+
+\begin{warnbox}[title=In the lab]
+Most lab experiments find that the winning number is usually between 10 and 20: people don't
+go through the 11 levels of reasoning and instead stop at level 4-5. If other people do not
+follow the reasoning, playing 1 is not the best strategy.
+\end{warnbox}
+
+
+\section{Dominant strategies}
+
+\begin{defnbox}[title=Strictly dominant strategy]
+For player $i$, a strategy $\tilde{s}^{(i)}$ is \textbf{strictly dominant} if it results in
+a strictly higher payout for player $i$ than any other strategy, \emph{no matter what
+strategy the other players adopt}:
+\[
+\mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)}) > \mathcal{P}^{(i)}(s^{(i)}, s^{(-i)}),
+\qquad \forall s^{(-i)}, \ \forall s^{(i)} \ne \tilde{s}^{(i)}.
+\]
+\end{defnbox}
+
+\begin{exbox}[title=Prisoner Dilemma]
+In the Prisoner Dilemma, D is strictly dominant for both players: against C, $0 > -1$;
+against D, $-3 > -5$.
+\end{exbox}
+
+
+\begin{defnbox}[title=Weakly dominant strategy]
+For player $i$, a strategy $\tilde{s}^{(i)}$ is \textbf{weakly dominant} if it results in a
+weakly higher payout for player $i$ than any other strategy, \emph{no matter what strategy
+the other players adopt}:
+\[
+\mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)}) \ge \mathcal{P}^{(i)}(s^{(i)}, s^{(-i)}),
+\qquad \forall s^{(-i)}, \ \forall s^{(i)}.
+\]
+\end{defnbox}
+
+\begin{exbox}[title=Split or Steal]
+There is no strictly dominant strategy. Steal is weakly dominant: against Split, $2 > 1$;
+against Steal, $0 = 0$.
+\end{exbox}
+
+
+\section{Dominated strategies}
+
+\begin{defnbox}[title=Strictly dominated strategy]
+For player $i$, a strategy $\bar{s}^{(i)}$ is \textbf{strictly dominated} if, for any
+strategy adopted by the other players, there is at least another strategy $\tilde{s}^{(i)}$
+that gives a strictly higher payout for Player $i$:
+\[
+\forall s^{(-i)} \ \exists \tilde{s}^{(i)} \ \text{s.t.} \
+\mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)}) > \mathcal{P}^{(i)}(\bar{s}^{(i)}, s^{(-i)}).
+\]
+\end{defnbox}
+
+\begin{exbox}[title={Example 1: $R$ is strictly dominated}]
+\begin{center}
+\begin{tabular}{c|ccc}
+ & L & M & R \\ \hline
+U & $(x_1,0)$ & $(x_2,3)$ & $(x_3,1)$ \\
+D & $(x_4,3)$ & $(x_5,0)$ & $(x_6,1)$
+\end{tabular}
+\end{center}
+The most general strategy for Player 1 is $s^{(1)} = (p_U^{(1)}, 1 - p_U^{(1)})$. If
+$p_U > 1/3$, $R$ is dominated by $M$; if $p_U < 2/3$, $R$ is dominated by $L$. For every
+strategy of Player 1 there is a better reply than $R$: \textbf{$R$ is strictly dominated}.
+\end{exbox}
+
+
+\begin{defnbox}[title=Weakly dominated strategy]
+$\bar{s}^{(i)}$ is \textbf{weakly dominated} iff
+\[
+\forall s^{(-i)} \ \exists \tilde{s}^{(i)} \ \text{s.t.} \
+\mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)}) \ge \mathcal{P}^{(i)}(\bar{s}^{(i)}, s^{(-i)}).
+\]
+\end{defnbox}
+
+\begin{exbox}[title={Example 2: $R$ is not dominated}]
+\begin{center}
+\begin{tabular}{c|ccc}
+ & L & M & R \\ \hline
+U & $(x_1,0)$ & $(x_2,3)$ & $(x_3,2)$ \\
+D & $(x_4,3)$ & $(x_5,0)$ & $(x_6,2)$
+\end{tabular}
+\end{center}
+If $p_U > 2/3$, $R$ is dominated by $M$, and if $p_U < 1/3$, $R$ is dominated by $L$.
+However, for $1/3 \le p_U \le 2/3$ strategy $R$ is an optimal strategy (strictly the best for
+$1/3 < p_U < 2/3$), hence $R$ is \textbf{not a dominated strategy}.
+\end{exbox}
+
+
+\section{Iterated elimination of dominated strategies}
+
+\begin{defnbox}[title=Iterated elimination of dominated strategies]
+A \textbf{solution concept} that allows to simplify (sometimes solve) a game. Idea: if a
+strategy is (strictly) dominated, I should never choose it, so the game should be
+equivalent if I discard this strategy altogether. Repeat on the reduced game.
+\end{defnbox}
+
+\begin{exbox}[title=Solving a game by iterated elimination]
+\begin{center}
+\begin{tabular}{c|ccc}
+ & L & M & R \\ \hline
+U & (1,0) & (1,2) & (0,1) \\
+D & (0,3) & (0,1) & (2,0)
+\end{tabular}
+\end{center}
+\begin{enumerate}
+  \item For Player 2, $R$ is dominated by $M$ ($2 > 1$, $1 > 0$): eliminate $R$.
+  \item Given that $R$ was discarded, for Player 1 $D$ is dominated by $U$ ($1 > 0$ against
+        $L$ and $M$): eliminate $D$.
+  \item Only row $U$ is left: Player 2 chooses $M$ ($2 > 0$).
+\end{enumerate}
+The game is greatly simplified: the NE is clearly $(U, M)$.
+\end{exbox}
+
+
+\begin{thmbox}[title=Strict elimination]
+Given an $N$-player game $G$, call $G_1$ the game obtained from $G$ after iterated
+elimination of one or more \textbf{strictly} dominated strategies.
+\begin{itemize}
+  \item If $(s^{(1)}, s^{(2)}, \ldots, s^{(N)})$ is a Nash equilibrium of $G$, it is a Nash
+        equilibrium of $G_1$.
+  \item If $G$ is finite and $(s^{(1)}, s^{(2)}, \ldots, s^{(N)})$ is a Nash equilibrium of
+        $G_1$, it is a Nash equilibrium of $G$.
+\end{itemize}
+\end{thmbox}
+
+
+\begin{thmbox}[title=Weak elimination]
+Consider a finite game $G$ and a game $G_1$ obtained from $G$ after iterated elimination of
+\textbf{weakly} dominated strategies. If $(s^{(1)}, s^{(2)}, \ldots, s^{(N)})$ is a Nash
+equilibrium of $G_1$, it is a Nash equilibrium of $G$.
+\end{thmbox}
+
+\begin{warnbox}[title=Weak elimination loses equilibria]
+Only some NE are preserved, and which ones \textbf{can depend on the order of elimination}.
+In Split or Steal, eliminating the weakly dominated Split keeps only one of the three
+equilibria: (Steal, Steal).
+\end{warnbox}
+
+\begin{exbox}[title=The order of elimination matters]
+\begin{center}
+\begin{tabular}{c|cc}
+ & L & R \\ \hline
+U & (5,1) & (4,0) \\
+M & (6,0) & (3,1) \\
+D & (6,4) & (4,4)
+\end{tabular}
+\end{center}
+Two NE: $(D,L)$ and $(D,R)$.
+\begin{itemize}
+  \item \textbf{Solution 1}: Player 1 eliminates $M$, weakly dominated by $D$; then Player 2
+        eliminates $R$, weakly dominated by $L$ (rows $U$, $D$ left). The unique NE of the
+        resulting game is $(D, L)$.
+  \item \textbf{Solution 2}: Player 1 eliminates $U$, weakly dominated by $D$; then Player 2
+        eliminates $L$, weakly dominated by $R$ (rows $M$, $D$ left). The unique NE of the
+        resulting game is $(D, R)$.
+\end{itemize}
+\end{exbox}
+
+
+\begin{propbox}[title=Beauty Contest and iterated elimination]
+The 11 levels of reasoning are an \textbf{iterated elimination of (weakly) dominated
+strategies}: everybody eliminates the choices $> 67$, which are weakly dominated; after this
+elimination the choices $> 45$ become weakly dominated, and so on. In the end we find the NE
+in which everybody plays 1, and everybody gets $1/N$ of the prize. Weak elimination could
+lose other equilibria, but it can be proved that this NE is the only one.
+\end{propbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item A mixed strategy requires indifference between all the actions it plays.
+  \item Strictly / weakly \textbf{dominant} and \textbf{dominated} strategies.
+  \item Iterated elimination of \textbf{strictly} dominated strategies keeps every NE (in a
+        finite game).
+  \item Iterated elimination of \textbf{weakly} dominated strategies keeps only some NE, and
+        which ones can depend on the order of elimination.
+\end{itemize}
+\end{keybox}
+
+
+% =========================================================
+\chapter{Lecture 3 : Sequential games and subgame-perfect equilibrium}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Games in which players make (one or multiple) choices
+\textbf{sequentially}, as in chess, represented as decision trees. \\
+\textbf{Why is it useful?} The Nash equilibrium is not fully satisfactory for sequential
+games: it can rely on \textbf{non-credible threats}. We refine it with the
+\textbf{subgame-perfect equilibrium}, found by \textbf{backward induction}.
+\end{rembox}
+
+\section{Sequential games}
+
+\begin{defnbox}[title=Sequential game]
+A sequential game needs to specify
+\begin{itemize}
+  \item the players;
+  \item the order of moves (which player moves at time 0, 1, 2\dots?);
+  \item the possible moves of each player at each of her decision points;
+  \item the information available to players throughout the game.
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Perfect information]
+A game in which, at each time 0, 1, 2, \ldots, each player knows the actions taken by the
+other players up to that time. This lecture assumes perfect information.
+\end{defnbox}
+
+
+\begin{defnbox}[title=Extensive form]
+Sequential games are best represented in \textbf{extensive form}, i.e.\ as \textbf{decision
+trees}: each node is a decision of one player, each branch one of her moves, and each leaf
+the payouts of the outcome.
+\end{defnbox}
+
+\begin{exbox}[title=The Ultimatum game]
+Player 1 has 3 coins, but needs to share them with Player 2. First, Player 1 makes an offer
+to Player 2: he can offer 1, 2 or 3 coins. Next, Player 2 can accept or reject the offer. If
+he accepts, he gets the $n$ (1, 2 or 3) coins offered and Player 1 keeps the rest. If Player
+2 rejects, nobody gets anything.
+\begin{center}
+\includegraphics[width=0.75\linewidth]{images/week03_01.png}
+\end{center}
+\end{exbox}
+
+
+\begin{defnbox}[title=Pure strategy (sequential game)]
+A pure strategy for Player $i$ in a sequential game of perfect information is a
+\textbf{contingent plan} that specifies an action at \textbf{each decision node} of Player
+$i$ --- even at the nodes that will not be reached.
+\end{defnbox}
+
+\begin{exbox}[title=Ultimatum game in normal form]
+A pure strategy for Player 1 is e.g.\ ``Offer 1''. A pure strategy for Player 2 is e.g.\
+``Reject if the offer is 1 or 2, and accept if the offer is 3''. Player 2 has eight pure
+strategies: `RRR' means Reject if offered 1, 2 or 3; `RAR' means Reject if offered 1, Accept
+if offered 2, Reject if offered 3.
+\begin{center}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{c|cccccccc}
+$1 \backslash 2$ & RRR & RRA & RAA & AAA & ARR & RAR & AAR & ARA \\ \hline
+Offer 1 & (0,0) & (0,0) & (0,0) & \underline{(2,1)} & \underline{(2,1)} & (0,0) & \underline{(2,1)} & \underline{(2,1)} \\
+Offer 2 & (0,0) & (0,0) & \underline{(1,2)} & (1,2) & (0,0) & \underline{(1,2)} & (1,2) & (0,0) \\
+Offer 3 & (0,0) & \underline{(0,3)} & (0,3) & (0,3) & (0,0) & (0,0) & (0,0) & (0,3)
+\end{tabular}
+\end{center}
+NE are defined exactly as for simultaneous-move games; the underlined cells are the many
+pure-strategy NE of the Ultimatum game.
+\end{exbox}
+
+
+\section{Non-credible threats}
+
+\begin{defnbox}[title=Non-credible threat]
+A threat of playing, at some decision node, an action that would not be optimal for the
+player once that node is actually reached.
+\end{defnbox}
+
+\begin{exbox}[title={Ultimatum game: (Offer 2, RAA)}]
+In the NE (Offer 2, RAA), Player 2 will not accept unless he is offered at least 2; Player 1
+knows it, and therefore offers 2. But this involves a non-credible threat by Player 2: that he
+will Reject (and therefore get nothing) if he is offered 1. Once Player 1 offers 1, it would
+be irrational for Player 2 to reject the offer and walk away with nothing!
+\end{exbox}
+
+
+\begin{defnbox}[title=Strategic entry deterrence]
+In business, any action taken by an existing business in a particular market that
+discourages potential entrants from entering into competition in that market. Such barriers
+to entry can include hostile takeovers, heavy spending on new product development, and
+predatory pricing.
+\end{defnbox}
+
+\begin{exbox}[title=The Entry-Deterrence game]
+\begin{center}
+\includegraphics[width=0.5\linewidth]{images/week03_02.png}
+\end{center}
+\begin{center}
+\begin{tabular}{c|cc}
+New Firm $\backslash$ Old Firm & Accept & Fight \\ \hline
+Not Enter & (0,0) & \underline{(0,0)} \\
+Enter     & \underline{(1,-1)} & (-3,-3)
+\end{tabular}
+\end{center}
+Two pure-strategy NE: (Not Enter, Fight) and (Enter, Accept). But (Not Enter, Fight) is again
+a \textbf{non-credible threat}: if the New Firm enters, fighting gives the Old Firm $-3$
+instead of $-1$.
+\end{exbox}
+
+
+\section{Sequential rationality}
+
+\begin{defnbox}[title=Sequential rationality]
+A player's equilibrium strategy should specify \textbf{optimal actions at every decision
+node} in a tree.
+\end{defnbox}
+
+\begin{exbox}[title=NE that are not sequentially rational]
+\begin{itemize}
+  \item Entry deterrence: Fight is a suboptimal decision in the node that starts after New
+        Firm chooses `Enter', so the NE (Not Enter, Fight) is not realistic.
+  \item Ultimatum game: the NE (Offer 2, RAA) --- and also (Offer 2, RAR) and
+        (Offer 3, RRA) --- do not satisfy sequential rationality either.
+\end{itemize}
+We need a refinement of the Nash equilibrium for sequential games that satisfies sequential
+rationality.
+\end{exbox}
+
+
+\section{Subgame-perfect equilibrium}
+
+\begin{defnbox}[title=Subgame]
+Given a game $G$, a \textbf{subgame} $G_1$ is the portion of the game $G$ starting at one of
+the decision nodes and containing all its successor nodes.
+\end{defnbox}
+
+\begin{exbox}[title=Subgames of the Ultimatum game]
+The whole game (yellow) and the three subgames starting at the decision nodes of Player 2
+(green).
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week03_03.png}
+\end{center}
+\end{exbox}
+
+
+\begin{defnbox}[title=Subgame-perfect equilibrium (SPE)]
+A \textbf{subgame-perfect equilibrium} of an extensive-form game $G$ is a strategy profile
+$s$ such that for any subgame $G'$, the restriction of $s$ to $G'$ is a Nash equilibrium for
+$G'$.
+\end{defnbox}
+
+\begin{propbox}[title=SPE $\subseteq$ NE]
+A subgame-perfect equilibrium is a special kind of Nash equilibrium (obvious, since $G$ is a
+subgame of itself). It removes the NE built on non-credible threats.
+\end{propbox}
+
+
+\begin{algbox}[title=Backward induction]
+The technique to obtain a subgame-perfect equilibrium:
+\begin{enumerate}
+  \item Find the Nash equilibria of the smallest subgames.
+  \item Replace each subgame with the payoff of (one of) its NE.
+  \item Repeat the procedure with the reduced game.
+\end{enumerate}
+\end{algbox}
+
+\begin{exbox}[title=Backward induction on the Entry-Deterrence game]
+The smallest subgame (after `Enter') has only one player, the Old Firm, who will choose
+`Accept': replace it with the payout of (Enter, Accept), $(1,-1)$. The reduced game has only
+itself as a subgame; it is a one-player game, and the New Firm will choose Enter.
+SPE: \textbf{(Enter, Accept)}.
+\end{exbox}
+
+\begin{exbox}[title=Backward induction on the Ultimatum game]
+In each of the smallest subgames there is only Player 2, and the only NE is `Accept'. After
+replacing them with their payout, we obtain the reduced game:
+\begin{center}
+\includegraphics[width=0.5\linewidth]{images/week03_04.png}
+\end{center}
+Only Player 1 needs to choose, and will choose `Offer 1'. SPE: \textbf{(Offer 1, AAA)}.
+\end{exbox}
+
+
+\begin{exbox}[title=A game with two SPE]
+New version of the Ultimatum game: Player 1 still has 3 coins, but can now also offer 0
+coins (so he can offer 0, 1, 2 or 3 coins).
+\begin{center}
+\includegraphics[width=0.75\linewidth]{images/week03_05.png}
+\end{center}
+In the subgame after `Offer 0', Player 2 gets 0 whether he accepts or rejects: `Accept' and
+`Reject' are two pure-strategy NE of this subgame. In the other three subgames, the only NE
+is `Accept'.
+\begin{itemize}
+  \item \textbf{Solution 1}: choose `Accept' in all 4 subgames. Reduced game: $(3,0)$,
+        $(2,1)$, $(1,2)$, $(0,3)$; Player 1 chooses `Offer 0' (payout 3).
+        SPE: \textbf{(Offer 0, AAAA)}.
+  \item \textbf{Solution 2}: choose `Reject' after `Offer 0' and `Accept' in the other 3
+        subgames. Reduced game: $(0,0)$, $(2,1)$, $(1,2)$, $(0,3)$; Player 1 chooses
+        `Offer 1' (payout 2). SPE: \textbf{(Offer 1, RAAA)}.
+\end{itemize}
+\end{exbox}
+
+
+\section{Threat credibility: the Cuban Missile Crisis (1962)}
+
+\begin{rembox}[title=Context]
+Threat credibility is very important in politics and international relations. The Cuban
+missile crisis (1962) was one of the most dramatic points in the Cold War, unfolding over 13
+days in which many feared a nuclear war might be approaching. The USA, led by President JFK,
+discovered that \textbf{the USSR was installing missiles in Cuba}, to deter US attacks to the
+island and more generally to provoke and threaten the USA. The USA discussed two main
+``punishments'': a \textbf{naval blockade to Cuba} and an \textbf{air-strike to destroy the
+missiles}. The USSR, hoping that the USA would just accept the missiles, made it known that
+both options would be acts of war that would \textbf{inevitably lead to a nuclear war}.
+\end{rembox}
+
+\begin{exbox}[title=Preferences over final outcomes (best first)]
+\textbf{USSR}: missiles installed and USA accepts without retaliation; status quo (no
+missiles); missiles, USA naval blockade, no war; missiles, USA air strike, no war; nuclear
+war. \\
+\textbf{USA}: status quo (no missiles); missiles, USA naval blockade, no war; missiles, USA
+air strike, no war; missiles, USA accepts without retaliation; nuclear war.
+\begin{center}
+\includegraphics[width=0.55\linewidth]{images/week03_06.png}
+\end{center}
+Different payouts preserving the same preference ranking would lead to the same NE and SPE.
+\end{exbox}
+
+\begin{propbox}[title=NE and SPE]
+USSR strategies: first move (N: Do Nothing, M: Missiles), then its answer (W: War, A:
+Accept) after an Air Strike, then after a Blockade. NE underlined:
+\begin{center}
+\begin{tabular}{c|ccc}
+USSR $\backslash$ USA & Air Strike & Blockade & Accept \\ \hline
+NWW & \underline{(4,5)} & \underline{(4,5)} & (4,5) \\
+NWA & \underline{(4,5)} & \underline{(4,5)} & (4,5) \\
+NAW & \underline{(4,5)} & \underline{(4,5)} & (4,5) \\
+NAA & \underline{(4,5)} & \underline{(4,5)} & (4,5) \\
+MWW & (1,1) & (1,1) & \underline{(5,2)} \\
+MWA & (1,1) & (3,4) & (5,2) \\
+MAW & (2,3) & (1,1) & (5,2) \\
+MAA & (2,3) & (3,4) & (5,2)
+\end{tabular}
+\end{center}
+Of all the NE, only \textbf{(NAA, Blockade)} is a SPE. The USSR was counting on the USA to
+believe that MWW would be credible, so that the realized NE would be (MWW, Accept).
+Eventually, the USSR agreed to remove the missiles, consistently with the (NAA, Blockade)
+SPE.
+\end{propbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Sequential games: extensive form, strategies as contingent plans.
+  \item The NE of sequential games can rely on \textbf{non-credible threats}.
+  \item \textbf{Sequential rationality}: optimal actions at every decision node.
+  \item \textbf{SPE}: a NE in every subgame; found by \textbf{backward induction}; a game can
+        have several SPE.
+\end{itemize}
+\end{keybox}
+
+
+% =========================================================
+\chapter{Lecture 4 : Backward induction paradoxes and Bayesian games}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} More sequential games (pirate game, centipede, dollar
+auction) showing that \textbf{backward induction can lead to unrealistic and unintuitive
+solutions}; then \textbf{games of incomplete information}, also called \textbf{Bayesian
+games}. \\
+\textbf{Why is it useful?} It shows the limits of the SPE, and how to model players with
+private information about themselves.
+\end{rembox}
+
+\section{The pirate game}
+
+\begin{exbox}[title=Rules]
+Captain A proposes how to split 100 coins between the pirates A, B, C, D, E. If at least
+\textbf{half} the pirates (3 in this case, including himself) vote yes, the vote passes. If it
+does not pass, A is killed and B becomes captain and makes a new proposal, that needs to be
+voted by at least half (2 in this case) of the remaining pirates, otherwise B is killed and C
+becomes captain\dots\ A pirate needs to be \textbf{strictly better off} with the proposed plan
+than in the continuation of the game to vote yes.
+\end{exbox}
+
+\begin{propbox}[title=SPE by backward induction]
+Coins of (A, B, C, D, E), ``--'' for a pirate already killed:
+\begin{itemize}
+  \item t=4, D and E left: D's own vote is half of 2, D keeps everything:
+        $(-, -, -, 100, 0)$.
+  \item t=3, C, D, E: C needs 2 votes; E gets 0 at t=4, so 1 coin makes him strictly better
+        off: $(-, -, 99, 0, 1)$.
+  \item t=2, B, C, D, E: B needs 2 votes; D gets 0 at t=3, 1 coin buys his vote:
+        $(-, 99, 0, 1, 0)$.
+  \item t=1, all five: A needs 3 votes; C and E get 0 at t=2, 1 coin each:
+        $(98, 0, 1, 0, 1)$.
+\end{itemize}
+Captain A is not thrown in the ocean and keeps \textbf{98 coins}.
+\end{propbox}
+
+
+\section{The centipede game}
+
+\begin{exbox}[title=The centipede game]
+Players 1 and 2 move in turn and can Continue (C) or Stop (S). In each period, the total
+payout (sum of the payouts of Player 1 and Player 2) increases by 2 units: one would think
+players want to continue playing as long as possible.
+\begin{center}
+\includegraphics[width=0.8\linewidth]{images/week04_01.png}
+\end{center}
+\end{exbox}
+
+\begin{propbox}[title=Unique SPE]
+At the last node, it's optimal for Player 2 to stop. At each node, knowing that at the next
+node the other player will stop, the player who moves finds it optimal to stop. The unique
+SPE has each player quitting at every node: Player 1 stops at the first node, with payout
+\textbf{(2,0)} --- a lost opportunity to gain a total of up to 202!
+\end{propbox}
+
+\begin{warnbox}[title=Is backward induction realistic?]
+People asked to play this game in a lab typically do not quit in the first stages. They have a
+higher tendency to collaborate than predicted: if both continue, their payout increases, so
+they take the risk to continue, which pays off if the other player continues too. Unlike the
+Prisoner Dilemma, one player has an incentive to cooperate if the other player cooperates.
+\end{warnbox}
+
+
+\section{The dollar auction game}
+
+How much would you pay to get one dollar? When people play this game in lab experiments,
+they end up paying much more than a dollar!
+
+\begin{defnbox}[title=Dollar auction (finite horizon)]
+\begin{itemize}
+  \item Players: 1 and 2. Player 1 starts and can decide to bid or stay out. If she stays
+        out, the game is over and everybody gets 0. Otherwise she bids 10 cents.
+  \item Then at each period, the player that did not play last period can decide to quit or
+        outbid the other player by 5 cents.
+  \item When a player quits, the other player gets the dollar, but \textbf{both players need
+        to pay their highest bid}.
+  \item If no player quit before, the game ends when one player's bid reaches \$10.
+\end{itemize}
+\end{defnbox}
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{images/week04_03.png}
+\end{center}
+
+
+\begin{propbox}[title=SPE in finite horizon]
+The longer the game continues, the worse off is the total payout. From the end:
+\begin{itemize}
+  \item T=199 (last period): Player 1 is sure to get the dollar if he bids, so by bidding he
+        gains \$0.90 for sure (relative to not bidding).
+  \item T=198: Player 2 quits for sure: if he bids, Player 1 bids again at T=199 and gets the
+        dollar, so bidding loses \$0.10 for sure.
+  \item T=197: Player 1 bids for sure, since Player 2 quits at T=198 (gain \$0.90).
+  \item T=196: Player 2 quits for sure, since Player 1 bids at T=197 (saves \$0.10).
+  \item \ldots\ same reasoning until the beginning of the game.
+\end{itemize}
+SPE: Player 1 bids at every one of his decision nodes, Player 2 quits at every one of his.
+Player 1 bids \$0.10 at T=1, Player 2 quits at T=2: payout \textbf{(0.90, 0)}.
+\end{propbox}
+
+\begin{exbox}[title=New version: the game ends when a bid exceeds \$10]
+Then the last player (if nobody quits before) is Player 2, when he bids \$10.05. From the
+end: Player 2 continues in the last period (T=200), so Player 1 quits at T=199, so Player 2
+continues at T=198\dots\ SPE: Player 2, with the advantage of being the last, always
+continues, and Player 1 always quits. Since Player 1 starts, he will not even enter the
+game: the payout is \textbf{(0,0)}.
+\end{exbox}
+
+
+\begin{defnbox}[title=Sunk cost]
+A cost already committed, that cannot be recovered whatever happens next: it should not
+affect the continuation of the game.
+\end{defnbox}
+
+\begin{rembox}[title=Infinite horizon]
+In the finite game, one player is sure to be the one who bids in the ``final period'', so he
+is sure to win if nobody quits, and the other player stays out from the beginning. What if
+there is no final time, and the auction continues until somebody drops out? Player 1 moves in
+every odd period, Player 2 in every even period. If nobody quits between $t$ and $t+2$,
+\textbf{nothing has changed}, except that both players have committed to pay 10c more than at
+$t$: a sunk cost.
+\end{rembox}
+
+\begin{propbox}[title=Stationary strategies]
+Each player quits or continues with the same probability at each of her decision nodes. At a
+node where Player $i$ has already committed to pay $x$, her expected payout $P_i(x)$ is,
+if she continues,
+\[
+P_i(x) =
+\begin{cases}
+-0.1 + P_i(x) & \text{if Player } -i \text{ continues} \\
+-x + 0.9 & \text{if Player } -i \text{ quits}
+\end{cases}
+\]
+and if she quits,
+\[
+P_i(x) = -x.
+\]
+If Player $-i$ always continues, $P_i(x) = -\infty$ $\rightarrow$ optimal to quit. If Player
+$-i$ always quits, optimal to continue.
+\end{propbox}
+
+
+\begin{propbox}[title=Mixed strategies]
+For one player to randomize, she must be indifferent between quit and continue, which is only
+possible if the other player also randomizes. If Player $-i$ continues with probability $q$:
+\[
+P_i(x; C) = q(-0.1 + P_i(x)) + (1-q)(0.9 - x), \qquad P_i(x; Q) = -x.
+\]
+Player $i$ is indifferent if the two payouts are the same: $q = 0.9$.
+\end{propbox}
+
+\begin{keybox}[title={Three NE, one survives the finite horizon}]
+NE: (Quit, Continue), (Continue, Quit) and $((0.9C, 0.1Q), (0.9C, 0.1Q))$. Only
+(Continue, Quit) survives if the game has a finite horizon --- even if the final time is after
+1 million periods and no player would ever want to get there! A problematic feature of
+backward induction.
+\end{keybox}
+
+\begin{exbox}[title=In the lab]
+People continue to bid without problem until the highest bid reaches \$1. Afterwards they
+start to feel uncomfortable but often continue to outbid each other for a while. Typically
+the dollar ends up being sold for \$3 (plus almost \$3 paid by the second bidder): the concept
+of sunk cost is difficult to digest for non-experienced players.
+\end{exbox}
+
+
+\section{Games of incomplete information}
+
+\begin{rembox}[title=Beyond common knowledge]
+So far, everything about the game was \textbf{common knowledge}: who the players are, their
+preferences, the payouts. But players might have private information about their own payout,
+their ``type'' or preferences, etc.
+\end{rembox}
+
+\begin{defnbox}[title=Bayesian game]
+A \textbf{simultaneous-move game of incomplete information}, defined by
+\begin{itemize}
+  \item the players;
+  \item an action set for each player;
+  \item possible types $\theta_i$ for each player $i$, and a probability distribution
+        $p(\theta_i)$ over player $i$'s types.
+\end{itemize}
+A pure strategy is a plan of action \textbf{for each type of player}.
+\end{defnbox}
+
+
+\begin{defnbox}[title=Bayesian Nash equilibrium (BNE)]
+A strategy profile $(s_1(\theta_1), s_2(\theta_2), \ldots, s_N(\theta_N))$ is a
+\textbf{Bayesian Nash equilibrium} of a Bayesian game with $N$ players iff, for each player
+$i$, her \textbf{expected payout} using strategy $i$ is higher than or equal to her expected
+payout using any of the other available strategies, keeping fixed the strategies of the other
+players, which \textbf{depend on their types}:
+\[
+E[\mathcal{P}_i(s_i(\theta_i), s_{-i}(\theta_{-i}) | \theta_i)] \ge
+E[\mathcal{P}_i(\tilde{s}_i(\theta_i), s_{-i}(\theta_{-i}) | \theta_i)],
+\]
+the expected value being taken over all possible types of the other players.
+\end{defnbox}
+
+
+\section{Public good and free riding}
+
+\begin{defnbox}[title=Public good game]
+Two players can work (W) or not work (N) to produce a public good, that would give utility 1
+to both. If at least one player works, the public good is available for both; if nobody works,
+it is not. Working costs $c_1$ to Player 1 and $c_2$ to Player 2.
+\begin{center}
+\begin{tabular}{c|cc}
+$1 \backslash 2$ & W & N \\ \hline
+W & $(1-c_1, 1-c_2)$ & $(1-c_1, 1)$ \\
+N & $(1, 1-c_2)$ & $(0,0)$
+\end{tabular}
+\end{center}
+\end{defnbox}
+
+\begin{exbox}[title=Two types of Player 2]
+$c_1 = 0.5$, known to everybody. $c_2$ is known to Player 2 but not to Player 1: it is 0.2
+with probability $p$ (\textbf{Efficient} type) and 1.2 with probability $1-p$
+(\textbf{Inefficient} type). \textbf{The value of $p$ is common knowledge.}
+\begin{center}
+\begin{tabular}{c|cc}
+\multicolumn{3}{c}{prob $p$} \\
+$1 \backslash$ 2E & W & N \\ \hline
+W & (0.5,0.8) & (0.5,1) \\
+N & (1,0.8) & (0,0)
+\end{tabular}
+\qquad
+\begin{tabular}{c|cc}
+\multicolumn{3}{c}{prob $(1-p)$} \\
+$1 \backslash$ 2I & W & N \\ \hline
+W & (0.5,-0.2) & (0.5,1) \\
+N & (1,-0.2) & (0,0)
+\end{tabular}
+\end{center}
+`Work' is a \textbf{dominated} strategy for the Inefficient type of Player 2.
+\end{exbox}
+
+
+\begin{propbox}[title=Pure-strategy BNE]
+\textbf{Efficient Player 2 works, Inefficient does not.} Player 1 gets $\mathcal{P}_1 = 0.5$
+for sure if he works; if he does not, he gets 1 if Player 2 works (E type) and 0 otherwise:
+$\mathcal{P}_1 = p \times 1 + (1-p) \times 0 = p$. So Player 1 works if $p < 0.5$ and does not
+work if $p > 0.5$ (indifferent if $p = 0.5$).
+\begin{itemize}
+  \item For $p \ge 0.5$, Player 1 may not work; knowing this, Player 2 works when he is of
+        type E: \textbf{$(N, WN)$ is a BNE} (N for Player 1, W for Player 2 of type E, N for
+        type I).
+  \item For $p < 0.5$, Player 1 works, but then Player 2 does not work even if efficient:
+        not a BNE.
+\end{itemize}
+\textbf{Player 2 never works.} Player 1 gets $1 - c_1 = 0.5$ if he works and 0 if not: he works
+regardless of $p$, and Player 2 then prefers not to work: \textbf{$(W, NN)$ is a BNE}.
+\begin{itemize}
+  \item $p < 0.5$: unique pure-strategy BNE $(W, NN)$.
+  \item $p \ge 0.5$: two pure-strategy BNE, $(W, NN)$ and $(N, WN)$.
+\end{itemize}
+\end{propbox}
+
+
+\section{Harsanyi's representation}
+
+\begin{rembox}[title=Harsanyi's idea]
+Imagine that ``Efficient'' and ``Inefficient'' are two states of the same person (e.g.\
+depending on whether the player slept well the previous night). \textbf{Nature} is a third
+player who moves first and draws the type of Player 2 (prob $p$ Efficient, prob $(1-p)$
+Inefficient). Player 2 needs a strategy for the two possible states (e.g.\ ``Work if
+efficient, Not Work if Inefficient'') that maximizes his \textbf{ex-ante expected payout}.
+\end{rembox}
+
+\begin{defnbox}[title=Harsanyi representation]
+Collapses all the payout tables contingent on the players' types into \textbf{one table},
+whose columns are the strategies of Player 2 conditional on his type (`WN' = ``Work if
+efficient, Not Work if Inefficient''). The payout of $(A_1, A_2A_2')$ is $p$ times the payout
+of $(A_1, A_2)$ in the table of the Efficient Player 2, plus $(1-p)$ times the payout of
+$(A_1, A_2')$ in the table of the Inefficient Player 2.
+\end{defnbox}
+
+\begin{exbox}[title=Public good game]
+\begin{center}
+\small
+\begin{tabular}{c|cccc}
+$1 \backslash 2$ & WN & NN & NW & WW \\ \hline
+W & (0.5, 1-0.2p) & (0.5, 1) & (0.5, 1.2p-0.2) & (0.5, p-0.2) \\
+N & (p, 0.8p) & (0,0) & (1-p, -0.2(1-p)) & (1, p-0.2)
+\end{tabular}
+\end{center}
+After elimination of the dominated strategy W for the Inefficient Player 2, only WN and NN
+remain:
+\begin{center}
+\begin{tabular}{c|cc}
+$1 \backslash 2$ & WN & NN \\ \hline
+W & (0.5, 1-0.2p) & (0.5, 1) \\
+N & (p, 0.8p) & (0,0)
+\end{tabular}
+\end{center}
+Solving it the standard way gives the same pure-strategy equilibria as before: $(W, NN)$ if
+$p < 0.5$, $(W, NN)$ and $(N, WN)$ for $p > 0.5$.
+\end{exbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Backward induction can lead to unrealistic solutions (centipede, dollar auction).
+  \item \textbf{Sunk costs} should not affect the continuation of a game.
+  \item \textbf{Bayesian games}: players have types; a strategy is a plan for each type;
+        \textbf{BNE} compares expected payouts over the types of the others.
+  \item \textbf{Harsanyi}: Nature draws the types; one table of type-contingent strategies.
+\end{itemize}
+\end{keybox}
+
+
+% =========================================================
+\chapter{Lecture 5 : Braess paradox, continuum of types, conditional probability}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} A real-world game theory paradox (the \textbf{Braess
+paradox}) and why every such network has a pure-strategy NE; back to Bayesian games with a
+\textbf{continuum of types}; and \textbf{conditional (Bayesian) probabilities}, in
+preparation for the next lecture. \\
+\textbf{Why is it useful?} Selfish choices can make everybody worse off when an option is
+added; and updating probabilities with new information is the basis of reasoning about the
+types of the others.
+\end{rembox}
+
+\section{The Braess paradox}
+
+\begin{defnbox}[title=Braess paradox]
+In an $N$-player, simultaneous-move game (complete information) modeling a transportation
+network, \textbf{adding a new, very fast route can increase traffic and transportation time
+for everybody}.
+\end{defnbox}
+
+\begin{exbox}[title=Real-world cases]
+\begin{itemize}
+  \item \textbf{Stuttgart, 1969}: shortly after D.\ Braess published his theory, the city
+        built a highly efficient new road segment downtown. Traffic immediately ground to a
+        halt; when the city closed the new section, traffic returned to normal.
+  \item \textbf{NYC, 1990}: 42nd street, one of Manhattan's busiest crosstown arteries, closed
+        on ``Earth day''. Media warned of a ``traffic apocalypse'', but the surrounding
+        gridlock dropped drastically and traffic moved faster.
+  \item \textbf{Seoul, 2003}: the destruction of a six-lane highway to build a park improved
+        travel time into and out of the city; traffic volume stayed roughly the same.
+\end{itemize}
+\end{exbox}
+
+
+\begin{exbox}[title=Initial situation]
+\begin{center}
+\includegraphics[width=0.45\linewidth]{images/week05_01.png}
+\end{center}
+\textbf{N = 4000 cars} (players), two \textbf{directed} routes from A to B. The travel time on
+an edge $e$ is a function of its number of cars, $T_e = T_e(x)$, and the payout of each car is
+$-T_e(x)$: each car \textbf{minimizes} its travel time.
+\end{exbox}
+
+\begin{propbox}[title=NE before the new route]
+All cars on the same route is not a NE: if all go through C (AC+CB), travel time is
+$4000/100 + 45 = 85$ minutes, and a car would switch to AD+DB ($1/100 + 45 = 45.01$). Since
+all cars are identical, different cars take different routes only if travel time is the same
+on both routes (in the limit $N \to \infty$, where a single car cannot affect the travel time
+of a route). \textbf{2000 cars on each route is a (pure-strategy) NE}, with travel time
+$2000/100 + 45 = 65$ minutes. With an odd number of cars, e.g.\ 7 (3 on AC+CB, 4 on AD+DB), it
+is still a NE: for a car on AD+DB, switching to AC+CB leaves its travel time unchanged.
+\end{propbox}
+
+
+\begin{exbox}[title=A superfast edge CD is added]
+\begin{center}
+\includegraphics[width=0.45\linewidth]{images/week05_02.png}
+\end{center}
+CD can only be used from C to D. Three routes from A to B: AC+CB, AD+DB and AC+CD+DB.
+\end{exbox}
+
+\begin{propbox}[title=The only NE is worse for everybody]
+\begin{itemize}
+  \item Everybody on AC+CB, or everybody on AD+DB, is still not a NE.
+  \item Everybody on AC+CD+DB: $4000/100 + 0 + 4000/100 = 80$ minutes. Switching to AC+CB
+        or to AD+DB gives $4000/100 + 45 = 85$: \textbf{it is a NE}.
+  \item Half on AC+CB, half on AD+DB (65 minutes) is no longer a NE: one car switching to
+        AC+CD+DB would travel $2001/100 + 0 + 1999/100 \simeq 40$ minutes.
+  \item Whatever the others do, leaving AC+CD+DB means replacing an edge with travel time
+        $x/100$ (at most 40) by an edge with travel time 45.
+\end{itemize}
+\textbf{AC+CD+DB is the only NE}: 80 minutes, 15 minutes longer than before the route was
+added.
+\end{propbox}
+
+
+\section{Existence of a pure-strategy NE in every network}
+
+\begin{defnbox}[title=Potential energy]
+The potential energy of an edge $e$ when $x_e$ cars travel on it is
+\[
+E_e(x_e) = T_e(1) + T_e(2) + \ldots + T_e(x_e),
+\]
+and the potential energy of a network $\mathcal{N}$ is the sum over all its edges:
+\[
+E_{\mathcal{N}} = \sum_{e \in \mathcal{N}} E_e(x_e).
+\]
+\end{defnbox}
+
+\begin{warnbox}[title=Not the total travel time]
+Potential energy is different from the aggregate travel time on an edge (total time spent on
+it by the cars traveling on it), which is $x\,T_e(x)$.
+\end{warnbox}
+
+
+\begin{propbox}[title=A car leaving or entering the network]
+If one single car leaves the network, the potential energy decreases by \textbf{exactly the
+traveling time of this car}. E.g.\ 3 cars, one on AC+CB and 2 on AD+DB:
+\[
+E_{\mathcal{N}} = T_{AC}(1) + T_{CB}(1) + (T_{AD}(1) + T_{AD}(2)) + (T_{DB}(1) + T_{DB}(2)).
+\]
+If one car leaves AD+DB, $E_{\mathcal{N}} = T_{AC}(1) + T_{CB}(1) + T_{AD}(1) + T_{DB}(1)$:
+the difference $T_{AD}(2) + T_{DB}(2)$ is that car's traveling time. If it re-enters on
+AC+CB,
+\[
+E_{\mathcal{N}} = (T_{AC}(1) + T_{AC}(2)) + (T_{CB}(1) + T_{CB}(2)) + T_{AD}(1) + T_{DB}(1):
+\]
+the potential energy increases by $T_{AC}(2) + T_{CB}(2)$, its new traveling time.
+\end{propbox}
+
+\begin{thmbox}[title=Every network has a pure-strategy NE]
+When one car switches to a better route (decreasing its traveling time), \textbf{the potential
+energy decreases}. So a (pure-strategy) Nash equilibrium corresponds to a \textbf{minimum of
+potential energy}. There is only a finite number of configurations, hence necessarily a
+minimum of potential energy, and so \textbf{necessarily a pure-strategy NE}.
+\end{thmbox}
+
+\begin{algbox}[title=Finding a NE for an arbitrary network]
+\begin{enumerate}
+  \item Start from an arbitrary configuration (strategy profile), compute the potential
+        energy.
+  \item Consider all possible changes of strategy \textbf{for 1 player}. If any change
+        decreases the potential energy, update the configuration.
+  \item Stop when no favorable change is found: this is the NE, and the minimum of potential
+        energy.
+\end{enumerate}
+\end{algbox}
+
+
+\section{Public good with a continuum of types}
+
+\begin{rembox}[title=Recap]
+The free riding game of Lecture 4 (Bayesian game, two types of Player 2, Harsanyi
+representation) is solved again in this lecture, with the same results. Now: what if $c_1$
+and $c_2$ can take a \textbf{continuum of values}?
+\end{rembox}
+
+\begin{defnbox}[title={Uniform distribution on $[0,2]$}]
+$c_1$ and $c_2$ are \textbf{uniformly distributed in the interval $[0,2]$}: the probability
+that each of them is between $x_1$ and $x_2 \in [0,2]$ is the length of the interval
+$|x_1 - x_2|$ divided by the total length of the domain, 2.
+\begin{center}
+\includegraphics[width=0.55\linewidth]{images/week05_03.png}
+\end{center}
+\end{defnbox}
+
+\begin{defnbox}[title=Threshold strategy]
+Player $i$ works if her cost is below a \textbf{threshold} $T_i^*$ (not necessarily the same
+for the two players). It is reasonable: with a low cost she works, with a high cost she does
+not --- and no player would ever work if her cost is above 1.
+\end{defnbox}
+
+
+\begin{propbox}[title=Equilibrium thresholds]
+Suppose Player 2's threshold is $T_2^*$. If Player 1 works, her payout is
+$\mathcal{P}_1^W = 1 - c_1$; if she does not, her expected payout is 1 times the probability
+that Player 2 works, i.e.\ that $c_2 < T_2^*$:
+\[
+\mathcal{P}_1^N = \frac{T_2^*}{2}.
+\]
+Player 1 works if $\mathcal{P}_1^W > \mathcal{P}_1^N$, hence $T_1^* = 1 - \frac{T_2^*}{2}$.
+The same way, Player 2's best response is $T_2^* = 1 - \frac{T_1^*}{2}$. The solution is
+\[
+T_1^* = T_2^* = \frac{2}{3}.
+\]
+\end{propbox}
+
+\begin{exbox}[title=Challenge: the game played two days in a row]
+Each day, each player decides whether or not to work, with the same payout matrix; the costs
+$c_1$ and $c_2$ are known only to the respective player, but each player's cost is \textbf{the
+same on both days}. Would you use the same strategy on both days? On day 2 you have more
+information: if my ``opponent'' worked on day 1, her cost is likely to be low, so she is also
+more likely to work on day 2, and my threshold for working is lower\dots\ And on day 1, would
+you behave the same as in the 1-period game?
+\end{exbox}
+
+
+\section{Conditional (Bayesian) probabilities}
+
+\begin{defnbox}[title=Conditional probability]
+The probability of an event A, conditional on an event B: if B occurs, what is the
+probability that A also occurs? Bayes formula:
+\[
+Prob(A|B) = \frac{Prob(A \& B)}{Prob(B)}.
+\]
+\end{defnbox}
+
+\begin{defnbox}[title=Bayesian inference]
+A rule to \textbf{update probabilities when new information becomes available}.
+\end{defnbox}
+
+
+\begin{exbox}[title={Example 1: uniform variable}]
+$x \sim \mathcal{U}([0,1])$. What is the probability that $x > 0.75$ (the
+\emph{unconditional probability})? You then learn that $x > 0.5$: how do you update the
+probability that $x > 0.75$ (the \emph{conditional probability})?
+\begin{center}
+\includegraphics[width=0.55\linewidth]{images/week05_04.png}
+\end{center}
+\textbf{Solution} (not on the slides): $Prob(x > 0.75) = 0.25$ and
+$Prob(x > 0.75 \,|\, x > 0.5) = \frac{0.25}{0.5} = 0.5$.
+\end{exbox}
+
+\begin{exbox}[title={Example 2: two children}]
+X has two children. What is the probability that she has (at least) a girl? You ask her: do
+you have a boy? She says yes. What is now the probability that she also has a girl?
+(a.\ 1/2, b.\ 1/3, c.\ 2/3) \\
+\textbf{Solution} (not on the slides): BB, BG, GB, GG are equally likely, so
+$Prob(\text{girl}) = 3/4$, and
+$Prob(\text{girl} \,|\, \text{boy}) = \frac{2/4}{3/4} = \frac{2}{3}$: answer c.
+\end{exbox}
+
+\begin{exbox}[title={Example 3: medical test}]
+In a population, 1\% of the people have a disease. A test has accuracy 95\%: whether or not
+you have the disease, it gives the truth with probability 95\% and the opposite with
+probability 5\%. Before the test, what is the probability that you have the disease? After a
+positive result? (a.\ more than 90\%, b.\ between 30\% and 90\%, c.\ less than 30\%).
+Understand why with 2000 people who all get tested. \\
+\textbf{Solution} (not on the slides): before the test, 1\%. Out of 2000 people, 20 are sick
+and 1980 healthy; $5\% \times 1980 = 99$ healthy people and $95\% \times 20 = 19$ sick people
+test positive, so
+\[
+Prob(\text{sick} \,|\, +) = \frac{19}{19 + 99} = \frac{19}{118} \approx 16\%: \text{ answer c.}
+\]
+\end{exbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item \textbf{Braess paradox}: adding a superfast route moves the only NE from 65 to 80
+        minutes.
+  \item Every such network has a pure-strategy NE: a minimum of \textbf{potential energy}.
+  \item \textbf{Continuum of types}: threshold strategies, $T_1^* = T_2^* = 2/3$.
+  \item \textbf{Conditional probability}: $Prob(A|B) = Prob(A \& B)/Prob(B)$, the rule to
+        update beliefs with new information.
+\end{itemize}
+\end{keybox}
+
+\end{document}

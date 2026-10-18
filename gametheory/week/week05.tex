@@ -1,0 +1,900 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Game Theory and Strategic Decisions}}
+\fancyhead[C]{\small Braess Paradox, Bayesian Games, Conditional Probability}
+\fancyhead[R]{\small Week 05 --- 05-11/10/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+% DEFINITION - blue
+\newtcolorbox{definition}{
+enhanced,
+unbreakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+% IMPORTANT - pink
+\newtcolorbox{important}{
+enhanced,
+unbreakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+% FORMULAS - green
+\newtcolorbox{formula}{
+enhanced,
+unbreakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+% WARNING - orange
+\newtcolorbox{warning}{
+enhanced,
+unbreakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+% EXAMPLE - purple
+\newtcolorbox{example}{
+enhanced,
+unbreakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+% SUMMARY - orange
+\newtcolorbox{summary}{
+enhanced,
+unbreakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+%\footnotesize   --> To reduce the size of the text
+
+\thispagestyle{fancy}
+
+
+
+\begin{multicols}{2}
+
+
+
+%=========================================================
+\section{Today's Agenda}
+
+
+\begin{itemize}
+
+\item Game theory real world paradoxes: the \textbf{Braess paradox}.
+
+\item Back to simultaneous-move games of incomplete information: the \textbf{free riding
+game}.
+
+\item In preparation to next lecture: \textbf{conditional (Bayesian) probability} with
+examples.
+
+\end{itemize}
+
+
+%=========================================================
+\section{The Braess Paradox}
+
+
+\begin{definition}
+
+\textbf{BRAESS PARADOX}
+
+$N$-player, simultaneous-move game (complete information) modeling a transportation network.
+
+Paradox: \textbf{adding a new, very fast route to a transportation network can increase
+traffic and transportation time for everybody}.
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Real-world cases}
+
+\begin{itemize}
+
+\item \textbf{Stuttgart, 1969}: shortly after D.\ Braess published his theory, the city
+invested heavily in its downtown road network by building a highly efficient new road
+segment. Traffic immediately ground to a halt. When the city closed the newly built road
+section, traffic immediately returned to normal.
+
+\item \textbf{NYC, 1990}: 42nd street (one of Manhattan's busiest crosstown arteries) closed
+on ``Earth day''. Media outlets warned of a ``traffic apocalypse'', but when the street
+closed, the surrounding gridlock dropped drastically, and traffic moved faster.
+
+\item \textbf{Seoul, South Korea, 2003}: the destruction of a six-lane highway to build a
+park actually improved travel time into and out of the city. Traffic volume stayed roughly
+the same before and after.
+
+\end{itemize}
+
+\end{example}
+
+
+
+%=========================================================
+\section{Braess -- Initial Situation}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.7\linewidth
+]{../images/week05_01.png}
+
+\end{center}
+
+
+\begin{itemize}
+
+\item \textbf{N = 4000 cars} (players). Two \textbf{directed} routes to go from A to B.
+
+\item Travel time on an ``edge'' of the graph (e.g.\ edge AC) is a function of the number of
+cars: $T_e = T_e(x)$.
+
+\item Payout for each car is $-T_e(x)$: each car's objective is to \textbf{minimize} travel
+time.
+
+\end{itemize}
+
+
+\textbf{Is there a NE in which all cars take the same route?} No. If all cars went through C
+(route AC+CB), travel time would be $4000/100 + 45 = 85$ minutes. A car would have an
+incentive to switch to the route through D (AD+DB): $1/100 + 45 = 45.01$.
+
+
+\begin{important}
+
+For different cars to take different routes (still a \textbf{pure-strategy NE}), since all
+cars are identical, with the same payout, travel time should be the same on the two routes
+\emph{in the limit $N \to \infty$, in which a single car cannot affect the travel time of a
+route}.
+
+\textbf{2000 cars on each route is a NE}, with travel time $2000/100 + 45 = 65$ minutes for
+each car.
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Odd number of cars}: e.g.\ 7 cars, 3 on AC+CB and 4 on AD+DB. Is this a NE? Yes,
+because even for the cars on AD+DB, switching to AC+CB would leave travel time unchanged.
+
+\end{example}
+
+
+
+%=========================================================
+\section{Braess -- New Route is Added}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.7\linewidth
+]{../images/week05_02.png}
+
+\end{center}
+
+
+New, superfast edge CD (can only go from C to D). Three possible routes from A to B now:
+AC+CB; AD+DB; AC+CD+DB.
+
+
+\begin{itemize}
+
+\item As before, everybody taking AC+CB, or everybody taking AD+DB, cannot be a NE.
+
+\item \textbf{Everybody on AC+CD+DB}: travel time $= 4000/100 + 0 + 4000/100 = 80$. If somebody
+switched to AC+CB, travel time would be $4000/100 + 45 = 85$; the same if somebody switched
+to AD+DB. So \textbf{AC+CD+DB is a NE!}
+
+\item \textbf{Half on AC+CB, half on AD+DB} (65 minutes) is not a NE anymore: if one car
+switches to AC+CD+DB, travel time would be $2001/100 + 0 + 1999/100 \simeq 40$ minutes.
+
+\end{itemize}
+
+
+\begin{important}
+
+No matter the strategy of the other players, switching from AC+CD+DB to another route involves
+switching from an edge with travel time $x/100$ (at most 40) to an edge with travel time 45.
+
+\textbf{AC+CD+DB is the only NE!} Travel time is 80, \textbf{15 minutes longer} than the NE
+before the route was added.
+
+\end{important}
+
+
+
+%=========================================================
+\section{A Pure-Strategy NE for Every Network}
+
+
+\begin{definition}
+
+\textbf{POTENTIAL ENERGY}
+
+Potential energy of an edge $e$ when $x_e$ cars travel on this edge:
+
+\[
+E_e(x_e) = T_e(1) + T_e(2) + \dots + T_e(x_e)
+\]
+
+Potential energy of a network $\mathcal{N}$: the sum of the potential energy of all its
+edges:
+
+\[
+E_{\mathcal{N}} = \sum_{e \in \mathcal{N}} E_e(x_e)
+\]
+
+\end{definition}
+
+
+\begin{warning}
+
+Potential energy is different from the aggregate travel time (total time spent on this edge
+by the cars traveling on it), which is $x\,T_e(x)$.
+
+\end{warning}
+
+
+\begin{important}
+
+\textbf{If one single car leaves the network, potential energy decreases by exactly the
+traveling time of this car.}
+
+\end{important}
+
+
+\begin{example}
+
+3 cars, one on AC+CB and 2 on AD+DB:
+
+\begin{align*}
+E_{\mathcal{N}} ={}& T_{AC}(1) + T_{CB}(1) \\
+&+ (T_{AD}(1) + T_{AD}(2)) + (T_{DB}(1) + T_{DB}(2))
+\end{align*}
+
+One car traveling on AD+DB leaves the network:
+
+\[
+E_{\mathcal{N}} = T_{AC}(1) + T_{CB}(1) + T_{AD}(1) + T_{DB}(1)
+\]
+
+The difference is $T_{AD}(2) + T_{DB}(2)$: the traveling time of this car.
+
+If this car re-enters on another route, e.g.\ AC+CB, the potential energy increases by its
+traveling time on the new route, $T_{AC}(2) + T_{CB}(2)$:
+
+\begin{align*}
+E_{\mathcal{N}} ={}& (T_{AC}(1) + T_{AC}(2)) + (T_{CB}(1) + T_{CB}(2)) \\
+&+ T_{AD}(1) + T_{DB}(1)
+\end{align*}
+
+\end{example}
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item When one car switches to a better route (which decreases its traveling time),
+\textbf{potential energy decreases}.
+
+\item (Pure-strategy) Nash equilibrium corresponds to a \textbf{min of potential energy}.
+
+\item Only a finite number of configurations $\rightarrow$ there is necessarily a min of
+potential energy. So \textbf{there is necessarily a pure-strategy NE}.
+
+\end{itemize}
+
+\end{important}
+
+
+
+%=========================================================
+\section{Finding a NE for an Arbitrary Network}
+
+
+\begin{summary}
+
+\textbf{Pseudocode}
+
+\begin{enumerate}
+
+\item Start from an arbitrary configuration (strategy profile), compute potential energy.
+
+\item Consider all possible changes of strategy \textbf{for 1 player}. If there is any change
+that decreases potential energy, update the configuration.
+
+\item Stop when no favorable change is found. This is the NE and the minimum of Potential
+energy.
+
+\end{enumerate}
+
+\end{summary}
+
+
+
+%=========================================================
+\section{Recap: Bayesian Games}
+
+
+\begin{definition}
+
+\textbf{BAYESIAN GAME} (simultaneous-move game of incomplete information)
+
+Defined by: players, an action set for each player, possible types $\theta_i$ for each player
+$i$ and a probability distribution over player $i$ types $p(\theta_i)$.
+
+A pure strategy is a plan of action \textbf{for each type of player}.
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{BAYESIAN NASH EQUILIBRIUM (BNE)}
+
+$(s_1(\theta_1), \dots, s_N(\theta_N))$ is a BNE iff, for each player $i$, her
+\textbf{expected payout} is higher than or equal to her expected payout using any of the other
+available strategies, keeping fixed the strategies of the other players, which \textbf{depend
+on their types}:
+
+\[
+\mathcal{P}_i(s_i(\theta_i), s_{-i}(\theta_{-i}) | \theta_i) \ge
+\mathcal{P}_i(\tilde{s}_i(\theta_i), s_{-i}(\theta_{-i}) | \theta_i)
+\]
+
+Take the expected value over all possible types of the other players.
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Public good and free riding} (see week 04)
+
+\begin{center}
+\begin{tabular}{c|cc}
+$1 \backslash 2$ & W & N \\
+\hline
+W & $(1-c_1, 1-c_2)$ & $(1-c_1, 1)$ \\
+N & $(1, 1-c_2)$ & $(0,0)$ \\
+\end{tabular}
+\end{center}
+
+$c_1 = 0.5$ known to everybody; $c_2 = 0.2$ (Efficient type, prob $p$) or $1.2$ (Inefficient
+type, prob $1-p$), known only to Player 2; $p$ is common knowledge. `Work' is dominated for
+the Inefficient type.
+
+\begin{itemize}
+
+\item Efficient works, Inefficient does not: Player 1 gets 0.5 if he works, $p$ if he does
+not $\rightarrow$ works if $p < 0.5$, does not work if $p > 0.5$. For $p > 0.5$:
+\textbf{BNE $(N, WN)$}.
+
+\item Player 2 never works: Player 1 works regardless of $p$: \textbf{BNE $(W, NN)$}.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item If $p < 0.5$: unique pure-strategy BNE $(W, NN)$.
+
+\item If $p > 0.5$: two pure-strategy BNE $(W, NN)$ and $(N, WN)$.
+
+\end{itemize}
+
+\end{important}
+
+
+\textbf{Harsanyi representation} (introduced in the last lecture): one table with the
+strategy of Player 2 conditional on his type (`WN' = ``Work if efficient, Not Work if
+Inefficient'').
+
+\begin{center}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{c|cccc}
+$1 \backslash 2$ & WN & NN & NW & WW \\
+\hline
+W & (0.5, 1-0.2p) & (0.5, 1) & (0.5, 1.2p-0.2) & (0.5, p-0.2) \\
+N & (p, 0.8p) & (0,0) & (1-p, -0.2(1-p)) & (1, p-0.2) \\
+\end{tabular}
+\end{center}
+
+After elimination of the dominated strategy W for the Inefficient Player 2, only WN and NN
+remain: we find the same pure-strategy equilibria, $(W, NN)$ if $p < 0.5$, $(W, NN)$ and
+$(N, WN)$ for $p > 0.5$.
+
+
+
+%=========================================================
+\section{Public Good with a Continuum of Types}
+
+
+Same game, but $c_1$ and $c_2$ can take a \textbf{continuum of values}: for example $c_1$ and
+$c_2$ \textbf{uniformly distributed in the interval $[0, 2]$}.
+
+
+\begin{formula}
+
+The probability that each of these variables is between $x_1$ and $x_2 \in [0,2]$ is the
+length of the interval $|x_1 - x_2|$ divided by the total length of the domain (here 2).
+
+\end{formula}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.9\linewidth
+]{../images/week05_03.png}
+
+\end{center}
+
+
+\begin{itemize}
+
+\item Reasonable to expect that when the cost of Player $i$ is low, she will decide to work;
+when her cost is high, she will not work.
+
+\item No player would ever work if her cost is above 1.
+
+\item Look for a solution where each player works if her cost is below a \textbf{threshold
+$T_i^*$} (not necessarily the same for the two players).
+
+\end{itemize}
+
+
+\begin{formula}
+
+Player 2's threshold is $T_2^*$. What should Player 1 do?
+
+\begin{itemize}
+
+\item If she works, her payout is
+
+\[
+\mathcal{P}_1^W = 1 - c_1
+\]
+
+\item If she does not work, her expected payout is 1 times the probability that Player 2
+works, i.e.\ the probability that $c_2 < T_2^*$:
+
+\[
+\mathcal{P}_1^N = \frac{T_2^*}{2}
+\]
+
+\end{itemize}
+
+Player 1 works if $\mathcal{P}_1^W > \mathcal{P}_1^N$, hence her threshold is
+
+\[
+T_1^* = 1 - \frac{T_2^*}{2}
+\]
+
+The same way, Player 2's best response to $T_1^*$ is
+
+\[
+T_2^* = 1 - \frac{T_1^*}{2}
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+The solution is
+
+\[
+T_1^* = T_2^* = \frac{2}{3}
+\]
+
+\end{important}
+
+
+
+%=========================================================
+\section{Challenge: Public Good Two Days in a Row}
+
+
+\begin{example}
+
+What if we played twice the same game?
+
+\begin{itemize}
+
+\item Each day, each player decides whether or not to work. Same payout matrix.
+
+\item The costs $c_1$ and $c_2$ are known only to the respective player. However, each
+player's cost is \textbf{THE SAME ON BOTH DAYS}.
+
+\end{itemize}
+
+\end{example}
+
+
+\textbf{Would you use the same strategy on both days?}
+
+On day 2, you have more information. If my ``opponent'' worked on day 1, her cost is likely to
+be low $\rightarrow$ she is also more likely to work on day 2 $\rightarrow$ my threshold for
+working is lower\dots
+
+
+\begin{warning}
+
+On day one, would you behave the same as in the 1-period game?
+
+\end{warning}
+
+
+
+%=========================================================
+\section{Conditional (Bayesian) Probabilities}
+
+
+\begin{definition}
+
+\textbf{CONDITIONAL PROBABILITY}
+
+Probability of an event A, conditional on an event B: if B occurs, what's the probability that
+A also occurs?
+
+\end{definition}
+
+
+\begin{formula}
+
+Bayes formula:
+
+\[
+Prob(A|B) = \frac{Prob(A \& B)}{Prob(B)}
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Bayesian inference} is a rule to update probabilities when new information becomes
+available.
+
+\end{important}
+
+
+
+%=========================================================
+\section{Conditional Probability Examples}
+
+
+\begin{example}
+
+\textbf{Example 1}
+
+A random variable $x$ is uniformly distributed between 0 and 1 ($x \sim \mathcal{U}([0,1])$).
+
+\begin{itemize}
+
+\item What is the probability that $x > 0.75$? (the \emph{unconditional probability})
+
+\item Now you receive the information that $x > 0.5$. How do you update the probability that
+$x > 0.75$? (the \emph{conditional probability})
+
+\end{itemize}
+
+\begin{center}
+
+\includegraphics[
+width=0.9\linewidth
+]{../images/week05_04.png}
+
+\end{center}
+
+\textbf{Solution} (not on the slides):
+
+\[
+Prob(x > 0.75) = 0.25
+\]
+
+\[
+Prob(x > 0.75 \,|\, x > 0.5) = \frac{Prob(x > 0.75)}{Prob(x > 0.5)} = \frac{0.25}{0.5} = 0.5
+\]
+
+\end{example}
+
+
+\begin{example}
+
+\textbf{Example 2}
+
+\begin{itemize}
+
+\item You know that X has two children. What is the probability that she has (at least) a
+girl?
+
+\item Then you ask her: do you have a boy? She says: yes.
+
+\item What is now the probability that she also has a girl? a.\ 1/2, b.\ 1/3, c.\ 2/3
+
+\end{itemize}
+
+\textbf{Solution} (not on the slides): the four cases BB, BG, GB, GG are equally likely.
+
+\[
+Prob(\text{girl}) = \frac{3}{4}
+\]
+
+\[
+Prob(\text{girl} \,|\, \text{boy}) = \frac{Prob(\text{BG or GB})}{Prob(\text{not GG})}
+= \frac{2/4}{3/4} = \frac{2}{3}
+\]
+
+$\rightarrow$ answer c.
+
+\end{example}
+
+
+\begin{example}
+
+\textbf{Example 3}
+
+\begin{itemize}
+
+\item In a population X, 1\% of the people have a disease.
+
+\item A test has accuracy 95\%: whether or not you have the disease, the test gives you the
+truth with probability 95\%, and the opposite of the truth with probability 5\%.
+
+\item Question 1: \emph{before taking the test}, what's the probability that you have the
+disease?
+
+\item Question 2: after a positive test result, what's the probability that you have the
+disease? a.\ more than 90\%, b.\ between 30\% and 90\%, c.\ less than 30\%
+
+\end{itemize}
+
+Understand why: suppose there are 2000 people in the population and everybody gets tested.
+How many people really have the disease? How many of the healthy people receive a positive
+test result? How many of the sick? What fraction of the people who receive a positive test
+result are actually sick?
+
+\textbf{Solution} (not on the slides):
+
+\begin{itemize}
+
+\item Question 1: 1\%.
+
+\item 2000 people: 20 sick, 1980 healthy.
+
+\item Healthy with a positive test: $5\% \times 1980 = 99$.
+
+\item Sick with a positive test: $95\% \times 20 = 19$.
+
+\end{itemize}
+
+\[
+Prob(\text{sick} \,|\, +) = \frac{19}{19 + 99} = \frac{19}{118} \approx 16\%
+\]
+
+$\rightarrow$ answer c (less than 30\%).
+
+\end{example}
+
+
+
+%=========================================================
+\section{Weekly Summary}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item \textbf{Braess paradox}: adding a superfast route moves the NE from 65 to 80 minutes.
+
+\item Every network has a pure-strategy NE: the minimum of \textbf{potential energy}, found by
+improving one player at a time.
+
+\item Bayesian games: free riding with two types of Player 2, Harsanyi representation.
+
+\item \textbf{Continuum of types}: threshold strategies, $T_1^* = T_2^* = 2/3$.
+
+\item \textbf{Conditional probability}: $Prob(A|B) = Prob(A \& B) / Prob(B)$, used to update
+probabilities with new information.
+
+\end{itemize}
+
+\end{summary}
+
+
+
+\end{multicols}
+
+
+\end{document}
