@@ -399,6 +399,121 @@ the other player cooperates.
 
 
 
+%=========================================================
+\section{The Dollar Auction Game}
+
+
+How much would you pay to get one dollar? When people play this game in lab experiments,
+they end up paying much more than a dollar!
+
+
+\begin{center}
+
+\includegraphics[
+width=0.6\linewidth
+]{../images/week04_02.png}
+
+\end{center}
+
+
+\begin{definition}
+
+\textbf{DOLLAR AUCTION -- FINITE-HORIZON VERSION}
+
+\begin{itemize}
+
+\item Players: 1 and 2.
+
+\item Player 1 starts and can decide to bid or stay out. If she stays out, the game is over
+and everybody gets 0. Otherwise she bids 10 cents.
+
+\item Then at each period, the player that did not play last period can decide to quit or
+outbid the other player by 5 cents.
+
+\item When a player quits, the other player gets the dollar, but \textbf{both players need
+to pay their highest bid}.
+
+\item If no player quit before, the game ends when one player's bid reaches \$10.
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{center}
+
+\includegraphics[
+width=\linewidth
+]{../images/week04_03.png}
+
+\end{center}
+
+
+\begin{important}
+
+The longer the game continues, the worse off is the total payout.
+
+\end{important}
+
+
+\textbf{Backward induction} (from the end):
+
+\begin{itemize}
+
+\item \textbf{T=199} (last period): Player 1 is sure to get the dollar if he bids, so by
+bidding he gains \$0.90 for sure (relative to not bidding).
+
+\item \textbf{T=198}: Player 2 quits for sure: if he bids, in the last period Player 1 will
+bid again for sure and get the dollar. By bidding, Player 2 loses \$0.10 for sure (relative
+to not bidding).
+
+\item \textbf{T=197}: Player 1 bids for sure, because, since Player 2 quits for sure at
+T=198, by bidding at T=197 Player 1 gains \$0.90 for sure.
+
+\item \textbf{T=196}: Player 2 quits for sure, because at T=197 Player 1 bids for sure
+$\rightarrow$ by quitting, Player 2 saves \$0.10 relative to bidding.
+
+\item \dots\ Same reasoning until the beginning of the game.
+
+\end{itemize}
+
+
+\begin{important}
+
+\textbf{SPE}: Player 1 bids in every one of his decision nodes, Player 2 quits in every one of
+his decision nodes.
+
+Player 1 bids \$0.10 at T=1, Player 2 quits at T=2: the payout is \textbf{(0.90, 0)}.
+
+\end{important}
+
+
+\separator
+
+
+\textbf{New version}: the game ends when a bid \emph{exceeds} \$10. Then the last player (if
+nobody quits before) would be Player 2, when he bids \$10.05.
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item From the end: Player 2 will continue in the last period (T=200), so Player 1 will quit
+at T=199, so Player 2 will continue at T=198\dots
+
+\item SPE: Player 2, with the advantage of being the last if nobody quits before, will always
+continue, and Player 1 will always quit.
+
+\item But since Player 1 starts, he will not even enter the game: the payout is
+\textbf{(0,0)}.
+
+\end{itemize}
+
+\end{important}
+
+
+
 \end{multicols}
 
 
