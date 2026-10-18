@@ -735,6 +735,51 @@ sum is large, the small terms $1/k$ are dropped entirely.
 
 
 
+%=========================================================
+\section{Catastrophic Cancellation}
+
+
+\begin{definition}
+
+\textbf{CATASTROPHIC CANCELLATION}
+
+The especially dangerous case $a - b$ with $a \approx b$ (also $a + b$ with $a \approx -b$). Can
+happen even if the subtraction is done without error: it ``reveals'' the imprecision of the
+operands.
+
+\end{definition}
+
+
+\begin{example}
+
+8 mantissa bits after the point:
+\begin{align*}
+3.140 &\approx +2^1\,1.10010010_2 \\
+3.148 &= +2^1\,1.10010011_2 \\
+3.140 - 3.148 &= -2^1\,0.00000001_2 = -2^{-7}\,1.0_2
+\end{align*}
+The exponent must be adjusted to re-establish the implicit leading 1. Not a wrong answer given
+the approximations, but only ``1 bit of information'' is left from much more accurate inputs.
+
+\end{example}
+
+
+\begin{example}
+
+\[
+f(x) = \frac{1 - \cos x}{x^2}
+\]
+\begin{align*}
+f(1.2 \cdot 10^{-5}) &= \frac{1 - 0.9999999999}{1.44 \cdot 10^{-10}} \\
+&= \frac{0.0000000001}{1.44 \cdot 10^{-10}} \approx 0.694
+\end{align*}
+The last digit is the only bit of accuracy left. BUT one can show that $f(x) < 1/2$ for
+$x > 0$.
+
+\end{example}
+
+
+
 \end{multicols}
 
 
