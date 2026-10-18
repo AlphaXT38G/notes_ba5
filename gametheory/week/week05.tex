@@ -495,6 +495,105 @@ energy.
 
 
 
+%=========================================================
+\section{Recap: Bayesian Games}
+
+
+\begin{definition}
+
+\textbf{BAYESIAN GAME} (simultaneous-move game of incomplete information)
+
+Defined by: players, an action set for each player, possible types $\theta_i$ for each player
+$i$ and a probability distribution over player $i$ types $p(\theta_i)$.
+
+A pure strategy is a plan of action \textbf{for each type of player}.
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{BAYESIAN NASH EQUILIBRIUM (BNE)}
+
+$(s_1(\theta_1), \dots, s_N(\theta_N))$ is a BNE iff, for each player $i$, her
+\textbf{expected payout} is higher than or equal to her expected payout using any of the other
+available strategies, keeping fixed the strategies of the other players, which \textbf{depend
+on their types}:
+
+\[
+\mathcal{P}_i(s_i(\theta_i), s_{-i}(\theta_{-i}) | \theta_i) \ge
+\mathcal{P}_i(\tilde{s}_i(\theta_i), s_{-i}(\theta_{-i}) | \theta_i)
+\]
+
+Take the expected value over all possible types of the other players.
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Public good and free riding} (see week 04)
+
+\begin{center}
+\begin{tabular}{c|cc}
+$1 \backslash 2$ & W & N \\
+\hline
+W & $(1-c_1, 1-c_2)$ & $(1-c_1, 1)$ \\
+N & $(1, 1-c_2)$ & $(0,0)$ \\
+\end{tabular}
+\end{center}
+
+$c_1 = 0.5$ known to everybody; $c_2 = 0.2$ (Efficient type, prob $p$) or $1.2$ (Inefficient
+type, prob $1-p$), known only to Player 2; $p$ is common knowledge. `Work' is dominated for
+the Inefficient type.
+
+\begin{itemize}
+
+\item Efficient works, Inefficient does not: Player 1 gets 0.5 if he works, $p$ if he does
+not $\rightarrow$ works if $p < 0.5$, does not work if $p > 0.5$. For $p > 0.5$:
+\textbf{BNE $(N, WN)$}.
+
+\item Player 2 never works: Player 1 works regardless of $p$: \textbf{BNE $(W, NN)$}.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item If $p < 0.5$: unique pure-strategy BNE $(W, NN)$.
+
+\item If $p > 0.5$: two pure-strategy BNE $(W, NN)$ and $(N, WN)$.
+
+\end{itemize}
+
+\end{important}
+
+
+\textbf{Harsanyi representation} (introduced in the last lecture): one table with the
+strategy of Player 2 conditional on his type (`WN' = ``Work if efficient, Not Work if
+Inefficient'').
+
+\begin{center}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{c|cccc}
+$1 \backslash 2$ & WN & NN & NW & WW \\
+\hline
+W & (0.5, 1-0.2p) & (0.5, 1) & (0.5, 1.2p-0.2) & (0.5, p-0.2) \\
+N & (p, 0.8p) & (0,0) & (1-p, -0.2(1-p)) & (1, p-0.2) \\
+\end{tabular}
+\end{center}
+
+After elimination of the dominated strategy W for the Inefficient Player 2, only WN and NN
+remain: we find the same pure-strategy equilibria, $(W, NN)$ if $p < 0.5$, $(W, NN)$ and
+$(N, WN)$ for $p > 0.5$.
+
+
+
 \end{multicols}
 
 
