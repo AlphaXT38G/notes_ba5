@@ -635,4 +635,14 @@ conditioning disappears. Use them to fit a smooth function to data.
 \end{center}
 \end{defnbox}
 
+
+\begin{thmbox}[title=Taylor's theorem for polynomials]
+When fitting a polynomial through points $x_i$ (Runge function demo), the residual is
+\[
+R_{k-1}(x) = \frac{f^k(y)}{k!}\prod_{i=1}^{k}|x - x_i|.
+\]
+The \textbf{Chebyshev points} $x_i = \cos\left(\frac{2k - 1}{2n}\pi\right)$ are the optimal set
+of points to make the product small.
+\end{thmbox}
+
 \end{document}
