@@ -9,6 +9,7 @@
     "css/epic.css",
     "css/christmas.css",
     "css/calm.css",
+    "css/tapes.css",
     "css/screens.css",
     "css/konami.css"
   ],
@@ -28,6 +29,7 @@
     "js/metal.js",
     "js/epic.js",
     "js/calm.js",
+    "js/tapes.js",
     "js/start.js"
   ]
 }
