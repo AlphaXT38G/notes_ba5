@@ -396,6 +396,88 @@ practice, the naïve algorithm tends to be fastest.
 
 
 
+%=========================================================
+\section{Matrix Zoo and Sparse Matrices}
+
+
+\textbf{Matrix zoo}: dense, symmetric, diagonal, tridiagonal, permutation, upper triangular,
+lower triangular, block, low rank, sparse. Also important: positive definite \& orthogonal
+matrices.
+
+\begin{center}
+
+\includegraphics[
+width=0.85\linewidth
+]{../images/week02_02.png}
+
+\end{center}
+
+
+\begin{definition}
+
+\textbf{SPARSE MATRIX}
+
+\emph{Almost all} ($> 99\%$) entries are zero.
+
+\begin{itemize}
+
+\item Useful: can avoid storing the zeros \& skip them during computation.
+
+\item Almost every matrix algorithm has an analogous \emph{sparse} version (or several!).
+
+\item Encodings: \emph{Compressed Sparse Row} (CSR) or \emph{Compressed Sparse Column} (CSC)
+(\texttt{scipy.sparse.csr\_matrix} \& \texttt{scipy.sparse.csc\_matrix}).
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item Protein modeling, social networks, triangle meshes of 3D objects: sparsity arises because
+most things \emph{aren't} connected.
+
+\item Discretizing continuous equations: 1D heat equation
+$\frac{\partial^2 f(x)}{\partial x^2} = 0$ becomes
+$-f(x_{i-1}) + 2f(x_i) - f(x_{i+1}) = 0$, one row
+$(0\ 0\ 0\ {-1}\ 2\ {-1}\ 0\ 0\ 0)$ of a HUGE matrix. Intuition: heat wants to spread out and
+become uniform, can't have a hotspot.
+
+\end{itemize}
+
+\end{example}
+
+
+\textbf{Sparse matrix-vector multiplication (CSR)}
+
+\begin{center}
+
+\includegraphics[
+width=\linewidth
+]{../images/week02_03.png}
+
+\end{center}
+
+
+\begin{formula}
+
+Row $i$ uses entries \texttt{row\_ptr[i]} to \texttt{row\_ptr[i+1]} of \texttt{col} and
+\texttt{val}:
+
+\begin{verbatim}
+y = np.zeros(n)
+for i in range(n):
+  for k in range(A.rowptr[i], A.rowptr[i+1]):
+    y[i] += A.val[k] * x[A.col[k]]
+\end{verbatim}
+
+\end{formula}
+
+
+
 \end{multicols}
 
 
