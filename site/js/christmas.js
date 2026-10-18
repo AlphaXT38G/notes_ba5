@@ -1158,42 +1158,47 @@ document.addEventListener("phase", e => {
   if (e.detail === "christmas" || e.detail === "christmas-night") setTreeLights(e.detail === "christmas-night");
 });
 
-// The jar's pendulum. The jar hangs from its string at (jarAt), in the page like the garland (it
-// scrolls with it), over the garland, a little bigger than the baubles. It swings like a pendulum
-// with friction (a period of about 1.7 s): a breath of wind now and then, the mouse passing by
-// pushes it (its speed across, the closer the stronger), and scrolling the page makes it lag and
-// swing back. Only its rotation changes (transform), on each frame while it is on screen and
-// moving; it sleeps when still and out of the window. Reduced motion: it hangs still.
+// The jar's pendulum. The jar hangs from its string (placeJar, called when the garland is built),
+// in the page like the garland (it scrolls with it), over the garland, a little bigger than the
+// baubles. It swings like a pendulum with friction (a period of about 1.7 s): a breath of wind
+// every 2 to 6 s, the mouse passing by pushes it (its speed across, the closer the stronger), and
+// scrolling the page makes it lag and swing back. Only its rotation changes (transform), on each
+// frame while it moves; once it has settled the loop sleeps until the next breath of wind (a
+// timer), and the wind waits while the jar is scrolled out of the window. Its place is kept in
+// page coordinates (jarAt), so nothing reads the layout per frame or per mouse move.
+// Reduced motion: it hangs still.
 const JAR_K = () => innerWidth < 700 ? 1.45 : 2.5;  // pixels per unit of its drawing
-let jarAngle = 0, jarSpin = 0, jarRaf = null, jarLast = 0, jarGust = 0, jarScroll = 0;
+const jarAt = { x: 0, y: 0, bottom: 0 };  // its string's top, and its bottom, in page pixels
+let jarAngle = 0, jarSpin = 0, jarRaf = null, jarLast = 0, jarGust = 0, jarScroll = 0, jarNap = 0;
 const placeJar = (x, y) => {
   const k = JAR_K();
   jarBtn.style.cssText = `left:${f1(x - JAR.w * k / 2)}px;top:${f1(y)}px;width:${f1(JAR.w * k)}px;height:${f1(JAR.h * k)}px`;
-  jarBtn.k = k;
+  Object.assign(jarAt, { x, y, bottom: y + JAR.h * k });
 };
 const jarStill = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const jarFrame = now => {
   jarRaf = null;
   const dt = Math.min(.05, (now - (jarLast || now)) / 1000);
   jarLast = now;
-  if (now > jarGust) {  // a breath of wind, every 2 to 6 s
+  if (now > jarGust) {  // a breath of wind
     jarSpin += (Math.random() - .5) * .5;
     jarGust = now + 2000 + Math.random() * 4000;
   }
   jarSpin += (-14 * Math.sin(jarAngle) - 1.1 * jarSpin) * dt;
   jarAngle = Math.max(-.7, Math.min(.7, jarAngle + jarSpin * dt));
   jarBtn.style.transform = `rotate(${(jarAngle * 180 / Math.PI).toFixed(2)}deg)`;
-  // asleep when it barely moves and nothing will wake it on screen (the wind waits for it)
-  const seen = jarBtn.getBoundingClientRect().bottom > 0;
-  if (seen || Math.abs(jarSpin) > .01) jarRaf = requestAnimationFrame(jarFrame);
+  if (Math.abs(jarSpin) > .003 || Math.abs(jarAngle) > .003) { jarRaf = requestAnimationFrame(jarFrame); return; }
+  // settled: sleep until the next breath of wind, if it is on screen to feel it
+  if (scrollY < jarAt.bottom) jarNap = setTimeout(wakeJar, Math.max(0, jarGust - now));
 };
 const wakeJar = () => {
   if (jarRaf || jarStill() || !jarBtn.isConnected) return;
+  clearTimeout(jarNap);
   jarLast = 0;
   jarRaf = requestAnimationFrame(jarFrame);
 };
 const pushJar = e => {
-  const r = jarBtn.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height * .7);
+  const dx = e.pageX - jarAt.x, dy = e.pageY - (jarAt.y + (jarAt.bottom - jarAt.y) * .7);
   const near = 1 - Math.hypot(dx, dy) / 160;
   if (near <= 0 || !e.movementX) return;
   jarSpin += Math.max(-.12, Math.min(.12, e.movementX * .004)) * near;
@@ -1209,6 +1214,7 @@ const setJarSwing = on => {
   removeEventListener("pointermove", pushJar);
   removeEventListener("scroll", scrollJar);
   if (jarRaf) cancelAnimationFrame(jarRaf);
+  clearTimeout(jarNap);
   jarRaf = null;
   jarAngle = jarSpin = 0;
   jarBtn.style.transform = "";
