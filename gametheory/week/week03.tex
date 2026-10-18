@@ -640,6 +640,57 @@ SPE: \textbf{(Offer 1, AAA)}.
 
 
 
+%=========================================================
+\section{An Example with two SPE}
+
+
+\begin{example}
+
+New version of the Ultimatum Game: Player 1 still has 3 coins, but can now also offer 0 coins
+to Player 2 (so can offer 0, 1, 2, or 3 coins).
+
+\begin{center}
+
+\includegraphics[
+width=0.95\linewidth
+]{../images/week03_05.png}
+
+\end{center}
+
+\end{example}
+
+
+\begin{itemize}
+
+\item In the subgame starting after `Offer 0', Player 2 gets 0 whether he accepts or rejects:
+`Accept' and `Reject' are \textbf{two pure-strategy NE} of this subgame.
+
+\item In the other three subgames, the only NE is `Accept'.
+
+\end{itemize}
+
+
+\begin{important}
+
+\textbf{Solution 1}: choose the NE `Accept' for all 4 subgames. Reduced game: (Offer 0,A)
+$(3,0)$, (Offer 1,A) $(2,1)$, (Offer 2,A) $(1,2)$, (Offer 3,A) $(0,3)$. Player 1 chooses
+`Offer 0', which gives her the highest payout (3).
+
+SPE: \textbf{(Offer 0, AAAA)}.
+
+\separator
+
+\textbf{Solution 2}: choose the NE `Reject' for the subgame starting after `Offer 0', and the
+(only) NE `Accept' for the other 3 subgames. Reduced game: (Offer 0,R) $(0,0)$, (Offer 1,A)
+$(2,1)$, (Offer 2,A) $(1,2)$, (Offer 3,A) $(0,3)$. Player 1 chooses `Offer 1', which gives
+her the highest payout (2).
+
+SPE: \textbf{(Offer 1, RAAA)}.
+
+\end{important}
+
+
+
 \end{multicols}
 
 
