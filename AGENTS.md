@@ -147,12 +147,13 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
 | `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), "Back to normal" |
 | `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, night forest sounds (`audio/calm.mp3`, quieter), dawn birds made with Web Audio, firefly jar; the `peace` code (the last override: the calm night at any time; `startPeace()`, also called by the Christmas jar) |
+| `tapes.js` | the day's cassette player (no screen only): a Walkman and a rack of four Lofi Girl tapes from YouTube (a hidden `<iframe>` driven by `postMessage`), ⏭ for the next tape, the next one going in when a mix ends; never plays by itself, the tape is remembered |
 | `start.js` | **last**: first `applyScreen()`, then the every-second clock check |
 
 ### CSS files, in cascade order
 
 `base.css` (layout, cards, search, previews) → `flames.css` → `surprise.css` → `jazz.css` → `closing.css` →
-`metal.css` → `epic.css` → `christmas.css` → `calm.css` → `screens.css` (effects canvas, view transitions) → `konami.css`.
+`metal.css` → `epic.css` → `christmas.css` → `calm.css` → `tapes.css` → `screens.css` (effects canvas, view transitions) → `konami.css`.
 The Konami file is last on purpose: during its animation `body.rift .wrap` must win over every
 theme's `.wrap` rule.
 
@@ -278,8 +279,8 @@ Example: a calm "dawn" screen from 06:00 to 07:00.
   on the first click (see the dawn birds in `calm.js`). Music is an mp3 in `site/audio/`,
   played with `screenTrack()` (`screens.js`, or loaded ahead with `preloadTrack()` when a show
   is coming), never put in the page, and stopped with `dropTrack()` when its screen ends. The
-  one YouTube player left (the Christmas radio) is a hidden `<iframe>` driven by `postMessage`
-  commands; a fresh player ignores commands until ready.
+  YouTube players left (the Christmas radio, the day's cassettes in `tapes.js`) are hidden
+  `<iframe>`s driven by `postMessage` commands; a fresh player ignores commands until ready.
 
 ### Phones and older browsers
 
