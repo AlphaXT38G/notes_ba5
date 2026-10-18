@@ -834,4 +834,31 @@ misses into hits.
 \end{itemize}
 \end{keybox}
 
+
+% =========================================================
+\chapter{Lecture 6 : GPUs}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} How GPU cores differ from CPU cores, and which workloads
+run better on GPUs. \\
+\textbf{Why is it useful?} Matrix multiplication, the key operation of ML/AI, runs far faster on
+GPUs --- if the algorithm keeps them busy.
+\end{rembox}
+
+\section{CPUs vs GPUs}
+
+\begin{propbox}[title=Two designs]
+\textbf{CPUs} run single-threaded code as fast as possible (plus $\sim$4-16 cores) and
+optimize \textbf{latency}. \textbf{GPUs} run massively parallel code, need 10K -- millions of
+work items, and optimize \textbf{throughput}.
+\end{propbox}
+
+\begin{exbox}[title=Graphics is brutal]
+4K at 60 frames per second is $\sim$500 million pixels per second, times the instructions per
+pixel (shader), overdraw and passes: $\frac{1}{2}$ -- $1\frac{1}{2}$ trillion operations per
+second. Rendering is an \textbf{embarrassingly parallel} problem, but CPU-style cores are too
+big to have many.
+\end{exbox}
+
 \end{document}
