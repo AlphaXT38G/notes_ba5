@@ -419,4 +419,51 @@ L_{22} = \sqrt{A_{22} - L_{21}^2}.
 \end{itemize}
 \end{keybox}
 
+
+% =========================================================
+\chapter{Lecture 3 : Linear systems II}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Where linear systems come from (regression), how much error
+a solver can make (\textbf{matrix norm} and \textbf{condition number}), and what to do when there
+are more equations than unknowns (\textbf{linear least squares}). \\
+\textbf{Why is it useful?} The condition number tells whether a system can be solved accurately
+at all; least squares is the workhorse of data fitting.
+\end{rembox}
+
+\begin{rembox}[title=Which solver?]
+$\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$ means ``call a solver for $\mathbf{A}\mathbf{x} =
+\mathbf{b}$'': diagonal (divide), permutation (reorder), triangular (substitution), dense
+(e.g.\ LU).
+\end{rembox}
+
+\section{Regression}
+
+\begin{defnbox}[title=Regression]
+We have a model of the \textbf{expected behaviour} with unknown parameters, and data that
+\emph{may} be supported by it. Goal: find the parameters that best support the data. When this
+is a linear system: \textbf{linear regression}.
+\end{defnbox}
+
+\begin{exbox}[title=Ideal ballistic motion]
+A thrown ball follows $y = ax^2 + bx + c$. Each measured position $(x_i, y_i)$ gives one equation,
+linear in the unknowns $a, b, c$, so 3 measurements give
+\[
+\begin{bmatrix} x_1^2 & x_1 & 1 \\ x_2^2 & x_2 & 1 \\ x_3^2 & x_3 & 1 \end{bmatrix}
+\begin{bmatrix} a \\ b \\ c \end{bmatrix} = \begin{bmatrix} y_1 \\ y_2 \\ y_3 \end{bmatrix}.
+\]
+\end{exbox}
+
+\begin{defnbox}[title=Polynomial regression and Vandermonde matrix]
+Find a polynomial that \emph{perfectly interpolates} given points, $y(t_i) = p_i$: the matrix of
+powers $t_i^3, t_i^2, t_i, 1$ is a \textbf{Vandermonde matrix}.
+\end{defnbox}
+
+\begin{warnbox}[title=What could go wrong?]
+Weak observations (all close together), more than 3 observations, noise, a model that violates
+the assumptions\dots\ Deconvolution (removing blur from an image) is a classical ``bad'' linear
+system: solving it exactly gives pure noise, a regularized solution recovers the image.
+\end{warnbox}
+
 \end{document}
