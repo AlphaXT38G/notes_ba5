@@ -358,4 +358,41 @@ randomization but also of player heterogeneity (some players prefer to kick on t
 others on the right). Obvious applications to other sports: tennis, baseball, etc.
 \end{exbox}
 
+
+\section{Classical game 3: Asymmetric Matching Pennies}
+
+\begin{exbox}[title=Asymmetric Matching Pennies]
+\begin{center}
+\begin{tabular}{c|cc}
+ & H & T \\ \hline
+H & (X,-X) & (-1,1) \\
+T & (-1,1) & (1,-1)
+\end{tabular}
+\end{center}
+$X$ is a big number, such as 1000 or 1 million. Player 1 might think: ``I'll play $H$:
+just in case Player 2 also plays $H$, I'll be rich (and if not, I lose just 1)''. But then
+Player 2 will always play $T$, so Player 1 loses 1 for sure; so Player 1 should play $T$ and
+win 1 for sure; then Player 2 will not play $T$ for sure\dots\ After all, also here
+\textbf{both players should randomize}.
+\end{exbox}
+
+\begin{propbox}[title=Mixed-strategy NE]
+In a mixed-strategy NE, \textbf{each player must be indifferent between $H$ and $T$}.
+\begin{itemize}
+  \item Player 2 indifferent, given $p_H^{(1)}$: $H$ gives
+        $-Xp_H^{(1)} + (1 - p_H^{(1)}) = 1 - (1+X)p_H^{(1)}$, $T$ gives
+        $p_H^{(1)} - (1 - p_H^{(1)}) = 2p_H^{(1)} - 1$; equal for
+        $p_H^{(1)} = \frac{2}{3+X}$.
+  \item Player 1 indifferent, given $p_H^{(2)}$: $H$ gives
+        $Xp_H^{(2)} - (1 - p_H^{(2)}) = -1 + (1+X)p_H^{(2)}$, $T$ gives
+        $-p_H^{(2)} + (1 - p_H^{(2)}) = 1 - 2p_H^{(2)}$; equal for
+        $p_H^{(2)} = \frac{2}{3+X}$.
+\end{itemize}
+\[
+s^{(1)} = s^{(2)} = \left(\frac{2}{3+X},\ 1 - \frac{2}{3+X}\right)
+\]
+The probability of the big gain for Player 1 (and big loss for Player 2) is
+$\left(\frac{2}{3+X}\right)^2$.
+\end{propbox}
+
 \end{document}
