@@ -136,7 +136,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `surprise.js` | random surprise banner |
 | `blackhole.js` | `createBlackHole()`: the Konami black hole, ray-traced in WebGL (light bent by gravity, disk with Doppler beaming, lensed stars), on two canvases so the page falls between its sky and its disk |
 | `supernova.js` | `createSupernova()`: the multi-stage supernova that ends the Konami black hole (flash, shock wave, ejecta, nebula, pulsar), one WebGL canvas over the page |
-| `konami.js` | Konami code: black hole (CSS drawing as a fallback without WebGL) swallowing the page letter by letter, then its boxes, the music player and the Christmas tree's hidden buttons, until it overheats, implodes and explodes in a supernova; confetti, party theme |
+| `konami.js` | Konami code: black hole (CSS drawing as a fallback without WebGL) swallowing the page letter by letter, then its boxes and the music player (the Christmas garland, sax and guitar fade out, `konami.css`), until it overheats, implodes and explodes in a supernova; confetti, party theme |
 | `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()`; `screenTrack()` / `preloadTrack()` / `dropTrack()` for the screens' music |
 | `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable playing `audio/jazz.mp3`, neon sign going out |
 | `closing.js` | closing time: the life-size bartender behind his bar (photo layers from `img/bartender/`: head nodding, forearm tapping the desk bell, chest breathing), swinging lamp, desk bell "ding" (Web Audio), typed speech, chalkboard with countdown, "Good night" |
