@@ -289,6 +289,59 @@ the same before and after.
 
 
 
+%=========================================================
+\section{Braess -- Initial Situation}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.7\linewidth
+]{../images/week05_01.png}
+
+\end{center}
+
+
+\begin{itemize}
+
+\item \textbf{N = 4000 cars} (players). Two \textbf{directed} routes to go from A to B.
+
+\item Travel time on an ``edge'' of the graph (e.g.\ edge AC) is a function of the number of
+cars: $T_e = T_e(x)$.
+
+\item Payout for each car is $-T_e(x)$: each car's objective is to \textbf{minimize} travel
+time.
+
+\end{itemize}
+
+
+\textbf{Is there a NE in which all cars take the same route?} No. If all cars went through C
+(route AC+CB), travel time would be $4000/100 + 45 = 85$ minutes. A car would have an
+incentive to switch to the route through D (AD+DB): $1/100 + 45 = 45.01$.
+
+
+\begin{important}
+
+For different cars to take different routes (still a \textbf{pure-strategy NE}), since all
+cars are identical, with the same payout, travel time should be the same on the two routes
+\emph{in the limit $N \to \infty$, in which a single car cannot affect the travel time of a
+route}.
+
+\textbf{2000 cars on each route is a NE}, with travel time $2000/100 + 45 = 65$ minutes for
+each car.
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Odd number of cars}: e.g.\ 7 cars, 3 on AC+CB and 4 on AD+DB. Is this a NE? Yes,
+because even for the cars on AD+DB, switching to AC+CB would leave travel time unchanged.
+
+\end{example}
+
+
+
 \end{multicols}
 
 
