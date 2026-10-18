@@ -892,4 +892,22 @@ Load (miss) & 800 cycles & 565 cycles
 \end{center}
 \end{propbox}
 
+
+\section{Latency hiding and shared memory}
+
+\begin{defnbox}[title=Warp and latency hiding]
+A \textbf{warp} is a group of 32 threads executed by an SM partition. The simple cores stall all
+the time, so each partition keeps \textbf{many} warps (huge register file) and switches to
+another one whenever a warp stalls (300-1000 cycles), for free: useful work at every cycle ---
+optimizing throughput, not latency.
+\begin{center}
+\includegraphics[width=0.8\linewidth]{images/week06_03.png}
+\end{center}
+\end{defnbox}
+
+\begin{defnbox}[title=Shared memory]
+Programs that read and write a lot of memory stall constantly: copy a small part of the problem
+into local (``shared'') memory, do \textbf{a lot of work} with it, then write back the result.
+\end{defnbox}
+
 \end{document}
