@@ -187,4 +187,17 @@ Ariane 5 rocket failure (June 14, 1996); Patriot missile failure (1991, Dhahran)
 \emph{rounding error accumulation}, the battery failed to intercept a missile, 28 people died.
 \end{exbox}
 
+
+\begin{defnbox}[title=Catastrophic cancellation]
+The especially dangerous case $a - b$ with $a \approx b$ (or $a + b$ with $a \approx -b$). Even
+when the subtraction itself is exact, it ``reveals'' the imprecision of the operands: with 8
+mantissa bits, $3.140 - 3.148 = -2^{-7}\,1.0_2$ keeps only ``1 bit of information''.
+\end{defnbox}
+
+\begin{exbox}[title={$f(x) = (1 - \cos x)/x^2$}]
+$f(1.2 \cdot 10^{-5}) = \frac{1 - 0.9999999999}{1.44 \cdot 10^{-10}} \approx 0.694$: the last
+digit is the only bit of accuracy left, but one can show that $f(x) < 1/2$ for $x > 0$.
+Arithmetic transformations that are ``pointless'' on paper can make a huge accuracy difference.
+\end{exbox}
+
 \end{document}
