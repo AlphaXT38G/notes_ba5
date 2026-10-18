@@ -1354,4 +1354,26 @@ $2000/100 + 45 = 65$ minutes. With an odd number of cars, e.g.\ 7 (3 on AC+CB, 4
 is still a NE: for a car on AD+DB, switching to AC+CB leaves its travel time unchanged.
 \end{propbox}
 
+
+\begin{exbox}[title=A superfast edge CD is added]
+\begin{center}
+\includegraphics[width=0.45\linewidth]{images/week05_02.png}
+\end{center}
+CD can only be used from C to D. Three routes from A to B: AC+CB, AD+DB and AC+CD+DB.
+\end{exbox}
+
+\begin{propbox}[title=The only NE is worse for everybody]
+\begin{itemize}
+  \item Everybody on AC+CB, or everybody on AD+DB, is still not a NE.
+  \item Everybody on AC+CD+DB: $4000/100 + 0 + 4000/100 = 80$ minutes. Switching to AC+CB
+        or to AD+DB gives $4000/100 + 45 = 85$: \textbf{it is a NE}.
+  \item Half on AC+CB, half on AD+DB (65 minutes) is no longer a NE: one car switching to
+        AC+CD+DB would travel $2001/100 + 0 + 1999/100 \simeq 40$ minutes.
+  \item Whatever the others do, leaving AC+CD+DB means replacing an edge with travel time
+        $x/100$ (at most 40) by an edge with travel time 45.
+\end{itemize}
+\textbf{AC+CD+DB is the only NE}: 80 minutes, 15 minutes longer than before the route was
+added.
+\end{propbox}
+
 \end{document}
