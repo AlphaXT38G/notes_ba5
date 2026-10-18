@@ -682,6 +682,87 @@ $G_1$, it is a Nash equilibrium of $G$.
 
 
 
+%=========================================================
+\section{Iterated Elimination of Weakly Dominated Strategies}
+
+
+\begin{warning}
+
+In the Split or Steal game, we could eliminate the weakly dominated Split strategy. However,
+only one out of the three equilibria, \textbf{(Steal, Steal)}, would be preserved!
+
+\end{warning}
+
+
+\begin{important}
+
+\textbf{Theorem (weak)}
+
+Consider a finite game $G$ and a game $G_1$ obtained from $G$ after iterated elimination of
+\textbf{weakly} dominated strategies. If $(s^{(1)}, s^{(2)}, \dots, s^{(N)})$ is a Nash
+equilibrium of $G_1$, it is a Nash equilibrium of $G$.
+
+\end{important}
+
+
+\begin{warning}
+
+\begin{itemize}
+
+\item Only some Nash Equilibria are preserved by the iterated elimination of weakly
+dominated strategies.
+
+\item Which equilibria are preserved \textbf{can depend on the order of elimination}.
+
+\end{itemize}
+
+\end{warning}
+
+
+\begin{example}
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & L & R \\
+\hline
+U & (5,1) & (4,0) \\
+M & (6,0) & (3,1) \\
+D & (6,4) & (4,4) \\
+\end{tabular}
+\end{center}
+
+Two NE: $(D,L)$ and $(D,R)$.
+
+\textbf{Solution 1}
+
+\begin{itemize}
+
+\item Player 1 eliminates $M$, weakly dominated by $D$.
+
+\item Player 2 eliminates $R$, weakly dominated by $L$.
+
+\item The game becomes $U$: (5,1), $D$: (6,4) in column $L$: the unique NE is
+$\boldsymbol{(D,L)}$.
+
+\end{itemize}
+
+\textbf{Solution 2}
+
+\begin{itemize}
+
+\item Player 1 eliminates $U$, weakly dominated by $D$.
+
+\item Player 2 eliminates $L$, weakly dominated by $R$.
+
+\item The game becomes $M$: (3,1), $D$: (4,4) in column $R$: the unique NE is
+$\boldsymbol{(D,R)}$.
+
+\end{itemize}
+
+\end{example}
+
+
+
 \end{multicols}
 
 
