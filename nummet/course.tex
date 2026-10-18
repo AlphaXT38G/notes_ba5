@@ -784,4 +784,17 @@ Instruction & Latency & Throughput \\ \hline
 Loading memory, division and square root are really expensive.
 \end{propbox}
 
+
+\begin{defnbox}[title=Superscalar execution (Tomasulo's algorithm)]
+Instead of running a program step by step, try to do everything at once while respecting data
+dependencies; units wait for their inputs in ``reservation stations''. Recent CPUs look at the 8
+next instructions per cycle and run several loop iterations ahead.
+\end{defnbox}
+
+\begin{defnbox}[title=Branch prediction]
+At each branch the CPU guesses the direction and starts executing it; N cycles later, a wrong
+guess means undoing all those steps. In the naive psum, the 50/50 random signs make it
+mispredict all the time; a branchless version (\texttt{r += fmaxf(x[i], 0.f)}) avoids it.
+\end{defnbox}
+
 \end{document}
