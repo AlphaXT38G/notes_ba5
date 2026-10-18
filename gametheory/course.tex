@@ -768,4 +768,30 @@ he accepts, he gets the $n$ (1, 2 or 3) coins offered and Player 1 keeps the res
 \end{center}
 \end{exbox}
 
+
+\begin{defnbox}[title=Pure strategy (sequential game)]
+A pure strategy for Player $i$ in a sequential game of perfect information is a
+\textbf{contingent plan} that specifies an action at \textbf{each decision node} of Player
+$i$ --- even at the nodes that will not be reached.
+\end{defnbox}
+
+\begin{exbox}[title=Ultimatum game in normal form]
+A pure strategy for Player 1 is e.g.\ ``Offer 1''. A pure strategy for Player 2 is e.g.\
+``Reject if the offer is 1 or 2, and accept if the offer is 3''. Player 2 has eight pure
+strategies: `RRR' means Reject if offered 1, 2 or 3; `RAR' means Reject if offered 1, Accept
+if offered 2, Reject if offered 3.
+\begin{center}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{c|cccccccc}
+$1 \backslash 2$ & RRR & RRA & RAA & AAA & ARR & RAR & AAR & ARA \\ \hline
+Offer 1 & (0,0) & (0,0) & (0,0) & \underline{(2,1)} & \underline{(2,1)} & (0,0) & \underline{(2,1)} & \underline{(2,1)} \\
+Offer 2 & (0,0) & (0,0) & \underline{(1,2)} & (1,2) & (0,0) & \underline{(1,2)} & (1,2) & (0,0) \\
+Offer 3 & (0,0) & \underline{(0,3)} & (0,3) & (0,3) & (0,0) & (0,0) & (0,0) & (0,3)
+\end{tabular}
+\end{center}
+NE are defined exactly as for simultaneous-move games; the underlined cells are the many
+pure-strategy NE of the Ultimatum game.
+\end{exbox}
+
 \end{document}
