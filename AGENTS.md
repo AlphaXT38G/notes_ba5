@@ -89,23 +89,22 @@ The night screens follow the clock. Force one with the URL (`?night=`, the old n
 | `?screen=calm` | calm night (no dawn when forced outside 04:45 – 05:30) |
 | `?screen=christmas` / `?screen=christmas-night` | Christmas day / Christmas night |
 
-Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑↑↓↓←→←→BA,
-`yeti` typed anywhere but the search field (Christmas day or night by the clock, any time of the
-year; outside the Christmas period, typed on a Christmas screen it goes back to the normal one;
-typed in a jazz bar opened over Christmas, it brings Christmas back),
-a random surprise banner on some visits, and on both Christmas screens (day and night) a small golden sax
-hidden among the tree ornaments that opens the jazz bar; a little fir
-in the bar's bottom right corner brings Christmas back. A little red guitar leaning against the
-gifts under the tree starts the metal show (then Christmas comes back). `armstrong` typed anywhere but the search
-field opens the jazz bar at any time (over Christmas and the calm night too, but not over the
-shows); typed again in the bar it goes back to the normal screen of that moment, by the clock
-alone: it drops the `armstrong` and `yeti` eggs, the sax and a forced `?screen=`, so it shows the
-day (or the calm night), the bar itself
-at bar time (21:30 – 01:00), or Christmas during the Christmas period. `peace` typed anywhere but
-the search field brings the calm night at any time, like `yeti` (over the day, the jazz bar and
-Christmas, not over the shows, which it comes back after); `yeti` or `armstrong` typed after it
-wins, and typed again on the calm night it goes back to the normal screen of that moment (on the
-calm night of the clock, it does nothing).
+Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑↑↓↓←→←→BA, `yeti` typed
+anywhere but the search field (Christmas day or night by the clock, any time of the year; outside
+the Christmas period, typed on a Christmas screen it goes back to the normal one; typed in a jazz
+bar opened over Christmas, it brings Christmas back), a random surprise banner on some visits, and
+on both Christmas screens (day and night) a small golden sax hidden among the tree ornaments that
+opens the jazz bar; a little fir in the bar's bottom right corner brings Christmas back. A little
+red guitar leaning against the gifts under the tree starts the metal show (then Christmas comes
+back). `armstrong` typed anywhere but the search field opens the jazz bar at any time (over
+Christmas and the calm night too, but not over the shows); typed again in the bar it goes back to
+the normal screen of that moment, by the clock alone: it drops the `armstrong` and `yeti` eggs, the
+sax and a forced `?screen=`, so it shows the day (or the calm night), the bar itself at bar time
+(21:30 – 01:00), or Christmas during the Christmas period. `peace` typed anywhere but the search
+field brings the calm night at any time, like `yeti` (over the day, the jazz bar and Christmas, not
+over the shows, which it comes back after); `yeti` or `armstrong` typed after it wins, and typed
+again on the calm night it goes back to the normal screen of that moment (on the calm night of the
+clock, it does nothing).
 
 ## How the index page is built
 
