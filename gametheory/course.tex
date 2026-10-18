@@ -630,4 +630,30 @@ However, for $1/3 \le p_U \le 2/3$ strategy $R$ is an optimal strategy (strictly
 $1/3 < p_U < 2/3$), hence $R$ is \textbf{not a dominated strategy}.
 \end{exbox}
 
+
+\section{Iterated elimination of dominated strategies}
+
+\begin{defnbox}[title=Iterated elimination of dominated strategies]
+A \textbf{solution concept} that allows to simplify (sometimes solve) a game. Idea: if a
+strategy is (strictly) dominated, I should never choose it, so the game should be
+equivalent if I discard this strategy altogether. Repeat on the reduced game.
+\end{defnbox}
+
+\begin{exbox}[title=Solving a game by iterated elimination]
+\begin{center}
+\begin{tabular}{c|ccc}
+ & L & M & R \\ \hline
+U & (1,0) & (1,2) & (0,1) \\
+D & (0,3) & (0,1) & (2,0)
+\end{tabular}
+\end{center}
+\begin{enumerate}
+  \item For Player 2, $R$ is dominated by $M$ ($2 > 1$, $1 > 0$): eliminate $R$.
+  \item Given that $R$ was discarded, for Player 1 $D$ is dominated by $U$ ($1 > 0$ against
+        $L$ and $M$): eliminate $D$.
+  \item Only row $U$ is left: Player 2 chooses $M$ ($2 > 0$).
+\end{enumerate}
+The game is greatly simplified: the NE is clearly $(U, M)$.
+\end{exbox}
+
 \end{document}
