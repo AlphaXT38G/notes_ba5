@@ -47,10 +47,12 @@ A **Names / Previews** switch shows every document as a small thumbnail of its
 first page instead (for course notes, the first page after the table of contents).
 The thumbnails are made by `pdftoppm` and `pdftotext` (poppler); without them,
 the build still works and the page shows names only.
-In the bottom left corner, a vintage cassette deck 📼 plays lofi while you read (Lofi
-Girl mixes from YouTube), with VU meters, a tape counter and real keys (▶ ❚❚ ■, ◀◀ / ▶▶
-wind 30 s). ⏏, or the next tape leaning behind the deck, puts the next tape in. It never
-starts by itself, and only shows during the day.
+In the bottom left corner, a vintage cassette deck 📼 plays music while you read, with
+VU meters, a tape counter and real keys (▶❚❚, ◀◀ / ▶▶ wind 30 s). Its station key
+goes through the bands: Lofi Girl mixes from YouTube, the music of the screens (jazz
+bar, late night, metal show, epic finale, Christmas) and Radio Impuls live. ⏏, or the
+next tape leaning behind the deck, puts in the next tape of the band. It never starts
+by itself, and only shows during the day.
 
 From **21:30 to 01:00** the page turns into a jazz bar 🎷 (neon title, smoke,
 floating notes) and plays background jazz ("Just One More Drink", jazz noir). The
