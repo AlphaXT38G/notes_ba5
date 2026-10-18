@@ -559,6 +559,54 @@ constantly.
 
 
 
+%=========================================================
+\section{GPUs as Compute Accelerators}
+
+
+\begin{definition}
+
+\textbf{KERNEL}
+
+You cannot run a browser or an operating system on a GPU: it merely helps to accelerate tasks.
+Its basic computational unit is called a \textbf{kernel} (the CPU asks: ``Please run kernel
+\texttt{matmul\_fp16\_1024}'', the GPU: ``OK!'').
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{KERNEL LAUNCH}
+
+Code + a \textbf{launch grid}: the grid specifies how many instances of the program to launch,
+e.g.\ $128 \times 128 \times 32$ times.
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{GPUs for general purpose computing}
+
+\begin{itemize}
+
+\item Originally, GPUs could only render triangles. Main use: computer games!
+
+\item People soon realized that their architecture is \emph{interesting} for non-graphics usage.
+
+\item Hacky workarounds: full-screen rectangle + input data (as a texture) + graphics program =
+output ``image'' (\emph{Brook for GPUs: Stream Computing on Graphics Hardware}, Buck et al.\
+2004).
+
+\item Today's frameworks make GPU programming easier: \textbf{CUDA} (NVIDIA), \textbf{ROCm}
+(AMD), \textbf{SYCL} (Intel).
+
+\end{itemize}
+
+\end{example}
+
+
+
 \end{multicols}
 
 
