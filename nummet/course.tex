@@ -385,4 +385,18 @@ $\mathbf{U} = \begin{bmatrix} 1 & 1 \\ 0 & 2 \end{bmatrix}$,
 $\mathbf{L} = \begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix}$.
 \end{exbox}
 
+
+\begin{propbox}[title=Using an LU decomposition]
+With partial pivoting, $\mathbf{A} = \mathbf{P}\mathbf{L}\mathbf{U}$ ($\mathbf{P}$ a
+permutation matrix, a single 1 per row/column) and
+\[
+\mathbf{x} = \mathbf{U}^{-1}(\mathbf{L}^{-1}(\mathbf{P}^{-1}\mathbf{b})),
+\]
+where $\cdot^{-1}$ means \emph{solving} a triangular system (forward / back substitution), not
+computing an inverse. Substitution costs $\mathcal{O}(n^2)$: all the hard work ($\mathcal{O}(n^3)$)
+is in the factorization. SciPy: \texttt{lu, piv = la.lu\_factor(A)}, \texttt{x =
+la.lu\_solve((lu, piv), b)}; $\mathbf{L}$ has a unit diagonal, so both factors are packed in
+one array.
+\end{propbox}
+
 \end{document}
