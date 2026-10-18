@@ -679,4 +679,17 @@ $\mathbf{x}$ across the axis perpendicular to $\mathbf{v}$ ($\|\mathbf{v}\| = 1$
 \end{center}
 \end{defnbox}
 
+
+\begin{propbox}[title=Least squares with QR]
+For a tall $\mathbf{A}$, the \textbf{economy-size} QR keeps only the columns of $\mathbf{Q}$
+that multiply $\mathbf{R}$. Then
+\[
+\mathbf{x} = \mathbf{R}^{-1}(\mathbf{Q}^T\mathbf{b}):
+\]
+solve $\mathbf{R}\mathbf{x} = \mathbf{Q}^T\mathbf{b}$ by back-substitution (never invert
+$\mathbf{R}$). About 2$\times$ the cost of LU, but it gives the least squares solution
+\emph{without the normal equations}, is numerically extremely well-behaved, and works even for
+singular (or zero) matrices. Geometrically: rotate, project, then unwarp.
+\end{propbox}
+
 \end{document}
