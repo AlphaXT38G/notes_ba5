@@ -764,6 +764,128 @@ enforce the agreement if one deviates?
 
 
 
+%=========================================================
+\section{Classical Example 2 -- Matching Pennies}
+
+
+\begin{example}
+
+Two players choose Head or Tail. Player 1 wins 1 if the two choices match (2 Heads or 2
+Tails) and loses 1 otherwise. The other way around for Player 2: she wins 1 in case of
+mismatch and loses 1 in case of a match.
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & H & T \\
+\hline
+H & (1,-1) & (-1,1) \\
+T & (-1,1) & (1,-1) \\
+\end{tabular}
+\end{center}
+
+This is a \textbf{zero sum game}.
+
+\end{example}
+
+
+\begin{warning}
+
+At first sight, it looks like there is no Nash Equilibrium\dots But what is true is that
+\textbf{there is no Nash Equilibrium in pure strategy}.
+
+\end{warning}
+
+
+\separator
+
+
+\textbf{Mixed strategy NE}
+
+Player 1 plays $H$ with probability $p_H^{(1)}$ (and $T$ with probability $1 - p_H^{(1)}$).
+What should Player 2 do?
+
+
+\begin{formula}
+
+If Player 2 plays $H$, his expected payout is
+
+\[
+-p_H^{(1)} + (1 - p_H^{(1)}) = 1 - 2p_H^{(1)}
+\]
+
+If Player 2 plays $T$, his expected payout is
+
+\[
+p_H^{(1)} - (1 - p_H^{(1)}) = -1 + 2p_H^{(1)}
+\]
+
+\end{formula}
+
+
+\begin{itemize}
+
+\item If $p_H^{(1)} > \frac{1}{2}$, playing $T$ gives Player 2 a higher expected payout:
+he should play $T$ with probability 1.
+
+\item If $p_H^{(1)} < \frac{1}{2}$, Player 2 should play $H$ with probability 1.
+
+\item The only possibility to induce Player 2 to randomize is $p_H^{(1)} = \frac{1}{2}$: to
+randomize, he must be \textbf{indifferent} between the two strategies.
+
+\item Same reasoning for the reaction of Player 1 to Player 2's strategy.
+
+\end{itemize}
+
+
+\begin{important}
+
+\textbf{NE: both players play $H$ and $T$ with probability $\frac{1}{2}$.}
+
+\end{important}
+
+
+\begin{summary}
+
+\textbf{Logic of a mixed-strategy equilibrium}
+
+\begin{itemize}
+
+\item At least one player plays a mixed strategy, i.e.\ randomizes between at least two
+actions.
+
+\item To randomize between two actions, a player must be \textbf{indifferent} between the
+two, otherwise she would play the one with higher expected payout.
+
+\item For Player 1 to randomize, Player 2 must play H/T with probability 50\% each.
+
+\item For Player 2 to randomize with 50\% each, he must also be indifferent between H and T.
+
+\item If both play H/T with probability 50\% each, both are indifferent: \textbf{both are
+making an optimal choice} (they could not do anything better) $\rightarrow$ it is a NE.
+
+\end{itemize}
+
+\end{summary}
+
+
+\begin{example}
+
+\textbf{Real life: penalty kicks}
+
+The goalkeeper has a higher probability of stopping the ball if he jumps on the side where
+the ball is kicked (Left/Right); the kicker has a higher probability of scoring if he kicks
+on the opposite side.
+
+Chiappori, Levitt, Groseclose (2002): statistical study of actual penalty kicks, with three
+possible actions (Left/Middle/Right) -- finds evidence of randomization but also of player
+heterogeneity (some players prefer to kick on the left, others on the right).
+
+Other applications: tennis, baseball, etc.
+
+\end{example}
+
+
+
 \end{multicols}
 
 
