@@ -575,4 +575,28 @@ $\operatorname{span}(\mathbf{A})$.
 \end{itemize}
 \end{keybox}
 
+
+% =========================================================
+\chapter{Lecture 4 : Linear systems III}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Least squares problems, orthogonality and polynomial
+regression: why the normal equations are badly conditioned, how orthogonal bases (Legendre,
+Chebyshev) and the \textbf{QR factorization} fix it, and \textbf{Tikhonov regularization}. \\
+\textbf{Why is it useful?} Orthogonal transformations do not amplify errors: they give
+accurate least squares solutions.
+\end{rembox}
+
+\section{Limits of the normal equations}
+
+\begin{warnbox}[title=The catch]
+\[
+\operatorname{cond}(\mathbf{A}^T\mathbf{A}) \approx \operatorname{cond}(\mathbf{A})^2
+\]
+The normal equations are often much worse conditioned than the original problem. Goal: solve
+the same problem without ever building $\mathbf{A}^T\mathbf{A}$. (Regression also suffers from
+overfitting and from wrong models.)
+\end{warnbox}
+
 \end{document}
