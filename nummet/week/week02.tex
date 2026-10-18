@@ -590,6 +590,34 @@ element must be chosen carefully.
 
 
 
+%=========================================================
+\section{Solving Repeatedly: Don't Invert}
+
+
+A common situation: the same system must be solved over and over again,
+$\mathbf{A}\mathbf{x}^{(1)} = \mathbf{b}^{(1)}$, $\mathbf{A}\mathbf{x}^{(2)} = \mathbf{b}^{(2)}$,
+\dots\ Can we \emph{precompute} something?
+
+
+\begin{warning}
+
+\textbf{Anti-pattern -- don't do this}: precompute $\mathbf{A}^{-1}$, then one matrix-vector
+multiplication per solve, $\mathbf{x}^{(i)} = \mathbf{A}^{-1}\mathbf{b}^{(i)}$.
+
+\begin{enumerate}
+
+\item Computation of the inverse can be numerically unstable.
+
+\item Inverse + matrix multiplies require slightly more FLOPs than the alternative (LU).
+
+\item Generally, the inverse of a sparse matrix is dense: will run out of memory.
+
+\end{enumerate}
+
+\end{warning}
+
+
+
 \end{multicols}
 
 
