@@ -251,6 +251,11 @@ const bow3d = (x, y, c, dark, k = 1) => `<g transform="translate(${f1(x)},${f1(y
   `<path d="M1.5,-.5C6,-7 13,-8 13.5,-3.5 11,-2 6,-1 1.5,-.5Z" fill="${dark}" opacity=".55"/>` +
   `<path d="M-14,-6c2,-3 5,-4 8,-2" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.3" stroke-linecap="round"/>` +
   `<ellipse rx="3.4" ry="2.8" fill="${c}"/><ellipse rx="3.4" ry="2.8" fill="rgba(0,0,0,.15)"/><ellipse cx="-1" cy="-1" rx="1.4" ry="1" fill="rgba(255,255,255,.45)"/></g>`;
+// A gift tag hanging from its string (x, y: where the string is tied), turned by a few degrees:
+// a cream card with a cut corner, its hole, and two red lines of writing too small to read
+const giftTag = (x, y, a) => `<g transform="translate(${x},${y}) rotate(${a})"><path d="M0,0L-1,6.5" stroke="#b8935a" stroke-width=".6"/>` +
+  `<path d="M-4.5,6H2.5L4.5,8.5V15H-4.5Z" fill="#f6ecd4" stroke="rgba(60,30,0,.35)" stroke-width=".4"/><path d="M2.5,6V8.5H4.5" fill="rgba(0,0,0,.08)"/>` +
+  `<circle cx="-1" cy="8.3" r=".8" fill="#8a6a3a"/><path d="M-3,11.2h4.5M-3,13h3" stroke="#c8102e" stroke-width=".55" stroke-linecap="round"/></g>`;
 const TREE_W = 520, TREE_H = 640, TREE_X = 330;
 const treeLights = [];
 const treeHalfWidth = y => 12 + (y - 60) / (520 - 60) * 172;  // half width of the tree at height y
@@ -353,7 +358,7 @@ const buildTree = () => {
     if (taken.some(([tx, ty, tr]) => Math.hypot(tx - x, ty - y) < tr + r + 6)) continue;
     taken.push([x, y, r]);
     placed++;
-    const c = (rnd() * BAUBLES.length) | 0;
+    const c = (placed * 2 + ((rnd() * 2) | 0)) % BAUBLES.length;  // every colour about as often
     parts.push(`<g class="bauble"><ellipse cx="${f1(x + r * .45)}" cy="${f1(y + r * .75)}" rx="${f1(r * .95)}" ry="${f1(r * .45)}" class="bauble-shadow"/>` +
       `<path d="M${f1(x)},${f1(y - r - 9)}v6" class="hook"/><rect x="${f1(x - 2.6)}" y="${f1(y - r - 4)}" width="5.2" height="4.5" rx="1" fill="url(#xgold)"/>` +
       `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="url(#xb${c})"/>` +
@@ -445,18 +450,18 @@ const SAX_SVG = `<svg viewBox="0 0 30 52" aria-hidden="true"><path d="M15,0v6" s
 
 // The hidden guitar, set down on the tree skirt and leaning against the green gift, its headstock
 // resting on the gift's lid, like a present that was too big to wrap: a small red electric guitar
-// (two horns, black pickups, gold knobs, a dark neck) with a gold ribbon bow tied on its neck. It
-// is lit like the gifts (from the top left): a contact shadow on the skirt, and the shadow it casts
-// on the green box. Drawn in the tree's own coordinates (the box's viewBox is that part of the
+// (two horns, black pickups, gold knobs, a dark neck) with the gifts' gold bow tied on its neck and
+// a gift tag hanging from it. It is lit like the gifts (from the top left): its shadow on the skirt
+// like theirs, and the shadow it casts on the green box. Drawn in the tree's own coordinates (the box's viewBox is that part of the
 // tree), so it sits exactly where the gifts are.
 const GUITAR = { x: 342, y: 494, w: 48, h: 60 };  // in front of the green gift (x 380 - 458)
 const GUITAR_SVG = `<svg viewBox="${GUITAR.x} ${GUITAR.y} ${GUITAR.w} ${GUITAR.h}" aria-hidden="true"><defs>` +
   `<linearGradient id="guitarred" x1="0" x2="1"><stop offset="0" stop-color="#e8423a"/><stop offset=".45" stop-color="#a80f1d"/><stop offset="1" stop-color="#45000a"/></linearGradient>` +
-  `<radialGradient id="guitarfoot"><stop offset="0" stop-color="rgba(60,0,12,.55)"/><stop offset="1" stop-color="rgba(60,0,12,0)"/></radialGradient>` +
+  `<radialGradient id="guitarfoot"><stop offset="0" stop-color="rgba(50,0,10,.5)"/><stop offset="1" stop-color="rgba(50,0,10,0)"/></radialGradient>` +
   `<linearGradient id="guitarcast" x1="0" x2="1"><stop offset="0" stop-color="rgba(0,25,10,.32)"/><stop offset="1" stop-color="rgba(0,25,10,0)"/></linearGradient></defs>` +
   // its shadow on the green gift's face (the light comes from the left), then on the skirt
   `<path d="M380,511L384.5,511 388,548 380,548Z" fill="url(#guitarcast)"/>` +
-  `<ellipse cx="362.5" cy="546.5" rx="10" ry="2.6" fill="url(#guitarfoot)"/>` +
+  `<ellipse cx="367" cy="546.5" rx="12" ry="3.2" fill="url(#guitarfoot)"/>` +
   // the guitar, drawn upright (bottom of the body at 13,63), stood on the skirt and tilted onto the lid
   `<g transform="translate(361,546) rotate(24) scale(.74) translate(-13,-63)">` +
   `<path d="M10.5,0H15.5L15,8H11Z" fill="#1a1a1f"/><path d="M10,2h-1.6M10,5h-1.6M16,2h1.6M16,5h1.6" stroke="#cfcfcf" stroke-width="1.2"/>` +
@@ -466,26 +471,27 @@ const GUITAR_SVG = `<svg viewBox="${GUITAR.x} ${GUITAR.y} ${GUITAR.w} ${GUITAR.h
   `<rect x="9.5" y="43" width="7" height="3" rx=".8" fill="#111"/><rect x="9.5" y="49" width="7" height="3" rx=".8" fill="#111"/><rect x="10" y="55" width="6" height="1.6" fill="#bbb"/>` +
   `<circle cx="19.5" cy="53" r="1.1" fill="#e3a923"/><circle cx="18" cy="57" r="1.1" fill="#e3a923"/>` +
   `<path d="M12,1V56M13,1V56M14,1V56" stroke="rgba(235,235,235,.6)" stroke-width=".3"/>` +
-  // the gold bow tied on the neck, the same ribbon as the red gift's, its two tails hanging
-  `<path d="M11,24.5h4.2" stroke="#ffd15c" stroke-width="2.2"/>` +
-  `<path d="M13,24.5c-7,-6 -10,2 0,0c7,-6 10,2 0,0" fill="#ffd15c" stroke="rgba(0,0,0,.3)" stroke-width=".5"/>` +
-  `<path d="M12.6,25.2l-2.6,6.5M13.4,25.2l2.2,6.8" stroke="#e2a81e" stroke-width="1.3" stroke-linecap="round"/></g></svg>`;
+  // the gold bow tied on the neck, the same ribbon as the red gift's
+  `<path d="M11,24.5h4.2" stroke="#ffd15c" stroke-width="2.2"/><path d="M11,25.3h4.2" stroke="#c9921c" stroke-width=".8"/>` + bow3d(13, 24.5, "#ffd15c", "#c9921c", .5) + `</g>` +
+  // its tag, hanging straight down from the bow (where the bow is, once the guitar is tilted)
+  giftTag(372.5, 521, -6) + `</svg>`;
 
 // The hidden firefly jar, set on the skirt in front of the red and blue gifts: the jar of the calm
 // night (calm.js) wrapped as a present, a cork lid with a red bow, twine round the neck, moss at
-// the bottom and a firefly glowing inside, wandering behind the glass (CSS). At night its light
-// spills on the skirt. In the tree's coordinates too, like the guitar.
+// the bottom and a firefly glowing inside, wandering behind the glass (CSS). The bow is the gifts'
+// one, a gift tag hangs from the twine, and its shadow on the skirt is like theirs. At night its
+// light spills on the skirt. In the tree's coordinates too, like the guitar.
 const JAR = { x: 226, y: 496, w: 52, h: 58 };
 const JAR_GLASS = "M245,513H259Q259,516 261.5,517.5Q263.5,519 263.5,522V542Q263.5,546.5 259,546.5H245Q240.5,546.5 240.5,542V522Q240.5,519 242.5,517.5Q245,516 245,513Z";
 const JAR_SVG = `<svg viewBox="${JAR.x} ${JAR.y} ${JAR.w} ${JAR.h}" aria-hidden="true"><defs>` +
-  `<radialGradient id="jarfoot"><stop offset="0" stop-color="rgba(60,0,12,.5)"/><stop offset="1" stop-color="rgba(60,0,12,0)"/></radialGradient>` +
+  `<radialGradient id="jarfoot"><stop offset="0" stop-color="rgba(50,0,10,.5)"/><stop offset="1" stop-color="rgba(50,0,10,0)"/></radialGradient>` +
   `<radialGradient id="jarspill"><stop offset="0" stop-color="rgba(215,255,150,.55)"/><stop offset="1" stop-color="rgba(215,255,150,0)"/></radialGradient>` +
   `<radialGradient id="jarglow"><stop offset="0" stop-color="rgba(240,255,190,1)"/><stop offset=".3" stop-color="rgba(205,255,140,.6)"/><stop offset="1" stop-color="rgba(170,255,120,0)"/></radialGradient>` +
   `<linearGradient id="jarglass" x1="0" x2="1"><stop offset="0" stop-color="rgba(210,230,255,.34)"/><stop offset=".3" stop-color="rgba(210,230,255,.1)"/><stop offset=".75" stop-color="rgba(210,230,255,.06)"/><stop offset="1" stop-color="rgba(210,230,255,.3)"/></linearGradient>` +
   `<linearGradient id="jarcork" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c49a64"/><stop offset="1" stop-color="#7a5430"/></linearGradient>` +
   `<clipPath id="jarclip"><path d="${JAR_GLASS}"/></clipPath></defs>` +
   `<ellipse class="spill" cx="252" cy="546" rx="24" ry="6" fill="url(#jarspill)"/>` +
-  `<ellipse cx="252" cy="546.6" rx="13" ry="2.6" fill="url(#jarfoot)"/>` +
+  `<ellipse cx="257" cy="546.6" rx="15" ry="3.4" fill="url(#jarfoot)"/>` +
   `<path d="${JAR_GLASS}" fill="url(#jarglass)"/>` +
   // inside the glass: moss and a twig at the bottom, the firefly (its light, then its body)
   `<g clip-path="url(#jarclip)"><path d="M240,547C242,540 246,543 248,540 250,543 254,539 256,542 259,539 262,542 264,540V547Z" fill="#2f6b34"/>` +
@@ -495,12 +501,15 @@ const JAR_SVG = `<svg viewBox="${JAR.x} ${JAR.y} ${JAR.w} ${JAR.h}" aria-hidden=
   `<path d="M250.6,527.6l-1.6,-1.4M251.6,527.6l1.2,-1.6" stroke="rgba(220,235,255,.7)" stroke-width=".5"/></g></g>` +
   // the glass: its outline and the reflections of the light from the left
   `<path d="${JAR_GLASS}" fill="none" stroke="rgba(225,240,255,.75)" stroke-width=".8"/>` +
+  // its round shape: the thick glass of the bottom and the rim of the neck seen as ellipses
+  `<path d="M241.5,543.5Q252,548.5 262.5,543.5" fill="none" stroke="rgba(235,245,255,.6)" stroke-width="1.4"/>` +
+  `<ellipse cx="252" cy="513.4" rx="7.2" ry="1.3" fill="none" stroke="rgba(235,245,255,.6)" stroke-width=".6"/>` +
   `<path d="M243.2,522V541" stroke="rgba(255,255,255,.7)" stroke-width="1.3" stroke-linecap="round"/><path d="M261,524V532" stroke="rgba(255,255,255,.35)" stroke-width=".8" stroke-linecap="round"/>` +
   // twine round the neck, the cork lid, and the red bow that makes it a present
   `<path d="M244.6,514.5H259.4" stroke="#c9a86a" stroke-width="1.4"/><rect x="243.5" y="508" width="17" height="5.5" rx="1.2" fill="url(#jarcork)"/>` +
   `<rect x="243.5" y="508" width="17" height="1.4" rx=".7" fill="rgba(255,255,255,.25)"/>` +
-  `<path d="M252,508c-9,-8 -13,1 0,0c9,-8 13,1 0,0" fill="#c8102e" stroke="rgba(0,0,0,.3)" stroke-width=".5"/>` +
-  `<path d="M251.4,508.4l-3,5M252.6,508.4l2.6,5.2" stroke="#a30d26" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+  `<path d="M252,508v5.5" stroke="#c8102e" stroke-width="2.4"/>` + bow3d(252, 508.5, "#c8102e", "#7e0a1d", .62) +
+  giftTag(244.5, 515, 12) + `</svg>`;
 
 const scene = document.createElement("div"), tree = document.createElement("div"), treeFront = document.createElement("div");
 scene.id = "xscene";

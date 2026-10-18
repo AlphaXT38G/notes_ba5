@@ -126,6 +126,9 @@ body[data-phase=christmas-night] #xtree .nf1{stroke:#3a8a52}
 body[data-phase=christmas-night] #xtree .nf2{stroke:#226a3d}
 body[data-phase=christmas-night] #xtree .nf3{stroke:#0e3f22}
 body[data-phase=christmas-night] #xtree .rim{opacity:.45}
+/* the gifts, the guitar and the jar in the night light (static, so the filter is drawn once) */
+body[data-phase=christmas-night] #xtree .gift,body[data-phase=christmas-night] #xguitar svg{filter:brightness(.82) saturate(.9)}
+body[data-phase=christmas-night] #xguitar:hover svg,body[data-phase=christmas-night] #xguitar:focus-visible svg{filter:brightness(.82) drop-shadow(0 0 5px rgba(255,80,50,.9))}
 @media(max-width:1240px){#xtree{opacity:.5}}
 #xtree-front{z-index:3;pointer-events:none}
 /* The hidden sax (among the ornaments), guitar and firefly jar (among the gifts), glowing gold / red /
