@@ -321,6 +321,85 @@ Lab}.
 
 
 
+%=========================================================
+\section{What is a Numerical Method?}
+
+
+\begin{important}
+
+Computer graphics, computer vision, machine learning, computational photography, weather
+simulation, geometric information systems\dots: \textbf{all of them have some kind of numerical
+method at their core}, running on number crunchers (CPUs, GPUs).
+
+\end{important}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item \textbf{Rendering}: visual effects $\simeq$ solving integrals,
+$\text{pixel color} = \int \text{light}\,\mathrm{d}x$.
+
+\item \textbf{Fluid simulation}: to compute the next frame (``timestep''), solve an enormous
+linear system $\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$ (HUGE matrix).
+
+\item \textbf{Character animation}: attaching a virtual body to a skeleton using optimization,
+$\mathbf{x} = \mathbf{A}^{+}\mathbf{b}$ (pseudoinverse).
+
+\item \textbf{Computer vision}: quickly process images using learned convolutions (``CNNs''); a
+convolution is a particular type of linear transformation.
+
+\item \textbf{Machine learning}: computing derivatives of software,
+$\frac{\partial}{\partial \mathbf{x}} f(\mathbf{x})$ where $f$ is a computer program.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{CS-328}
+
+About the \textbf{computer implementation} of abstract concepts from MATH-111 (Linear Algebra:
+$\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$) and MATH-101/106 (Analysis:
+$\frac{\partial}{\partial \mathbf{x}} f(\mathbf{x})$, $y = \int_\Omega f(x)\,\mathrm{d}x$).
+
+Typical computer science works with $\mathbb{N}$ (graph theory, databases, network protocols,
+cryptography); numerical methods work with $\mathbb{R}^n$.
+
+\end{definition}
+
+
+\begin{summary}
+
+\textbf{Many layers} (top to bottom)
+
+\begin{itemize}
+
+\item Applications
+
+\item Frameworks: NumPy, PyTorch, TensorFlow, JAX
+
+\item Optimization algorithms: gradient descent, Newton's method in N dimensions, Broyden's
+method, Gauss-Newton, Levenberg-Marquardt
+
+\item Matrix factorizations: the ``Big 3'' LU, QR, SVD
+
+\item Compilation: of floating point math, just-in-time (JAX, XLA, etc.)
+
+\item Floating point arithmetic: history, IEEE-754, error propagation (\emph{today})
+
+\item Processor architecture: superscalar processors, vectorization, memory hierarchy, shared
+memory (GPUs)
+
+\end{itemize}
+
+\end{summary}
+
+
+
 \end{multicols}
 
 
