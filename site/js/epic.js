@@ -154,10 +154,11 @@ fxLayers.push({
 // "More epicness ?": 10 s before a metal takeover ends this button rises in the middle of the
 // screen. Clicking it queues the epic finale (epicQueued, see the override above) and gets its song ready
 // (preloadEpic, below); it stays, counting down, until the metal ends, then goes away.
-// It is a medallion forged in blue fire (css/epic.css), on a pool of darkness that hides the show behind: light rays turning behind it, a ring of
-// runes (an SVG shown as an <img>, its glow rendered once), ten charge pips around it that light up
-// one by one as the end of the show nears once it was clicked, sparks rising, a shine sweeping
-// its face. Every moving part only turns, scales or fades.
+// It is a medallion forged in blue fire (css/epic.css), on a pool of darkness that hides the show
+// behind: light rays turning behind it, a ring of runes (an SVG shown as an <img>, its glow
+// rendered once), ten charge pips around it that light up one by one as the end of the show nears
+// once it was clicked, sparks rising, a shine sweeping its face. Every moving part only turns,
+// scales or fades.
 const MORE_SIGIL = (() => {
   const runes = Array.from({ length: 30 }, (_, i) => {
     let d = "";
@@ -270,7 +271,7 @@ const summonSound = left => {
     boom.start(tb); boom.stop(tb + 2);
   } catch (e) {}
 };
-// The show ended without the finale (e.g. left by the clock), or the finale ended: nothing left to summon
+// The show ended without the finale (e.g. by the clock), or the finale ended: nothing to summon
 document.addEventListener("metal", e => { if (!e.detail && !epicAt) endSummoning(); });
 document.addEventListener("epic", e => { if (!e.detail) endSummoning(); });
 // Epic music: a Two Steps From Hell mix (audio/epic.mp3, 25 tracks), looped, on the same amp

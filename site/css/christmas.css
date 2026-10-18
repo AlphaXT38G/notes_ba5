@@ -126,23 +126,23 @@ body[data-phase=christmas-night] #xtree .nf1{stroke:#3a8a52}
 body[data-phase=christmas-night] #xtree .nf2{stroke:#226a3d}
 body[data-phase=christmas-night] #xtree .nf3{stroke:#0e3f22}
 body[data-phase=christmas-night] #xtree .rim{opacity:.45}
-/* the gifts, the guitar and the jar in the night light (static, so the filter is drawn once) */
+/* the gifts and the guitar in the night light (static, so the filter is drawn once) */
 body[data-phase=christmas-night] #xtree .gift,body[data-phase=christmas-night] #xguitar svg{filter:brightness(.82) saturate(.9)}
 @media(max-width:1240px){#xtree{opacity:.5}}
 #xtree-front{z-index:3;pointer-events:none}
-/* The hidden sax (among the ornaments), guitar and firefly jar (among the gifts), glowing gold / red /
-   green when hovered */
+/* The hidden sax (among the ornaments), guitar (behind the gifts) and firefly jar (under the
+   garland), glowing gold / red / green when hovered */
 #xsax,#xguitar,#xjar{position:absolute;display:none;padding:0;background:none;border:0;cursor:pointer;pointer-events:auto}
 #xsax svg,#xguitar svg,#xjar svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
 #xguitar svg{filter:none}  /* it draws its own shadows, on the tree and the gifts */
 #xjar svg{filter:drop-shadow(1px 3px 2px rgba(0,30,15,.35))}
 #xsax:hover svg,#xsax:focus-visible svg{filter:drop-shadow(0 0 5px rgba(255,215,110,.9))}
-/* the guitar stands behind gifts it draws again over itself: only the guitar takes clicks and glows */
+/* the guitar stands behind gifts it draws again over itself: only the guitar takes clicks, glows */
 #xguitar{pointer-events:none}
 #xguitar .gtr{pointer-events:visiblePainted}
 #xguitar:hover .gtr,#xguitar:focus-visible .gtr{filter:drop-shadow(0 0 4px rgba(255,80,50,.9))}
 #xjar:hover svg,#xjar:focus-visible svg{filter:drop-shadow(0 0 5px rgba(200,255,150,.9))}
-/* The firefly wanders behind the glass and its light breathes; by day it is faint, bright at night */
+/* The firefly wanders behind the glass and its light breathes: faint by day, bright at night */
 #xjar .fly{animation:xjar-fly 9s ease-in-out infinite}
 #xjar .glow{opacity:.45;animation:xjar-glow 2.6s ease-in-out infinite alternate}
 #xjar .halo{opacity:0}

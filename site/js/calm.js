@@ -396,7 +396,7 @@ document.addEventListener("keydown", e => {
     applyScreen();
   } else startPeace();
 });
-// Bringing the calm night: the code, or the firefly jar among the Christmas gifts (christmas.js,
+// Bringing the calm night: the code, or the firefly jar under the Christmas garland (christmas.js,
 // fromXmas). The other eggs give way, so that leaving the calm night later goes back to the
 // clock; the jar keeps the yeti egg, so that leaving it goes back to Christmas.
 const startPeace = (fromXmas = false) => {

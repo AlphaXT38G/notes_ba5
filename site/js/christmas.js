@@ -8,16 +8,17 @@
 //     gifts, a snowman companion on the left (and at night the moon and chalet lights),
 //   - a Christmas turntable playing Jingle Bell Rock or a live of Christmas music,
 //   - a small golden sax hidden among the tree's ornaments, which opens the jazz bar (a little
-//     fir in the bar brings Christmas back), a little red guitar set down against the gifts,
-//     which starts the metal show, and a firefly jar swinging under the garland, which opens the
-//     calm night (the same fir brings Christmas back).
+//     fir in the bar brings Christmas back), a red guitar standing behind the gifts, which
+//     starts the metal show, and a firefly jar swinging under the garland, which opens the calm
+//     night (the same fir brings Christmas back).
 // At night the tree lights play changing patterns and Santa's sleigh crosses the sky now and then.
 // The metal show at 1:00 and the other easter eggs still take over.
 //
 // In this file, in order: screens and override, the yeti code, shared helpers, the garland, the
-// tree and its sax ornament, the mountains, the moon, the snowman, the sax, guitar and jar buttons, the
-// tree lights canvas, the snow, the sleigh, the music, the fir back from the jazz bar, and turning
-// it all on and off.
+// bow, the tag and the gifts, the tree and its sax ornament, the guitar, the jar, the mountains, the
+// moon, the snowman, the sax, guitar and jar buttons, the tree lights canvas, the snow, the sleigh,
+// the music, the fir back from the jazz bar or the calm night, the jar's pendulum, and turning it
+// all on and off.
 // Every drawing is SVG built once from code (seeded random, so it looks the same on every visit).
 const xmasSubtitle = () => {
   const d = new Date(), m = d.getMonth(), day = d.getDate();
@@ -157,9 +158,9 @@ const buildGarland = () => {
     for (let i = 0; i < nb; i++) {
       const tt = (i + .25 + rnd() * .5) / nb, [x, y] = cubic(curve, tt), thread = 8 + rnd() * 28, r = 8 + rnd() * 6;
       const c = (rnd() * GLASS.length) | 0;
-      if (Math.abs(x - jarX) > 34) baubles.push({ k, x, y: y + 6, cy: y + 6 + thread + r, r, c });  // not on the jar
+      if (Math.abs(x - jarX) > 34) baubles.push({ k, x, y: y + 6, cy: y + 6 + thread + r, r, c });  // off the jar
     }
-    if (jarX >= x0 && jarX < x1) {  // the jar's swag: where it crosses the jar's x (the middle of the fir)
+    if (jarX >= x0 && jarX < x1) {  // the jar's swag: where the middle of the fir crosses its x
       for (let i = 0, best = Infinity; i <= 100; i++) {
         const [x, y] = cubic(curve, i / 100);
         if (Math.abs(x - jarX) < best) { best = Math.abs(x - jarX); jarY = y; }
@@ -247,11 +248,12 @@ const paintGarlandGlow = time => {  // time in seconds, or null: still lights
 // it. Drawn once as SVG in a 520 x 640 box, lit from the top left like the rest of the scene and
 // shaded for volume: each tier is rounded by gradients (darker under the tier above it and towards
 // its edges), carries rows of hanging branches layered like scales (light on the lit side, dark
-// on the far side), a lip under its edge and a rim of light along the lit half; the trunk is a cylinder, the
-// skirt a lit cloth, the baubles have their reflection and their shadow on the needles, the star is
-// cut in facets. All of it is static (no blur, no animation), so it costs nothing once drawn. The lights are also listed (treeLights) for the night
-// canvas that lights them up. The sax ornament and the guitar are in a separate layer above the
-// page (#xtree-front), so they can be clicked even where the cards cover the tree.
+// on the far side), a lip under its edge and a rim of light along the lit half; the trunk is a
+// cylinder, the skirt a lit cloth, the baubles have their reflection and their shadow on the
+// needles, the star is cut in facets. All of it is static (no blur, no animation), so it costs
+// nothing once drawn. The lights are also listed (treeLights) for the night canvas that lights
+// them up. The sax ornament and the guitar are in a separate layer above the page (#xtree-front),
+// so they can be clicked even where the cards cover the tree.
 // A ribbon bow seen from the front, in volume without gradients (the gifts, the guitar and the jar
 // share it, and the jar and guitar are separate SVGs): the left loop lit, the right one in shade,
 // the inside of each loop darker, a glint on the left loop, two tails and the knot.
@@ -277,7 +279,7 @@ const treeHalfWidth = y => 12 + (y - 60) / (520 - 60) * 172;  // half width of t
 // side in shade. The ribbon goes round the box (front, side and top) and a bow sits in the middle
 // of the lid; some papers have a pattern. Each one casts a shadow on the skirt (foot). Their
 // gradients and patterns are in the tree's defs (buildTree).
-const poly = (pts, fill, extra = "") => `<polygon points="${pts.map(([a, b]) => `${f1(a)},${f1(b)}`).join(" ")}" fill="${fill}"${extra}/>`;
+const giftPoly = (pts, fill) => `<polygon points="${pts.map(([a, b]) => `${f1(a)},${f1(b)}`).join(" ")}" fill="${fill}"/>`;
 const giftBox = ([x, y, w, h, box, rib, ribDark, pat], foot = true) => {
   const side = x + w / 2 < TREE_X ? 1 : -1, d = Math.min(18, w * .24), dx = side * d * .5, dy = -d * .62;
   const sideShade = side > 0 ? "rgba(0,0,0,.3)" : "rgba(0,0,0,.1)", cx = x + w / 2, rw = Math.max(7, w * .14);
@@ -288,21 +290,21 @@ const giftBox = ([x, y, w, h, box, rib, ribDark, pat], foot = true) => {
   const bx = side > 0 ? x + w : x, lsx = side > 0 ? lx + lw : lx;  // where the visible sides are
   let g = foot ? `<ellipse cx="${f1(cx + 9)}" cy="${f1(y + h)}" rx="${f1(w * .62)}" ry="6" fill="url(#xgiftfoot)"/>` : "";
   // the box: its side (paper, ribbon, shade), then its front (paper, pattern, ribbon, shading)
-  g += poly(sideFace(bx, y, y + h), box) + (pat ? poly(sideFace(bx, y, y + h), `url(#${pat})`) : "") + poly(band(bx, y, y + h), rib) + poly(sideFace(bx, y, y + h), sideShade);
+  g += giftPoly(sideFace(bx, y, y + h), box) + (pat ? giftPoly(sideFace(bx, y, y + h), `url(#${pat})`) : "") + giftPoly(band(bx, y, y + h), rib) + giftPoly(sideFace(bx, y, y + h), sideShade);
   g += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${box}"/>` + (pat ? `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${pat})"/>` : "") +
     `<rect x="${f1(cx - rw / 2)}" y="${y}" width="${f1(rw)}" height="${h}" fill="${rib}"/><rect x="${f1(cx - rw / 2)}" y="${y}" width="${f1(rw * .3)}" height="${h}" fill="rgba(255,255,255,.22)"/>` +
     `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#xshade)"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#xgiftfloor)"/>` +
     `<rect x="${x}" y="${y}" width="${w}" height="5" fill="rgba(0,0,0,.28)"/>`;  // the lid's shadow on the box
   // the lid: its side, its front, then its top with the two ribbons crossing and the bow
   const top = [[lx, ly], [lx + lw, ly], along(lx + lw, ly, 1), along(lx, ly, 1)];
-  g += poly(sideFace(lsx, ly, ly + L), box) + poly(band(lsx, ly, ly + L), rib) + poly(sideFace(lsx, ly, ly + L), sideShade);
+  g += giftPoly(sideFace(lsx, ly, ly + L), box) + giftPoly(band(lsx, ly, ly + L), rib) + giftPoly(sideFace(lsx, ly, ly + L), sideShade);
   g += `<rect x="${lx}" y="${ly}" width="${lw}" height="${L}" fill="${box}"/>` + (pat ? `<rect x="${lx}" y="${ly}" width="${lw}" height="${L}" fill="url(#${pat})"/>` : "") +
     `<rect x="${f1(cx - rw / 2)}" y="${ly}" width="${f1(rw)}" height="${L}" fill="${rib}"/><rect x="${lx}" y="${ly}" width="${lw}" height="${L}" fill="url(#xshade)"/>` +
     `<rect x="${lx}" y="${ly + L - 1.5}" width="${lw}" height="1.5" fill="rgba(0,0,0,.25)"/>`;
-  g += poly(top, box) + (pat ? poly(top, `url(#${pat})`) : "") +
-    poly([[cx - rw / 2, ly], [cx + rw / 2, ly], along(cx + rw / 2, ly, 1), along(cx - rw / 2, ly, 1)], rib) +
-    poly([along(lx, ly, .5 - .16), along(lx + lw, ly, .5 - .16), along(lx + lw, ly, .5 + .16), along(lx, ly, .5 + .16)], rib) +
-    poly(top, "rgba(255,255,255,.2)") + `<path d="M${f1(lx)},${f1(ly)}H${f1(lx + lw)}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`;
+  g += giftPoly(top, box) + (pat ? giftPoly(top, `url(#${pat})`) : "") +
+    giftPoly([[cx - rw / 2, ly], [cx + rw / 2, ly], along(cx + rw / 2, ly, 1), along(cx - rw / 2, ly, 1)], rib) +
+    giftPoly([along(lx, ly, .5 - .16), along(lx + lw, ly, .5 - .16), along(lx + lw, ly, .5 + .16), along(lx, ly, .5 + .16)], rib) +
+    giftPoly(top, "rgba(255,255,255,.2)") + `<path d="M${f1(lx)},${f1(ly)}H${f1(lx + lw)}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`;
   const [bowX, bowY] = along(cx, ly, .5);
   return `<g class="gift">${g}${bow3d(bowX, bowY + 1, rib, ribDark, Math.min(1.25, w / 60))}</g>`;
 };
@@ -463,8 +465,8 @@ const SAX_SVG = `<svg viewBox="0 0 30 52" aria-hidden="true"><path d="M15,0v6" s
 
 // The hidden guitar, standing behind the green gift as if it were part of the pile: a red electric
 // guitar twice the size of the old small one, its body half hidden by the gift (its left side and
-// horn show beside it), its neck and headstock rising against the tree, the gifts' gold bow and a tag tied on the neck,
-// and a soft shadow on the branches behind it. To pass behind the gift while staying in the layer
+// horn show beside it), its neck and headstock rising against the tree, the gifts' gold bow and a
+// tag tied on the neck, and a soft shadow on the branches behind it. To pass behind the gift while staying in the layer
 // above the page (to be clicked), it draws the green and yellow gifts again over itself, exactly
 // where the tree draws them (giftBox, without their shadow on the skirt); only the guitar itself
 // takes clicks (.gtr, css/christmas.css). Its bottom may be cut by the window: it still reads as a
@@ -1133,8 +1135,8 @@ const setCarols = on => {
   paintDeck();
 };
 
-// Back to Christmas from the jazz bar or the calm night: a small fir with a star in the bottom right
-// corner, only when the bar was opened with the sax, or the calm night with the firefly jar
+// Back to Christmas from the jazz bar or the calm night: a small fir with a star in the bottom
+// right corner, only when the bar was opened with the sax, or the calm night with the firefly jar
 const firBtn = document.createElement("button");
 firBtn.id = "xback";
 firBtn.type = "button";

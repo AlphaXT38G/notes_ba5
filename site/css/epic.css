@@ -13,9 +13,9 @@ body.epic section::after{box-shadow:-10px 0 34px -10px rgba(170,90,255,.9);anima
 @keyframes aurora{from{transform:translateX(-4%) rotate(-2deg)}to{transform:translateX(4%) rotate(2deg)}}
 @keyframes shimmer{to{background-position:200% 0}}
 /* "More epicness ?" (js/epic.js), rising in the middle of the metal show 10 s before it ends: a
-   medallion forged in blue fire. Its parts stack in one square (--d wide): a pool of darkness, turning light rays, a
-   breathing halo, the ring of runes (an <img>), the charge pips, rising sparks, and the face in the
-   middle with the words and a sweeping shine. Only transform and opacity animate. Clicked, it
+   medallion forged in blue fire. Its parts stack in one square (--d wide): a pool of darkness,
+   turning light rays, a breathing halo, the ring of runes (an <img>), the charge pips, rising
+   sparks, and the face in the middle with the words and a sweeping shine. Only transform and opacity animate. Clicked, it
    counts down (.queued): the runes and rays spin faster and the pips light up one by one. */
 #more{--d:min(17rem,78vw);position:fixed;left:50%;top:50%;z-index:60;width:var(--d);height:var(--d);margin:calc(var(--d) / -2) 0 0 calc(var(--d) / -2);padding:0;color:#fff;background:none;border:0;border-radius:50%;cursor:pointer;animation:more-in 1s cubic-bezier(.34,1.56,.64,1) both}
 #more>span,#more>img{position:absolute;inset:0;pointer-events:none}
