@@ -553,6 +553,66 @@ width=0.9\linewidth
 
 
 
+%=========================================================
+\section{The IEEE 754 Standard}
+
+
+\textbf{Problems with the baby version}: how to represent zero? What if the number becomes too
+big, or too small, during a calculation? What if the calculation is nonsensical? What if the
+result cannot be represented exactly?
+
+
+\begin{definition}
+
+\textbf{IEEE 754} (William Kahan; published in 1985, developed for many years)
+
+Super-ambitious proposal at the time. Behavior is \textbf{fully specified}: every arithmetic
+operation produces a result, whether it is mathematically expected or not, and exceptional
+operations raise a signal.
+
+\end{definition}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item \textbf{Zero}: easy, just don't store the leading one. Zero is \textbf{signed} in IEEE754.
+
+\item \textbf{Too big}: return the special number ``infinity'' (positive or negative).
+
+\item \textbf{Too small}: gradual underflow through \textbf{denormalized numbers}.
+
+\item \textbf{Nonsensical}: return the special number \textbf{NaN} (Not a Number). NaN is
+infectious.
+
+\item \textbf{Not representable}: \textbf{Banker's rounding} (round-to-nearest-tie-to-even) by
+default, other modes available.
+
+\end{itemize}
+
+\end{summary}
+
+
+\begin{important}
+
+\textbf{Major innovations}
+
+\begin{itemize}
+
+\item \textbf{Accuracy guarantees}: elementary operations ($+, -, *, /, \sqrt{}$) are done in
+infinite precision and then \emph{rounded} to a representable number.
+
+\item \textbf{Denormalized numbers} ($+2^E \cdot 0.xxx$ instead of $+2^E \cdot 1.xxx$): fill
+the gap around zero, enable gradual underflow. Most controversial feature of IEEE 754: handled
+badly by current processors, can make a calculation 100-1000$\times$ slower.
+
+\end{itemize}
+
+\end{important}
+
+
+
 \end{multicols}
 
 
