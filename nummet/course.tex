@@ -1,0 +1,49 @@
+\documentclass[11pt,a4paper,openany]{book}
+
+\makeatletter\def\input@path{{../_shared/}}\makeatother
+\usepackage{course}
+
+\begin{document}
+\raggedbottom
+
+\coursetitle{Numerical Methods for Visual Computing and ML}{BA5}{2026--2027}
+
+\tableofcontents
+\clearpage
+
+These notes cover CS-328 (Prof.\ Wenzel Jakob, Realistic Graphics Lab): how the abstract
+concepts of linear algebra and analysis are implemented on a computer --- floating point
+arithmetic, linear systems and their factorizations, least squares, and how to write efficient
+numerical code for CPUs and GPUs.
+
+
+% =========================================================
+\chapter{Lecture 1 : Admin and floating point}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} What numerical methods are and where they are used, how
+real numbers are stored in a computer (\textbf{IEEE 754 floating point}), and which kinds of
+errors this causes. \\
+\textbf{Why is it useful?} Every later algorithm runs on floating point numbers: knowing their
+limits tells you why a program ``no longer computes the correct answer'' and how to measure the
+damage.
+\end{rembox}
+
+\begin{rembox}[title=Course organisation]
+\begin{itemize}
+  \item Lecture on Thursday in CE13, exercise session on Thursday in BC07/08 (first 3 weeks:
+        tutorials, then homework Q\&A).
+  \item \textbf{Grading}: 4 homeworks, \textbf{10\%} of the final grade; pen \& paper exam in
+        the January session, \textbf{90\%}. Optional practice midterm, graded but 0\% weight.
+        Grades on a 1-6 scale, raw percentages mapped with a curve.
+  \item Homeworks: (1) basics, floating point, error analysis, Monte Carlo; (2) processing a
+        RAW image (demosaicing, least squares to sRGB); (3) inverse kinematics with the SVD;
+        (4) autodiff \& a tiny ML framework (``MyTorch''). Plus 6-7 ungraded exercise sheets.
+  \item Late policy: 25\% penalty per extra started late day. Python 3.14, Jupyter Lab.
+  \item Survey course: many methods, none in depth. LLMs can solve all problems, but reviewing
+        their output does not teach you anything: ``to learn, you must struggle''.
+\end{itemize}
+\end{rembox}
+
+\end{document}
