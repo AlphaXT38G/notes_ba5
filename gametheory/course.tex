@@ -608,4 +608,26 @@ $p_U > 1/3$, $R$ is dominated by $M$; if $p_U < 2/3$, $R$ is dominated by $L$. F
 strategy of Player 1 there is a better reply than $R$: \textbf{$R$ is strictly dominated}.
 \end{exbox}
 
+
+\begin{defnbox}[title=Weakly dominated strategy]
+$\bar{s}^{(i)}$ is \textbf{weakly dominated} iff
+\[
+\forall s^{(-i)} \ \exists \tilde{s}^{(i)} \ \text{s.t.} \
+\mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)}) \ge \mathcal{P}^{(i)}(\bar{s}^{(i)}, s^{(-i)}).
+\]
+\end{defnbox}
+
+\begin{exbox}[title={Example 2: $R$ is not dominated}]
+\begin{center}
+\begin{tabular}{c|ccc}
+ & L & M & R \\ \hline
+U & $(x_1,0)$ & $(x_2,3)$ & $(x_3,2)$ \\
+D & $(x_4,3)$ & $(x_5,0)$ & $(x_6,2)$
+\end{tabular}
+\end{center}
+If $p_U > 2/3$, $R$ is dominated by $M$, and if $p_U < 1/3$, $R$ is dominated by $L$.
+However, for $1/3 \le p_U \le 2/3$ strategy $R$ is an optimal strategy (strictly the best for
+$1/3 < p_U < 2/3$), hence $R$ is \textbf{not a dominated strategy}.
+\end{exbox}
+
 \end{document}
