@@ -1492,4 +1492,50 @@ Prob(A|B) = \frac{Prob(A \& B)}{Prob(B)}.
 A rule to \textbf{update probabilities when new information becomes available}.
 \end{defnbox}
 
+
+\begin{exbox}[title={Example 1: uniform variable}]
+$x \sim \mathcal{U}([0,1])$. What is the probability that $x > 0.75$ (the
+\emph{unconditional probability})? You then learn that $x > 0.5$: how do you update the
+probability that $x > 0.75$ (the \emph{conditional probability})?
+\begin{center}
+\includegraphics[width=0.55\linewidth]{images/week05_04.png}
+\end{center}
+\textbf{Solution} (not on the slides): $Prob(x > 0.75) = 0.25$ and
+$Prob(x > 0.75 \,|\, x > 0.5) = \frac{0.25}{0.5} = 0.5$.
+\end{exbox}
+
+\begin{exbox}[title={Example 2: two children}]
+X has two children. What is the probability that she has (at least) a girl? You ask her: do
+you have a boy? She says yes. What is now the probability that she also has a girl?
+(a.\ 1/2, b.\ 1/3, c.\ 2/3) \\
+\textbf{Solution} (not on the slides): BB, BG, GB, GG are equally likely, so
+$Prob(\text{girl}) = 3/4$, and
+$Prob(\text{girl} \,|\, \text{boy}) = \frac{2/4}{3/4} = \frac{2}{3}$: answer c.
+\end{exbox}
+
+\begin{exbox}[title={Example 3: medical test}]
+In a population, 1\% of the people have a disease. A test has accuracy 95\%: whether or not
+you have the disease, it gives the truth with probability 95\% and the opposite with
+probability 5\%. Before the test, what is the probability that you have the disease? After a
+positive result? (a.\ more than 90\%, b.\ between 30\% and 90\%, c.\ less than 30\%).
+Understand why with 2000 people who all get tested. \\
+\textbf{Solution} (not on the slides): before the test, 1\%. Out of 2000 people, 20 are sick
+and 1980 healthy; $5\% \times 1980 = 99$ healthy people and $95\% \times 20 = 19$ sick people
+test positive, so
+\[
+Prob(\text{sick} \,|\, +) = \frac{19}{19 + 99} = \frac{19}{118} \approx 16\%: \text{ answer c.}
+\]
+\end{exbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item \textbf{Braess paradox}: adding a superfast route moves the only NE from 65 to 80
+        minutes.
+  \item Every such network has a pure-strategy NE: a minimum of \textbf{potential energy}.
+  \item \textbf{Continuum of types}: threshold strategies, $T_1^* = T_2^* = 2/3$.
+  \item \textbf{Conditional probability}: $Prob(A|B) = Prob(A \& B)/Prob(B)$, the rule to
+        update beliefs with new information.
+\end{itemize}
+\end{keybox}
+
 \end{document}
