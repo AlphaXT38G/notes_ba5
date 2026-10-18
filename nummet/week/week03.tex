@@ -302,6 +302,96 @@ $\mathbf{L}\mathbf{x}_2 = \mathbf{x}_1$ (forward subst.), then $\mathbf{U}\mathb
 
 
 
+%=========================================================
+\section{Examples of Linear Systems}
+
+
+\begin{example}
+
+\textbf{Ideal ballistic motion} (a basketball throw): gravity + initial velocity give a parabola
+
+\[
+y = ax^2 + bx + c
+\]
+
+\textbf{Step 1}: think about observables and unknowns. For a measured position
+$(x_1, y_1)$: $y_1$ and $x_1$ are \emph{known}, $a$, $b$, $c$ are \emph{unknown}.
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{REGRESSION}
+
+\begin{itemize}
+
+\item We have a model of the \textbf{expected behaviour}, containing unknown parameter values.
+
+\item We have data / measurements that \emph{may} be supported by the model.
+
+\item \textbf{Goal}: find parameters that best support the data.
+
+\end{itemize}
+
+If this can be expressed as the solution of a linear system: \textbf{linear regression}.
+
+\end{definition}
+
+
+\begin{formula}
+
+How many data points (measurements) do we need? The equation is \textbf{linear in the
+unknowns}: 3 measurements give 3 equations,
+
+\[
+\begin{bmatrix} x_1^2 & x_1 & 1 \\ x_2^2 & x_2 & 1 \\ x_3^2 & x_3 & 1 \end{bmatrix}
+\begin{bmatrix} a \\ b \\ c \end{bmatrix}
+= \begin{bmatrix} y_1 \\ y_2 \\ y_3 \end{bmatrix}
+\]
+
+\end{formula}
+
+
+\begin{definition}
+
+\textbf{POLYNOMIAL REGRESSION} (the basketball is a representative of this larger class)
+
+Find a polynomial that \emph{perfectly interpolates} a given set of points:
+$y(t_i) = p_i$.
+
+\[
+\begin{bmatrix}
+t_0^3 & t_0^2 & t_0 & 1 \\ t_1^3 & t_1^2 & t_1 & 1 \\
+t_2^3 & t_2^2 & t_2 & 1 \\ t_3^3 & t_3^2 & t_3 & 1
+\end{bmatrix}
+\begin{bmatrix} a \\ b \\ c \\ d \end{bmatrix}
+= \begin{bmatrix} p_0 \\ p_1 \\ p_2 \\ p_3 \end{bmatrix}
+\]
+
+The matrix is a \textbf{Vandermonde matrix}.
+
+\end{definition}
+
+
+\begin{warning}
+
+\textbf{Food for thought -- what could possibly go wrong?}
+
+\begin{itemize}
+
+\item What if the observations are \emph{weak} (all very close together)?
+
+\item What if there are $> 3$ observations? Use a subset? Which ones? Use all somehow?
+
+\item What if there is noise? What if the model violates the assumptions?
+
+\end{itemize}
+
+\end{warning}
+
+
+
 \end{multicols}
 
 
