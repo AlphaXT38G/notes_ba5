@@ -7,9 +7,9 @@ body.rift #vinyl,body.rift #amp,body.rift #xmusic{z-index:2}body.rift #xsleeve{z
    and the tree's hidden sax and guitar are above it. They fade out with the void coming in; the
    garland comes back once the page is out of the nebula, the sax and the guitar only after the
    party theme (they would float over its rainbow). */
-#garland,#xtree-front{transition:opacity .9s}
-body.rift #garland,body.rift #xtree-front,body.party #xtree-front{opacity:0}
-body.rift #xtree-front button,body.party #xtree-front button{pointer-events:none}
+#garland,#xtree-front,#xjar{transition:opacity .9s}
+body.rift #garland,body.rift #xtree-front,body.party #xtree-front,body.rift #xjar,body.party #xjar{opacity:0}
+body.rift #xtree-front button,body.party #xtree-front button,body.rift #xjar,body.party #xjar{pointer-events:none}
 /* Letters split to be swallowed one by one (konami.js): words stay whole, letters can move */
 .rw{white-space:nowrap}
 .rl{display:inline-block}

@@ -134,24 +134,26 @@ body[data-phase=christmas-night] #xtree .gift,body[data-phase=christmas-night] #
    green when hovered */
 #xsax,#xguitar,#xjar{position:absolute;display:none;padding:0;background:none;border:0;cursor:pointer;pointer-events:auto}
 #xsax svg,#xguitar svg,#xjar svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
-#xguitar svg,#xjar svg{filter:none}  /* they draw their own shadows, on the skirt and the gifts */
+#xguitar svg{filter:none}  /* it draws its own shadows, on the tree and the gifts */
+#xjar svg{filter:drop-shadow(1px 3px 2px rgba(0,30,15,.35))}
 #xsax:hover svg,#xsax:focus-visible svg{filter:drop-shadow(0 0 5px rgba(255,215,110,.9))}
 /* the guitar stands behind gifts it draws again over itself: only the guitar takes clicks and glows */
 #xguitar{pointer-events:none}
 #xguitar .gtr{pointer-events:visiblePainted}
 #xguitar:hover .gtr,#xguitar:focus-visible .gtr{filter:drop-shadow(0 0 4px rgba(255,80,50,.9))}
 #xjar:hover svg,#xjar:focus-visible svg{filter:drop-shadow(0 0 5px rgba(200,255,150,.9))}
-/* The firefly wanders behind the glass and its light breathes; by day it is faint, at night it
-   lights the skirt around the jar */
+/* The firefly wanders behind the glass and its light breathes; by day it is faint, bright at night */
 #xjar .fly{animation:xjar-fly 9s ease-in-out infinite}
 #xjar .glow{opacity:.45;animation:xjar-glow 2.6s ease-in-out infinite alternate}
-#xjar .spill{opacity:0}
+#xjar .halo{opacity:0}
 body[data-phase=christmas-night] #xjar .glow{opacity:1}
-body[data-phase=christmas-night] #xjar .spill{opacity:1}
+body[data-phase=christmas-night] #xjar .halo{opacity:.35}
 @keyframes xjar-fly{0%,100%{transform:translate(0,0)}20%{transform:translate(4px,-4px)}45%{transform:translate(-3px,-7px)}70%{transform:translate(-5px,2px)}85%{transform:translate(2px,5px)}}
 @keyframes xjar-glow{from{opacity:.25}}
 /* Where the tree is faded behind the cards, they fade with it (they are above the page), until hovered */
-@media(max-width:1240px){#xsax,#xguitar,#xjar{opacity:.5;transition:opacity .2s}#xsax:hover,#xsax:focus-visible,#xguitar:hover,#xguitar:focus-visible,#xjar:hover,#xjar:focus-visible{opacity:1}}
+@media(max-width:1240px){#xsax,#xguitar{opacity:.5;transition:opacity .2s}#xsax:hover,#xsax:focus-visible,#xguitar:hover,#xguitar:focus-visible{opacity:1}}
+/* The jar hangs under the garland (in the page, over it), swinging from the top of its string */
+#xjar{z-index:4;transform-origin:50% 0}
 body.christmas #xsax,body.christmas #xguitar,body.christmas #xjar{display:block}
 
 /* The snowman, a big companion in the left margin beside the courses (behind the cards, faded,

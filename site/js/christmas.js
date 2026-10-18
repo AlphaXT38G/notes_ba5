@@ -9,8 +9,8 @@
 //   - a Christmas turntable playing Jingle Bell Rock or a live of Christmas music,
 //   - a small golden sax hidden among the tree's ornaments, which opens the jazz bar (a little
 //     fir in the bar brings Christmas back), a little red guitar set down against the gifts,
-//     which starts the metal show, and a firefly jar in front of them, which opens the calm night
-//     (the same fir brings Christmas back).
+//     which starts the metal show, and a firefly jar swinging under the garland, which opens the
+//     calm night (the same fir brings Christmas back).
 // At night the tree lights play changing patterns and Santa's sleigh crosses the sky now and then.
 // The metal show at 1:00 and the other easter eggs still take over.
 //
@@ -119,6 +119,9 @@ const buildGarland = () => {
   const scale = W / last()[0];  // stretch so the last hook lands on the right edge
   hooks.forEach(h => { h[0] *= scale; });
   const swags = [], lights = [], baubles = [];
+  // the firefly jar hangs on the left, in the margin beside the title (placeJar, below)
+  const jarX = W < 700 ? W * .1 : W * .12;
+  let jarY = 20;
   for (let k = 0; k + 1 < hooks.length; k++) {
     const [x0, y0] = hooks[k], [x1, y1] = hooks[k + 1], w = x1 - x0, sag = 45 + rnd() * 37, lean = (rnd() - .5) * .25;
     const curve = [[x0, y0], [x0 + w * (.28 + lean), y0 + sag * 1.3], [x0 + w * (.72 + lean), y1 + sag * 1.3], [x1, y1]];
@@ -153,7 +156,14 @@ const buildGarland = () => {
     const nb = 2 + (rnd() < .5);
     for (let i = 0; i < nb; i++) {
       const tt = (i + .25 + rnd() * .5) / nb, [x, y] = cubic(curve, tt), thread = 8 + rnd() * 28, r = 8 + rnd() * 6;
-      baubles.push({ k, x, y: y + 6, cy: y + 6 + thread + r, r, c: (rnd() * GLASS.length) | 0 });
+      const c = (rnd() * GLASS.length) | 0;
+      if (Math.abs(x - jarX) > 34) baubles.push({ k, x, y: y + 6, cy: y + 6 + thread + r, r, c });  // not on the jar
+    }
+    if (jarX >= x0 && jarX < x1) {  // the jar's swag: where it crosses the jar's x (the middle of the fir)
+      for (let i = 0, best = Infinity; i <= 100; i++) {
+        const [x, y] = cubic(curve, i / 100);
+        if (Math.abs(x - jarX) < best) { best = Math.abs(x - jarX); jarY = y; }
+      }
     }
     const fir = `<path class="fir" d="M${f1(x0)},${f1(y0)}C${curve.slice(1).map(([x, y]) => `${f1(x)},${f1(y)}`).join(" ")}"/>` +
       needles.map((d, i) => `<path stroke="${NEEDLES[i]}" class="needles" d="${d.join("")}"/>`).join("") +
@@ -193,6 +203,7 @@ const buildGarland = () => {
   garlandGlowShown = false;
   garland.append(garlandGlow);
   garland.w = W;
+  placeJar(jarX, jarY);
 };
 
 // The halos of the garland's fairy lights at night, on a canvas over the garland, at 1x (they are
@@ -482,22 +493,22 @@ const GUITAR_SVG = `<svg viewBox="${GUITAR.x} ${GUITAR.y} ${GUITAR.w} ${GUITAR.h
   // the gifts in front of it, drawn again over it
   GIFTS.filter(g => g[0] >= 380).map(g => giftBox(g, false)).join("") + `</svg>`;
 
-// The hidden firefly jar, set on the skirt in front of the red and blue gifts: the jar of the calm
-// night (calm.js) wrapped as a present, a cork lid with a red bow, twine round the neck, moss at
-// the bottom and a firefly glowing inside, wandering behind the glass (CSS). The bow is the gifts'
-// one, a gift tag hangs from the twine, and its shadow on the skirt is like theirs. At night its
-// light spills on the skirt. In the tree's coordinates too, like the guitar.
-const JAR = { x: 226, y: 496, w: 52, h: 58 };
+// The hidden firefly jar, hanging under the garland at the top of the page like its baubles: the
+// jar of the calm night (calm.js) wrapped as a present, a cork lid with the gifts' red bow, twine
+// round the neck, its string going up into the fir, a gift tag, moss at the bottom and a firefly
+// glowing inside, wandering behind the glass (CSS). It swings on its string (the jar's pendulum,
+// below). Drawn in the coordinates it had on the skirt, the string added above it: the top of the
+// string, where it swings from, is the top middle of the box (252, JAR.y).
+const JAR = { x: 234, y: 478, w: 36, h: 70 };
 const JAR_GLASS = "M245,513H259Q259,516 261.5,517.5Q263.5,519 263.5,522V542Q263.5,546.5 259,546.5H245Q240.5,546.5 240.5,542V522Q240.5,519 242.5,517.5Q245,516 245,513Z";
 const JAR_SVG = `<svg viewBox="${JAR.x} ${JAR.y} ${JAR.w} ${JAR.h}" aria-hidden="true"><defs>` +
-  `<radialGradient id="jarfoot"><stop offset="0" stop-color="rgba(50,0,10,.5)"/><stop offset="1" stop-color="rgba(50,0,10,0)"/></radialGradient>` +
-  `<radialGradient id="jarspill"><stop offset="0" stop-color="rgba(215,255,150,.55)"/><stop offset="1" stop-color="rgba(215,255,150,0)"/></radialGradient>` +
   `<radialGradient id="jarglow"><stop offset="0" stop-color="rgba(240,255,190,1)"/><stop offset=".3" stop-color="rgba(205,255,140,.6)"/><stop offset="1" stop-color="rgba(170,255,120,0)"/></radialGradient>` +
   `<linearGradient id="jarglass" x1="0" x2="1"><stop offset="0" stop-color="rgba(210,230,255,.34)"/><stop offset=".3" stop-color="rgba(210,230,255,.1)"/><stop offset=".75" stop-color="rgba(210,230,255,.06)"/><stop offset="1" stop-color="rgba(210,230,255,.3)"/></linearGradient>` +
   `<linearGradient id="jarcork" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c49a64"/><stop offset="1" stop-color="#7a5430"/></linearGradient>` +
   `<clipPath id="jarclip"><path d="${JAR_GLASS}"/></clipPath></defs>` +
-  `<ellipse class="spill" cx="252" cy="546" rx="24" ry="6" fill="url(#jarspill)"/>` +
-  `<ellipse cx="257" cy="546.6" rx="15" ry="3.4" fill="url(#jarfoot)"/>` +
+  // the string, from the fir down to the twine, knotted round the lid
+  `<path d="M252,${JAR.y}V508.5" stroke="#b8935a" stroke-width=".9"/><path d="M252,${JAR.y}V508.5" stroke="rgba(255,255,255,.35)" stroke-width=".3" transform="translate(-.3,0)"/>` +
+  `<circle class="halo" cx="252" cy="529" r="22" fill="url(#jarglow)"/>` +  // at night, its light around the jar
   `<path d="${JAR_GLASS}" fill="url(#jarglass)"/>` +
   // inside the glass: moss and a twig at the bottom, the firefly (its light, then its body)
   `<g clip-path="url(#jarclip)"><path d="M240,547C242,540 246,543 248,540 250,543 254,539 256,542 259,539 262,542 264,540V547Z" fill="#2f6b34"/>` +
@@ -752,16 +763,15 @@ guitarBtn.addEventListener("click", e => {
   e.stopPropagation();
   startMetalEgg("Santa brought a guitar.");
 });
-// The firefly jar, in the same layer: it opens the calm night, as the peace code does (startPeace,
-// calm.js, loaded after this file); the fir there, or typing peace, brings Christmas back
+// The firefly jar, hanging under the garland (placed by placeJar, below): it opens the calm night,
+// as the peace code does (startPeace, calm.js, loaded after this file); the fir there, or typing
+// peace, brings Christmas back
 const jarBtn = document.createElement("button");
 jarBtn.id = "xjar";
 jarBtn.type = "button";
 jarBtn.title = "A firefly in a jar?";
 jarBtn.setAttribute("aria-label", "Go to the calm night");
 jarBtn.innerHTML = JAR_SVG;
-jarBtn.style.cssText = `left:${JAR.x / TREE_W * 100}%;top:${JAR.y / TREE_H * 100}%;width:${JAR.w / TREE_W * 100}%;height:${JAR.h / TREE_H * 100}%`;
-treeFront.append(jarBtn);
 jarBtn.addEventListener("click", e => {
   e.stopPropagation();
   startPeace(true);
@@ -1146,6 +1156,68 @@ document.addEventListener("phase", e => {
   if (e.detail === "christmas" || e.detail === "christmas-night") setTreeLights(e.detail === "christmas-night");
 });
 
+// The jar's pendulum. The jar hangs from its string at (jarAt), in the page like the garland (it
+// scrolls with it), over the garland, a little bigger than the baubles. It swings like a pendulum
+// with friction (a period of about 1.7 s): a breath of wind now and then, the mouse passing by
+// pushes it (its speed across, the closer the stronger), and scrolling the page makes it lag and
+// swing back. Only its rotation changes (transform), on each frame while it is on screen and
+// moving; it sleeps when still and out of the window. Reduced motion: it hangs still.
+const JAR_K = () => innerWidth < 700 ? 1.45 : 2.5;  // pixels per unit of its drawing
+let jarAngle = 0, jarSpin = 0, jarRaf = null, jarLast = 0, jarGust = 0, jarScroll = 0;
+const placeJar = (x, y) => {
+  const k = JAR_K();
+  jarBtn.style.cssText = `left:${f1(x - JAR.w * k / 2)}px;top:${f1(y)}px;width:${f1(JAR.w * k)}px;height:${f1(JAR.h * k)}px`;
+  jarBtn.k = k;
+};
+const jarStill = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const jarFrame = now => {
+  jarRaf = null;
+  const dt = Math.min(.05, (now - (jarLast || now)) / 1000);
+  jarLast = now;
+  if (now > jarGust) {  // a breath of wind, every 2 to 6 s
+    jarSpin += (Math.random() - .5) * .5;
+    jarGust = now + 2000 + Math.random() * 4000;
+  }
+  jarSpin += (-14 * Math.sin(jarAngle) - 1.1 * jarSpin) * dt;
+  jarAngle = Math.max(-.7, Math.min(.7, jarAngle + jarSpin * dt));
+  jarBtn.style.transform = `rotate(${(jarAngle * 180 / Math.PI).toFixed(2)}deg)`;
+  // asleep when it barely moves and nothing will wake it on screen (the wind waits for it)
+  const seen = jarBtn.getBoundingClientRect().bottom > 0;
+  if (seen || Math.abs(jarSpin) > .01) jarRaf = requestAnimationFrame(jarFrame);
+};
+const wakeJar = () => {
+  if (jarRaf || jarStill() || !jarBtn.isConnected) return;
+  jarLast = 0;
+  jarRaf = requestAnimationFrame(jarFrame);
+};
+const pushJar = e => {
+  const r = jarBtn.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height * .7);
+  const near = 1 - Math.hypot(dx, dy) / 160;
+  if (near <= 0 || !e.movementX) return;
+  jarSpin += Math.max(-.12, Math.min(.12, e.movementX * .004)) * near;
+  wakeJar();
+};
+const scrollJar = () => {
+  const y = scrollY;
+  jarSpin += Math.max(-.4, Math.min(.4, (y - jarScroll) * .004));
+  jarScroll = y;
+  wakeJar();
+};
+const setJarSwing = on => {
+  removeEventListener("pointermove", pushJar);
+  removeEventListener("scroll", scrollJar);
+  if (jarRaf) cancelAnimationFrame(jarRaf);
+  jarRaf = null;
+  jarAngle = jarSpin = 0;
+  jarBtn.style.transform = "";
+  if (!on || jarStill()) return;
+  jarScroll = scrollY;
+  addEventListener("pointermove", pushJar, { passive: true });
+  addEventListener("scroll", scrollJar, { passive: true });
+  jarSpin = .25;  // it comes in swinging a little
+  wakeJar();
+};
+
 // Turning the screen on and off: the garland, the scene and the music come and go with the class
 let garlandResize = null;
 const onGarlandResize = () => {
@@ -1160,7 +1232,7 @@ const onGarlandResize = () => {
 const setChristmas = on => {
   removeEventListener("resize", onGarlandResize);
   setCarols(on);
-  if (!on) { [garland, scene, treeFront, sleighEl].forEach(el => el.remove()); setTreeLights(false); return; }
+  if (!on) { [garland, scene, treeFront, sleighEl, jarBtn].forEach(el => el.remove()); setTreeLights(false); setJarSwing(false); return; }
   if (!treeBuilt) {
     tree.innerHTML = buildTree();
     scene.innerHTML = MOUNTAINS;
@@ -1171,6 +1243,8 @@ const setChristmas = on => {
   addEventListener("resize", onGarlandResize);
   document.body.prepend(garland, scene);
   document.body.append(treeFront);
+  garland.after(jarBtn);  // over the garland, in the page
+  setJarSwing(true);
 };
 setChristmas(document.body.classList.contains("christmas"));
 document.addEventListener("christmas", e => setChristmas(e.detail));
