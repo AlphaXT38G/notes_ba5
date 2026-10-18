@@ -33,7 +33,7 @@ SCREENS["christmas-night"] = { className: "christmas", subtitle: xmasSubtitle, t
 // Christmas replaces the day, the calm night and the jazz bar, not the shows: the override only
 // rewrites the normal screens (no screen, the calm night, see isNormal) and the jazz screens, and
 // it runs before the metal and epic ones (this file is loaded before metal.js), so those still
-// win. A forced ?night=... is left alone (?night=christmas and ?night=christmas-night force these
+// win. A forced ?screen=... is left alone (?screen=christmas and ?screen=christmas-night force these
 // screens), unless the yeti code was typed (xmasEgg).
 // xmasJazz: the hidden sax was clicked on that Christmas screen ("christmas" or "christmas-night"):
 // the jazz bar replaces it until the fir is clicked or the other one comes (18:00 or 6:00).
@@ -41,10 +41,10 @@ const isXmasDate = (d = new Date()) => (d.getMonth() === 11 && d.getDate() >= 10
 const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && t < 18 * 3600; };
 // Easter egg: typing y e t i (outside the search field) brings Christmas at any time of the year, day
 // or night by the clock as usual, for the rest of the visit. Outside the Christmas period, typing it
-// on a Christmas screen (from the egg or a forced ?night=christmas...) goes back to the normal
+// on a Christmas screen (from the egg or a forced ?screen=christmas...) goes back to the normal
 // screen; during the period it does nothing there, Christmas is there anyway. What counts is the
 // screen shown, not the egg: typed in a jazz bar opened over Christmas (armstrong code, sax), it
-// brings Christmas back. It overrides a forced ?night=.
+// brings Christmas back. It overrides a forced ?screen=.
 // yetiTyped: how many times it was typed, so that the armstrong code's bar gives way (armstrong.js)
 let xmasJazz = false, xmasEgg = false, yetiTyped = 0;
 OVERRIDES.push(phase => {

@@ -13,7 +13,7 @@
 
 let peaceEgg = false,   // the peace code was typed: the calm night stays (end of this file)
     peaceYeti = 0;      // how many times yeti had been typed then (yetiTyped, christmas.js)
-// The subtitle follows the hours of the night (a forced ?night=calm in the day gets the first one)
+// The subtitle follows the hours of the night (a forced ?screen=calm in the day gets the first one)
 const calmSubtitle = () => {
   const h = new Date().getHours();
   if (h === 2) return "2 AM. The crickets are revising too.";
@@ -121,7 +121,7 @@ const setCalmSky = on => {
 };
 // Dawn: from 4:45 the sky slowly lightens towards the horizon, the stars fade, until 5:30 when the
 // day comes back. calmDawn goes from 0 to 1 over those 45 minutes (0 at any other time, e.g. a
-// forced ?night=calm in the day), and is given to the CSS as --dawn.
+// forced ?screen=calm in the day), and is given to the CSS as --dawn.
 let calmDawn = 0;
 const paintCalmDawn = () => {
   const t = clockSeconds() - (4 * 3600 + 45 * 60);
@@ -375,7 +375,7 @@ document.addEventListener("calm", e => setCrickets(e.detail));
 // and armstrong eggs: it gives way when one of them is typed after it (the bar's jazzEgg, cleared
 // when peace is typed, is set again; yetiTyped changes).
 // Typed again on the calm night, it goes back to the normal screen of that moment: it drops its
-// own egg, or leaves a forced ?night=calm; on the calm night of the clock, it does nothing.
+// own egg, or leaves a forced ?screen=calm; on the calm night of the clock, it does nothing.
 OVERRIDES.push(phase => {
   if (peaceEgg && (jazzEgg || yetiTyped !== peaceYeti)) peaceEgg = false;
   if (!peaceEgg || !isNormal(phase) && screenClass(phase) !== "night" && screenClass(phase) !== "christmas") return phase;
