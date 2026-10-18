@@ -613,6 +613,65 @@ badly by current processors, can make a calculation 100-1000$\times$ slower.
 
 
 
+%=========================================================
+\section{Special Cases and Danger Zone}
+
+
+\begin{center}
+\small
+\begin{tabular}{c|cccccc}
+$*$ & -Inf & -0 & 0 & Inf & NaN \\
+\hline
+-Inf & Inf & NaN & NaN & -Inf & NaN \\
+-0 & NaN & 0 & -0 & NaN & NaN \\
+0 & NaN & -0 & 0 & NaN & NaN \\
+Inf & -Inf & NaN & NaN & Inf & NaN \\
+NaN & NaN & NaN & NaN & NaN & NaN \\
+\end{tabular}
+\end{center}
+
+
+Common sense: $(-\text{Inf}) * (-\text{Inf}) = \text{Inf}$,
+$\text{Inf} * x = \text{sign}(x) * \text{Inf}$, $\text{Inf} * 0 = \text{NaN}$,
+$\text{NaN} * x = \text{NaN}$.
+
+
+\begin{warning}
+
+\textbf{Comparison against NaN is always false}: \texttt{if x < 0 or x > 1: raise} lets a NaN
+through, while \texttt{if not (x >= 0 and x <= 1): raise} rejects it.
+
+\end{warning}
+
+
+\begin{warning}
+
+\textbf{Danger zone}
+
+\begin{itemize}
+
+\item \textbf{Transcendental operations} (sin, cos, atan, exp, log) are much slower (50-300
+clock cycles) and less accurate.
+
+\item \textbf{Fused Multiply-Add} (FMA) computes \texttt{a*b+c} directly (faster, one rounding
+step), but now there are two ways to do the same thing (e.g.\ clang-14 inserting FMAs can make
+\texttt{(u*600000) - int(u*600000)} negative).
+
+\item \textbf{Compiler optimizations} may violate expected IEEE 754 rounding behavior.
+
+\item \textbf{Denormalized numbers} are often very slow and cause surprises. Can turn them off.
+
+\item Careful when converting floats to integers, and vice versa.
+
+\item Arithmetic transformations that are ``pointless'' on pencil and paper can make a huge
+accuracy difference.
+
+\end{itemize}
+
+\end{warning}
+
+
+
 \end{multicols}
 
 
