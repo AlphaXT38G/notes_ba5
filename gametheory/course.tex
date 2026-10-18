@@ -1096,4 +1096,38 @@ continues, and Player 1 always quits. Since Player 1 starts, he will not even en
 game: the payout is \textbf{(0,0)}.
 \end{exbox}
 
+
+\begin{defnbox}[title=Sunk cost]
+A cost already committed, that cannot be recovered whatever happens next: it should not
+affect the continuation of the game.
+\end{defnbox}
+
+\begin{rembox}[title=Infinite horizon]
+In the finite game, one player is sure to be the one who bids in the ``final period'', so he
+is sure to win if nobody quits, and the other player stays out from the beginning. What if
+there is no final time, and the auction continues until somebody drops out? Player 1 moves in
+every odd period, Player 2 in every even period. If nobody quits between $t$ and $t+2$,
+\textbf{nothing has changed}, except that both players have committed to pay 10c more than at
+$t$: a sunk cost.
+\end{rembox}
+
+\begin{propbox}[title=Stationary strategies]
+Each player quits or continues with the same probability at each of her decision nodes. At a
+node where Player $i$ has already committed to pay $x$, her expected payout $P_i(x)$ is,
+if she continues,
+\[
+P_i(x) =
+\begin{cases}
+-0.1 + P_i(x) & \text{if Player } -i \text{ continues} \\
+-x + 0.9 & \text{if Player } -i \text{ quits}
+\end{cases}
+\]
+and if she quits,
+\[
+P_i(x) = -x.
+\]
+If Player $-i$ always continues, $P_i(x) = -\infty$ $\rightarrow$ optimal to quit. If Player
+$-i$ always quits, optimal to continue.
+\end{propbox}
+
 \end{document}
