@@ -796,6 +796,34 @@ L_{22} = \sqrt{A_{22} - L_{21}^2}
 
 
 
+%=========================================================
+\section{Weekly Summary}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item Linear functions $\leftrightarrow$ matrices; matrix product $\leftrightarrow$ composition.
+
+\item Matrix-vector $\mathcal{O}(n^2)$, matrix-matrix $\mathcal{O}(n^3)$; vectorized code is
+orders of magnitude faster than Python loops.
+
+\item Sparse matrices (CSR / CSC) skip the zeros.
+
+\item Gaussian elimination with pivoting (largest absolute value).
+
+\item Never compute $\mathbf{A}^{-1}$: factor $\mathbf{A} = \mathbf{P}\mathbf{L}\mathbf{U}$ once
+($\mathcal{O}(n^3)$), then solve triangular systems ($O(n^2)$) per right-hand side.
+
+\item SPD matrices: Cholesky $\mathbf{A} = \mathbf{L}\mathbf{L}^T$, half the cost.
+
+\end{itemize}
+
+\end{summary}
+
+
+
 \end{multicols}
 
 
