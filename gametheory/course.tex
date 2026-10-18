@@ -317,4 +317,45 @@ At first sight, it looks like there is no Nash Equilibrium. What is true is that
 \textbf{there is no Nash Equilibrium in pure strategy}.
 \end{warnbox}
 
+
+\begin{propbox}[title=Mixed-strategy NE of Matching Pennies]
+Suppose Player 1 plays $H$ with probability $p_H^{(1)}$ (and $T$ with probability
+$1 - p_H^{(1)}$). Player 2's expected payouts:
+\begin{itemize}
+  \item plays $H$: $-p_H^{(1)} + (1 - p_H^{(1)}) = 1 - 2p_H^{(1)}$;
+  \item plays $T$: $p_H^{(1)} - (1 - p_H^{(1)}) = -1 + 2p_H^{(1)}$.
+\end{itemize}
+If $p_H^{(1)} > \frac12$, Player 2 should play $T$ with probability 1; if
+$p_H^{(1)} < \frac12$, he should play $H$ with probability 1. The only possibility to induce
+Player 2 to randomize is $p_H^{(1)} = \frac12$: he must be \textbf{indifferent} between his
+two actions. Same reasoning for Player 1's reaction to Player 2's strategy:
+\[
+\textbf{NE: both players play } H \textbf{ and } T \textbf{ with probability } \tfrac12.
+\]
+\end{propbox}
+
+\begin{keybox}[title=Logic of a mixed-strategy equilibrium]
+\begin{itemize}
+  \item At least one player plays a mixed strategy: she randomizes between at least two
+        actions.
+  \item To randomize between two actions, a player must be \textbf{indifferent} between
+        them, otherwise she would play the one with the higher expected payout.
+  \item In Matching Pennies, for Player 1 to randomize, Player 2 must play H/T with
+        probability 50\% each --- and for Player 2 to do so, he must also be indifferent
+        between H and T.
+  \item If both play H/T with probability 50\% each, both are indifferent: \textbf{both are
+        making an optimal choice} (they could not do anything better) $\rightarrow$ it is a
+        NE.
+\end{itemize}
+\end{keybox}
+
+\begin{exbox}[title=Real life: penalty kicks]
+The goalkeeper has a higher probability of stopping the ball if he jumps on the side where
+the ball is kicked (Left/Right); the kicker has a higher probability of scoring if he kicks
+on the opposite side. Chiappori, Levitt, Groseclose (2002): statistical study of actual
+penalty kicks, with three possible actions (Left/Middle/Right); finds evidence of
+randomization but also of player heterogeneity (some players prefer to kick on the left,
+others on the right). Obvious applications to other sports: tennis, baseball, etc.
+\end{exbox}
+
 \end{document}
