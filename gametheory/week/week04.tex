@@ -811,6 +811,76 @@ Player 2 prefers not to work (1 > 0.8 and 1 > -0.2). \textbf{BNE: $(W, NN)$}.
 
 
 
+%=========================================================
+\section{Harsanyi's Idea}
+
+
+\begin{important}
+
+Imagine that ``Efficient'' and ``Inefficient'' are two states of the same person (e.g.\
+depending on whether the player slept well the previous night).
+
+\textbf{Nature} is a third player who moves first and draws the type of Player 2 (prob $p$
+Efficient, prob $(1-p)$ Inefficient). Player 2 needs to find a strategy in the two possible
+states (e.g.\ ``Work if efficient, Not Work if Inefficient'') to maximize his
+\textbf{ex-ante expected payout}.
+
+\end{important}
+
+
+\begin{definition}
+
+\textbf{HARSANYI REPRESENTATION}
+
+Collapses all the payout tables contingent on the players' types into \textbf{one table}. The
+columns contain the strategy of Player 2 conditional on his type: e.g.\ `WN' means ``Work if
+efficient, Not Work if Inefficient''.
+
+\end{definition}
+
+
+\begin{center}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{c|cccc}
+$1 \backslash 2$ & WN & NN & NW & WW \\
+\hline
+W & (0.5, 1-0.2p) & (0.5, 1) & (0.5, 1.2p-0.2) & (0.5, p-0.2) \\
+N & (p, 0.8p) & (0,0) & (1-p, -0.2(1-p)) & (1, p-0.2) \\
+\end{tabular}
+\end{center}
+
+
+\begin{formula}
+
+Payout for the $(A_1, A_2A_2')$ strategy $=$ $p$ $\times$ payout of $(A_1, A_2)$ in the table
+of the Efficient Player 2 $+$ $(1-p)$ $\times$ payout of $(A_1, A_2')$ in the table of the
+Inefficient Player 2 ($A_1$, $A_2$, $A_2'$ can be W or N).
+
+\end{formula}
+
+
+After elimination of the dominated strategy W for the Inefficient Player 2:
+
+\begin{center}
+\begin{tabular}{c|cc}
+$1 \backslash 2$ & WN & NN \\
+\hline
+W & (0.5, 1-0.2p) & (0.5, 1) \\
+N & (p, 0.8p) & (0,0) \\
+\end{tabular}
+\end{center}
+
+
+\begin{important}
+
+Find the BNE the standard way on the big table: we find the same pure-strategy equilibria as
+before: $(W, NN)$ if $p < 0.5$, $(W, NN)$ and $(N, WN)$ for $p > 0.5$.
+
+\end{important}
+
+
+
 \end{multicols}
 
 
