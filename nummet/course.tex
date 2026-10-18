@@ -910,4 +910,12 @@ Programs that read and write a lot of memory stall constantly: copy a small part
 into local (``shared'') memory, do \textbf{a lot of work} with it, then write back the result.
 \end{defnbox}
 
+
+\begin{defnbox}[title=Kernel]
+A GPU only accelerates tasks; its basic unit of work is a \textbf{kernel}, launched with a
+\textbf{launch grid} that says how many instances to run (e.g.\ $128 \times 128 \times 32$).
+GPUs started with triangles only; today CUDA (NVIDIA), ROCm (AMD) and SYCL (Intel) make general
+purpose GPU programming easier.
+\end{defnbox}
+
 \end{document}
