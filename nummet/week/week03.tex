@@ -505,6 +505,69 @@ product of their individual bounds.
 
 
 
+%=========================================================
+\section{Condition Number of a Linear System}
+
+
+\begin{formula}
+
+\textbf{Solving a perturbed linear system}
+
+\begin{itemize}
+
+\item Original system: $\mathbf{A}\mathbf{x} = \mathbf{b}$
+
+\item Perturbed system: $\mathbf{A}(\mathbf{x} + \Delta\mathbf{x}) = \mathbf{b} +
+\Delta\mathbf{b}$
+
+\item What we'd like to know: how big is $\|\Delta\mathbf{x}\| / \|\mathbf{x}\|$ (relative error
+of the solution)?
+
+\end{itemize}
+
+\textbf{Ingredient 1}:
+$\|\mathbf{b}\| = \|\mathbf{A}\mathbf{x}\| \le \|\mathbf{A}\| \cdot \|\mathbf{x}\|
+\Leftrightarrow \|\mathbf{x}\| \ge \frac{\|\mathbf{b}\|}{\|\mathbf{A}\|}$
+
+\textbf{Ingredient 2}:
+$\|\Delta\mathbf{x}\| = \|\mathbf{A}^{-1}\Delta\mathbf{b}\| \le \|\mathbf{A}^{-1}\| \cdot
+\|\Delta\mathbf{b}\|$
+
+\textbf{Putting it together}:
+
+\[
+\frac{\|\Delta\mathbf{x}\|}{\|\mathbf{x}\|}
+\le \underbrace{\|\mathbf{A}^{-1}\| \cdot \|\mathbf{A}\|}_{= \operatorname{cond}(\mathbf{A})
+= \kappa(\mathbf{A})} \cdot \frac{\|\Delta\mathbf{b}\|}{\|\mathbf{b}\|}
+\]
+
+\end{formula}
+
+
+\begin{definition}
+
+\textbf{CONDITION NUMBER}
+
+\[
+\operatorname{cond}(\mathbf{A}) = \|\mathbf{A}\| \cdot \|\mathbf{A}^{-1}\|
+\]
+
+Measures how much $\mathbf{A}$ (and $\mathbf{A}^{-1}$) distort the unit circle: the more
+elongated the ellipse, the larger the condition number.
+
+\end{definition}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.85\linewidth
+]{../images/week03_02.png}
+
+\end{center}
+
+
+
 \end{multicols}
 
 
