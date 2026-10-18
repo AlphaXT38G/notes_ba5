@@ -861,4 +861,35 @@ second. Rendering is an \textbf{embarrassingly parallel} problem, but CPU-style 
 big to have many.
 \end{exbox}
 
+
+\section{From CPU to GPU cores}
+
+\begin{rembox}[title=Throw away what makes single threads fast]
+No branch predictor, no out-of-order execution, no big caches: every jump and every load is
+slow. But all pixels run \textbf{in lockstep}, so many tiny processors can share one instruction
+decoder.
+\begin{center}
+\includegraphics[width=0.75\linewidth]{images/week06_01.png}
+\end{center}
+\end{rembox}
+
+\begin{defnbox}[title=SM partition and streaming multiprocessor]
+An \textbf{SM partition}: 32 tiny processors (own registers and units) sharing one instruction
+fetch + decode. A \textbf{streaming multiprocessor (SM)}: 4 partitions sharing an L1 cache /
+shared memory (128 KiB). The NVIDIA RTX 5090 has 170 SMs $\times$ 4 $\times$ 32 = 21'760
+``cores'', a hardware scheduler, a 96 MiB L2 and 32 GiB of memory.
+\end{defnbox}
+
+\begin{propbox}[title={Slow, simple circuits}]
+\begin{center}
+\begin{tabular}{l|cc}
+ & RTX 5090 & Core Ultra 9 285K \\ \hline
+Clock & 2.4 GHz & 5.7 GHz \\
+Load (L1 hit) & 30 cycles & 4 cycles \\
+Load (L2 hit) & 200 cycles & 17 cycles \\
+Load (miss) & 800 cycles & 565 cycles
+\end{tabular}
+\end{center}
+\end{propbox}
+
 \end{document}
