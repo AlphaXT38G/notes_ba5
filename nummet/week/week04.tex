@@ -593,6 +593,60 @@ General form:
 
 
 
+%=========================================================
+\section{Using the QR Factorization}
+
+
+\textbf{The end result} for a tall $\mathbf{A}$: square orthogonal $\mathbf{Q}$, and
+$\mathbf{R}$ upper triangular on top of zeros. \textbf{``Economy size''}: drop the columns of
+$\mathbf{Q}$ that only multiply these zeros.
+
+\begin{center}
+
+\includegraphics[
+width=0.75\linewidth
+]{../images/week04_05.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+\mathbf{x} = \mathbf{R}^{-1}(\mathbf{Q}^T\mathbf{b})
+\]
+
+\end{formula}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item Be mindful to \textbf{not} compute an inverse of $\mathbf{R}$. Instead, solve the
+upper-triangular system $\mathbf{R}\mathbf{x} = \mathbf{Q}^T\mathbf{b}$ via back-substitution!
+
+\item More expensive to compute than LU factorization ($\sim$2X). Can solve \emph{tall} linear
+systems, giving the least squares solution \emph{without having to use the normal equations}.
+
+\item QR factorization is numerically extremely well-behaved. Works even for singular (or
+zero-valued!) matrices.
+
+\end{itemize}
+
+\end{summary}
+
+
+\begin{important}
+
+\textbf{Geometric interpretation: rotate, project, then unwarp!}
+$\mathbf{Q}, \mathbf{R} = \texttt{qr}(\mathbf{A})$; $\mathbf{b}' = \mathbf{Q}^T\mathbf{b}$ gives
+a simpler \emph{square} 2D problem; then $\mathbf{x} = \mathbf{R}^{-1}\mathbf{b}'$.
+
+\end{important}
+
+
+
 \end{multicols}
 
 
