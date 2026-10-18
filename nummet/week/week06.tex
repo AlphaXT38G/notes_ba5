@@ -477,6 +477,58 @@ and shared memory.
 
 
 
+%=========================================================
+\section{Part 1: Latency Hiding}
+
+
+\begin{definition}
+
+\textbf{WARP}
+
+A group of 32 threads, executed by an SM partition.
+
+\end{definition}
+
+
+\begin{center}
+
+\includegraphics[
+width=\linewidth
+]{../images/week06_03.png}
+
+\end{center}
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item Because the cores on GPUs are so basic, they will \textbf{stall all the time}; latencies
+from stalls are \emph{terrible} for performance.
+
+\item Stalls are unavoidable, but GPUs can usually ``hide'' this latency.
+
+\item Key idea: run \textbf{many} warps per SM partition (\textbf{huge register file}).
+
+\begin{itemize}
+
+\item Switch to another warp whenever a stall happens (a stalled warp waits for 300-1000
+clock cycles).
+
+\item Switching is ``for free'' (consumes no clock cycles).
+
+\item If all goes well: do useful work at every clock cycle.
+
+\end{itemize}
+
+\item Follows the high level pattern: optimize \textbf{throughput}, not latency.
+
+\end{itemize}
+
+\end{important}
+
+
+
 \end{multicols}
 
 
