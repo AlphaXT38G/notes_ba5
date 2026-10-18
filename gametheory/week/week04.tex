@@ -628,6 +628,58 @@ The concept of \textbf{sunk cost} is difficult to digest for non-experienced pla
 
 
 
+%=========================================================
+\section{Games of Incomplete Information (Bayesian Games)}
+
+
+So far, everything about the game was \textbf{common knowledge}: who are the players, what are
+their preferences, what are the payouts. But players might have private information about
+their own payout, their ``type'' or preferences, etc.
+
+
+\begin{definition}
+
+\textbf{BAYESIAN GAME} (simultaneous-move game of incomplete information)
+
+Defined by:
+
+\begin{itemize}
+
+\item Players
+
+\item Action set for each player
+
+\item Possible types $\theta_i$ for each player $i$ and a probability distribution over
+player $i$ types $p(\theta_i)$.
+
+\end{itemize}
+
+A pure strategy is a plan of action \textbf{for each type of player}.
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{BAYESIAN NASH EQUILIBRIUM (BNE)}
+
+A strategy profile $(s_1(\theta_1), s_2(\theta_2), \dots, s_N(\theta_N))$ is a BNE of a
+Bayesian game with $N$ players iff, for each player $i$, her \textbf{expected payout} using
+strategy $i$ is higher than or equal to her expected payout using any of the other available
+strategies, keeping fixed the strategies of the other players, which \textbf{depend on their
+types}:
+
+\[
+E[\mathcal{P}_i(s_i(\theta_i), s_{-i}(\theta_{-i}) | \theta_i)] \ge
+E[\mathcal{P}_i(\tilde{s}_i(\theta_i), s_{-i}(\theta_{-i}) | \theta_i)]
+\]
+
+The expected value is taken over all possible types of the other players.
+
+\end{definition}
+
+
+
 \end{multicols}
 
 
