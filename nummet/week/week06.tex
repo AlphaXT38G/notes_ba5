@@ -395,6 +395,53 @@ When all pixels are computed in parallel, \textbf{all processors are evolving in
 
 
 
+%=========================================================
+\section{SM Partitions and Streaming Multiprocessors}
+
+
+\begin{definition}
+
+\textbf{SM PARTITION}
+
+\textbf{32 tiny ``processors''} (each with its own register file and functional units: load,
+mul, add) \textbf{sharing one instruction fetch + decode}. Similar to vector operations on CPUs.
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{STREAMING MULTIPROCESSOR (SM)}
+
+4 SM partitions sharing an \textbf{L1 cache / shared memory} (128 KiB).
+
+\end{definition}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.6\linewidth
+]{../images/week06_02.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\textbf{NVIDIA RTX 5090} (Blackwell GB202 chip)
+
+\begin{align*}
+& 170 \text{ SMs} \times 4 \text{ partitions} \times 32 \text{ processing elements} \\
+& =21'760 \text{ ``cores''}
+\end{align*}
+
+plus a \textbf{hardware scheduler}, an L2 cache (96 MiB) and the GPU memory (32 GiB).
+
+\end{formula}
+
+
+
 \end{multicols}
 
 
