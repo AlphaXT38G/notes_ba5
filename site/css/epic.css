@@ -46,6 +46,38 @@ body.epic section::after{box-shadow:-10px 0 34px -10px rgba(170,90,255,.9);anima
 @keyframes more-breathe{from{opacity:.5}}
 @keyframes more-spark{0%{opacity:0;transform:none}15%{opacity:1}100%{opacity:0;transform:translateY(-4.5rem) scale(.3)}}
 @keyframes more-shine{0%{transform:skewX(-20deg)}45%,100%{transform:skewX(-20deg) translateX(480%)}}
+#more.implode{animation:more-implode .75s cubic-bezier(.6,0,.9,.3) forwards}
+@keyframes more-implode{35%{transform:scale(1.12) rotate(25deg)}100%{opacity:0;transform:scale(0) rotate(220deg)}}
+/* The summoning (js/epic.js): the last 3.2 s of the show once the finale is queued, then 2.6 s over
+   the finale. Every part runs on the same 5.8 s timeline, the switch at 55 % (3.2 s), started part
+   way through when clicked late (--skip). Just under the medallion (z-index), over everything else.
+   Only transform and opacity animate. */
+#summon{--skip:0s;position:fixed;top:0;right:0;bottom:0;left:0;z-index:58;overflow:hidden;pointer-events:none}
+#summon>*{position:absolute}
+#summon .s-veil{top:0;right:0;bottom:0;left:0;background:radial-gradient(circle,rgba(40,25,120,.4),rgba(3,2,14,.96) 70%);animation:s-veil 5.8s var(--skip) both}
+#summon .s-sigil{left:50%;top:50%;width:130vmax;height:130vmax;margin:-65vmax 0 0 -65vmax;animation:s-sigil 5.8s var(--skip) cubic-bezier(.3,.1,.3,1) both}
+#summon .s-beams{top:0;right:0;bottom:0;left:0}
+#summon .s-beams i{position:absolute;bottom:0;width:7vw;height:110vh;margin-left:-3.5vw;transform-origin:50% 100%;background:linear-gradient(90deg,transparent,rgba(170,200,255,.75) 45%,#eef4ff 50%,rgba(170,200,255,.75) 55%,transparent);-webkit-mask-image:linear-gradient(transparent,#000 70%);mask-image:linear-gradient(transparent,#000 70%);animation:s-beam 5.8s both}
+#summon .s-streaks{left:50%;top:50%;animation:s-streaks 5.8s var(--skip) both}
+#summon .s-streaks i{position:absolute;left:0;top:0}
+#summon .s-streaks b{position:absolute;left:0;top:-1px;width:30vmax;height:2px;background:linear-gradient(90deg,#e4eeff,rgba(180,200,255,0));transform-origin:0 50%;opacity:0;animation:s-streak .75s ease-in infinite}
+#summon .s-core{left:50%;top:50%;width:30vmin;height:30vmin;margin:-15vmin 0 0 -15vmin;border-radius:50%;background:radial-gradient(closest-side,#fff,rgba(200,220,255,.95) 25%,rgba(130,120,255,.45) 55%,transparent);animation:s-core 5.8s var(--skip) both}
+#summon .s-wave{left:50%;top:50%;width:40vmin;height:40vmin;margin:-20vmin 0 0 -20vmin;border:.7vmin solid rgba(225,238,255,.95);border-radius:50%;box-shadow:0 0 4vmin rgba(140,170,255,.9),inset 0 0 4vmin rgba(140,170,255,.9);animation:s-wave 5.8s var(--skip) ease-out both}
+#summon .s-wave2{animation-delay:calc(var(--skip) + .3s)}
+#summon .s-flash{top:0;right:0;bottom:0;left:0;background:radial-gradient(circle,#fff 20%,#e2eaff 55%,#aab6ff);animation:s-flash 5.8s var(--skip) both}
+#summon .s-word{left:0;right:0;top:50%;display:flex;flex-direction:column;align-items:center;transform:translateY(-50%)}
+#summon .s-word b{display:block;color:#fff;font:700 clamp(2.2rem,8vw,5.5rem)/1.1 "Cinzel","Trajan Pro","Palatino Linotype","Book Antiqua",Georgia,serif;letter-spacing:.16em;text-transform:uppercase;text-shadow:0 0 1px #140c50,0 0 6px #2a1ca0,0 0 20px #4a3cff,0 0 48px #8a6bff;animation:s-word 5.8s var(--skip) both}
+#summon .s-word b+b{font-size:clamp(1.3rem,4.6vw,3.2rem);letter-spacing:.42em;margin-right:-.42em;animation-name:s-word2}
+@keyframes s-veil{0%{opacity:0}45%{opacity:.9}55%{opacity:1}72%,100%{opacity:0}}
+@keyframes s-sigil{0%{opacity:0;transform:scale(.15) rotate(-60deg)}40%{opacity:.85;transform:scale(.6) rotate(90deg)}54%{opacity:1;transform:scale(.4) rotate(260deg)}58%{opacity:.9;transform:scale(1.4) rotate(290deg)}80%,100%{opacity:0;transform:scale(1.9) rotate(320deg)}}
+@keyframes s-beam{0%,8%{opacity:0;transform:scaleY(0)}22%{opacity:.8;transform:scaleY(1)}48%{opacity:.85;transform:scaleY(1)}55%{opacity:1;transform:scaleX(2.2)}62%,100%{opacity:0;transform:scaleX(3)}}
+@keyframes s-streaks{0%,22%{opacity:0}35%,52%{opacity:1}55%,100%{opacity:0}}
+@keyframes s-streak{0%{opacity:0;transform:translateX(65vmax) scaleX(.4)}35%{opacity:1}100%{opacity:0;transform:translateX(2vmin) scaleX(1)}}
+@keyframes s-core{0%,28%{opacity:0;transform:scale(0)}48%{opacity:1;transform:scale(.8)}54%{opacity:1;transform:scale(.4)}57%{opacity:1;transform:scale(6)}68%,100%{opacity:0;transform:scale(9)}}
+@keyframes s-wave{0%,55%{opacity:0;transform:scale(.1)}56%{opacity:1;transform:scale(.2)}82%,100%{opacity:0;transform:scale(6)}}
+@keyframes s-flash{0%,50%{opacity:0}55%{opacity:1}62%{opacity:.95}86%,100%{opacity:0}}
+@keyframes s-word{0%,57%{opacity:0;transform:scale(1.7)}66%{opacity:1;transform:scale(1)}88%{opacity:1;transform:scale(.97)}100%{opacity:0;transform:scale(.92)}}
+@keyframes s-word2{0%,62%{opacity:0;transform:translateY(.6em)}72%{opacity:1;transform:none}88%{opacity:1}100%{opacity:0}}
 /* "Back to normal", small and discreet in the bottom right corner of the epic finale */
 #leave{position:fixed;right:1rem;bottom:1rem;z-index:45;padding:.35rem .7rem;color:#c9d4ff;font:600 .75rem system-ui,sans-serif;background:rgba(12,10,40,.75);border:1px solid rgba(140,160,255,.45);border-radius:999px;cursor:pointer}
 #leave:hover,#leave:focus-visible{color:#fff;border-color:#b9c8ff;box-shadow:0 0 12px rgba(120,150,255,.6)}
@@ -56,4 +88,4 @@ body.epic #fire{display:none}  /* no flame mode during the finale */
 #amp.epic .cone{background:radial-gradient(circle,#9fd8ff 0 10%,#11112a 14%,#24245a 40%,#0b0b20 42%,#1d1d46 70%,#000 72%)}
 #amp.epic .label{background:rgba(12,10,40,.9);border-color:rgba(140,160,255,.6)}
 /* Reduced motion */
-@media(prefers-reduced-motion:reduce){body.epic section::after,body.epic::before,body.epic h1{animation:none}#more,#more>span,#more>img,#more .m-sparks b,#more .m-shine{animation:none}#more .m-sparks{display:none}}
+@media(prefers-reduced-motion:reduce){body.epic section::after,body.epic::before,body.epic h1{animation:none}#more,#more>span,#more>img,#more .m-sparks b,#more .m-shine{animation:none}#more .m-sparks{display:none}#summon{display:none}}

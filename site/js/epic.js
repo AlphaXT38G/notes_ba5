@@ -197,7 +197,81 @@ moreBtn.addEventListener("click", e => {
   preloadEpic();
   moreBtn.classList.add("queued");
   paintMore();
+  queueSummoning();
 });
+
+// The summoning: the last seconds of the show once the finale is queued, so that the switch is an
+// event rather than a cut. SUMMON_BUILD s before the metal ends an overlay (#summon, css/epic.css)
+// takes over: the room goes dark, a huge rune circle turns in, pillars of light rise from the
+// floor, streaks of energy rush to the medallion, which implodes into a core of light; at the very
+// end of the show the core bursts in a white flash and two shock waves, the screen switches under
+// the flash (the view transition starts from white), and "Epicness unleashed" shows while the
+// light fades onto the finale. A rising whoosh and a deep boom go with it (Web Audio, unless the
+// show was muted). Its CSS animations share one timeline (SUMMON_BUILD + SUMMON_TAIL long, the
+// switch at SUMMON_BUILD); clicked late, it starts part way through (--skip, a negative delay).
+// The switch itself is timed to the millisecond here instead of waiting for the next clock tick.
+const SUMMON_BUILD = 3.2, SUMMON_TAIL = 2.6;
+const summon = document.createElement("div");
+summon.id = "summon";
+summon.setAttribute("aria-hidden", "true");
+summon.innerHTML = `<span class="s-veil"></span><img class="s-sigil" src="${MORE_SIGIL}" alt="">` +
+  `<span class="s-beams">${[8, 22, 34, 46, 58, 70, 83, 93].map((x, i) => `<i style="left:${x}%;animation-delay:calc(var(--skip) + ${(i * .53 % 1.4).toFixed(2)}s)"></i>`).join("")}</span>` +
+  `<span class="s-streaks">${Array.from({ length: 18 }, (_, i) => `<i style="transform:rotate(${i * 20 + (i * 7) % 11}deg)"><b style="animation-delay:${(i * .29 % .7).toFixed(2)}s"></b></i>`).join("")}</span>` +
+  `<span class="s-core"></span><span class="s-wave"></span><span class="s-wave s-wave2"></span><span class="s-flash"></span>` +
+  `<span class="s-word"><b>Epicness</b><b>unleashed</b></span>`;
+let summonTimers = [], summonAudio = null;
+const metalLeftNow = () => metalEggAt ? metalLeft() : metalLeft() - new Date().getMilliseconds() / 1000;  // the clock's, to the ms
+const endSummoning = () => {
+  summonTimers.forEach(clearTimeout);
+  summonTimers = [];
+  summon.remove();
+  moreBtn.classList.remove("implode");
+};
+const queueSummoning = () => {
+  endSummoning();
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;  // the finale simply comes on time
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (AC && !summonAudio) try { summonAudio = new AC(); } catch (e) {}  // made in the click, so allowed to sound
+  summonTimers.push(setTimeout(startSummoning, Math.max(0, (metalLeftNow() - SUMMON_BUILD) * 1000)));
+};
+const startSummoning = () => {
+  if (!epicQueued || document.body.dataset.phase !== "metal") return;
+  const left = Math.max(0, metalLeftNow());
+  summon.style.setProperty("--skip", `${-(SUMMON_BUILD - Math.min(left, SUMMON_BUILD)).toFixed(2)}s`);
+  document.body.append(summon);
+  summonSound(left);
+  summonTimers.push(
+    setTimeout(() => moreBtn.classList.add("implode"), Math.max(0, left - .75) * 1000),
+    setTimeout(applyScreen, left * 1000 + 30),  // the show is over: the epic override takes over
+    setTimeout(endSummoning, (left + SUMMON_TAIL) * 1000));
+};
+// The whoosh, band-passed noise sweeping up until the end of the show, then the boom, a sine
+// falling from 90 to 28 Hz
+const summonSound = left => {
+  const ac = summonAudio;
+  if (!ac || left < .4 || riffMuted()) return;
+  try {
+    if (ac.state === "suspended") ac.resume();
+    const t0 = ac.currentTime, tb = t0 + left, rate = ac.sampleRate;
+    const noise = ac.createBuffer(1, Math.ceil((left + 1) * rate), rate), d = noise.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    const src = ac.createBufferSource(), band = ac.createBiquadFilter(), hiss = ac.createGain();
+    src.buffer = noise;
+    band.type = "bandpass"; band.Q.value = 1.4;
+    band.frequency.setValueAtTime(160, t0); band.frequency.exponentialRampToValueAtTime(5200, tb);
+    hiss.gain.setValueAtTime(.0001, t0); hiss.gain.exponentialRampToValueAtTime(.3, tb - .05); hiss.gain.exponentialRampToValueAtTime(.0001, tb + .5);
+    src.connect(band); band.connect(hiss); hiss.connect(ac.destination);
+    src.start(t0); src.stop(tb + 1);
+    const boom = ac.createOscillator(), thump = ac.createGain();
+    boom.frequency.setValueAtTime(90, tb); boom.frequency.exponentialRampToValueAtTime(28, tb + 1.4);
+    thump.gain.setValueAtTime(.0001, t0); thump.gain.setValueAtTime(.0001, tb); thump.gain.exponentialRampToValueAtTime(.8, tb + .02); thump.gain.exponentialRampToValueAtTime(.0001, tb + 1.8);
+    boom.connect(thump); thump.connect(ac.destination);
+    boom.start(tb); boom.stop(tb + 2);
+  } catch (e) {}
+};
+// The show ended without the finale (e.g. left by the clock), or the finale ended: nothing left to summon
+document.addEventListener("metal", e => { if (!e.detail && !epicAt) endSummoning(); });
+document.addEventListener("epic", e => { if (!e.detail) endSummoning(); });
 // Epic music: a Two Steps From Hell mix (audio/epic.mp3, 25 tracks), looped, on the same amp
 // (turned blue). The song is loaded as soon as the button is clicked (paused), so it starts at once
 // when the metal ends; the click also counts as the gesture browsers need for sound.
