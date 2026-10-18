@@ -144,4 +144,31 @@ An \textbf{action} (letter $a$) is what a player ends up playing. A \textbf{stra
 (letter $s$) is the vector of the \emph{ex-ante} probabilities of playing each action.
 \end{warnbox}
 
+
+\begin{propbox}[title=Expected payout]
+When players use mixed strategies, their objective is to maximize their \textbf{expected
+payout} (weighted average over the possible outcomes, weighed with their probabilities).
+With 2 players choosing between $A$ and $B$, $s^{(1)} = (p_A^{(1)}, p_B^{(1)})$ and
+$s^{(2)} = (p_A^{(2)}, p_B^{(2)})$:
+\begin{align*}
+E[\mathcal{P}^{(1)}(s^{(1)}, s^{(2)})]
+&= Prob(A,A)\,\mathcal{P}^{(1)}(A,A) + Prob(A,B)\,\mathcal{P}^{(1)}(A,B) \\
+&\quad + Prob(B,A)\,\mathcal{P}^{(1)}(B,A) + Prob(B,B)\,\mathcal{P}^{(1)}(B,B).
+\end{align*}
+The choices are independent, so $Prob(A,A) = p_A^{(1)} p_A^{(2)}$,
+$Prob(A,B) = p_A^{(1)} p_B^{(2)}$, etc.:
+\begin{align*}
+E[\mathcal{P}^{(1)}(s^{(1)}, s^{(2)})]
+&= p_A^{(1)} p_A^{(2)} \mathcal{P}^{(1)}(A,A) + p_A^{(1)} p_B^{(2)} \mathcal{P}^{(1)}(A,B) \\
+&\quad + p_B^{(1)} p_A^{(2)} \mathcal{P}^{(1)}(B,A) + p_B^{(1)} p_B^{(2)} \mathcal{P}^{(1)}(B,B).
+\end{align*}
+\end{propbox}
+
+\begin{rembox}[title=What players know]
+In the simultaneous-move games of this lecture, each player \textbf{knows the other players'
+strategy, but not their actions}. E.g.\ in Rock-Paper-Scissors I may know that my opponent
+plays the three actions with probability $(0.3, 0.3, 0.4)$ --- because we already played
+together many times --- but I don't know what she will play this time.
+\end{rembox}
+
 \end{document}
