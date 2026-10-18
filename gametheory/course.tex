@@ -291,4 +291,30 @@ for each player, both to be able to ``strike first'' and to be able to defend it
 Unfortunately, disarmament is not a Nash Equilibrium.
 \end{exbox}
 
+
+\section{Classical game 2: Matching Pennies}
+
+\begin{exbox}[title=Matching Pennies]
+Two players choose Head or Tail. Player 1 wins 1 if the two choices match (2 Heads or 2
+Tails) and loses 1 otherwise. The other way around for Player 2: she wins 1 in case of
+mismatch and loses 1 in case of a match.
+\begin{center}
+\begin{tabular}{c|cc}
+ & H & T \\ \hline
+H & (1,-1) & (-1,1) \\
+T & (-1,1) & (1,-1)
+\end{tabular}
+\end{center}
+\end{exbox}
+
+\begin{defnbox}[title=Zero sum game]
+A game in which, in every outcome, what one player wins is exactly what the other loses
+(the payouts sum to zero), like Matching Pennies.
+\end{defnbox}
+
+\begin{warnbox}[title=No pure-strategy NE]
+At first sight, it looks like there is no Nash Equilibrium. What is true is that
+\textbf{there is no Nash Equilibrium in pure strategy}.
+\end{warnbox}
+
 \end{document}
