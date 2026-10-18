@@ -702,6 +702,63 @@ We won't look at low-level details of how the LU factorization is computed (ditt
 
 
 
+%=========================================================
+\section{Using an LU Decomposition}
+
+
+\begin{formula}
+
+\[
+\mathbf{x} = \mathbf{U}^{-1}(\mathbf{L}^{-1}\mathbf{b})
+\]
+
+Important: here, $\cdot^{-1}$ does \emph{not} mean computing a matrix inverse, but solving
+triangular systems (forward substitution with $\mathbf{L}$, back substitution with
+$\mathbf{U}$).
+
+\end{formula}
+
+
+\begin{important}
+
+Forward/back-substitution have the same complexity as matrix-vector multiplication: solving a
+triangular system takes $O(n^2)$, i.e.\ \emph{all the hard work is done already!}
+
+\end{important}
+
+
+\begin{definition}
+
+\textbf{LU WITH PIVOTING} (column pivoting, also known as partial pivoting)
+
+\[
+\mathbf{A} = \mathbf{P}\mathbf{L}\mathbf{U}, \qquad
+\mathbf{x} = \mathbf{U}^{-1}(\mathbf{L}^{-1}(\mathbf{P}^{-1}\mathbf{b}))
+\]
+
+$\mathbf{P}$ is a \textbf{permutation matrix}: each row/column contains a single 1, the rest is
+zero.
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{In SciPy}
+
+\begin{verbatim}
+import scipy.linalg as la
+lu, piv = la.lu_factor(A)
+x = la.lu_solve((lu, piv), b)
+\end{verbatim}
+
+Returns a pivot element vector and a single 2D array: the diagonal elements of $\mathbf{L}$ are
+1, so both components can be packed tightly.
+
+\end{example}
+
+
+
 \end{multicols}
 
 
