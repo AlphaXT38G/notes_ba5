@@ -886,6 +886,100 @@ Other applications: tennis, baseball, etc.
 
 
 
+%=========================================================
+\section{Classical Example 3 -- Asymmetric Matching Pennies}
+
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & H & T \\
+\hline
+H & (X,-X) & (-1,1) \\
+T & (-1,1) & (1,-1) \\
+\end{tabular}
+\end{center}
+
+$X$ is a big number, such as 1000 or 1 million.
+
+
+\begin{example}
+
+\textbf{Intuition}
+
+\begin{itemize}
+
+\item Player 1 might think: I'll play $H$, just in case Player 2 also plays $H$: I'll be
+rich! (and if not, I lose just 1).
+
+\item But then Player 2 will never play $H$, he will always play $T$! So Player 1 playing $H$
+loses 1 for sure.
+
+\item So Player 1 should play $T$ and win 1 for sure\dots Then Player 2 will not play $T$
+for sure, because he doesn't want to lose for sure\dots
+
+\item After all, also in this case \textbf{both players should randomize}.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{important}
+
+In a mixed-strategy NE, \textbf{each player must be indifferent between playing $H$ and
+$T$}.
+
+\end{important}
+
+
+\begin{formula}
+
+\textbf{Player 2 indifferent} (given $p_H^{(1)}$):
+
+\begin{itemize}
+
+\item 2 plays $H$: $-Xp_H^{(1)} + (1 - p_H^{(1)}) = 1 - (1+X)p_H^{(1)}$
+
+\item 2 plays $T$: $p_H^{(1)} - (1 - p_H^{(1)}) = 2p_H^{(1)} - 1$
+
+\end{itemize}
+
+\[
+\Rightarrow \quad p_H^{(1)} = \frac{2}{3+X}
+\]
+
+\textbf{Player 1 indifferent} (given $p_H^{(2)}$):
+
+\begin{itemize}
+
+\item 1 plays $H$: $Xp_H^{(2)} - (1 - p_H^{(2)}) = -1 + (1+X)p_H^{(2)}$
+
+\item 1 plays $T$: $-p_H^{(2)} + (1 - p_H^{(2)}) = 1 - 2p_H^{(2)}$
+
+\end{itemize}
+
+\[
+\Rightarrow \quad p_H^{(2)} = \frac{2}{3+X}
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+NE for
+
+\[
+s^{(1)} = s^{(2)} = \left(\frac{2}{3+X},\ 1 - \frac{2}{3+X}\right)
+\]
+
+The probability of the big gain for Player 1 (and big loss for Player 2) is
+$\left(\frac{2}{3+X}\right)^2$.
+
+\end{important}
+
+
+
 \end{multicols}
 
 
