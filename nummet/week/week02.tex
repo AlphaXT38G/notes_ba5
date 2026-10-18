@@ -478,6 +478,64 @@ for i in range(n):
 
 
 
+%=========================================================
+\section{Linear Systems}
+
+
+Today: dense, upper triangular, lower triangular and permutation matrices.
+
+
+\begin{definition}
+
+\textbf{LINEAR SYSTEM}
+
+\[
+\mathbf{A}\mathbf{x} = \mathbf{b}, \qquad
+\mathbf{A} \in \mathbb{R}^{m \times n}, \ \mathbf{x} \in \mathbb{R}^n, \
+\mathbf{b} \in \mathbb{R}^m
+\]
+
+Can $\mathbf{b}$ be expressed as a linear combination of the columns of $\mathbf{A}$? The
+solution may not exist or may not be unique! This lecture: the \emph{square} case ($m = n$).
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{Geometric interpretation}
+
+\begin{itemize}
+
+\item \textbf{Column-based view}: try to reach point $\mathbf{b}$ using a linear combination of
+basis vectors $\mathbf{a}^{(i)}$ (columns). $\mathbf{x}$ tells us how much of each axis we need.
+
+\item \textbf{Row-based view}: compute the intersection of planes with normals $\mathbf{a}^{(i)}$
+(rows) and offset $b_i$: $\mathbf{a}^{(i)} \cdot \mathbf{x} = b_i$.
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{warning}
+
+\textbf{Pure versus numerical mathematics}: concepts like invertibility become more nuanced.
+
+\[
+\begin{pmatrix} 1 & 0 \\ 1 & \epsilon \end{pmatrix}
+\begin{pmatrix} x_1 \\ x_2 \end{pmatrix}
+= \begin{pmatrix} -1 \\ 1 \end{pmatrix}
+\]
+
+Conceptually the matrix is nonsingular for every $\epsilon \ne 0$ and singular for
+$\epsilon = 0$; in IEEE754 FP it becomes gradually ``more singular'' from
+$\epsilon = 10^{-1}$ to $10^{-10}$, $10^{-50}$, $0$.
+
+\end{warning}
+
+
+
 \end{multicols}
 
 
