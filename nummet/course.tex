@@ -130,4 +130,40 @@ The density of representable numbers decreases with the magnitude; there is over
 the usable range and underflow near zero (``please don't memorize these numbers'').
 \end{propbox}
 
+
+\section{The IEEE 754 standard}
+
+\begin{defnbox}[title=IEEE 754]
+Standard by William Kahan, published in 1985. Its behavior is \textbf{fully specified}: every
+arithmetic operation produces a result, whether it is mathematically expected or not, and
+exceptional operations raise a signal.
+\begin{itemize}
+  \item \textbf{Zero}: don't store the leading one; zero is \textbf{signed}.
+  \item \textbf{Too big}: special number $\pm$\textbf{infinity}.
+  \item \textbf{Too small}: gradual underflow through \textbf{denormalized numbers}
+        ($2^E \cdot 0.xxx$).
+  \item \textbf{Nonsensical} ($\text{Inf} \cdot 0$, \dots): \textbf{NaN}, which is infectious.
+  \item \textbf{Not representable}: \textbf{Banker's rounding} (round-to-nearest-tie-to-even)
+        by default.
+\end{itemize}
+\end{defnbox}
+
+\begin{thmbox}[title=Accuracy guarantee]
+The elementary operations $+, -, *, /, \sqrt{}$ are computed in infinite precision and then
+\textbf{rounded} to a representable number.
+\end{thmbox}
+
+\begin{warnbox}[title=Danger zone]
+\begin{itemize}
+  \item Comparison against NaN is always false: \texttt{if x < 0 or x > 1: raise} lets a NaN
+        through, \texttt{if not (x >= 0 and x <= 1): raise} does not.
+  \item Transcendental operations (sin, exp, log\dots) are much slower (50-300 cycles) and less
+        accurate.
+  \item Fused multiply-add (\texttt{a*b+c}, one rounding) and compiler optimizations can change
+        the expected rounding.
+  \item Denormals are handled badly by processors (100-1000$\times$ slower); careful with
+        float/integer conversions.
+\end{itemize}
+\end{warnbox}
+
 \end{document}
