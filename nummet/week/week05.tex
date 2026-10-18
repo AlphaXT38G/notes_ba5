@@ -294,6 +294,60 @@ these things exist and how they \emph{roughly} work.
 
 
 
+%=========================================================
+\section{Model Problem: psum}
+
+
+\begin{definition}
+
+\textbf{psum(x)}: sum the positive elements of the input vector \texttt{x}. A simple
+operation, but one that isn't ``natively'' supported by NumPy.
+
+\end{definition}
+
+
+\textbf{Tip of the iceberg}: below the Python code (browser, Jupyter, NumPy, bytecode
+interpreter, OS) lie instruction decoding, Tomasulo's algorithm, speculative execution, caches
+and prefetch, DRAM, physical bits. On a GPU: CUDA/Vulkan, kernels, hardware scheduler, shared
+memory, latency hiding.
+
+
+\textbf{Python bytecode}: \texttt{dis.dis(psum)} shows the stack-machine instructions
+(\texttt{LOAD\_FAST}, \texttt{BINARY\_SUBSCR}, \texttt{COMPARE\_OP}, \dots).
+
+
+\begin{important}
+
+\textbf{Dissecting the interpreter}: a big loop fetches the next \emph{opcode} and jumps to one of
+$\sim$130 code blocks. \texttt{COMPARE\_OP} pops two operands, calls
+\texttt{PyObject\_RichCompare} (stack overflow check, type dispatch, reference counting, error
+management), down to \texttt{float\_richcompare} (``Comparison is pretty much a nightmare'').
+
+\begin{itemize}
+
+\item That's \emph{a lot} of code for something so simple: the overhead dwarfs the actual
+operation.
+
+\item Inherent compromise of an interpreted language. Overheads are usually negligible when the
+operation does more work.
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Vectorization in Python}
+
+Bad: a Python loop \texttt{if B[i] < 0: X[i] = A[i] + C[i] else: X[i] = A[i] + D[i]}
+
+Good: \texttt{X = A + np.where(B < 0, C, D)}
+
+\end{example}
+
+
+
 \end{multicols}
 
 
