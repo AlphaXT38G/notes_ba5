@@ -445,6 +445,62 @@ be accepted. \textbf{Loading memory, division and square root are really expensi
 
 
 
+%=========================================================
+\section{Superscalar Execution}
+
+
+\begin{definition}
+
+\textbf{TOMASULO'S ALGORITHM} (``superscalar execution'')
+
+Aggressively parallelizes the execution of a program: instead of running it step by step, try
+to do everything at once while respecting data dependencies. Processing units must wait for
+their inputs to be ready (``reservation stations'').
+
+\end{definition}
+
+
+\begin{itemize}
+
+\item LOADs are \textbf{extremely} slow: helpful to do multiple in parallel.
+
+\item Newer architectures (e.g.\ Apple M1) look at the eight next instructions per clock cycle;
+in a loop, they can run ahead several iterations.
+
+\item The CPU is like a high-speed train: to keep the pipeline fed, it must look far ahead
+(decode, schedule and execute different instructions at the same time).
+
+\end{itemize}
+
+
+\begin{definition}
+
+\textbf{BRANCH PREDICTION}
+
+At each branch, the processor must decide what to do a long time in advance (waiting would be
+too slow): ask the oracle (jump or not?), go that way and begin executing; N cycles later we
+know if it was right. Correct: all good. Wrong: pull the emergency brake and undo all steps.
+
+\end{definition}
+
+
+\begin{warning}
+
+In the naive \texttt{psum\_0}, mispredictions happen all the time: the input values are random
+and positive with 50\% probability.
+
+\end{warning}
+
+
+\begin{example}
+
+\textbf{Improved version} (no branch):
+\texttt{for (...) r += fmaxf(x[i], 0.f);} -- compiled to \texttt{FMAXNM} + \texttt{FADD}.
+
+\end{example}
+
+
+
 \end{multicols}
 
 
