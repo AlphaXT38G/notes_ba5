@@ -342,6 +342,49 @@ because even for the cars on AD+DB, switching to AC+CB would leave travel time u
 
 
 
+%=========================================================
+\section{Braess -- New Route is Added}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.7\linewidth
+]{../images/week05_02.png}
+
+\end{center}
+
+
+New, superfast edge CD (can only go from C to D). Three possible routes from A to B now:
+AC+CB; AD+DB; AC+CD+DB.
+
+
+\begin{itemize}
+
+\item As before, everybody taking AC+CB, or everybody taking AD+DB, cannot be a NE.
+
+\item \textbf{Everybody on AC+CD+DB}: travel time $= 4000/100 + 0 + 4000/100 = 80$. If somebody
+switched to AC+CB, travel time would be $4000/100 + 45 = 85$; the same if somebody switched
+to AD+DB. So \textbf{AC+CD+DB is a NE!}
+
+\item \textbf{Half on AC+CB, half on AD+DB} (65 minutes) is not a NE anymore: if one car
+switches to AC+CD+DB, travel time would be $2001/100 + 0 + 1999/100 \simeq 40$ minutes.
+
+\end{itemize}
+
+
+\begin{important}
+
+No matter the strategy of the other players, switching from AC+CD+DB to another route involves
+switching from an edge with travel time $x/100$ (at most 40) to an edge with travel time 45.
+
+\textbf{AC+CD+DB is the only NE!} Travel time is 80, \textbf{15 minutes longer} than the NE
+before the route was added.
+
+\end{important}
+
+
+
 \end{multicols}
 
 
