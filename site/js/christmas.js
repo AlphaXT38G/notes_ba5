@@ -355,15 +355,15 @@ const buildTree = () => {
     let shade = "";
     for (let r = 1; r <= 3; r++) {
       const y = top + (bottom - top) * (r / 4) - 6, half = hw * (.3 + .7 * (y - top + 34) / (bottom - top + 34)) * .88;
-      const count = Math.max(3, Math.round(half * 2 / 26)), w = half * 2 / count;
+      const count = Math.max(3, Math.round(half * 2 / 30)), w = half * 2 / count;
       for (let k = 0; k < count; k++) {
         const x = TREE_X - half + k * w + (rnd() - .5) * 5, yy = y + (rnd() - .5) * 6, out = (x + w / 2 - TREE_X) / hw;
         const lit = (1 - out) / 2 - (r === 1 ? .22 : 0) + (rnd() - .5) * .2, tone = lit > .55 ? 0 : lit > .28 ? 1 : 2;
         const ww = w + 6, sag = 9 + rnd() * 4, x0 = x - 3;
         tones[tone] += `M${f1(x0)},${f1(yy)}Q${f1(x0 + ww / 2)},${f1(yy + sag * 2)} ${f1(x0 + ww)},${f1(yy)}Q${f1(x0 + ww / 2)},${f1(yy + sag * .5)} ${f1(x0)},${f1(yy)}Z`;
         shade += `M${f1(x0 + 1)},${f1(yy + 3)}Q${f1(x0 + ww / 2 + 1)},${f1(yy + sag * 2 + 4)} ${f1(x0 + ww + 1)},${f1(yy + 3)}Q${f1(x0 + ww / 2)},${f1(yy + sag + 2)} ${f1(x0 + 1)},${f1(yy + 3)}Z`;
-        for (let q = 1; q < 6; q++) {  // needles along the bottom of the crescent
-          const t = q / 6, nx = x0 + ww * t, ny = yy + 2 * sag * t * (1 - t) * 2 * .98;
+        for (let q = 1; q < 4; q++) {  // a few needles along the bottom of the crescent
+          const t = q / 4, nx = x0 + ww * t, ny = yy + 2 * sag * t * (1 - t) * 2 * .98;
           fringe[tone] += `M${f1(nx)},${f1(ny - 1)}l${f1(out * 2 + (rnd() - .5) * 1.6)},${f1(3 + rnd() * 2.5)}`;
         }
       }
@@ -372,7 +372,7 @@ const buildTree = () => {
     parts.push(`<path class="rim" d="M${f1(TREE_X - hw)},${bottom}${edge}" stroke="url(#xrim)"/>`);
     // needle tips along the bottom edge, and snow resting on some branches
     let tips = "", snow = "";
-    for (let j = 0; j < n * 5; j++) {
+    for (let j = 0; j < n * 3; j++) {
       const x = TREE_X - hw + rnd() * hw * 2, y = bottom - 2 + rnd() * 10;
       tips += `M${f1(x)},${f1(y)}l${f1((rnd() - .5) * 8)},${f1(4 + rnd() * 6)}`;
     }
