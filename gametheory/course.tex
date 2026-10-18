@@ -118,4 +118,30 @@ $\mathcal{P}^{(1)}(R,P) = -1$ (payout for Player 1 if 1 chooses R and 2 chooses 
 $\mathcal{P}^{(2)}(S,R) = 1$ (payout for Player 2 if 1 chooses S and 2 chooses R).
 \end{exbox}
 
+
+\section{Actions and strategies}
+
+Player $i$ can choose between $M$ \textbf{actions} $(a_1^{(i)}, a_2^{(i)}, \ldots,
+a_M^{(i)})$.
+
+\begin{defnbox}[title=Mixed strategy]
+A (mixed) \textbf{strategy} is an $M$-component vector
+\[
+s^{(i)} = (p_1^{(i)}, p_2^{(i)}, \ldots, p_M^{(i)}), \qquad 0 \le p_j^{(i)} \le 1, \qquad
+\sum_{j=1}^{M} p_j^{(i)} = 1,
+\]
+where each component $j$ is the probability of choosing action $a_j^{(i)}$.
+\textbf{Different players choose their actions independently.}
+\end{defnbox}
+
+\begin{defnbox}[title=Pure strategy]
+A strategy vector with one component equal to one, and the others equal to zero: the player
+always plays the same action.
+\end{defnbox}
+
+\begin{warnbox}[title=Action $\ne$ strategy]
+An \textbf{action} (letter $a$) is what a player ends up playing. A \textbf{strategy}
+(letter $s$) is the vector of the \emph{ex-ante} probabilities of playing each action.
+\end{warnbox}
+
 \end{document}
