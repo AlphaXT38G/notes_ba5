@@ -295,4 +295,31 @@ might be $O(n^2)$, \emph{nobody knows}. Many of these are \emph{galactic} algori
 the naïve algorithm tends to be fastest.
 \end{rembox}
 
+
+\section{Sparse matrices}
+
+\begin{defnbox}[title=Sparse matrix]
+A matrix where \emph{almost all} ($> 99\%$) entries are zero: we can avoid storing the zeros and
+skip them during computation. Encodings: \textbf{Compressed Sparse Row} (CSR) and
+\textbf{Compressed Sparse Column} (CSC), \texttt{scipy.sparse.csr\_matrix} / \texttt{csc\_matrix}.
+\begin{center}
+\includegraphics[width=0.8\linewidth]{images/week02_03.png}
+\end{center}
+\end{defnbox}
+
+\begin{exbox}[title=Where sparsity comes from]
+Protein models, social networks, triangle meshes: most things \emph{aren't} connected.
+Discretized equations: the 1D heat equation $\frac{\partial^2 f}{\partial x^2} = 0$ becomes
+$-f(x_{i-1}) + 2f(x_i) - f(x_{i+1}) = 0$, one row $(\ldots\ {-1}\ 2\ {-1}\ \ldots)$ of a huge
+matrix.
+\end{exbox}
+
+\begin{rembox}[title=Matrix zoo]
+Dense, symmetric, diagonal, tridiagonal, permutation, upper / lower triangular, block, low
+rank, sparse; also positive definite and orthogonal matrices.
+\begin{center}
+\includegraphics[width=0.7\linewidth]{images/week02_02.png}
+\end{center}
+\end{rembox}
+
 \end{document}
