@@ -8,12 +8,13 @@
 //     gifts, a snowman companion on the left (and at night the moon and chalet lights),
 //   - a Christmas turntable playing Jingle Bell Rock or a live of Christmas music,
 //   - a small golden sax hidden among the tree's ornaments, which opens the jazz bar (a little
-//     fir in the bar brings Christmas back).
+//     fir in the bar brings Christmas back), and a little red guitar leaning against the gifts,
+//     which starts the metal show.
 // At night the tree lights play changing patterns and Santa's sleigh crosses the sky now and then.
 // The metal show at 1:00 and the other easter eggs still take over.
 //
 // In this file, in order: screens and override, the yeti code, shared helpers, the garland, the
-// tree and its sax ornament, the mountains, the moon, the snowman, the sax button, the tree lights
+// tree and its sax ornament, the mountains, the moon, the snowman, the sax and guitar buttons, the tree lights
 // canvas, the snow, the sleigh, the music, the fir back from the jazz bar,
 // and turning it all on and off.
 // Every drawing is SVG built once from code (seeded random, so it looks the same on every visit).
@@ -230,8 +231,8 @@ const paintGarlandGlow = time => {  // time in seconds, or null: still lights
 // The tree, on the right of the winter scene behind the page (#xscene): tiers of fir with snow on
 // the branches, tinsel, baubles, candy canes, light strings and a star, a red skirt and gifts below
 // it. Drawn once as SVG in a 520 x 640 box. The lights are also listed (treeLights) for the night
-// canvas that lights them up. The sax ornament is in a separate layer above the page
-// (#xtree-front), so it can be clicked even where the cards cover the tree.
+// canvas that lights them up. The sax ornament and the guitar are in a separate layer above the
+// page (#xtree-front), so they can be clicked even where the cards cover the tree.
 const TREE_W = 520, TREE_H = 640, TREE_X = 330;
 const treeLights = [];
 const treeHalfWidth = y => 12 + (y - 60) / (520 - 60) * 172;  // half width of the tree at height y
@@ -332,6 +333,18 @@ const SAX_SVG = `<svg viewBox="0 0 30 52" aria-hidden="true"><path d="M15,0v6" s
   `<path d="M20.5,38 21,31 28,30 27.5,38Z" fill="url(#saxgold)" stroke="#8a5a08" stroke-width=".8"/>` +
   `<circle cx="13.6" cy="18" r="1.2" fill="#fff5c8"/><circle cx="13.6" cy="24" r="1.2" fill="#fff5c8"/><circle cx="13" cy="30" r="1.2" fill="#fff5c8"/>` +
   `<defs><linearGradient id="saxgold" x1="0" x2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset=".5" stop-color="#e3a923"/><stop offset="1" stop-color="#8a5a08"/></linearGradient></defs></svg>`;
+
+// The hidden guitar, leaning against the green gift: a small red electric guitar, two horns, black
+// pickups, gold knobs, a dark neck with its headstock. Drawn upright, tilted inside its own box.
+const GUITAR = { x: 352, y: 482, w: 20, h: 50 };  // among the gifts, half the size of a real one
+const GUITAR_SVG = `<svg viewBox="0 0 26 64" aria-hidden="true"><g transform="rotate(14 13 34)">` +
+  `<path d="M10.5,0H15.5L15,8H11Z" fill="#1a1a1f"/><path d="M10,2h-1.6M10,5h-1.6M16,2h1.6M16,5h1.6" stroke="#d8d8d8" stroke-width="1.2"/>` +
+  `<rect x="11.4" y="7" width="3.2" height="30" fill="#3b2412"/><path d="M11.4,12h3.2M11.4,17h3.2M11.4,22h3.2M11.4,27h3.2M11.4,32h3.2" stroke="#c9b48a" stroke-width=".5"/>` +
+  `<path d="M6,34C2,33 1,40 3,44 1,48 1,58 8,61 11,63 15,63 18,61 25,58 25,48 23,44 25,40 24,33 20,34 18,38 16,38 14.5,37H11.5C10,38 8,38 6,34Z" fill="url(#guitarred)" stroke="#3a0008" stroke-width=".8"/>` +
+  `<rect x="9.5" y="43" width="7" height="3" rx=".8" fill="#111"/><rect x="9.5" y="49" width="7" height="3" rx=".8" fill="#111"/><rect x="10" y="55" width="6" height="1.6" fill="#bbb"/>` +
+  `<circle cx="19.5" cy="53" r="1.1" fill="#e3a923"/><circle cx="18" cy="57" r="1.1" fill="#e3a923"/>` +
+  `<path d="M12,1V56M13,1V56M14,1V56" stroke="rgba(235,235,235,.7)" stroke-width=".3"/></g>` +
+  `<defs><linearGradient id="guitarred" x1="0" x2="1"><stop offset="0" stop-color="#ff4a3d"/><stop offset=".5" stop-color="#b3101e"/><stop offset="1" stop-color="#4d0009"/></linearGradient></defs></svg>`;
 
 const scene = document.createElement("div"), tree = document.createElement("div"), treeFront = document.createElement("div");
 scene.id = "xscene";
@@ -553,6 +566,20 @@ saxBtn.addEventListener("click", e => {
   e.stopPropagation();
   xmasJazz = document.body.dataset.phase;  // the Christmas screen it replaces
   applyScreen();
+});
+// The guitar, in the same layer: the metal show takes over for one song (metal.js, loaded after
+// this file, so startMetalEgg exists by the time it is clicked), then Christmas comes back
+const guitarBtn = document.createElement("button");
+guitarBtn.id = "xguitar";
+guitarBtn.type = "button";
+guitarBtn.title = "Who left a guitar under the tree?";
+guitarBtn.setAttribute("aria-label", "Go to the metal show");
+guitarBtn.innerHTML = GUITAR_SVG;
+guitarBtn.style.cssText = `left:${GUITAR.x / TREE_W * 100}%;top:${GUITAR.y / TREE_H * 100}%;width:${GUITAR.w / TREE_W * 100}%;height:${GUITAR.h / TREE_H * 100}%`;
+treeFront.append(guitarBtn);
+guitarBtn.addEventListener("click", e => {
+  e.stopPropagation();
+  startMetalEgg("Santa brought a guitar.");
 });
 
 // Tree lights at night, on a canvas over the tree (behind the page, unlike the effects canvas):
