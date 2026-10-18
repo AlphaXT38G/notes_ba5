@@ -725,4 +725,26 @@ $\mathbf{A}^T\mathbf{A}$: the matrix scales input vectors more uniformly in all 
 \end{itemize}
 \end{keybox}
 
+
+% =========================================================
+\chapter{Lecture 5 : Processor architecture and efficiency}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} How to write efficient numerical code for today's hardware:
+what the Python interpreter costs, and how a CPU really executes code (pipelining, superscalar
+execution, branch prediction, SIMD, caches). \\
+\textbf{Why is it useful?} Processors no longer get faster by themselves: performance comes from
+designing the algorithm for the hardware, and order-of-magnitude speedups are easy to get.
+\end{rembox}
+
+\section{Processor trends}
+
+\begin{propbox}[title=The power wall]
+Transistor counts keep growing (``Moore's law''), but we hit a power wall at
+$\sim$100 W/cm$^2$: frequency is fixed, single-thread performance has flattened, and the only
+way forward is \textbf{more processors} (multi-core CPUs, GPUs). (Ed Catmull planned ``Toy
+Story'' on the exponential curve of computing speed: 14-15 years, almost exactly right.)
+\end{propbox}
+
 \end{document}
