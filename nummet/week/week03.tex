@@ -568,6 +568,67 @@ width=0.85\linewidth
 
 
 
+%=========================================================
+\section{Properties of the Condition Number}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item $\operatorname{cond}(\mathbf{A}) = \infty$ iff $\mathbf{A}$ is singular
+
+\item $\operatorname{cond}(\mathbf{A}) = 1$ if $\mathbf{A}$ is the identity matrix
+
+\item $\operatorname{cond}(\gamma\mathbf{A}) = \operatorname{cond}(\mathbf{A})$,
+$\gamma \in \mathbb{R}$
+
+\item $\operatorname{cond}(\mathbf{Q}\mathbf{A}) = \operatorname{cond}(\mathbf{A})$ where
+$\mathbf{Q}$ is a rotation matrix
+
+\end{itemize}
+
+\end{summary}
+
+
+\begin{warning}
+
+\textbf{What about the determinant?} It is \emph{not} a good way to determine whether a linear
+system is easy to solve. We know that $\det(\mathbf{A}) = 0$ iff $\mathbf{A}$ is singular. But
+with $\mathbf{A} = \frac{1}{10}\mathbf{I} \in \mathbb{R}^{1000 \times 1000}$,
+$\det(\mathbf{A}) = 10^{-1000}$, yet this linear system is \emph{trivial} to solve. On the other
+hand, $\operatorname{cond}(\mathbf{A}) = 1$ (!)
+
+\end{warning}
+
+
+\begin{important}
+
+\textbf{Implications} (stated without proof): if you are using a good linear system solver, and
+if $\mathbf{b}$ can be assumed to be accurate, then
+
+\[
+\frac{\|\Delta\mathbf{x}\|}{\|\mathbf{x}\|} \lesssim \operatorname{cond}(\mathbf{A})\,
+\operatorname{ulp}(1)
+\]
+
+where $\operatorname{ulp}(1) \approx 2^{-23}$ (single precision), $\approx 2^{-52}$ (double
+precision).
+
+\end{important}
+
+
+\begin{warning}
+
+\textbf{A chicken-and-egg problem}: inverting matrices is expensive; we want to know the
+condition number to find out if this is even possible\dots\ but our definition of
+$\operatorname{cond}(\mathbf{A})$ requires inverting a matrix and computing a matrix norm (how?!).
+Stay tuned!
+
+\end{warning}
+
+
+
 \end{multicols}
 
 
