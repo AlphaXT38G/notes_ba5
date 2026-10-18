@@ -466,4 +466,25 @@ the assumptions\dots\ Deconvolution (removing blur from an image) is a classical
 system: solving it exactly gives pure noise, a regularized solution recovers the image.
 \end{warnbox}
 
+
+\section{Error of linear solvers}
+
+\begin{defnbox}[title=Residual]
+For the ideal solver $\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$ (inverse $f^{-1}(\mathbf{x}) =
+\mathbf{A}\mathbf{x}$) and the actual one $\hat{\mathbf{x}} = \hat{f}(\mathbf{b})$,
+\[
+r(\hat{\mathbf{x}}) = \mathbf{A}\hat{\mathbf{x}} - \mathbf{b}
+\]
+gives an approximation of the \textbf{backward error} of the solver.
+\end{defnbox}
+
+\begin{defnbox}[title=Matrix norm (operator norm)]
+\[
+\|\mathbf{A}\| = \max\{\|\mathbf{A}\mathbf{x}\|, \text{ where } \|\mathbf{x}\| = 1\},
+\]
+the maximum radius of the ellipse that $\mathbf{A}$ makes of the unit circle. Then
+$\|\mathbf{A}\mathbf{x}\| \le \|\mathbf{A}\|\,\|\mathbf{x}\|$ and
+$\|\mathbf{A}\mathbf{B}\| \le \|\mathbf{A}\|\,\|\mathbf{B}\|$.
+\end{defnbox}
+
 \end{document}
