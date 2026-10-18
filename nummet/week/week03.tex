@@ -629,6 +629,51 @@ Stay tuned!
 
 
 
+%=========================================================
+\section{Badly Conditioned Systems}
+
+
+\begin{important}
+
+\textbf{Geometry} (row-based interpretation): noise \& errors may be greatly magnified. When the
+planes (lines) $\mathbf{a}^{(i)} \cdot \mathbf{x} = b_i$ are nearly parallel, a small uncertainty
+on each one gives a huge region of possible intersections.
+
+\end{important}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.6\linewidth
+]{../images/week03_03.png}
+
+\end{center}
+
+
+\begin{example}
+
+\textbf{Conditioning of the Vandermonde matrix} (maps polynomial coefficients to polynomial
+evaluations):
+
+\[
+\mathbf{A} = \begin{pmatrix}
+\alpha_1^n & \dots & \alpha_1^2 & \alpha_1 & 1 \\
+\vdots & & \vdots & \vdots & \vdots \\
+\alpha_m^n & \dots & \alpha_m^2 & \alpha_m & 1
+\end{pmatrix}
+\]
+
+Condition number for $n = 100$ (uniformly spaced positions on $[0, 1]$):
+
+\[
+\operatorname{cond}(\mathbf{A}) = 7.31 \cdot 10^{19} \ (!!!!!!)
+\]
+
+\end{example}
+
+
+
 \end{multicols}
 
 
