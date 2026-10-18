@@ -3,7 +3,7 @@
    Night (christmas-night): a very deep navy sky with stars and the moon, gold accents, the
    garland, the tree and the chalets lit up. Every colour token is set: the visitor may be in
    light or dark mode. In order: colours and sky, title, cards, garland, winter scene (mountains,
-   moon, chalets, tree, sax, snowman), sleigh, turntable, fir back from the jazz bar, transition. */
+   moon, chalets, tree, sax, guitar, snowman), sleigh, turntable, fir back from the jazz bar, transition. */
 body.christmas{--bg:#eaf2fa;--fg:#1d2433;--card:rgba(255,255,255,.93);--line:#d5e1ee;--mut:#5b6a80;--acc:#b3122e;--acc-bg:#fde7eb;--new:#fff;--new-bg:#c8102e;background:var(--bg)}
 body.christmas::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(#c9def2,#eaf2fa 55%,#f5f9fd)}
 body.christmas .wrap{position:relative;z-index:1;padding-top:9.8rem}
@@ -89,7 +89,7 @@ body[data-phase=christmas-night] #xscene .chalets{display:inline}
 @keyframes chalet{0%,100%{opacity:1}40%{opacity:.55}55%{opacity:.9}70%{opacity:.65}}
 /* The tree box: taller than the window, always on the right, sticking out past the right edge and
    a little below the bottom one (the SVG is bottom-aligned, so the gifts are partly cut). On narrow screens it is
-   behind the cards (faded). #xtree-front is the same box above the page, holding only the hidden sax. */
+   behind the cards (faded). #xtree-front is the same box above the page, holding only the hidden sax and guitar. */
 #xtree,#xtree-front{--tw:min(calc(114vh * 520 / 640),135vw);position:fixed;right:calc(var(--tw) * -.14);bottom:-16vh;width:var(--tw);aspect-ratio:520/640}
 #xtree svg,#xtree canvas{position:absolute;inset:0;width:100%;height:100%}
 #xtree .s1{stop-color:#2f8a4a}
@@ -110,12 +110,14 @@ body[data-phase=christmas-night] #xtree .s3{stop-color:#062413}
 body[data-phase=christmas-night] #xtree .branch-snow{stroke:#c9d6ea}
 @media(max-width:1240px){#xtree{opacity:.5}}
 #xtree-front{z-index:3;pointer-events:none}
-#xsax{position:absolute;display:none;padding:0;background:none;border:0;cursor:pointer;pointer-events:auto}
-#xsax svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+/* The hidden sax (among the ornaments) and guitar (against the gifts), glowing gold / red when hovered */
+#xsax,#xguitar{position:absolute;display:none;padding:0;background:none;border:0;cursor:pointer;pointer-events:auto}
+#xsax svg,#xguitar svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
 #xsax:hover svg,#xsax:focus-visible svg{filter:drop-shadow(0 0 5px rgba(255,215,110,.9))}
-/* Where the tree is faded behind the cards, the sax fades with it (it is above the page), until hovered */
-@media(max-width:1240px){#xsax{opacity:.5;transition:opacity .2s}#xsax:hover,#xsax:focus-visible{opacity:1}}
-body.christmas #xsax{display:block}
+#xguitar:hover svg,#xguitar:focus-visible svg{filter:drop-shadow(0 0 5px rgba(255,80,50,.9))}
+/* Where the tree is faded behind the cards, they fade with it (they are above the page), until hovered */
+@media(max-width:1240px){#xsax,#xguitar{opacity:.5;transition:opacity .2s}#xsax:hover,#xsax:focus-visible,#xguitar:hover,#xguitar:focus-visible{opacity:1}}
+body.christmas #xsax,body.christmas #xguitar{display:block}
 
 /* The snowman, a big companion in the left margin beside the courses (behind the cards, faded,
    on narrow screens). It blinks, turns its face a bit more to the courses now and then, and waves;

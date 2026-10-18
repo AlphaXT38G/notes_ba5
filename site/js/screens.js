@@ -22,10 +22,11 @@
 //
 // The current screen's name is body[data-phase] (none during the day), and a "phase" event is
 // sent on every change, with detail = the new name or null.
-// ?night=0 forces the day, ?night=<name> a screen, ?night=1 the first scheduled screen.
+// ?screen=0 forces the day, ?screen=<name> a screen, ?screen=1 the first scheduled screen
+// (?night=..., its old name, still works for links shared before).
 const SCREENS = {}, SCHEDULE = [], OVERRIDES = [], everySecond = [];
 const sub = document.querySelector(".sub"), daySub = sub.textContent;
-const forced = new URLSearchParams(location.search).get("night");
+const forced = (q => q.get("screen") || q.get("night"))(new URLSearchParams(location.search));
 let forcedDismissed = false;  // set by a "back to normal" button: the forced screen is left
 const clockSeconds = () => { const d = new Date(); return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds(); };
 const scheduledPhase = () => {

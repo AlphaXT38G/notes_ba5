@@ -29,7 +29,7 @@ const bubble = closing.querySelector(".bubble"), board = closing.querySelector("
 const loadBartender = () => closing.querySelectorAll(".bt img[data-src]").forEach(img => { img.src = img.dataset.src; delete img.dataset.src; });
 
 // The chalkboard tells how long is left before 1:00, live, when the clock is in the closing slot
-// (a forced ?night=closing or the armstrong code can show it at any time: then no countdown),
+// (a forced ?screen=closing or the armstrong code can show it at any time: then no countdown),
 // and when the bar reopens
 const paintBoard = () => {
   const t = clockSeconds(), inSlot = t >= 45 * 60 && t < 3600;

@@ -9,15 +9,18 @@
 //     bottom left corner pauses / resumes them.
 // It is a "normal" screen (screens.js): the usual look of those hours, which Christmas and the
 // armstrong code replace like the day. The metal show and the epic finale come before it.
+// Typing p e a c e brings it at any time (the peace code, at the end of this file).
 
-// The subtitle follows the hours of the night (a forced ?night=calm in the day gets the first one)
+let peaceEgg = false,   // the peace code was typed: the calm night stays (end of this file)
+    peaceYeti = 0;      // how many times yeti had been typed then (yetiTyped, christmas.js)
+// The subtitle follows the hours of the night (a forced ?screen=calm in the day gets the first one)
 const calmSubtitle = () => {
   const h = new Date().getHours();
   if (h === 2) return "2 AM. The crickets are revising too.";
   if (h === 3) return "3 AM. Even the exams are asleep.";
   if (h === 4) return "4 AM. The quietest hour of the night.";
   if (h === 5) return "5 AM. The sky is thinking about the morning.";
-  return "The show is over. Only the crickets are still up.";
+  return peaceEgg ? "Peace. Only the crickets are still up." : "The show is over. Only the crickets are still up.";
 };
 // normal: the calm night is the usual look of those hours, Christmas and the armstrong code
 // replace it as they replace the day (see screens.js)
@@ -118,7 +121,7 @@ const setCalmSky = on => {
 };
 // Dawn: from 4:45 the sky slowly lightens towards the horizon, the stars fade, until 5:30 when the
 // day comes back. calmDawn goes from 0 to 1 over those 45 minutes (0 at any other time, e.g. a
-// forced ?night=calm in the day), and is given to the CSS as --dawn.
+// forced ?screen=calm in the day), and is given to the CSS as --dawn.
 let calmDawn = 0;
 const paintCalmDawn = () => {
   const t = clockSeconds() - (4 * 3600 + 45 * 60);
@@ -363,3 +366,38 @@ const setCrickets = on => {
 };
 setCrickets(document.body.classList.contains("calm"));
 document.addEventListener("calm", e => setCrickets(e.detail));
+
+// ── Peace code (easter egg: the calm night at any time) ───────────────────────────────────────
+// Typing p e a c e (outside the search field), like yeti, brings the calm night at any time of
+// the day or the year, for the rest of the visit. It replaces the normal screens (the day), the
+// jazz bar and Christmas, but not the shows: the metal show and the epic finale still win, and the
+// calm night comes back after them. This override is the last one, so it would win over the yeti
+// and armstrong eggs: it gives way when one of them is typed after it (the bar's jazzEgg, cleared
+// when peace is typed, is set again; yetiTyped changes).
+// Typed again on the calm night, it goes back to the normal screen of that moment: it drops its
+// own egg, or leaves a forced ?screen=calm; on the calm night of the clock, it does nothing.
+OVERRIDES.push(phase => {
+  if (peaceEgg && (jazzEgg || yetiTyped !== peaceYeti)) peaceEgg = false;
+  if (!peaceEgg || !isNormal(phase) && screenClass(phase) !== "night" && screenClass(phase) !== "christmas") return phase;
+  return "calm";
+});
+const PEACE = [..."peace"];
+let peacePos = 0;  // how many letters of the word have been typed so far
+document.addEventListener("keydown", e => {
+  if (e.target.matches("input")) return;  // typing in the search field never triggers it
+  const k = e.key.toLowerCase();
+  peacePos = k === PEACE[peacePos] ? peacePos + 1 : (k === PEACE[0] ? 1 : 0);
+  if (peacePos !== PEACE.length) return;
+  peacePos = 0;
+  if (document.body.dataset.phase === "calm") {
+    if (peaceEgg) peaceEgg = false;
+    else if (forced === "calm") forcedDismissed = true;
+    else return;  // the clock's calm night: nothing to leave
+  } else {
+    // The other eggs give way, so that leaving the calm night later goes back to the clock
+    peaceEgg = true;
+    peaceYeti = yetiTyped;
+    jazzEgg = xmasEgg = xmasJazz = false;
+  }
+  applyScreen();
+});

@@ -3,13 +3,15 @@
 // (css/metal.css): red stage, chrome title, headbanging cards, lightning, chains, fire and thrown
 // silhouettes on the effects canvas (fx.js), and a guitar amp playing the song. Then the calm
 // night comes (calm.js), unless the epic finale takes over (epic.js). 20 clicks on the flame
-// button within a minute start it at any time of day (startMetalEgg, called by flames.js).
+// button within a minute start it at any time of day (startMetalEgg, called by flames.js), and
+// so does the little guitar hidden among the Christmas gifts (christmas.js).
 const METAL_SONG = 37, METAL_PLAYS = 3;          // the song lasts 37 s and is played 3 times
 const METAL_SECONDS = METAL_SONG * METAL_PLAYS;  // so the show lasts 1 min 51 s
-let metalEggAt = 0;         // when the easter egg started it (0 = not running)
+let metalEggAt = 0,         // when the easter egg started it (0 = not running)
+    metalEggWhy = "";       // how it was started, the start of its subtitle
 SCREENS.metal = {
   className: "metal",
-  subtitle: () => metalEggAt ? "You lit too many fires. Time to headbang. 🤘" : "1:00 AM. Time to headbang. 🤘",
+  subtitle: () => metalEggAt ? `${metalEggWhy} Time to headbang. 🤘` : "1:00 AM. Time to headbang. 🤘",
   transition: "metal",
 };
 SCHEDULE.push([3600, 3600 + METAL_SECONDS, "metal"]);
@@ -18,13 +20,13 @@ OVERRIDES.push(phase => {  // the easter egg runs for one song, whatever the clo
   metalEggAt = 0;
   return phase;
 });
-const startMetalEgg = () => { metalEggAt = Date.now(); applyScreen(); };
+const startMetalEgg = (why = "You lit too many fires.") => { metalEggAt = Date.now(); metalEggWhy = why; applyScreen(); };
 const metalLeft = () => {  // seconds before the current metal takeover ends (Infinity when forced)
   if (metalEggAt) return METAL_SECONDS - (Date.now() - metalEggAt) / 1000;
   if (forced === "metal") return Infinity;
   return 3600 + METAL_SECONDS - clockSeconds();
 };
-// A forced ?night=metal has no start on the clock: it counts from when the screen showed up
+// A forced ?screen=metal has no start on the clock: it counts from when the screen showed up
 let metalOnAt = 0;
 document.addEventListener("metal", e => { metalOnAt = e.detail ? Date.now() : 0; });
 const metalElapsed = () => {  // seconds since the current metal takeover started

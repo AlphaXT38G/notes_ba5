@@ -171,7 +171,7 @@ let epicRiff = null, epicPlaying = false;
 const epicMuted = () => !!epicRiff && epicRiff.muted;
 const preloadEpic = () => { if (!epicRiff) epicRiff = preloadTrack("epic.mp3"); };
 const epicPlay = () => {
-  if (!epicRiff) epicRiff = screenTrack("epic.mp3", { muted: !screenGesture() });  // e.g. ?night=epic: muted until a click
+  if (!epicRiff) epicRiff = screenTrack("epic.mp3", { muted: !screenGesture() });  // e.g. ?screen=epic: muted until a click
   else epicRiff.play().catch(() => {});
   epicPlaying = true;
   paintAmp();
@@ -208,7 +208,7 @@ leaveBtn.textContent = "↩ Back to normal";
 leaveBtn.addEventListener("click", e => {
   e.stopPropagation();
   epicAt = 0;
-  forcedDismissed = true;  // also leaves a ?night=epic
+  forcedDismissed = true;  // also leaves a ?screen=epic
   applyScreen();
 });
 const setLeave = on => on ? document.body.append(leaveBtn) : leaveBtn.remove();
