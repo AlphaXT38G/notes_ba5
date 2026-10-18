@@ -1,46 +1,59 @@
 /* Cassette player of the day (js/tapes.js), bottom left: a brushed-metal Walkman with an orange
-   stripe, the tape seen through its window, a ⏭ key, and a rack of the tapes beside it (the slot
-   of the one in the deck stays empty). The YouTube player is kept invisible. */
+   stripe, the tape seen through its glass door, and a ⏏ key opening the tape box above it. The
+   YouTube player is kept invisible. */
 #tapedeck{position:fixed;left:1.1rem;bottom:1.1rem;z-index:40;display:flex;flex-direction:column;align-items:flex-start;gap:.45rem;color:var(--fg);font:600 .78rem system-ui,sans-serif}
-#tapedeck .unit{display:flex;align-items:flex-end;gap:.35rem}
+#tapedeck .unit{display:flex;align-items:flex-end;gap:.3rem}
 #tapedeck button{padding:0;font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-/* What plays: a pill above the player, shown a few seconds after a change, then on hover / focus */
+/* What plays: a pill above the player, shown a few seconds after a change, then on hover / focus
+   (not while the tape box is open, it would be under it) */
 #tapedeck .label{padding:.3rem .65rem;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,.12);pointer-events:none;opacity:0;transform:translateY(.3rem);transition:opacity .25s,transform .25s}
 #tapedeck:hover .label,#tapedeck:focus-within .label,#tapedeck.tell .label{opacity:1;transform:none}
-/* The Walkman: the window holds the cassette, the LED turns red while it plays */
-#tapedeck .walkman{position:relative;width:5.4rem;height:3.6rem;border-radius:.5rem;background:linear-gradient(160deg,#5b6372,#323843 55%,#262a32);box-shadow:0 6px 18px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.3)}
+#tapedeck.choosing .label{opacity:0}
+/* The Walkman: the bay holds the cassette behind a glass door, the LED turns red while it plays */
+#tapedeck .walkman,#tapedeck .eject{height:3.6rem;border-radius:.5rem;background:linear-gradient(160deg,#5b6372,#323843 55%,#262a32);box-shadow:0 6px 18px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.3)}
+#tapedeck .walkman{position:relative;width:5.4rem}
 #tapedeck .walkman::after{content:"";position:absolute;left:.3rem;right:.3rem;bottom:.22rem;height:.2rem;border-radius:2px;background:linear-gradient(90deg,#f28c28,#e8542b)}
-#tapedeck .slot{position:absolute;left:.3rem;top:.3rem;width:4.32rem;height:2.74rem;overflow:hidden;border-radius:.3rem;background:#0e0f12;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
-#tapedeck .slot .cassette{font-size:.72rem}
-#tapedeck .slot .cassette b{font-size:.85em;line-height:1.6em;height:1.6em;top:.3em}
+#tapedeck .bay,#tapedeck .door{position:absolute;left:.3rem;top:.3rem;width:4.32rem;height:2.74rem;border-radius:.3rem}
+#tapedeck .bay{background:#0e0f12;box-shadow:inset 0 2px 6px rgba(0,0,0,.8)}
+#tapedeck .bay .cassette{font-size:.72rem}
+#tapedeck .bay .cassette b{font-size:.85em;line-height:1.6em;height:1.6em}
+/* The door: tinted glass with a latch at the top, hinged at the bottom; it opens towards us */
+#tapedeck .door{background:linear-gradient(160deg,rgba(255,255,255,.24),rgba(255,255,255,.05) 45%,rgba(150,175,215,.12));box-shadow:inset 0 0 0 1px rgba(255,255,255,.28);transform-origin:50% 100%;transform:perspective(10rem) rotateX(0);transition:transform .35s cubic-bezier(.4,0,.2,1)}
+#tapedeck .door::before{content:"";position:absolute;left:50%;top:-.12rem;width:1.1rem;height:.22rem;margin-left:-.55rem;border-radius:.1rem;background:linear-gradient(#d9dde4,#8b93a1)}
+#tapedeck.open .door{transform:perspective(10rem) rotateX(-72deg)}
+/* The tape comes out upwards (.eject), the new one starts there (.insert, no transition) and
+   slides down into the bay */
+#tapedeck .bay .cassette{transition:transform .45s cubic-bezier(.4,0,.2,1),opacity .45s}
+#tapedeck.eject .bay .cassette{transform:translateY(-135%) rotate(-4deg);opacity:0}
+#tapedeck.insert .bay .cassette{transition:none;transform:translateY(-135%) rotate(3deg);opacity:0}
 #tapedeck .led{position:absolute;right:.32rem;top:.45rem;width:.35rem;height:.35rem;border-radius:50%;background:#55302e}
-#tapedeck .led::after{content:"";position:absolute;inset:-2px;border-radius:50%;background:#ff3b30;box-shadow:0 0 6px #ff3b30;opacity:0;transition:opacity .3s}
+#tapedeck .led::after{content:"";position:absolute;top:-2px;right:-2px;bottom:-2px;left:-2px;border-radius:50%;background:#ff3b30;box-shadow:0 0 6px #ff3b30;opacity:0;transition:opacity .3s}
 #tapedeck.playing .led::after{opacity:1}
-#tapedeck .walkman:hover,#tapedeck .walkman:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-#tapedeck .next{width:1.7rem;height:3.6rem;border-radius:.5rem;color:#e9eaec;font-size:.85rem;background:linear-gradient(160deg,#5b6372,#323843 55%,#262a32);box-shadow:0 6px 18px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.3)}
-#tapedeck .next:hover,#tapedeck .next:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-/* A cassette, sized in em (big in the deck, small in the rack): shell, coloured label, a window
-   with the two reels and the brown tape between them */
+#tapedeck .eject{width:1.5rem;color:#e9eaec;font-size:.9rem}
+#tapedeck .walkman:hover,#tapedeck .walkman:focus-visible,#tapedeck .eject:hover,#tapedeck .eject:focus-visible,#tapedeck .eject[aria-expanded=true]{outline:2px solid var(--acc);outline-offset:2px}
+/* A cassette, sized in em: shell, coloured label, a window with the two reels and the brown tape */
 #tapedeck .cassette{position:relative;display:block;width:6em;height:3.8em;border-radius:.35em;background:linear-gradient(#34343b,#1b1b20);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
-#tapedeck .cassette b{position:absolute;left:.35em;right:.35em;top:.3em;height:1.35em;border-radius:.2em;background:var(--tc);color:#fff;font-size:1em;line-height:1.35em;text-align:center;white-space:nowrap;overflow:hidden;text-shadow:0 1px 1px rgba(0,0,0,.3)}
+#tapedeck .cassette b{position:absolute;left:.35em;right:.35em;top:.3em;border-radius:.2em;background:var(--tc);color:#fff;text-align:center;white-space:nowrap;overflow:hidden;text-shadow:0 1px 1px rgba(0,0,0,.3)}
 #tapedeck .reels{position:absolute;left:1.2em;right:1.2em;bottom:.45em;height:1.45em;display:flex;justify-content:space-between;align-items:center;padding:0 .2em;border-radius:.75em;background:linear-gradient(#5a3a22,#3d2614)}
 #tapedeck .reels i{width:1.05em;height:1.05em;border-radius:50%;background:radial-gradient(circle,#1b1b20 0 22%,transparent 24%),repeating-conic-gradient(#f2f2f2 0 20deg,#bdbdbd 20deg 60deg);box-shadow:0 0 0 1px rgba(0,0,0,.4)}
-#tapedeck.playing .slot .reels i{animation:tape-spin 2.4s linear infinite}
-#tapedeck.swap .slot .cassette{animation:tape-in .5s cubic-bezier(.2,.8,.3,1.15)}
+#tapedeck.playing .reels i{animation:tape-spin 2.4s linear infinite}
 @keyframes tape-spin{to{transform:rotate(360deg)}}
-@keyframes tape-in{from{transform:translateY(-115%)}}
-/* The rack: the four tapes, two by two, the icon only on their label */
-#tapedeck .rack{display:grid;grid-template-columns:auto auto;gap:.25rem;padding:.25rem;border-radius:.4rem;background:var(--card);box-shadow:inset 0 0 0 1px var(--line),0 4px 12px rgba(0,0,0,.15)}
-#tapedeck .rack button{display:block;font-size:.4rem;transition:transform .15s,opacity .2s}
-#tapedeck .rack .cassette b{font-size:1.6em;line-height:.85em;height:.85em;top:.3em}
-#tapedeck .rack .cassette b span{display:none}
-#tapedeck .rack button:hover,#tapedeck .rack button:focus-visible{transform:translateY(-2px)}
-#tapedeck .rack button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
-#tapedeck .rack .out{opacity:.15;pointer-events:none}
+/* The tape box: a list above the player, as long as TAPES (it scrolls past a few) */
+#tapedeck .tapebox{position:absolute;left:0;bottom:4.1rem;width:15rem;max-height:20rem;max-height:min(20rem,60vh);overflow:auto;padding:.4rem;border-radius:.75rem;background:var(--card);border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.2);opacity:0;visibility:hidden;transform:translateY(.4rem);transition:opacity .2s,transform .2s,visibility .2s}
+#tapedeck.choosing .tapebox{opacity:1;visibility:visible;transform:none}
+#tapedeck .tapebox p{margin:.15rem .45rem .35rem;font:600 .68rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+#tapedeck .tapebox ul{list-style:none;margin:0;padding:0}
+#tapedeck .tapebox button{display:flex;align-items:center;gap:.6rem;width:100%;padding:.4rem .45rem;border-radius:.5rem;text-align:left;color:var(--mut)}
+#tapedeck .tapebox button:hover,#tapedeck .tapebox button:focus-visible{background:var(--acc-bg);color:var(--fg);outline:none}
+#tapedeck .tapebox button[aria-current=true]{color:var(--fg)}
+#tapedeck .tapebox small{display:none;margin-left:auto;font-weight:400;font-size:.68rem;color:var(--mut);white-space:nowrap}
+#tapedeck .tapebox button[aria-current=true] small{display:block}
+/* A small cassette seen from the front in the list: its coloured label with the icon */
+#tapedeck .mini{flex:none;width:1.9rem;height:1.25rem;border-radius:.2rem;display:flex;justify-content:center;padding-top:.08rem;font-size:.6rem;line-height:1;background:linear-gradient(var(--tc) 0 58%,#26262b 58%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
 #tapeplayer{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
-/* Touch screens: the rack is too small for a finger, the ⏭ key changes tape */
-@media(pointer:coarse){#tapedeck .rack{display:none}#tapedeck .next{width:2.75rem}}
+/* Touch screens: a finger-sized ⏏ key and list rows */
+@media(pointer:coarse){#tapedeck .eject{width:2.75rem}#tapedeck .tapebox button{min-height:2.75rem}}
 /* Phones: room under the last card to scroll it clear of the player */
 @media(max-width:640px){body:not([data-phase]) .wrap{padding-bottom:6.5rem}#tapedeck .label{font-size:.7rem;max-width:11rem}}
-/* Reduced motion */
-@media(prefers-reduced-motion:reduce){#tapedeck.playing .slot .reels i,#tapedeck.swap .slot .cassette{animation:none}#tapedeck .label{transition:none}}
+/* Reduced motion (tapes.js changes the tape without the door then) */
+@media(prefers-reduced-motion:reduce){#tapedeck.playing .reels i{animation:none}#tapedeck .label,#tapedeck .tapebox{transition:none}}

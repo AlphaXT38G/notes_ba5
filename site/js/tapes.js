@@ -1,10 +1,11 @@
 // ── Cassette player (the day, no screen) ──
-// Music for the usual look of the page: a portable cassette player in the bottom left corner, with
-// a small rack of tapes beside it. The tapes are Lofi Girl mixes from YouTube (the last one is the
-// live radio, a tape that never ends), played by a hidden <iframe> driven by postMessage commands,
-// like the Christmas radio. The deck plays / pauses the tape in it; a tape of the rack ejects the
-// one in the deck and goes in, playing; the ⏭ key puts in the next tape of the rack (the one way on
-// touch screens, where the rack is too small for a finger). When a mix ends the next tape goes in.
+// Music for the usual look of the page: a small portable cassette player in the bottom left
+// corner. The tapes are Lofi Girl mixes from YouTube (the last one is the live radio, a tape that
+// never ends), played by a hidden <iframe> driven by postMessage commands, like the Christmas
+// radio. The player plays / pauses the tape in it; its ⏏ key opens the tape box, a list above it
+// that takes any number of tapes (add one to TAPES, nothing else). Changing tape is done as on a
+// real player: the door opens, the tape comes out, the new one goes in, the door closes, it plays.
+// When a mix ends the next tape goes in the same way.
 // Unlike the screens' music, nothing plays by itself: someone reading notes at noon did not ask for
 // music. The chosen tape is remembered; a screen (jazz bar, Christmas...) takes the player away,
 // and it comes back stopped with the day.
@@ -18,35 +19,37 @@ let tapeAt = (() => {
   try { const i = +localStorage.getItem("tape"); return i >= 0 && i < TAPES.length ? i : 0; } catch (e) { return 0; }
 })();
 let tapePlayer = null, tapeReady = false, tapePlaying = false, tapeTell = null;
+let tapeSwapping = false, tapeTimers = [];
 
 // The cassette drawn in CSS: a shell, a coloured label with the tape's name, a window with its two
 // reels (spinning while it plays)
-const cassette = tape => `<span class="cassette" style="--tc:${tape.color}"><b>${tape.icon}<span> ${tape.short}</span></b>` +
+const cassette = tape => `<span class="cassette" style="--tc:${tape.color}"><b>${tape.icon} ${tape.short}</b>` +
   '<i class="reels"><i></i><i></i></i></span>';
 const tapeDeck = document.createElement("div");
 tapeDeck.id = "tapedeck";
-tapeDeck.innerHTML = '<span class="label" aria-live="polite"></span><span class="unit">' +
-  '<button type="button" class="walkman"><span class="slot"></span><i class="led"></i></button>' +
-  '<button type="button" class="next" aria-label="Next tape" title="Next tape">⏭</button>' +
-  '<span class="rack" role="group" aria-label="Tapes"></span></span>';
-const walkman = tapeDeck.querySelector(".walkman"), tapeRack = tapeDeck.querySelector(".rack");
+tapeDeck.innerHTML = '<span class="label" aria-live="polite"></span>' +
+  '<div class="tapebox" role="group" aria-label="Tapes"><p>Tapes</p><ul></ul></div><span class="unit">' +
+  '<button type="button" class="walkman"><span class="bay"></span><span class="door"></span><i class="led"></i></button>' +
+  '<button type="button" class="eject" aria-expanded="false" aria-label="Change tape" title="Change tape">⏏</button></span>';
+const walkman = tapeDeck.querySelector(".walkman"), tapeBay = tapeDeck.querySelector(".bay");
+const tapeEject = tapeDeck.querySelector(".eject"), tapeList = tapeDeck.querySelector(".tapebox ul");
 TAPES.forEach((tape, i) => {
-  const b = document.createElement("button");
+  const li = document.createElement("li"), b = document.createElement("button");
   b.type = "button";
-  b.title = `Put in ${tape.name}`;
-  b.setAttribute("aria-label", b.title);
-  b.innerHTML = cassette(tape);
-  b.addEventListener("click", () => putTape(i));
-  tapeRack.append(b);
+  b.innerHTML = `<span class="mini" style="--tc:${tape.color}">${tape.icon}</span><span>${tape.name}</span><small>in the player</small>`;
+  b.addEventListener("click", () => { tapeBoxOpen(false); if (i !== tapeAt) swapTape(i); else if (!tapePlaying) tapePlay(); });
+  li.append(b);
+  tapeList.append(li);
 });
 
 const paintTapes = () => {
   const tape = TAPES[tapeAt];
   tapeDeck.classList.toggle("playing", tapePlaying);
-  tapeDeck.querySelector(".label").textContent = tapePlaying ? `♪ ${tape.name} — click to pause` : `♪ ${tape.name} — click to play`;
+  tapeDeck.querySelector(".label").textContent = tapeSwapping ? `⏏ ${tape.name}…`
+    : tapePlaying ? `♪ ${tape.name} — click to pause` : `♪ ${tape.name} — click to play`;
   walkman.title = tapePlaying ? "Pause the tape" : `Play ${tape.name}`;
   walkman.setAttribute("aria-label", walkman.title);
-  [...tapeRack.children].forEach((b, i) => b.classList.toggle("out", i === tapeAt));  // its slot is empty
+  [...tapeList.querySelectorAll("button")].forEach((b, i) => b.setAttribute("aria-current", i === tapeAt));
 };
 // The label says what plays for a few seconds after a change, then only on hover / focus
 const tellTape = () => {
@@ -54,6 +57,18 @@ const tellTape = () => {
   clearTimeout(tapeTell);
   tapeTell = setTimeout(() => tapeDeck.classList.remove("tell"), 4000);
 };
+// The tape box, above the player: closed by a choice, a click elsewhere or Escape
+const tapeBoxOpen = open => {
+  tapeDeck.classList.toggle("choosing", open);
+  tapeEject.setAttribute("aria-expanded", open);
+  if (open) document.addEventListener("pointerdown", tapeBoxAway);
+  else document.removeEventListener("pointerdown", tapeBoxAway);
+};
+const tapeBoxAway = e => { if (!tapeDeck.contains(e.target)) tapeBoxOpen(false); };
+tapeEject.addEventListener("click", () => tapeBoxOpen(!tapeDeck.classList.contains("choosing")));
+tapeDeck.addEventListener("keydown", e => {
+  if (e.key === "Escape" && tapeDeck.classList.contains("choosing")) { tapeBoxOpen(false); tapeEject.focus(); }
+});
 
 const tapeCommand = func => tapePlayer && tapePlayer.contentWindow.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
 const tapeStop = () => {  // the tape out of the player: its iframe goes
@@ -92,22 +107,41 @@ const tapePause = () => {
   tapePlaying = false;
   paintTapes();
 };
-// A tape of the rack goes in: the one in the deck comes out (the cassette slides in again: class
-// removed, reflow, put back), and it plays
-const putTape = i => {
+
+// Changing tape, step by step (the moves are CSS transitions, tapes.css): the door opens (.open),
+// the tape slides up out of the bay (.eject), the new one is put above it without a transition
+// (.insert), then slides down into it, the door closes, and it plays. With reduced motion the
+// tape is simply changed.
+const tapeLater = (ms, fn) => tapeTimers.push(setTimeout(fn, ms));
+const swapTape = i => {
+  if (tapeSwapping) return;
   tapeStop();
+  tapePlaying = false;
   tapeAt = i;
   try { localStorage.setItem("tape", i); } catch (e) {}
-  const slot = tapeDeck.querySelector(".slot");
-  slot.innerHTML = cassette(TAPES[i]);
-  tapeDeck.classList.remove("swap");
-  void tapeDeck.offsetWidth;
-  tapeDeck.classList.add("swap");
-  tapePlay();
+  const putIn = () => { tapeBay.innerHTML = cassette(TAPES[i]); };
+  const done = () => { tapeSwapping = false; tapePlay(); tellTape(); };
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { putIn(); return done(); }
+  tapeSwapping = true;
+  paintTapes();
   tellTape();
+  tapeDeck.classList.add("open");
+  tapeLater(350, () => tapeDeck.classList.add("eject"));
+  tapeLater(850, () => {
+    putIn();
+    tapeDeck.classList.remove("eject");
+    tapeDeck.classList.add("insert");
+    void tapeBay.offsetWidth;  // the new tape starts above the bay, then slides down
+    tapeDeck.classList.remove("insert");
+  });
+  tapeLater(1400, () => tapeDeck.classList.remove("open"));
+  tapeLater(1750, done);
 };
-walkman.addEventListener("click", () => { tapePlaying ? tapePause() : tapePlay(); tellTape(); });
-tapeDeck.querySelector(".next").addEventListener("click", () => putTape((tapeAt + 1) % TAPES.length));
+walkman.addEventListener("click", () => {
+  if (tapeSwapping) return;
+  tapePlaying ? tapePause() : tapePlay();
+  tellTape();
+});
 // What the player reports: that it is ready (commands now work), and its state: 0 = the mix has
 // ended, then the next tape goes in
 window.addEventListener("message", e => {
@@ -117,13 +151,22 @@ window.addEventListener("message", e => {
   const state = msg.event === "onStateChange" ? msg.info
     : msg.event === "infoDelivery" && msg.info ? msg.info.playerState : undefined;
   if (msg.event === "onReady" || msg.event === "initialDelivery" || state !== undefined) tapeReady = true;
-  if (state === 0 && tapePlaying) putTape((tapeAt + 1) % TAPES.length);
+  if (state === 0 && tapePlaying) swapTape((tapeAt + 1) % TAPES.length);
 });
 
 const setTapes = on => {
-  if (!on) { tapeStop(); tapePlaying = false; tapeDeck.remove(); return; }
+  if (!on) {
+    tapeStop();
+    tapeTimers.forEach(clearTimeout);
+    tapeTimers = [];
+    tapePlaying = tapeSwapping = false;
+    tapeBoxOpen(false);
+    tapeDeck.classList.remove("open", "eject", "insert", "tell");
+    tapeDeck.remove();
+    return;
+  }
   if (tapeDeck.isConnected) return;
-  tapeDeck.querySelector(".slot").innerHTML = cassette(TAPES[tapeAt]);
+  tapeBay.innerHTML = cassette(TAPES[tapeAt]);
   document.body.append(tapeDeck);
   paintTapes();
 };
