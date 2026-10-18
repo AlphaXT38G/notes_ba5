@@ -756,6 +756,35 @@ width=0.6\linewidth
 
 
 
+%=========================================================
+\section{Weekly Summary}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item Pick the solver for the matrix type; factorization $\mathcal{O}(n^3)$, substitution
+$\mathcal{O}(n^2)$.
+
+\item Regression: data + model linear in the unknowns $\Rightarrow$ linear system (Vandermonde
+matrix for polynomials).
+
+\item Residual $\mathbf{A}\hat{\mathbf{x}} - \mathbf{b}$ $\approx$ backward error.
+
+\item Matrix norm, $\operatorname{cond}(\mathbf{A}) = \|\mathbf{A}\|\,\|\mathbf{A}^{-1}\|$,
+relative error $\lesssim \operatorname{cond}(\mathbf{A})\operatorname{ulp}(1)$; the determinant
+says nothing about difficulty.
+
+\item Least squares: minimize $\|\mathbf{A}\mathbf{x} - \mathbf{b}\|^2$ $\Rightarrow$ normal
+equations $\mathbf{A}^T\mathbf{A}\mathbf{x} = \mathbf{A}^T\mathbf{b}$.
+
+\end{itemize}
+
+\end{summary}
+
+
+
 \end{multicols}
 
 
