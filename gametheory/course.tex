@@ -1395,4 +1395,38 @@ Potential energy is different from the aggregate travel time on an edge (total t
 it by the cars traveling on it), which is $x\,T_e(x)$.
 \end{warnbox}
 
+
+\begin{propbox}[title=A car leaving or entering the network]
+If one single car leaves the network, the potential energy decreases by \textbf{exactly the
+traveling time of this car}. E.g.\ 3 cars, one on AC+CB and 2 on AD+DB:
+\[
+E_{\mathcal{N}} = T_{AC}(1) + T_{CB}(1) + (T_{AD}(1) + T_{AD}(2)) + (T_{DB}(1) + T_{DB}(2)).
+\]
+If one car leaves AD+DB, $E_{\mathcal{N}} = T_{AC}(1) + T_{CB}(1) + T_{AD}(1) + T_{DB}(1)$:
+the difference $T_{AD}(2) + T_{DB}(2)$ is that car's traveling time. If it re-enters on
+AC+CB,
+\[
+E_{\mathcal{N}} = (T_{AC}(1) + T_{AC}(2)) + (T_{CB}(1) + T_{CB}(2)) + T_{AD}(1) + T_{DB}(1):
+\]
+the potential energy increases by $T_{AC}(2) + T_{CB}(2)$, its new traveling time.
+\end{propbox}
+
+\begin{thmbox}[title=Every network has a pure-strategy NE]
+When one car switches to a better route (decreasing its traveling time), \textbf{the potential
+energy decreases}. So a (pure-strategy) Nash equilibrium corresponds to a \textbf{minimum of
+potential energy}. There is only a finite number of configurations, hence necessarily a
+minimum of potential energy, and so \textbf{necessarily a pure-strategy NE}.
+\end{thmbox}
+
+\begin{algbox}[title=Finding a NE for an arbitrary network]
+\begin{enumerate}
+  \item Start from an arbitrary configuration (strategy profile), compute the potential
+        energy.
+  \item Consider all possible changes of strategy \textbf{for 1 player}. If any change
+        decreases the potential energy, update the configuration.
+  \item Stop when no favorable change is found: this is the NE, and the minimum of potential
+        energy.
+\end{enumerate}
+\end{algbox}
+
 \end{document}
