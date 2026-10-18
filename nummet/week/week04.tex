@@ -470,6 +470,78 @@ Demo, Runge function part II: using Chebyshev points instead of uniformly spaced
 
 
 
+%=========================================================
+\section{The QR Decomposition}
+
+
+\begin{definition}
+
+\textbf{QR FACTORIZATION}
+
+\[
+\mathbf{A} = \mathbf{Q}\mathbf{R}
+\]
+
+\begin{itemize}
+
+\item \emph{Different flavors exist}: Gram-Schmidt, Givens rotations, \textbf{Householder
+transformations}.
+
+\item Follows the previous approach of using (pre-)computation to transform a ``difficult''
+linear system into one that has a special structure, making it ``easy''.
+
+\item Compared to LU, one triangular factor was replaced by an \textbf{orthogonal matrix}.
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{formula}
+
+\[
+\mathbf{Q} = \begin{pmatrix} | & & | \\ \mathbf{q}_1 & \cdots & \mathbf{q}_n \\ | & & |
+\end{pmatrix}
+\]
+\[
+\mathbf{Q}^T\mathbf{Q} = \begin{pmatrix}
+\mathbf{q}_1^T\mathbf{q}_1 & \cdots & \mathbf{q}_1^T\mathbf{q}_n \\
+\vdots & & \vdots \\
+\mathbf{q}_n^T\mathbf{q}_1 & \cdots & \mathbf{q}_n^T\mathbf{q}_n
+\end{pmatrix} = \mathbf{I}
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+Orthogonal transformations preserve distances, angles. They do \textbf{not} amplify error!
+
+\end{important}
+
+
+\begin{definition}
+
+\textbf{ISOMETRY}
+
+A transformation that preserves angles \& distances. Rotate, mirror: isometric. Shear (and
+scaling): \textbf{not} isometric.
+
+\end{definition}
+
+
+\begin{warning}
+
+\textbf{The problem}: least squares problems seek the solution in
+$\operatorname{span}(\mathbf{A})$ that is \emph{closest} to $\mathbf{b}$. If we
+non-isometrically transform the problem (as the LU decomposition does), then that actually
+changes the answer\dots
+
+\end{warning}
+
+
+
 \end{multicols}
 
 
