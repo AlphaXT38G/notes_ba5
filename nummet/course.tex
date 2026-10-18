@@ -109,4 +109,25 @@ $\mathbb{Q} = \{a/b : a, b \in \mathbb{Z}\}$, with $a/b + c/d = (ad + cb)/bd$: a
 representation, which is generally not a good thing (the numbers grow).
 \end{defnbox}
 
+
+\section{Floating point numbers}
+
+\begin{defnbox}[title=Floating point number]
+Numbers whose resolution follows their magnitude (from the Planck length to the universe):
+\[
+\underbrace{\pm}_{\text{sign}} \ \underbrace{2^E}_{\text{exponent}}
+\ \underbrace{\sum_{i=0}^{n} 2^{-i} A_i}_{\text{mantissa}}
+\]
+E.g.\ $-0.75 = -2^{-1}(2^{-0} + 2^{-1}) = -2^{-1}\,1.1_2$, and
+$3.14 \approx +2^1\,1.1001001_2$. The leading digit is always 1, so it is not stored.
+\end{defnbox}
+
+\begin{propbox}[title=Standard formats (sign | exponent | mantissa)]
+\begin{center}
+\includegraphics[width=\linewidth]{images/week01_01.png}
+\end{center}
+The density of representable numbers decreases with the magnitude; there is overflow beyond
+the usable range and underflow near zero (``please don't memorize these numbers'').
+\end{propbox}
+
 \end{document}
