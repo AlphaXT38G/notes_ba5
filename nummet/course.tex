@@ -78,4 +78,35 @@ descent, Newton, Broyden, Gauss-Newton, Levenberg-Marquardt); matrix factorizati
 propagation); processor architecture (superscalar, vectorization, memory hierarchy, GPUs).
 \end{propbox}
 
+
+\section{Number systems}
+
+\begin{keybox}[title=The compromise]
+$\pi$ has infinitely many digits, and there are infinitely many such numbers between any two
+numbers: we cannot store them. The compromise is that \textbf{the program will no longer
+compute the correct answer}.
+\end{keybox}
+
+\begin{defnbox}[title=Integers]
+Unsigned: $11000101_2 = 2^7 + 2^6 + 2^2 + 2^0 = 197$. Signed (two's complement), the top bit
+weighs $-2^7$: $11000101_2 = -2^7 + 2^6 + 2^2 + 2^0 = -59$. Typical sizes: \texttt{int8}
+($-128..127$), \texttt{uint8} ($0..255$), \texttt{int16}, \texttt{int32}
+($-2147483648..2147483647$), \texttt{int64}, and their unsigned versions.
+\end{defnbox}
+
+\begin{defnbox}[title=Fixed point arithmetic]
+Allow negative exponents: $1100.0101_2 = 2^3 + 2^2 + 2^{-2} + 2^{-4} = 12.3125$.
+\end{defnbox}
+
+\begin{warnbox}[title=Drawbacks of fixed point]
+Big numbers need a lot of storage ($4 \cdot 10^{80}$: $\sim$268 bits), and the exponent range
+grows during operations: a product of two numbers with exponents in $[-k, k]$ has exponents in
+$[-2k, 2k]$.
+\end{warnbox}
+
+\begin{defnbox}[title=Rational numbers]
+$\mathbb{Q} = \{a/b : a, b \in \mathbb{Z}\}$, with $a/b + c/d = (ad + cb)/bd$: an exact
+representation, which is generally not a good thing (the numbers grow).
+\end{defnbox}
+
 \end{document}
