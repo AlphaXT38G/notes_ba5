@@ -1050,4 +1050,26 @@ they take the risk to continue, which pays off if the other player continues too
 Prisoner Dilemma, one player has an incentive to cooperate if the other player cooperates.
 \end{warnbox}
 
+
+\section{The dollar auction game}
+
+How much would you pay to get one dollar? When people play this game in lab experiments,
+they end up paying much more than a dollar!
+
+\begin{defnbox}[title=Dollar auction (finite horizon)]
+\begin{itemize}
+  \item Players: 1 and 2. Player 1 starts and can decide to bid or stay out. If she stays
+        out, the game is over and everybody gets 0. Otherwise she bids 10 cents.
+  \item Then at each period, the player that did not play last period can decide to quit or
+        outbid the other player by 5 cents.
+  \item When a player quits, the other player gets the dollar, but \textbf{both players need
+        to pay their highest bid}.
+  \item If no player quit before, the game ends when one player's bid reaches \$10.
+\end{itemize}
+\end{defnbox}
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{images/week04_03.png}
+\end{center}
+
 \end{document}
