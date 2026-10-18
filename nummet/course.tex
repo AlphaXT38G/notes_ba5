@@ -645,4 +645,25 @@ The \textbf{Chebyshev points} $x_i = \cos\left(\frac{2k - 1}{2n}\pi\right)$ are 
 of points to make the product small.
 \end{thmbox}
 
+
+\section{The QR factorization}
+
+\begin{defnbox}[title=QR factorization]
+$\mathbf{A} = \mathbf{Q}\mathbf{R}$ with $\mathbf{Q}$ \textbf{orthogonal}
+($\mathbf{Q}^T\mathbf{Q} = \mathbf{I}$, i.e.\ $\mathbf{q}_i^T\mathbf{q}_j = \delta_{ij}$) and
+$\mathbf{R}$ upper (``right'') triangular. Flavors: Gram-Schmidt, Givens rotations,
+\textbf{Householder transformations}. Compared to LU, one triangular factor is replaced by an
+orthogonal matrix.
+\end{defnbox}
+
+\begin{defnbox}[title=Isometry]
+A transformation that preserves angles and distances (rotation, mirror; not shear or scaling).
+Orthogonal transformations are isometries: they do \textbf{not} amplify error.
+\end{defnbox}
+
+\begin{warnbox}[title=Why not LU for least squares]
+Least squares seeks the point of $\operatorname{span}(\mathbf{A})$ \emph{closest} to $\mathbf{b}$:
+a non-isometric transformation of the problem changes the answer.
+\end{warnbox}
+
 \end{document}
