@@ -363,6 +363,65 @@ over time (e.g.\ chess)? Does the game eventually end, or continue forever? Do t
 
 
 
+%=========================================================
+\section{Normal Form Representation}
+
+
+\begin{definition}
+
+\textbf{NORMAL FORM}
+
+A table with one row per action of Player 1, one column per action of Player 2, and in each
+cell the payouts \textbf{(Player 1, Player 2)}.
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Rock-Paper-Scissors}
+
+\begin{center}
+\begin{tabular}{c|ccc}
+$1 \backslash 2$ & R & P & S \\
+\hline
+R & (0,0) & (-1,1) & (1,-1) \\
+P & (1,-1) & (0,0) & (-1,1) \\
+S & (-1,1) & (1,-1) & (0,0) \\
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+
+\item Players: 1, 2
+
+\item Possible actions for Player 1 (and for Player 2): R(ock), P(aper), S(cissors).
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{formula}
+
+Payout notation:
+
+\[
+\mathcal{P}^{(1)}(R,P) = -1
+\]
+
+Payout for Player 1 if 1 chooses R and 2 chooses P.
+
+\[
+\mathcal{P}^{(2)}(S,R) = 1
+\]
+
+Payout for Player 2 if 1 chooses S and 2 chooses R.
+
+\end{formula}
+
+
+
 \end{multicols}
 
 
