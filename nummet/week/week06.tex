@@ -342,6 +342,59 @@ to make some tough compromises\dots
 
 
 
+%=========================================================
+\section{From CPU to GPU}
+
+
+\textbf{Review: CPU cores}
+
+\begin{center}
+
+\includegraphics[
+width=0.85\linewidth
+]{../images/week06_01.png}
+
+\end{center}
+
+
+Left: what we \emph{want} to do (fetch, decode, register file, functional units). Right: what we
+\emph{had} to do to make it fast (branch predictor, huge cache, out of order execution,
+prefetcher).
+
+
+\begin{important}
+
+\textbf{Idea}: throw away all parts intended to make single-threaded programs run fast.
+
+\end{important}
+
+
+\begin{warning}
+
+\textbf{Implications}
+
+\begin{itemize}
+
+\item Without branch predictor: every jump is slow.
+
+\item Without out of order execution: an \texttt{ADD} waiting on a \texttt{LOAD} is slow.
+
+\item Without big, fast caches: everything is slow.
+
+\end{itemize}
+
+\end{warning}
+
+
+\begin{important}
+
+When all pixels are computed in parallel, \textbf{all processors are evolving in lockstep}
+(same instructions on different data). Let's exploit this in the architecture.
+
+\end{important}
+
+
+
 \end{multicols}
 
 
