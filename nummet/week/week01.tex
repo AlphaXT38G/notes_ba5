@@ -780,6 +780,80 @@ $x > 0$.
 
 
 
+%=========================================================
+\section{Quantifying Error}
+
+
+\begin{definition}
+
+\textbf{ABSOLUTE ERROR}: $|\text{true value} - \text{approximate value}|$
+(e.g.\ 2 cm $\pm$ 0.1 cm).
+
+\textbf{RELATIVE ERROR}: $(\text{absolute error}) / |\text{true value}|$ (e.g.\ 2 cm $\pm$
+0.1\%). Other notation: $(\text{true value})(1 \pm \text{relative error})$.
+
+\end{definition}
+
+
+\begin{warning}
+
+The error is generally unknown.
+
+\end{warning}
+
+
+\begin{definition}
+
+\textbf{FORWARD AND BACKWARD ERROR}
+
+The actual algorithm maps $x$ to $\hat{y}$ instead of $y = f(x)$; $\hat{y}$ is what the ideal
+algorithm returns for a perturbed input: $\hat{y} = f(x + \Delta x)$.
+
+\begin{itemize}
+
+\item \textbf{Forward error}: the distance between $y$ and $\hat{y}$ (output space).
+
+\item \textbf{Backward error}: $\Delta x$, the distance between $x$ and $x + \Delta x$ (input
+space).
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.85\linewidth
+]{../images/week01_03.png}
+
+\end{center}
+
+
+\begin{example}
+
+$f(x) := \sqrt{x}$, $y = f(x)$, $\hat{y} = f_{\text{IEEE754}}(x)$:
+\begin{align*}
+\text{forward error} &= y - \hat{y} \\
+\hat{x} &= f^{-1}(\hat{y}) = \hat{y}^2 \\
+\text{backward error} &= x - (f_{\text{IEEE754}}(x))^2
+\end{align*}
+
+\end{example}
+
+
+\begin{formula}
+
+\textbf{Conditioning of numerical problems}
+
+\[
+\text{Condition number: ratio } \frac{\text{forward error}}{\text{backward error}}
+\]
+
+\end{formula}
+
+
+
 \end{multicols}
 
 
