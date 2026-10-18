@@ -529,6 +529,36 @@ clock cycles).
 
 
 
+%=========================================================
+\section{Part 2: Shared Memory}
+
+
+\begin{warning}
+
+Most programs read and write a lot of memory: on GPUs, this means that they will stall
+constantly.
+
+\end{warning}
+
+
+\begin{definition}
+
+\textbf{SHARED MEMORY} (solution)
+
+\begin{itemize}
+
+\item Copy a small part of the problem into local (``shared'') memory.
+
+\item Do \textbf{a lot of work} with this copy, which is fast to access.
+
+\item Then write back the result.
+
+\end{itemize}
+
+\end{definition}
+
+
+
 \end{multicols}
 
 
