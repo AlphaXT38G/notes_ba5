@@ -607,6 +607,72 @@ output ``image'' (\emph{Brook for GPUs: Stream Computing on Graphics Hardware}, 
 
 
 
+%=========================================================
+\section{AI and Tensor Cores}
+
+
+\begin{example}
+
+\textbf{Developments in the last 5 years}: NVIDIA's stock price went up 1'202.17\%, currently
+the most valuable company on earth (market capitalization). Not because of computer games:
+datacenter GPUs ($\sim$50'000 CHF each) for \textbf{artificial intelligence}. GPUs are really,
+really good at \textbf{matrix multiplication}, the fundamental operation underlying AI.
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{TENSOR CORE}
+
+Fancy name for a \textbf{matrix multiplication unit}. Like an FMA (fused-multiply-add) machine
+instruction:
+
+\begin{itemize}
+
+\item FMA: \texttt{D = A * B + C}
+
+\item Tensor core: \texttt{D = A @ B + C}
+
+\end{itemize}
+
+Multiplies a fixed matrix size quickly (e.g.\ $256 \times 32$ @ $32 \times 256$).
+
+\end{definition}
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item Nowadays most of the computational ``power'' of a GPU is in the tensor core.
+
+\item Recent trend: very low precision floating point (16 bit $\to$ 8 bit $\to$ 4 bit
+``floats'').
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{formula}
+
+Percentage of FLOP/s in tensor core:
+
+\begin{center}
+\small
+\begin{tabular}{l|ccc}
+ & 16 bit & 8 bit & 4 bit \\
+\hline
+B200 (data center) & 98.4\% & 99.2\% & 99.6\% \\
+RTX 5090 & 75.0\% & 87.49\% & 93.8\% \\
+\end{tabular}
+\end{center}
+
+\end{formula}
+
+
+
 \end{multicols}
 
 
