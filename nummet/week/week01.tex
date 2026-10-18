@@ -400,6 +400,89 @@ memory (GPUs)
 
 
 
+%=========================================================
+\section{Number Systems}
+
+
+\begin{important}
+
+$\pi$ has infinitely many digits: we cannot store it, and there are infinitely many numbers of
+this type between any two numbers. The compromise: \textbf{the program will no longer compute
+the correct answer}.
+
+\end{important}
+
+
+\begin{definition}
+
+\textbf{INTEGERS}
+
+\begin{itemize}
+
+\item Positive: $11000101_2 = 2^7 + 2^6 + 2^2 + 2^0 = 197$.
+
+\item Signed (two's complement), top bit weighs $-2^7$:
+$11000101_2 = -2^7 + 2^6 + 2^2 + 2^0 = -59$.
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{center}
+\small
+\begin{tabular}{l|rr}
+Type & Min & Max \\
+\hline
+\texttt{uint8} & 0 & 255 \\
+\texttt{int8} & -128 & 127 \\
+\texttt{uint16} & 0 & 65535 \\
+\texttt{int16} & -32768 & 32767 \\
+\texttt{uint32} & 0 & 4294967295 \\
+\texttt{int32} & -2147483648 & 2147483647 \\
+\texttt{uint64} & 0 & 18446744073709551615 \\
+\texttt{int64} & -9223372036854775808 & 9223372036854775807 \\
+\end{tabular}
+\end{center}
+
+
+\begin{definition}
+
+\textbf{FIXED POINT ARITHMETIC}
+
+Allow negative exponents: $1100.0101_2 = 2^3 + 2^2 + 2^{-2} + 2^{-4} = 12.3125$.
+
+\end{definition}
+
+
+\begin{warning}
+
+\begin{itemize}
+
+\item Drawback 1: big numbers require a lot of storage ($4 \times 10^{80}$: $\sim$268 bits).
+
+\item Drawback 2: growth of the exponent range during operations:
+\[
+\Big(\sum_{i=-k}^{k} a_i 2^i\Big)\Big(\sum_{i=-k}^{k} b_i 2^i\Big)
+= a_{-k}b_{-k}2^{-2k} + \dots + a_k b_k 2^{2k}
+\]
+
+\end{itemize}
+
+\end{warning}
+
+
+\begin{definition}
+
+\textbf{RATIONAL NUMBERS}
+
+$\mathbb{Q} = \{a/b : a, b \in \mathbb{Z}\}$: exact representation,
+$a/b + c/d = (ad + cb)/bd$. Generally not a good thing (numerators and denominators grow).
+
+\end{definition}
+
+
+
 \end{multicols}
 
 
