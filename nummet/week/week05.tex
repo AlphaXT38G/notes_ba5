@@ -390,6 +390,61 @@ The disassembly of \texttt{psum\_0} shows a loop of \texttt{LDR} (load), \texttt
 
 
 
+%=========================================================
+\section{Pipelining, Latency and Throughput}
+
+
+\begin{example}
+
+\textbf{Laundry day}: 3 batches (Dark, Light, Color), 3 steps (Wash, Dry, Fold). Naive schedule:
+9 cycles. Better (pipelined) schedule: \textbf{4 cycles}.
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{LATENCY}: number of cycles before the result of an operation is available.
+
+\textbf{THROUGHPUT}: number of operations that can be started per cycle.
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{Pipelining within processing units}: a unit split into 5 stages has latency 5 but
+throughput 1 (one new input per cycle); with 5 independent inputs it keeps all stages busy.
+
+\end{important}
+
+
+\begin{formula}
+
+\textbf{Intel ``Ice Lake''} (1 cycle on a 3 GHz CPU = 0.33 ns; light moves 10 cm)
+
+\begin{center}
+\begin{tabular}{l|cc}
+Instruction & Latency & Throughput \\
+\hline
+\multicolumn{3}{l}{\texttt{int64} integers} \\
+add, sub & 1 & 4 \\
+mul & 3 & 1 \\
+div & 15 & 1/14 \\
+\hline
+\multicolumn{3}{l}{\texttt{float32} vectors} \\
+add, sub, mul & 4 & 2 \\
+div & 17 & 1/10 \\
+\end{tabular}
+\end{center}
+
+Throughput 4: can start 4 additions every cycle. 1/14: busy for 14 cycles before new input can
+be accepted. \textbf{Loading memory, division and square root are really expensive.}
+
+\end{formula}
+
+
+
 \end{multicols}
 
 
