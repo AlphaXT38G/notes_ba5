@@ -48,8 +48,8 @@ first page instead (for course notes, the first page after the table of contents
 The thumbnails are made by `pdftoppm` and `pdftotext` (poppler); without them,
 the build still works and the page shows names only.
 In the bottom left corner, a cassette player 📼 plays lofi while you read (Lofi Girl
-mixes from YouTube): click it to play / pause, pick another tape in the rack beside it
-(or ⏭ on a phone). It never starts by itself, and only shows during the day.
+mixes from YouTube): click it to play / pause, and its ⏏ key opens the box of tapes to
+put another one in. It never starts by itself, and only shows during the day.
 
 From **21:30 to 01:00** the page turns into a jazz bar 🎷 (neon title, smoke,
 floating notes) and plays background jazz ("Just One More Drink", jazz noir). The

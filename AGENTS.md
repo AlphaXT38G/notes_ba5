@@ -147,7 +147,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
 | `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), "Back to normal" |
 | `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, night forest sounds (`audio/calm.mp3`, quieter), dawn birds made with Web Audio, firefly jar; the `peace` code (the last override: the calm night at any time; `startPeace()`, also called by the Christmas jar) |
-| `tapes.js` | the day's cassette player (no screen only): a Walkman and a rack of four Lofi Girl tapes from YouTube (a hidden `<iframe>` driven by `postMessage`), ⏭ for the next tape, the next one going in when a mix ends; never plays by itself, the tape is remembered |
+| `tapes.js` | the day's cassette player (no screen only): a Walkman playing Lofi Girl tapes from YouTube (a hidden `<iframe>` driven by `postMessage`); its ⏏ key opens the tape box, a list of `TAPES` (add a tape there, nothing else); a change opens the door, takes the tape out, puts the new one in and closes it; the next tape goes in when a mix ends; never plays by itself, the tape is remembered |
 | `start.js` | **last**: first `applyScreen()`, then the every-second clock check |
 
 ### CSS files, in cascade order
