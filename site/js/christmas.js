@@ -241,6 +241,16 @@ const paintGarlandGlow = time => {  // time in seconds, or null: still lights
 // cut in facets. All of it is static (no blur, no animation), so it costs nothing once drawn. The lights are also listed (treeLights) for the night
 // canvas that lights them up. The sax ornament and the guitar are in a separate layer above the
 // page (#xtree-front), so they can be clicked even where the cards cover the tree.
+// A ribbon bow seen from the front, in volume without gradients (the gifts, the guitar and the jar
+// share it, and the jar and guitar are separate SVGs): the left loop lit, the right one in shade,
+// the inside of each loop darker, a glint on the left loop, two tails and the knot.
+const bow3d = (x, y, c, dark, k = 1) => `<g transform="translate(${f1(x)},${f1(y)}) scale(${k})">` +
+  `<path d="M-1,1L-8,11 -4.5,11.5 0,3Z" fill="${dark}"/><path d="M1,1L7,12 10.5,10.5 1.8,1.5Z" fill="${dark}"/>` +
+  `<path d="M0,0C-5,-11 -18,-13 -17,-4 -16,3 -6,2 0,0Z" fill="${c}"/><path d="M-1.5,-.5C-6,-7 -13,-8 -13.5,-3.5 -11,-2 -6,-1 -1.5,-.5Z" fill="${dark}" opacity=".55"/>` +
+  `<path d="M0,0C5,-11 18,-13 17,-4 16,3 6,2 0,0Z" fill="${c}"/><path d="M0,0C5,-11 18,-13 17,-4 16,3 6,2 0,0Z" fill="rgba(0,0,0,.22)"/>` +
+  `<path d="M1.5,-.5C6,-7 13,-8 13.5,-3.5 11,-2 6,-1 1.5,-.5Z" fill="${dark}" opacity=".55"/>` +
+  `<path d="M-14,-6c2,-3 5,-4 8,-2" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.3" stroke-linecap="round"/>` +
+  `<ellipse rx="3.4" ry="2.8" fill="${c}"/><ellipse rx="3.4" ry="2.8" fill="rgba(0,0,0,.15)"/><ellipse cx="-1" cy="-1" rx="1.4" ry="1" fill="rgba(255,255,255,.45)"/></g>`;
 const TREE_W = 520, TREE_H = 640, TREE_X = 330;
 const treeLights = [];
 const treeHalfWidth = y => 12 + (y - 60) / (520 - 60) * 172;  // half width of the tree at height y
@@ -356,13 +366,50 @@ const buildTree = () => {
     const d = `M0,0v-20a7,7 0 0 1 14,0v3`;
     parts.push(`<g transform="translate(${x},${y}) rotate(${a})"><path d="${d}" class="cane"/><path d="${d}" class="cane-stripes"/></g>`);
   });
-  // Gifts below the tree: box, ribbon, lid and bow
-  [[178, 512, 72, 50, "#c8102e", "#ffd15c"], [258, 528, 52, 36, "#2f6fd1", "#e9eef5"], [380, 508, 78, 52, "#1e8a4c", "#d6203a"], [452, 530, 46, 32, "#e2a81e", "#c8102e"]].forEach(([x, y, w, h, box, rib]) => {
-    parts.push(`<g class="gift"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${box}"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#xshade)"/>` +
-      `<rect x="${x - 3}" y="${y - 7}" width="${w + 6}" height="10" rx="1.5" fill="${box}"/><rect x="${x + w / 2 - 5}" y="${y - 7}" width="10" height="${h + 7}" fill="${rib}"/>` +
-      `<rect x="${x - 3}" y="${y - 7}" width="${w + 6}" height="3" fill="rgba(255,255,255,.25)"/>` +
-      `<path d="M${x + w / 2},${y - 7}c-14,-14 -22,0 0,0c14,-14 22,0 0,0" fill="${rib}" stroke="rgba(0,0,0,.25)"/></g>`);
-  });
+  // Gifts below the tree, as boxes in volume seen a little from above: the front, the side that
+  // faces the tree's middle (the right one for the gifts on the left, the left one for those on the
+  // right), and the lid, with its top, overhanging the box and casting a shadow on it. Lit from the
+  // top left: the top is the lightest, the front shaded across and darker near the floor, a right
+  // side in shade. The ribbon goes round the box (front, side and top) and a bow sits in the middle
+  // of the lid; some papers have a pattern. Each one casts a shadow on the skirt.
+  const poly = (pts, fill, extra = "") => `<polygon points="${pts.map(([a, b]) => `${f1(a)},${f1(b)}`).join(" ")}" fill="${fill}"${extra}/>`;
+  const giftBox = ([x, y, w, h, box, rib, ribDark, pat]) => {
+    const side = x + w / 2 < TREE_X ? 1 : -1, d = Math.min(18, w * .24), dx = side * d * .5, dy = -d * .62;
+    const sideShade = side > 0 ? "rgba(0,0,0,.3)" : "rgba(0,0,0,.1)", cx = x + w / 2, rw = Math.max(7, w * .14);
+    const along = (x0, y0, t) => [x0 + dx * t, y0 + dy * t];  // a point t of the way back from the front
+    const band = (x0, ya, yb) => [along(x0, ya, .5 - .16), along(x0, ya, .5 + .16), along(x0, yb, .5 + .16), along(x0, yb, .5 - .16)];
+    const sideFace = (x0, ya, yb) => [[x0, ya], along(x0, ya, 1), along(x0, yb, 1), [x0, yb]];
+    const L = 10, o = 3, lx = x - o, lw = w + 2 * o, ly = y - L + 2;  // the lid
+    const bx = side > 0 ? x + w : x, lsx = side > 0 ? lx + lw : lx;  // where the visible sides are
+    let g = `<ellipse cx="${f1(cx + 9)}" cy="${f1(y + h)}" rx="${f1(w * .62)}" ry="6" fill="url(#xgiftfoot)"/>`;
+    // the box: its side (paper, ribbon, shade), then its front (paper, pattern, ribbon, shading)
+    g += poly(sideFace(bx, y, y + h), box) + (pat ? poly(sideFace(bx, y, y + h), `url(#${pat})`) : "") + poly(band(bx, y, y + h), rib) + poly(sideFace(bx, y, y + h), sideShade);
+    g += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${box}"/>` + (pat ? `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${pat})"/>` : "") +
+      `<rect x="${f1(cx - rw / 2)}" y="${y}" width="${f1(rw)}" height="${h}" fill="${rib}"/><rect x="${f1(cx - rw / 2)}" y="${y}" width="${f1(rw * .3)}" height="${h}" fill="rgba(255,255,255,.22)"/>` +
+      `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#xshade)"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#xgiftfloor)"/>` +
+      `<rect x="${x}" y="${y}" width="${w}" height="5" fill="rgba(0,0,0,.28)"/>`;  // the lid's shadow on the box
+    // the lid: its side, its front, then its top with the two ribbons crossing and the bow
+    const top = [[lx, ly], [lx + lw, ly], along(lx + lw, ly, 1), along(lx, ly, 1)];
+    g += poly(sideFace(lsx, ly, ly + L), box) + poly(band(lsx, ly, ly + L), rib) + poly(sideFace(lsx, ly, ly + L), sideShade);
+    g += `<rect x="${lx}" y="${ly}" width="${lw}" height="${L}" fill="${box}"/>` + (pat ? `<rect x="${lx}" y="${ly}" width="${lw}" height="${L}" fill="url(#${pat})"/>` : "") +
+      `<rect x="${f1(cx - rw / 2)}" y="${ly}" width="${f1(rw)}" height="${L}" fill="${rib}"/><rect x="${lx}" y="${ly}" width="${lw}" height="${L}" fill="url(#xshade)"/>` +
+      `<rect x="${lx}" y="${ly + L - 1.5}" width="${lw}" height="1.5" fill="rgba(0,0,0,.25)"/>`;
+    g += poly(top, box) + (pat ? poly(top, `url(#${pat})`) : "") +
+      poly([[cx - rw / 2, ly], [cx + rw / 2, ly], along(cx + rw / 2, ly, 1), along(cx - rw / 2, ly, 1)], rib) +
+      poly([along(lx, ly, .5 - .16), along(lx + lw, ly, .5 - .16), along(lx + lw, ly, .5 + .16), along(lx, ly, .5 + .16)], rib) +
+      poly(top, "rgba(255,255,255,.2)") + `<path d="M${f1(lx)},${f1(ly)}H${f1(lx + lw)}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`;
+    const [bowX, bowY] = along(cx, ly, .5);
+    return `<g class="gift">${g}${bow3d(bowX, bowY + 1, rib, ribDark, Math.min(1.25, w / 60))}</g>`;
+  };
+  defs.push(`<radialGradient id="xgiftfoot"><stop offset="0" stop-color="rgba(50,0,10,.5)"/><stop offset="1" stop-color="rgba(50,0,10,0)"/></radialGradient>`,
+    `<linearGradient id="xgiftfloor" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="rgba(0,0,0,0)"/><stop offset="1" stop-color="rgba(0,0,0,.25)"/></linearGradient>`,
+    `<pattern id="xpdots" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.3" fill="rgba(255,215,90,.75)"/><circle cx="7" cy="7" r="1.3" fill="rgba(255,215,90,.75)"/></pattern>`,
+    `<pattern id="xpstripes" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><rect width="3" height="8" fill="rgba(255,255,255,.16)"/></pattern>`,
+    `<pattern id="xpflakes" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M4,1v6M1,4h6M2,2l4,4M6,2l-4,4M11,8v5M8.5,10.5h5" stroke="rgba(255,255,255,.55)" stroke-width=".7"/></pattern>`);
+  // drawn from the back to the front (the lowest last)
+  [[178, 512, 72, 50, "#c8102e", "#ffd15c", "#c9921c", "xpdots"], [258, 528, 52, 36, "#2f6fd1", "#eef2f8", "#aab4c4", "xpflakes"],
+    [380, 508, 78, 52, "#1e8a4c", "#d6203a", "#8e0f22", "xpstripes"], [452, 530, 46, 32, "#e2a81e", "#c8102e", "#7e0a1d", ""]]
+    .sort((a, b) => (a[1] + a[3]) - (b[1] + b[3])).forEach(gift => parts.push(giftBox(gift)));
   defs.push(`<linearGradient id="xshade" x1="0" x2="1"><stop offset="0" stop-color="rgba(255,255,255,.18)"/><stop offset=".6" stop-color="rgba(0,0,0,0)"/><stop offset="1" stop-color="rgba(0,0,0,.25)"/></linearGradient>`);
   // Star on the top
   // Star on the top, cut in facets: each point is two triangles from the centre, the one facing the
