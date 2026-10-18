@@ -236,4 +236,47 @@ $x - (f_{\text{IEEE754}}(x))^2$.
 \end{itemize}
 \end{keybox}
 
+
+% =========================================================
+\chapter{Lecture 2 : Linear systems I}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Vectors and matrices as linear functions, the cost of
+matrix operations, sparse matrices, and how to solve a square linear system with Gaussian
+elimination and the \textbf{LU factorization}. \\
+\textbf{Why is it useful?} Linear systems are one of the few numerical problems we know to solve
+really well, and almost everything boils down to one at some point.
+\end{rembox}
+
+\section{Vectors, matrices and linear functions}
+
+\begin{defnbox}[title={Scalars, vectors, matrices, tensors}]
+Key numerical data structures organized by dimension. All are \textbf{nd-arrays} (general
+n-dimensional storage); vectors and matrices are representations of \emph{linear functions}.
+\end{defnbox}
+
+\begin{defnbox}[title=Linear function]
+$f$ is linear iff $f(\mathbf{x} + \mathbf{y}) = f(\mathbf{x}) + f(\mathbf{y})$ (additivity) and
+$f(\alpha\mathbf{x}) = \alpha f(\mathbf{x})$ (homogeneity). Then $f(\mathbf{x}) =
+\mathbf{A}\mathbf{x}$ fully encodes everything that $f$ does, with
+\[
+(\mathbf{A}\mathbf{x})_i = \sum_{k=1}^{n} A_{ik} x_k, \qquad
+\mathbf{A}\mathbf{x} = \mathbf{a}^{(1)} x_1 + \mathbf{a}^{(2)} x_2 + \ldots
+\]
+a linear combination of the columns.
+\end{defnbox}
+
+\begin{defnbox}[title=Matrix multiplication]
+$(\mathbf{A}\mathbf{B})_{ij} = \sum_{k} A_{ik} B_{kj}$: if $f \leftrightarrow \mathbf{A}$ and
+$g \leftrightarrow \mathbf{B}$, then the composition $g \circ f \leftrightarrow
+\mathbf{B}\mathbf{A}$.
+\end{defnbox}
+
+\begin{exbox}[title=Basic matrix transformations in 2D]
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week02_01.png}
+\end{center}
+\end{exbox}
+
 \end{document}
