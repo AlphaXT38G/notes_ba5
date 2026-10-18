@@ -1174,4 +1174,18 @@ A \textbf{simultaneous-move game of incomplete information}, defined by
 A pure strategy is a plan of action \textbf{for each type of player}.
 \end{defnbox}
 
+
+\begin{defnbox}[title=Bayesian Nash equilibrium (BNE)]
+A strategy profile $(s_1(\theta_1), s_2(\theta_2), \ldots, s_N(\theta_N))$ is a
+\textbf{Bayesian Nash equilibrium} of a Bayesian game with $N$ players iff, for each player
+$i$, her \textbf{expected payout} using strategy $i$ is higher than or equal to her expected
+payout using any of the other available strategies, keeping fixed the strategies of the other
+players, which \textbf{depend on their types}:
+\[
+E[\mathcal{P}_i(s_i(\theta_i), s_{-i}(\theta_{-i}) | \theta_i)] \ge
+E[\mathcal{P}_i(\tilde{s}_i(\theta_i), s_{-i}(\theta_{-i}) | \theta_i)],
+\]
+the expected value being taken over all possible types of the other players.
+\end{defnbox}
+
 \end{document}
