@@ -220,4 +220,43 @@ Two NE: $(U,L)$ and $(D,R)$.
 When a game has two equilibria, the theory cannot tell which one will be chosen.
 \end{warnbox}
 
+
+\section{Classical game 1: the Prisoner Dilemma}
+
+Developed at the RAND corporation in 1950 (an organization started immediately after WWII to
+develop research for military strategy and planning), as one of the first steps in thinking
+about cold war strategy.
+
+\begin{exbox}[title=The classic story]
+Two suspects of a crime are placed in different rooms and interrogated by the police. If
+both \textbf{cooperate (C)} with each other and stay silent, they each get 1 year of prison.
+If one \textbf{defects (D)} and denounces the other, who stays silent, the one denounced gets
+5 years and the denouncer walks away. If both defect, they both get 3 years.
+\begin{center}
+\begin{tabular}{c|cc}
+ & C & D \\ \hline
+C & (-1,-1) & (-5,0) \\
+D & (0,-5)  & (-3,-3)
+\end{tabular}
+\end{center}
+\end{exbox}
+
+\begin{keybox}[title=Why it is a dilemma]
+Each player strictly prefers to Defect no matter what the other does (\textbf{Defect is a
+``dominant strategy''}). Defect-Defect is the \textbf{only Nash Equilibrium}, and at the
+same time the outcome that maximizes social loss!
+\end{keybox}
+
+\begin{defnbox}[title=Prisoner Dilemma (general form)]
+Payouts can change, but we call ``Prisoner Dilemma'' any game of the form
+\begin{center}
+\begin{tabular}{c|cc}
+ & C & D \\ \hline
+C & $(X_2, Y_2)$ & $(X_4, Y_1)$ \\
+D & $(X_1, Y_4)$ & $(X_3, Y_3)$
+\end{tabular}
+\end{center}
+with $X_1 > X_2 > X_3 > X_4$ and $Y_1 > Y_2 > Y_3 > Y_4$.
+\end{defnbox}
+
 \end{document}
