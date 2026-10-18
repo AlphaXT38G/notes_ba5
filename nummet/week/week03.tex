@@ -462,6 +462,49 @@ Gives an approximation of the \textbf{backward error} of a linear system solver.
 
 
 
+%=========================================================
+\section{The Matrix Norm}
+
+
+Interlude: a matrix maps the points of a circle to an ellipse (an ellipsoid in higher
+dimensions).
+
+
+\begin{definition}
+
+\textbf{MATRIX NORM} (aka.\ operator norm)
+
+\[
+\|\mathbf{A}\| = \max\{\|\mathbf{A}\mathbf{x}\|, \text{ where } \|\mathbf{x}\| = 1\}
+\]
+
+Determines the maximum radius of the ellipse that $\mathbf{A}$ makes of the unit circle.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Some inequalities}
+
+\[
+\|\mathbf{A}\mathbf{x}\| \le \|\mathbf{A}\|\,\|\mathbf{x}\|
+\]
+
+The length of a transformed vector is bounded by its original length and the most that it can
+be stretched by $\mathbf{A}$.
+
+\[
+\|\mathbf{A}\mathbf{B}\| \le \|\mathbf{A}\|\,\|\mathbf{B}\|
+\]
+
+Successive application of $\mathbf{A}$ and $\mathbf{B}$ cannot stretch a vector by more than the
+product of their individual bounds.
+
+\end{formula}
+
+
+
 \end{multicols}
 
 
