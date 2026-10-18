@@ -458,6 +458,78 @@ A vector with one component equal to one, and the others equal to zero.
 
 
 
+%=========================================================
+\section{Actions vs Strategies}
+
+
+\begin{warning}
+
+\begin{itemize}
+
+\item \textbf{Action} (letter $a$): what a player ends up playing.
+
+\item \textbf{Strategy} (letter $s$): the $M$-component vector containing the
+\emph{ex-ante} probability of playing each of the different actions.
+
+\end{itemize}
+
+\end{warning}
+
+
+\begin{important}
+
+When players use mixed strategies, their objective is to maximize their \textbf{expected
+payout}.
+
+Expected value of a random variable: weighted average over possible outcomes, weighed with
+their respective probabilities.
+
+\end{important}
+
+
+\begin{formula}
+
+2 players, each choosing between actions $A$ and $B$:
+$s^{(1)} = (p_A^{(1)}, p_B^{(1)})$, $s^{(2)} = (p_A^{(2)}, p_B^{(2)})$.
+
+\begin{align*}
+E[\mathcal{P}^{(1)}(s^{(1)}, s^{(2)})] ={}& Prob(A,A)\,\mathcal{P}^{(1)}(A,A) \\
+&+ Prob(A,B)\,\mathcal{P}^{(1)}(A,B) \\
+&+ Prob(B,A)\,\mathcal{P}^{(1)}(B,A) \\
+&+ Prob(B,B)\,\mathcal{P}^{(1)}(B,B)
+\end{align*}
+
+The choices are independent: $Prob(A,A) = p_A^{(1)} p_A^{(2)}$,
+$Prob(A,B) = p_A^{(1)} p_B^{(2)}$, etc. Hence
+
+\begin{align*}
+E[\mathcal{P}^{(1)}(s^{(1)}, s^{(2)})] ={}& p_A^{(1)} p_A^{(2)} \mathcal{P}^{(1)}(A,A) \\
+&+ p_A^{(1)} p_B^{(2)} \mathcal{P}^{(1)}(A,B) \\
+&+ p_B^{(1)} p_A^{(2)} \mathcal{P}^{(1)}(B,A) \\
+&+ p_B^{(1)} p_B^{(2)} \mathcal{P}^{(1)}(B,B)
+\end{align*}
+
+\end{formula}
+
+
+\begin{important}
+
+In the simultaneous-move games of this week, each player \textbf{knows the other players'
+strategy, but not their actions}.
+
+\end{important}
+
+
+\begin{example}
+
+In Rock-Paper-Scissors, I may know that my opponent plays the three actions with probability
+$(0.3, 0.3, 0.4)$ -- e.g.\ because we already played together many times -- but I don't know
+what she will play this time.
+
+\end{example}
+
+
+
 \end{multicols}
 
 
