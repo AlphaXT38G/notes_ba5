@@ -918,4 +918,31 @@ GPUs started with triangles only; today CUDA (NVIDIA), ROCm (AMD) and SYCL (Inte
 purpose GPU programming easier.
 \end{defnbox}
 
+
+\section{AI and tensor cores}
+
+\begin{defnbox}[title=Tensor core]
+A matrix multiplication unit, like an FMA for matrices: \texttt{D = A @ B + C} on a fixed size.
+Most of a GPU's FLOP/s are in tensor cores (98.4\% in 16 bit on a B200, 75.0\% on an RTX 5090),
+with ever lower precision (16 $\to$ 8 $\to$ 4 bit floats). \textbf{HMMA.16816}: a
+$16 \times 8 \times 16$ half-precision product, 256 flops/cycle per SM partition.
+\end{defnbox}
+
+\begin{keybox}[title=Block matrix multiplication]
+Feeding a tensor core needs $\sim$64 TB/s, more than even shared memory (45.5 TB/s on an Ada
+A6000). Matrix multiplication does $O(n^3)$ compute on $O(n^2)$ data: fetch blocks into shared
+memory and reuse each one for many products, so the computation is \textbf{compute-bound} instead
+of memory-bound.
+\begin{center}
+\includegraphics[width=0.8\linewidth]{images/week06_04.png}
+\end{center}
+\end{keybox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item GPUs: many simple cores in lockstep, latency hidden by switching warps, shared memory.
+  \item GPUs are much better than CPUs at multiplying big matrices, the key operation of ML/AI.
+\end{itemize}
+\end{keybox}
+
 \end{document}
