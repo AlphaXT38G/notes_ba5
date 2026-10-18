@@ -414,6 +414,54 @@ width=0.85\linewidth
 
 
 
+%=========================================================
+\section{Forward and Backward Error of Solvers}
+
+
+\begin{important}
+
+Recap: backward error in the input space, forward error in the output space.
+
+\[
+\text{Condition number: ratio } \frac{\text{forward error}}{\text{backward error}}
+\]
+
+\end{important}
+
+
+\begin{formula}
+
+\textbf{Applied to linear system solving}
+
+\begin{itemize}
+
+\item Theoretical infinite precision solver:
+$\mathbf{x} = f(\mathbf{b}) = \mathbf{A}^{-1}\mathbf{b}$. Its inverse is simple:
+$f^{-1}(\mathbf{x}) = \mathbf{A}\mathbf{x}$.
+
+\item Actual finite precision solver: $\hat{\mathbf{x}} = \hat{f}(\mathbf{b})$ -- how accurate is
+$\hat{\mathbf{x}}$? Natural to expect
+$f^{-1}(\hat{\mathbf{x}}) = \mathbf{A}\hat{\mathbf{x}} \approx \mathbf{b}$.
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{definition}
+
+\textbf{RESIDUAL}
+
+\[
+r(\hat{\mathbf{x}}) = \mathbf{A}\hat{\mathbf{x}} - \mathbf{b}
+\]
+
+Gives an approximation of the \textbf{backward error} of a linear system solver.
+
+\end{definition}
+
+
+
 \end{multicols}
 
 
