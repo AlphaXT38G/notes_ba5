@@ -12,7 +12,7 @@ runs the build and publishes `dist/` at <https://alphaxt38g.github.io/notes_ba5/
 
 The index page has grown a lot of personality: a flame mode, a jazz bar at night (closed by a
 life-size Gigachad bartender at 00:45), a metal show at 01:00, an epic finale, a calm night with
-crickets until 05:30, Christmas screens in December, easter eggs. Most of the code is there, in `site/`.
+crickets until 05:30, Christmas screens in December, a vintage cassette deck by day, easter eggs. Most of the code is there, in `site/`.
 
 ## Repository layout
 
@@ -34,7 +34,8 @@ site/                 the index page (HTML, CSS, JS inlined into one dist/index.
                         bartender by an image generator, used as an illustration in this
                         non-commercial project)
   audio/                the screens' music, mp3 files copied to dist/audio/: jazz, metal, epic,
-                        calm (the night's forest) and jingle-bell-rock (Christmas)
+                        calm (the night's forest) and jingle-bell-rock (Christmas); the day's
+                        cassette deck plays them too
 tools/bartender/      remakes the bartender's layers from source.webp (open it through a local
                       server, see below): cut-out, joints, bar counter and desk bell
 subjects.json         subjects: id, display name, exam rules, optional "weeks" and "color"
@@ -278,7 +279,8 @@ Example: a calm "dawn" screen from 06:00 to 07:00.
   first click (see `jazz.js`, `metal.js`); a Web Audio context waits suspended and is resumed
   on the first click (see the dawn birds in `calm.js`). Music is an mp3 in `site/audio/`,
   played with `screenTrack()` (`screens.js`, or loaded ahead with `preloadTrack()` when a show
-  is coming), never put in the page, and stopped with `dropTrack()` when its screen ends. The
+  is coming), never put in the page, and stopped with `dropTrack()` when its screen ends (the
+  day's cassette deck also plays a radio's live stream, `tapes.js`, the same way). The
   YouTube players left (the Christmas radio, the day's cassettes in `tapes.js`) are hidden
   `<iframe>`s driven by `postMessage` commands; a fresh player ignores commands until ready.
 
