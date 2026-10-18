@@ -106,11 +106,8 @@ async function rift() {
   const wrap = document.querySelector(".wrap");
   const shown = sel => [...document.querySelectorAll(sel)].filter(el => el.getBoundingClientRect().width > 0);
   const music = shown("#vinyl, #amp, #xmusic");
-  // The Christmas tree's hidden buttons (sax, guitar) sit in a layer above the page: left alone,
-  // they would float over the black hole. They go in quietly, like any small box.
-  const hidden = shown("#xtree-front button");
-  const boxes = [...shown("header h1, #search, .view button, .view, .tools button, .links li, .bar, .new, .thumb, main section"), ...music, ...hidden];
-  const returning = [...shown("header h1, header .sub, #search, .view, .tools button, main section, footer"), ...music, ...hidden];
+  const boxes = [...shown("header h1, #search, .view button, .view, .tools button, .links li, .bar, .new, .thumb, main section"), ...music];
+  const returning = [...shown("header h1, header .sub, #search, .view, .tools button, main section, footer"), ...music];
   const { letters, restore } = splitLetters([wrap, ...music]);
   // Level of a box: 1 if it holds no other box, else one more than the highest box it holds
   const levels = new Map();
