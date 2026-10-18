@@ -228,6 +228,7 @@ const endSummoning = () => {
   summonTimers = [];
   summon.remove();
   moreBtn.classList.remove("implode");
+  if (summonAudio && summonAudio.state === "running") summonAudio.suspend().catch(() => {});  // its sounds are over
 };
 const queueSummoning = () => {
   endSummoning();
