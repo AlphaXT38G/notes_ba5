@@ -809,4 +809,29 @@ Each sum depends on the previous one, so the pipeline starves: keep 4 (or 8, 16)
 and add them at the end.
 \end{keybox}
 
+
+\begin{propbox}[title=Memory hierarchy]
+A load costs $\sim$5-300 cycles depending on where the data is: registers, L1, L2 (SRAM), main
+memory (DRAM), disks, remote storage --- smaller, faster and costlier per byte at the top.
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week05_01.png}
+\end{center}
+\end{propbox}
+
+\begin{defnbox}[title=Locality]
+\textbf{Temporal locality}: the same memory is accessed again soon. \textbf{Spatial locality}:
+nearby memory is accessed soon. \textbf{Prefetchers} exploit regular access patterns to turn
+misses into hits.
+\end{defnbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Design for the hardware; correctness first, use good libraries, always measure the
+        bottlenecks.
+  \item Avoid interpreter overhead, unpredictable branches and dependency chains; use SIMD and
+        locality.
+  \item CPU = a cheetah (complex, fast cores); GPU = an army of snails.
+\end{itemize}
+\end{keybox}
+
 \end{document}
