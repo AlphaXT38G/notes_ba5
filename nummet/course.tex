@@ -692,4 +692,37 @@ $\mathbf{R}$). About 2$\times$ the cost of LU, but it gives the least squares so
 singular (or zero) matrices. Geometrically: rotate, project, then unwarp.
 \end{propbox}
 
+
+\section{Regularization}
+
+\begin{defnbox}[title=Regularization]
+Methods that \emph{improve the condition number} of a problem. No free lunch: better
+conditioning costs accuracy, bias, etc.
+\end{defnbox}
+
+\begin{defnbox}[title=Tikhonov regularization]
+Penalize solutions with large $L_2$ norm (a symptom of instability), with a factor $\lambda$:
+\[
+\operatorname{argmin}\left[\|\mathbf{A}\mathbf{x} - \mathbf{b}\|_2^2 +
+\lambda\|\mathbf{x}\|_2^2\right],
+\]
+i.e.\ $\lambda\mathbf{x}^T\mathbf{I}^T\mathbf{I}\mathbf{x}$ merged into
+$\mathbf{A}^T\mathbf{A}$: the matrix scales input vectors more uniformly in all directions.
+\begin{itemize}
+  \item LU: add $\lambda\mathbf{I}$ to $\mathbf{A}^T\mathbf{A}$ and solve.
+  \item QR: factorize $\begin{bmatrix} \mathbf{A} \\ \sqrt{\lambda}\mathbf{I} \end{bmatrix}$
+        and append $n$ zeros to $\mathbf{b}$.
+\end{itemize}
+\end{defnbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item $\operatorname{cond}(\mathbf{A}^T\mathbf{A}) \approx \operatorname{cond}(\mathbf{A})^2$:
+        avoid the normal equations when accuracy matters.
+  \item Orthogonality: Gram-Schmidt, Legendre polynomials, Chebyshev points.
+  \item QR (Householder): $\mathbf{R}\mathbf{x} = \mathbf{Q}^T\mathbf{b}$.
+  \item Tikhonov: $+\lambda\|\mathbf{x}\|_2^2$.
+\end{itemize}
+\end{keybox}
+
 \end{document}
