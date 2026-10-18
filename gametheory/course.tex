@@ -880,4 +880,30 @@ A subgame-perfect equilibrium is a special kind of Nash equilibrium (obvious, si
 subgame of itself). It removes the NE built on non-credible threats.
 \end{propbox}
 
+
+\begin{algbox}[title=Backward induction]
+The technique to obtain a subgame-perfect equilibrium:
+\begin{enumerate}
+  \item Find the Nash equilibria of the smallest subgames.
+  \item Replace each subgame with the payoff of (one of) its NE.
+  \item Repeat the procedure with the reduced game.
+\end{enumerate}
+\end{algbox}
+
+\begin{exbox}[title=Backward induction on the Entry-Deterrence game]
+The smallest subgame (after `Enter') has only one player, the Old Firm, who will choose
+`Accept': replace it with the payout of (Enter, Accept), $(1,-1)$. The reduced game has only
+itself as a subgame; it is a one-player game, and the New Firm will choose Enter.
+SPE: \textbf{(Enter, Accept)}.
+\end{exbox}
+
+\begin{exbox}[title=Backward induction on the Ultimatum game]
+In each of the smallest subgames there is only Player 2, and the only NE is `Accept'. After
+replacing them with their payout, we obtain the reduced game:
+\begin{center}
+\includegraphics[width=0.5\linewidth]{images/week03_04.png}
+\end{center}
+Only Player 1 needs to choose, and will choose `Offer 1'. SPE: \textbf{(Offer 1, AAA)}.
+\end{exbox}
+
 \end{document}
