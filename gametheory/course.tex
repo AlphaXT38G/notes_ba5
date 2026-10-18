@@ -171,4 +171,23 @@ plays the three actions with probability $(0.3, 0.3, 0.4)$ --- because we alread
 together many times --- but I don't know what she will play this time.
 \end{rembox}
 
+
+\section{Nash equilibrium}
+
+\begin{defnbox}[title=Nash equilibrium (NE)]
+Given a game with $N$ players, a \textbf{strategy profile} (the set of the strategies taken
+by each of the players) $(s^{(1)}, s^{(2)}, \ldots, s^{(N)})$ is a \textbf{Nash equilibrium}
+iff the payout of each player $i$ is such that
+\[
+\mathcal{P}^{(i)}(s^{(i)}, s^{(-i)}) \ge \mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)})
+\qquad \text{for every possible } \tilde{s}^{(i)},
+\]
+where $s^{(-i)}$ denotes the strategies of all players \emph{other than} $i$.
+\end{defnbox}
+
+\begin{keybox}[title=Meaning]
+The most widely used \textbf{solution concept}: in a NE, each player does the best she can
+\emph{given the strategies of all the other players}. Nobody gains by deviating alone.
+\end{keybox}
+
 \end{document}
