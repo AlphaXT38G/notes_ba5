@@ -483,6 +483,76 @@ $a/b + c/d = (ad + cb)/bd$. Generally not a good thing (numerators and denominat
 
 
 
+%=========================================================
+\section{Floating Point Numbers}
+
+
+Different scales, from the Planck length ($10^{-33}$ cm) to the universe: we need numbers whose
+resolution follows their magnitude.
+
+
+\begin{definition}
+
+\textbf{FLOATING POINT NUMBER} (``baby version'')
+
+\[
+\underbrace{\pm}_{\text{sign}} \ \underbrace{2^E}_{\text{exponent}}
+\ \underbrace{\sum_{i=0}^{n} 2^{-i} A_i}_{\text{mantissa}}
+\]
+
+\end{definition}
+
+
+\begin{example}
+
+\begin{align*}
+1.0 &= +2^0 (2^{-0}) = +2^0\,1.00000_2 \\
+0.5 &= +2^{-1} (2^{-0}) = +2^{-1}\,1.00000_2 \\
+-0.75 &= -2^{-1} (2^{-0} + 2^{-1}) = -2^{-1}\,1.10000_2 \\
+3.14 &\approx +2^1 (2^{-0} + 2^{-1} + 2^{-4} + 2^{-7}) = +2^1\,1.1001001_2
+\end{align*}
+
+The leading digit is always 1: no need to store it.
+
+\end{example}
+
+
+\textbf{Standard floating point formats} (sign | exponent | mantissa)
+
+\begin{center}
+
+\includegraphics[
+width=\linewidth
+]{../images/week01_01.png}
+
+\end{center}
+
+
+\begin{warning}
+
+``Please don't memorize these numbers for the exam.''
+
+\end{warning}
+
+
+\begin{important}
+
+\textbf{Number resolution changes with magnitude}: representable numbers are dense near zero and
+sparse for large magnitudes; overflow beyond $\pm 10^{308}$, underflow near 0 (float64).
+
+\end{important}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.9\linewidth
+]{../images/week01_02.png}
+
+\end{center}
+
+
+
 \end{multicols}
 
 
