@@ -501,6 +501,38 @@ and positive with 50\% probability.
 
 
 
+%=========================================================
+\section{SIMD and Partial Sums}
+
+
+\begin{definition}
+
+\textbf{SIMD} (single instruction, multiple data)
+
+CPUs can process vectors: in the same amount of time, add $x[0]+y[0]$ or 16 elements at once.
+Accessible through \textbf{intrinsics} (Intel/AMD: SSE, AVX, AVX512; ARM: NEON, SVE).
+
+\end{definition}
+
+
+\begin{warning}
+
+The idea was that compilers would magically insert vector instructions (``auto-vectorization'').
+It never really worked, and still does not work well enough.
+
+\end{warning}
+
+
+\begin{important}
+
+\textbf{What's missing?} Each SUM depends on the previous SUM: the program is still not parallel
+enough to keep the pipeline fed. Break these connections: compute \textbf{4 (or 8 or 16) partial
+sums} and add them up at the end (\texttt{psum\_3}: 4 vector accumulators).
+
+\end{important}
+
+
+
 \end{multicols}
 
 
