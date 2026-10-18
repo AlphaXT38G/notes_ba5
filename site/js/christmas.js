@@ -8,15 +8,17 @@
 //     gifts, a snowman companion on the left (and at night the moon and chalet lights),
 //   - a Christmas turntable playing Jingle Bell Rock or a live of Christmas music,
 //   - a small golden sax hidden among the tree's ornaments, which opens the jazz bar (a little
-//     fir in the bar brings Christmas back), and a little red guitar leaning against the gifts,
-//     which starts the metal show.
+//     fir in the bar brings Christmas back), a red guitar standing behind the gifts, which
+//     starts the metal show, and a firefly jar swinging under the garland, which opens the calm
+//     night (the same fir brings Christmas back).
 // At night the tree lights play changing patterns and Santa's sleigh crosses the sky now and then.
 // The metal show at 1:00 and the other easter eggs still take over.
 //
 // In this file, in order: screens and override, the yeti code, shared helpers, the garland, the
-// tree and its sax ornament, the mountains, the moon, the snowman, the sax and guitar buttons, the
-// tree lights canvas, the snow, the sleigh, the music, the fir back from the jazz bar, and turning
-// it all on and off.
+// bow, the tag and the gifts, the tree and its sax ornament, the guitar, the jar, the mountains, the
+// moon, the snowman, the sax, guitar and jar buttons, the tree lights canvas, the snow, the sleigh,
+// the music, the fir back from the jazz bar or the calm night, the jar's pendulum, and turning it
+// all on and off.
 // Every drawing is SVG built once from code (seeded random, so it looks the same on every visit).
 const xmasSubtitle = () => {
   const d = new Date(), m = d.getMonth(), day = d.getDate();
@@ -37,6 +39,8 @@ SCREENS["christmas-night"] = { className: "christmas", subtitle: xmasSubtitle, t
 // screens), unless the yeti code was typed (xmasEgg).
 // xmasJazz: the hidden sax was clicked on that Christmas screen ("christmas" or "christmas-night"):
 // the jazz bar replaces it until the fir is clicked or the other one comes (18:00 or 6:00).
+// xmasPeace: the calm night was opened with the firefly jar (the peace egg of calm.js, which keeps
+// the yeti egg then), so the fir shows there too and brings Christmas back.
 const isXmasDate = (d = new Date()) => (d.getMonth() === 11 && d.getDate() >= 10) || (d.getMonth() === 0 && d.getDate() <= 3);
 const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && t < 18 * 3600; };
 // Easter egg: typing y e t i (outside the search field) brings Christmas at any time of the year, day
@@ -46,7 +50,7 @@ const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && 
 // screen shown, not the egg: typed in a jazz bar opened over Christmas (armstrong code, sax), it
 // brings Christmas back. It overrides a forced ?screen=.
 // yetiTyped: how many times it was typed, so that the armstrong code's bar gives way (armstrong.js)
-let xmasJazz = false, xmasEgg = false, yetiTyped = 0;
+let xmasJazz = false, xmasEgg = false, xmasPeace = false, yetiTyped = 0;
 OVERRIDES.push(phase => {
   let p = phase;
   if ((xmasEgg || (!forced || forcedDismissed) && isXmasDate()) && (isNormal(p) || screenClass(p) === "night")) {
@@ -116,6 +120,9 @@ const buildGarland = () => {
   const scale = W / last()[0];  // stretch so the last hook lands on the right edge
   hooks.forEach(h => { h[0] *= scale; });
   const swags = [], lights = [], baubles = [];
+  // the firefly jar hangs on the left, in the margin beside the title (placeJar, below)
+  const jarX = W < 700 ? W * .1 : W * .12;
+  let jarY = 20;
   for (let k = 0; k + 1 < hooks.length; k++) {
     const [x0, y0] = hooks[k], [x1, y1] = hooks[k + 1], w = x1 - x0, sag = 45 + rnd() * 37, lean = (rnd() - .5) * .25;
     const curve = [[x0, y0], [x0 + w * (.28 + lean), y0 + sag * 1.3], [x0 + w * (.72 + lean), y1 + sag * 1.3], [x1, y1]];
@@ -150,7 +157,14 @@ const buildGarland = () => {
     const nb = 2 + (rnd() < .5);
     for (let i = 0; i < nb; i++) {
       const tt = (i + .25 + rnd() * .5) / nb, [x, y] = cubic(curve, tt), thread = 8 + rnd() * 28, r = 8 + rnd() * 6;
-      baubles.push({ k, x, y: y + 6, cy: y + 6 + thread + r, r, c: (rnd() * GLASS.length) | 0 });
+      const c = (rnd() * GLASS.length) | 0;
+      if (Math.abs(x - jarX) > 34) baubles.push({ k, x, y: y + 6, cy: y + 6 + thread + r, r, c });  // off the jar
+    }
+    if (jarX >= x0 && jarX < x1) {  // the jar's swag: where the middle of the fir crosses its x
+      for (let i = 0, best = Infinity; i <= 100; i++) {
+        const [x, y] = cubic(curve, i / 100);
+        if (Math.abs(x - jarX) < best) { best = Math.abs(x - jarX); jarY = y; }
+      }
     }
     const fir = `<path class="fir" d="M${f1(x0)},${f1(y0)}C${curve.slice(1).map(([x, y]) => `${f1(x)},${f1(y)}`).join(" ")}"/>` +
       needles.map((d, i) => `<path stroke="${NEEDLES[i]}" class="needles" d="${d.join("")}"/>`).join("") +
@@ -190,6 +204,7 @@ const buildGarland = () => {
   garlandGlowShown = false;
   garland.append(garlandGlow);
   garland.w = W;
+  placeJar(jarX, jarY);
 };
 
 // The halos of the garland's fairy lights at night, on a canvas over the garland, at 1x (they are
@@ -230,23 +245,97 @@ const paintGarlandGlow = time => {  // time in seconds, or null: still lights
 
 // The tree, on the right of the winter scene behind the page (#xscene): tiers of fir with snow on
 // the branches, tinsel, baubles, candy canes, light strings and a star, a red skirt and gifts below
-// it. Drawn once as SVG in a 520 x 640 box. The lights are also listed (treeLights) for the night
-// canvas that lights them up. The sax ornament and the guitar are in a separate layer above the
-// page (#xtree-front), so they can be clicked even where the cards cover the tree.
+// it. Drawn once as SVG in a 520 x 640 box, lit from the top left like the rest of the scene and
+// shaded for volume: each tier is rounded by gradients (darker under the tier above it and towards
+// its edges), carries rows of hanging branches layered like scales (light on the lit side, dark
+// on the far side), a lip under its edge and a rim of light along the lit half; the trunk is a
+// cylinder, the skirt a lit cloth, the baubles have their reflection and their shadow on the
+// needles, the star is cut in facets. All of it is static (no blur, no animation), so it costs
+// nothing once drawn. The lights are also listed (treeLights) for the night canvas that lights
+// them up. The sax ornament and the guitar are in a separate layer above the page (#xtree-front),
+// so they can be clicked even where the cards cover the tree.
+// A ribbon bow seen from the front, in volume without gradients (the gifts, the guitar and the jar
+// share it, and the jar and guitar are separate SVGs): the left loop lit, the right one in shade,
+// the inside of each loop darker, a glint on the left loop, two tails and the knot.
+const bow3d = (x, y, c, dark, k = 1) => `<g transform="translate(${f1(x)},${f1(y)}) scale(${k})">` +
+  `<path d="M-1,1L-8,11 -4.5,11.5 0,3Z" fill="${dark}"/><path d="M1,1L7,12 10.5,10.5 1.8,1.5Z" fill="${dark}"/>` +
+  `<path d="M0,0C-5,-11 -18,-13 -17,-4 -16,3 -6,2 0,0Z" fill="${c}"/><path d="M-1.5,-.5C-6,-7 -13,-8 -13.5,-3.5 -11,-2 -6,-1 -1.5,-.5Z" fill="${dark}" opacity=".55"/>` +
+  `<path d="M0,0C5,-11 18,-13 17,-4 16,3 6,2 0,0Z" fill="${c}"/><path d="M0,0C5,-11 18,-13 17,-4 16,3 6,2 0,0Z" fill="rgba(0,0,0,.22)"/>` +
+  `<path d="M1.5,-.5C6,-7 13,-8 13.5,-3.5 11,-2 6,-1 1.5,-.5Z" fill="${dark}" opacity=".55"/>` +
+  `<path d="M-14,-6c2,-3 5,-4 8,-2" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.3" stroke-linecap="round"/>` +
+  `<ellipse rx="3.4" ry="2.8" fill="${c}"/><ellipse rx="3.4" ry="2.8" fill="rgba(0,0,0,.15)"/><ellipse cx="-1" cy="-1" rx="1.4" ry="1" fill="rgba(255,255,255,.45)"/></g>`;
+// A gift tag hanging from its string (x, y: where the string is tied), turned by a few degrees:
+// a cream card with a cut corner, its hole, and two red lines of writing too small to read
+const giftTag = (x, y, a) => `<g transform="translate(${x},${y}) rotate(${a})"><path d="M0,0L-1,6.5" stroke="#b8935a" stroke-width=".6"/>` +
+  `<path d="M-4.5,6H2.5L4.5,8.5V15H-4.5Z" fill="#f6ecd4" stroke="rgba(60,30,0,.35)" stroke-width=".4"/><path d="M2.5,6V8.5H4.5" fill="rgba(0,0,0,.08)"/>` +
+  `<circle cx="-1" cy="8.3" r=".8" fill="#8a6a3a"/><path d="M-3,11.2h4.5M-3,13h3" stroke="#c8102e" stroke-width=".55" stroke-linecap="round"/></g>`;
 const TREE_W = 520, TREE_H = 640, TREE_X = 330;
 const treeLights = [];
 const treeHalfWidth = y => 12 + (y - 60) / (520 - 60) * 172;  // half width of the tree at height y
+// Gifts below the tree, as boxes in volume seen a little from above: the front, the side that
+// faces the tree's middle (the right one for the gifts on the left, the left one for those on the
+// right), and the lid, with its top, overhanging the box and casting a shadow on it. Lit from the
+// top left: the top is the lightest, the front shaded across and darker near the floor, a right
+// side in shade. The ribbon goes round the box (front, side and top) and a bow sits in the middle
+// of the lid; some papers have a pattern. Each one casts a shadow on the skirt (foot). Their
+// gradients and patterns are in the tree's defs (buildTree).
+const giftPoly = (pts, fill) => `<polygon points="${pts.map(([a, b]) => `${f1(a)},${f1(b)}`).join(" ")}" fill="${fill}"/>`;
+const giftBox = ([x, y, w, h, box, rib, ribDark, pat], foot = true) => {
+  const side = x + w / 2 < TREE_X ? 1 : -1, d = Math.min(18, w * .24), dx = side * d * .5, dy = -d * .62;
+  const sideShade = side > 0 ? "rgba(0,0,0,.3)" : "rgba(0,0,0,.1)", cx = x + w / 2, rw = Math.max(7, w * .14);
+  const along = (x0, y0, t) => [x0 + dx * t, y0 + dy * t];  // a point t of the way back from the front
+  const band = (x0, ya, yb) => [along(x0, ya, .5 - .16), along(x0, ya, .5 + .16), along(x0, yb, .5 + .16), along(x0, yb, .5 - .16)];
+  const sideFace = (x0, ya, yb) => [[x0, ya], along(x0, ya, 1), along(x0, yb, 1), [x0, yb]];
+  const L = 10, o = 3, lx = x - o, lw = w + 2 * o, ly = y - L + 2;  // the lid
+  const bx = side > 0 ? x + w : x, lsx = side > 0 ? lx + lw : lx;  // where the visible sides are
+  let g = foot ? `<ellipse cx="${f1(cx + 9)}" cy="${f1(y + h)}" rx="${f1(w * .62)}" ry="6" fill="url(#xgiftfoot)"/>` : "";
+  // the box: its side (paper, ribbon, shade), then its front (paper, pattern, ribbon, shading)
+  g += giftPoly(sideFace(bx, y, y + h), box) + (pat ? giftPoly(sideFace(bx, y, y + h), `url(#${pat})`) : "") + giftPoly(band(bx, y, y + h), rib) + giftPoly(sideFace(bx, y, y + h), sideShade);
+  g += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${box}"/>` + (pat ? `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${pat})"/>` : "") +
+    `<rect x="${f1(cx - rw / 2)}" y="${y}" width="${f1(rw)}" height="${h}" fill="${rib}"/><rect x="${f1(cx - rw / 2)}" y="${y}" width="${f1(rw * .3)}" height="${h}" fill="rgba(255,255,255,.22)"/>` +
+    `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#xshade)"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#xgiftfloor)"/>` +
+    `<rect x="${x}" y="${y}" width="${w}" height="5" fill="rgba(0,0,0,.28)"/>`;  // the lid's shadow on the box
+  // the lid: its side, its front, then its top with the two ribbons crossing and the bow
+  const top = [[lx, ly], [lx + lw, ly], along(lx + lw, ly, 1), along(lx, ly, 1)];
+  g += giftPoly(sideFace(lsx, ly, ly + L), box) + giftPoly(band(lsx, ly, ly + L), rib) + giftPoly(sideFace(lsx, ly, ly + L), sideShade);
+  g += `<rect x="${lx}" y="${ly}" width="${lw}" height="${L}" fill="${box}"/>` + (pat ? `<rect x="${lx}" y="${ly}" width="${lw}" height="${L}" fill="url(#${pat})"/>` : "") +
+    `<rect x="${f1(cx - rw / 2)}" y="${ly}" width="${f1(rw)}" height="${L}" fill="${rib}"/><rect x="${lx}" y="${ly}" width="${lw}" height="${L}" fill="url(#xshade)"/>` +
+    `<rect x="${lx}" y="${ly + L - 1.5}" width="${lw}" height="1.5" fill="rgba(0,0,0,.25)"/>`;
+  g += giftPoly(top, box) + (pat ? giftPoly(top, `url(#${pat})`) : "") +
+    giftPoly([[cx - rw / 2, ly], [cx + rw / 2, ly], along(cx + rw / 2, ly, 1), along(cx - rw / 2, ly, 1)], rib) +
+    giftPoly([along(lx, ly, .5 - .16), along(lx + lw, ly, .5 - .16), along(lx + lw, ly, .5 + .16), along(lx, ly, .5 + .16)], rib) +
+    giftPoly(top, "rgba(255,255,255,.2)") + `<path d="M${f1(lx)},${f1(ly)}H${f1(lx + lw)}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`;
+  const [bowX, bowY] = along(cx, ly, .5);
+  return `<g class="gift">${g}${bow3d(bowX, bowY + 1, rib, ribDark, Math.min(1.25, w / 60))}</g>`;
+};
+// x, y, width, height, paper, ribbon, ribbon in shade, pattern; from the back to the front (lowest last)
+const GIFTS = [[178, 512, 72, 50, "#c8102e", "#ffd15c", "#c9921c", "xpdots"], [258, 528, 52, 36, "#2f6fd1", "#eef2f8", "#aab4c4", "xpflakes"],
+  [380, 508, 78, 52, "#1e8a4c", "#d6203a", "#8e0f22", "xpstripes"], [452, 530, 46, 32, "#e2a81e", "#c8102e", "#7e0a1d", ""]]
+  .sort((a, b) => (a[1] + a[3]) - (b[1] + b[3]));
 const buildTree = () => {
   const rnd = seeded(2025), parts = [];
   const defs = [`<linearGradient id="xfir" x1="0" x2="1"><stop class="s1" offset="0"/><stop class="s2" offset=".45"/><stop class="s3" offset="1"/></linearGradient>`,
     `<linearGradient id="xstar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3b0"/><stop offset=".5" stop-color="#ffc93c"/><stop offset="1" stop-color="#c98a0c"/></linearGradient>`,
-    `<linearGradient id="xgold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset=".45" stop-color="#e3a923"/><stop offset="1" stop-color="#8a5a08"/></linearGradient>`];
+    `<linearGradient id="xgold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset=".45" stop-color="#e3a923"/><stop offset="1" stop-color="#8a5a08"/></linearGradient>`,
+    // volume of a tier: in the shadow of the tier above at its top, rounded like a cone (lit on the
+    // left, darker towards the edges), a rim of light along the lit half of its edge
+    `<linearGradient id="xfirdepth" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(0,18,6,.55)"/><stop offset=".4" stop-color="rgba(0,18,6,0)"/><stop offset=".85" stop-color="rgba(0,18,6,0)"/><stop offset="1" stop-color="rgba(0,18,6,.25)"/></linearGradient>`,
+    `<radialGradient id="xfirround" cx=".34" cy=".62" r=".72"><stop offset="0" stop-color="rgba(220,255,200,.16)"/><stop offset=".55" stop-color="rgba(220,255,200,0)"/><stop offset="1" stop-color="rgba(0,15,5,.4)"/></radialGradient>`,
+    `<linearGradient id="xrim" x1="0" x2="1"><stop offset="0" stop-color="rgba(190,245,170,.75)"/><stop offset=".45" stop-color="rgba(190,245,170,.25)"/><stop offset=".6" stop-color="rgba(190,245,170,0)"/></linearGradient>`,
+    `<linearGradient id="xtrunk" x1="0" x2="1"><stop offset="0" stop-color="#8a5a2c"/><stop offset=".35" stop-color="#6b4220"/><stop offset="1" stop-color="#2e1808"/></linearGradient>`,
+    `<radialGradient id="xskirt" cx=".32" cy=".25" r=".8"><stop offset="0" stop-color="#ea3048"/><stop offset=".5" stop-color="#c8102e"/><stop offset="1" stop-color="#7e0a1d"/></radialGradient>`,
+    `<radialGradient id="xtrunkfoot"><stop offset="0" stop-color="rgba(40,0,8,.55)"/><stop offset="1" stop-color="rgba(40,0,8,0)"/></radialGradient>`];
   const BAUBLES = [["#ff6b7d", "#c8102e", "#5c0614"], ["#fff1a6", "#e2a81e", "#6b4504"], ["#bfe1ff", "#2f7ed8", "#0b2d5c"], ["#ffffff", "#c7ced8", "#59626e"], ["#e9b8ff", "#8e3cc8", "#3a0c5a"]];
   BAUBLES.forEach(([a, b, c], i) => defs.push(`<radialGradient id="xb${i}" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="${a}"/><stop offset=".45" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></radialGradient>`));
 
-  // Tree skirt and trunk, then the tiers from the bottom up, each casting a shadow on the one below
-  parts.push(`<rect x="${TREE_X - 15}" y="512" width="30" height="40" fill="#5a3418"/><ellipse cx="${TREE_X}" cy="560" rx="150" ry="22" fill="#a30d26"/>` +
-    `<ellipse cx="${TREE_X}" cy="556" rx="150" ry="19" fill="#c8102e"/><path d="M${TREE_X - 150},556a150,19 0 0 0 300,0" fill="none" stroke="#fff" stroke-width="6" stroke-dasharray="1 9" stroke-linecap="round"/>`);
+  // Tree skirt (a lit cloth with a few soft folds) and trunk (a cylinder standing in it), then the
+  // tiers from the bottom up, each casting a shadow on the one below
+  const folds = [-110, -62, -18, 30, 76, 118].map(dx => `M${TREE_X + dx * .55},541Q${TREE_X + dx * .8},556 ${TREE_X + dx},${f1(556 + 17 * Math.sqrt(1 - (dx / 150) ** 2))}`).join("");
+  parts.push(`<ellipse cx="${TREE_X}" cy="560" rx="150" ry="22" fill="#7e0a1d"/><ellipse cx="${TREE_X}" cy="556" rx="150" ry="19" fill="url(#xskirt)"/>` +
+    `<path d="${folds}" fill="none" stroke="rgba(70,0,12,.28)" stroke-width="3" stroke-linecap="round"/>` +
+    `<path d="M${TREE_X - 150},556a150,19 0 0 0 300,0" fill="none" stroke="#fff" stroke-width="6" stroke-dasharray="1 9" stroke-linecap="round"/>` +
+    `<ellipse cx="${TREE_X + 6}" cy="551" rx="30" ry="6" fill="url(#xtrunkfoot)"/><rect x="${TREE_X - 15}" y="512" width="30" height="40" fill="url(#xtrunk)"/>` +
+    `<ellipse cx="${TREE_X}" cy="552" rx="15" ry="3" fill="#2e1808"/><path d="M${TREE_X - 8},516v32M${TREE_X + 3},514v34" stroke="rgba(0,0,0,.18)" stroke-width="1.2"/>`);
   const TIERS = [[290, 525, 184], [222, 438, 150], [160, 350, 118], [106, 262, 86], [62, 178, 52]];
   TIERS.forEach(([top, bottom, hw], i) => {
     const n = 7 + (4 - i) * 2, step = hw * 2 / n;
@@ -258,10 +347,34 @@ const buildTree = () => {
     const path = `M${TREE_X},${top - 34}C${TREE_X - hw * .35},${f1(top + (bottom - top) * .45)} ${f1(TREE_X - hw * .8)},${f1(bottom - 20)} ${f1(TREE_X - hw)},${bottom}${edge}` +
       `C${f1(TREE_X + hw * .8)},${f1(bottom - 20)} ${TREE_X + hw * .35},${f1(top + (bottom - top) * .45)} ${TREE_X},${top - 34}Z`;
     if (i) parts.push(`<path d="${path}" transform="translate(0,9)" class="tier-shadow"/>`);
-    parts.push(`<path d="${path}" fill="url(#xfir)"/>`);
+    // the lip: the underside of the branches, seen just below their edge
+    parts.push(`<path d="${path}" transform="translate(0,3.5)" class="tier-lip"/><path d="${path}" fill="url(#xfir)"/>` +
+      `<path d="${path}" fill="url(#xfirdepth)"/><path d="${path}" fill="url(#xfirround)"/>`);
+    // rows of drooping branches inside the tier, layered like scales: each branch is a hanging
+    // crescent with its shadow under it and a fringe of needles along its edge, in three tones by
+    // where it is (lit on the left, in the shade on the right and in the shadow of the tier above)
+    const tones = ["", "", ""], fringe = ["", "", ""];
+    let shade = "";
+    for (let r = 1; r <= 3; r++) {
+      const y = top + (bottom - top) * (r / 4) - 6, half = hw * (.3 + .7 * (y - top + 34) / (bottom - top + 34)) * .88;
+      const count = Math.max(3, Math.round(half * 2 / 30)), w = half * 2 / count;
+      for (let k = 0; k < count; k++) {
+        const x = TREE_X - half + k * w + (rnd() - .5) * 5, yy = y + (rnd() - .5) * 6, out = (x + w / 2 - TREE_X) / hw;
+        const lit = (1 - out) / 2 - (r === 1 ? .22 : 0) + (rnd() - .5) * .2, tone = lit > .55 ? 0 : lit > .28 ? 1 : 2;
+        const ww = w + 6, sag = 9 + rnd() * 4, x0 = x - 3;
+        tones[tone] += `M${f1(x0)},${f1(yy)}Q${f1(x0 + ww / 2)},${f1(yy + sag * 2)} ${f1(x0 + ww)},${f1(yy)}Q${f1(x0 + ww / 2)},${f1(yy + sag * .5)} ${f1(x0)},${f1(yy)}Z`;
+        shade += `M${f1(x0 + 1)},${f1(yy + 3)}Q${f1(x0 + ww / 2 + 1)},${f1(yy + sag * 2 + 4)} ${f1(x0 + ww + 1)},${f1(yy + 3)}Q${f1(x0 + ww / 2)},${f1(yy + sag + 2)} ${f1(x0 + 1)},${f1(yy + 3)}Z`;
+        for (let q = 1; q < 4; q++) {  // a few needles along the bottom of the crescent
+          const t = q / 4, nx = x0 + ww * t, ny = yy + 2 * sag * t * (1 - t) * 2 * .98;
+          fringe[tone] += `M${f1(nx)},${f1(ny - 1)}l${f1(out * 2 + (rnd() - .5) * 1.6)},${f1(3 + rnd() * 2.5)}`;
+        }
+      }
+    }
+    parts.push(`<path class="ndsh" d="${shade}"/>` + tones.map((d, t) => `<path class="nd${t + 1}" d="${d}"/><path class="nf${t + 1}" d="${fringe[t]}"/>`).join(""));
+    parts.push(`<path class="rim" d="M${f1(TREE_X - hw)},${bottom}${edge}" stroke="url(#xrim)"/>`);
     // needle tips along the bottom edge, and snow resting on some branches
     let tips = "", snow = "";
-    for (let j = 0; j < n * 5; j++) {
+    for (let j = 0; j < n * 3; j++) {
       const x = TREE_X - hw + rnd() * hw * 2, y = bottom - 2 + rnd() * 10;
       tips += `M${f1(x)},${f1(y)}l${f1((rnd() - .5) * 8)},${f1(4 + rnd() * 6)}`;
     }
@@ -298,9 +411,12 @@ const buildTree = () => {
     if (taken.some(([tx, ty, tr]) => Math.hypot(tx - x, ty - y) < tr + r + 6)) continue;
     taken.push([x, y, r]);
     placed++;
-    const c = (rnd() * BAUBLES.length) | 0;
-    parts.push(`<g class="bauble"><path d="M${f1(x)},${f1(y - r - 9)}v6" class="hook"/><rect x="${f1(x - 2.6)}" y="${f1(y - r - 4)}" width="5.2" height="4.5" rx="1" fill="url(#xgold)"/>` +
+    const c = (placed * 2 + ((rnd() * 2) | 0)) % BAUBLES.length;  // every colour about as often
+    parts.push(`<g class="bauble"><ellipse cx="${f1(x + r * .45)}" cy="${f1(y + r * .75)}" rx="${f1(r * .95)}" ry="${f1(r * .45)}" class="bauble-shadow"/>` +
+      `<path d="M${f1(x)},${f1(y - r - 9)}v6" class="hook"/><rect x="${f1(x - 2.6)}" y="${f1(y - r - 4)}" width="5.2" height="4.5" rx="1" fill="url(#xgold)"/>` +
       `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="url(#xb${c})"/>` +
+      `<ellipse cx="${f1(x - r * .38)}" cy="${f1(y - r * .42)}" rx="${f1(r * .3)}" ry="${f1(r * .2)}" transform="rotate(-35 ${f1(x - r * .38)} ${f1(y - r * .42)})" fill="rgba(255,255,255,.75)"/>` +
+      `<path d="M${f1(x + r * .3)},${f1(y + r * .75)}a${f1(r)},${f1(r)} 0 0 0 ${f1(r * .5)},${f1(-r * .6)}" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1"/>` +
       (rnd() < .35 ? `<path d="M${f1(x - r)},${f1(y)}a${f1(r)},${f1(r * .35)} 0 0 0 ${f1(r * 2)},0" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="1.6"/>` : "") + `</g>`);
   }
   // Candy canes
@@ -308,20 +424,33 @@ const buildTree = () => {
     const d = `M0,0v-20a7,7 0 0 1 14,0v3`;
     parts.push(`<g transform="translate(${x},${y}) rotate(${a})"><path d="${d}" class="cane"/><path d="${d}" class="cane-stripes"/></g>`);
   });
-  // Gifts below the tree: box, ribbon, lid and bow
-  [[178, 512, 72, 50, "#c8102e", "#ffd15c"], [258, 528, 52, 36, "#2f6fd1", "#e9eef5"], [380, 508, 78, 52, "#1e8a4c", "#d6203a"], [452, 530, 46, 32, "#e2a81e", "#c8102e"]].forEach(([x, y, w, h, box, rib]) => {
-    parts.push(`<g class="gift"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${box}"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#xshade)"/>` +
-      `<rect x="${x - 3}" y="${y - 7}" width="${w + 6}" height="10" rx="1.5" fill="${box}"/><rect x="${x + w / 2 - 5}" y="${y - 7}" width="10" height="${h + 7}" fill="${rib}"/>` +
-      `<rect x="${x - 3}" y="${y - 7}" width="${w + 6}" height="3" fill="rgba(255,255,255,.25)"/>` +
-      `<path d="M${x + w / 2},${y - 7}c-14,-14 -22,0 0,0c14,-14 22,0 0,0" fill="${rib}" stroke="rgba(0,0,0,.25)"/></g>`);
-  });
+  defs.push(`<radialGradient id="xgiftfoot"><stop offset="0" stop-color="rgba(50,0,10,.5)"/><stop offset="1" stop-color="rgba(50,0,10,0)"/></radialGradient>`,
+    `<linearGradient id="xgiftfloor" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="rgba(0,0,0,0)"/><stop offset="1" stop-color="rgba(0,0,0,.25)"/></linearGradient>`,
+    `<pattern id="xpdots" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.3" fill="rgba(255,215,90,.75)"/><circle cx="7" cy="7" r="1.3" fill="rgba(255,215,90,.75)"/></pattern>`,
+    `<pattern id="xpstripes" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><rect width="3" height="8" fill="rgba(255,255,255,.16)"/></pattern>`,
+    `<pattern id="xpflakes" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M4,1v6M1,4h6M2,2l4,4M6,2l-4,4M11,8v5M8.5,10.5h5" stroke="rgba(255,255,255,.55)" stroke-width=".7"/></pattern>`);
+  GIFTS.forEach(gift => parts.push(giftBox(gift)));  // the gifts (giftBox, above)
   defs.push(`<linearGradient id="xshade" x1="0" x2="1"><stop offset="0" stop-color="rgba(255,255,255,.18)"/><stop offset=".6" stop-color="rgba(0,0,0,0)"/><stop offset="1" stop-color="rgba(0,0,0,.25)"/></linearGradient>`);
   // Star on the top
-  const star = Array.from({ length: 10 }, (_, i) => {
+  // Star on the top, cut in facets: each point is two triangles from the centre, the one facing the
+  // light (top left) bright, the other in shade
+  const starPts = Array.from({ length: 10 }, (_, i) => {
     const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? 11 : 27;
-    return `${f1(TREE_X + Math.cos(a) * r)},${f1(30 + Math.sin(a) * r)}`;
-  }).join(" ");
-  parts.push(`<polygon points="${star}" fill="url(#xstar)" stroke="#a8740a" stroke-width="1.2" stroke-linejoin="round"/>`);
+    return [TREE_X + Math.cos(a) * r, 30 + Math.sin(a) * r, a];
+  });
+  const star = starPts.map(([x, y]) => `${f1(x)},${f1(y)}`).join(" ");
+  let facets = "";
+  starPts.forEach(([x, y, a], i) => {
+    if (i % 2) return;
+    [starPts[(i + 9) % 10], starPts[i + 1]].forEach(([ix, iy], k) => {
+      // how much this facet faces the top left: its middle direction from the centre
+      const mid = a + (k ? 1 : -1) * Math.PI / 10, lit = Math.cos(mid - Math.PI * 1.25);
+      const fill = lit > .3 ? "#fff6c4" : lit > -.3 ? "#ffd04a" : "#c98a0c";
+      facets += `<polygon points="${TREE_X},30 ${f1(x)},${f1(y)} ${f1(ix)},${f1(iy)}" fill="${fill}"/>`;
+    });
+  });
+  parts.push(`<polygon points="${star}" fill="url(#xstar)"/>${facets}<polygon points="${star}" fill="none" stroke="#a8740a" stroke-width="1.2" stroke-linejoin="round"/>` +
+    `<circle cx="${TREE_X - 6}" cy="22" r="2.2" fill="rgba(255,255,255,.85)"/>`);
   return `<svg viewBox="0 0 ${TREE_W} ${TREE_H}" preserveAspectRatio="xMidYMax meet"><defs>${defs.join("")}</defs>${parts.join("")}</svg>`;
 };
 // The hidden sax, hanging on the right side of the tree like an ornament:
@@ -334,17 +463,72 @@ const SAX_SVG = `<svg viewBox="0 0 30 52" aria-hidden="true"><path d="M15,0v6" s
   `<circle cx="13.6" cy="18" r="1.2" fill="#fff5c8"/><circle cx="13.6" cy="24" r="1.2" fill="#fff5c8"/><circle cx="13" cy="30" r="1.2" fill="#fff5c8"/>` +
   `<defs><linearGradient id="saxgold" x1="0" x2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset=".5" stop-color="#e3a923"/><stop offset="1" stop-color="#8a5a08"/></linearGradient></defs></svg>`;
 
-// The hidden guitar, leaning against the green gift: a small red electric guitar, two horns, black
-// pickups, gold knobs, a dark neck with its headstock. Drawn upright, tilted inside its own box.
-const GUITAR = { x: 352, y: 482, w: 20, h: 50 };  // among the gifts, half the size of a real one
-const GUITAR_SVG = `<svg viewBox="0 0 26 64" aria-hidden="true"><g transform="rotate(14 13 34)">` +
-  `<path d="M10.5,0H15.5L15,8H11Z" fill="#1a1a1f"/><path d="M10,2h-1.6M10,5h-1.6M16,2h1.6M16,5h1.6" stroke="#d8d8d8" stroke-width="1.2"/>` +
-  `<rect x="11.4" y="7" width="3.2" height="30" fill="#3b2412"/><path d="M11.4,12h3.2M11.4,17h3.2M11.4,22h3.2M11.4,27h3.2M11.4,32h3.2" stroke="#c9b48a" stroke-width=".5"/>` +
+// The hidden guitar, standing behind the green gift as if it were part of the pile: a red electric
+// guitar twice the size of the old small one, its body half hidden by the gift (its left side and
+// horn show beside it), its neck and headstock rising against the tree, the gifts' gold bow and a
+// tag tied on the neck, and a soft shadow on the branches behind it. To pass behind the gift while staying in the layer
+// above the page (to be clicked), it draws the green and yellow gifts again over itself, exactly
+// where the tree draws them (giftBox, without their shadow on the skirt); only the guitar itself
+// takes clicks (.gtr, css/christmas.css). Its bottom may be cut by the window: it still reads as a
+// guitar. In the tree's coordinates, like the gifts.
+const GUITAR = { x: 344, y: 390, w: 84, h: 178 };
+const GUITAR_SHAPE = `M10.5,0H15.5L15,8H14.6V35C16,37 18,38 20,34 24,33 25,40 23,44 25,48 25,58 18,61 15,63 11,63 8,61 1,58 1,48 3,44 1,40 2,33 6,34 8,38 10,37 11.4,35V8H11Z`;
+const GUITAR_AT = "translate(392,528) rotate(-9) scale(2) translate(-13,-63)";  // the bottom of its body at 392,528
+const GUITAR_SVG = `<svg viewBox="${GUITAR.x} ${GUITAR.y} ${GUITAR.w} ${GUITAR.h}" aria-hidden="true"><defs>` +
+  `<linearGradient id="guitarred" x1="0" x2="1"><stop offset="0" stop-color="#e8423a"/><stop offset=".45" stop-color="#a80f1d"/><stop offset="1" stop-color="#45000a"/></linearGradient></defs>` +
+  // its shadow on the branches behind it, cast to the right (the light comes from the top left)
+  `<g transform="translate(6,3)"><path transform="${GUITAR_AT}" d="${GUITAR_SHAPE}" fill="rgba(0,25,10,.3)"/></g>` +
+  // the guitar, drawn upright (bottom of the body at 13,63)
+  `<g class="gtr"><g transform="${GUITAR_AT}">` +
+  `<path d="M10.5,0H15.5L15,8H11Z" fill="#1a1a1f"/><path d="M10,2h-1.6M10,5h-1.6M16,2h1.6M16,5h1.6" stroke="#cfcfcf" stroke-width="1.2"/>` +
+  `<rect x="11.4" y="7" width="3.2" height="30" fill="#3b2412"/><rect x="11.4" y="7" width="1" height="30" fill="rgba(255,255,255,.15)"/>` +
+  `<path d="M11.4,12h3.2M11.4,17h3.2M11.4,22h3.2M11.4,27h3.2M11.4,32h3.2" stroke="#c9b48a" stroke-width=".5"/>` +
   `<path d="M6,34C2,33 1,40 3,44 1,48 1,58 8,61 11,63 15,63 18,61 25,58 25,48 23,44 25,40 24,33 20,34 18,38 16,38 14.5,37H11.5C10,38 8,38 6,34Z" fill="url(#guitarred)" stroke="#3a0008" stroke-width=".8"/>` +
+  `<path d="M4.5,40C3.5,44 3.5,50 5,54M3.4,35.5C4.5,34.5 5.5,35 6,36" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1" stroke-linecap="round"/>` +
   `<rect x="9.5" y="43" width="7" height="3" rx=".8" fill="#111"/><rect x="9.5" y="49" width="7" height="3" rx=".8" fill="#111"/><rect x="10" y="55" width="6" height="1.6" fill="#bbb"/>` +
   `<circle cx="19.5" cy="53" r="1.1" fill="#e3a923"/><circle cx="18" cy="57" r="1.1" fill="#e3a923"/>` +
-  `<path d="M12,1V56M13,1V56M14,1V56" stroke="rgba(235,235,235,.7)" stroke-width=".3"/></g>` +
-  `<defs><linearGradient id="guitarred" x1="0" x2="1"><stop offset="0" stop-color="#ff4a3d"/><stop offset=".5" stop-color="#b3101e"/><stop offset="1" stop-color="#4d0009"/></linearGradient></defs></svg>`;
+  `<path d="M12,1V56M13,1V56M14,1V56" stroke="rgba(235,235,235,.6)" stroke-width=".3"/>` +
+  // the gold bow tied on the neck, the same ribbon as the red gift's
+  `<path d="M11,24.5h4.2" stroke="#ffd15c" stroke-width="2.2"/><path d="M11,25.3h4.2" stroke="#c9921c" stroke-width=".8"/>` + bow3d(13, 24.5, "#ffd15c", "#c9921c", .45) + `</g>` +
+  // its tag, hanging straight down from the bow (where the bow is, once the guitar is tilted)
+  giftTag(378, 452, -4) + `</g>` +
+  // the gifts in front of it, drawn again over it
+  GIFTS.filter(g => g[0] >= 380).map(g => giftBox(g, false)).join("") + `</svg>`;
+
+// The hidden firefly jar, hanging under the garland at the top of the page like its baubles: the
+// jar of the calm night (calm.js) wrapped as a present, a cork lid with the gifts' red bow, twine
+// round the neck, its string going up into the fir, a gift tag, moss at the bottom and a firefly
+// glowing inside, wandering behind the glass (CSS). It swings on its string (the jar's pendulum,
+// below). Drawn in the coordinates it had on the skirt, the string added above it: the top of the
+// string, where it swings from, is the top middle of the box (252, JAR.y).
+const JAR = { x: 234, y: 478, w: 36, h: 70 };
+const JAR_GLASS = "M245,513H259Q259,516 261.5,517.5Q263.5,519 263.5,522V542Q263.5,546.5 259,546.5H245Q240.5,546.5 240.5,542V522Q240.5,519 242.5,517.5Q245,516 245,513Z";
+const JAR_SVG = `<svg viewBox="${JAR.x} ${JAR.y} ${JAR.w} ${JAR.h}" aria-hidden="true"><defs>` +
+  `<radialGradient id="jarglow"><stop offset="0" stop-color="rgba(240,255,190,1)"/><stop offset=".3" stop-color="rgba(205,255,140,.6)"/><stop offset="1" stop-color="rgba(170,255,120,0)"/></radialGradient>` +
+  `<linearGradient id="jarglass" x1="0" x2="1"><stop offset="0" stop-color="rgba(210,230,255,.34)"/><stop offset=".3" stop-color="rgba(210,230,255,.1)"/><stop offset=".75" stop-color="rgba(210,230,255,.06)"/><stop offset="1" stop-color="rgba(210,230,255,.3)"/></linearGradient>` +
+  `<linearGradient id="jarcork" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c49a64"/><stop offset="1" stop-color="#7a5430"/></linearGradient>` +
+  `<clipPath id="jarclip"><path d="${JAR_GLASS}"/></clipPath></defs>` +
+  // the string, from the fir down to the twine, knotted round the lid
+  `<path d="M252,${JAR.y}V508.5" stroke="#b8935a" stroke-width=".9"/><path d="M252,${JAR.y}V508.5" stroke="rgba(255,255,255,.35)" stroke-width=".3" transform="translate(-.3,0)"/>` +
+  `<circle class="halo" cx="252" cy="529" r="22" fill="url(#jarglow)"/>` +  // at night, its light around the jar
+  `<path d="${JAR_GLASS}" fill="url(#jarglass)"/>` +
+  // inside the glass: moss and a twig at the bottom, the firefly (its light, then its body)
+  `<g clip-path="url(#jarclip)"><path d="M240,547C242,540 246,543 248,540 250,543 254,539 256,542 259,539 262,542 264,540V547Z" fill="#2f6b34"/>` +
+  `<path d="M243,543L258,533M252,537l3,-6" stroke="#5a3a1c" stroke-width="1.1" stroke-linecap="round" fill="none"/>` +
+  `<g class="fly"><circle class="glow" cx="252" cy="529" r="9" fill="url(#jarglow)"/>` +
+  `<ellipse cx="251.2" cy="528.4" rx="1.3" ry=".8" fill="#2a2a22"/><circle cx="252.6" cy="529.1" r="1.1" fill="#f6ffd0"/>` +
+  `<path d="M250.6,527.6l-1.6,-1.4M251.6,527.6l1.2,-1.6" stroke="rgba(220,235,255,.7)" stroke-width=".5"/></g></g>` +
+  // the glass: its outline and the reflections of the light from the left
+  `<path d="${JAR_GLASS}" fill="none" stroke="rgba(225,240,255,.75)" stroke-width=".8"/>` +
+  // its round shape: the thick glass of the bottom and the rim of the neck seen as ellipses
+  `<path d="M241.5,543.5Q252,548.5 262.5,543.5" fill="none" stroke="rgba(235,245,255,.6)" stroke-width="1.4"/>` +
+  `<ellipse cx="252" cy="513.4" rx="7.2" ry="1.3" fill="none" stroke="rgba(235,245,255,.6)" stroke-width=".6"/>` +
+  `<path d="M243.2,522V541" stroke="rgba(255,255,255,.7)" stroke-width="1.3" stroke-linecap="round"/><path d="M261,524V532" stroke="rgba(255,255,255,.35)" stroke-width=".8" stroke-linecap="round"/>` +
+  // twine round the neck, the cork lid, and the red bow that makes it a present
+  `<path d="M244.6,514.5H259.4" stroke="#c9a86a" stroke-width="1.4"/><rect x="243.5" y="508" width="17" height="5.5" rx="1.2" fill="url(#jarcork)"/>` +
+  `<rect x="243.5" y="508" width="17" height="1.4" rx=".7" fill="rgba(255,255,255,.25)"/>` +
+  `<path d="M252,508v5.5" stroke="#c8102e" stroke-width="2.4"/>` + bow3d(252, 508.5, "#c8102e", "#7e0a1d", .62) +
+  giftTag(244.5, 515, 12) + `</svg>`;
 
 const scene = document.createElement("div"), tree = document.createElement("div"), treeFront = document.createElement("div");
 scene.id = "xscene";
@@ -580,6 +764,19 @@ treeFront.append(guitarBtn);
 guitarBtn.addEventListener("click", e => {
   e.stopPropagation();
   startMetalEgg("Santa brought a guitar.");
+});
+// The firefly jar, hanging under the garland (placed by placeJar, below): it opens the calm night,
+// as the peace code does (startPeace, calm.js, loaded after this file); the fir there, or typing
+// peace, brings Christmas back
+const jarBtn = document.createElement("button");
+jarBtn.id = "xjar";
+jarBtn.type = "button";
+jarBtn.title = "A firefly in a jar?";
+jarBtn.setAttribute("aria-label", "Go to the calm night");
+jarBtn.innerHTML = JAR_SVG;
+jarBtn.addEventListener("click", e => {
+  e.stopPropagation();
+  startPeace(true);
 });
 
 // Tree lights at night, on a canvas over the tree (behind the page, unlike the effects canvas):
@@ -828,9 +1025,9 @@ everySecond.push(() => {
 // only music of the page still from YouTube: a radio that never ends, no file; green label). The
 // other record waits in its sleeve, leaning behind the turntable: clicking the sleeve swaps them
 // and plays the new one. The turntable plays / pauses the record on; the choice and the pause
-// are remembered. It starts with the screen and
-// keeps playing from day to night. As for the jazz, without a user gesture yet it starts muted
-// and the sound comes on at the first click or key press.
+// are remembered. It starts with the screen and keeps playing from day to night. As for the
+// jazz, without a user gesture yet it starts muted and the sound comes on at the first click or
+// key press.
 const XMAS_LIVE = "XSXEaikz0Bc";
 let carolsRock = null, carolsRadio = null;  // the record's player: an <audio>, or the YouTube <iframe>
 let carolsPlaying = false, carolsMuted = false, carolsSoundAt = 0;
@@ -938,8 +1135,8 @@ const setCarols = on => {
   paintDeck();
 };
 
-// Back to Christmas from the jazz bar: a small fir with a star in the bottom right corner of the
-// bar, only when the bar was opened with the sax
+// Back to Christmas from the jazz bar or the calm night: a small fir with a star in the bottom
+// right corner, only when the bar was opened with the sax, or the calm night with the firefly jar
 const firBtn = document.createElement("button");
 firBtn.id = "xback";
 firBtn.type = "button";
@@ -951,12 +1148,83 @@ firBtn.innerHTML = '<svg viewBox="0 0 30 40" aria-hidden="true"><path d="M15,4 2
 firBtn.addEventListener("click", e => {
   e.stopPropagation();
   xmasJazz = false;
+  if (xmasPeace) peaceEgg = xmasPeace = false;
   applyScreen();
 });
 document.addEventListener("phase", e => {
-  if (xmasJazz && screenClass(e.detail) === "night") document.body.append(firBtn); else firBtn.remove();
+  // (the peace egg ends when the calm night is left another way: typing peace, yeti or armstrong)
+  if (xmasJazz && screenClass(e.detail) === "night" || xmasPeace && peaceEgg && e.detail === "calm") document.body.append(firBtn);
+  else firBtn.remove();
   if (e.detail === "christmas" || e.detail === "christmas-night") setTreeLights(e.detail === "christmas-night");
 });
+
+// The jar's pendulum. The jar hangs from its string (placeJar, called when the garland is built),
+// in the page like the garland (it scrolls with it), over the garland, a little bigger than the
+// baubles. It swings like a pendulum with friction (a period of about 1.7 s): a breath of wind
+// every 2 to 6 s, the mouse passing by pushes it (its speed across, the closer the stronger), and
+// scrolling the page makes it lag and swing back. Only its rotation changes (transform), on each
+// frame while it moves; once it has settled the loop sleeps until the next breath of wind (a
+// timer), and the wind waits while the jar is scrolled out of the window. Its place is kept in
+// page coordinates (jarAt), so nothing reads the layout per frame or per mouse move.
+// Reduced motion: it hangs still.
+const JAR_K = () => innerWidth < 700 ? 1.45 : 2.5;  // pixels per unit of its drawing
+const jarAt = { x: 0, y: 0, bottom: 0 };  // its string's top, and its bottom, in page pixels
+let jarAngle = 0, jarSpin = 0, jarRaf = null, jarLast = 0, jarGust = 0, jarScroll = 0, jarNap = 0;
+const placeJar = (x, y) => {
+  const k = JAR_K();
+  jarBtn.style.cssText = `left:${f1(x - JAR.w * k / 2)}px;top:${f1(y)}px;width:${f1(JAR.w * k)}px;height:${f1(JAR.h * k)}px`;
+  Object.assign(jarAt, { x, y, bottom: y + JAR.h * k });
+};
+const jarStill = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const jarFrame = now => {
+  jarRaf = null;
+  const dt = Math.min(.05, (now - (jarLast || now)) / 1000);
+  jarLast = now;
+  if (now > jarGust) {  // a breath of wind
+    jarSpin += (Math.random() - .5) * .5;
+    jarGust = now + 2000 + Math.random() * 4000;
+  }
+  jarSpin += (-14 * Math.sin(jarAngle) - 1.1 * jarSpin) * dt;
+  jarAngle = Math.max(-.7, Math.min(.7, jarAngle + jarSpin * dt));
+  jarBtn.style.transform = `rotate(${(jarAngle * 180 / Math.PI).toFixed(2)}deg)`;
+  if (Math.abs(jarSpin) > .003 || Math.abs(jarAngle) > .003) { jarRaf = requestAnimationFrame(jarFrame); return; }
+  // settled: sleep until the next breath of wind, if it is on screen to feel it
+  if (scrollY < jarAt.bottom) jarNap = setTimeout(wakeJar, Math.max(0, jarGust - now));
+};
+const wakeJar = () => {
+  if (jarRaf || jarStill() || !jarBtn.isConnected) return;
+  clearTimeout(jarNap);
+  jarLast = 0;
+  jarRaf = requestAnimationFrame(jarFrame);
+};
+const pushJar = e => {
+  const dx = e.pageX - jarAt.x, dy = e.pageY - (jarAt.y + (jarAt.bottom - jarAt.y) * .7);
+  const near = 1 - Math.hypot(dx, dy) / 160;
+  if (near <= 0 || !e.movementX) return;
+  jarSpin += Math.max(-.12, Math.min(.12, e.movementX * .004)) * near;
+  wakeJar();
+};
+const scrollJar = () => {
+  const y = scrollY;
+  jarSpin += Math.max(-.4, Math.min(.4, (y - jarScroll) * .004));
+  jarScroll = y;
+  wakeJar();
+};
+const setJarSwing = on => {
+  removeEventListener("pointermove", pushJar);
+  removeEventListener("scroll", scrollJar);
+  if (jarRaf) cancelAnimationFrame(jarRaf);
+  clearTimeout(jarNap);
+  jarRaf = null;
+  jarAngle = jarSpin = 0;
+  jarBtn.style.transform = "";
+  if (!on || jarStill()) return;
+  jarScroll = scrollY;
+  addEventListener("pointermove", pushJar, { passive: true });
+  addEventListener("scroll", scrollJar, { passive: true });
+  jarSpin = .25;  // it comes in swinging a little
+  wakeJar();
+};
 
 // Turning the screen on and off: the garland, the scene and the music come and go with the class
 let garlandResize = null;
@@ -972,7 +1240,7 @@ const onGarlandResize = () => {
 const setChristmas = on => {
   removeEventListener("resize", onGarlandResize);
   setCarols(on);
-  if (!on) { [garland, scene, treeFront, sleighEl].forEach(el => el.remove()); setTreeLights(false); return; }
+  if (!on) { [garland, scene, treeFront, sleighEl, jarBtn].forEach(el => el.remove()); setTreeLights(false); setJarSwing(false); return; }
   if (!treeBuilt) {
     tree.innerHTML = buildTree();
     scene.innerHTML = MOUNTAINS;
@@ -983,6 +1251,8 @@ const setChristmas = on => {
   addEventListener("resize", onGarlandResize);
   document.body.prepend(garland, scene);
   document.body.append(treeFront);
+  garland.after(jarBtn);  // over the garland, in the page
+  setJarSwing(true);
 };
 setChristmas(document.body.classList.contains("christmas"));
 document.addEventListener("christmas", e => setChristmas(e.detail));

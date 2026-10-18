@@ -1,8 +1,9 @@
 // ── Epic finale (screen "epic", body.epic) ────────────────────────────────────────────────────
-// 10 s before a metal show ends, a "More epicness ?" button shows up. Clicked, it queues the epic
-// finale, which takes over right when the metal ends (css/epic.css): a blue and violet fantasy
-// night with blue fire on the effects canvas (fx.js), the amp playing epic music in a loop. It
-// lasts until its "Back to normal" button is clicked.
+// 10 s before a metal show ends, a "More epicness ?" medallion shows up. Clicked, it queues the
+// epic finale, summoned in the last seconds of the show, which takes over right when the metal
+// ends (css/epic.css): a blue and violet fantasy night with blue fire on the effects canvas
+// (fx.js), the amp playing epic music in a loop. It lasts until its "Back to normal" button is
+// clicked.
 let epicQueued = false, epicAt = 0;  // epicAt: when it started (0 = not running)
 SCREENS.epic = { className: "epic", subtitle: "Behold… more epicness.", transition: "epic" };
 OVERRIDES.push(phase => {  // runs after the metal override (metal.js is loaded first)
@@ -152,18 +153,128 @@ fxLayers.push({
 
 // "More epicness ?": 10 s before a metal takeover ends this button rises in the middle of the
 // screen. Clicking it queues the epic finale (epicQueued, see the override above) and gets its song ready
-// (preloadEpic, below); it stays as "Epicness incoming…" until the metal ends, then goes away.
+// (preloadEpic, below); it stays, counting down, until the metal ends, then goes away.
+// It is a medallion forged in blue fire (css/epic.css), on a pool of darkness that hides the show
+// behind: light rays turning behind it, a ring of runes (an SVG shown as an <img>, its glow
+// rendered once), ten charge pips around it that light up one by one as the end of the show nears
+// once it was clicked, sparks rising, a shine sweeping its face. Every moving part only turns,
+// scales or fades.
+const MORE_SIGIL = (() => {
+  const runes = Array.from({ length: 30 }, (_, i) => {
+    let d = "";
+    for (let k = 0; k < 3; k++) {
+      const r = () => (Math.random() * 7 - 3.5).toFixed(1);
+      d += `M${r()},${r()}L${r()},${r()}`;
+    }
+    return `<path transform="rotate(${i * 12}) translate(0,-83)" d="${d}"/>`;
+  }).join("");
+  const ticks = Array.from({ length: 72 }, (_, i) => `<path transform="rotate(${i * 5})" d="M0,-96v${i % 6 ? 3 : 6}"/>`).join("");
+  const star = [0, 45].map(a => `<rect transform="rotate(${a})" x="-50" y="-50" width="100" height="100"/>`).join("");
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 200 200"><defs><filter id="g" x="-20%" y="-20%" width="140%" height="140%">` +
+    `<feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>` +
+    `<g filter="url(#g)" fill="none" stroke="#a9c8ff" stroke-linecap="round"><circle r="92" stroke-width="1.6"/><circle r="74" stroke-width="1.2"/>` +
+    `<circle r="99" stroke-width=".6" stroke-dasharray="2 5"/><g stroke-width="1">${ticks}</g><g stroke-width="1.3" stroke="#d6c4ff">${runes}</g>` +
+    `<g stroke-width="1" stroke="#7fa6ff" opacity=".8">${star}</g></g></svg>`;
+  return "data:image/svg+xml," + encodeURIComponent(svg);
+})();
 const moreBtn = document.createElement("button");
 moreBtn.id = "more";
 moreBtn.type = "button";
+moreBtn.innerHTML = `<span class="m-void"></span><span class="m-burst"></span><span class="m-rays"></span><span class="m-halo"></span><img class="m-sigil" src="${MORE_SIGIL}" alt="">` +
+  `<span class="m-pips">${Array.from({ length: 10 }, (_, i) => `<i style="transform:rotate(${i * 36}deg)"></i>`).join("")}</span>` +
+  `<span class="m-sparks">${Array.from({ length: 12 }, (_, i) => `<i style="transform:rotate(${i * 30 + 8}deg)"><b style="animation-delay:${(i * .37 % 2).toFixed(2)}s"></b></i>`).join("")}</span>` +
+  `<span class="m-face"><small class="m-kick"></small><b class="m-title"></b><small class="m-hint"></small><span class="m-shine"></span></span>`;
+const paintMore = () => {
+  const queued = moreBtn.classList.contains("queued"), left = Math.max(0, Math.ceil(metalLeft()));
+  moreBtn.querySelector(".m-kick").textContent = queued ? "Summoning" : "The show is ending";
+  moreBtn.querySelector(".m-title").innerHTML = queued ? `<span class="m-count">${left}</span>` : "More<br>epicness ?";
+  moreBtn.querySelector(".m-hint").textContent = queued ? "Epicness incoming…" : "⚔️ Click to summon";
+  moreBtn.setAttribute("aria-label", queued ? `Epic finale in ${left} seconds` : "More epicness");
+  moreBtn.querySelectorAll(".m-pips i").forEach((pip, i) => pip.classList.toggle("on", queued && i < 10 - left));
+};
 moreBtn.addEventListener("click", e => {
   e.stopPropagation();
   if (epicQueued) return;
   epicQueued = true;
   preloadEpic();
   moreBtn.classList.add("queued");
-  moreBtn.textContent = "⚔️ Epicness incoming…";
+  paintMore();
+  queueSummoning();
 });
+
+// The summoning: the last seconds of the show once the finale is queued, so that the switch is an
+// event rather than a cut. SUMMON_BUILD s before the metal ends an overlay (#summon, css/epic.css)
+// takes over: the room goes dark, a huge rune circle turns in, pillars of light rise from the
+// floor, streaks of energy rush to the medallion, which implodes into a core of light; at the very
+// end of the show the core bursts in a white flash and two shock waves, the screen switches under
+// the flash (the view transition starts from white), and "Epicness unleashed" shows while the
+// light fades onto the finale. A rising whoosh and a deep boom go with it (Web Audio, unless the
+// show was muted). Its CSS animations share one timeline (SUMMON_BUILD + SUMMON_TAIL long, the
+// switch at SUMMON_BUILD); clicked late, it starts part way through (--skip, a negative delay).
+// The switch itself is timed to the millisecond here instead of waiting for the next clock tick.
+const SUMMON_BUILD = 3.2, SUMMON_TAIL = 2.6;
+const summon = document.createElement("div");
+summon.id = "summon";
+summon.setAttribute("aria-hidden", "true");
+summon.innerHTML = `<span class="s-veil"></span><img class="s-sigil" src="${MORE_SIGIL}" alt="">` +
+  `<span class="s-beams">${[8, 22, 34, 46, 58, 70, 83, 93].map((x, i) => `<i style="left:${x}%;animation-delay:calc(var(--skip) + ${(i * .53 % 1.4).toFixed(2)}s)"></i>`).join("")}</span>` +
+  `<span class="s-streaks">${Array.from({ length: 18 }, (_, i) => `<i style="transform:rotate(${i * 20 + (i * 7) % 11}deg)"><b style="animation-delay:${(i * .29 % .7).toFixed(2)}s"></b></i>`).join("")}</span>` +
+  `<span class="s-core"></span><span class="s-wave"></span><span class="s-wave s-wave2"></span><span class="s-flash"></span>` +
+  `<span class="s-word"><b>Epicness</b><b>unleashed</b></span>`;
+let summonTimers = [], summonAudio = null;
+const metalLeftNow = () => metalEggAt ? metalLeft() : metalLeft() - new Date().getMilliseconds() / 1000;  // the clock's, to the ms
+const endSummoning = () => {
+  summonTimers.forEach(clearTimeout);
+  summonTimers = [];
+  summon.remove();
+  moreBtn.classList.remove("implode");
+  if (summonAudio && summonAudio.state === "running") summonAudio.suspend().catch(() => {});  // its sounds are over
+};
+const queueSummoning = () => {
+  endSummoning();
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;  // the finale simply comes on time
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (AC && !summonAudio) try { summonAudio = new AC(); } catch (e) {}  // made in the click, so allowed to sound
+  summonTimers.push(setTimeout(startSummoning, Math.max(0, (metalLeftNow() - SUMMON_BUILD) * 1000)));
+};
+const startSummoning = () => {
+  if (!epicQueued || document.body.dataset.phase !== "metal") return;
+  const left = Math.max(0, metalLeftNow());
+  summon.style.setProperty("--skip", `${-(SUMMON_BUILD - Math.min(left, SUMMON_BUILD)).toFixed(2)}s`);
+  document.body.append(summon);
+  summonSound(left);
+  summonTimers.push(
+    setTimeout(() => moreBtn.classList.add("implode"), Math.max(0, left - .75) * 1000),
+    setTimeout(applyScreen, left * 1000 + 30),  // the show is over: the epic override takes over
+    setTimeout(endSummoning, (left + SUMMON_TAIL) * 1000));
+};
+// The whoosh, band-passed noise sweeping up until the end of the show, then the boom, a sine
+// falling from 90 to 28 Hz
+const summonSound = left => {
+  const ac = summonAudio;
+  if (!ac || left < .4 || riffMuted()) return;
+  try {
+    if (ac.state === "suspended") ac.resume();
+    const t0 = ac.currentTime, tb = t0 + left, rate = ac.sampleRate;
+    const noise = ac.createBuffer(1, Math.ceil((left + 1) * rate), rate), d = noise.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    const src = ac.createBufferSource(), band = ac.createBiquadFilter(), hiss = ac.createGain();
+    src.buffer = noise;
+    band.type = "bandpass"; band.Q.value = 1.4;
+    band.frequency.setValueAtTime(160, t0); band.frequency.exponentialRampToValueAtTime(5200, tb);
+    hiss.gain.setValueAtTime(.0001, t0); hiss.gain.exponentialRampToValueAtTime(.3, tb - .05); hiss.gain.exponentialRampToValueAtTime(.0001, tb + .5);
+    src.connect(band); band.connect(hiss); hiss.connect(ac.destination);
+    src.start(t0); src.stop(tb + 1);
+    const boom = ac.createOscillator(), thump = ac.createGain();
+    boom.frequency.setValueAtTime(90, tb); boom.frequency.exponentialRampToValueAtTime(28, tb + 1.4);
+    thump.gain.setValueAtTime(.0001, t0); thump.gain.setValueAtTime(.0001, tb); thump.gain.exponentialRampToValueAtTime(.8, tb + .02); thump.gain.exponentialRampToValueAtTime(.0001, tb + 1.8);
+    boom.connect(thump); thump.connect(ac.destination);
+    boom.start(tb); boom.stop(tb + 2);
+  } catch (e) {}
+};
+// The show ended without the finale (e.g. by the clock), or the finale ended: nothing to summon
+document.addEventListener("metal", e => { if (!e.detail && !epicAt) endSummoning(); });
+document.addEventListener("epic", e => { if (!e.detail) endSummoning(); });
 // Epic music: a Two Steps From Hell mix (audio/epic.mp3, 25 tracks), looped, on the same amp
 // (turned blue). The song is loaded as soon as the button is clicked (paused), so it starts at once
 // when the metal ends; the click also counts as the gesture browsers need for sound.
@@ -220,9 +331,9 @@ everySecond.push(() => {  // show / hide "More epicness ?" in the last 10 s of a
   if (left > 0 && left <= 10) {
     if (!moreBtn.isConnected) {
       moreBtn.classList.remove("queued");
-      moreBtn.textContent = "✨ More epicness ?";
       document.body.append(moreBtn);
     }
+    paintMore();
   } else moreBtn.remove();
 });
 
