@@ -190,4 +190,34 @@ The most widely used \textbf{solution concept}: in a NE, each player does the be
 \emph{given the strategies of all the other players}. Nobody gains by deviating alone.
 \end{keybox}
 
+
+\begin{defnbox}[title=Pure-strategy Nash equilibrium]
+A Nash equilibrium obtained when we restrict ourselves to the case in which all players adopt
+pure strategies (always play the same action): a profile in which the action of each player
+is the \textbf{best response} to the actions of the other players.
+\end{defnbox}
+
+\begin{exbox}[title=Finding pure-strategy NE by circling best responses]
+\begin{center}
+\begin{tabular}{c|cc}
+$1 \backslash 2$ & L & R \\ \hline
+U & (8,7) & (4,6) \\
+D & (6,5) & (7,8)
+\end{tabular}
+\end{center}
+\begin{itemize}
+  \item Player 1: if 2 moves Left, 1 should move Up; if 2 moves Right, 1 should move Down.
+  \item Player 2: if 1 moves Up, 2 should move Left; if 1 moves Down, 2 should move Right.
+\end{itemize}
+Circle each best response; the cells where both payouts are circled are the NE:
+\begin{center}
+\includegraphics[width=0.45\linewidth]{images/week01_01.png}
+\end{center}
+Two NE: $(U,L)$ and $(D,R)$.
+\end{exbox}
+
+\begin{warnbox}[title=Multiple equilibria]
+When a game has two equilibria, the theory cannot tell which one will be chosen.
+\end{warnbox}
+
 \end{document}
