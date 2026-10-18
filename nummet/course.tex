@@ -166,4 +166,25 @@ The elementary operations $+, -, *, /, \sqrt{}$ are computed in infinite precisi
 \end{itemize}
 \end{warnbox}
 
+
+\section{Errors}
+
+\begin{defnbox}[title=Types of errors]
+\begin{itemize}
+  \item \textbf{Model error}: the model approximates reality ($A = 4\pi r^2$, but the earth is
+        not a sphere).
+  \item \textbf{Discretization error}: e.g.\ a fluid simulated at a finite resolution (a kind of
+        model error).
+  \item \textbf{Truncation error}: an infinite calculation approximated by a finite one,
+        $\sum_{i=1}^{10} 3^{-i} \approx 0.499991532$ vs.\ $\sum_{i=1}^{\infty} 3^{-i} = 0.5$.
+  \item \textbf{Rounding error}: $\sum_{k=1}^{\infty} \frac{1}{k} = 15.403683$ in IEEE-754 (the
+        series diverges!): once the sum is large, aligning the exponents drops the small terms.
+\end{itemize}
+\end{defnbox}
+
+\begin{exbox}[title=Catastrophic numerical errors]
+Ariane 5 rocket failure (June 14, 1996); Patriot missile failure (1991, Dhahran):
+\emph{rounding error accumulation}, the battery failed to intercept a missile, 28 people died.
+\end{exbox}
+
 \end{document}
