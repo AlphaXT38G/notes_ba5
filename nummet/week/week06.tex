@@ -733,6 +733,38 @@ width=\linewidth
 
 
 
+%=========================================================
+\section{Weekly Summary}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item Key property of matrix multiplication: \textbf{$O(n^3)$ compute for $O(n^2)$ data}.
+
+\begin{itemize}
+
+\item Exploit this by fetching parts of a matrix into local (``shared'') memory.
+
+\item Then do a lot of computation with these parts.
+
+\item Allows matrix computation to be \textbf{compute-bound} instead of
+\textbf{memory-bound}.
+
+\end{itemize}
+
+\item GPUs are much better at multiplying big matrices than CPUs.
+
+\item Matrix multiplication is the key operation underlying ML / AI (in particular, large
+language models use \textbf{huge} matrices).
+
+\end{itemize}
+
+\end{summary}
+
+
+
 \end{multicols}
 
 
