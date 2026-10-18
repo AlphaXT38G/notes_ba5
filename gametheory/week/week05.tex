@@ -749,6 +749,125 @@ available.
 
 
 
+%=========================================================
+\section{Conditional Probability Examples}
+
+
+\begin{example}
+
+\textbf{Example 1}
+
+A random variable $x$ is uniformly distributed between 0 and 1 ($x \sim \mathcal{U}([0,1])$).
+
+\begin{itemize}
+
+\item What is the probability that $x > 0.75$? (the \emph{unconditional probability})
+
+\item Now you receive the information that $x > 0.5$. How do you update the probability that
+$x > 0.75$? (the \emph{conditional probability})
+
+\end{itemize}
+
+\begin{center}
+
+\includegraphics[
+width=0.9\linewidth
+]{../images/week05_04.png}
+
+\end{center}
+
+\textbf{Solution} (not on the slides):
+
+\[
+Prob(x > 0.75) = 0.25
+\]
+
+\[
+Prob(x > 0.75 \,|\, x > 0.5) = \frac{Prob(x > 0.75)}{Prob(x > 0.5)} = \frac{0.25}{0.5} = 0.5
+\]
+
+\end{example}
+
+
+\begin{example}
+
+\textbf{Example 2}
+
+\begin{itemize}
+
+\item You know that X has two children. What is the probability that she has (at least) a
+girl?
+
+\item Then you ask her: do you have a boy? She says: yes.
+
+\item What is now the probability that she also has a girl? a.\ 1/2, b.\ 1/3, c.\ 2/3
+
+\end{itemize}
+
+\textbf{Solution} (not on the slides): the four cases BB, BG, GB, GG are equally likely.
+
+\[
+Prob(\text{girl}) = \frac{3}{4}
+\]
+
+\[
+Prob(\text{girl} \,|\, \text{boy}) = \frac{Prob(\text{BG or GB})}{Prob(\text{not GG})}
+= \frac{2/4}{3/4} = \frac{2}{3}
+\]
+
+$\rightarrow$ answer c.
+
+\end{example}
+
+
+\begin{example}
+
+\textbf{Example 3}
+
+\begin{itemize}
+
+\item In a population X, 1\% of the people have a disease.
+
+\item A test has accuracy 95\%: whether or not you have the disease, the test gives you the
+truth with probability 95\%, and the opposite of the truth with probability 5\%.
+
+\item Question 1: \emph{before taking the test}, what's the probability that you have the
+disease?
+
+\item Question 2: after a positive test result, what's the probability that you have the
+disease? a.\ more than 90\%, b.\ between 30\% and 90\%, c.\ less than 30\%
+
+\end{itemize}
+
+Understand why: suppose there are 2000 people in the population and everybody gets tested.
+How many people really have the disease? How many of the healthy people receive a positive
+test result? How many of the sick? What fraction of the people who receive a positive test
+result are actually sick?
+
+\textbf{Solution} (not on the slides):
+
+\begin{itemize}
+
+\item Question 1: 1\%.
+
+\item 2000 people: 20 sick, 1980 healthy.
+
+\item Healthy with a positive test: $5\% \times 1980 = 99$.
+
+\item Sick with a positive test: $95\% \times 20 = 19$.
+
+\end{itemize}
+
+\[
+Prob(\text{sick} \,|\, +) = \frac{19}{19 + 99} = \frac{19}{118} \approx 16\%
+\]
+
+$\rightarrow$ answer c (less than 30\%).
+
+\end{example}
+
+
+
 \end{multicols}
 
 
