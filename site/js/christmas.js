@@ -259,6 +259,46 @@ const giftTag = (x, y, a) => `<g transform="translate(${x},${y}) rotate(${a})"><
 const TREE_W = 520, TREE_H = 640, TREE_X = 330;
 const treeLights = [];
 const treeHalfWidth = y => 12 + (y - 60) / (520 - 60) * 172;  // half width of the tree at height y
+// Gifts below the tree, as boxes in volume seen a little from above: the front, the side that
+// faces the tree's middle (the right one for the gifts on the left, the left one for those on the
+// right), and the lid, with its top, overhanging the box and casting a shadow on it. Lit from the
+// top left: the top is the lightest, the front shaded across and darker near the floor, a right
+// side in shade. The ribbon goes round the box (front, side and top) and a bow sits in the middle
+// of the lid; some papers have a pattern. Each one casts a shadow on the skirt (foot). Their
+// gradients and patterns are in the tree's defs (buildTree).
+const poly = (pts, fill, extra = "") => `<polygon points="${pts.map(([a, b]) => `${f1(a)},${f1(b)}`).join(" ")}" fill="${fill}"${extra}/>`;
+const giftBox = ([x, y, w, h, box, rib, ribDark, pat], foot = true) => {
+  const side = x + w / 2 < TREE_X ? 1 : -1, d = Math.min(18, w * .24), dx = side * d * .5, dy = -d * .62;
+  const sideShade = side > 0 ? "rgba(0,0,0,.3)" : "rgba(0,0,0,.1)", cx = x + w / 2, rw = Math.max(7, w * .14);
+  const along = (x0, y0, t) => [x0 + dx * t, y0 + dy * t];  // a point t of the way back from the front
+  const band = (x0, ya, yb) => [along(x0, ya, .5 - .16), along(x0, ya, .5 + .16), along(x0, yb, .5 + .16), along(x0, yb, .5 - .16)];
+  const sideFace = (x0, ya, yb) => [[x0, ya], along(x0, ya, 1), along(x0, yb, 1), [x0, yb]];
+  const L = 10, o = 3, lx = x - o, lw = w + 2 * o, ly = y - L + 2;  // the lid
+  const bx = side > 0 ? x + w : x, lsx = side > 0 ? lx + lw : lx;  // where the visible sides are
+  let g = foot ? `<ellipse cx="${f1(cx + 9)}" cy="${f1(y + h)}" rx="${f1(w * .62)}" ry="6" fill="url(#xgiftfoot)"/>` : "";
+  // the box: its side (paper, ribbon, shade), then its front (paper, pattern, ribbon, shading)
+  g += poly(sideFace(bx, y, y + h), box) + (pat ? poly(sideFace(bx, y, y + h), `url(#${pat})`) : "") + poly(band(bx, y, y + h), rib) + poly(sideFace(bx, y, y + h), sideShade);
+  g += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${box}"/>` + (pat ? `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${pat})"/>` : "") +
+    `<rect x="${f1(cx - rw / 2)}" y="${y}" width="${f1(rw)}" height="${h}" fill="${rib}"/><rect x="${f1(cx - rw / 2)}" y="${y}" width="${f1(rw * .3)}" height="${h}" fill="rgba(255,255,255,.22)"/>` +
+    `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#xshade)"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#xgiftfloor)"/>` +
+    `<rect x="${x}" y="${y}" width="${w}" height="5" fill="rgba(0,0,0,.28)"/>`;  // the lid's shadow on the box
+  // the lid: its side, its front, then its top with the two ribbons crossing and the bow
+  const top = [[lx, ly], [lx + lw, ly], along(lx + lw, ly, 1), along(lx, ly, 1)];
+  g += poly(sideFace(lsx, ly, ly + L), box) + poly(band(lsx, ly, ly + L), rib) + poly(sideFace(lsx, ly, ly + L), sideShade);
+  g += `<rect x="${lx}" y="${ly}" width="${lw}" height="${L}" fill="${box}"/>` + (pat ? `<rect x="${lx}" y="${ly}" width="${lw}" height="${L}" fill="url(#${pat})"/>` : "") +
+    `<rect x="${f1(cx - rw / 2)}" y="${ly}" width="${f1(rw)}" height="${L}" fill="${rib}"/><rect x="${lx}" y="${ly}" width="${lw}" height="${L}" fill="url(#xshade)"/>` +
+    `<rect x="${lx}" y="${ly + L - 1.5}" width="${lw}" height="1.5" fill="rgba(0,0,0,.25)"/>`;
+  g += poly(top, box) + (pat ? poly(top, `url(#${pat})`) : "") +
+    poly([[cx - rw / 2, ly], [cx + rw / 2, ly], along(cx + rw / 2, ly, 1), along(cx - rw / 2, ly, 1)], rib) +
+    poly([along(lx, ly, .5 - .16), along(lx + lw, ly, .5 - .16), along(lx + lw, ly, .5 + .16), along(lx, ly, .5 + .16)], rib) +
+    poly(top, "rgba(255,255,255,.2)") + `<path d="M${f1(lx)},${f1(ly)}H${f1(lx + lw)}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`;
+  const [bowX, bowY] = along(cx, ly, .5);
+  return `<g class="gift">${g}${bow3d(bowX, bowY + 1, rib, ribDark, Math.min(1.25, w / 60))}</g>`;
+};
+// x, y, width, height, paper, ribbon, ribbon in shade, pattern; from the back to the front (lowest last)
+const GIFTS = [[178, 512, 72, 50, "#c8102e", "#ffd15c", "#c9921c", "xpdots"], [258, 528, 52, 36, "#2f6fd1", "#eef2f8", "#aab4c4", "xpflakes"],
+  [380, 508, 78, 52, "#1e8a4c", "#d6203a", "#8e0f22", "xpstripes"], [452, 530, 46, 32, "#e2a81e", "#c8102e", "#7e0a1d", ""]]
+  .sort((a, b) => (a[1] + a[3]) - (b[1] + b[3]));
 const buildTree = () => {
   const rnd = seeded(2025), parts = [];
   const defs = [`<linearGradient id="xfir" x1="0" x2="1"><stop class="s1" offset="0"/><stop class="s2" offset=".45"/><stop class="s3" offset="1"/></linearGradient>`,
@@ -371,50 +411,12 @@ const buildTree = () => {
     const d = `M0,0v-20a7,7 0 0 1 14,0v3`;
     parts.push(`<g transform="translate(${x},${y}) rotate(${a})"><path d="${d}" class="cane"/><path d="${d}" class="cane-stripes"/></g>`);
   });
-  // Gifts below the tree, as boxes in volume seen a little from above: the front, the side that
-  // faces the tree's middle (the right one for the gifts on the left, the left one for those on the
-  // right), and the lid, with its top, overhanging the box and casting a shadow on it. Lit from the
-  // top left: the top is the lightest, the front shaded across and darker near the floor, a right
-  // side in shade. The ribbon goes round the box (front, side and top) and a bow sits in the middle
-  // of the lid; some papers have a pattern. Each one casts a shadow on the skirt.
-  const poly = (pts, fill, extra = "") => `<polygon points="${pts.map(([a, b]) => `${f1(a)},${f1(b)}`).join(" ")}" fill="${fill}"${extra}/>`;
-  const giftBox = ([x, y, w, h, box, rib, ribDark, pat]) => {
-    const side = x + w / 2 < TREE_X ? 1 : -1, d = Math.min(18, w * .24), dx = side * d * .5, dy = -d * .62;
-    const sideShade = side > 0 ? "rgba(0,0,0,.3)" : "rgba(0,0,0,.1)", cx = x + w / 2, rw = Math.max(7, w * .14);
-    const along = (x0, y0, t) => [x0 + dx * t, y0 + dy * t];  // a point t of the way back from the front
-    const band = (x0, ya, yb) => [along(x0, ya, .5 - .16), along(x0, ya, .5 + .16), along(x0, yb, .5 + .16), along(x0, yb, .5 - .16)];
-    const sideFace = (x0, ya, yb) => [[x0, ya], along(x0, ya, 1), along(x0, yb, 1), [x0, yb]];
-    const L = 10, o = 3, lx = x - o, lw = w + 2 * o, ly = y - L + 2;  // the lid
-    const bx = side > 0 ? x + w : x, lsx = side > 0 ? lx + lw : lx;  // where the visible sides are
-    let g = `<ellipse cx="${f1(cx + 9)}" cy="${f1(y + h)}" rx="${f1(w * .62)}" ry="6" fill="url(#xgiftfoot)"/>`;
-    // the box: its side (paper, ribbon, shade), then its front (paper, pattern, ribbon, shading)
-    g += poly(sideFace(bx, y, y + h), box) + (pat ? poly(sideFace(bx, y, y + h), `url(#${pat})`) : "") + poly(band(bx, y, y + h), rib) + poly(sideFace(bx, y, y + h), sideShade);
-    g += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${box}"/>` + (pat ? `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${pat})"/>` : "") +
-      `<rect x="${f1(cx - rw / 2)}" y="${y}" width="${f1(rw)}" height="${h}" fill="${rib}"/><rect x="${f1(cx - rw / 2)}" y="${y}" width="${f1(rw * .3)}" height="${h}" fill="rgba(255,255,255,.22)"/>` +
-      `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#xshade)"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#xgiftfloor)"/>` +
-      `<rect x="${x}" y="${y}" width="${w}" height="5" fill="rgba(0,0,0,.28)"/>`;  // the lid's shadow on the box
-    // the lid: its side, its front, then its top with the two ribbons crossing and the bow
-    const top = [[lx, ly], [lx + lw, ly], along(lx + lw, ly, 1), along(lx, ly, 1)];
-    g += poly(sideFace(lsx, ly, ly + L), box) + poly(band(lsx, ly, ly + L), rib) + poly(sideFace(lsx, ly, ly + L), sideShade);
-    g += `<rect x="${lx}" y="${ly}" width="${lw}" height="${L}" fill="${box}"/>` + (pat ? `<rect x="${lx}" y="${ly}" width="${lw}" height="${L}" fill="url(#${pat})"/>` : "") +
-      `<rect x="${f1(cx - rw / 2)}" y="${ly}" width="${f1(rw)}" height="${L}" fill="${rib}"/><rect x="${lx}" y="${ly}" width="${lw}" height="${L}" fill="url(#xshade)"/>` +
-      `<rect x="${lx}" y="${ly + L - 1.5}" width="${lw}" height="1.5" fill="rgba(0,0,0,.25)"/>`;
-    g += poly(top, box) + (pat ? poly(top, `url(#${pat})`) : "") +
-      poly([[cx - rw / 2, ly], [cx + rw / 2, ly], along(cx + rw / 2, ly, 1), along(cx - rw / 2, ly, 1)], rib) +
-      poly([along(lx, ly, .5 - .16), along(lx + lw, ly, .5 - .16), along(lx + lw, ly, .5 + .16), along(lx, ly, .5 + .16)], rib) +
-      poly(top, "rgba(255,255,255,.2)") + `<path d="M${f1(lx)},${f1(ly)}H${f1(lx + lw)}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`;
-    const [bowX, bowY] = along(cx, ly, .5);
-    return `<g class="gift">${g}${bow3d(bowX, bowY + 1, rib, ribDark, Math.min(1.25, w / 60))}</g>`;
-  };
   defs.push(`<radialGradient id="xgiftfoot"><stop offset="0" stop-color="rgba(50,0,10,.5)"/><stop offset="1" stop-color="rgba(50,0,10,0)"/></radialGradient>`,
     `<linearGradient id="xgiftfloor" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="rgba(0,0,0,0)"/><stop offset="1" stop-color="rgba(0,0,0,.25)"/></linearGradient>`,
     `<pattern id="xpdots" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.3" fill="rgba(255,215,90,.75)"/><circle cx="7" cy="7" r="1.3" fill="rgba(255,215,90,.75)"/></pattern>`,
     `<pattern id="xpstripes" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><rect width="3" height="8" fill="rgba(255,255,255,.16)"/></pattern>`,
     `<pattern id="xpflakes" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M4,1v6M1,4h6M2,2l4,4M6,2l-4,4M11,8v5M8.5,10.5h5" stroke="rgba(255,255,255,.55)" stroke-width=".7"/></pattern>`);
-  // drawn from the back to the front (the lowest last)
-  [[178, 512, 72, 50, "#c8102e", "#ffd15c", "#c9921c", "xpdots"], [258, 528, 52, 36, "#2f6fd1", "#eef2f8", "#aab4c4", "xpflakes"],
-    [380, 508, 78, 52, "#1e8a4c", "#d6203a", "#8e0f22", "xpstripes"], [452, 530, 46, 32, "#e2a81e", "#c8102e", "#7e0a1d", ""]]
-    .sort((a, b) => (a[1] + a[3]) - (b[1] + b[3])).forEach(gift => parts.push(giftBox(gift)));
+  GIFTS.forEach(gift => parts.push(giftBox(gift)));  // the gifts (giftBox, above)
   defs.push(`<linearGradient id="xshade" x1="0" x2="1"><stop offset="0" stop-color="rgba(255,255,255,.18)"/><stop offset=".6" stop-color="rgba(0,0,0,0)"/><stop offset="1" stop-color="rgba(0,0,0,.25)"/></linearGradient>`);
   // Star on the top
   // Star on the top, cut in facets: each point is two triangles from the centre, the one facing the
@@ -448,33 +450,37 @@ const SAX_SVG = `<svg viewBox="0 0 30 52" aria-hidden="true"><path d="M15,0v6" s
   `<circle cx="13.6" cy="18" r="1.2" fill="#fff5c8"/><circle cx="13.6" cy="24" r="1.2" fill="#fff5c8"/><circle cx="13" cy="30" r="1.2" fill="#fff5c8"/>` +
   `<defs><linearGradient id="saxgold" x1="0" x2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset=".5" stop-color="#e3a923"/><stop offset="1" stop-color="#8a5a08"/></linearGradient></defs></svg>`;
 
-// The hidden guitar, set down on the tree skirt and leaning against the green gift, its headstock
-// resting on the gift's lid, like a present that was too big to wrap: a small red electric guitar
-// (two horns, black pickups, gold knobs, a dark neck) with the gifts' gold bow tied on its neck and
-// a gift tag hanging from it. It is lit like the gifts (from the top left): its shadow on the skirt
-// like theirs, and the shadow it casts on the green box. Drawn in the tree's own coordinates (the box's viewBox is that part of the
-// tree), so it sits exactly where the gifts are.
-const GUITAR = { x: 342, y: 494, w: 48, h: 60 };  // in front of the green gift (x 380 - 458)
+// The hidden guitar, standing behind the green gift as if it were part of the pile: a red electric
+// guitar twice the size of the old small one, its body half hidden by the gift (its left side and
+// horn show beside it), its neck and headstock rising against the tree, the gifts' gold bow and a tag tied on the neck,
+// and a soft shadow on the branches behind it. To pass behind the gift while staying in the layer
+// above the page (to be clicked), it draws the green and yellow gifts again over itself, exactly
+// where the tree draws them (giftBox, without their shadow on the skirt); only the guitar itself
+// takes clicks (.gtr, css/christmas.css). Its bottom may be cut by the window: it still reads as a
+// guitar. In the tree's coordinates, like the gifts.
+const GUITAR = { x: 344, y: 390, w: 84, h: 178 };
+const GUITAR_SHAPE = `M10.5,0H15.5L15,8H14.6V35C16,37 18,38 20,34 24,33 25,40 23,44 25,48 25,58 18,61 15,63 11,63 8,61 1,58 1,48 3,44 1,40 2,33 6,34 8,38 10,37 11.4,35V8H11Z`;
+const GUITAR_AT = "translate(392,528) rotate(-9) scale(2) translate(-13,-63)";  // the bottom of its body at 392,528
 const GUITAR_SVG = `<svg viewBox="${GUITAR.x} ${GUITAR.y} ${GUITAR.w} ${GUITAR.h}" aria-hidden="true"><defs>` +
-  `<linearGradient id="guitarred" x1="0" x2="1"><stop offset="0" stop-color="#e8423a"/><stop offset=".45" stop-color="#a80f1d"/><stop offset="1" stop-color="#45000a"/></linearGradient>` +
-  `<radialGradient id="guitarfoot"><stop offset="0" stop-color="rgba(50,0,10,.5)"/><stop offset="1" stop-color="rgba(50,0,10,0)"/></radialGradient>` +
-  `<linearGradient id="guitarcast" x1="0" x2="1"><stop offset="0" stop-color="rgba(0,25,10,.32)"/><stop offset="1" stop-color="rgba(0,25,10,0)"/></linearGradient></defs>` +
-  // its shadow on the green gift's face (the light comes from the left), then on the skirt
-  `<path d="M380,511L384.5,511 388,548 380,548Z" fill="url(#guitarcast)"/>` +
-  `<ellipse cx="367" cy="546.5" rx="12" ry="3.2" fill="url(#guitarfoot)"/>` +
-  // the guitar, drawn upright (bottom of the body at 13,63), stood on the skirt and tilted onto the lid
-  `<g transform="translate(361,546) rotate(24) scale(.74) translate(-13,-63)">` +
+  `<linearGradient id="guitarred" x1="0" x2="1"><stop offset="0" stop-color="#e8423a"/><stop offset=".45" stop-color="#a80f1d"/><stop offset="1" stop-color="#45000a"/></linearGradient></defs>` +
+  // its shadow on the branches behind it, cast to the right (the light comes from the top left)
+  `<g transform="translate(6,3)"><path transform="${GUITAR_AT}" d="${GUITAR_SHAPE}" fill="rgba(0,25,10,.3)"/></g>` +
+  // the guitar, drawn upright (bottom of the body at 13,63)
+  `<g class="gtr"><g transform="${GUITAR_AT}">` +
   `<path d="M10.5,0H15.5L15,8H11Z" fill="#1a1a1f"/><path d="M10,2h-1.6M10,5h-1.6M16,2h1.6M16,5h1.6" stroke="#cfcfcf" stroke-width="1.2"/>` +
-  `<rect x="11.4" y="7" width="3.2" height="30" fill="#3b2412"/><path d="M11.4,12h3.2M11.4,17h3.2M11.4,22h3.2M11.4,27h3.2M11.4,32h3.2" stroke="#c9b48a" stroke-width=".5"/>` +
+  `<rect x="11.4" y="7" width="3.2" height="30" fill="#3b2412"/><rect x="11.4" y="7" width="1" height="30" fill="rgba(255,255,255,.15)"/>` +
+  `<path d="M11.4,12h3.2M11.4,17h3.2M11.4,22h3.2M11.4,27h3.2M11.4,32h3.2" stroke="#c9b48a" stroke-width=".5"/>` +
   `<path d="M6,34C2,33 1,40 3,44 1,48 1,58 8,61 11,63 15,63 18,61 25,58 25,48 23,44 25,40 24,33 20,34 18,38 16,38 14.5,37H11.5C10,38 8,38 6,34Z" fill="url(#guitarred)" stroke="#3a0008" stroke-width=".8"/>` +
-  `<path d="M4.5,40C3.5,44 3.5,50 5,54" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.2" stroke-linecap="round"/>` +
+  `<path d="M4.5,40C3.5,44 3.5,50 5,54M3.4,35.5C4.5,34.5 5.5,35 6,36" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1" stroke-linecap="round"/>` +
   `<rect x="9.5" y="43" width="7" height="3" rx=".8" fill="#111"/><rect x="9.5" y="49" width="7" height="3" rx=".8" fill="#111"/><rect x="10" y="55" width="6" height="1.6" fill="#bbb"/>` +
   `<circle cx="19.5" cy="53" r="1.1" fill="#e3a923"/><circle cx="18" cy="57" r="1.1" fill="#e3a923"/>` +
   `<path d="M12,1V56M13,1V56M14,1V56" stroke="rgba(235,235,235,.6)" stroke-width=".3"/>` +
   // the gold bow tied on the neck, the same ribbon as the red gift's
-  `<path d="M11,24.5h4.2" stroke="#ffd15c" stroke-width="2.2"/><path d="M11,25.3h4.2" stroke="#c9921c" stroke-width=".8"/>` + bow3d(13, 24.5, "#ffd15c", "#c9921c", .5) + `</g>` +
+  `<path d="M11,24.5h4.2" stroke="#ffd15c" stroke-width="2.2"/><path d="M11,25.3h4.2" stroke="#c9921c" stroke-width=".8"/>` + bow3d(13, 24.5, "#ffd15c", "#c9921c", .45) + `</g>` +
   // its tag, hanging straight down from the bow (where the bow is, once the guitar is tilted)
-  giftTag(372.5, 521, -6) + `</svg>`;
+  giftTag(378, 452, -4) + `</g>` +
+  // the gifts in front of it, drawn again over it
+  GIFTS.filter(g => g[0] >= 380).map(g => giftBox(g, false)).join("") + `</svg>`;
 
 // The hidden firefly jar, set on the skirt in front of the red and blue gifts: the jar of the calm
 // night (calm.js) wrapped as a present, a cork lid with a red bow, twine round the neck, moss at
