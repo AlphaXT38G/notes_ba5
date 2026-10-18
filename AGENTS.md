@@ -95,8 +95,8 @@ the Christmas period, typed on a Christmas screen it goes back to the normal one
 bar opened over Christmas, it brings Christmas back), a random surprise banner on some visits, and
 on both Christmas screens (day and night) a small golden sax hidden among the tree ornaments that
 opens the jazz bar; a little fir in the bar's bottom right corner brings Christmas back. A little
-red guitar set down against the green gift under the tree starts the metal show (then Christmas
-comes back), and a firefly jar in front of the gifts opens the calm night (like `peace`, but the
+red guitar standing behind the green gift under the tree starts the metal show (then Christmas
+comes back), and a firefly jar swinging under the garland opens the calm night (like `peace`, but the
 fir shows there too and brings Christmas back). `armstrong` typed anywhere but the search field opens the jazz bar at any time (over
 Christmas and the calm night too, but not over the shows); typed again in the bar it goes back to
 the normal screen of that moment, by the clock alone: it drops the `armstrong` and `yeti` eggs, the
@@ -136,12 +136,12 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `surprise.js` | random surprise banner |
 | `blackhole.js` | `createBlackHole()`: the Konami black hole, ray-traced in WebGL (light bent by gravity, disk with Doppler beaming, lensed stars), on two canvases so the page falls between its sky and its disk |
 | `supernova.js` | `createSupernova()`: the multi-stage supernova that ends the Konami black hole (flash, shock wave, ejecta, nebula, pulsar), one WebGL canvas over the page |
-| `konami.js` | Konami code: black hole (CSS drawing as a fallback without WebGL) swallowing the page letter by letter, then its boxes and the music player (the Christmas garland, sax, guitar and jar fade out, `konami.css`; they stay hidden during the party theme), until it overheats, implodes and explodes in a supernova; confetti, party theme |
+| `konami.js` | Konami code: black hole (CSS drawing as a fallback without WebGL) swallowing the page letter by letter, then its boxes and the music player (the Christmas garland, jar, sax and guitar fade out, `konami.css`; they stay hidden during the party theme), until it overheats, implodes and explodes in a supernova; confetti, party theme |
 | `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()`; `screenTrack()` / `preloadTrack()` / `dropTrack()` for the screens' music |
 | `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable playing `audio/jazz.mp3`, neon sign going out |
 | `closing.js` | closing time: the life-size bartender behind his bar (photo layers from `img/bartender/`: head nodding, forearm tapping the desk bell, chest breathing), swinging lamp, desk bell "ding" (Web Audio), typed speech, chalkboard with countdown, "Good night" |
 | `fx.js` | the effects canvas of every screen: `fxLayers` (by `<body>` class), `blob()`, the animation loop |
-| `christmas.js` | Christmas screens: date override and `yeti` code, garland, winter scene (mountains and chalets, moon, tree and gifts drawn in volume with a shared `bow3d` and `giftTag`, snowman), night lights canvases (tree, garland halos), snow, sleigh, music (Jingle Bell Rock or the YouTube Christmas radio, swapped with the sleeve behind the turntable, or paused), hidden sax, guitar and firefly jar |
+| `christmas.js` | Christmas screens: date override and `yeti` code, garland, winter scene (mountains and chalets, moon, tree and gifts drawn in volume with a shared `bow3d` and `giftTag`, snowman), night lights canvases (tree, garland halos), snow, sleigh, music (Jingle Bell Rock or the YouTube Christmas radio, swapped with the sleeve behind the turntable, or paused), hidden sax and guitar, firefly jar swinging under the garland (a pendulum pushed by the wind, the mouse and scrolling) |
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
 | `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), "Back to normal" |
