@@ -14,9 +14,9 @@
 // The metal show at 1:00 and the other easter eggs still take over.
 //
 // In this file, in order: screens and override, the yeti code, shared helpers, the garland, the
-// tree and its sax ornament, the mountains, the moon, the snowman, the sax and guitar buttons, the tree lights
-// canvas, the snow, the sleigh, the music, the fir back from the jazz bar,
-// and turning it all on and off.
+// tree and its sax ornament, the mountains, the moon, the snowman, the sax and guitar buttons, the
+// tree lights canvas, the snow, the sleigh, the music, the fir back from the jazz bar, and turning
+// it all on and off.
 // Every drawing is SVG built once from code (seeded random, so it looks the same on every visit).
 const xmasSubtitle = () => {
   const d = new Date(), m = d.getMonth(), day = d.getDate();
