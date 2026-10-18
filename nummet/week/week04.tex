@@ -542,6 +542,57 @@ changes the answer\dots
 
 
 
+%=========================================================
+\section{Householder Reflections}
+
+
+\begin{important}
+
+\textbf{The challenge}: like LU, make $\mathbf{A}$ upper triangular (``R'' as in \emph{right
+triangular}, the same as upper-triangular), column by column:
+
+\[
+\mathbf{Q}\mathbf{x} = \mathbf{Q}\begin{pmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{pmatrix}
+= \begin{pmatrix} \tilde{x}_1 \\ 0 \\ \vdots \\ 0 \end{pmatrix}
+\]
+
+\textbf{Goal}: zero out all elements of $\mathbf{x}$ except for the first. \textbf{Challenge}: need
+to do this only using rotations or reflections.
+
+\end{important}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.7\linewidth
+]{../images/week04_04.png}
+
+\end{center}
+
+
+\begin{definition}
+
+\textbf{HOUSEHOLDER REFLECTION}
+
+Reflect $\mathbf{x}$ across the axis perpendicular to $\mathbf{v}$ (assuming
+$\|\mathbf{v}\| = 1$):
+
+\[
+\tilde{\mathbf{x}} = \mathbf{x} - 2(\mathbf{v}^T\mathbf{x})\mathbf{v}
+\]
+
+General form:
+
+\[
+\tilde{\mathbf{x}} = \mathbf{Q}\mathbf{x}, \quad \text{where }
+\mathbf{Q} = \mathbf{I} - 2\frac{\mathbf{v}\mathbf{v}^T}{\mathbf{v}^T\mathbf{v}}
+\]
+
+\end{definition}
+
+
+
 \end{multicols}
 
 
