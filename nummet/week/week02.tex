@@ -324,6 +324,78 @@ automatic differentiation; 9.\ neural networks.
 
 
 
+%=========================================================
+\section{Cost of Matrix Operations}
+
+
+\begin{formula}
+
+\textbf{Matrix-vector multiplication}: $\mathcal{O}(n^2)$
+
+$\mathbf{b} \in \mathbb{R}^{10000}$, $\mathbf{A} \in \mathbb{R}^{10000 \times 10000}$ (100
+million entries), measured on an M1 Mac:
+
+\begin{center}
+\small
+\begin{tabular}{l|rr}
+Code & Time & \\
+\hline
+\texttt{b = A @ x} & 11 ms & \\
+rows: \texttt{b[i] = A[i, :] @ x} & 66 ms & $\sim$6$\times$ \\
+cols: \texttt{b += A[:, j] * x[j]} & 309 ms & $\sim$28$\times$ \\
+2 loops: \texttt{b[i] += A[i, j] * x[j]} & 30'282 ms & $\sim$2'752$\times$ \\
+\end{tabular}
+\end{center}
+
+\end{formula}
+
+
+\begin{definition}
+
+\textbf{MATRIX MULTIPLICATION}
+
+\[
+(\mathbf{A}\mathbf{B})_{ij} = \sum_{k=1}^{n} A_{ik} B_{kj}
+\]
+
+Why this definition? If $f(\mathbf{x}) \leftrightarrow \mathbf{A}\mathbf{x}$ and
+$g(\mathbf{x}) \leftrightarrow \mathbf{B}\mathbf{x}$, then the composition
+$g(f(\mathbf{x})) \leftrightarrow \mathbf{B}\mathbf{A}\mathbf{x} = \mathbf{C}\mathbf{x}$.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Matrix-matrix multiplication}: $\mathcal{O}(n^3)$
+
+$\mathbf{A}, \mathbf{B} \in \mathbb{R}^{1000 \times 1000}$ (1 million entries):
+
+\begin{center}
+\small
+\begin{tabular}{l|rr}
+Code & Time & \\
+\hline
+\texttt{C = A @ B} & 19 ms & \\
+loop: \texttt{C[:, j] = A @ B[:, j]} & 236 ms & $\sim$6$\times$ \\
+triple loop & 341'495 ms & $\sim$17'973$\times$ \\
+\end{tabular}
+\end{center}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Is $\mathcal{O}(n^3)$ really true?} Volker Strassen, 1969: $O(n^{2.8074})$. Virginia
+Williams et al., 2023: $O(n^{2.371552})$. Still an active area of research: quite possible that
+the true cost is $O(n^2)$, \emph{nobody knows!} Many works are \emph{galactic} algorithms; in
+practice, the naïve algorithm tends to be fastest.
+
+\end{important}
+
+
+
 \end{multicols}
 
 
