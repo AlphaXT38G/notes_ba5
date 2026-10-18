@@ -539,4 +539,40 @@ $\operatorname{cond}(\mathbf{A})$ requires an inverse and a matrix norm: a chick
 problem (stay tuned).
 \end{exbox}
 
+
+\section{Linear least squares}
+
+\begin{defnbox}[title=Linear least squares]
+With $n$ constraint equations (many) and $m$ parameters (few), the tall system
+$\mathbf{A}\mathbf{x} = \mathbf{b}$ is not solvable for almost all $\mathbf{b}$. Compromise:
+minimize the residual,
+\[
+\min_{\mathbf{x}} \|\mathbf{A}\mathbf{x} - \mathbf{b}\|^2.
+\]
+\end{defnbox}
+
+\begin{thmbox}[title=Normal equations]
+Expanding $\|\mathbf{A}\mathbf{x} - \mathbf{b}\|^2 = \mathbf{x}^T\mathbf{A}^T\mathbf{A}\mathbf{x}
+- 2\mathbf{b}^T\mathbf{A}\mathbf{x} + \|\mathbf{b}\|^2$, its derivative is
+$2\mathbf{A}^T\mathbf{A}\mathbf{x} - 2\mathbf{A}^T\mathbf{b}$; setting it to zero (Gauss):
+\[
+\mathbf{A}^T\mathbf{A}\mathbf{x} = \mathbf{A}^T\mathbf{b},
+\]
+a smaller square system. ``Normal'': at the optimum the residual is perpendicular to
+$\operatorname{span}(\mathbf{A})$.
+\begin{center}
+\includegraphics[width=0.5\linewidth]{images/week03_04.png}
+\end{center}
+\end{thmbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Regression with a model linear in the unknowns is a linear system.
+  \item $\operatorname{cond}(\mathbf{A}) = \|\mathbf{A}\|\,\|\mathbf{A}^{-1}\|$ bounds the
+        relative error; the determinant does not measure difficulty.
+  \item Least squares: normal equations $\mathbf{A}^T\mathbf{A}\mathbf{x} =
+        \mathbf{A}^T\mathbf{b}$.
+\end{itemize}
+\end{keybox}
+
 \end{document}
