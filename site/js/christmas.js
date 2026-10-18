@@ -334,17 +334,33 @@ const SAX_SVG = `<svg viewBox="0 0 30 52" aria-hidden="true"><path d="M15,0v6" s
   `<circle cx="13.6" cy="18" r="1.2" fill="#fff5c8"/><circle cx="13.6" cy="24" r="1.2" fill="#fff5c8"/><circle cx="13" cy="30" r="1.2" fill="#fff5c8"/>` +
   `<defs><linearGradient id="saxgold" x1="0" x2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset=".5" stop-color="#e3a923"/><stop offset="1" stop-color="#8a5a08"/></linearGradient></defs></svg>`;
 
-// The hidden guitar, leaning against the green gift: a small red electric guitar, two horns, black
-// pickups, gold knobs, a dark neck with its headstock. Drawn upright, tilted inside its own box.
-const GUITAR = { x: 352, y: 482, w: 20, h: 50 };  // among the gifts, half the size of a real one
-const GUITAR_SVG = `<svg viewBox="0 0 26 64" aria-hidden="true"><g transform="rotate(14 13 34)">` +
-  `<path d="M10.5,0H15.5L15,8H11Z" fill="#1a1a1f"/><path d="M10,2h-1.6M10,5h-1.6M16,2h1.6M16,5h1.6" stroke="#d8d8d8" stroke-width="1.2"/>` +
+// The hidden guitar, set down on the tree skirt and leaning against the green gift, its headstock
+// resting on the gift's lid, like a present that was too big to wrap: a small red electric guitar
+// (two horns, black pickups, gold knobs, a dark neck) with a gold ribbon bow tied on its neck. It
+// is lit like the gifts (from the top left): a contact shadow on the skirt, and the shadow it casts
+// on the green box. Drawn in the tree's own coordinates (the box's viewBox is that part of the
+// tree), so it sits exactly where the gifts are.
+const GUITAR = { x: 342, y: 494, w: 48, h: 60 };  // in front of the green gift (x 380 - 458)
+const GUITAR_SVG = `<svg viewBox="${GUITAR.x} ${GUITAR.y} ${GUITAR.w} ${GUITAR.h}" aria-hidden="true"><defs>` +
+  `<linearGradient id="guitarred" x1="0" x2="1"><stop offset="0" stop-color="#e8423a"/><stop offset=".45" stop-color="#a80f1d"/><stop offset="1" stop-color="#45000a"/></linearGradient>` +
+  `<radialGradient id="guitarfoot"><stop offset="0" stop-color="rgba(60,0,12,.55)"/><stop offset="1" stop-color="rgba(60,0,12,0)"/></radialGradient>` +
+  `<linearGradient id="guitarcast" x1="0" x2="1"><stop offset="0" stop-color="rgba(0,25,10,.32)"/><stop offset="1" stop-color="rgba(0,25,10,0)"/></linearGradient></defs>` +
+  // its shadow on the green gift's face (the light comes from the left), then on the skirt
+  `<path d="M380,511L384.5,511 388,548 380,548Z" fill="url(#guitarcast)"/>` +
+  `<ellipse cx="362.5" cy="546.5" rx="10" ry="2.6" fill="url(#guitarfoot)"/>` +
+  // the guitar, drawn upright (bottom of the body at 13,63), stood on the skirt and tilted onto the lid
+  `<g transform="translate(361,546) rotate(24) scale(.74) translate(-13,-63)">` +
+  `<path d="M10.5,0H15.5L15,8H11Z" fill="#1a1a1f"/><path d="M10,2h-1.6M10,5h-1.6M16,2h1.6M16,5h1.6" stroke="#cfcfcf" stroke-width="1.2"/>` +
   `<rect x="11.4" y="7" width="3.2" height="30" fill="#3b2412"/><path d="M11.4,12h3.2M11.4,17h3.2M11.4,22h3.2M11.4,27h3.2M11.4,32h3.2" stroke="#c9b48a" stroke-width=".5"/>` +
   `<path d="M6,34C2,33 1,40 3,44 1,48 1,58 8,61 11,63 15,63 18,61 25,58 25,48 23,44 25,40 24,33 20,34 18,38 16,38 14.5,37H11.5C10,38 8,38 6,34Z" fill="url(#guitarred)" stroke="#3a0008" stroke-width=".8"/>` +
+  `<path d="M4.5,40C3.5,44 3.5,50 5,54" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.2" stroke-linecap="round"/>` +
   `<rect x="9.5" y="43" width="7" height="3" rx=".8" fill="#111"/><rect x="9.5" y="49" width="7" height="3" rx=".8" fill="#111"/><rect x="10" y="55" width="6" height="1.6" fill="#bbb"/>` +
   `<circle cx="19.5" cy="53" r="1.1" fill="#e3a923"/><circle cx="18" cy="57" r="1.1" fill="#e3a923"/>` +
-  `<path d="M12,1V56M13,1V56M14,1V56" stroke="rgba(235,235,235,.7)" stroke-width=".3"/></g>` +
-  `<defs><linearGradient id="guitarred" x1="0" x2="1"><stop offset="0" stop-color="#ff4a3d"/><stop offset=".5" stop-color="#b3101e"/><stop offset="1" stop-color="#4d0009"/></linearGradient></defs></svg>`;
+  `<path d="M12,1V56M13,1V56M14,1V56" stroke="rgba(235,235,235,.6)" stroke-width=".3"/>` +
+  // the gold bow tied on the neck, the same ribbon as the red gift's, its two tails hanging
+  `<path d="M11,24.5h4.2" stroke="#ffd15c" stroke-width="2.2"/>` +
+  `<path d="M13,24.5c-7,-6 -10,2 0,0c7,-6 10,2 0,0" fill="#ffd15c" stroke="rgba(0,0,0,.3)" stroke-width=".5"/>` +
+  `<path d="M12.6,25.2l-2.6,6.5M13.4,25.2l2.2,6.8" stroke="#e2a81e" stroke-width="1.3" stroke-linecap="round"/></g></svg>`;
 
 const scene = document.createElement("div"), tree = document.createElement("div"), treeFront = document.createElement("div");
 scene.id = "xscene";
