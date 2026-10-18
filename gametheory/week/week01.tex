@@ -616,6 +616,154 @@ Game with two equilibria: the theory cannot tell which one will be chosen.
 
 
 
+%=========================================================
+\section{Classical Example 1 -- Prisoner Dilemma (PD)}
+
+
+Developed at the RAND corporation in 1950 (organization started immediately after WWII to
+develop research for military strategy and planning), as one of the first steps in thinking
+about cold war strategy.
+
+
+\begin{example}
+
+\textbf{Classic story}
+
+Two suspects of a crime are placed in different rooms and interrogated by the police.
+
+\begin{itemize}
+
+\item Both \textbf{cooperate (C)} with each other and stay silent: 1 year of prison each.
+
+\item One \textbf{defects (D)} and denounces the other, who stays silent (C): the one
+denounced gets 5 years, the denouncer walks away.
+
+\item Both defect (D): 3 years of prison each.
+
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & C & D \\
+\hline
+C & (-1,-1) & (-5,0) \\
+D & (0,-5) & (-3,-3) \\
+\end{tabular}
+\end{center}
+
+\end{example}
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item Each player strictly prefers to Defect no matter what the other does
+(\textbf{Defect is a ``dominant strategy''}).
+
+\item Defect-Defect is the \textbf{only Nash Equilibrium}, and it's at the same time the
+outcome that maximizes social loss!
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{definition}
+
+\textbf{PRISONER DILEMMA -- GENERAL FORM}
+
+Payouts can change, but we call ``Prisoner Dilemma'' a game of the form
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & C & D \\
+\hline
+C & $(X_2,Y_2)$ & $(X_4,Y_1)$ \\
+D & $(X_1,Y_4)$ & $(X_3,Y_3)$ \\
+\end{tabular}
+\end{center}
+
+with $X_1 > X_2 > X_3 > X_4$ and $Y_1 > Y_2 > Y_3 > Y_4$.
+
+\end{definition}
+
+
+\separator
+
+
+\textbf{Applications}
+
+\begin{example}
+
+\textbf{Coke-Pepsi advertising war}
+
+\begin{itemize}
+
+\item Without any advertising, each company earns \$5b/year.
+
+\item Each company can choose to spend \$2b/year on advertising.
+
+\item Advertising does not increase total sales, but if one company advertises while the
+other doesn't, it captures \$3b/year from the competitor.
+
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & No Ad & Ad \\
+\hline
+No Ad & (5,5) & (2,6) \\
+Ad & (6,2) & (3,3) \\
+\end{tabular}
+\end{center}
+
+The only NE is (Ad, Ad), with payout (3,3), while (No Ad, No Ad) would give (5,5) to both.
+
+\end{example}
+
+
+\begin{example}
+
+\textbf{Doping in sports} (same matrix: No Dop / Dop)
+
+\begin{itemize}
+
+\item Two professional athletes of similar ability compete in 10 tournaments per year,
+winning on average 5 each.
+
+\item If only one of them takes the medication, he wins 8 of the 10 tournaments, leaving
+only 2 to the opponent. The long-term health cost makes his final utility the same as
+winning only 6 tournaments and staying healthy.
+
+\item If both take it, they both win 5 tournaments each and both pay the health cost
+(equivalent to 2 tournaments).
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{example}
+
+\textbf{Is disarmament possible?} Two ``great powers'':
+
+\begin{itemize}
+
+\item Is it possible to reach an agreement to dramatically reduce weapons? Who is going to
+enforce the agreement if one deviates?
+
+\item Deviating is the best course of action for each player, both to be able to
+``strike first'' and to be able to defend itself.
+
+\item Unfortunately, disarmament is not a Nash Equilibrium.
+
+\end{itemize}
+
+\end{example}
+
+
+
 \end{multicols}
 
 
