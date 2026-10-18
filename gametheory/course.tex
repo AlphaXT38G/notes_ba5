@@ -668,4 +668,37 @@ elimination of one or more \textbf{strictly} dominated strategies.
 \end{itemize}
 \end{thmbox}
 
+
+\begin{thmbox}[title=Weak elimination]
+Consider a finite game $G$ and a game $G_1$ obtained from $G$ after iterated elimination of
+\textbf{weakly} dominated strategies. If $(s^{(1)}, s^{(2)}, \ldots, s^{(N)})$ is a Nash
+equilibrium of $G_1$, it is a Nash equilibrium of $G$.
+\end{thmbox}
+
+\begin{warnbox}[title=Weak elimination loses equilibria]
+Only some NE are preserved, and which ones \textbf{can depend on the order of elimination}.
+In Split or Steal, eliminating the weakly dominated Split keeps only one of the three
+equilibria: (Steal, Steal).
+\end{warnbox}
+
+\begin{exbox}[title=The order of elimination matters]
+\begin{center}
+\begin{tabular}{c|cc}
+ & L & R \\ \hline
+U & (5,1) & (4,0) \\
+M & (6,0) & (3,1) \\
+D & (6,4) & (4,4)
+\end{tabular}
+\end{center}
+Two NE: $(D,L)$ and $(D,R)$.
+\begin{itemize}
+  \item \textbf{Solution 1}: Player 1 eliminates $M$, weakly dominated by $D$; then Player 2
+        eliminates $R$, weakly dominated by $L$ (rows $U$, $D$ left). The unique NE of the
+        resulting game is $(D, L)$.
+  \item \textbf{Solution 2}: Player 1 eliminates $U$, weakly dominated by $D$; then Player 2
+        eliminates $L$, weakly dominated by $R$ (rows $M$, $D$ left). The unique NE of the
+        resulting game is $(D, R)$.
+\end{itemize}
+\end{exbox}
+
 \end{document}
