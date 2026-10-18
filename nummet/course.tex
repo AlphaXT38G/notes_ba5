@@ -358,4 +358,31 @@ Instabilities can occur even for nonzero (tiny) pivots: pick the element with th
 \textbf{largest absolute value} as pivot.
 \end{warnbox}
 
+
+\section{The LU factorization}
+
+\begin{warnbox}[title=Don't compute the inverse]
+To solve many systems with the same $\mathbf{A}$, do not precompute $\mathbf{A}^{-1}$: it can
+be numerically unstable, costs slightly more FLOPs than LU, and the inverse of a sparse matrix
+is generally dense (out of memory).
+\end{warnbox}
+
+\begin{defnbox}[title=LU factorization]
+Run Gaussian elimination on $\mathbf{A}$ alone and record the steps: each step is a lower
+triangular matrix $\mathbf{E}_i$ (adding $c \times$ row 1 to row 2 is the identity with $c$ at
+position $(2,1)$, inverted by $-c$), so
+\begin{align*}
+\mathbf{U} &= \mathbf{E}_k \cdots \mathbf{E}_1\mathbf{A} \quad \text{(upper triangular)}, \\
+\mathbf{L} &= \mathbf{E}_1^{-1} \cdots \mathbf{E}_k^{-1} \quad \text{(lower triangular)}, \qquad
+\mathbf{A} = \mathbf{L}\mathbf{U}.
+\end{align*}
+\end{defnbox}
+
+\begin{exbox}[title=$2 \times 2$ example]
+$\mathbf{A} = \begin{bmatrix} 1 & 1 \\ 2 & 4 \end{bmatrix}$,
+$\mathbf{E}_1 = \begin{bmatrix} 1 & 0 \\ -2 & 1 \end{bmatrix}$,
+$\mathbf{U} = \begin{bmatrix} 1 & 1 \\ 0 & 2 \end{bmatrix}$,
+$\mathbf{L} = \begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix}$.
+\end{exbox}
+
 \end{document}
