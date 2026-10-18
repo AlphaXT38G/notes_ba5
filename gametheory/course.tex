@@ -984,4 +984,44 @@ SPE.
 \end{itemize}
 \end{keybox}
 
+
+% =========================================================
+\chapter{Lecture 4 : Backward induction paradoxes and Bayesian games}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} More sequential games (pirate game, centipede, dollar
+auction) showing that \textbf{backward induction can lead to unrealistic and unintuitive
+solutions}; then \textbf{games of incomplete information}, also called \textbf{Bayesian
+games}. \\
+\textbf{Why is it useful?} It shows the limits of the SPE, and how to model players with
+private information about themselves.
+\end{rembox}
+
+\section{The pirate game}
+
+\begin{exbox}[title=Rules]
+Captain A proposes how to split 100 coins between the pirates A, B, C, D, E. If at least
+\textbf{half} the pirates (3 in this case, including himself) vote yes, the vote passes. If it
+does not pass, A is killed and B becomes captain and makes a new proposal, that needs to be
+voted by at least half (2 in this case) of the remaining pirates, otherwise B is killed and C
+becomes captain\dots\ A pirate needs to be \textbf{strictly better off} with the proposed plan
+than in the continuation of the game to vote yes.
+\end{exbox}
+
+\begin{propbox}[title=SPE by backward induction]
+Coins of (A, B, C, D, E), ``--'' for a pirate already killed:
+\begin{itemize}
+  \item t=4, D and E left: D's own vote is half of 2, D keeps everything:
+        $(-, -, -, 100, 0)$.
+  \item t=3, C, D, E: C needs 2 votes; E gets 0 at t=4, so 1 coin makes him strictly better
+        off: $(-, -, 99, 0, 1)$.
+  \item t=2, B, C, D, E: B needs 2 votes; D gets 0 at t=3, 1 coin buys his vote:
+        $(-, 99, 0, 1, 0)$.
+  \item t=1, all five: A needs 3 votes; C and E get 0 at t=2, 1 coin each:
+        $(98, 0, 1, 0, 1)$.
+\end{itemize}
+Captain A is not thrown in the ocean and keeps \textbf{98 coins}.
+\end{propbox}
+
 \end{document}
