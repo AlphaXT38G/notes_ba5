@@ -680,6 +680,137 @@ The expected value is taken over all possible types of the other players.
 
 
 
+%=========================================================
+\section{Example: Public Good and Free Riding}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item Two players can work (W) or not work (N) to produce a public good, that would give
+utility 1 to both players.
+
+\item If at least one player works, the public good is available for both. If nobody works,
+it is not available.
+
+\item Working has a cost $c_1$ for Player 1 and $c_2$ for Player 2.
+
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{c|cc}
+$1 \backslash 2$ & W & N \\
+\hline
+W & $(1-c_1, 1-c_2)$ & $(1-c_1, 1)$ \\
+N & $(1, 1-c_2)$ & $(0,0)$ \\
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+
+\item $c_1 = 0.5$, known to everybody.
+
+\item $c_2$ is known to Player 2 but not to Player 1: it can be 0.2 with probability $p$
+and 1.2 with probability $1-p$.
+
+\item \textbf{The value of $p$ is common knowledge.}
+
+\end{itemize}
+
+\end{example}
+
+
+Equivalently, Player 2 can be of two \textbf{types}: \textbf{Efficient} (E, cost of working
+$c_2 = 0.2$, probability $p$) or \textbf{Inefficient} (I, $c_2 = 1.2$, probability $1-p$).
+
+
+\begin{center}
+\small
+\begin{tabular}{c|cc}
+\multicolumn{3}{c}{prob $p$} \\
+$1 \backslash$ 2E & W & N \\
+\hline
+W & (0.5,0.8) & (0.5,1) \\
+N & (1,0.8) & (0,0) \\
+\end{tabular}
+\quad
+\begin{tabular}{c|cc}
+\multicolumn{3}{c}{prob $(1-p)$} \\
+$1 \backslash$ 2I & W & N \\
+\hline
+W & (0.5,-0.2) & (0.5,1) \\
+N & (1,-0.2) & (0,0) \\
+\end{tabular}
+\end{center}
+
+
+\begin{important}
+
+`Work' is a \textbf{dominated} strategy for the Inefficient type of Player 2.
+
+\end{important}
+
+
+\separator
+
+
+\textbf{Scenario 1: Efficient Player 2 works, Inefficient Player 2 does not work.}
+Player 1's best reaction?
+
+\begin{formula}
+
+\begin{itemize}
+
+\item Player 1 works: $\mathcal{P}_1 = 0.5$ for sure.
+
+\item Player 1 does not work: payout 1 if Player 2 works (E type), 0 otherwise (I type):
+
+\[
+\mathcal{P}_1 = p \times 1 + (1-p) \times 0 = p
+\]
+
+\end{itemize}
+
+$\Rightarrow$ Player 1 works if $p < 0.5$, and does not work if $p > 0.5$ (indifferent if
+$p = 0.5$).
+
+\end{formula}
+
+
+\begin{itemize}
+
+\item For $p > 0.5$ Player 1 does not work (for $p = 0.5$ he may not work). Knowing this,
+Player 2 works when he is of type E: the starting point was correct.
+
+$\Rightarrow$ \textbf{If $p \ge 0.5$, one BNE is $(N, WN)$}: N for Player 1, W for Player 2
+of type E, N for Player 2 of type I.
+
+\item If $p < 0.5$, Player 1 works; but then Player 2 will not work even if he is of
+efficient type\dots Hence for $p < 0.5$ this scenario is not a BNE.
+
+\end{itemize}
+
+
+\textbf{Scenario 2: Player 2 never works.} Player 1 gets $1 - c_1 = 0.5$ if he works and 0
+if he does not $\Rightarrow$ regardless of $p$, Player 1 works; and when Player 1 works,
+Player 2 prefers not to work (1 > 0.8 and 1 > -0.2). \textbf{BNE: $(W, NN)$}.
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item If $p < 0.5$: unique pure-strategy BNE \textbf{$(W, NN)$}.
+
+\item If $p \ge 0.5$: two pure-strategy BNE \textbf{$(W, NN)$} and \textbf{$(N, WN)$}.
+
+\end{itemize}
+
+\end{important}
+
+
+
 \end{multicols}
 
 
