@@ -368,6 +368,50 @@ offered 3.
 
 
 
+%=========================================================
+\section{Nash Equilibrium of Sequential Games}
+
+
+\begin{definition}
+
+\textbf{NASH EQUILIBRIUM}
+
+Defined the same way as for simultaneous-move games: a strategy profile
+$(s^{(1)}, s^{(2)}, \dots, s^{(N)})$ is a Nash equilibrium iff
+
+\[
+\mathcal{P}^{(i)}(s^{(i)}, s^{(-i)}) \ge \mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)})
+\quad \text{for every possible } \tilde{s}^{(i)}
+\]
+
+i.e.\ the best that one player can do \emph{given the strategies of all the other players}.
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{The Ultimatum game has many pure-strategy NE} (underlined):
+
+\begin{center}
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{c|cccccccc}
+$1 \backslash 2$ & RRR & RRA & RAA & AAA & ARR & RAR & AAR & ARA \\
+\hline
+Offer 1 & (0,0) & (0,0) & (0,0) & \underline{(2,1)} & \underline{(2,1)} & (0,0) & \underline{(2,1)} & \underline{(2,1)} \\
+Offer 2 & (0,0) & (0,0) & \underline{(1,2)} & (1,2) & (0,0) & \underline{(1,2)} & (1,2) & (0,0) \\
+Offer 3 & (0,0) & \underline{(0,3)} & (0,3) & (0,3) & (0,0) & (0,0) & (0,0) & (0,3) \\
+\end{tabular}
+\end{center}
+
+Take for example the NE (Offer 2, RAA): Player 2 will not accept unless he is offered at
+least 2. Player 1 knows it, and therefore offers 2.
+
+\end{example}
+
+
+
 \end{multicols}
 
 
