@@ -674,6 +674,88 @@ Condition number for $n = 100$ (uniformly spaced positions on $[0, 1]$):
 
 
 
+%=========================================================
+\section{Linear Least Squares}
+
+
+\begin{definition}
+
+\textbf{FROM LINEAR SYSTEMS TO LEAST SQUARES}
+
+$n$ constraint equations (many), $m$ parameters (few): instead of
+$\mathbf{A}\mathbf{x} = \mathbf{b}$, ask for
+$\|\mathbf{A}\mathbf{x} - \mathbf{b}\| \approx 0$. For almost all values of $\mathbf{b}$, this
+\emph{tall} system is not solvable (generally ill-defined): try to get as close as possible.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Compromise: minimize the residual}
+$\|\mathbf{r}(\mathbf{x})\| = \|\mathbf{A}\mathbf{x} - \mathbf{b}\|$.
+
+\textbf{1. Expand} (the squared length of a vector is the inner product with itself):
+
+\begin{align*}
+\|\mathbf{A}\mathbf{x} - \mathbf{b}\|^2
+&= \langle \mathbf{A}\mathbf{x} - \mathbf{b}, \mathbf{A}\mathbf{x} - \mathbf{b} \rangle \\
+&= \langle \mathbf{A}\mathbf{x}, \mathbf{A}\mathbf{x} \rangle
+- \langle \mathbf{A}\mathbf{x}, \mathbf{b} \rangle
+- \langle \mathbf{b}, \mathbf{A}\mathbf{x} \rangle
++ \langle \mathbf{b}, \mathbf{b} \rangle \\
+&= \mathbf{x}^T\mathbf{A}^T\mathbf{A}\mathbf{x} - 2\mathbf{b}^T\mathbf{A}\mathbf{x}
++ \|\mathbf{b}\|^2
+\end{align*}
+
+\textbf{2. Take the derivative} ($\|\mathbf{b}\|^2$ is constant):
+
+\[
+\frac{\partial}{\partial\mathbf{x}}\left[\mathbf{x}^T\mathbf{A}^T\mathbf{A}\mathbf{x}
+- 2\mathbf{b}^T\mathbf{A}\mathbf{x} + \|\mathbf{b}\|^2\right]
+= 2\mathbf{A}^T\mathbf{A}\mathbf{x} - 2\mathbf{A}^T\mathbf{b}
+\]
+
+\textbf{3. Set it to zero} (Carl Friedrich Gauss):
+
+\[
+\mathbf{A}^T\mathbf{A}\mathbf{x} = \mathbf{A}^T\mathbf{b}
+\qquad \text{(\textbf{normal equations})}
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+The ``best'' solution (in the $L_2$ sense) is given by the normal equations, which are
+equivalent to a \textbf{smaller square linear system} ($\mathbf{A}^T\mathbf{A}$ is
+$m \times m$).
+
+\end{important}
+
+
+\begin{definition}
+
+\textbf{WHY ``NORMAL'' EQUATIONS?}
+
+$\mathbf{A}^T(\mathbf{A}\mathbf{x} - \mathbf{b}) = \mathbf{0}$: at the optimum, the residual
+$\mathbf{r}(\mathbf{x})$ is \textbf{normal} (perpendicular) to $\operatorname{span}(\mathbf{A})$;
+$\mathbf{y} = \mathbf{A}\mathbf{x}$ is the orthogonal projection of $\mathbf{b}$.
+
+\end{definition}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.6\linewidth
+]{../images/week03_04.png}
+
+\end{center}
+
+
+
 \end{multicols}
 
 
