@@ -510,6 +510,98 @@ $0 = 0$ against Steal).
 
 
 
+%=========================================================
+\section{Dominated Strategies}
+
+
+\begin{definition}
+
+\textbf{STRICTLY DOMINATED STRATEGY}
+
+For player $i$, a strategy $\bar{s}^{(i)}$ is strictly dominated if, for any strategy
+adopted by the other players, there is at least another strategy $\tilde{s}^{(i)}$ that
+gives a strictly higher payout for Player $i$:
+
+\[
+\forall s^{(-i)} \ \exists \tilde{s}^{(i)} \ s.t. \
+\mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)}) > \mathcal{P}^{(i)}(\bar{s}^{(i)}, s^{(-i)})
+\]
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{WEAKLY DOMINATED STRATEGY}
+
+$\bar{s}^{(i)}$ is weakly dominated iff
+
+\[
+\forall s^{(-i)} \ \exists \tilde{s}^{(i)} \ s.t. \
+\mathcal{P}^{(i)}(\tilde{s}^{(i)}, s^{(-i)}) \ge \mathcal{P}^{(i)}(\bar{s}^{(i)}, s^{(-i)})
+\]
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Example 1} -- Is $R$ a dominated strategy for Player 2?
+
+\begin{center}
+\begin{tabular}{c|ccc}
+ & L & M & R \\
+\hline
+U & $(x_1,0)$ & $(x_2,3)$ & $(x_3,1)$ \\
+D & $(x_4,3)$ & $(x_5,0)$ & $(x_6,1)$ \\
+\end{tabular}
+\end{center}
+
+The most general strategy for Player 1 is $s^{(1)} = (p_U^{(1)}, 1 - p_U^{(1)})$.
+
+\begin{itemize}
+
+\item If $p_U > 1/3$, strategy $R$ is dominated by strategy $M$.
+
+\item If $p_U < 2/3$, strategy $R$ is dominated by strategy $L$.
+
+\end{itemize}
+
+$\rightarrow$ Strategy $R$ is \textbf{strictly dominated}.
+
+\end{example}
+
+
+\begin{example}
+
+\textbf{Example 2} -- Is $R$ a dominated strategy for Player 2?
+
+\begin{center}
+\begin{tabular}{c|ccc}
+ & L & M & R \\
+\hline
+U & $(x_1,0)$ & $(x_2,3)$ & $(x_3,2)$ \\
+D & $(x_4,3)$ & $(x_5,0)$ & $(x_6,2)$ \\
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+
+\item If $p_U > 2/3$, strategy $R$ is dominated by strategy $M$.
+
+\item If $p_U < 1/3$, strategy $R$ is dominated by strategy $L$.
+
+\item However, for $1/3 \le p_U \le 2/3$ strategy $R$ is an optimal strategy (strictly the
+best for $1/3 < p_U < 2/3$).
+
+\end{itemize}
+
+$\rightarrow$ Strategy $R$ is \textbf{not a dominated strategy}.
+
+\end{example}
+
+
+
 \end{multicols}
 
 
