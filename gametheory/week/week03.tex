@@ -567,6 +567,79 @@ subgame of itself).
 
 
 
+%=========================================================
+\section{Backward Induction}
+
+
+\begin{summary}
+
+\textbf{Backward induction} -- the technique to obtain a Subgame-Perfect equilibrium:
+
+\begin{enumerate}
+
+\item Find the Nash equilibria of the smallest subgames.
+
+\item Replace each subgame with the payoff of (one of) its NE.
+
+\item Repeat the procedure with the reduced game.
+
+\end{enumerate}
+
+\end{summary}
+
+
+\begin{example}
+
+\textbf{Entry-Deterrence game}
+
+\begin{itemize}
+
+\item The smallest subgame (after `Enter') has only one player, Old Firm, who will choose
+`Accept'. We replace this subgame with the payout of (Enter, Accept): $(1,-1)$.
+
+\item The reduced game (Not Enter: $(0,0)$, (Enter, A): $(1,-1)$) has only itself as a
+subgame. It is a one-player game (New Firm), who will choose Enter.
+
+\end{itemize}
+
+SPE: \textbf{(Enter, Accept)}.
+
+\end{example}
+
+
+\begin{example}
+
+\textbf{Ultimatum game}
+
+\begin{itemize}
+
+\item In each of the smallest subgames there is only Player 2, and in each of these the only
+NE is `Accept'.
+
+\item After replacing them with the payout of their NE, we obtain the reduced game:
+
+\end{itemize}
+
+\begin{center}
+
+\includegraphics[
+width=0.75\linewidth
+]{../images/week03_04.png}
+
+\end{center}
+
+\begin{itemize}
+
+\item Only Player 1 needs to choose, and will choose `Offer 1'.
+
+\end{itemize}
+
+SPE: \textbf{(Offer 1, AAA)}.
+
+\end{example}
+
+
+
 \end{multicols}
 
 
