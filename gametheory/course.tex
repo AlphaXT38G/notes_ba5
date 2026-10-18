@@ -1188,4 +1188,42 @@ E[\mathcal{P}_i(\tilde{s}_i(\theta_i), s_{-i}(\theta_{-i}) | \theta_i)],
 the expected value being taken over all possible types of the other players.
 \end{defnbox}
 
+
+\section{Public good and free riding}
+
+\begin{defnbox}[title=Public good game]
+Two players can work (W) or not work (N) to produce a public good, that would give utility 1
+to both. If at least one player works, the public good is available for both; if nobody works,
+it is not. Working costs $c_1$ to Player 1 and $c_2$ to Player 2.
+\begin{center}
+\begin{tabular}{c|cc}
+$1 \backslash 2$ & W & N \\ \hline
+W & $(1-c_1, 1-c_2)$ & $(1-c_1, 1)$ \\
+N & $(1, 1-c_2)$ & $(0,0)$
+\end{tabular}
+\end{center}
+\end{defnbox}
+
+\begin{exbox}[title=Two types of Player 2]
+$c_1 = 0.5$, known to everybody. $c_2$ is known to Player 2 but not to Player 1: it is 0.2
+with probability $p$ (\textbf{Efficient} type) and 1.2 with probability $1-p$
+(\textbf{Inefficient} type). \textbf{The value of $p$ is common knowledge.}
+\begin{center}
+\begin{tabular}{c|cc}
+\multicolumn{3}{c}{prob $p$} \\
+$1 \backslash$ 2E & W & N \\ \hline
+W & (0.5,0.8) & (0.5,1) \\
+N & (1,0.8) & (0,0)
+\end{tabular}
+\qquad
+\begin{tabular}{c|cc}
+\multicolumn{3}{c}{prob $(1-p)$} \\
+$1 \backslash$ 2I & W & N \\ \hline
+W & (0.5,-0.2) & (0.5,1) \\
+N & (1,-0.2) & (0,0)
+\end{tabular}
+\end{center}
+`Work' is a \textbf{dominated} strategy for the Inefficient type of Player 2.
+\end{exbox}
+
 \end{document}
