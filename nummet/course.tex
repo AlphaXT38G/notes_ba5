@@ -487,4 +487,56 @@ $\|\mathbf{A}\mathbf{x}\| \le \|\mathbf{A}\|\,\|\mathbf{x}\|$ and
 $\|\mathbf{A}\mathbf{B}\| \le \|\mathbf{A}\|\,\|\mathbf{B}\|$.
 \end{defnbox}
 
+
+\section{Condition number}
+
+\begin{thmbox}[title=Perturbed linear system]
+If $\mathbf{A}\mathbf{x} = \mathbf{b}$ and $\mathbf{A}(\mathbf{x} + \Delta\mathbf{x}) =
+\mathbf{b} + \Delta\mathbf{b}$, then from $\|\mathbf{x}\| \ge \|\mathbf{b}\|/\|\mathbf{A}\|$ and
+$\|\Delta\mathbf{x}\| \le \|\mathbf{A}^{-1}\|\,\|\Delta\mathbf{b}\|$:
+\[
+\frac{\|\Delta\mathbf{x}\|}{\|\mathbf{x}\|} \le
+\|\mathbf{A}^{-1}\| \cdot \|\mathbf{A}\| \cdot \frac{\|\Delta\mathbf{b}\|}{\|\mathbf{b}\|}.
+\]
+\end{thmbox}
+
+\begin{defnbox}[title=Condition number]
+\[
+\operatorname{cond}(\mathbf{A}) = \kappa(\mathbf{A}) = \|\mathbf{A}\| \cdot \|\mathbf{A}^{-1}\|
+\]
+It measures how much $\mathbf{A}$ distorts the unit circle.
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week03_02.png}
+\end{center}
+\end{defnbox}
+
+\begin{propbox}[title=Properties]
+$\operatorname{cond}(\mathbf{A}) = \infty$ iff $\mathbf{A}$ is singular;
+$\operatorname{cond}(\mathbf{I}) = 1$;
+$\operatorname{cond}(\gamma\mathbf{A}) = \operatorname{cond}(\mathbf{A})$;
+$\operatorname{cond}(\mathbf{Q}\mathbf{A}) = \operatorname{cond}(\mathbf{A})$ for a rotation
+$\mathbf{Q}$.
+\end{propbox}
+
+\begin{warnbox}[title=Not the determinant]
+$\mathbf{A} = \frac{1}{10}\mathbf{I} \in \mathbb{R}^{1000 \times 1000}$ has
+$\det(\mathbf{A}) = 10^{-1000}$, yet the system is trivial to solve:
+$\operatorname{cond}(\mathbf{A}) = 1$.
+\end{warnbox}
+
+\begin{thmbox}[title=Implications (without proof)]
+With a good solver and an accurate $\mathbf{b}$,
+$\frac{\|\Delta\mathbf{x}\|}{\|\mathbf{x}\|} \lesssim \operatorname{cond}(\mathbf{A})
+\operatorname{ulp}(1)$, with $\operatorname{ulp}(1) \approx 2^{-23}$ (single) or $2^{-52}$
+(double precision).
+\end{thmbox}
+
+\begin{exbox}[title=Badly conditioned systems]
+Nearly parallel rows: small errors on each plane give a huge region of possible intersections.
+The Vandermonde matrix for $n = 100$ uniform points on $[0, 1]$ has
+$\operatorname{cond}(\mathbf{A}) = 7.31 \cdot 10^{19}$. And computing
+$\operatorname{cond}(\mathbf{A})$ requires an inverse and a matrix norm: a chicken-and-egg
+problem (stay tuned).
+\end{exbox}
+
 \end{document}
