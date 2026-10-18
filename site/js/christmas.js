@@ -37,6 +37,8 @@ SCREENS["christmas-night"] = { className: "christmas", subtitle: xmasSubtitle, t
 // screens), unless the yeti code was typed (xmasEgg).
 // xmasJazz: the hidden sax was clicked on that Christmas screen ("christmas" or "christmas-night"):
 // the jazz bar replaces it until the fir is clicked or the other one comes (18:00 or 6:00).
+// xmasPeace: the calm night was opened with the firefly jar (the peace egg of calm.js, which keeps
+// the yeti egg then), so the fir shows there too and brings Christmas back.
 const isXmasDate = (d = new Date()) => (d.getMonth() === 11 && d.getDate() >= 10) || (d.getMonth() === 0 && d.getDate() <= 3);
 const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && t < 18 * 3600; };
 // Easter egg: typing y e t i (outside the search field) brings Christmas at any time of the year, day
@@ -46,7 +48,7 @@ const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && 
 // screen shown, not the egg: typed in a jazz bar opened over Christmas (armstrong code, sax), it
 // brings Christmas back. It overrides a forced ?screen=.
 // yetiTyped: how many times it was typed, so that the armstrong code's bar gives way (armstrong.js)
-let xmasJazz = false, xmasEgg = false, yetiTyped = 0;
+let xmasJazz = false, xmasEgg = false, xmasPeace = false, yetiTyped = 0;
 OVERRIDES.push(phase => {
   let p = phase;
   if ((xmasEgg || (!forced || forcedDismissed) && isXmasDate()) && (isNormal(p) || screenClass(p) === "night")) {
@@ -362,6 +364,37 @@ const GUITAR_SVG = `<svg viewBox="${GUITAR.x} ${GUITAR.y} ${GUITAR.w} ${GUITAR.h
   `<path d="M13,24.5c-7,-6 -10,2 0,0c7,-6 10,2 0,0" fill="#ffd15c" stroke="rgba(0,0,0,.3)" stroke-width=".5"/>` +
   `<path d="M12.6,25.2l-2.6,6.5M13.4,25.2l2.2,6.8" stroke="#e2a81e" stroke-width="1.3" stroke-linecap="round"/></g></svg>`;
 
+// The hidden firefly jar, set on the skirt in front of the red and blue gifts: the jar of the calm
+// night (calm.js) wrapped as a present, a cork lid with a red bow, twine round the neck, moss at
+// the bottom and a firefly glowing inside, wandering behind the glass (CSS). At night its light
+// spills on the skirt. In the tree's coordinates too, like the guitar.
+const JAR = { x: 226, y: 496, w: 52, h: 58 };
+const JAR_GLASS = "M245,513H259Q259,516 261.5,517.5Q263.5,519 263.5,522V542Q263.5,546.5 259,546.5H245Q240.5,546.5 240.5,542V522Q240.5,519 242.5,517.5Q245,516 245,513Z";
+const JAR_SVG = `<svg viewBox="${JAR.x} ${JAR.y} ${JAR.w} ${JAR.h}" aria-hidden="true"><defs>` +
+  `<radialGradient id="jarfoot"><stop offset="0" stop-color="rgba(60,0,12,.5)"/><stop offset="1" stop-color="rgba(60,0,12,0)"/></radialGradient>` +
+  `<radialGradient id="jarspill"><stop offset="0" stop-color="rgba(215,255,150,.55)"/><stop offset="1" stop-color="rgba(215,255,150,0)"/></radialGradient>` +
+  `<radialGradient id="jarglow"><stop offset="0" stop-color="rgba(240,255,190,1)"/><stop offset=".3" stop-color="rgba(205,255,140,.6)"/><stop offset="1" stop-color="rgba(170,255,120,0)"/></radialGradient>` +
+  `<linearGradient id="jarglass" x1="0" x2="1"><stop offset="0" stop-color="rgba(210,230,255,.34)"/><stop offset=".3" stop-color="rgba(210,230,255,.1)"/><stop offset=".75" stop-color="rgba(210,230,255,.06)"/><stop offset="1" stop-color="rgba(210,230,255,.3)"/></linearGradient>` +
+  `<linearGradient id="jarcork" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c49a64"/><stop offset="1" stop-color="#7a5430"/></linearGradient>` +
+  `<clipPath id="jarclip"><path d="${JAR_GLASS}"/></clipPath></defs>` +
+  `<ellipse class="spill" cx="252" cy="546" rx="24" ry="6" fill="url(#jarspill)"/>` +
+  `<ellipse cx="252" cy="546.6" rx="13" ry="2.6" fill="url(#jarfoot)"/>` +
+  `<path d="${JAR_GLASS}" fill="url(#jarglass)"/>` +
+  // inside the glass: moss and a twig at the bottom, the firefly (its light, then its body)
+  `<g clip-path="url(#jarclip)"><path d="M240,547C242,540 246,543 248,540 250,543 254,539 256,542 259,539 262,542 264,540V547Z" fill="#2f6b34"/>` +
+  `<path d="M243,543L258,533M252,537l3,-6" stroke="#5a3a1c" stroke-width="1.1" stroke-linecap="round" fill="none"/>` +
+  `<g class="fly"><circle class="glow" cx="252" cy="529" r="9" fill="url(#jarglow)"/>` +
+  `<ellipse cx="251.2" cy="528.4" rx="1.3" ry=".8" fill="#2a2a22"/><circle cx="252.6" cy="529.1" r="1.1" fill="#f6ffd0"/>` +
+  `<path d="M250.6,527.6l-1.6,-1.4M251.6,527.6l1.2,-1.6" stroke="rgba(220,235,255,.7)" stroke-width=".5"/></g></g>` +
+  // the glass: its outline and the reflections of the light from the left
+  `<path d="${JAR_GLASS}" fill="none" stroke="rgba(225,240,255,.75)" stroke-width=".8"/>` +
+  `<path d="M243.2,522V541" stroke="rgba(255,255,255,.7)" stroke-width="1.3" stroke-linecap="round"/><path d="M261,524V532" stroke="rgba(255,255,255,.35)" stroke-width=".8" stroke-linecap="round"/>` +
+  // twine round the neck, the cork lid, and the red bow that makes it a present
+  `<path d="M244.6,514.5H259.4" stroke="#c9a86a" stroke-width="1.4"/><rect x="243.5" y="508" width="17" height="5.5" rx="1.2" fill="url(#jarcork)"/>` +
+  `<rect x="243.5" y="508" width="17" height="1.4" rx=".7" fill="rgba(255,255,255,.25)"/>` +
+  `<path d="M252,508c-9,-8 -13,1 0,0c9,-8 13,1 0,0" fill="#c8102e" stroke="rgba(0,0,0,.3)" stroke-width=".5"/>` +
+  `<path d="M251.4,508.4l-3,5M252.6,508.4l2.6,5.2" stroke="#a30d26" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+
 const scene = document.createElement("div"), tree = document.createElement("div"), treeFront = document.createElement("div");
 scene.id = "xscene";
 scene.setAttribute("aria-hidden", "true");
@@ -596,6 +629,20 @@ treeFront.append(guitarBtn);
 guitarBtn.addEventListener("click", e => {
   e.stopPropagation();
   startMetalEgg("Santa brought a guitar.");
+});
+// The firefly jar, in the same layer: it opens the calm night, as the peace code does (startPeace,
+// calm.js, loaded after this file); the fir there, or typing peace, brings Christmas back
+const jarBtn = document.createElement("button");
+jarBtn.id = "xjar";
+jarBtn.type = "button";
+jarBtn.title = "A firefly in a jar?";
+jarBtn.setAttribute("aria-label", "Go to the calm night");
+jarBtn.innerHTML = JAR_SVG;
+jarBtn.style.cssText = `left:${JAR.x / TREE_W * 100}%;top:${JAR.y / TREE_H * 100}%;width:${JAR.w / TREE_W * 100}%;height:${JAR.h / TREE_H * 100}%`;
+treeFront.append(jarBtn);
+jarBtn.addEventListener("click", e => {
+  e.stopPropagation();
+  startPeace(true);
 });
 
 // Tree lights at night, on a canvas over the tree (behind the page, unlike the effects canvas):
@@ -954,8 +1001,8 @@ const setCarols = on => {
   paintDeck();
 };
 
-// Back to Christmas from the jazz bar: a small fir with a star in the bottom right corner of the
-// bar, only when the bar was opened with the sax
+// Back to Christmas from the jazz bar or the calm night: a small fir with a star in the bottom right
+// corner, only when the bar was opened with the sax, or the calm night with the firefly jar
 const firBtn = document.createElement("button");
 firBtn.id = "xback";
 firBtn.type = "button";
@@ -967,10 +1014,13 @@ firBtn.innerHTML = '<svg viewBox="0 0 30 40" aria-hidden="true"><path d="M15,4 2
 firBtn.addEventListener("click", e => {
   e.stopPropagation();
   xmasJazz = false;
+  if (xmasPeace) peaceEgg = xmasPeace = false;
   applyScreen();
 });
 document.addEventListener("phase", e => {
-  if (xmasJazz && screenClass(e.detail) === "night") document.body.append(firBtn); else firBtn.remove();
+  // (the peace egg ends when the calm night is left another way: typing peace, yeti or armstrong)
+  if (xmasJazz && screenClass(e.detail) === "night" || xmasPeace && peaceEgg && e.detail === "calm") document.body.append(firBtn);
+  else firBtn.remove();
   if (e.detail === "christmas" || e.detail === "christmas-night") setTreeLights(e.detail === "christmas-night");
 });
 

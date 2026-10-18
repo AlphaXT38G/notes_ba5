@@ -393,11 +393,17 @@ document.addEventListener("keydown", e => {
     if (peaceEgg) peaceEgg = false;
     else if (forced === "calm") forcedDismissed = true;
     else return;  // the clock's calm night: nothing to leave
-  } else {
-    // The other eggs give way, so that leaving the calm night later goes back to the clock
-    peaceEgg = true;
-    peaceYeti = yetiTyped;
-    jazzEgg = xmasEgg = xmasJazz = false;
-  }
-  applyScreen();
+    applyScreen();
+  } else startPeace();
 });
+// Bringing the calm night: the code, or the firefly jar among the Christmas gifts (christmas.js,
+// fromXmas). The other eggs give way, so that leaving the calm night later goes back to the
+// clock; the jar keeps the yeti egg, so that leaving it goes back to Christmas.
+const startPeace = (fromXmas = false) => {
+  peaceEgg = true;
+  peaceYeti = yetiTyped;
+  jazzEgg = xmasJazz = false;
+  if (!fromXmas) xmasEgg = false;
+  xmasPeace = fromXmas;
+  applyScreen();
+};
