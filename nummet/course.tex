@@ -599,4 +599,40 @@ the same problem without ever building $\mathbf{A}^T\mathbf{A}$. (Regression als
 overfitting and from wrong models.)
 \end{warnbox}
 
+
+\section{Orthogonality}
+
+\begin{rembox}[title=The issue with the Vandermonde matrix]
+Monomials of different powers look more and more alike: almost parallel columns. Idea: make the
+problem more ``orthogonal''.
+\begin{center}
+\includegraphics[width=0.8\linewidth]{images/week04_02.png}
+\end{center}
+\end{rembox}
+
+\begin{defnbox}[title=Inner product]
+$\langle \mathbf{a}, \mathbf{b} \rangle = \mathbf{a}^T\mathbf{b} = \|\mathbf{a}\|\,\|\mathbf{b}\|
+\cos\theta$ measures a projection: $\mathbf{a}^T\mathbf{a} = 1$ for a unit vector,
+$\mathbf{a}^T\mathbf{b} = 0$ for perpendicular vectors. More generally,
+$\langle f, g \rangle := \int_a^b f(x) g(x)\,\mathrm{d}x$ for functions.
+\end{defnbox}
+
+\begin{algbox}[title=Gram-Schmidt orthogonalization]
+\[
+\hat{\mathbf{y}} := \mathbf{y} - \frac{\langle \mathbf{x}, \mathbf{y} \rangle}
+{\langle \mathbf{x}, \mathbf{x} \rangle}\mathbf{x} \quad \Rightarrow \quad
+\langle \mathbf{x}, \hat{\mathbf{y}} \rangle = 0.
+\]
+On $[-1, 1]$ with $f = 1$, $g = x$, $h = x^2$: $\langle f, g \rangle = \langle g, h \rangle = 0$,
+$\langle f, h \rangle = 2/3$, so $\hat{h}(x) = x^2 - \frac{1}{3}$.
+\end{algbox}
+
+\begin{defnbox}[title=Legendre polynomials]
+Span the same space as the monomials, but are \textbf{orthogonal to each other}: the poor
+conditioning disappears. Use them to fit a smooth function to data.
+\begin{center}
+\includegraphics[width=0.55\linewidth]{images/week04_03.png}
+\end{center}
+\end{defnbox}
+
 \end{document}
