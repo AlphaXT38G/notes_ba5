@@ -98,8 +98,8 @@ play changing patterns and Santa's sleigh crosses the sky now and then. Look clo
 at the ornaments of the tree, and under it. The metal show at 01:00 and the easter eggs still
 happen.
 
-Add `?night=evening`, `?night=closing`, `?night=metal`, `?night=epic`, `?night=calm`,
-`?night=christmas` or `?night=christmas-night` (or `1` / `0`) to the URL to force a
+Add `?screen=evening`, `?screen=closing`, `?screen=metal`, `?screen=epic`, `?screen=calm`,
+`?screen=christmas` or `?screen=christmas-night` (or `1` / `0`) to the URL to force a
 screen (or the day) at any time.
 
 It hides six easter eggs: a surprise banner that shows up on some visits,

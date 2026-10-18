@@ -77,17 +77,17 @@ for the WebGL relief renderer (`relief.js`) and lit like the photo, are in `prop
 
 ### Trying the screens at any time
 
-The night screens follow the clock. Force one with the URL:
+The night screens follow the clock. Force one with the URL (`?night=`, the old name, still works):
 
 | URL | Screen |
 |---|---|
-| `?night=0` | the day, whatever the time |
-| `?night=1` | the first scheduled screen (the jazz bar) |
-| `?night=evening` / `?night=closing` | jazz bar / bar closing (the bartender comes ~9 s in, once the sign is dark) |
-| `?night=metal` | metal show (does not end by itself when forced: the song plays on and on) |
-| `?night=epic` | epic finale (until "Back to normal") |
-| `?night=calm` | calm night (no dawn when forced outside 04:45 – 05:30) |
-| `?night=christmas` / `?night=christmas-night` | Christmas day / Christmas night |
+| `?screen=0` | the day, whatever the time |
+| `?screen=1` | the first scheduled screen (the jazz bar) |
+| `?screen=evening` / `?screen=closing` | jazz bar / bar closing (the bartender comes ~9 s in, once the sign is dark) |
+| `?screen=metal` | metal show (does not end by itself when forced: the song plays on and on) |
+| `?screen=epic` | epic finale (until "Back to normal") |
+| `?screen=calm` | calm night (no dawn when forced outside 04:45 – 05:30) |
+| `?screen=christmas` / `?screen=christmas-night` | Christmas day / Christmas night |
 
 Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑↑↓↓←→←→BA,
 `yeti` typed anywhere but the search field (Christmas day or night by the clock, any time of the
@@ -99,7 +99,7 @@ in the bar's bottom right corner brings Christmas back. A little red guitar lean
 gifts under the tree starts the metal show (then Christmas comes back). `armstrong` typed anywhere but the search
 field opens the jazz bar at any time (over Christmas and the calm night too, but not over the
 shows); typed again in the bar it goes back to the normal screen of that moment, by the clock
-alone: it drops the `armstrong` and `yeti` eggs, the sax and a forced `?night=`, so it shows the
+alone: it drops the `armstrong` and `yeti` eggs, the sax and a forced `?screen=`, so it shows the
 day (or the calm night), the bar itself
 at bar time (21:30 – 01:00), or Christmas during the Christmas period. `peace` typed anywhere but
 the search field brings the calm night at any time, like `yeti` (over the day, the jazz bar and
@@ -197,8 +197,8 @@ Current screens:
 The Christmas screens depend on the date, so they are an override rather than a `SCHEDULE` slot:
 it only rewrites the normal screens (no screen, the calm night: `isNormal()` in `screens.js`) and
 the jazz screens, and `christmas.js` is loaded before `metal.js`,
-so the metal show (01:00 or easter egg) and the epic finale still take over. A forced `?night=`
-turns it off, except `?night=christmas` / `?night=christmas-night` themselves and the `yeti` easter egg.
+so the metal show (01:00 or easter egg) and the epic finale still take over. A forced `?screen=`
+turns it off, except `?screen=christmas` / `?screen=christmas-night` themselves and the `yeti` easter egg.
 
 ### Adding a new screen, step by step
 
@@ -255,7 +255,7 @@ Example: a calm "dawn" screen from 06:00 to 07:00.
    calm night after the metal show, says `normal: true`. Christmas and the `armstrong` code then
    replace it as they replace the day (`isNormal()` in `screens.js`).
 
-7. Build, open `http://localhost:8765/?night=dawn`, check the console has no errors, and check
+7. Build, open `http://localhost:8765/?screen=dawn`, check the console has no errors, and check
    the switch from and to the day with a mocked clock if the screen is scheduled.
 
 ## Good practices
@@ -296,7 +296,7 @@ Android WebViews). One syntax they do not know makes the browser reject a whole 
   with no tap delay. Nothing may cover the header controls; fixed widgets go in the corners, and
   phones get room under the last card for them (`screens.css`).
 - **Check a phone-sized window** (375 px wide) after a page change: the search, the theme and
-  the Names / Previews switch must work on every screen (`?night=...`).
+  the Names / Previews switch must work on every screen (`?screen=...`).
 
 ### Performance (the page runs heavy effects; keep scrolling smooth)
 
@@ -330,7 +330,7 @@ Android WebViews). One syntax they do not know makes the browser reject a whole 
   `refactor`, `docs`, `build`, `ci`, `chore`. Scopes: `index` / `site` (the page), `build`,
   or a subject and document (`compsec-week05`, `respsoft-cheatsheet`).
 - **Before committing a page change**: `python build.py --index-only` (the JS syntax check must
-  say OK), open the page, try the screens concerned with `?night=...`, check the browser console
+  say OK), open the page, try the screens concerned with `?screen=...`, check the browser console
   has no errors, and check a phone-sized window.
 - Keep `README.md` (for readers) and this file (for contributors) up to date with what changes.
 
