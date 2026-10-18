@@ -1226,4 +1226,25 @@ N & (1,-0.2) & (0,0)
 `Work' is a \textbf{dominated} strategy for the Inefficient type of Player 2.
 \end{exbox}
 
+
+\begin{propbox}[title=Pure-strategy BNE]
+\textbf{Efficient Player 2 works, Inefficient does not.} Player 1 gets $\mathcal{P}_1 = 0.5$
+for sure if he works; if he does not, he gets 1 if Player 2 works (E type) and 0 otherwise:
+$\mathcal{P}_1 = p \times 1 + (1-p) \times 0 = p$. So Player 1 works if $p < 0.5$ and does not
+work if $p > 0.5$ (indifferent if $p = 0.5$).
+\begin{itemize}
+  \item For $p \ge 0.5$, Player 1 may not work; knowing this, Player 2 works when he is of
+        type E: \textbf{$(N, WN)$ is a BNE} (N for Player 1, W for Player 2 of type E, N for
+        type I).
+  \item For $p < 0.5$, Player 1 works, but then Player 2 does not work even if efficient:
+        not a BNE.
+\end{itemize}
+\textbf{Player 2 never works.} Player 1 gets $1 - c_1 = 0.5$ if he works and 0 if not: he works
+regardless of $p$, and Player 2 then prefers not to work: \textbf{$(W, NN)$ is a BNE}.
+\begin{itemize}
+  \item $p < 0.5$: unique pure-strategy BNE $(W, NN)$.
+  \item $p \ge 0.5$: two pure-strategy BNE, $(W, NN)$ and $(N, WN)$.
+\end{itemize}
+\end{propbox}
+
 \end{document}
