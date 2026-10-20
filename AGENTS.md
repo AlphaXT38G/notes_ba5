@@ -32,7 +32,8 @@ site/                 the index page (HTML, CSS, JS inlined into one dist/index.
   img/                  images, copied as files to dist/img/ (too heavy to inline); bartender/
                         holds the closing bartender's layers (the Gigachad meme photo, dressed as a
                         bartender by an image generator, used as an illustration in this
-                        non-commercial project)
+                        non-commercial project); frost.png is the frost the snowman's
+                        snowball leaves on the window
   audio/                the screens' music, mp3 files copied to dist/audio/: jazz, metal, epic,
                         calm (the night's forest) and jingle-bell-rock (Christmas); the day's
                         cassette deck plays them too
@@ -98,7 +99,10 @@ on both Christmas screens (day and night) a small golden sax hidden among the tr
 opens the jazz bar; a little fir in the bar's bottom right corner brings Christmas back. A red
 guitar standing behind the green gift under the tree starts the metal show (then Christmas comes
 back), and a firefly jar swinging under the garland opens the calm night (like `peace`, but the
-fir shows there too and brings Christmas back). `armstrong` typed anywhere but the search field
+fir shows there too and brings Christmas back). The Christmas snowman can be teased: a click
+knocks his hat off, his carrot nose can be dragged away (put back on him he plants it again,
+dropped elsewhere he fishes it back with a rod), and the third tease makes him throw a snowball
+that frosts the window and slows the mouse pointer for a few seconds. `armstrong` typed anywhere but the search field
 opens the jazz bar at any time (over Christmas and the calm night too, but not over the shows);
 typed again in the bar it goes back to
 the normal screen of that moment, by the clock alone: it drops the `armstrong` and `yeti` eggs, the
@@ -148,6 +152,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `closing.js` | closing time: the life-size bartender behind his bar (photo layers from `img/bartender/`: head nodding, forearm tapping the desk bell, chest breathing), swinging lamp, desk bell "ding" (Web Audio), typed speech, chalkboard with countdown, "Good night" |
 | `fx.js` | the effects canvas of every screen: `fxLayers` (by `<body>` class), `blob()`, the animation loop |
 | `christmas.js` | Christmas screens: date override and `yeti` code, garland, winter scene (mountains and chalets, moon, tree and gifts drawn in volume with a shared `bow3d` and `giftTag`, snowman), night lights canvases (tree, garland halos), snow, sleigh, music (Jingle Bell Rock or the YouTube Christmas radio, swapped with the sleeve behind the turntable, or paused), hidden sax and guitar (the guitar draws the gifts in front of it again over itself, to stand behind them while staying clickable), firefly jar swinging under the garland (a pendulum pushed by the wind, the mouse and scrolling, asleep once settled) |
+| `snowman.js` | the Christmas snowman's games (drawn in `christmas.js`, his hat, nose, brows, steam and rod as parts of their own): hat knocked off, nose dragged away and put back by him (by hand, or with a fishing rod and line from afar), his temper, the snowball thrown at the pointer, the frost (`img/frost.png`) and the frozen, slow pointer (a sheet passing clicks to an icy pointer that lags); all reset when Christmas ends |
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
 | `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), "Back to normal" |
@@ -159,7 +164,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 ### CSS files, in cascade order
 
 `base.css` (layout, cards, search, previews) → `flames.css` → `surprise.css` → `jazz.css` → `closing.css` →
-`metal.css` → `epic.css` → `christmas.css` → `calm.css` → `tapes.css` → `screens.css` (effects canvas, view transitions) → `konami.css`.
+`metal.css` → `epic.css` → `christmas.css` → `snowman.css` → `calm.css` → `tapes.css` → `screens.css` (effects canvas, view transitions) → `konami.css`.
 The Konami file is last on purpose: during its animation `body.rift .wrap` must win over every
 theme's `.wrap` rule.
 
