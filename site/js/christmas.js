@@ -656,7 +656,8 @@ moon.innerHTML = MOON;
 // carrot seen in perspective, a battered top hat tilted back with snow on the brim, a knitted scarf
 // with one end blowing behind, tapering branches for arms. It blinks, now and then turns its face
 // a little more towards the courses, and waves with the arm on that side (CSS). Its hat, nose,
-// brows, cheeks, steam and fishing rod are parts of their own for its games (snowman.js).
+// brows, cheeks, steam, sweat, buttons, eyes and puddle are parts of their own for its games
+// (snowman.js).
 // His carrot nose, also drawn on its own when it is taken from him (snowman.js)
 const SNOWMAN_NOSE = `<path d="M178,147C192,145 220,150 244,160 222,163 196,162 179,158 175,155 175,149 178,147Z" fill="url(#sm-carrot)"/>` +
   `<path d="M186,148q2,6 0,11M198,149q2,5 0,10M210,152q1.5,4 0,8M222,155q1,3 0,6" stroke="#a5470a" stroke-width="1.3" fill="none" stroke-linecap="round"/>`;
@@ -689,7 +690,7 @@ const SNOWMAN = (() => {
     return `<path d="M${x0},${y0}L${f1(xe)},${f1(ye)}" stroke-width="${f1(w * f)}"/>`;
   }).join("");
   const BOTTOM = lump(150, 412, 100, 86, .07), MIDDLE = lump(156, 264, 70, 64, .08), HEAD = lump(164, 152, 50, 47, .07);
-  const ball = d => `<path d="${d}" fill="url(#sm-snow)"/><path d="${d}" fill="url(#sm-under)"/><path d="${d}" fill="#fff" filter="url(#sm-grain)" opacity=".55"/>`;
+  const ball = d => `<g class="snow"><path d="${d}" fill="url(#sm-snow)"/><path d="${d}" fill="url(#sm-under)"/><path d="${d}" fill="#fff" filter="url(#sm-grain)" opacity=".55"/></g>`;
   return `<svg viewBox="0 0 300 520" aria-hidden="true"><defs>` +
     `<radialGradient id="sm-snow" cx=".33" cy=".27" r=".8"><stop class="k1" offset="0"/><stop class="k2" offset=".42"/><stop class="k3" offset=".8"/><stop class="k4" offset="1"/></radialGradient>` +
     `<linearGradient id="sm-under" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="rgba(50,75,120,0)"/><stop offset="1" stop-color="rgba(50,75,120,.28)"/></linearGradient>` +
@@ -710,11 +711,14 @@ const SNOWMAN = (() => {
     ball(BOTTOM) + `<ellipse cx="154" cy="327" rx="60" ry="12" fill="url(#sm-contact)"/>` +
     ball(MIDDLE) + `<ellipse cx="160" cy="198" rx="42" ry="9" fill="url(#sm-contact)"/>` +
     // buttons, following the curve of the body turned to the right
-    coal(178, 240, 6.5) + coal(181, 268, 7) + coal(179, 297, 7) + coal(184, 392, 8) +
+    // (each its own part: they are a xylophone, snowman.js)
+    [[178, 240, 6.5], [181, 268, 7], [179, 297, 7], [184, 392, 8]].map(([x, y, r]) => `<g class="btn">${coal(x, y, r)}</g>`).join("") +
     // snowdrift piled around the base
     `<path d="M20,505C40,470 80,476 100,486 130,474 180,476 210,486 240,474 270,480 285,505Z" fill="url(#sm-drift)"/>` +
-    `<g class="headball">${ball(HEAD)}<g class="face"><g class="eyes"><ellipse cx="166" cy="140" rx="5.5" ry="6.5" fill="url(#sm-coal)"/><ellipse cx="190" cy="138" rx="4.2" ry="6" fill="url(#sm-coal)"/>` +
-    `<circle cx="164.5" cy="137.5" r="1.4" fill="rgba(255,255,255,.7)"/><circle cx="188.8" cy="135.8" r="1.1" fill="rgba(255,255,255,.7)"/></g>` +
+    // the puddle he becomes when he melts (snowman.js)
+    `<ellipse class="puddle" cx="155" cy="498" rx="150" ry="22" fill="rgba(95,155,220,.55)" stroke="rgba(255,255,255,.85)" stroke-width="2.5"/>` +
+    `<g class="headball">${ball(HEAD)}<g class="face"><g class="look"><g class="eyes"><ellipse cx="166" cy="140" rx="5.5" ry="6.5" fill="url(#sm-coal)"/><ellipse cx="190" cy="138" rx="4.2" ry="6" fill="url(#sm-coal)"/>` +
+    `<circle cx="164.5" cy="137.5" r="1.4" fill="rgba(255,255,255,.7)"/><circle cx="188.8" cy="135.8" r="1.1" fill="rgba(255,255,255,.7)"/></g></g>` +
     [[160, 170, 3.2], [168, 175, 3.3], [177, 177, 3.3], [186, 175, 3], [193, 170, 2.6]].map(([x, y, r]) => coal(x, y, r)).join("") +
     `<g class="nose">${SNOWMAN_NOSE}</g>` +
     // when cross (snowman.js): frowning brows, red cheeks
@@ -728,7 +732,9 @@ const SNOWMAN = (() => {
     `<path d="M190,94c-6,-10 -16,-8 -20,-12 4,6 0,10 6,12 -4,2 0,6 -2,10 6,-4 10,-2 16,-10Z" fill="#1f7a3e"/><circle cx="190" cy="94" r="3.4" fill="#d6203a"/><circle cx="196" cy="90" r="3.2" fill="#c8102e"/>` +
     `<path d="M106,104c6,-6 14,-5 20,-2 6,-4 14,-3 18,1M190,100c6,-5 14,-5 20,0" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none" opacity=".9"/></g></g>` +
     // steam puffing out from under the hat when he is about to lose it
-    `<g class="steam"><circle cx="122" cy="96" r="7"/><circle cx="206" cy="94" r="6"/><circle cx="118" cy="84" r="5"/></g></g>` +
+    `<g class="steam"><circle cx="122" cy="96" r="7"/><circle cx="206" cy="94" r="6"/><circle cx="118" cy="84" r="5"/></g>` +
+    // a drop of sweat, when he gets too warm
+    `<path class="sweat" d="M210,112C214,120 217,124 214,128 211,131 205,129 206,124 206,120 208,117 210,112Z" fill="#a9dcf7" stroke="#5aa6d6" stroke-width="1"/></g>` +
     // scarf around the neck, knotted on the right, its end hanging down the front
     `<path d="M108,196C122,214 196,216 212,196L215,212C198,232 120,232 104,212Z" fill="url(#sm-scarf)"/><path d="M108,196C122,214 196,216 212,196L215,212C198,232 120,232 104,212Z" fill="url(#sm-knit)"/>` +
     `<ellipse cx="196" cy="216" rx="11" ry="9" fill="#9b0d22"/>` +
@@ -736,10 +742,7 @@ const SNOWMAN = (() => {
     `<path d="M190,244 207,242M192,264 210,262" stroke="rgba(255,255,255,.4)" stroke-width="4"/>` +
     `<path d="M197,292v9M201,291v11M205,290v9M209,290v10M213,289v8" stroke="#b3122e" stroke-width="2.2" stroke-linecap="round"/>` +
     // near arm, towards the courses: the one that waves
-    `<g class="wave"><g class="twig">${branch(218, 258, 274, 212, 7)}${branch(250, 232, 280, 224, 3.5)}${branch(262, 222, 262, 194, 3)}</g>` +
-    // the fishing rod he takes out to get his nose back from afar (snowman.js), its tip at 334,104
-    `<g class="rod"><path d="M262,226 334,104" stroke="#3b2414" stroke-width="3.4" stroke-linecap="round"/><path d="M300,162 334,104" stroke="#6b4423" stroke-width="2" stroke-linecap="round"/>` +
-    `<circle cx="276" cy="212" r="6" fill="#8a8f99" stroke="#3a3d44" stroke-width="1.5"/><path d="M276,212l5,-3" stroke="#3a3d44" stroke-width="1.5"/></g></g></svg>`;
+    `<g class="wave"><g class="twig">${branch(218, 258, 274, 212, 7)}${branch(250, 232, 280, 224, 3.5)}${branch(262, 222, 262, 194, 3)}</g></g></svg>`;
 })();
 const snowman = document.createElement("div");
 snowman.id = "xsnowman";
