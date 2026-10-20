@@ -107,10 +107,10 @@ click on his body tickles him (it calms him down), a press held on it melts him 
 his coal buttons are a xylophone (eight notes and he dances, the start of Jingle Bells and he sings
 on), and the fifth, lowest one plays Megalovania, one note per click (his eye glows blue); the 22nd
 click plays the whole song (`audio/megalovania.mp3`) and starts a fight in the style of the old
-pixel RPG duels: the page goes black around him, his eye burns with a blue flame, the battle box
-takes the place of the courses and the pointer becomes a red heart dodging bones and skull
-blasters; FIGHT / ACT / ITEM / MERCY between the attacks. MERCY, Escape or the end of the song
-end it (the first attack is slow, after time to get in place). The
+pixel RPG duels: the page goes black around him, a blue flame rises from his glowing eye, the
+battle box takes the place of the courses and the pointer becomes a red heart (exactly where the
+pointer is, never slowed) dodging bones and skull blasters, non-stop, faster and faster; a hit
+shakes the screen. Escape, game over or the end of the song end it. The
 third tease (hat, nose, melting him flat) makes him bend down, scoop snow from his belly, pack a
 snowball and throw it in our face: it grows until it fills the window and splashes, then lumps
 of snow, blinks, frost and a slow pointer (about 15 s).
@@ -165,7 +165,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `fx.js` | the effects canvas of every screen: `fxLayers` (by `<body>` class), `blob()`, the animation loop |
 | `christmas.js` | Christmas screens: date override and `yeti` code, garland, winter scene (mountains and chalets, moon, tree and gifts drawn in volume with a shared `bow3d` and `giftTag`, snowman), night lights canvases (tree, garland halos), snow, sleigh, music (Jingle Bell Rock or the YouTube Christmas radio, swapped with the sleeve behind the turntable, or paused), hidden sax and guitar (the guitar draws the gifts in front of it again over itself, to stand behind them while staying clickable), firefly jar swinging under the garland (a pendulum pushed by the wind, the mouse and scrolling, asleep once settled) |
 | `snowman.js` | the Christmas snowman's games (drawn in `christmas.js`, with his hat, nose, eyes, buttons, brows, steam, sweat and puddle as parts of their own): eyes following the pointer, hat knocked off, nose dragged away and put back by him (by hand, or with a fishing rod drawn over the page: back cast, line and float, ripple, reel), tickling, melting, the buttons' xylophone and dances, the fifth button's Megalovania (Web Audio notes, then `audio/megalovania.mp3` at the 22nd click, stopped by the next), his temper, the snowball scooped from his belly (his top half bends at the waist), packed and thrown at our eyes (canvas bitmaps growing to fill the window), the splash and its spray, lumps of snow, blinks, the blurred view, the frost (`img/frost.png`) and the frozen, slow pointer (a sheet passing clicks to an icy pointer that lags); all reset when Christmas ends |
-| `sansfight.js` | the fight that comes with the snowman's Megalovania (`sfStart()` / `sfEnd()`, called by `snowman.js`): the scene over the page and black around him (`#xdark`), the battle box, stats and buttons (`#xfight`), turns of attacks (bones, blue bones, bone waves, skull blasters, on a full-window canvas; slow at first, faster each turn) and menus, the pixel heart following the pointer at a limited speed (or the arrow keys), his eye's flame (WebGL, a volume of noise ray-marched); reduced motion: no fight |
+| `sansfight.js` | the fight that comes with the snowman's Megalovania (`sfStart()` / `sfEnd()`, called by `snowman.js`): the scene over the page and black around him (`#xdark`), the battle box and stats (`#xfight`), one opening line then attacks without end (bones, blue bones, bone waves, bone rain, skull blasters, crossing blasters, on a full-window canvas; faster and more overlapping as it goes), hits (a crunch, the screen shaking, the box flashing red), the pixel heart exactly at the pointer (or moved by the arrow keys), the flame rising from his eye (WebGL, a volume of noise ray-marched, following his gaze); reduced motion: no fight |
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
 | `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), "Back to normal" |
