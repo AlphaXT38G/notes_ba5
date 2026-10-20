@@ -159,12 +159,14 @@ addEventListener("pointermove", e => {
   smMouse = [e.clientX, e.clientY];
   if (!smLookRaf && snowman.isConnected) smLookRaf = requestAnimationFrame(smLookAt);
 }, { passive: true });
+let smLookOff = [0, 0];  // where the eyes look, in units of his drawing (the fight's flame follows)
 const smLookAt = () => {
   smLookRaf = null;
   if (!smMouse || !snowman.isConnected) return;
   const [cx, cy] = smPt(178, 140), dx = smMouse[0] - cx, dy = smMouse[1] - cy, d = Math.hypot(dx, dy) || 1;
   const r = Math.min(1, d / 250) * 3.4;
-  smLook.style.transform = `translate(${f1(dx / d * r)}px,${f1(dy / d * r * .8)}px)`;
+  smLookOff = [dx / d * r, dy / d * r * .8];
+  smLook.style.transform = `translate(${f1(smLookOff[0])}px,${f1(smLookOff[1])}px)`;
 };
 
 // His temper: 1 = cross, 2 = furious, 3 = the snowball. A quarter of a minute left in peace calms
@@ -1002,6 +1004,13 @@ const smSlowPointer = (x, y, ms, gen) => {
     if (el.matches("input, textarea, select")) el.focus();
     el.click();
   });
+};
+
+// The frozen pointer, gone at once (the fight needs the real one)
+const smUnfreeze = () => {
+  if (smLoop) cancelAnimationFrame(smLoop);
+  smLoop = null;
+  smExtras.filter(el => el.id === "xfreeze" || el.id === "xcursor").forEach(smDrop);
 };
 
 // Christmas over: every game stops, he is himself again

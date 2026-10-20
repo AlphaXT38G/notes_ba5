@@ -1,20 +1,20 @@
 // ── The snowman's bad time: a fight, in the style of the old pixel RPG duels ──
 // When the whole Megalovania plays (the 22nd click on his lowest button, snowman.js), he picks a
-// fight. The page goes black around him; where the courses were, the battle box; under it, the
-// stats (LV, HP and its bar) and the four buttons FIGHT ACT ITEM MERCY. The mouse pointer becomes a
-// red pixel-art heart (drawn on the fight's canvas, the real pointer hidden).
-// Turns: an attack, during which the heart is trapped in the box and follows the pointer (or the
-// arrow keys) at a limited speed, dodging bones from all sides, blue bones (they only hurt a
-// heart that moves), bone waves and skull blasters charging then firing a beam across the screen;
-// then a menu, the heart free to pick a button. FIGHT misses (he steps aside), ACT tells about him,
-// ITEM heals, MERCY spares him and ends it all. The first turn is slow, after a few seconds to get
-// in place; the attacks speed up turn after turn. HP at 0: the heart breaks, game over. The fight
-// ends with the song, with MERCY, with Escape, or with Christmas.
-// His left eye burns with a blue flame: a WebGL shader ray-marching a volume of noise (the flame
-// rises from the eye, leaning back, flickering), drawn on a small canvas over his face.
+// fight. The page goes black around him; where the courses were, the battle box, and under it the
+// stats (LV, HP and its bar). The mouse pointer becomes a red pixel-art heart, trapped in the box:
+// it is exactly where the pointer is (or moved by the arrow keys), never slowed, only kept inside.
+// One line to begin with, a moment to get in place, then the attacks never stop, faster and faster,
+// overlapping more and more: bones from both sides along the floor and the ceiling, blue bones
+// (they only hurt a heart that moves), bone waves, bones raining from the top, skull blasters
+// charging then firing a beam across the screen. Each hit: a crunch, the screen shakes, the box
+// flashes red. HP at 0: the heart breaks, game over. The fight ends with the song, with Escape,
+// at game over, or with Christmas.
+// His left eye glows blue and a flame rises from it: a WebGL shader ray-marching a volume of noise
+// (rising from the top of the eye, leaning back, flickering), on a small canvas over his face that
+// follows his gaze.
 // Everything here is made when the fight starts and removed when it ends.
-const SF_HP = 20;
-const SF = { on: false, raf: null, phase: "", t: 0, turn: 0, hp: SF_HP, hitAt: 0, objs: [], pat: null, pats: [], last: 0, keys: {}, typing: null, over: false };
+const SF_HP = 40;
+const SF = { on: false, raf: null, phase: "", t: 0, fight: 0, hp: SF_HP, hitAt: 0, shake: 0, objs: [], active: [], nextAt: 0, n: 0, last: 0, keys: {}, typing: null, over: false };
 let sfUi = null, sfCv = null, sfCtx = null, sfDark = null, sfFlame = null, sfBox = null;
 let sfSoul = [0, 0], sfMoved = 0;
 
@@ -31,13 +31,14 @@ const sfHeart = (ctx, x, y, px, half, color) => {
   });
 };
 
-// Sounds: square-wave blips (text, hits), noise for the blasters
-const sfBlip = (freq, ms, vol = .05, type = "square") => {
+// Sounds: square-wave blips (text), a crunch for the hits, noise for the blasters
+const sfBlip = (freq, ms, vol = .05, type = "square", to) => {
   const ctx = smAudio();
   if (!ctx) return;
   const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
   o.type = type;
-  o.frequency.value = freq;
+  o.frequency.setValueAtTime(freq, t);
+  if (to) o.frequency.exponentialRampToValueAtTime(to, t + ms / 1000);
   g.gain.setValueAtTime(vol, t);
   g.gain.exponentialRampToValueAtTime(.0001, t + ms / 1000);
   o.connect(g);
@@ -46,21 +47,19 @@ const sfBlip = (freq, ms, vol = .05, type = "square") => {
   o.stop(t + ms / 1000 + .02);
 };
 
-// The layout: the box where the courses are, bigger for the attacks; stats and buttons under it
+// The layout: a big box where the courses are, the stats under it
 const sfLayout = () => {
   const W = innerWidth, H = innerHeight;
-  const w = Math.min(760, W - 32), h = Math.min(320, Math.max(180, H * .4));
-  sfBox = { x: (W - w) / 2, y: Math.max(70, H * .47 - h / 2), w, h };
+  const w = Math.min(760, W - 32), h = Math.min(330, Math.max(190, H * .42));
+  sfBox = { x: (W - w) / 2, y: Math.max(60, H * .5 - h / 2 - 16), w, h };
   if (!sfUi) return;
-  const box = sfUi.querySelector(".box");
-  Object.assign(box.style, { left: `${sfBox.x}px`, top: `${sfBox.y}px`, width: `${w}px`, height: `${h}px` });
+  Object.assign(sfUi.querySelector(".box").style, { left: `${sfBox.x}px`, top: `${sfBox.y}px`, width: `${w}px`, height: `${h}px` });
   Object.assign(sfUi.querySelector(".stats").style, { left: `${sfBox.x}px`, top: `${sfBox.y + h + 14}px`, width: `${w}px` });
-  Object.assign(sfUi.querySelector(".menu").style, { left: `${sfBox.x}px`, top: `${sfBox.y + h + 52}px`, width: `${w}px` });
   sfCv.width = W;
   sfCv.height = H;
 };
 
-// The text in the box, typed letter by letter with a blip
+// The opening line in the box, typed letter by letter with a blip
 const sfSay = (text, done) => {
   const p = sfUi.querySelector(".text");
   clearInterval(SF.typing);
@@ -69,148 +68,160 @@ const sfSay = (text, done) => {
   SF.typing = setInterval(() => {
     p.textContent = text.slice(0, ++i);
     if (text[i - 1] && text[i - 1].trim()) sfBlip(180, 40, .025);
-    if (i >= text.length) { clearInterval(SF.typing); SF.typing = null; if (done) setTimeout(done, 900); }
-  }, 32);
+    if (i >= text.length) { clearInterval(SF.typing); SF.typing = null; if (done) setTimeout(done, 700); }
+  }, 30);
 };
 
-// ── The attacks. Each pattern spawns objects over its duration; speed grows with the turns.
-// Objects: bones { kind: "bone", x, y, w, h, vx, vy, blue } (in window pixels, drawn clipped to the
-// box) and blasters { kind: "blaster", x, y, a (angle of fire), t, charge, fire }.
-const sfSpeed = () => Math.min(1.25, .55 + SF.turn * .17);  // slow at first
+// ── The attacks. Each pattern spawns objects over its duration, faster as the fight goes on (from
+// 0.85 to 2 in a minute and a half). Objects: bones { kind: "bone", x, y, w, h, vx, vy, blue } and
+// blasters { kind: "blaster", x, y, a (angle of fire), t, charge, fire }, in window pixels.
+const sfSpeed = () => Math.min(2, .85 + SF.fight / 80);
 const sfBone = (x, y, w, h, vx, vy, blue) => SF.objs.push({ kind: "bone", x, y, w, h, vx, vy, blue: !!blue });
+const sfBlast = (x, y, aim) => {
+  const s = sfSpeed();
+  SF.objs.push({ kind: "blaster", x, y, a: aim, t: 0, charge: .85 / s + .15, fire: .45 });
+  smNoise(600, 300, 1800, .1, "swell");
+};
 const SF_PATTERNS = {
-  // bones running along the floor and the ceiling, the gap between them moving
+  // bones running along the floor and the ceiling, from both sides, the gap moving
   run: () => {
     let next = 0;
-    return { dur: 7, step: t => {
-      if (t < next) return;
-      const s = sfSpeed(), B = sfBox, gap = 92 - s * 18, low = 26 + Math.random() * (B.h - gap - 52);
-      next = t + .62 / s;
-      const fromLeft = Math.random() < .5, x = fromLeft ? B.x - 14 : B.x + B.w + 4, vx = (fromLeft ? 1 : -1) * 230 * s;
+    return { dur: 6, step: t => {
+      if (t < next || t > 5) return;
+      const s = sfSpeed(), B = sfBox, gap = Math.max(58, 96 - s * 18), low = 22 + Math.random() * (B.h - gap - 44);
+      next = t + .5 / s;
+      const fromLeft = Math.random() < .5, x = fromLeft ? B.x - 14 : B.x + B.w + 4, vx = (fromLeft ? 1 : -1) * 250 * s;
       sfBone(x, B.y + B.h - low, 10, low, vx, 0);
       sfBone(x, B.y, 10, B.h - low - gap, vx, 0);
     } };
   },
-  // tall blue bones sweeping the box: stand still and they pass through; white ones on the floor
+  // tall blue bones sweeping the box, both ways: stand still and they pass through
   blue: () => {
     let next = 0, side = 0;
-    return { dur: 7, step: t => {
-      if (t < next) return;
+    return { dur: 6, step: t => {
+      if (t < next || t > 5) return;
       const s = sfSpeed(), B = sfBox;
-      next = t + 1.25 / s;
+      next = t + 1 / s;
       side = 1 - side;
-      sfBone(side ? B.x - 14 : B.x + B.w + 4, B.y, 12, B.h, (side ? 1 : -1) * 250 * s, 0, true);
-      sfBone(side ? B.x + B.w + 4 : B.x - 14, B.y + B.h - 30, 10, 30, (side ? -1 : 1) * 200 * s, 0);
+      sfBone(side ? B.x - 14 : B.x + B.w + 4, B.y, 12, B.h, (side ? 1 : -1) * 280 * s, 0, true);
+      sfBone(side ? B.x + B.w + 4 : B.x - 14, B.y + B.h - 34, 10, 34, (side ? -1 : 1) * 230 * s, 0);
     } };
   },
   // a wave: columns of bones from the top and the bottom, a winding gap between them
   wave: () => {
     let next = 0;
-    return { dur: 6.5, step: t => {
-      if (t < next || t > 5.2) return;
-      const s = sfSpeed(), B = sfBox, gap = 110 - s * 20, mid = B.y + B.h / 2 + Math.sin(t * 2.2) * (B.h / 2 - gap / 2 - 14);
-      next = t + .16 / s;
-      sfBone(B.x + B.w + 4, B.y, 10, mid - gap / 2 - B.y, -210 * s, 0);
-      sfBone(B.x + B.w + 4, mid + gap / 2, 10, B.y + B.h - mid - gap / 2, -210 * s, 0);
+    return { dur: 6, step: t => {
+      if (t < next || t > 4.8) return;
+      const s = sfSpeed(), B = sfBox, gap = Math.max(70, 112 - s * 22), mid = B.y + B.h / 2 + Math.sin(t * 2.4 * Math.min(1.5, s)) * (B.h / 2 - gap / 2 - 12);
+      next = t + .14 / s;
+      sfBone(B.x + B.w + 4, B.y, 10, mid - gap / 2 - B.y, -230 * s, 0);
+      sfBone(B.x + B.w + 4, mid + gap / 2, 10, B.y + B.h - mid - gap / 2, -230 * s, 0);
+    } };
+  },
+  // bones raining from the ceiling, some aimed at the heart
+  rain: () => {
+    let next = 0;
+    return { dur: 5.5, step: t => {
+      if (t < next || t > 4.6) return;
+      const s = sfSpeed(), B = sfBox, aimed = Math.random() < .35;
+      next = t + .2 / s;
+      const x = aimed ? sfSoul[0] - 5 : B.x + 10 + Math.random() * (B.w - 30), h = 34 + Math.random() * 40;
+      sfBone(x, B.y - h, 10, h, 0, (230 + Math.random() * 120) * s);
     } };
   },
   // skull blasters around the box, aiming at the heart, charging then firing
   blasters: () => {
-    let next = .4, n = 0;
-    return { dur: 7.5, step: t => {
-      if (t < next || n >= 6) return;
+    let next = .2, n = 0;
+    return { dur: 6.5, step: t => {
+      if (t < next || n >= 8) return;
       const s = sfSpeed(), B = sfBox, a = Math.random() * Math.PI * 2, R = Math.max(B.w, B.h) / 2 + 90;
       const x = B.x + B.w / 2 + Math.cos(a) * R, y = B.y + B.h / 2 + Math.sin(a) * R * .8;
-      next = t + 1.05 / s;
+      next = t + .75 / s;
       n++;
-      SF.objs.push({ kind: "blaster", x, y, a: Math.atan2(sfSoul[1] - y, sfSoul[0] - x), t: 0, charge: .95 / s, fire: .5 });
-      sfNoiseUp();
+      sfBlast(x, y, Math.atan2(sfSoul[1] - y, sfSoul[0] - x));
+    } };
+  },
+  // four blasters at once, crossing on the heart
+  cross: () => {
+    let done = 0;
+    return { dur: 3.2, step: t => {
+      if (done >= 2 || t < done * 1.6) return;
+      const B = sfBox, R = Math.max(B.w, B.h) / 2 + 80, [hx, hy] = sfSoul, turn = done ? Math.PI / 4 : 0;
+      done++;
+      for (let i = 0; i < 4; i++) {
+        const a = turn + i * Math.PI / 2, x = hx + Math.cos(a) * R, y = hy + Math.sin(a) * R;
+        sfBlast(x, y, a + Math.PI);
+      }
     } };
   },
 };
-const sfNoiseUp = () => smNoise(600, 300, 1800, .12, "swell");
+const SF_NAMES = Object.keys(SF_PATTERNS);
 // The heart's box (inside the border)
 const sfInside = () => ({ x0: sfBox.x + 12, y0: sfBox.y + 12, x1: sfBox.x + sfBox.w - 12, y1: sfBox.y + sfBox.h - 12 });
 
-// ── The turns
-const sfAttack = () => {
-  SF.phase = "attack";
-  SF.t = 0;
-  SF.objs = [];
+// The fight itself: patterns one after another, the next one starting earlier and earlier, so they
+// overlap more and more
+const sfFightStart = () => {
+  SF.phase = "fight";
+  SF.fight = 0;
+  SF.nextAt = 2.2;  // a moment to get in place
+  SF.n = 0;
   sfUi.classList.add("attacking");
   sfUi.querySelector(".text").textContent = "";
   const I = sfInside();
-  sfSoul = [(I.x0 + I.x1) / 2, (I.y0 + I.y1) / 2];  // the heart in the middle
-  const names = Object.keys(SF_PATTERNS);
-  const pick = () => names[Math.floor(Math.random() * names.length)];
-  const first = SF.turn === 0 ? "run" : pick();
-  let second = pick();
-  if (second === first) second = names[(names.indexOf(first) + 1) % names.length];
-  // the first turn: three seconds to get in place, one pattern only
-  SF.pats = SF.turn === 0 ? [{ wait: 3 }, first] : [{ wait: 1 }, first, second];
-  SF.pat = null;
-  smAnimate(smArm, [{ transform: "rotate(0)" }, { transform: "rotate(-50deg)" }, { transform: "rotate(0)" }], { duration: 700, easing: "ease-in-out" });
+  sfSoul = [(I.x0 + I.x1) / 2, (I.y0 + I.y1) / 2];
 };
-const SF_FLAVOUR = [
-  "* The snowman's eye burns blue.\n* You feel like studying would have been safer.",
-  "* Snow keeps falling.\n* Somewhere, a deadline is getting closer.",
-  "* The snowman is sweating.\n* ...no, wait, he's just melting a little.",
-  "* The snowman hums along to the music.",
-  "* It smells like carrots and danger.",
-];
-const sfMenu = text => {
-  SF.phase = "menu";
-  SF.objs = [];
-  SF.turn++;
-  sfUi.classList.remove("attacking");
-  sfUi.classList.add("choosing");
-  sfSay(text || SF_FLAVOUR[(SF.turn - 1) % SF_FLAVOUR.length]);
-};
-const sfAct = what => {
-  if (SF.phase !== "menu" || SF.over) return;
-  sfUi.classList.remove("choosing");
-  sfBlip(520, 60, .04);
-  SF.phase = "talk";
-  if (what === "mercy") {
-    smSays("Heh. Merry Christmas, kid.", 2600);
-    return sfSay("* You spared the snowman.", () => sfEnd(true));
-  }
-  if (what === "fight") {  // he simply steps aside
-    smAnimate(smSvg, [{ transform: "none" }, { transform: "translateX(-34px)" }, { transform: "translateX(-34px)" }, { transform: "none" }], { duration: 900, easing: "ease-in-out" });
-    smFloat("miss", "MISS", 180, 60, 1300);
-    return sfSay("* You swing at the snowman.\n* He just... steps aside.", sfAttack);
-  }
-  if (what === "act") return sfSay("* SNOWMAN - ATK 1 DEF 1\n* Made of snow. Very cool. Hates warm hands.", sfAttack);
-  SF.hp = SF_HP;
-  sfPaintHp();
-  sfBlip(880, 200, .04, "triangle");
-  sfSay("* You ate a snow cone.\n* Brain freeze! HP maxed out.", sfAttack);
+const sfNextPattern = () => {
+  const last = SF.active.length ? SF.active[SF.active.length - 1].name : "";
+  let name = SF.n === 0 ? "run" : SF_NAMES[Math.floor(Math.random() * SF_NAMES.length)];
+  if (name === last) name = SF_NAMES[(SF_NAMES.indexOf(name) + 1) % SF_NAMES.length];
+  const p = SF_PATTERNS[name]();
+  p.name = name;
+  p.t = 0;
+  SF.active.push(p);
+  SF.n++;
+  // the next one: at the end of this one at first, then sooner (from 1 s after the end to 45 % in)
+  const overlap = Math.min(1, SF.fight / 90);
+  SF.nextAt = SF.fight + p.dur * (1 - .55 * overlap) + (1 - overlap);
+  smAnimate(smArm, [{ transform: "rotate(0)" }, { transform: "rotate(-50deg)" }, { transform: "rotate(0)" }], { duration: 600, easing: "ease-in-out" });
 };
 const sfPaintHp = () => {
   sfUi.querySelector(".bar i").style.transform = `scaleX(${(SF.hp / SF_HP).toFixed(3)})`;
   sfUi.querySelector(".hpn").textContent = `${SF.hp} / ${SF_HP}`;
 };
+// A hit: a point less at most every 60 ms of contact, a crunch, the window shakes, the box flashes
 const sfHurt = () => {
   const now = performance.now();
-  if (now - SF.hitAt < 70 || SF.over) return;
+  if (now - SF.hitAt < 60 || SF.over) return;
+  const first = now - SF.hitAt > 400;  // a new hit, not the same one going on
   SF.hitAt = now;
   SF.hp = Math.max(0, SF.hp - 1);
   sfPaintHp();
-  sfBlip(110, 70, .06);
+  if (first) {
+    smNoise(130, 1600, 300, .45);
+    sfBlip(160, 140, .07, "square", 60);
+  } else sfBlip(120, 50, .035);
+  SF.shake = Math.min(1, SF.shake + (first ? .8 : .25));
+  sfUi.classList.remove("hurt");
+  void sfUi.offsetWidth;
+  sfUi.classList.add("hurt");
   if (!SF.hp) sfGameOver();
 };
 const sfGameOver = () => {
   SF.over = true;
   SF.phase = "over";
   SF.objs = [];
+  SF.active = [];
   SF.t = 0;
-  sfBlip(70, 600, .08, "sawtooth");
+  sfBlip(220, 900, .08, "sawtooth", 50);
   smSays("Ha. Ha. ❄", 2600);
   sfUi.classList.add("over");
-  setTimeout(() => { if (SF.on) sfEnd(false); }, 3800);
+  setTimeout(() => { if (SF.on) sfEnd(); }, 3800);
 };
+// Does the heart at x, y touch a bone?
+const sfTouches = (x, y) => SF.objs.some(o => o.kind === "bone" && x + 5 > o.x && x - 5 < o.x + o.w && y + 5 > o.y && y - 5 < o.y + o.h && (!o.blue || sfMoved > 15));
 
-// ── Every frame: the heart, the patterns, the objects, the hits, the drawing
+// ── Every frame: the heart, the patterns, the objects, the hits, the shake, the drawing
 const sfFrame = now => {
   SF.raf = null;
   if (!SF.on) return;
@@ -218,49 +229,50 @@ const sfFrame = now => {
   SF.last = now;
   SF.t += dt;
   const I = sfInside(), prev = sfSoul.slice();
-  if (SF.phase === "attack") {
-    // the heart: towards the pointer (or by the arrows), at most 260 px/s, inside the box
+  if (SF.phase === "fight" || SF.phase === "talk") {
+    // the heart: where the pointer is (or moved by the arrows), kept inside the box
     const K = SF.keys, kx = (K.ArrowRight ? 1 : 0) - (K.ArrowLeft ? 1 : 0), ky = (K.ArrowDown ? 1 : 0) - (K.ArrowUp ? 1 : 0);
-    const max = 260 * dt;
-    if (kx || ky) { sfSoul[0] += kx * max; sfSoul[1] += ky * max; }
-    else if (smMouse) {
-      const dx = smMouse[0] - sfSoul[0], dy = smMouse[1] - sfSoul[1], d = Math.hypot(dx, dy);
-      if (d > .5) { const m = Math.min(d, max); sfSoul[0] += dx / d * m; sfSoul[1] += dy / d * m; }
-    }
+    if (kx || ky) { sfSoul[0] += kx * 300 * dt; sfSoul[1] += ky * 300 * dt; }
+    else if (smMouse && SF.phase === "fight") sfSoul = smMouse.slice();
     sfSoul[0] = Math.max(I.x0, Math.min(I.x1, sfSoul[0]));
     sfSoul[1] = Math.max(I.y0, Math.min(I.y1, sfSoul[1]));
-    // the patterns, one after the other
-    if (!SF.pat && SF.pats.length) {
-      const p = SF.pats.shift();
-      SF.pat = typeof p === "string" ? SF_PATTERNS[p]() : { dur: p.wait, step: () => {} };
-      SF.pat.t = 0;
-    }
-    if (SF.pat) {
-      SF.pat.t += dt;
-      SF.pat.step(SF.pat.t);
-      if (SF.pat.t >= SF.pat.dur) SF.pat = null;
-    }
-    if (!SF.pat && !SF.pats.length) sfMenu();
-  } else if (smMouse && SF.phase !== "over") sfSoul = smMouse.slice();  // free: the heart is the pointer
+  }
   sfMoved = Math.hypot(sfSoul[0] - prev[0], sfSoul[1] - prev[1]) / Math.max(dt, .001);
-  // objects
+  if (SF.phase === "fight") {
+    SF.fight += dt;
+    if (SF.fight >= SF.nextAt) sfNextPattern();
+    SF.active = SF.active.filter(p => { p.t += dt; p.step(p.t); return p.t < p.dur; });
+  }
+  // objects, and the hits (along the whole way the heart went this frame: a fast move does not
+  // jump through a bone)
+  for (const o of SF.objs) { if (o.kind === "bone") { o.x += o.vx * dt; o.y += o.vy * dt; } else o.t += dt; }
+  if (SF.phase === "fight") {
+    const steps = Math.min(12, Math.ceil(Math.hypot(sfSoul[0] - prev[0], sfSoul[1] - prev[1]) / 6));
+    for (let i = 1; i <= Math.max(1, steps); i++) {
+      const u = i / Math.max(1, steps);
+      if (sfTouches(smLerp(prev[0], sfSoul[0], u), smLerp(prev[1], sfSoul[1], u))) { sfHurt(); break; }
+    }
+  }
   const [hx, hy] = sfSoul;
   SF.objs = SF.objs.filter(o => {
-    if (o.kind === "bone") {
-      o.x += o.vx * dt;
-      o.y += o.vy * dt;
-      if (SF.phase === "attack" && hx + 5 > o.x && hx - 5 < o.x + o.w && hy + 5 > o.y && hy - 5 < o.y + o.h && (!o.blue || sfMoved > 15)) sfHurt();
-      return o.x > sfBox.x - 60 && o.x < sfBox.x + sfBox.w + 60;
-    }
-    o.t += dt;
-    if (o.t > o.charge && !o.boomed) { o.boomed = true; smNoise(500, 1400, 200, .3); }
-    if (o.t > o.charge && o.t < o.charge + o.fire && SF.phase === "attack") {
-      // distance from the heart to the beam's line, ahead of the skull
-      const ux = Math.cos(o.a), uy = Math.sin(o.a), rx = hx - (o.x - uy * 10), ry = hy - (o.y + ux * 10), along = rx * ux + ry * uy, across = Math.abs(-rx * uy + ry * ux);
+    if (o.kind === "bone") return o.x > sfBox.x - 60 && o.x < sfBox.x + sfBox.w + 60 && o.y < sfBox.y + sfBox.h + 10;
+    if (o.t > o.charge && !o.boomed) { o.boomed = true; smNoise(500, 1400, 200, .3); SF.shake = Math.max(SF.shake, .35); }
+    if (o.t > o.charge && o.t < o.charge + o.fire && SF.phase === "fight") {
+      // the distance from the heart to the beam's line (from the mouth, ahead of the skull)
+      const ux = Math.cos(o.a), uy = Math.sin(o.a), rx = hx - (o.x - uy * 17), ry = hy - (o.y + ux * 17), along = rx * ux + ry * uy, across = Math.abs(-rx * uy + ry * ux);
       if (along > 0 && across < 26) sfHurt();
     }
     return o.t < o.charge + o.fire + .35;
   });
+  // the shake, dying away
+  if (SF.shake > 0) {
+    const a = 10 * SF.shake * SF.shake;
+    sfUi.style.transform = `translate(${f1((Math.random() - .5) * 2 * a)}px,${f1((Math.random() - .5) * 2 * a)}px)`;
+    SF.shake = Math.max(0, SF.shake - dt * 4);
+    if (!SF.shake) sfUi.style.transform = "";
+  }
+  // the flame follows his gaze (snowman.js moves his eyes)
+  if (sfFlame) { const k = smK(); sfFlame.cv.style.transform = `translate(${f1(smLookOff[0] * k)}px,${f1(smLookOff[1] * k)}px)`; }
   sfDraw(now);
   SF.raf = requestAnimationFrame(sfFrame);
 };
@@ -310,9 +322,9 @@ const sfBlaster = (c, o) => {
   if (firing) {  // the beam, flickering a little
     const w = 46 * (o.t < o.charge + o.fire ? 1 + .06 * Math.sin((o.t - o.charge) * 60) : fade);
     c.fillStyle = "rgba(170,230,255,.55)";
-    c.fillRect(40, 10 - w / 2 - 5, 3000, w + 10);
+    c.fillRect(40, 17 - w / 2 - 5, 3000, w + 10);
     c.fillStyle = "#fff";
-    c.fillRect(40, 10 - w / 2, 3000, w);
+    c.fillRect(40, 17 - w / 2, 3000, w);
   }
   c.scale(1.7 * grow, 1.7 * grow);
   c.fillStyle = "#fff";
@@ -362,7 +374,9 @@ const sfBlaster = (c, o) => {
   }
   c.restore();
 };
-// ── His burning eye: a ray-marched volumetric flame (WebGL), on a canvas over his face
+
+// ── His burning eye: a ray-marched volumetric flame (WebGL), on a canvas over his face. The eye
+// itself (the blue glow of his drawing, snowman.css) stays visible: the flame rises from its top.
 const SF_FLAME_FS = `precision mediump float;
 uniform vec2 R; uniform float T;
 float h3(vec3 p){ p = fract(p * vec3(.1031, .1030, .0973)); p += dot(p, p.yxz + 33.33); return fract((p.x + p.y) * p.z); }
@@ -370,16 +384,17 @@ float n3(vec3 x){ vec3 i = floor(x), f = fract(x); f = f * f * (3. - 2. * f);
   return mix(mix(mix(h3(i), h3(i + vec3(1,0,0)), f.x), mix(h3(i + vec3(0,1,0)), h3(i + vec3(1,1,0)), f.x), f.y),
              mix(mix(h3(i + vec3(0,0,1)), h3(i + vec3(1,0,1)), f.x), mix(h3(i + vec3(0,1,1)), h3(i + vec3(1,1,1)), f.x), f.y), f.z); }
 float fbm(vec3 p){ float s = 0., a = .5; for (int i = 0; i < 4; i++) { s += a * n3(p); p = p * 2.02 + vec3(3.1, 1.7, 5.3); a *= .5; } return s; }
-// the flame's density at p: rising from the eye (y = 0), wide at the base, thinning, leaning back
-// and swaying, eaten by noise that climbs with time
+// the flame's density at p: rising from the top of the eye (the eye: a disc of radius .1 around 0),
+// wide at its root, thinning, leaning back and swaying, eaten by noise that climbs with time
 float dens(vec3 p){
-  float y = p.y;
-  if (y < -.1) return 0.;
-  vec3 q = p - vec3(-.24 * y * y + .06 * sin(T * 2.3 + y * 3.) * y, 0., 0.);
-  float r = mix(.15, .015, smoothstep(0., 1.35, y)) + .05 * exp(-y * 9.);
+  float y = p.y - .07;
+  if (y < -.05) return 0.;
+  vec3 q = p - vec3(-.26 * y * y + .06 * sin(T * 2.3 + y * 3.) * y, 0., 0.);
+  float r = mix(.12, .015, smoothstep(0., 1.3, y)) + .03 * exp(-y * 10.);
   float d = length(q.xz) - r;
   float n = fbm(vec3(q.x * 4.2, q.y * 3.4 - T * 3.2, q.z * 4.2 + T * .6));
-  return clamp(-d * 9. + (n - .5) * 2.4 + .3, 0., 1.) * (1. - smoothstep(1.05, 1.45, y));
+  float keep = smoothstep(.1, .17, length(p.xy));  // not over the eye
+  return clamp(-d * 9. + (n - .5) * 2.4 + .3, 0., 1.) * (1. - smoothstep(1.0, 1.4, y)) * smoothstep(-.05, .06, y) * keep;
 }
 void main(){
   vec2 uv = (gl_FragCoord.xy - vec2(.5 * R.x, .07 * R.y)) / R.y;
@@ -396,9 +411,11 @@ void main(){
       if (tr < .03) break;
     }
   }
-  float g = .01 / (dot(uv, uv) + .004);  // the glow of the eye itself
-  col += vec3(.25, .7, 1.) * g * .3;
-  gl_FragColor = vec4(col, clamp(1. - tr + g * .12, 0., 1.));
+  // a soft halo around the eye, outside it
+  float r = length(uv * 1.6);
+  float g = .006 / (abs(r - .11) + .02) * smoothstep(.09, .13, r);
+  col += vec3(.2, .6, 1.) * g * .5;
+  gl_FragColor = vec4(col, clamp(1. - tr + g * .2, 0., 1.));
 }`;
 const sfFlameStart = () => {
   const k = smK(), cv = document.createElement("canvas");
@@ -443,12 +460,13 @@ const sfFlameStop = () => {
 // ── Start and end
 const sfKey = e => {
   if (!SF.on) return;
-  if (e.key === "Escape") { e.preventDefault(); return sfEnd(true); }
+  if (e.key === "Escape") { e.preventDefault(); return sfEnd(); }
   if (e.key.indexOf("Arrow") === 0) { e.preventDefault(); SF.keys[e.key] = e.type === "keydown"; }
 };
 const sfStart = () => {
   if (SF.on || smStill()) return;
-  Object.assign(SF, { on: true, phase: "", t: 0, turn: 0, hp: SF_HP, hitAt: 0, objs: [], pat: null, pats: [], keys: {}, over: false });
+  Object.assign(SF, { on: true, phase: "talk", t: 0, fight: 0, hp: SF_HP, hitAt: 0, shake: 0, objs: [], active: [], nextAt: 0, n: 0, keys: {}, over: false });
+  smUnfreeze();  // no slow, frozen pointer from a snowball during the fight
   smBusy = true;
   snowman.classList.add("hold");
   document.body.classList.add("sansfight");
@@ -458,34 +476,28 @@ const sfStart = () => {
   sfUi = document.createElement("div");
   sfUi.id = "xfight";
   sfUi.innerHTML = '<div class="box"><p class="text"></p></div><canvas></canvas>' +
-    `<div class="stats"><b>YOU</b><span>LV 1</span><span class="hp">HP</span><i class="bar"><i></i></i><span class="hpn">${SF_HP} / ${SF_HP}</span></div>` +
-    '<div class="menu">' + [["fight", "FIGHT"], ["act", "ACT"], ["item", "ITEM"], ["mercy", "MERCY"]].map(([a, n]) =>
-      `<button type="button" data-a="${a}"><i></i>${n}</button>`).join("") + "</div>";
+    `<div class="stats"><b>YOU</b><span>LV 1</span><span class="hp">HP</span><i class="bar"><i></i></i><span class="hpn">${SF_HP} / ${SF_HP}</span><small>ESC: run away</small></div>`;
   sfCv = sfUi.querySelector("canvas");
   sfCtx = sfCv.getContext("2d");
   document.body.append(sfUi);
   sfLayout();
-  sfUi.querySelectorAll(".menu button").forEach(b => {
-    b.addEventListener("click", e => { e.stopPropagation(); sfAct(b.dataset.a); });
-    b.addEventListener("pointerenter", () => { if (SF.phase === "menu") sfBlip(330, 30, .03); });
-  });
   sfUi.addEventListener("pointerdown", e => e.stopPropagation());
   addEventListener("resize", sfLayout);
   addEventListener("keydown", sfKey, true);
   addEventListener("keyup", sfKey, true);
   sfFlame = sfFlameStart();
   if (sfFlame) snowman.classList.add("flaming");
-  sfSoul = smMouse ? smMouse.slice() : [innerWidth / 2, innerHeight / 2];
+  const I = sfInside();
+  sfSoul = [(I.x0 + I.x1) / 2, (I.y0 + I.y1) / 2];
   SF.last = performance.now();
   SF.raf = requestAnimationFrame(sfFrame);
-  // the dark falls, a line, then the first attack (slow, after a moment to get in place)
-  SF.phase = "talk";
+  // the dark falls, the one line, then the fight, which never stops
   setTimeout(() => {
     if (!SF.on) return;
-    sfSay("* The snowman blocks the way!\n* Get ready...", () => { if (SF.on) sfAttack(); });
+    sfSay("* The snowman blocks the way!\n* Get ready...", () => { if (SF.on) sfFightStart(); });
   }, 900);
 };
-// spared: the song stops with it; lost: too
+// Over: the song stops with it
 const sfEnd = () => {
   if (!SF.on) return;
   SF.on = false;
