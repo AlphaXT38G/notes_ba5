@@ -655,7 +655,11 @@ moon.innerHTML = MOON;
 // a grainy snow texture, contact shadows and a snowdrift at its base, irregular lumps of coal, a
 // carrot seen in perspective, a battered top hat tilted back with snow on the brim, a knitted scarf
 // with one end blowing behind, tapering branches for arms. It blinks, now and then turns its face
-// a little more towards the courses, and waves with the arm on that side (CSS).
+// a little more towards the courses, and waves with the arm on that side (CSS). Its hat, nose,
+// brows, cheeks, steam and fishing rod are parts of their own for its games (snowman.js).
+// His carrot nose, also drawn on its own when it is taken from him (snowman.js)
+const SNOWMAN_NOSE = `<path d="M178,147C192,145 220,150 244,160 222,163 196,162 179,158 175,155 175,149 178,147Z" fill="url(#sm-carrot)"/>` +
+  `<path d="M186,148q2,6 0,11M198,149q2,5 0,10M210,152q1.5,4 0,8M222,155q1,3 0,6" stroke="#a5470a" stroke-width="1.3" fill="none" stroke-linecap="round"/>`;
 const SNOWMAN = (() => {
   const rnd = seeded(31);
   // closed wobbly outline through n points around an ellipse, smoothed (Catmull-Rom to Bezier)
@@ -712,15 +716,19 @@ const SNOWMAN = (() => {
     `<g class="headball">${ball(HEAD)}<g class="face"><g class="eyes"><ellipse cx="166" cy="140" rx="5.5" ry="6.5" fill="url(#sm-coal)"/><ellipse cx="190" cy="138" rx="4.2" ry="6" fill="url(#sm-coal)"/>` +
     `<circle cx="164.5" cy="137.5" r="1.4" fill="rgba(255,255,255,.7)"/><circle cx="188.8" cy="135.8" r="1.1" fill="rgba(255,255,255,.7)"/></g>` +
     [[160, 170, 3.2], [168, 175, 3.3], [177, 177, 3.3], [186, 175, 3], [193, 170, 2.6]].map(([x, y, r]) => coal(x, y, r)).join("") +
-    `<path d="M178,147C192,145 220,150 244,160 222,163 196,162 179,158 175,155 175,149 178,147Z" fill="url(#sm-carrot)"/>` +
-    `<path d="M186,148q2,6 0,11M198,149q2,5 0,10M210,152q1.5,4 0,8M222,155q1,3 0,6" stroke="#a5470a" stroke-width="1.3" fill="none" stroke-linecap="round"/></g>` +
+    `<g class="nose">${SNOWMAN_NOSE}</g>` +
+    // when cross (snowman.js): frowning brows, red cheeks
+    `<g class="brows"><path d="M156,126 172,133M184,131 199,123" stroke="#1e1e25" stroke-width="3.6" stroke-linecap="round"/></g>` +
+    `<g class="blush"><ellipse cx="154" cy="160" rx="8" ry="4.5"/><ellipse cx="200" cy="158" rx="6" ry="4"/></g></g>` +
     // battered top hat tilted back, snow on the brim, red band with holly
-    `<g transform="rotate(-9 164 104)"><ellipse cx="164" cy="106" rx="62" ry="14" fill="#16161d"/><ellipse cx="164" cy="104" rx="60" ry="12" fill="#25252f"/>` +
+    `<g class="hat"><g transform="rotate(-9 164 104)"><ellipse cx="164" cy="106" rx="62" ry="14" fill="#16161d"/><ellipse cx="164" cy="104" rx="60" ry="12" fill="#25252f"/>` +
     `<path d="M126,104C125,80 127,56 129,36 150,30 180,30 201,36 202,58 203,82 202,104 188,111 140,111 126,104Z" fill="url(#sm-hat)"/>` +
     `<ellipse cx="165" cy="36" rx="36" ry="7.5" fill="#3a3a48"/><path d="M146,40c4,8 6,16 4,26" stroke="rgba(255,255,255,.08)" stroke-width="3" fill="none"/>` +
     `<path d="M126,86C140,92 188,92 202,86L202,100C188,107 140,107 126,100Z" fill="#a30d26"/>` +
     `<path d="M190,94c-6,-10 -16,-8 -20,-12 4,6 0,10 6,12 -4,2 0,6 -2,10 6,-4 10,-2 16,-10Z" fill="#1f7a3e"/><circle cx="190" cy="94" r="3.4" fill="#d6203a"/><circle cx="196" cy="90" r="3.2" fill="#c8102e"/>` +
     `<path d="M106,104c6,-6 14,-5 20,-2 6,-4 14,-3 18,1M190,100c6,-5 14,-5 20,0" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none" opacity=".9"/></g></g>` +
+    // steam puffing out from under the hat when he is about to lose it
+    `<g class="steam"><circle cx="122" cy="96" r="7"/><circle cx="206" cy="94" r="6"/><circle cx="118" cy="84" r="5"/></g></g>` +
     // scarf around the neck, knotted on the right, its end hanging down the front
     `<path d="M108,196C122,214 196,216 212,196L215,212C198,232 120,232 104,212Z" fill="url(#sm-scarf)"/><path d="M108,196C122,214 196,216 212,196L215,212C198,232 120,232 104,212Z" fill="url(#sm-knit)"/>` +
     `<ellipse cx="196" cy="216" rx="11" ry="9" fill="#9b0d22"/>` +
@@ -728,7 +736,10 @@ const SNOWMAN = (() => {
     `<path d="M190,244 207,242M192,264 210,262" stroke="rgba(255,255,255,.4)" stroke-width="4"/>` +
     `<path d="M197,292v9M201,291v11M205,290v9M209,290v10M213,289v8" stroke="#b3122e" stroke-width="2.2" stroke-linecap="round"/>` +
     // near arm, towards the courses: the one that waves
-    `<g class="wave"><g class="twig">${branch(218, 258, 274, 212, 7)}${branch(250, 232, 280, 224, 3.5)}${branch(262, 222, 262, 194, 3)}</g></g></svg>`;
+    `<g class="wave"><g class="twig">${branch(218, 258, 274, 212, 7)}${branch(250, 232, 280, 224, 3.5)}${branch(262, 222, 262, 194, 3)}</g>` +
+    // the fishing rod he takes out to get his nose back from afar (snowman.js), its tip at 334,104
+    `<g class="rod"><path d="M262,226 334,104" stroke="#3b2414" stroke-width="3.4" stroke-linecap="round"/><path d="M300,162 334,104" stroke="#6b4423" stroke-width="2" stroke-linecap="round"/>` +
+    `<circle cx="276" cy="212" r="6" fill="#8a8f99" stroke="#3a3d44" stroke-width="1.5"/><path d="M276,212l5,-3" stroke="#3a3d44" stroke-width="1.5"/></g></g></svg>`;
 })();
 const snowman = document.createElement("div");
 snowman.id = "xsnowman";
