@@ -143,6 +143,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `supernova.js` | `createSupernova()`: the multi-stage supernova that ends the Konami black hole (flash, shock wave, ejecta, nebula, pulsar), one WebGL canvas over the page |
 | `konami.js` | Konami code: black hole (CSS drawing as a fallback without WebGL) swallowing the page letter by letter, then its boxes and the music player (the Christmas garland, jar, sax and guitar fade out, `konami.css`; they stay hidden during the party theme), until it overheats, implodes and explodes in a supernova; confetti, party theme |
 | `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()`; `screenTrack()` / `preloadTrack()` / `dropTrack()` for the screens' music |
+| `youtube.js` | the YouTube players of the music (the day's cassettes, the Christmas radio): `ytPlay()` / `ytPause()` / `ytSound()` / `ytSeek()` / `ytWarm()`. One hidden `<iframe>` per video, kept once made (coming back to a video plays on, with no new ad), muted while YouTube plays an ad (the video's own time stands still), and made ahead by `ytWarm()` to go through its ads muted |
 | `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable playing `audio/jazz.mp3`, neon sign going out |
 | `closing.js` | closing time: the life-size bartender behind his bar (photo layers from `img/bartender/`: head nodding, forearm tapping the desk bell, chest breathing), swinging lamp, desk bell "ding" (Web Audio), typed speech, chalkboard with countdown, "Good night" |
 | `fx.js` | the effects canvas of every screen: `fxLayers` (by `<body>` class), `blob()`, the animation loop |
@@ -152,7 +153,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), "Back to normal" |
 | `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, night forest sounds (`audio/calm.mp3`, quieter), dawn birds made with Web Audio, firefly jar; the `peace` code (the last override: the calm night at any time; `startPeace()`, also called by the Christmas jar) |
 | `normal.js` | `normal` code: the day at any time, over every screen (the very last override, after `calm.js`); typed again, back to the clock's screen |
-| `tapes.js` | the day's cassette deck (no screen only): an early-80s hi-fi deck (VU meters, LED counter, piano keys ⏏ ◀◀ ▶❚❚ ▶▶ and the station key) whose music comes in bands (`TAPE_BANDS`): Lofi Girl mixes, then the screens' music (jazz, late night, metal, epic, Christmas), then Radio Impuls live. A tape is a YouTube video (hidden `<iframe>` driven by `postMessage`), an mp3 of `site/audio/` or a live stream (`<audio>`). The station key goes to the next band, ⏏ or the next tape's case behind the deck to the next tape of the band (door opens, tape out, new one in, door closes); never plays by itself, the tape is remembered |
+| `tapes.js` | the day's cassette deck (no screen only): an early-80s hi-fi deck (VU meters, LED counter, piano keys ⏏ ◀◀ ▶❚❚ ▶▶ and the station key) whose music comes in bands (`TAPE_BANDS`): Lofi Girl mixes, then the screens' music (jazz, late night, metal, epic, Christmas), then Radio Impuls live. A tape is a YouTube video (a `youtube.js` player; every YouTube tape is warmed up, ads included, once the deck is first reached for), an mp3 of `site/audio/` or a live stream (`<audio>`). The station key goes to the next band, ⏏ or the next tape's case behind the deck to the next tape of the band (door opens, tape out, new one in, door closes); never plays by itself, the tape is remembered |
 | `start.js` | **last**: first `applyScreen()`, then the every-second clock check |
 
 ### CSS files, in cascade order
@@ -285,8 +286,9 @@ Example: a calm "dawn" screen from 06:00 to 07:00.
   played with `screenTrack()` (`screens.js`, or loaded ahead with `preloadTrack()` when a show
   is coming), never put in the page, and stopped with `dropTrack()` when its screen ends (the
   day's cassette deck also plays a radio's live stream, `tapes.js`, the same way). The
-  YouTube players left (the Christmas radio, the day's cassettes in `tapes.js`) are hidden
-  `<iframe>`s driven by `postMessage` commands; a fresh player ignores commands until ready.
+  YouTube players left (the Christmas radio, the day's cassettes in `tapes.js`) go through
+  `youtube.js`: hidden `<iframe>`s driven by `postMessage` commands, never removed, muted during
+  ads. Never make a YouTube `<iframe>` of your own: it would play the ads aloud.
 
 ### Phones and older browsers
 

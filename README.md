@@ -54,6 +54,8 @@ goes through the bands: Lofi Girl mixes from YouTube, the music of the screens (
 bar, late night, metal show, epic finale, Christmas) and Radio Impuls live. ⏏, or the
 next tape leaning behind the deck, puts in the next tape of the band. It never starts
 by itself, and only shows during the day.
+YouTube ads stay silent: only the music is heard, and a tape you come back to plays on
+where it was, without a new ad.
 
 From **21:30 to 01:00** the page turns into a jazz bar 🎷 (neon title, smoke,
 floating notes) and plays background jazz ("Just One More Drink", jazz noir). The
