@@ -109,8 +109,8 @@ other record waits in its sleeve behind the turntable: click it to swap them), o
 paused. At night the moon rises, chalets light up on the mountains, the tree lights
 play changing patterns and Santa's sleigh crosses the sky now and then. Look closely
 at the ornaments of the tree, under it, and along the garland. And play with the snowman: his hat,
-his carrot nose, tickle him, warm him up, play his buttons (and spam the lowest one)... but
-not too much, he throws snowballs. The metal show at 01:00
+his carrot nose, tickle him, warm him up, play his buttons (and spam the lowest one, if you
+want a bad time)... but not too much, he throws snowballs. The metal show at 01:00
 and the easter eggs still happen.
 
 Add `?screen=evening`, `?screen=closing`, `?screen=metal`, `?screen=epic`, `?screen=calm`,
