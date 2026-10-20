@@ -1029,7 +1029,8 @@ everySecond.push(() => {
 // jazz, without a user gesture yet it starts muted and the sound comes on at the first click or
 // key press.
 const XMAS_LIVE = "XSXEaikz0Bc";
-let carolsRock = null, carolsRadio = null;  // the record's player: an <audio>, or the YouTube <iframe>
+let carolsRock = null, carolsRadio = false;  // the record on: an <audio>, or the YouTube radio (youtube.js)
+const CAROLS_YT = {};  // the turntable, as the owner of the radio's player
 let carolsPlaying = false, carolsMuted = false, carolsSoundAt = 0;
 let carolsRecord = (() => { try { return localStorage.getItem("xmas-record") === "radio" ? "radio" : "rock"; } catch (e) { return "rock"; } })();
 const xmasDeck = document.createElement("button");
@@ -1060,41 +1061,36 @@ const paintDeck = () => {
   xmasSleeve.title = `Put on ${XMAS_RECORDS[other].name}`;
   xmasSleeve.setAttribute("aria-label", xmasSleeve.title);
 };
-const carolsCommand = func => carolsRadio && carolsRadio.contentWindow.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
+// The radio's player stays in the page once made (paused when the record is off), and is muted
+// during YouTube's ads: coming back to it plays on with no new ad (youtube.js)
 const carolsStart = muted => {  // puts the chosen record on, playing
   if (carolsRecord === "rock") carolsRock = screenTrack("jingle-bell-rock.mp3", { muted });
-  else {
-    carolsRadio = document.createElement("iframe");
-    carolsRadio.id = "carols";
-    carolsRadio.title = "Christmas music";
-    carolsRadio.allow = "autoplay; encrypted-media";
-    carolsRadio.src = `https://www.youtube.com/embed/${XMAS_LIVE}?autoplay=1&mute=${muted ? 1 : 0}&controls=0&enablejsapi=1`;
-    document.body.append(carolsRadio);
-  }
+  else { ytPlay(XMAS_LIVE, CAROLS_YT, !muted); carolsRadio = true; }
   carolsMuted = muted;
 };
 const carolsStop = () => {  // takes the record off
   dropTrack(carolsRock);
-  if (carolsRadio) carolsRadio.remove();
-  carolsRock = carolsRadio = null;
+  if (carolsRadio) ytPause(XMAS_LIVE, CAROLS_YT);
+  carolsRock = null;
+  carolsRadio = false;
 };
 const carolsPlay = (muted = false) => {
   if (carolsRock) carolsRock.play().catch(() => {});
-  else if (carolsRadio) carolsCommand("playVideo");
+  else if (carolsRadio) ytPlay(XMAS_LIVE, CAROLS_YT, !carolsMuted);
   else carolsStart(muted);
   carolsPlaying = true;
   try { localStorage.removeItem("xmas-music"); } catch (e) {}
   paintDeck();
 };
 const carolsPause = () => {
-  if (carolsRock) carolsRock.pause(); else carolsCommand("pauseVideo");
+  if (carolsRock) carolsRock.pause(); else ytPause(XMAS_LIVE, CAROLS_YT);
   carolsPlaying = false;
   try { localStorage.setItem("xmas-music", "off"); } catch (e) {}
   paintDeck();
 };
 const carolsSound = () => {
   if (!carolsMuted) return;
-  if (carolsRock) carolsRock.muted = false; else carolsCommand("unMute");
+  if (carolsRock) carolsRock.muted = false; else ytSound(XMAS_LIVE, CAROLS_YT, true);
   carolsMuted = false;
   carolsSoundAt = performance.now();
   paintDeck();
@@ -1119,11 +1115,17 @@ xmasSleeve.addEventListener("click", e => {  // the records swap: the one on goe
   clearTimeout(xmasSwapEnd);
   xmasSwapEnd = setTimeout(() => { xmasDeck.classList.remove("swap"); xmasSleeve.classList.remove("swap"); }, 600);
 });
+const carolsWarm = () => ytWarm(XMAS_LIVE);
 const setCarols = on => {
   document.removeEventListener("pointerdown", carolsSound);
   document.removeEventListener("keydown", carolsSound);
   if (!on) { carolsStop(); carolsPlaying = carolsMuted = false; xmasDeck.remove(); xmasSleeve.remove(); return; }
   document.body.append(xmasSleeve, xmasDeck);
+  // The radio made ahead, through its ads, once the turntable is reached for (youtube.js)
+  ["pointerenter", "touchstart", "focusin"].forEach(type => {
+    xmasDeck.addEventListener(type, carolsWarm, { passive: true });
+    xmasSleeve.addEventListener(type, carolsWarm, { passive: true });
+  });
   if (!carolsOff()) {
     const canSound = screenGesture();
     carolsPlay(!canSound);

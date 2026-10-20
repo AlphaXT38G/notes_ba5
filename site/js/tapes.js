@@ -4,7 +4,7 @@
 // piano keys). The music comes in bands, the deck's "stations": the Lofi Girl mixes from YouTube,
 // then the music of the screens (jazz bar, late night, metal show, epic finale, Christmas), then
 // Radio Impuls live. A tape is a YouTube video (`id`, a hidden <iframe> driven by postMessage
-// commands, like the Christmas radio), an mp3 of site/audio (`file`) or a live stream (`stream`),
+// commands, like the Christmas radio: youtube.js, muted during ads), an mp3 of site/audio (`file`) or a live stream (`stream`),
 // both played by an <audio>.
 // The keys: ⏏ puts in the next tape of the band, ◀◀ / ▶▶ wind 30 s back / forward, ▶❚❚ plays or
 // pauses, and the station key goes to the next band (its name shows on the counter a moment).
@@ -111,37 +111,35 @@ const tellTape = () => {
   tapeTell = setTimeout(() => tapeDeck.classList.remove("tell"), 4000);
 };
 
-// The sources. YouTube: a hidden <iframe>, commanded once ready (a fresh player ignores commands).
-// mp3 and stream: an <audio>, never put in the page (screens.js).
-const tapeCommand = (func, args = []) => tapeSrc && tapeSrc.tagName === "IFRAME"
-  && tapeSrc.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
-const tapeStop = () => {  // the tape out of the deck: its player goes
-  if (tapeSrc && tapeSrc.tagName === "IFRAME") tapeSrc.remove();
+// The sources. YouTube: a hidden <iframe> of youtube.js, kept when the tape comes out (it comes
+// back where it was, with no new ad) and muted while an ad plays. mp3 and stream: an <audio>,
+// never put in the page (screens.js).
+const TAPE_YT = {  // the deck, as the owner of a YouTube player: its time and its end
+  onTime: t => { tapeTime = t; paintCounter(); },
+  onEnd: () => { if (tapePlaying) swapTape(tapeBand, tapeNext()); },
+};
+const tapeYT = () => tapeSrc && tapeSrc.tagName === "IFRAME";
+const tapeStop = () => {  // the tape out of the deck: a YouTube player waits, paused; an <audio> goes
+  if (tapeYT()) ytPause(tapeNow().id, TAPE_YT);
   else dropTrack(tapeSrc);
   tapeSrc = null;
   tapeReady = false;
   tapeTime = 0;
 };
+// Every YouTube tape made ahead, muted, through its ads: done once the deck is first reached for
+// (pointer over it, a tap, the keyboard), not for every visitor, who may never want music
+const tapeWarm = () => {
+  TAPE_BANDS.forEach(band => band.tapes.forEach(tape => { if (tape.id) ytWarm(tape.id); }));
+  ["pointerenter", "touchstart", "focusin"].forEach(type => tapeDeck.removeEventListener(type, tapeWarm));
+};
 const tapeStart = () => {
   const tape = tapeNow();
   if (tape.id) {
-    const player = tapeSrc = document.createElement("iframe");
-    player.id = "tapeplayer";
-    player.title = "Music";
-    player.allow = "autoplay; encrypted-media";
-    player.src = `https://www.youtube.com/embed/${tape.id}?autoplay=1&controls=0&enablejsapi=1`;
-    // Ask the player to report its state and time, as the YouTube iframe API does: again and
-    // again until it answers, since it does not listen yet when the frame has just loaded
-    player.addEventListener("load", () => {
-      let tries = 0;
-      const ask = () => {
-        if (tapeSrc !== player || tapeReady || ++tries > 20) return;
-        player.contentWindow.postMessage(JSON.stringify({ event: "listening", id: "tapes", channel: "widget" }), "*");
-        setTimeout(ask, 500);
-      };
-      ask();
-    });
-    document.body.append(player);
+    const player = ytPlay(tape.id, TAPE_YT, true);
+    tapeSrc = player.frame;
+    tapeReady = true;  // commands before the player is ready wait in youtube.js
+    tapeTime = player.time;
+    tapeWarm();  // and the other tapes get ready meanwhile
     return;
   }
   const track = tapeSrc = tape.file ? preloadTrack(tape.file, { loop: false }) : new Audio(tape.stream);
@@ -152,7 +150,7 @@ const tapeStart = () => {
 };
 const tapePlay = () => {
   if (tapeSrc && tapeReady) {
-    if (tapeSrc.tagName === "IFRAME") tapeCommand("playVideo"); else tapeSrc.play().catch(() => {});
+    if (tapeYT()) ytPlay(tapeNow().id, TAPE_YT, true); else tapeSrc.play().catch(() => {});
   } else {
     tapeStop();
     tapeStart();
@@ -161,10 +159,9 @@ const tapePlay = () => {
   paintTapes();
 };
 const tapePause = () => {
-  // A YouTube player not ready yet, or a live stream (resumed, it would play what it had kept),
-  // is stopped instead
-  if (!tapeReady || (tapeSrc.tagName !== "IFRAME" && tapeNow().stream)) tapeStop();
-  else if (tapeSrc.tagName === "IFRAME") tapeCommand("pauseVideo");
+  // A live stream is stopped instead (resumed, it would play what it had kept)
+  if (tapeYT()) ytPause(tapeNow().id, TAPE_YT);
+  else if (tapeNow().stream) tapeStop();
   else tapeSrc.pause();
   tapePlaying = false;
   paintTapes();
@@ -172,7 +169,7 @@ const tapePause = () => {
 const tapeWind = by => {
   if (!tapeSrc || !tapeReady || tapeNow().live) return;
   tapeTime = Math.max(0, tapeTime + by);
-  if (tapeSrc.tagName === "IFRAME") tapeCommand("seekTo", [tapeTime, true]); else tapeSrc.currentTime = tapeTime;
+  if (tapeYT()) ytSeek(tapeNow().id, TAPE_YT, tapeTime); else tapeSrc.currentTime = tapeTime;
   paintCounter();
 };
 
@@ -221,19 +218,6 @@ TAPE_KEYS.forEach(([k]) => tapeKey(k).addEventListener("click", () => {
   tellTape();
 }));
 tapeCase.addEventListener("click", () => { if (!tapeSwapping) swapTape(tapeBand, tapeNext()); });
-// What a YouTube player reports: that it is ready (commands now work), the time (the counter),
-// and its state: 0 = the mix has ended, then the next tape goes in
-window.addEventListener("message", e => {
-  if (!tapeSrc || tapeSrc.tagName !== "IFRAME" || e.source !== tapeSrc.contentWindow || typeof e.data !== "string") return;
-  let msg;
-  try { msg = JSON.parse(e.data); } catch (err) { return; }
-  const info = msg.info && typeof msg.info === "object" ? msg.info : {};
-  const state = msg.event === "onStateChange" ? msg.info : info.playerState;
-  if (msg.event === "onReady" || msg.event === "initialDelivery" || state !== undefined) tapeReady = true;
-  if (typeof info.currentTime === "number") { tapeTime = info.currentTime; paintCounter(); }
-  if (state === 0 && tapePlaying) swapTape(tapeBand, tapeNext());
-});
-
 const setTapes = on => {
   if (!on) {
     tapeStop();
@@ -247,6 +231,7 @@ const setTapes = on => {
   if (tapeDeck.isConnected) return;
   tapeBay.innerHTML = cassette(tapeNow());
   document.body.append(tapeDeck);
+  ["pointerenter", "touchstart", "focusin"].forEach(type => tapeDeck.addEventListener(type, tapeWarm, { passive: true }));
   paintTapes();
 };
 // Only during the day: the first screen is set by start.js, after this file, hence the timeout
