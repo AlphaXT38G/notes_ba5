@@ -84,7 +84,6 @@
 #tapedeck.swap .case{animation:tape-dip .7s ease-out}
 @keyframes tape-dip{45%{transform:rotate(7deg) translateY(1.6rem);opacity:.3}}
 
-#tapeplayer{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
 /* Touch screens: finger-sized keys; the deck is taller, so the case leans higher to show its label */
 @media(pointer:coarse){#tapedeck .key{height:2.75rem;font-size:.75rem}#tapedeck .case{bottom:5.65rem}#tapedeck .case .cassette{font-size:.65rem}}
 /* Phones: room under the last card to scroll it clear of the deck and its case, the label smaller */
