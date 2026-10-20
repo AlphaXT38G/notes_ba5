@@ -32,10 +32,12 @@ site/                 the index page (HTML, CSS, JS inlined into one dist/index.
   img/                  images, copied as files to dist/img/ (too heavy to inline); bartender/
                         holds the closing bartender's layers (the Gigachad meme photo, dressed as a
                         bartender by an image generator, used as an illustration in this
-                        non-commercial project)
+                        non-commercial project); frost.png is the frost the snowman's
+                        snowball leaves on the window
   audio/                the screens' music, mp3 files copied to dist/audio/: jazz, metal, epic,
                         calm (the night's forest) and jingle-bell-rock (Christmas); the day's
-                        cassette deck plays them too
+                        cassette deck plays them too; megalovania is the Christmas snowman's
+                        (his fifth button)
 tools/bartender/      remakes the bartender's layers from source.webp (open it through a local
                       server, see below): cut-out, joints, bar counter and desk bell
 subjects.json         subjects: id, display name, exam rules, optional "weeks" and "color"
@@ -98,7 +100,22 @@ on both Christmas screens (day and night) a small golden sax hidden among the tr
 opens the jazz bar; a little fir in the bar's bottom right corner brings Christmas back. A red
 guitar standing behind the green gift under the tree starts the metal show (then Christmas comes
 back), and a firefly jar swinging under the garland opens the calm night (like `peace`, but the
-fir shows there too and brings Christmas back). `armstrong` typed anywhere but the search field
+fir shows there too and brings Christmas back). The Christmas snowman can be teased: his eyes
+follow the pointer; a click knocks his hat off; his carrot nose can be dragged away (put back on
+him he plants it again, dropped elsewhere he casts a fishing rod and reels it back); a click on
+his body tickles him (it calms him down), a press held on it melts him into a puddle; his coal
+buttons are a xylophone (eight notes and he dances, the start of Jingle Bells and he sings on).
+The third tease (hat, nose, melting him flat) makes him bend down, scoop snow from his belly, pack
+a snowball and throw it in our face: it grows until it fills the window and splashes, then lumps
+of snow, blinks, frost and a slow pointer (about 15 s). His fifth, lowest button plays
+Megalovania, one note per click (his eye glows blue); the 22nd click plays the whole song
+(`audio/megalovania.mp3`) and starts a fight in the style of the old pixel RPG duels: the page
+goes black around him, a blue flame rises from his glowing eye, the battle box takes the place of
+the courses and the pointer becomes a red heart (exactly where the pointer is, never slowed; or
+moved by the arrow keys) dodging bones and skull blasters, non-stop, faster and faster, before
+dioramas of cut paper that change during the fight; a hit shakes the screen. Escape, game over or
+the end of the song end it.
+`armstrong` typed anywhere but the search field
 opens the jazz bar at any time (over Christmas and the calm night too, but not over the shows);
 typed again in the bar it goes back to
 the normal screen of that moment, by the clock alone: it drops the `armstrong` and `yeti` eggs, the
@@ -148,6 +165,9 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `closing.js` | closing time: the life-size bartender behind his bar (photo layers from `img/bartender/`: head nodding, forearm tapping the desk bell, chest breathing), swinging lamp, desk bell "ding" (Web Audio), typed speech, chalkboard with countdown, "Good night" |
 | `fx.js` | the effects canvas of every screen: `fxLayers` (by `<body>` class), `blob()`, the animation loop |
 | `christmas.js` | Christmas screens: date override and `yeti` code, garland, winter scene (mountains and chalets, moon, tree and gifts drawn in volume with a shared `bow3d` and `giftTag`, snowman), night lights canvases (tree, garland halos), snow, sleigh, music (Jingle Bell Rock or the YouTube Christmas radio, swapped with the sleeve behind the turntable, or paused), hidden sax and guitar (the guitar draws the gifts in front of it again over itself, to stand behind them while staying clickable), firefly jar swinging under the garland (a pendulum pushed by the wind, the mouse and scrolling, asleep once settled) |
+| `snowman.js` | the Christmas snowman's games (drawn in `christmas.js`, with his hat, nose, eyes, buttons, brows, steam, sweat, puddle, belly hollow, blue eye and two halves bending at the waist as parts of their own): eyes following the pointer, hat knocked off, nose dragged away and put back by him (by hand, or with a fishing rod drawn over the page: back cast, line and float, ripple, reel), tickling, melting, the buttons' xylophone and dances, the fifth button's Megalovania (Web Audio notes, then `audio/megalovania.mp3` at the 22nd click, with the fight of `sansfight.js` for as long as it plays, the Christmas turntable hushed meanwhile), his temper, the snowball scooped from his belly (his top half bends at the waist), packed and thrown at our eyes (canvas bitmaps growing to fill the window), the splash and its spray, lumps of snow, blinks, the blurred view, the frost (`img/frost.png`) and the frozen, slow pointer (a sheet passing clicks to an icy pointer that lags); its Web Audio sounds (`smTone()`, `smNoise()`, also used by the fight); all reset when Christmas ends |
+| `sansscenes.js` | the fight's backgrounds: dioramas (`SF_SCENES`: snowy forest, golden hall, ice cavern, aurora), layers of cut paper drawn once on canvases (shadow, lit edge), slid by the heart's place (parallax), with a few living things (snow, light shafts, sparks, the aurora); `sfSceneDraw()` |
+| `sansfight.js` | the fight that comes with the snowman's Megalovania (`sfStart()` / `sfEnd()`, called by `snowman.js`): the scene over the page and black around him (`#xdark`), the battle box and stats (`#xfight`), one opening line then attacks without end (bones, blue bones, bone waves, bone rain, sine waves of bones, a turning propeller of bones, bouncing bone snowflakes, eruptions after red warnings, closing rings, skull blasters, crossing blasters, on a full-window canvas; bones turn, are outlined, glow when blue, leave trails; faster and more overlapping as it goes), the dioramas behind it (`sansscenes.js`, one every 22 s), hits (a crunch, the screen shaking, the box flashing red), the pixel heart exactly at the pointer (or moved by the arrow keys, then left there until the mouse moves), the flame rising from his eye (WebGL, a volume of noise ray-marched, following his gaze); reduced motion: no fight |
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
 | `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), "Back to normal" |
@@ -159,7 +179,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 ### CSS files, in cascade order
 
 `base.css` (layout, cards, search, previews) → `flames.css` → `surprise.css` → `jazz.css` → `closing.css` →
-`metal.css` → `epic.css` → `christmas.css` → `calm.css` → `tapes.css` → `screens.css` (effects canvas, view transitions) → `konami.css`.
+`metal.css` → `epic.css` → `christmas.css` → `snowman.css` → `sansfight.css` → `calm.css` → `tapes.css` → `screens.css` (effects canvas, view transitions) → `konami.css`.
 The Konami file is last on purpose: during its animation `body.rift .wrap` must win over every
 theme's `.wrap` rule.
 
