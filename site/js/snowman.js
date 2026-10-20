@@ -11,11 +11,13 @@
 //   flat, builds himself up again).
 // - his coal buttons are a xylophone: eight notes in a row and he dances; the start of Jingle
 //   Bells (E E E, E E E, E G C D E: buttons 2 2 2, 2 2 2, 2 1 4 3 2 from the top) and he sings on.
+//   The fifth, lowest one plays Megalovania, one note per click: spam it (his eye glows blue).
 // Each tease (hat, nose, melting him flat) makes him crosser (brows, then red cheeks and steam), and
-// he calms down after a while left in peace. The third is one too many: he turns to us, packs a
-// snowball (snow whirls into his hand, three pats), winds up and throws it. It comes at us, growing
-// as it comes closer and closer, until it fills the whole window: we take it in the eyes. White,
-// lumps of snow sliding down the glass, a blink or two, a blurred view, frost on the window
+// he calms down after a while left in peace. The third is one too many: he turns to us, bends down,
+// scoops snow from his belly, packs it into a snowball (three squeezes, crumbs falling), winds up
+// and throws it. It comes at us, growing as it comes closer and closer, until it fills the whole
+// window: we take it in the face. A splash, spray, lumps of snow sliding down the glass, two
+// blinks, a blurred view, frost on the window
 // (img/frost.png), and for a few seconds a frozen pointer: the real one is hidden, an icy one
 // follows it slowly, shivering, and clicks go where the icy one is (touch screens: no pointer).
 // What flies (the carrot, the rod and line, the snowball, the snow) is a fixed element over the page,
@@ -24,11 +26,11 @@
 // Reduced motion: the same story without the flights (no rod, no flying ball, no slow pointer).
 const smQ = sel => snowman.querySelector(sel);
 const smHat = smQ(".hat"), smNose = smQ(".nose"), smFace = smQ(".face"), smArm = smQ(".wave");
-const smSvg = smQ("svg"), smLook = smQ(".look"), smPuddle = smQ(".puddle");
+const smSvg = smQ("svg"), smLook = smQ(".look"), smPuddle = smQ(".puddle"), smUpper = smQ(".upper"), smDent = smQ(".dent");
 const smSay = document.createElement("span");
 smSay.className = "say";
 snowman.append(smSay);
-const SM_FREEZE_MS = 7000;  // how long the window stays frozen, before it melts (2.5 s)
+const SM_FREEZE_MS = 12000;  // how long the window stays frozen, before it melts (2.5 s)
 let smMad = 0, smMadAt = 0, smBusy = false, smHatUp = false, smGen = 0, smSayEnd = null;
 let smMouse = null;  // the pointer: his eyes follow it
 let smAnims = [], smExtras = [], smLoop = null, smBox = null, smLookRaf = null;
@@ -82,7 +84,7 @@ const smSays = (text, ms = 1800) => {
 // Something that floats up from a point of his drawing and goes (a note, a drop): an element in
 // his box, its CSS animation removes nothing, a timer does
 const smFloat = (cls, text, x, y, ms) => {
-  if (snowman.querySelectorAll("." + cls).length > 12) return;
+  if (snowman.querySelectorAll("." + cls.split(" ")[0]).length > 12) return;
   const el = smExtra("span", null, snowman);
   el.className = cls;
   el.textContent = text;
@@ -137,15 +139,18 @@ const smNoise = (ms, from, to, peak, shape) => {  // filtered noise: crunch, who
   src.start(t);
 };
 
-// His arm (the near one, towards the courses): turned around the shoulder; the hand is its tip
-const SM_SHOULDER = [218, 258], SM_HAND = [268, 216];
-let smArmDeg = 0;
+// His arm (the near one, towards the courses): turned around the shoulder; the hand is its tip.
+// And his top half, bent at the waist (the arm goes with it).
+const SM_SHOULDER = [218, 258], SM_HAND = [268, 216], SM_WAIST = [150, 328];
+let smArmDeg = 0, smBendDeg = 0;
 const smSetArm = deg => { smArmDeg = deg; smArm.style.transform = deg ? `rotate(${f1(deg)}deg)` : ""; };
-const smHand = () => {
-  const a = smArmDeg * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
-  const dx = SM_HAND[0] - SM_SHOULDER[0], dy = SM_HAND[1] - SM_SHOULDER[1];
-  return smPt(SM_SHOULDER[0] + dx * c - dy * s, SM_SHOULDER[1] + dx * s + dy * c);
+const smSetBend = deg => { smBendDeg = deg; smUpper.style.transform = deg ? `rotate(${f1(deg)}deg)` : ""; };
+const smTurn = ([x, y], [cx, cy], deg) => {
+  const a = deg * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
+  return [cx + (x - cx) * c - (y - cy) * s, cy + (x - cx) * s + (y - cy) * c];
 };
+const smHandAt = () => smTurn(smTurn(SM_HAND, SM_SHOULDER, smArmDeg), SM_WAIST, smBendDeg);  // in his drawing
+const smHand = () => smPt(...smHandAt());
 
 // His eyes follow the pointer: at most once a frame, a few units towards it
 addEventListener("pointermove", e => {
@@ -282,17 +287,58 @@ const smMeltedFlat = async () => {  // a puddle, then he builds himself up again
   setTimeout(smCheck, 900);
 };
 
-// ── His buttons: a xylophone (G E D C from the top)
-const SM_NOTES = [784, 659.3, 587.3, 523.3], SM_BTN_AT = [[178, 240], [181, 268], [179, 297], [184, 392]];
+// ── His buttons: a xylophone (G E D C from the top), and the lowest one plays Megalovania, one note
+// a click (in chiptune), his eye glowing blue while it lasts
+const SM_NOTES = [784, 659.3, 587.3, 523.3], SM_BTN_AT = [[178, 240], [181, 268], [179, 297], [184, 392], [187, 436]];
+const SM_MEGA = (() => {  // D D D' A G# G F D F G, then the same on C, B and B flat
+  const tail = [1174.7, 880, 830.6, 784, 698.5, 587.3, 698.5, 784];
+  return [587.3, 523.3, 493.9, 466.2].reduce((all, low) => all.concat([low, low], tail), []);
+})();
+let smMegaI = 0, smMegaAt = 0, smMegaEnd = null;
+const smChip = freq => {  // a square wave, short, like an old console
+  const ctx = smAudio();
+  if (!ctx) return;
+  const t = ctx.currentTime, o = ctx.createOscillator(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+  o.type = "square";
+  o.frequency.value = freq;
+  f.type = "lowpass";
+  f.frequency.value = 3200;
+  g.gain.setValueAtTime(.0001, t);
+  g.gain.exponentialRampToValueAtTime(.07, t + .005);
+  g.gain.setValueAtTime(.07, t + .09);
+  g.gain.exponentialRampToValueAtTime(.0001, t + .16);
+  o.connect(f);
+  f.connect(g);
+  g.connect(ctx.destination);
+  o.start(t);
+  o.stop(t + .18);
+};
+const smMegalovania = () => {
+  const now = Date.now();
+  if (now - smMegaAt > 1500) smMegaI = 0;  // a pause: from the start again
+  smMegaAt = now;
+  smChip(SM_MEGA[smMegaI % SM_MEGA.length]);
+  smMegaI++;
+  if (smMegaI >= 4) snowman.classList.add("badtime");
+  if (smMegaI === 20) smSays("You're gonna have a bad time.", 2600);
+  clearTimeout(smMegaEnd);
+  smMegaEnd = setTimeout(() => snowman.classList.remove("badtime"), 1600);
+};
 const SM_JINGLE = "11111110321";  // E E E, E E E, E G C D E
 // what he sings on: F F F F F E E E E D D E D G
 const SM_ANSWER = [698.5, 698.5, 698.5, 698.5, 698.5, 659.3, 659.3, 659.3, 659.3, 587.3, 587.3, 659.3, 587.3, 784];
 let smTune = "", smTuneAt = 0, smDancing = false;
-snowman.querySelectorAll(".btn").forEach((btn, i) => {
+snowman.querySelectorAll(".btn").forEach(btn => {
+  const i = +btn.dataset.i;
   btn.addEventListener("pointerdown", e => e.stopPropagation());
   btn.addEventListener("click", e => {
     e.stopPropagation();
     if (smBusy && !smDancing) return;
+    if (i === 4) {
+      smMegalovania();
+      smAnimate(btn, [{ transform: "none" }, { transform: "scale(1.3)" }, { transform: "none" }], { duration: 160 });
+      return smFloat("note mega", "♪", SM_BTN_AT[4][0] + 14, SM_BTN_AT[4][1] - 10, 1400);
+    }
     smNote(SM_NOTES[i]);
     smAnimate(btn, [{ transform: "none" }, { transform: "scale(1.4)" }, { transform: "none" }], { duration: 260, easing: "ease-out" });
     smFloat("note", ["♪", "♫", "♩"][i % 3], SM_BTN_AT[i][0] + 14, SM_BTN_AT[i][1] - 10, 1400);
@@ -538,6 +584,47 @@ const smFish = async (el, gen) => {
   setTimeout(smCheck, 800);
 };
 
+// Snow crumbs and spray: particles with gravity and drag on a canvas over the page, drawn while
+// any lives
+const smParticles = id => {
+  const cv = smExtra("canvas", id), ctx = cv.getContext("2d"), list = [];
+  cv.width = innerWidth;
+  cv.height = innerHeight;
+  let last = 0, raf = null;
+  const frame = now => {
+    raf = null;
+    const dt = Math.min(.05, (now - last) / 1000);
+    last = now;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.fillStyle = "#fff";
+    ctx.strokeStyle = "rgba(120,150,200,.55)";
+    for (let i = list.length - 1; i >= 0; i--) {
+      const p = list[i], d = Math.pow(p.drag, dt);
+      p.vx *= d;
+      p.vy = p.vy * d + p.g * dt;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.life -= dt;
+      if (p.life <= 0) { list.splice(i, 1); continue; }
+      ctx.globalAlpha = Math.min(1, p.life * 3);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+    if (list.length && cv.isConnected) raf = requestAnimationFrame(frame);
+  };
+  // n particles from x, y: speed (px/s) in all directions, up (px/s) more upwards, size, life (s)
+  const add = (x, y, n, speed, up, r, life, g = 900, drag = .5) => {
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2, v = speed * (.3 + Math.random() * .7);
+      list.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - up, r: r * (.4 + Math.random() * .8), life: life * (.6 + Math.random() * .6), g, drag });
+    }
+    if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
+  };
+  return { add, cv };
+};
+
 // ── The snowball. Drawn once on canvases, as bitmaps (growing them redraws nothing): the ball, a
 // lumpy sphere of packed snow lit from the top left, grainy, with the creases of the hands; and
 // three lumps of snow, for what sticks on the window after.
@@ -597,9 +684,54 @@ const smSnowImage = (size, seed, amp, n, creases, lump) => {  // lump: a flat sp
   ctx.fill();
   return c.toDataURL();
 };
+// The splash of a snowball hitting us in the face: a mass of snow with spikes thrown out all
+// round, tipped with drops, and drops further out; shaded and grainy like the rest
+const smSplashImage = size => {
+  const c = document.createElement("canvas");
+  c.width = c.height = size;
+  const ctx = c.getContext("2d"), rnd = seeded(91), h = size / 2;
+  const g = ctx.createRadialGradient(h * .92, h * .88, size * .02, h, h, h);
+  [[0, "#ffffff"], [.45, "#f6f9fd"], [.75, "#e4ecf5"], [1, "#c6d4e5"]].forEach(([o, col]) => g.addColorStop(o, col));
+  ctx.fillStyle = g;
+  smLump(ctx, h, h, size * .25, .3, 18, rnd);
+  ctx.fill();
+  for (let i = 0; i < 30; i++) {  // the spikes, tapering, each ending in a drop
+    const a = i / 30 * Math.PI * 2 + (rnd() - .5) * .18, L = size * (rnd() < .3 ? .26 + rnd() * .08 : .34 + rnd() * .14), w = size * (.02 + rnd() * .03);
+    const d = [Math.cos(a), Math.sin(a)], p = [-d[1], d[0]], tip = [h + d[0] * L, h + d[1] * L];
+    ctx.beginPath();
+    ctx.moveTo(h + d[0] * size * .15 + p[0] * w * 2, h + d[1] * size * .15 + p[1] * w * 2);
+    ctx.quadraticCurveTo(h + d[0] * L * .7 + p[0] * w * .5, h + d[1] * L * .7 + p[1] * w * .5, tip[0], tip[1]);
+    ctx.quadraticCurveTo(h + d[0] * L * .7 - p[0] * w * .5, h + d[1] * L * .7 - p[1] * w * .5, h + d[0] * size * .15 - p[0] * w * 2, h + d[1] * size * .15 - p[1] * w * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(tip[0], tip[1], w * .75, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  for (let i = 0; i < 40; i++) {  // drops thrown further out
+    const a = rnd() * Math.PI * 2, r = size * (.3 + rnd() * .19);
+    ctx.beginPath();
+    ctx.arc(h + Math.cos(a) * r, h + Math.sin(a) * r, size * (.004 + rnd() * .012), 0, Math.PI * 2);
+    ctx.fill();
+  }
+  // on the snow only: grain, and a shade growing towards the edges
+  ctx.globalCompositeOperation = "source-atop";
+  for (let i = 0; i < size * 10; i++) {
+    ctx.fillStyle = rnd() < .5 ? "rgba(255,255,255,.75)" : "rgba(110,140,185,.2)";
+    const sz = size / 500 * (.6 + rnd() * 1.6);
+    ctx.fillRect(rnd() * size, rnd() * size, sz, sz);
+  }
+  const e = ctx.createRadialGradient(h, h, size * .2, h, h, h);
+  e.addColorStop(0, "rgba(70,100,150,0)");
+  e.addColorStop(1, "rgba(70,100,150,.3)");
+  ctx.fillStyle = e;
+  ctx.fillRect(0, 0, size, size);
+  return c.toDataURL();
+};
 let smImages = null;
 const smSnowImages = () => smImages || (smImages = {
   ball: smSnowImage(768, 5, .1, 20, 9),
+  clump: smSnowImage(384, 61, .55, 11, 0, true),
+  splash: smSplashImage(1024),
   lumps: [smSnowImage(384, 11, .7, 15, 3, true), smSnowImage(384, 23, .8, 13, 2, true), smSnowImage(384, 37, .65, 17, 3, true)],
 });
 
@@ -616,51 +748,76 @@ const smThrow = async () => {
   await smWait(600);
   if (stale()) return;
   if (smStill()) { smFreeze(innerWidth / 2, innerHeight / 2, gen); return smThrowEnd(gen, face, nose); }
-  // the hand out in front, then the snow whirls into it, packed in three pats
-  await smTween(450, t => smSetArm(32 * smEase(t)));
-  if (stale()) return;
-  smSays("Heh heh heh…", 1800);
+  // He bends down to his right and scoops snow from his own belly with his hand (it leaves a
+  // hollow there), stands up again with a loose handful, and packs it in three squeezes: each one
+  // makes it rounder, smaller and harder, crumbs falling off.
+  smSays("Heh heh heh…", 2400);
   const D = Math.ceil(Math.max(innerWidth, innerHeight) * 1.15), d0 = 34 * k;
-  const ball = smExtra("img", "xbig");
+  const ball = smExtra("img", "xbig"), clump = smExtra("img", "xclump");
   ball.src = imgs.ball;
-  ball.style.width = ball.style.height = `${D}px`;
-  const putBall = (x, y, s, sx = 1, sy = 1, rot = 0) => {
-    ball.style.transform = `translate(${f1(x - D / 2)}px,${f1(y - D / 2)}px) rotate(${f1(rot)}deg) scale(${(s * sx).toFixed(4)},${(s * sy).toFixed(4)})`;
+  clump.src = imgs.clump;
+  ball.style.width = ball.style.height = clump.style.width = clump.style.height = `${D}px`;
+  ball.style.opacity = clump.style.opacity = 0;
+  const put = (el, x, y, s, sx = 1, sy = 1, rot = 0) => {
+    el.style.transform = `translate(${f1(x - D / 2)}px,${f1(y - D / 2)}px) rotate(${f1(rot)}deg) scale(${(s * sx).toFixed(4)},${(s * sy).toFixed(4)})`;
   };
-  const pack = smExtra("canvas", "xpack"), pctx = pack.getContext("2d");
-  pack.width = innerWidth;
-  pack.height = innerHeight;
-  const flakes = Array.from({ length: 46 }, () => ({ a: Math.random() * Math.PI * 2, r: 90 + Math.random() * 220, d: Math.random() * .45, s: 1.5 + Math.random() * 2.5 }));
-  const pats = [.3, .58, .86];
-  let patted = 0;
-  await smTween(1700, t => {
-    const H = smHand();
-    pctx.clearRect(0, 0, pack.width, pack.height);
-    pctx.fillStyle = "#fff";
-    pctx.strokeStyle = "rgba(120,150,200,.6)";
-    pctx.lineWidth = 1;
-    for (const f of flakes) {  // each flake spirals in, late or early
-      const u = Math.max(0, Math.min(1, (t - f.d) / .5));
-      if (u <= 0 || u >= 1) continue;
-      const e = u * u, a = f.a + e * 4, r = f.r * (1 - e);
-      pctx.beginPath();
-      pctx.arc(H[0] + Math.cos(a) * r, H[1] - 10 * k + Math.sin(a) * r * .7, f.s * (1 - e * .5), 0, Math.PI * 2);
-      pctx.fill();
-      pctx.stroke();
-    }
-    if (patted < pats.length && t >= pats[patted]) { patted++; smNoise(140, 700, 300, .25); }
-    const grow = Math.min(1, t * 1.15), q = pats.reduce((m, p) => Math.max(m, Math.max(0, 1 - Math.abs(t - p) * 14)), 0);
-    smSetArm(32 + 7 * q);
-    putBall(H[0], H[1] - 10 * k, d0 / D * grow, 1 + .14 * q, 1 - .14 * q);
+  const putBall = (x, y, s, sx, sy, rot) => put(ball, x, y, s, sx, sy, rot);
+  const crumbs = smParticles("xpack");
+  const held = () => { const H = smHand(); return [H[0], H[1] - 9 * k]; };  // what he holds sits on his hand
+  // the arm angle that puts his hand on the scoop, for a bend: the hand turns by arm + bend
+  const SCOOP = [229, 361], BEND = 30;
+  const S = smTurn(SM_SHOULDER, SM_WAIST, BEND), v0 = Math.atan2(SM_HAND[1] - SM_SHOULDER[1], SM_HAND[0] - SM_SHOULDER[0]);
+  const ARM = (Math.atan2(SCOOP[1] - S[1], SCOOP[0] - S[0]) - v0) * 180 / Math.PI - BEND;
+  await smTween(700, t => { const e = smEase(t); smSetBend(BEND * e); smSetArm(ARM * e); });
+  if (stale()) return;
+  // scooping: the hand digs twice, snow sprays, the hollow opens, a handful comes up
+  smNoise(260, 900, 400, .2);
+  await smTween(800, t => {
+    smSetArm(ARM + 7 * Math.sin(t * Math.PI * 4));
+    smDent.style.opacity = Math.min(1, t * 1.4).toFixed(2);
+    const [x, y] = held();
+    if (Math.random() < .45) crumbs.add(x, y + 6 * k, 2, 140, 160, 2.6 * k, .8);
+    clump.style.opacity = Math.min(1, t * 2).toFixed(2);
+    put(clump, x, y, d0 * 1.35 / D * Math.min(1, .3 + t));
   });
-  smDrop(pack);
+  if (stale()) return;
+  // up again, the handful in front of his chest (a few crumbs dropping)
+  await smTween(650, t => {
+    const e = smEase(t);
+    smSetBend(BEND * (1 - e));
+    smSetArm(smLerp(ARM, 26, e));
+    const [x, y] = held();
+    if (Math.random() < .15) crumbs.add(x, y + 8 * k, 1, 40, 0, 2.2 * k, 1);
+    put(clump, x, y, d0 * 1.35 / D);
+  });
+  if (stale()) return;
+  // three squeezes: the loose snow becomes a hard ball
+  const pats = [.18, .5, .82];
+  let patted = 0;
+  await smTween(1600, t => {
+    const [x, y] = held();
+    if (patted < pats.length && t >= pats[patted]) {
+      patted++;
+      smNoise(150, 800, 260, .3);
+      crumbs.add(x, y, 9 - patted * 2, 170, 60, 2.8 * k, .9);
+    }
+    const q = pats.reduce((m, p) => Math.max(m, 1 - Math.min(1, Math.abs(t - p) * 12)), 0);  // squeezing now
+    const done = Math.min(1, patted / 3 + q * .1), size = d0 * (1.35 - .35 * done) / D;
+    smSetArm(26 + 9 * q);
+    clump.style.opacity = (1 - done).toFixed(2);
+    ball.style.opacity = Math.min(1, done * 1.3).toFixed(2);
+    put(clump, x, y, size, 1 + .16 * q, 1 - .16 * q, t * 20);
+    putBall(x, y, size, 1 + .16 * q, 1 - .16 * q, t * 20);
+  });
+  smDrop(clump);
+  ball.style.opacity = 1;
   if (stale()) return;
   // the wind-up, the ball in his hand raised over his shoulder, then the throw
-  await smTween(650, t => { smSetArm(32 - 94 * smEase(t)); const H = smHand(); putBall(H[0], H[1] - 10 * k, d0 / D); });
+  await smTween(650, t => { smSetArm(26 - 88 * smEase(t)); const [x, y] = held(); putBall(x, y, d0 / D); });
   if (stale()) return;
   smSays("Take that!", 1400);
   await smWait(140);
-  await smTween(120, t => { smSetArm(-62 + 70 * t * t); const H = smHand(); putBall(H[0], H[1] - 10 * k, d0 / D); });
+  await smTween(120, t => { smSetArm(-62 + 70 * t * t); const [x, y] = held(); putBall(x, y, d0 / D); });
   if (stale()) return;
   smAnimate(smArm, [{ transform: "rotate(8deg)" }, { transform: "rotate(48deg)" }, { transform: "rotate(0)" }], { duration: 500, easing: "ease-out" });
   smSetArm(0);
@@ -669,7 +826,8 @@ const smThrow = async () => {
   // perspective its distance z is 1 / its size: its place comes to the middle of the window as z
   // (half true perspective, half straight at us, so it heads for our eyes all the way). It spins,
   // and arcs up a little.
-  const s0 = d0 / D, sEnd = 2.6, [x0, y0] = smHand(), x1 = innerWidth / 2, y1 = innerHeight * .46;
+  smDrop(crumbs.cv);
+  const s0 = d0 / D, sEnd = 2.6, [x0, y0] = held(), x1 = innerWidth / 2, y1 = innerHeight * .46;
   smNoise(1500, 500, 2600, .5, "swell");
   await smTween(1500, t => {
     const s = s0 * Math.pow(sEnd / s0, Math.pow(t, 1.4)), z = s0 / s;
@@ -698,47 +856,62 @@ const smThrowEnd = async (gen, face, nose) => {
   if (nose) nose.cancel();
   snowman.classList.remove("hold");
   smBusy = false;
+  setTimeout(() => { if (gen === smGen) smDent.style.opacity = 0; }, 9000);  // the hollow fills again
 };
-// In the eyes: all white, a thud, then lumps of snow stuck on the window slide down it one by one
-// while we blink it away
+// In the eyes: a thud and a splash. The snow bursts over the whole window (a splash with spikes
+// all round, slammed on and shaking), spray flying off its edges, then it breaks up into lumps
+// stuck on the glass that slide down it one by one, the middle first, while we blink twice.
 const smImpact = (gen, imgs) => {
   smNoise(450, 300, 80, .9);
+  smNoise(320, 2600, 700, .45);
+  const W = innerWidth, H = innerHeight, cx = W / 2, cy = H * .46, S = Math.max(W, H) * 1.05;  // its spikes reach the edges
   const white = smExtra("div", "ximpact");
-  smAnimate(white, [{ opacity: 1 }, { opacity: 1, offset: .25 }, { opacity: 0 }], { duration: 650, fill: "forwards" });
-  const W = innerWidth, H = innerHeight, S = Math.max(W, H) * .42;
-  const spots = [];
+  smAnimate(white, [{ opacity: 1 }, { opacity: 0 }], { duration: 220, fill: "forwards" });
+  const splash = smExtra("img", "xsplash");
+  splash.src = imgs.splash;
+  splash.style.width = splash.style.height = `${f1(S)}px`;
+  const at = (dx, dy, sc) => `translate(${f1(cx - S / 2 + dx)}px,${f1(cy - S / 2 + dy)}px) scale(${sc})`;
+  splash.style.transform = at(0, 0, 1);
+  smAnimate(splash, [
+    { transform: at(0, 0, 1.3), opacity: 1 }, { transform: at(14, -10, .97), opacity: 1, offset: .05 },
+    { transform: at(-10, 8, 1.01), opacity: 1, offset: .1 }, { transform: at(6, -4, 1), opacity: 1, offset: .15 },
+    { transform: at(0, 0, 1), opacity: 1, offset: .5 }, { transform: at(0, H * .04, 1.02), opacity: 0 },
+  ], { duration: 1200, easing: "ease-out", fill: "forwards" });
+  const spray = smParticles("xspray");
+  for (let i = 0; i < 6; i++) spray.add(cx + (Math.random() - .5) * W * .3, cy + (Math.random() - .5) * H * .3, 24, 2200, 0, 9, .7, 700, .08);
+  const L = Math.max(W, H) * .42, spots = [];
   for (let i = 0; i < 4; i++) for (let j = 0; j < 3; j++) spots.push([(i + .5) / 4 * W, (j + .5) / 3 * H]);
   spots.push([W / 2, H / 2], [W * .35, H * .55], [W * .62, H * .4]);
   spots.forEach(([x, y], i) => {
     const lump = smExtra("img", null);
     lump.className = "xlump";
     lump.src = imgs.lumps[i % 3];
-    const s = S * (.8 + Math.random() * .6), r = Math.random() * 360, jx = (Math.random() - .5) * S * .4, jy = (Math.random() - .5) * S * .4;
+    const s = L * (.8 + Math.random() * .6), r = Math.random() * 360, jx = (Math.random() - .5) * L * .4, jy = (Math.random() - .5) * L * .4;
     lump.style.width = lump.style.height = `${f1(s)}px`;
-    const at = (dy, sc) => `translate(${f1(x + jx - s / 2)}px,${f1(y + jy - s / 2 + dy)}px) rotate(${f1(r)}deg) scale(${sc})`;
-    lump.style.transform = at(0, 1);
-    // the middle ones go first (we see again), the edges last
-    const edge = Math.hypot(x - W / 2, y - H / 2) / Math.hypot(W / 2, H / 2), wait = 250 + edge * 1800 + Math.random() * 600;
+    const pos = (dy, sc) => `translate(${f1(x + jx - s / 2)}px,${f1(y + jy - s / 2 + dy)}px) rotate(${f1(r)}deg) scale(${sc})`;
+    lump.style.transform = pos(0, 1);
+    // the splash breaks up into them; then the middle ones go first (we see again), the edges last
+    const edge = Math.hypot(x - W / 2, y - H / 2) / Math.hypot(W / 2, H / 2), hold = 1100 + edge * 1800 + Math.random() * 600, all = hold + 1500 + Math.random() * 1200;
     smAnimate(lump, [
-      { transform: at(0, 1.08), opacity: 1 }, { transform: at(0, 1), opacity: 1, offset: .05 },
-      { transform: at(H * .08, 1), opacity: 1, offset: .35 }, { transform: at(H * .7, .9), opacity: 0 },
-    ], { duration: 1500 + wait + Math.random() * 1200, easing: "ease-in", fill: "forwards" });
+      { transform: pos(0, 1.1), opacity: 0 }, { transform: pos(0, 1.1), opacity: 0, offset: 550 / all }, { transform: pos(0, 1), opacity: 1, offset: 800 / all },
+      { transform: pos(H * .06, 1), opacity: 1, offset: hold / all },
+      { transform: pos(H * .7, .9), opacity: 0 },
+    ], { duration: all, easing: "ease-in", fill: "forwards" });
   });
   // two blinks: eyelids closing over the window
   const lids = smExtra("div", "xlids");
   lids.innerHTML = "<i></i><i></i>";
-  const blink = { duration: 320, easing: "ease-in-out" };
+  const blink = { duration: 340, easing: "ease-in-out" };
   lids.querySelectorAll("i").forEach((lid, i) => {
-    const shut = i ? "translateY(-50%)" : "translateY(50%)";
-    smAnimate(lid, [{ transform: "none" }, { transform: shut }, { transform: "none" }], { ...blink, delay: 700 });
-    smAnimate(lid, [{ transform: "none" }, { transform: shut }, { transform: "none" }], { ...blink, delay: 1350 });
+    const shut = i ? "translateY(-92%)" : "translateY(92%)";
+    smAnimate(lid, [{ transform: "none" }, { transform: shut }, { transform: "none" }], { ...blink, delay: 1100 });
+    smAnimate(lid, [{ transform: "none" }, { transform: shut }, { transform: "none" }], { ...blink, delay: 1750 });
   });
   setTimeout(() => {
     if (gen !== smGen) return;
-    smDrop(white);
-    smDrop(lids);
+    [white, splash, lids, spray.cv].forEach(smDrop);
     document.querySelectorAll(".xlump").forEach(smDrop);
-  }, 6000);
+  }, 7000);
 };
 
 // The frost and the blurred view, then the frozen pointer
@@ -803,8 +976,11 @@ const smReset = () => {
   smTune = "";
   smPaintMelt();
   smSetArm(0);
+  smSetBend(0);
+  smDent.style.opacity = 0;
+  clearTimeout(smMegaEnd);
   smBox = null;
-  snowman.classList.remove("noseless", "hold", "mad1", "mad2", "laughing", "sweaty");
+  snowman.classList.remove("noseless", "hold", "mad1", "mad2", "laughing", "sweaty", "badtime");
   smSay.classList.remove("on");
 };
 document.addEventListener("christmas", e => { if (!e.detail) smReset(); else smBox = null; });
