@@ -1,0 +1,33 @@
+/* The snowman's bad time (js/sansfight.js): a fight in the style of the old pixel RPG duels. The
+   winter scene rises over the page and goes black around the snowman (#xdark, under him); over
+   it, where the courses were, the battle box, the stats and the four buttons (#xfight, which also
+   hides the pointer: the heart is drawn on its canvas). His left eye burns (.eyefire, WebGL). */
+body.sansfight #xscene{z-index:86}
+#xdark{position:absolute;top:0;right:0;bottom:0;left:0;background:#000;animation:sf-in .9s ease-out both}
+#xdark.leaving,#xfight.leaving{animation:sf-out .6s ease-in both}
+@keyframes sf-in{from{opacity:0}}
+@keyframes sf-out{to{opacity:0}}
+#xfight{position:fixed;top:0;right:0;bottom:0;left:0;z-index:87;cursor:none;touch-action:none;color:#fff;font:700 1.1rem/1.5 "Courier New",Courier,monospace;animation:sf-in .9s ease-out both}
+#xfight *{cursor:none}
+#xfight canvas{position:fixed;left:0;top:0;pointer-events:none}
+#xfight .box{position:absolute;border:4px solid #fff;background:#000;box-sizing:border-box}
+#xfight .text{margin:0;padding:1.1rem 1.4rem;white-space:pre-line;font-size:1.15rem;letter-spacing:.04em}
+#xfight.attacking .text{display:none}
+#xfight .stats{position:absolute;display:flex;align-items:center;gap:1.1rem;letter-spacing:.06em}
+#xfight .hp{font-size:.8rem}
+#xfight .bar{position:relative;width:5.5rem;height:1.1rem;background:#c40000}
+#xfight .bar i{position:absolute;top:0;right:0;bottom:0;left:0;background:#ffe600;transform-origin:0 50%;transition:transform .1s}
+#xfight .menu{position:absolute;display:flex;justify-content:space-between;gap:.6rem}
+#xfight .menu button{flex:1;min-height:44px;padding:.4rem .6rem;border:3px solid #ff8a1c;background:#000;color:#ff8a1c;font:inherit;font-size:1.2rem;letter-spacing:.08em;pointer-events:none}
+#xfight .menu button i{display:none}
+#xfight.choosing .menu button{pointer-events:auto}
+#xfight.choosing .menu button:hover,#xfight.choosing .menu button:focus-visible{border-color:#ffef3b;color:#ffef3b;outline:none}
+/* Game over */
+#xfight.over::after{content:"GAME OVER";position:absolute;left:0;right:0;top:38%;text-align:center;font-size:clamp(2.5rem,9vw,5.5rem);letter-spacing:.12em;animation:sf-in 1s 2.4s ease-out both}
+#xfight.over .box,#xfight.over .stats,#xfight.over .menu{animation:sf-out .6s 1.6s ease-in both}
+/* His burning eye, over his face (the flame rises from the eye, at the bottom middle of it) */
+#xsnowman .eyefire{position:absolute;left:40.33%;top:1.92%;width:30%;height:26.92%;pointer-events:none}
+/* MISS, over him */
+#xsnowman .miss{position:absolute;pointer-events:none;color:#e8e8e8;font:700 1.5rem "Courier New",monospace;letter-spacing:.1em;animation:sf-miss 1.3s ease-out forwards}
+@keyframes sf-miss{0%{transform:translateY(8px);opacity:0}20%{opacity:1}100%{transform:translateY(-24px);opacity:0}}
+@media(prefers-reduced-motion:reduce){#xdark,#xfight,#xfight.over::after{animation:none}}

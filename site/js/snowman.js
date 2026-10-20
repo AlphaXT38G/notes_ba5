@@ -12,7 +12,8 @@
 // - his coal buttons are a xylophone: eight notes in a row and he dances; the start of Jingle
 //   Bells (E E E, E E E, E G C D E: buttons 2 2 2, 2 2 2, 2 1 4 3 2 from the top) and he sings on.
 //   The fifth, lowest one plays Megalovania, one note per click: spam it (his eye glows blue), and
-//   at the 22nd click the real song plays, whole, until it is clicked again.
+//   at the 22nd click the real song plays, whole, with a fight (sansfight.js), until it is clicked
+//   again.
 // Each tease (hat, nose, melting him flat) makes him crosser (brows, then red cheeks and steam), and
 // he calms down after a while left in peace. The third is one too many: he turns to us, bends down,
 // scoops snow from his belly, packs it into a snowball (three squeezes, crumbs falling), winds up
@@ -317,7 +318,21 @@ const smChip = freq => {  // a square wave, short, like an old console
   o.start(t);
   o.stop(t + .18);
 };
-const smMegaStop = () => {  // the song and the glow end, the count starts again
+// The Christmas turntable is hushed while the song plays (christmas.js), then plays on
+let smHushed = false;
+const smHush = on => {
+  if (on && carolsPlaying && !smHushed) {
+    smHushed = true;
+    if (carolsRock) carolsRock.pause(); else if (carolsRadio) ytPause(XMAS_LIVE, CAROLS_YT);
+  } else if (!on && smHushed) {
+    smHushed = false;
+    if (!carolsPlaying) return;  // stopped meanwhile
+    if (carolsRock) carolsRock.play().catch(() => {}); else if (carolsRadio) ytPlay(XMAS_LIVE, CAROLS_YT, !carolsMuted);
+  }
+};
+const smMegaStop = () => {  // the song, its fight and the glow end, the count starts again
+  if (typeof sfEnd === "function") sfEnd();
+  smHush(false);
   dropTrack(smMegaTrack);
   smMegaTrack = null;
   smMegaSong = false;
@@ -349,7 +364,9 @@ const smMegalovania = () => {
   const track = smMegaTrack || (smMegaTrack = preloadTrack("megalovania.mp3", { loop: false }));
   track.addEventListener("ended", () => { if (smMegaTrack === track) smMegaStop(); });
   track.play().catch(() => { if (smMegaTrack === track) smMegaStop(); });
+  smHush(true);
   smSays("💀", 1500);
+  sfStart();  // and the fight begins (sansfight.js)
 };
 const SM_JINGLE = "11111110321";  // E E E, E E E, E G C D E
 // what he sings on: F F F F F E E E E D D E D G
