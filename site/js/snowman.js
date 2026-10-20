@@ -11,7 +11,8 @@
 //   flat, builds himself up again).
 // - his coal buttons are a xylophone: eight notes in a row and he dances; the start of Jingle
 //   Bells (E E E, E E E, E G C D E: buttons 2 2 2, 2 2 2, 2 1 4 3 2 from the top) and he sings on.
-//   The fifth, lowest one plays Megalovania, one note per click: spam it (his eye glows blue).
+//   The fifth, lowest one plays Megalovania, one note per click: spam it (his eye glows blue), and
+//   at the 22nd click the real song plays, whole, until it is clicked again.
 // Each tease (hat, nose, melting him flat) makes him crosser (brows, then red cheeks and steam), and
 // he calms down after a while left in peace. The third is one too many: he turns to us, bends down,
 // scoops snow from his belly, packs it into a snowball (three squeezes, crumbs falling), winds up
@@ -288,13 +289,16 @@ const smMeltedFlat = async () => {  // a puddle, then he builds himself up again
 };
 
 // ── His buttons: a xylophone (G E D C from the top), and the lowest one plays Megalovania, one note
-// a click (in chiptune), his eye glowing blue while it lasts
+// a click (in chiptune), his eye glowing blue while it lasts. Spammed on to the 22nd note, the real
+// song starts (audio/megalovania.mp3, loaded ahead from the 10th): it plays to its end, unless the
+// button is clicked again, which stops it.
 const SM_NOTES = [784, 659.3, 587.3, 523.3], SM_BTN_AT = [[178, 240], [181, 268], [179, 297], [184, 392], [187, 436]];
 const SM_MEGA = (() => {  // D D D' A G# G F D F G, then the same on C, B and B flat
   const tail = [1174.7, 880, 830.6, 784, 698.5, 587.3, 698.5, 784];
   return [587.3, 523.3, 493.9, 466.2].reduce((all, low) => all.concat([low, low], tail), []);
 })();
-let smMegaI = 0, smMegaAt = 0, smMegaEnd = null;
+const SM_MEGA_SONG = 22;  // the click that starts the song
+let smMegaI = 0, smMegaAt = 0, smMegaEnd = null, smMegaTrack = null, smMegaSong = false;
 const smChip = freq => {  // a square wave, short, like an old console
   const ctx = smAudio();
   if (!ctx) return;
@@ -313,16 +317,39 @@ const smChip = freq => {  // a square wave, short, like an old console
   o.start(t);
   o.stop(t + .18);
 };
-const smMegalovania = () => {
-  const now = Date.now();
-  if (now - smMegaAt > 1500) smMegaI = 0;  // a pause: from the start again
-  smMegaAt = now;
-  smChip(SM_MEGA[smMegaI % SM_MEGA.length]);
-  smMegaI++;
-  if (smMegaI >= 4) snowman.classList.add("badtime");
-  if (smMegaI === 20) smSays("You're gonna have a bad time.", 2600);
+const smMegaStop = () => {  // the song and the glow end, the count starts again
+  dropTrack(smMegaTrack);
+  smMegaTrack = null;
+  smMegaSong = false;
+  smMegaI = 0;
   clearTimeout(smMegaEnd);
-  smMegaEnd = setTimeout(() => snowman.classList.remove("badtime"), 1600);
+  snowman.classList.remove("badtime");
+};
+const smMegalovania = () => {
+  if (smMegaSong) { smSays("…ok.", 1200); return smMegaStop(); }  // clicked during the song: it stops
+  const now = Date.now();
+  if (now - smMegaAt > 1500) {  // a pause: from the start again
+    smMegaI = 0;
+    dropTrack(smMegaTrack);
+    smMegaTrack = null;
+  }
+  smMegaAt = now;
+  smMegaI++;
+  if (smMegaI === 10 && !smMegaTrack) smMegaTrack = preloadTrack("megalovania.mp3", { loop: false });
+  if (smMegaI >= 4) snowman.classList.add("badtime");
+  if (smMegaI === 18) smSays("You're gonna have a bad time.", 2600);
+  clearTimeout(smMegaEnd);
+  if (smMegaI < SM_MEGA_SONG) {
+    smChip(SM_MEGA[(smMegaI - 1) % SM_MEGA.length]);
+    smMegaEnd = setTimeout(() => snowman.classList.remove("badtime"), 1600);
+    return;
+  }
+  // the song, whole, his eye glowing all along
+  smMegaSong = true;
+  const track = smMegaTrack || (smMegaTrack = preloadTrack("megalovania.mp3", { loop: false }));
+  track.addEventListener("ended", () => { if (smMegaTrack === track) smMegaStop(); });
+  track.play().catch(() => { if (smMegaTrack === track) smMegaStop(); });
+  smSays("💀", 1500);
 };
 const SM_JINGLE = "11111110321";  // E E E, E E E, E G C D E
 // what he sings on: F F F F F E E E E D D E D G
@@ -333,6 +360,7 @@ snowman.querySelectorAll(".btn").forEach(btn => {
   btn.addEventListener("pointerdown", e => e.stopPropagation());
   btn.addEventListener("click", e => {
     e.stopPropagation();
+    if (i === 4 && smMegaSong) return smMegalovania();  // the song can always be stopped
     if (smBusy && !smDancing) return;
     if (i === 4) {
       smMegalovania();
@@ -978,7 +1006,7 @@ const smReset = () => {
   smSetArm(0);
   smSetBend(0);
   smDent.style.opacity = 0;
-  clearTimeout(smMegaEnd);
+  smMegaStop();
   smBox = null;
   snowman.classList.remove("noseless", "hold", "mad1", "mad2", "laughing", "sweaty", "badtime");
   smSay.classList.remove("on");
