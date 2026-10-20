@@ -228,7 +228,6 @@ body[data-phase=christmas-night] #xsnowman .k4{stop-color:#566b90}
 #xmusic.playing .arm{transform:rotate(25deg)}
 #xmusic .holly{position:absolute;right:-.7rem;bottom:-.45rem;width:1.9rem}
 #xmusic .label{padding:.3rem .65rem;border-radius:999px;color:#fff;background:linear-gradient(#1f7a3e,#145a2c);border:1px solid #e3b341;box-shadow:0 2px 8px rgba(0,0,0,.25)}
-#carols{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
 #xmusic.radio .disc{background:radial-gradient(circle,#fff 0 4%,#2ea55a 5% 19%,#e3b341 20% 22%,#111 23%,#1f1f1f 32%,#0d0d0d 33%,#1f1f1f 45%,#0d0d0d 46%,#1f1f1f 58%,#0d0d0d 59%,#161616 70%)}
 #xmusic.swap .disc{animation:xmas-drop .55s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes xmas-drop{from{opacity:0;transform:translateY(-1.4rem) scale(.7)}}
