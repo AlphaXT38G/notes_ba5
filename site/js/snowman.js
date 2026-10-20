@@ -12,16 +12,15 @@
 // - his coal buttons are a xylophone: eight notes in a row and he dances; the start of Jingle
 //   Bells (E E E, E E E, E G C D E: buttons 2 2 2, 2 2 2, 2 1 4 3 2 from the top) and he sings on.
 //   The fifth, lowest one plays Megalovania, one note per click: spam it (his eye glows blue), and
-//   at the 22nd click the real song plays, whole, with a fight (sansfight.js), until it is clicked
-//   again.
+//   at the 22nd click the real song plays, whole, with a fight (sansfight.js) that lasts as long.
 // Each tease (hat, nose, melting him flat) makes him crosser (brows, then red cheeks and steam), and
 // he calms down after a while left in peace. The third is one too many: he turns to us, bends down,
 // scoops snow from his belly, packs it into a snowball (three squeezes, crumbs falling), winds up
 // and throws it. It comes at us, growing as it comes closer and closer, until it fills the whole
 // window: we take it in the face. A splash, spray, lumps of snow sliding down the glass, two
-// blinks, a blurred view, frost on the window
-// (img/frost.png), and for a few seconds a frozen pointer: the real one is hidden, an icy one
-// follows it slowly, shivering, and clicks go where the icy one is (touch screens: no pointer).
+// blinks, a blurred view, frost on the window (img/frost.png), and for about fifteen seconds a
+// frozen pointer: the real one is hidden, an icy one follows it slowly, shivering, and clicks go
+// where the icy one is (touch screens: no pointer).
 // What flies (the carrot, the rod and line, the snowball, the snow) is a fixed element over the page,
 // made for the move and removed after; on the snowman only transforms and opacity change. The
 // snowball and its lumps are bitmaps drawn once on a canvas, so growing them redraws nothing.
@@ -140,6 +139,32 @@ const smNoise = (ms, from, to, peak, shape) => {  // filtered noise: crunch, who
   g.connect(ctx.destination);
   src.start(t);
 };
+// one oscillator: a blip, a note, a glide (to: the pitch it slides to), held a while (hold, s) then
+// dying away, through a low-pass filter if asked (shared with the fight, sansfight.js)
+const smTone = (freq, ms, { vol = .05, type = "square", to = 0, hold = 0, lowpass = 0 } = {}) => {
+  const ctx = smAudio();
+  if (!ctx) return;
+  const t = ctx.currentTime, end = t + ms / 1000, o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = type;
+  o.frequency.setValueAtTime(freq, t);
+  if (to) o.frequency.exponentialRampToValueAtTime(to, end);
+  g.gain.setValueAtTime(.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol, t + .005);
+  if (hold) g.gain.setValueAtTime(vol, t + hold);
+  g.gain.exponentialRampToValueAtTime(.0001, end);
+  let out = o;
+  if (lowpass) {
+    const f = ctx.createBiquadFilter();
+    f.type = "lowpass";
+    f.frequency.value = lowpass;
+    o.connect(f);
+    out = f;
+  }
+  out.connect(g);
+  g.connect(ctx.destination);
+  o.start(t);
+  o.stop(end + .02);
+};
 
 // His arm (the near one, towards the courses): turned around the shoulder; the hand is its tip.
 // And his top half, bent at the waist (the arm goes with it).
@@ -151,8 +176,7 @@ const smTurn = ([x, y], [cx, cy], deg) => {
   const a = deg * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
   return [cx + (x - cx) * c - (y - cy) * s, cy + (x - cx) * s + (y - cy) * c];
 };
-const smHandAt = () => smTurn(smTurn(SM_HAND, SM_SHOULDER, smArmDeg), SM_WAIST, smBendDeg);  // in his drawing
-const smHand = () => smPt(...smHandAt());
+const smHand = () => smPt(...smTurn(smTurn(SM_HAND, SM_SHOULDER, smArmDeg), SM_WAIST, smBendDeg));
 
 // His eyes follow the pointer: at most once a frame, a few units towards it
 addEventListener("pointermove", e => {
@@ -302,24 +326,7 @@ const SM_MEGA = (() => {  // D D D' A G# G F D F G, then the same on C, B and B 
 })();
 const SM_MEGA_SONG = 22;  // the click that starts the song
 let smMegaI = 0, smMegaAt = 0, smMegaEnd = null, smMegaTrack = null, smMegaSong = false;
-const smChip = freq => {  // a square wave, short, like an old console
-  const ctx = smAudio();
-  if (!ctx) return;
-  const t = ctx.currentTime, o = ctx.createOscillator(), f = ctx.createBiquadFilter(), g = ctx.createGain();
-  o.type = "square";
-  o.frequency.value = freq;
-  f.type = "lowpass";
-  f.frequency.value = 3200;
-  g.gain.setValueAtTime(.0001, t);
-  g.gain.exponentialRampToValueAtTime(.07, t + .005);
-  g.gain.setValueAtTime(.07, t + .09);
-  g.gain.exponentialRampToValueAtTime(.0001, t + .16);
-  o.connect(f);
-  f.connect(g);
-  g.connect(ctx.destination);
-  o.start(t);
-  o.stop(t + .18);
-};
+const smChip = freq => smTone(freq, 160, { vol: .07, hold: .09, lowpass: 3200 });  // a square wave, short, like an old console
 // The Christmas turntable is hushed while the song plays (christmas.js), then plays on
 let smHushed = false;
 const smHush = on => {
@@ -686,6 +693,14 @@ const smLump = (ctx, cx, cy, r, amp, n, rnd) => {  // a closed, wobbly outline, 
   for (let i = 1; i <= n; i++) { const m = mid(i); ctx.quadraticCurveTo(pts[i % n][0], pts[i % n][1], m[0], m[1]); }
   ctx.closePath();
 };
+// grain on snow: thousands of specks, light and dark (n per pixel of width, grain: their size)
+const smGrain = (ctx, rnd, size, n, grain, light, dark) => {
+  for (let i = 0; i < size * n; i++) {
+    const s = size / grain * (.6 + rnd() * 1.6);
+    ctx.fillStyle = rnd() < .5 ? light : dark;
+    ctx.fillRect(rnd() * size, rnd() * size, s, s);
+  }
+};
 const smSnowImage = (size, seed, amp, n, creases, lump) => {  // lump: a flat splash, lighter
   const c = document.createElement("canvas");
   c.width = c.height = size;
@@ -697,12 +712,7 @@ const smSnowImage = (size, seed, amp, n, creases, lump) => {  // lump: a flat sp
   ctx.fill();
   ctx.save();
   ctx.clip();
-  // grain: thousands of specks, light and dark
-  for (let i = 0; i < size * 9; i++) {
-    const x = rnd() * size, y = rnd() * size, s = size / 400 * (.6 + rnd() * 1.6);
-    ctx.fillStyle = rnd() < .5 ? "rgba(255,255,255,.7)" : "rgba(110,140,185,.18)";
-    ctx.fillRect(x, y, s, s);
-  }
+  smGrain(ctx, rnd, size, 9, 400, "rgba(255,255,255,.7)", "rgba(110,140,185,.18)");
   // the creases of the hands that packed it
   ctx.lineCap = "round";
   for (let i = 0; i < creases; i++) {
@@ -762,11 +772,7 @@ const smSplashImage = size => {
   }
   // on the snow only: grain, and a shade growing towards the edges
   ctx.globalCompositeOperation = "source-atop";
-  for (let i = 0; i < size * 10; i++) {
-    ctx.fillStyle = rnd() < .5 ? "rgba(255,255,255,.75)" : "rgba(110,140,185,.2)";
-    const sz = size / 500 * (.6 + rnd() * 1.6);
-    ctx.fillRect(rnd() * size, rnd() * size, sz, sz);
-  }
+  smGrain(ctx, rnd, size, 10, 500, "rgba(255,255,255,.75)", "rgba(110,140,185,.2)");
   const e = ctx.createRadialGradient(h, h, size * .2, h, h, h);
   e.addColorStop(0, "rgba(70,100,150,0)");
   e.addColorStop(1, "rgba(70,100,150,.3)");

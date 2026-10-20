@@ -38,22 +38,6 @@ const sfHeart = (ctx, x, y, px, half, color) => {
   });
 };
 
-// Sounds: square-wave blips (text), a crunch for the hits, noise for the blasters
-const sfBlip = (freq, ms, vol = .05, type = "square", to) => {
-  const ctx = smAudio();
-  if (!ctx) return;
-  const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
-  o.type = type;
-  o.frequency.setValueAtTime(freq, t);
-  if (to) o.frequency.exponentialRampToValueAtTime(to, t + ms / 1000);
-  g.gain.setValueAtTime(vol, t);
-  g.gain.exponentialRampToValueAtTime(.0001, t + ms / 1000);
-  o.connect(g);
-  g.connect(ctx.destination);
-  o.start(t);
-  o.stop(t + ms / 1000 + .02);
-};
-
 // The layout: a big box where the courses are, the stats under it
 const sfLayout = () => {
   const W = innerWidth, H = innerHeight;
@@ -87,7 +71,7 @@ const sfSay = (text, done) => {
   let i = 0;
   SF.typing = setInterval(() => {
     p.textContent = text.slice(0, ++i);
-    if (text[i - 1] && text[i - 1].trim()) sfBlip(180, 40, .025);
+    if (text[i - 1] && text[i - 1].trim()) smTone(180, 40, { vol: .025 });  // a blip a letter
     if (i >= text.length) { clearInterval(SF.typing); SF.typing = null; if (done) setTimeout(done, 700); }
   }, 30);
 };
@@ -305,8 +289,8 @@ const sfHurt = () => {
   sfPaintHp();
   if (first) {
     smNoise(130, 1600, 300, .45);
-    sfBlip(160, 140, .07, "square", 60);
-  } else sfBlip(120, 50, .035);
+    smTone(160, 140, { vol: .07, to: 60 });
+  } else smTone(120, 50, { vol: .035 });
   SF.shake = Math.min(1, SF.shake + (first ? .8 : .25));
   sfUi.classList.remove("hurt");
   void sfUi.offsetWidth;
@@ -319,7 +303,7 @@ const sfGameOver = () => {
   SF.objs = [];
   SF.active = [];
   SF.t = 0;
-  sfBlip(220, 900, .08, "sawtooth", 50);
+  smTone(220, 900, { vol: .08, type: "sawtooth", to: 50 });
   smSays("Ha. Ha. ❄", 2600);
   sfUi.classList.add("over");
   setTimeout(() => { if (SF.on) sfEnd(); }, 3800);
@@ -361,7 +345,6 @@ const sfFrame = now => {
   }
   // objects, and the hits (along the whole way the heart went this frame: a fast move does not
   // jump through a bone)
-  const I2 = sfInside();
   for (const o of SF.objs) {
     if (o.trail && o.kind === "bone") { o.past = o.past || []; o.past.unshift([o.x, o.y, o.a]); if (o.past.length > 3) o.past.pop(); }
     o.t += dt;
@@ -375,10 +358,10 @@ const sfFrame = now => {
       o.y += o.vy * dt;
       o.a += o.va * dt;
       const r = o.len / 2 - 6;
-      if (o.x < I2.x0 + r) { o.x = I2.x0 + r; o.vx = Math.abs(o.vx); }
-      if (o.x > I2.x1 - r) { o.x = I2.x1 - r; o.vx = -Math.abs(o.vx); }
-      if (o.y < I2.y0 + r) { o.y = I2.y0 + r; o.vy = Math.abs(o.vy); }
-      if (o.y > I2.y1 - r) { o.y = I2.y1 - r; o.vy = -Math.abs(o.vy); }
+      if (o.x < I.x0 + r) { o.x = I.x0 + r; o.vx = Math.abs(o.vx); }
+      if (o.x > I.x1 - r) { o.x = I.x1 - r; o.vx = -Math.abs(o.vx); }
+      if (o.y < I.y0 + r) { o.y = I.y0 + r; o.vy = Math.abs(o.vy); }
+      if (o.y > I.y1 - r) { o.y = I.y1 - r; o.vy = -Math.abs(o.vy); }
     }
   }
   if (SF.phase === "fight") {
@@ -685,7 +668,6 @@ const sfStart = () => {
   addEventListener("keydown", sfKey, true);
   addEventListener("keyup", sfKey, true);
   sfFlame = sfFlameStart();
-  if (sfFlame) snowman.classList.add("flaming");
   const I = sfInside();
   sfSoul = [(I.x0 + I.x1) / 2, (I.y0 + I.y1) / 2];
   SF.last = performance.now();
@@ -708,7 +690,7 @@ const sfEnd = () => {
   removeEventListener("pointermove", sfPointer);
   SF.scene = null;
   sfFlameStop();
-  snowman.classList.remove("flaming", "hold");
+  snowman.classList.remove("hold");
   document.body.classList.remove("sansfight");
   const ui = sfUi, dark = sfDark;
   sfUi = sfDark = null;
