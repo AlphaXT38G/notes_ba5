@@ -90,10 +90,9 @@ ensure that the security policy is not violated by an adversary
 \underline{within the threat model}.
 \end{defnbox}
 
-\begin{exbox}[title=Policy $\to$ mechanism]
-\textbf{Policy}: the transaction log must not be tampered with by a single employee. \\
-\textbf{Mechanism}: replicate the log across multiple machines so that no employee has
-access to all copies.
+\begin{exbox}[title=Example]
+\textbf{Policy}: ensure messages cannot be read by anyone but the sender and the receiver \\
+\textbf{Mechanism}: encrypt the message before sending
 \end{exbox}
 
 \begin{propbox}[title=Composing mechanisms]
