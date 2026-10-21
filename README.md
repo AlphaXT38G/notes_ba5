@@ -99,9 +99,9 @@ a blue and violet night with an aurora, realistic blue fire, embers, floating ar
 lights and a rune circle. In the bottom left corner, a little pixel art painting, ray-traced
 live: a knight playing the lute, his back against a mossy boulder, by a campfire whose
 light and shadows play on his armour. He plays Two Steps From Hell, then Dragonborn
-(Skyrim), its title lettered in pixels in a corner of the painting. On a scrap of parchment
-slipped behind the painting, two inked controls pause him (he dozes off) or change the song
-(clicking him or the fire does it too): watch the fire burst into the new song's
+(Skyrim), its title lettered in pixels in a corner of the painting. Click him to pause (he
+dozes off); the next song waits on an old parchment leaning behind the painting: click it (or
+the fire) to change the song, and watch the fire burst into the new song's
 colours (blue and arcane, or red under a starry night, with a dragon crossing the moon). It lasts
 until you click the small **"Back to normal"** button in the bottom right corner, which
 brings back the usual look for the time of day (day, the calm night after the show,
