@@ -174,7 +174,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
 | `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), "Back to normal", the `kamelot` code (the finale at any time) |
-| `bardscene.js` | `createBardScene()`: the epic finale's bard, a pixel art painting ray-marched in WebGL (distance fields): a knight in armour and a blue surcoat playing the lute against a mossy boulder, a campfire lighting him (traced soft shadows), mirror steel (a second ray), ambient occlusion, flames and sparks, a sky with the moon and firs; two moods (`uMood`: blue arcane fire, or Dragonborn's orange fire, snow, aurora and dragon); posterised with Bayer dithering at a low resolution |
+| `bardscene.js` | `createBardScene()`: the epic finale's bard, a pixel art painting ray-marched in WebGL (distance fields): a knight in armour and a blue surcoat playing the lute against a mossy boulder, a campfire lighting him (traced soft shadows), mirror steel (a second ray), ambient occlusion, flames and sparks, a sky with the moon and firs; two moods (`uMood`: blue arcane fire, or Dragonborn's orange fire, snow, aurora and dragon); posterised with Bayer dithering at a low resolution; compiled in the background (`ready()`), every ray in one loop so the scene is written out once |
 | `bard.js` | the epic finale's music player (`BARD_SONGS`: the Two Steps From Hell mix `audio/epic.mp3`, then Dragonborn `audio/dragonborn.mp3`, the next when one ends, the choice remembered): the painting of `bardscene.js` in a frame (click: play / pause; he strums at the song's pace, nods, dozes when paused), a parchment naming the song, its wax seal changing it with a show (he looks at the fire, a flourish plucked in Web Audio, the fire drawn in then bursting in the new colour with a shock wave, the parchment rolling up and unrolling); `preloadEpic()` for the "More epicness ?" click |
 | `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, night forest sounds (`audio/calm.mp3`, quieter), dawn birds made with Web Audio, firefly jar; the `peace` code (the last override: the calm night at any time; `startPeace()`, also called by the Christmas jar) |
 | `normal.js` | `normal` code: the day at any time, over every screen (the very last override, after `calm.js`); typed again, back to the clock's screen |
@@ -354,6 +354,12 @@ Android WebViews). One syntax they do not know makes the browser reject a whole 
   size so they stack exactly, and only `transform` / `translate` / `scale` animate them. Each moving
   layer reaches under the one that hides its joint (the forearm goes up under the rolled sleeve),
   and the layer behind loses that part, so a move never opens a gap nor shows a ghost.
+- **WebGL shaders compile slowly on Windows**: Chrome goes through Direct3D, whose compiler copies
+  a function at every call and unrolls loops. A ray-marched scene called from a dozen places (march,
+  normal, shadows, reflection...) took 110 s to compile, freezing the page. Call the scene's
+  distance function from one loop only (`bardscene.js` traces every ray in one loop), start loops
+  at a uniform zero (WebGL 2), share noises instead of calling `noise()` in every branch, compile
+  with `KHR_parallel_shader_compile` and draw only once it is ready, and compile once per visit.
 - All scripts share one scope: prefix new top-level names if they could clash with another file's.
 - Remove a screen's extras (elements, timers, players) when its class turns off.
 

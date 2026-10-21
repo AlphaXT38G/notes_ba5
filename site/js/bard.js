@@ -192,11 +192,23 @@ const bardStep = (now, dt) => {
   }
 };
 const bardRender = () => { if (bardScene) bardScene.render(bardVal); };
+// The shader compiles in the background (bardscene.js), seconds on some systems: meanwhile the
+// frame shows a plain night and "Tuning the lute…" (.tuning), and the painting fades in once it is
+// ready; if it fails, the plain night stays (.flat)
+const bardCheck = () => {
+  const state = bardScene ? bardScene.ready() : "failed";
+  bard.classList.toggle("tuning", state === "compiling");
+  bard.classList.toggle("flat", state === "failed");
+  return state;
+};
 const bardFrame = now => {
   bardRaf = requestAnimationFrame(bardFrame);
   const gap = now - bardDrawn;
   if (gap < 30) return;
   bardDrawn = now;
+  const state = bardCheck();
+  if (state === "failed") { cancelAnimationFrame(bardRaf); return; }
+  if (state === "compiling") { bardStep(now, Math.min(gap, 100) / 1000); return; }
   // Too slow (many frames well over 33 ms): fewer pixels from now on. Longer gaps are a hidden tab
   bardSlow = gap > 55 && gap < 250 ? bardSlow + 1 : Math.max(0, bardSlow - 1);
   if (bardSlow > 20 && bardScale > .5) { bardScale *= .8; bardSlow = 0; bardScene.resize(bardScale); }
@@ -204,6 +216,14 @@ const bardFrame = now => {
   bardRender();
 };
 const bardResize = () => { if (bardScene) { bardScene.resize(bardScale); bardRender(); } };
+// The canvas and its scene are made once in the visit and kept, so that its shader compiles once:
+// when "More epicness ?" shows up (epic.js), ahead of the finale, or when the finale starts.
+// Without WebGL there is none: the frame shows a plain night drawn in CSS.
+const bardWarm = () => {
+  if (bardCanvas) return;
+  bardCanvas = document.createElement("canvas");
+  bardScene = createBardScene(bardCanvas);
+};
 
 // Music notes flying out of the painting at the burst (removed when their animation ends)
 const bardNotes = () => {
@@ -278,21 +298,14 @@ const setEpicMusic = on => {
     bardFading.forEach(dropTrack);
     bardFading = [];
     epicRiff = null; epicPlaying = false;
-    if (bardScene) bardScene.destroy();
-    bardScene = null;
-    bard.classList.remove("swap", "burst");
+    bard.classList.remove("swap", "burst", "tuning");
     bard.remove();
     return;
   }
   bardShown = bardSong;
   document.body.append(bard);
-  // A new canvas each time (the last one's WebGL context was freed), drawn by bardscene.js; without
-  // WebGL the frame stays, with a plain night drawn in CSS
-  if (bardCanvas) bardCanvas.remove();
-  bardCanvas = document.createElement("canvas");
+  bardWarm();
   bardStage.prepend(bardCanvas);
-  bardScene = createBardScene(bardCanvas);
-  bard.classList.toggle("flat", !bardScene);
   Object.assign(bardVal, { uMood: BARD_SONGS[bardSong].mood, uPlay: 0, uPitch: -.5, uFlare: 0, uRing: 0 });
   epicPlay();
   if (epicMuted()) {
@@ -302,8 +315,16 @@ const setEpicMusic = on => {
   if (!bardScene) return;
   bardScene.resize(bardScale);
   addEventListener("resize", bardResize);
-  if (bardStill()) { bardStep(performance.now(), 1); bardRender(); }  // one still picture
-  else { bardDrawn = 0; bardRaf = requestAnimationFrame(bardFrame); }
+  bardCheck();
+  if (bardStill()) {  // one still picture, once the shader is ready
+    const still = () => {
+      if (!bardScene || !bard.isConnected) return;
+      if (bardCheck() === "compiling") { bardTimers.push(setTimeout(still, 250)); return; }
+      bardStep(performance.now(), 1);
+      bardRender();
+    };
+    still();
+  } else { bardDrawn = 0; bardRaf = requestAnimationFrame(bardFrame); }
 };
 setEpicMusic(document.body.classList.contains("epic"));
 document.addEventListener("epic", e => setEpicMusic(e.detail));

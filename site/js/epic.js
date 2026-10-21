@@ -321,6 +321,7 @@ everySecond.push(() => {  // show / hide "More epicness ?" in the last 10 s of a
     if (!moreBtn.isConnected) {
       moreBtn.classList.remove("queued");
       document.body.append(moreBtn);
+      bardWarm();  // the bard's shader starts compiling now, in case the finale comes
     }
     paintMore();
   } else moreBtn.remove();

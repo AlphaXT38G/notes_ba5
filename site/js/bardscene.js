@@ -16,7 +16,8 @@
 // Two moods, mixed by uMood: 0 is the arcane night of the epic mix (blue fire, blue motes),
 // 1 is Dragonborn (orange fire, snow on the ground and the boulder, aurora, the dragon).
 // createBardScene(canvas) returns null without WebGL (bard.js then shows a plain frame); else
-// { render(values), resize(scale), destroy() }, values being the animated uniforms (see BARD_UNIFORMS).
+// { render(values), resize(scale), ready() }, values being the animated uniforms (see
+// BARD_UNIFORMS), ready() saying "compiling", "ready" or "failed".
 
 // The lute's frame, in the knight's own coordinates (x his left, y up, z where he looks): the
 // soundboard faces him forward and up, the neck goes to his left and up. Made orthonormal here,
@@ -39,7 +40,6 @@ const bardLute = (() => {
 const BARD_UNIFORMS = ["uRes", "uTime", "uMood", "uPlay", "uStrum", "uFret", "uPitch", "uYaw", "uFlare", "uRing"];
 
 const BARD_SHADER = `
-precision highp float;
 uniform vec2 uRes;
 uniform float uTime, uMood, uPlay, uStrum, uFret, uPitch, uYaw, uFlare, uRing;
 
@@ -211,50 +211,10 @@ vec2 map(vec3 p) {
   return r;
 }
 
-vec2 march(vec3 ro, vec3 rd, float tmax) {
-  float t = .01, m = 0.;
-  for (int i = 0; i < 96; i++) {
-    vec2 h = map(ro + rd * t);
-    if (h.x < .0012 * t) { m = h.y; break; }
-    t += h.x;
-    if (t > tmax) break;
-  }
-  return vec2(t, m);
-}
-// The same, shorter, for the reflections
-vec2 marchShort(vec3 ro, vec3 rd) {
-  float t = .02, m = 0.;
-  for (int i = 0; i < 36; i++) {
-    vec2 h = map(ro + rd * t);
-    if (h.x < .003 * t) { m = h.y; break; }
-    t += h.x;
-    if (t > 4.) break;
-  }
-  return vec2(t, m);
-}
-vec3 normal(vec3 p) {
-  const vec2 e = vec2(.0012, -.0012);
-  return normalize(e.xyy * map(p + e.xyy).x + e.yyx * map(p + e.yyx).x + e.yxy * map(p + e.yxy).x + e.xxx * map(p + e.xxx).x);
-}
-// Soft shadow towards a light: how much of it is seen from p
-float shadow(vec3 ro, vec3 rd, float tmax) {
-  float res = 1., t = .03;
-  for (int i = 0; i < 30; i++) {
-    float h = map(ro + rd * t).x;
-    res = min(res, 9. * h / t);
-    t += clamp(h, .015, .2);
-    if (res < .01 || t > tmax) break;
-  }
-  return clamp(res, 0., 1.);
-}
-float occlusion(vec3 p, vec3 n) {
-  float o = 0., w = 1.;
-  for (int i = 1; i <= 4; i++) {
-    float h = .03 * float(i);
-    o += (h - map(p + n * h).x) * w;
-    w *= .7;
-  }
-  return clamp(1. - o * 3.2, 0., 1.);
+// The tetrahedron of offsets that samples the gradient of map() for a normal
+vec3 tetra(int k) {
+  float f = float(k);
+  return .5773 * (2. * vec3(mod(floor((f + 3.) / 2.), 2.), mod(floor(f / 2.), 2.), mod(f, 2.)) - 1.);
 }
 
 // ── Light ──
@@ -265,25 +225,27 @@ float fireFlicker() {
 vec3 fireLight() { return FIRE + vec3(.02 * sin(uTime * 7.), .3 + .1 * uFlare, .02 * cos(uTime * 6.)); }
 vec3 moonColor() { return mix(vec3(.22, .3, .62), vec3(.3, .38, .55), uMood) * .55; }
 
-// Snow lying on what faces up, in the Dragonborn mood (none close to the fire)
-float snowCover(vec3 p, vec3 n) {
-  float s = smoothstep(.35, .85, n.y) * smoothstep(.25, .6, noise(p * 7.) + .2);
+// Snow lying on what faces up, in the Dragonborn mood (none close to the fire); nz: a noise at p
+float snowCover(vec3 p, vec3 n, float nz) {
+  float s = smoothstep(.35, .85, n.y) * smoothstep(.25, .6, nz + .2);
   return s * uMood * smoothstep(.3, .55, length(p.xz - FIRE.xz));
 }
 
-// The colour of each material at p (normal n)
+// The colour of each material at p (normal n). Two noises, coarse and fine, are computed once and
+// shared by every material: each noise() written out costs the compiler dearly.
 vec3 albedo(vec3 p, vec3 n, float m) {
   vec3 c = vec3(.5);
+  float n1 = noise(p * 6.), n2 = noise(p * 19. + 7.);
   if (m < 1.5) {  // grass: patches and blades, more trodden near the fire
-    float g = noise(vec3(p.xz * 5., 0.)), blade = hash2(floor(p.xz * 70.));
+    float g = n1, blade = hash2(floor(p.xz * 70.));
     c = mix(vec3(.05, .12, .035), vec3(.14, .27, .07), g) * (.75 + .5 * blade);
     c = mix(c, vec3(.13, .1, .06), smoothstep(.42, .2, length(p.xz - FIRE.xz)));
-    c = mix(c, vec3(.78, .84, .95), snowCover(p, n));
+    c = mix(c, vec3(.78, .84, .95), snowCover(p, n, n2));
   } else if (m < 2.5) {  // stone, under a coat of moss on its top and its shady side
-    float s = noise(p * 6.), moss = smoothstep(.15, .55, n.y * .7 + n.z * .35 + .55 * noise(p * 4.) - .2);
-    c = vec3(.21, .22, .24) * (.6 + .7 * s);
-    c = mix(c, mix(vec3(.06, .17, .04), vec3(.2, .36, .08), noise(p * 18.)), moss);
-    c = mix(c, vec3(.8, .86, .96), snowCover(p, n));
+    float moss = smoothstep(.15, .55, n.y * .7 + n.z * .35 + .55 * n1 - .2);
+    c = vec3(.21, .22, .24) * (.6 + .7 * n2);
+    c = mix(c, mix(vec3(.06, .17, .04), vec3(.2, .36, .08), n2), moss);
+    c = mix(c, vec3(.8, .86, .96), snowCover(p, n, n1));
   } else if (m < 3.5) {
     c = vec3(.62, .64, .68);
   } else if (m < 4.5) {  // the mantle: deep blue, with folds
@@ -310,7 +272,7 @@ vec3 albedo(vec3 p, vec3 n, float m) {
   } else if (m < 7.5) {  // logs, charred and glowing near the heart of the fire
     c = mix(vec3(.2, .12, .06), vec3(.04, .03, .03), smoothstep(.12, .03, length((p - FIRE).xz)));
   } else if (m < 8.5) {
-    c = vec3(.3, .3, .32) * (.7 + .5 * noise(p * 20.));
+    c = vec3(.3, .3, .32) * (.7 + .5 * n2);
   } else if (m < 9.5) {  // the shield: steel rim, deep red field, a golden sword
     vec3 s = shieldSpace(p);
     float e = shieldShape(s.xy);
@@ -318,25 +280,20 @@ vec3 albedo(vec3 p, vec3 n, float m) {
     if ((abs(s.x) < .018 && s.y > -.13 && s.y < .13) || (abs(s.y - .07) < .016 && abs(s.x) < .08)) c = vec3(.85, .65, .2);
     if (e > -.025) c = vec3(.62, .64, .68);
   } else {  // bark, mossy at the foot of the trunk
-    c = vec3(.17, .12, .08) * (.6 + .7 * noise(vec3(atan(p.z - 1.45, p.x - 1.3) * 7., p.y * 1.5, 0.)));
-    c = mix(c, vec3(.08, .2, .05), smoothstep(.7, .1, p.y) * noise(p * 9.));
+    c = vec3(.17, .12, .08) * (.6 + .7 * hash2(vec2(floor(atan(p.z - 1.45, p.x - 1.3) * 9.), floor(p.y * 3.))));
+    c = mix(c, vec3(.08, .2, .05), smoothstep(.7, .1, p.y) * n1);
   }
   return c;
 }
 
-// Light reaching p: the fire (traced shadow when asked), the moon, the sky, and the shock wave
-vec3 lighting(vec3 p, vec3 n, bool shadows) {
+// Light reaching p: the fire, the moon and the sky, each light dimmed by its traced shadow
+// (sFire, sMoon: 1 for what a mirror shows, not traced)
+vec3 lighting(vec3 p, vec3 n, float sFire, float sMoon) {
   vec3 fl = fireLight() - p;
   float fd = length(fl);
-  fl /= fd;
-  float fire = max(dot(n, fl), 0.) * fireFlicker() / (1. + 5.5 * fd * fd);
-  float moon = max(dot(n, MOON), 0.);
-  if (shadows) {
-    if (fire > .002) fire *= shadow(p + n * .01, fl, fd - .12);
-    if (moon > .01) moon *= shadow(p + n * .01, MOON, 3.);
-  }
+  float fire = max(dot(n, fl / fd), 0.) * fireFlicker() / (1. + 5.5 * fd * fd);
   vec3 sky = mix(vec3(.015, .02, .03), mix(vec3(.05, .06, .15), vec3(.05, .09, .12), uMood), n.y * .5 + .5);
-  return fireColor() * fire * 1.6 + moonColor() * moon + sky;
+  return fireColor() * fire * sFire * 1.6 + moonColor() * max(dot(n, MOON), 0.) * sMoon + sky;
 }
 float ringGlow(vec3 p) {
   if (uRing <= 0. || uRing >= 1.) return 0.;
@@ -371,7 +328,7 @@ vec3 sky(vec3 rd) {
   c += vec3(.25, .3, .55) * pow(max(md, 0.), 300.) * .4 + vec3(.12, .12, .3) * pow(max(md, 0.), 25.) * .22;
   if (md > .9991) {
     vec3 mp = (rd - MOON) * 160.;
-    c = mix(vec3(.95, .95, .88), vec3(.62, .64, .7), smoothstep(.5, .62, noise(mp * .5) * .7 + noise(mp * 1.3) * .3));
+    c = mix(vec3(.95, .95, .88), vec3(.62, .64, .7), smoothstep(.5, .62, noise(mp * .6)));
   }
   // The dragon crossing the sky in front of the moon, wings beating (Dragonborn)
   if (uMood > .5) {
@@ -415,14 +372,14 @@ vec4 flames(vec3 ro, vec3 rd, float tHit) {
 // Sparks rising from the fire (more in a burst), and in the arcane mood blue motes drifting around
 vec3 sparks(vec3 ro, vec3 rd, float tHit) {
   vec3 c = vec3(0.);
-  for (int i = 0; i < 12; i++) {
+  for (int i = ZERO; i < 12; i++) {
     float fi = float(i), life = fract(uTime * (.35 + .03 * fi) + fi * .37);
     vec3 s = FIRE + vec3(.08 * sin(fi * 2.3) + .06 * sin(uTime * 2. + fi) * life, .12 + life * (.75 + .6 * uFlare), .08 * cos(fi * 1.7));
     vec3 os = s - ro;
     float t = dot(os, rd);
     if (t > 0. && t < tHit) c += fireColor() * smoothstep(.014, .0, length(os - rd * t)) * (1. - life) * 1.6;
   }
-  for (int i = 0; i < 7; i++) {
+  for (int i = ZERO; i < 7; i++) {
     float fi = float(i);
     vec3 s = vec3(-1. + fi * .38 + .1 * sin(uTime * .3 + fi), .3 + .25 * sin(uTime * .4 + fi * 2.) + .15 * fi / 7., .1 + .5 * sin(fi * 3.1));
     vec3 os = s - ro;
@@ -441,32 +398,93 @@ void main() {
   vec3 cw = normalize(ta - ro), cu = normalize(cross(vec3(0., 1., 0.), cw)), cv = cross(cw, cu);
   vec3 rd = normalize(uv.x * cu + uv.y * cv + 1.5 * cw);
 
-  vec2 hit = march(ro, rd, 7.);
-  vec3 col;
-  float tHit = hit.y > 0. ? hit.x : 1e5;
-  if (hit.y > 0.) {
-    vec3 p = ro + rd * hit.x, n = normal(p);
-    float m = hit.y, ao = occlusion(p, n);
-    vec3 alb = albedo(p, n, m), light = lighting(p, n, true);
-    col = alb * light * mix(.45, 1., ao);
-    if (m > 2.5 && m < 3.5 || m > 8.5 && m < 9.5 && shieldShape(shieldSpace(p).xy) > -.025) {
-      // Steel: a mirror, slightly rough. A second ray finds what it reflects.
-      vec3 r = reflect(rd, n);
-      vec2 h2 = marchShort(p + n * .015, r);
-      vec3 refl;
-      if (h2.y > 0.) {
-        vec3 q = p + n * .015 + r * h2.x, nq = normal(q);
-        refl = albedo(q, nq, h2.y) * lighting(q, nq, false);
-      } else refl = sky(r);
+  // Every ray of the pixel is traced in this one loop, one step of map() per turn, so that map()
+  // (the whole scene) is written out once in the compiled shader: compilers that copy a function
+  // at each call (Direct3D's) then take seconds instead of minutes. The stages, in turn:
+  //   0 the ray from the camera          4 the shadow towards the moon
+  //   1 the normal where it hit (4 taps) 5 the mirror ray, from steel only
+  //   2 ambient occlusion (4 taps)       6 the normal where the mirror ray hit
+  //   3 the shadow towards the fire      7 done
+  int stage = 0, tap = 0;
+  bool mirror = false;  // the mirror ray has started
+  float t = .01, m = 0., m2 = 0., ao = 0., aoW = 1., sFire = 1., sMoon = 1., tShadow = 0.;
+  vec3 p = ro, n = vec3(0., 1., 0.), acc = vec3(0.), sro = ro, sdir = rd, q = ro, n2 = n, r = rd;
+  for (int i = ZERO; i < 260; i++) {
+    vec3 at = stage == 0 ? ro + rd * t : stage == 1 ? p + tetra(tap) * .0012 : stage == 2 ? p + n * .03 * float(tap + 1)
+      : stage == 5 ? sro + r * t : stage == 6 ? q + tetra(tap) * .0012 : sro + sdir * t;
+    vec2 h = map(at);
+    if (stage == 0) {
+      if (h.x < .0012 * t) { m = h.y; p = at; stage = 1; }
+      else { t += h.x; if (t > 7.) stage = 7; }
+    } else if (stage == 1 || stage == 6) {
+      acc += tetra(tap) * h.x;
+      if (++tap == 4) {
+        tap = 0;
+        if (stage == 1) { n = normalize(acc); stage = 2; } else { n2 = normalize(acc); stage = 7; }
+        acc = vec3(0.);
+      }
+    } else if (stage == 2) {
+      ao += (.03 * float(tap + 1) - h.x) * aoW;
+      aoW *= .7;
+      if (++tap == 4) {
+        tap = 0;
+        stage = 3;
+        vec3 fl = fireLight() - p;
+        tShadow = length(fl) - .12;
+        sro = p + n * .01; sdir = fl / length(fl); t = .03;
+        if (dot(n, sdir) <= 0.) { sFire = 0.; stage = 4; sdir = MOON; tShadow = 3.; }
+        if (stage == 4 && dot(n, MOON) <= 0.) { sMoon = 0.; stage = 5; }
+      }
+    } else if (stage == 3 || stage == 4) {  // soft shadow: how much of the light is seen
+      float res = min(stage == 3 ? sFire : sMoon, 9. * h.x / t);
+      if (stage == 3) sFire = res; else sMoon = res;
+      t += clamp(h.x, .015, .2);
+      if (res < .01 || t > tShadow) {
+        t = .03;
+        if (stage == 3) { stage = 4; sdir = MOON; tShadow = 3.; if (dot(n, MOON) <= 0.) { sMoon = 0.; stage = 5; } }
+        else stage = 5;
+      }
+    } else if (stage == 5) {
+      if (!mirror) {  // entering it: steel and the shield's rim only
+        bool steel = m > 2.5 && m < 3.5 || m > 8.5 && m < 9.5 && shieldShape(shieldSpace(p).xy) > -.025;
+        if (!steel) stage = 7; else { r = reflect(rd, n); sro = p + n * .015; t = .02; mirror = true; }
+      } else if (h.x < .003 * t) { m2 = h.y; q = at; stage = 6; }
+      else { t += h.x; if (t > 4.) stage = 7; }
+    }
+    if (stage == 7) break;
+  }
+  sFire = clamp(sFire, 0., 1.); sMoon = clamp(sMoon, 0., 1.); ao = clamp(1. - ao * 3.2, 0., 1.);
+
+  // The colour of what the camera ray and the mirror ray found (or the sky they went to): in a
+  // loop as well, so that albedo() and sky() are written out once
+  vec3 seen = vec3(0.), mirrored = vec3(0.), albP = vec3(0.), lightP = vec3(0.);
+  for (int k = ZERO; k < 2; k++) {
+    bool cam = k == 0;
+    float mk = cam ? m : m2;
+    vec3 c;
+    if (mk > 0.) {
+      vec3 pk = cam ? p : q, nk = cam ? n : n2;
+      vec3 a = albedo(pk, nk, mk), l = lighting(pk, nk, cam ? sFire : 1., cam ? sMoon : 1.);
+      if (cam) { albP = a; lightP = l; }
+      c = a * l;
+    } else c = sky(cam ? rd : r);
+    if (cam) seen = c; else mirrored = c;
+    if (!mirror) break;
+  }
+  vec3 col = seen;
+  float tHit = m > 0. ? length(p - ro) : 1e5;
+  if (m > 0.) {
+    col *= mix(.45, 1., ao);
+    if (mirror) {  // steel: a mirror, slightly rough, showing what the second ray found
       vec3 fl = normalize(fireLight() - p);
       float fres = .55 + .45 * pow(1. - max(dot(-rd, n), 0.), 3.);
-      col = alb * light * ao * .45 + refl * alb * fres * mix(.35, .7, ao);
+      col = albP * lightP * ao * .45 + mirrored * albP * fres * mix(.35, .7, ao);
       col += fireColor() * pow(max(dot(r, fl), 0.), 30.) * fireFlicker() * .6 + moonColor() * pow(max(dot(r, MOON), 0.), 40.) * 1.5;
     }
     if (m > 6.5 && m < 7.5) col += fireColor() * smoothstep(.13, .02, length((p - FIRE).xz)) * (.4 + .5 * noise(p * 30. + uTime * 3.)) * .8;  // embers
     col += fireColor() * ringGlow(p);
-    col = mix(col, sky(rd) * .8, smoothstep(3., 6.5, hit.x));  // mist far away
-  } else col = sky(rd);
+    col = mix(col, mix(vec3(.06, .045, .17), vec3(.045, .08, .13), uMood), smoothstep(3., 6.5, tHit));  // mist far away
+  }
 
   vec4 fl = flames(ro, rd, tHit);
   col = col * (1. - fl.a * .5) + fl.rgb * 1.6;
@@ -479,7 +497,7 @@ void main() {
   // Falling snow, two layers (Dragonborn)
   if (uMood > .01) {
     vec2 s = gl_FragCoord.xy / uRes.y;
-    for (int k = 0; k < 2; k++) {
+    for (int k = ZERO; k < 2; k++) {
       float fk = float(k), sc = 16. + fk * 10.;
       vec2 g = s * sc + vec2(sin(uTime * .5 + fk) * 1.2 + s.y * 2., uTime * (.9 + fk * .7));
       vec2 id = floor(g), f = fract(g) - .5;
@@ -494,27 +512,47 @@ void main() {
   col = pow(col, vec3(1. / 2.2));
   col *= 1. - .35 * dot(uv, uv);
   col = floor(col * 16. + .5 + (bayer4(gl_FragCoord.xy) - .5) * .7) / 16.;
-  gl_FragColor = vec4(col, 1.);
+  FRAG = vec4(col, 1.);
 }`;
 
 const BARD_PIXEL = 2;  // CSS pixels per pixel of the painting
+// The shader takes long to compile on some systems (Direct3D, behind Chrome on Windows, turns
+// every call of map() into a copy of the whole scene): it is compiled in the background where the
+// browser can (KHR_parallel_shader_compile), and every loop starts at ZERO, a uniform the
+// compiler cannot see through, so that it keeps the loops instead of unrolling them (WebGL 2; with
+// WebGL 1 loops must start at a constant). Until it is ready, render() draws nothing (ready()).
 function createBardScene(canvas) {
-  const gl = canvas.getContext("webgl", { antialias: false, depth: false, stencil: false, alpha: false, powerPreference: "low-power" });
+  const opts = { antialias: false, depth: false, stencil: false, alpha: false, powerPreference: "low-power" };
+  const gl2 = canvas.getContext("webgl2", opts), gl = gl2 || canvas.getContext("webgl", opts);
   if (!gl) return null;
   if (gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT).precision < 16) return null;
+  const head = gl2 ? "#version 300 es\nprecision highp float;\nuniform int uZero;\n#define ZERO min(uZero, 0)\nout vec4 fragOut;\n#define FRAG fragOut\n"
+    : "precision highp float;\n#define ZERO 0\n#define FRAG gl_FragColor\n";
+  const vert = gl2 ? "#version 300 es\nin vec2 p;void main(){gl_Position=vec4(p,0.,1.);}" : "attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}";
   const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
-  const fs = sh(gl.FRAGMENT_SHADER, BARD_SHADER), p = gl.createProgram();
-  gl.attachShader(p, sh(gl.VERTEX_SHADER, "attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}"));
+  const fs = sh(gl.FRAGMENT_SHADER, head + BARD_SHADER), p = gl.createProgram();
+  gl.attachShader(p, sh(gl.VERTEX_SHADER, vert));
   gl.attachShader(p, fs);
+  gl.bindAttribLocation(p, 0, "p");
   gl.linkProgram(p);
-  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) { console.warn("bard shader:", gl.getShaderInfoLog(fs)); return null; }
-  gl.useProgram(p);
-  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());  // one triangle covering the canvas
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-  gl.enableVertexAttribArray(0);
-  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+  const parallel = gl.getExtension("KHR_parallel_shader_compile");
+  let state = "compiling";  // then "ready" or "failed"
   const u = {};
-  BARD_UNIFORMS.forEach(n => u[n] = gl.getUniformLocation(p, n));
+  const setUp = () => {
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) { console.warn("bard shader:", gl.getShaderInfoLog(fs)); state = "failed"; return; }
+    gl.useProgram(p);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());  // one triangle covering the canvas
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0);
+    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    BARD_UNIFORMS.forEach(n => u[n] = gl.getUniformLocation(p, n));
+    state = "ready";
+  };
+  // Without the extension, asking for the result waits for the compiler: done at once
+  const ready = () => {
+    if (state === "compiling" && (!parallel || gl.getProgramParameter(p, parallel.COMPLETION_STATUS_KHR))) setUp();
+    return state;
+  };
   // One pixel of the painting is BARD_PIXEL CSS pixels (more when scale < 1, if frames come too
   // slowly): the canvas follows the frame's size
   const resize = (scale = 1) => {
@@ -524,12 +562,13 @@ function createBardScene(canvas) {
   };
   return {
     resize,
+    ready,
     render(values) {
+      if (ready() !== "ready") return;
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.uniform2f(u.uRes, canvas.width, canvas.height);
       BARD_UNIFORMS.forEach(n => { if (n !== "uRes") gl.uniform1f(u[n], values[n]); });
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     },
-    destroy() { const x = gl.getExtension("WEBGL_lose_context"); if (x) x.loseContext(); },
   };
 }

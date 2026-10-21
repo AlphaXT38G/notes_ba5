@@ -30,8 +30,13 @@
 #bard .seal{flex:none;width:2rem;height:2rem;padding:0;color:#ffe1b0;font:700 .95rem Georgia,serif;border:0;border-radius:50%;background:radial-gradient(circle at 36% 30%,#e0563f,#9a1f16 58%,#5c0f0a);box-shadow:0 2px 5px rgba(0,0,0,.5),inset 0 0 0 3px rgba(90,12,8,.55),inset 0 1px 2px rgba(255,200,170,.5);cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
 #bard .seal:hover,#bard .seal:focus-visible{transform:rotate(-14deg) scale(1.1)}
 #bard.swap .seal{animation:bard-seal .7s ease-in-out}
-/* Without WebGL: a plain night in the frame */
-#bard.flat .stage{background:radial-gradient(30% 30% at 22% 75%,rgba(var(--glow),.55),transparent 70%),linear-gradient(#141238,#05040f 70%,#0c1a10 71%)}
+/* Without WebGL, or while its shader compiles (.tuning, "Tuning the lute…" pulsing): a plain night
+   in the frame; the painting fades in once ready */
+#bard canvas{transition:opacity .8s}
+#bard.tuning canvas{opacity:0}
+#bard.tuning .stage::before{content:"Tuning the lute…";position:absolute;left:0;right:0;top:42%;color:#e9e6ff;font:italic .8rem "Palatino Linotype",Georgia,serif;text-align:center;text-shadow:0 0 8px rgba(var(--glow),.9);animation:bard-tune 1.4s ease-in-out infinite alternate}
+@keyframes bard-tune{from{opacity:.35}}
+#bard.flat .stage,#bard.tuning .stage{background:radial-gradient(30% 30% at 22% 75%,rgba(var(--glow),.55),transparent 70%),linear-gradient(#141238,#05040f 70%,#0c1a10 71%)}
 #bard.flat .stage::before{content:"🛡️🪕";position:absolute;right:18%;bottom:18%;font-size:2.4rem}
 @keyframes bard-glow{from{opacity:.45}to{opacity:1}}
 @keyframes bard-flash{0%{opacity:0}12%{opacity:1}100%{opacity:0}}
@@ -42,4 +47,4 @@
 /* Phones: a smaller painting (the room under the last card is in screens.css) */
 @media(max-width:640px){#bard{--bw:10.5rem}#bard .scroll{width:96%;min-height:2.1rem}#bard .song b{font-size:.7rem}#bard .song small{font-size:.62rem}}
 /* Reduced motion */
-@media(prefers-reduced-motion:reduce){#bard .stage::after,#bard.burst .flash,#bard.swap .seal{animation:none}#bard .notes{display:none}#bard .song{transition:none}}
+@media(prefers-reduced-motion:reduce){#bard.tuning .stage::before,#bard .stage::after,#bard.burst .flash,#bard.swap .seal{animation:none}#bard .notes{display:none}#bard .song{transition:none}}
