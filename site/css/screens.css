@@ -33,7 +33,7 @@
    scrolled clear of them, and their labels are smaller */
 @media(max-width:640px){
   body.night .wrap,body.metal .wrap,body.calm .wrap{padding-bottom:7rem}
-  body.epic .wrap{padding-bottom:11rem}
+  body.epic .wrap{padding-bottom:9.5rem}
   body.christmas .wrap{padding-bottom:9.5rem}
   #vinyl .label,#amp .label,#jar .label,#xmusic .label{font-size:.7rem;max-width:11rem}
 }

@@ -3,9 +3,9 @@
 // boulder by a campfire, a little pixel art painting in the bottom left corner (his scene is
 // ray-marched in bardscene.js, css/bard.css). It replaces the metal show's amp when the finale
 // takes over. The song's title is lettered in pixels in the bottom right corner of the painting.
-// As the next tape waits in its case behind the day's cassette deck, the next song waits on a
-// scrap of old parchment leaning behind the painting, its name inked in pixels on the part that
-// peeks out above the frame: clicking it changes the song. Clicking the knight plays / pauses.
+// As the next tape waits in its case behind the day's cassette deck, the next song waits on an
+// old parchment standing behind the painting, its name inked in pixels on the part that peeks out
+// above the frame: clicking it changes the song. Clicking the knight plays / pauses.
 // The finale has two songs (BARD_SONGS), each with its mood in the scene: the Two Steps From Hell
 // mix (audio/epic.mp3: blue arcane fire, blue motes) and Dragonborn, the theme of Skyrim
 // (audio/dragonborn.mp3: a red fire, a starry night, a dragon crossing the moon). When one ends
@@ -19,9 +19,9 @@
 // As the other screens' music, the song autoplays muted when the page has had no gesture yet, and
 // the sound comes on at the first click or key press anywhere.
 const BARD_SONGS = [
-  { file: "epic.mp3", name: "Two Steps From Hell", sub: "Epic mix", icon: "🔥", mood: 0, tempo: 1.25,
+  { file: "epic.mp3", name: "Two Steps From Hell", mood: 0, tempo: 1.25,
     chord: [110, 164.81, 220, 261.63, 329.63] },  // A minor
-  { file: "dragonborn.mp3", name: "Dragonborn", sub: "Skyrim", icon: "🐉", mood: 1, tempo: 1.55,
+  { file: "dragonborn.mp3", name: "Dragonborn", mood: 1, tempo: 1.55,
     chord: [73.42, 146.83, 220, 293.66, 349.23] },  // D minor
 ];
 let bardSong = (() => {
@@ -42,16 +42,14 @@ let bardShown = bardSong;  // the song whose title is written (changed halfway t
 let bardHover = null;      // what the pointer is over: "fire", "knight" or null
 
 const paintBard = () => {
-  const song = BARD_SONGS[bardShown], next = BARD_SONGS[(bardSong + 1) % BARD_SONGS.length];
+  // the song that comes after the one shown: the parchment's (it changes while it is hidden)
+  const song = BARD_SONGS[bardShown], next = BARD_SONGS[(bardShown + 1) % BARD_SONGS.length];
   const toggle = !epicPlaying ? "Play the music" : epicMuted() ? "Turn the sound on" : "Pause the music";
-  bard.classList.toggle("playing", epicPlaying);
   bard.classList.toggle("mood-1", song.mood === 1);
   bardToggleBtn.textContent = `${toggle} (${song.name})`;
-  // the parchment names the song that comes after the one shown (it changes while it is hidden)
-  const after = BARD_SONGS[(bardShown + 1) % BARD_SONGS.length];
-  bardNextBtn.title = `Next song: ${after.name}`;
+  bardNextBtn.title = `Next song: ${next.name}`;
   bardNextBtn.setAttribute("aria-label", bardNextBtn.title);
-  if (bardSlipFor !== after) bardSlipArt(after);
+  if (bardSlipFor !== next) bardSlipArt(next);
   // the tooltip says what a click does where the pointer is
   bardStage.title = bardHover === "fire" ? `The fire: next song (${next.name})` : `The knight: ${toggle.toLowerCase()} · the fire: next song`;
 };
@@ -215,7 +213,7 @@ const bardFrame = now => {
   if (gap < 30) return;
   bardDrawn = now;
   const state = bardCheck();
-  if (state === "compiling" || state === "failed") {  // the title and glyphs still show, over the plain night
+  if (state === "compiling" || state === "failed") {  // the title still shows, over the plain night
     bardStep(now, Math.min(gap, 100) / 1000);
     bardUISize();
     bardDrawUI(now);
@@ -243,56 +241,77 @@ const bardWarm = () => {
   bardScene = createBardScene(bardCanvas);
 };
 
+// ── Pixel fonts, drawn by hand: a browser font shrunk to a few pixels and cut out turns to mush.
+// Each letter is its rows of pixels ("#" inked), of its own width; letters are one pixel apart.
+const bardFont = (src, height, space) => {
+  const font = { " ": Array(height).fill(".".repeat(space)) };
+  Object.keys(src).forEach(k => { font[k] = src[k].split(" "); });
+  return font;
+};
+const bardGlyphOf = (font, ch) => font[ch] || font[" "];
+const bardTextWidth = (font, text) => [...text].reduce((w, ch) => w + bardGlyphOf(font, ch)[0].length + 1, -1);
+// A name in capitals, on two lines (as many words on each) when wider than max
+const bardTextLines = (font, text, max) => {
+  const words = text.toUpperCase().split(" "), one = words.join(" ");
+  if (bardTextWidth(font, one) <= max || words.length < 2) return [one];
+  const half = Math.ceil(words.length / 2);
+  return [words.slice(0, half).join(" "), words.slice(half).join(" ")];
+};
+// Calls plot(x, y) for each inked pixel of a line written from its top left corner (x, y)
+const bardWrite = (font, line, x, y, plot) => {
+  [...line].forEach(ch => {
+    const rows = bardGlyphOf(font, ch);
+    rows.forEach((row, j) => [...row].forEach((v, i) => { if (v === "#") plot(x + i, y + j); }));
+    x += rows[0].length + 1;
+  });
+};
+// The title's: capitals five pixels high
+const BARD_FONT_SMALL = bardFont({
+  A: ".##. #..# #### #..# #..#", B: "###. #..# ###. #..# ###.", C: ".### #... #... #... .###",
+  D: "###. #..# #..# #..# ###.", E: "#### #... ###. #... ####", F: "#### #... ###. #... #...",
+  G: ".### #... #.## #..# .###", H: "#..# #..# #### #..# #..#", I: "### .#. .#. .#. ###",
+  J: "..## ...# ...# #..# .##.", K: "#..# #.#. ##.. #.#. #..#", L: "#... #... #... #... ####",
+  M: "#...# ##.## #.#.# #...# #...#", N: "#..# ##.# #.## #..# #..#", O: ".##. #..# #..# #..# .##.",
+  P: "###. #..# ###. #... #...", Q: ".##. #..# #..# #.#. .#.#", R: "###. #..# ###. #.#. #..#",
+  S: ".### #... .##. ...# ###.", T: "### .#. .#. .#. .#.", U: "#..# #..# #..# #..# .##.",
+  V: "#...# #...# .#.#. .#.#. ..#..", W: "#...# #...# #.#.# ##.## #...#", X: "#..# #..# .##. #..# #..#",
+  Y: "#.# #.# .#. .#. .#.", Z: "#### ...# .##. #... ####",
+}, 5, 2);
+// The parchment's: capitals seven pixels high (the title's would be too cramped there)
+const BARD_FONT_INK = bardFont({
+  A: ".###. #...# #...# ##### #...# #...# #...#", B: "####. #...# #...# ####. #...# #...# ####.",
+  C: ".###. #...# #.... #.... #.... #...# .###.", D: "####. #...# #...# #...# #...# #...# ####.",
+  E: "##### #.... #.... ####. #.... #.... #####", F: "##### #.... #.... ####. #.... #.... #....",
+  G: ".###. #...# #.... #.### #...# #...# .####", H: "#...# #...# #...# ##### #...# #...# #...#",
+  I: "### .#. .#. .#. .#. .#. ###", J: "..### ...#. ...#. ...#. ...#. #..#. .##..",
+  K: "#...# #..#. #.#.. ##... #.#.. #..#. #...#", L: "#.... #.... #.... #.... #.... #.... #####",
+  M: "#...# ##.## #.#.# #.#.# #...# #...# #...#", N: "#...# #...# ##..# #.#.# #..## #...# #...#",
+  O: ".###. #...# #...# #...# #...# #...# .###.", P: "####. #...# #...# ####. #.... #.... #....",
+  Q: ".###. #...# #...# #...# #.#.# #..#. .##.#", R: "####. #...# #...# ####. #.#.. #..#. #...#",
+  S: ".#### #.... #.... .###. ....# ....# ####.", T: "##### ..#.. ..#.. ..#.. ..#.. ..#.. ..#..",
+  U: "#...# #...# #...# #...# #...# #...# .###.", V: "#...# #...# #...# #...# #...# .#.#. ..#..",
+  W: "#...# #...# #...# #.#.# #.#.# #.#.# .#.#.", X: "#...# #...# .#.#. ..#.. .#.#. #...# #...#",
+  Y: "#...# #...# .#.#. ..#.. ..#.. ..#.. ..#..", Z: "##### ....# ...#. ..#.. .#... #.... #####",
+}, 7, 3);
+
 // ── The title, lettered in pixels over the painting at its own resolution (each of its pixels one
-// of the painting's), in the bottom right corner, as on the covers of those videos: capitals of a
-// small pixel font, a dark outline, a thin ornament above them in the fire's colour. During a song
+// of the painting's), in the bottom right corner, as on the covers of those videos: capitals of the
+// small font, a dark outline, a thin ornament above them in the fire's colour. During a song
 // change it dissolves pixel by pixel and the new one appears the same way.
 let bardTitle = null;  // the title's pixels, made once per song and size
 const bardUIColour = () => BARD_SONGS[bardShown].mood ? [255, 92, 70] : [140, 180, 255];
-// A pixel font of capitals five pixels high, drawn by hand (each letter: five rows of its own
-// width): a browser font shrunk to a few pixels and cut out turns to mush
-const BARD_FONT = (() => {
-  const src = {
-    A: ".##. #..# #### #..# #..#", B: "###. #..# ###. #..# ###.", C: ".### #... #... #... .###",
-    D: "###. #..# #..# #..# ###.", E: "#### #... ###. #... ####", F: "#### #... ###. #... #...",
-    G: ".### #... #.## #..# .###", H: "#..# #..# #### #..# #..#", I: "### .#. .#. .#. ###",
-    J: "..## ...# ...# #..# .##.", K: "#..# #.#. ##.. #.#. #..#", L: "#... #... #... #... ####",
-    M: "#...# ##.## #.#.# #...# #...#", N: "#..# ##.# #.## #..# #..#", O: ".##. #..# #..# #..# .##.",
-    P: "###. #..# ###. #... #...", Q: ".##. #..# #..# #.#. .#.#", R: "###. #..# ###. #.#. #..#",
-    S: ".### #... .##. ...# ###.", T: "### .#. .#. .#. .#.", U: "#..# #..# #..# #..# .##.",
-    V: "#...# #...# .#.#. .#.#. ..#..", W: "#...# #...# #.#.# ##.## #...#", X: "#..# #..# .##. #..# #..#",
-    Y: "#.# #.# .#. .#. .#.", Z: "#### ...# .##. #... ####",
-  };
-  const font = {};
-  Object.keys(src).forEach(k => { font[k] = src[k].split(" "); });
-  font[" "] = ["..", "..", "..", "..", ".."];
-  return font;
-})();
-// The title's pixels: the name in the pixel font, right-aligned (1), the ornament above it (2), and
+// The title's pixels: the name, right-aligned (1), the ornament above it (2), and
 // their outline (3): a lit pixel's neighbours. Too wide for the painting (phones), it goes on two
 // lines.
 const bardTitleArt = (song, W, H) => {
-  const px = new Uint8Array(W * H), rnd = new Float32Array(W * H);
-  const glyph = ch => BARD_FONT[ch] || BARD_FONT[" "];
-  const width = text => [...text].reduce((w, ch) => w + glyph(ch)[0].length + 1, -1);
-  const name = song.name.toUpperCase(), words = name.split(" ");
-  let lines = [name];
-  if (width(name) > W * .7 && words.length > 1) {
-    const half = Math.ceil(words.length / 2);
-    lines = [words.slice(0, half).join(" "), words.slice(half).join(" ")];
-  }
+  const px = new Uint8Array(W * H), rnd = new Float32Array(W * H), font = BARD_FONT_SMALL;
+  const lines = bardTextLines(font, song.name, W * .7);
   const put = (x, y, v) => { if (x >= 0 && x < W && y >= 0 && y < H) px[y * W + x] = v; };
-  const right = W - 4;
-  let y = H - 4 - lines.length * 7 + 2, widest = 0;
+  const right = W - 4, widest = Math.max(...lines.map(line => bardTextWidth(font, line)));
+  let y = H - 4 - lines.length * 7 + 2;
   const oy = y - 3;
   lines.forEach(line => {
-    let x = right - width(line);
-    widest = Math.max(widest, width(line));
-    [...line].forEach(ch => {
-      const rows = glyph(ch);
-      rows.forEach((row, j) => [...row].forEach((v, i) => { if (v === "#") put(x + i, y + j, 1); }));
-      x += rows[0].length + 1;
-    });
+    bardWrite(font, line, right - bardTextWidth(font, line), y, (x, yy) => put(x, yy, 1));
     y += 7;
   });
   const ox = Math.round(right - widest * .7), cx = Math.round(right - widest * .35);
@@ -331,47 +350,18 @@ const bardDrawUI = now => {
 };
 // ── The parchment of the next song, in pixel art too (one of its pixels, BARD_PIXEL CSS pixels,
 // kept straight on the screen: a pixel grid turned by CSS goes jagged): old paper in a few soft
-// tones, a stain or two away from the writing, ragged edges burnt brown; the name in capitals of a
-// larger hand-drawn font (7 pixels high, the title's 5 would be too cramped here), in solid brown
-// ink that bleeds a shade into the paper below each stroke, on one line or two. Its random draws
-// are seeded by the name, so that it always looks the same. Its lower part is hidden behind the
-// frame.
-const BARD_INK_FONT = (() => {
-  const src = {
-    A: "01110 10001 10001 11111 10001 10001 10001", B: "11110 10001 10001 11110 10001 10001 11110",
-    C: "01110 10001 10000 10000 10000 10001 01110", D: "11110 10001 10001 10001 10001 10001 11110",
-    E: "11111 10000 10000 11110 10000 10000 11111", F: "11111 10000 10000 11110 10000 10000 10000",
-    G: "01110 10001 10000 10111 10001 10001 01111", H: "10001 10001 10001 11111 10001 10001 10001",
-    I: "111 010 010 010 010 010 111", J: "00111 00010 00010 00010 00010 10010 01100",
-    K: "10001 10010 10100 11000 10100 10010 10001", L: "10000 10000 10000 10000 10000 10000 11111",
-    M: "10001 11011 10101 10101 10001 10001 10001", N: "10001 10001 11001 10101 10011 10001 10001",
-    O: "01110 10001 10001 10001 10001 10001 01110", P: "11110 10001 10001 11110 10000 10000 10000",
-    Q: "01110 10001 10001 10001 10101 10010 01101", R: "11110 10001 10001 11110 10100 10010 10001",
-    S: "01111 10000 10000 01110 00001 00001 11110", T: "11111 00100 00100 00100 00100 00100 00100",
-    U: "10001 10001 10001 10001 10001 10001 01110", V: "10001 10001 10001 10001 10001 01010 00100",
-    W: "10001 10001 10001 10101 10101 10101 01010", X: "10001 10001 01010 00100 01010 10001 10001",
-    Y: "10001 10001 01010 00100 00100 00100 00100", Z: "11111 00001 00010 00100 01000 10000 11111",
-    " ": "000 000 000 000 000 000 000",
-  };
-  const font = {};
-  Object.keys(src).forEach(k => { font[k] = src[k].split(" "); });
-  return font;
-})();
+// tones, a stain or two away from the writing, ragged edges burnt brown; the name in capitals of
+// the ink font, in solid brown ink that bleeds a shade into the paper below each stroke, on one
+// line or two. Its random draws are seeded by the name, so that it always looks the same. Its
+// lower part is hidden behind the frame.
 let bardSlipFor = null;
 const bardSlipArt = song => {
   bardSlipFor = song;
   const canvas = bardNextBtn.querySelector("canvas"), c = canvas.getContext("2d");
   let seed = [...song.name].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7);
   const rand = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
-  const glyph = ch => BARD_INK_FONT[ch] || BARD_INK_FONT[" "];
-  const width = text => [...text].reduce((w, ch) => w + glyph(ch)[0].length + 1, -1);
-  const words = song.name.toUpperCase().split(" ");
-  let lines = [words.join(" ")];
-  if (width(lines[0]) > 62 && words.length > 1) {
-    const half = Math.ceil(words.length / 2);
-    lines = [words.slice(0, half).join(" "), words.slice(half).join(" ")];
-  }
-  const tw = Math.max(...lines.map(width)), textH = lines.length * 10 - 3;
+  const font = BARD_FONT_INK, lines = bardTextLines(font, song.name, 62);
+  const tw = Math.max(...lines.map(line => bardTextWidth(font, line))), textH = lines.length * 10 - 3;
   const W = tw + 16, H = textH + 18, ty = 6;  // the writing from ty to ty + textH, the rest hidden
   canvas.width = W; canvas.height = H;
   canvas.style.width = `${W * BARD_PIXEL}px`; canvas.style.height = `${H * BARD_PIXEL}px`;
@@ -385,10 +375,9 @@ const bardSlipArt = song => {
   const top = ragged(W), bottom = ragged(W), left = ragged(H), right = ragged(H);
   // Stains, kept off the writing
   const stains = [];
-  while (stains.length < 2) {
-    const st = [3 + rand() * (W - 6), 2 + rand() * (H - 4), 1.6 + rand() * 2];
-    if (st[1] + st[2] < ty - 1 || st[1] - st[2] > ty + textH + 1 || st[0] + st[2] < 6 || st[0] - st[2] > W - 6) stains.push(st);
-    else if (rand() < .1) stains.push([2, H - 3, 1.5]);
+  for (let n = 0; n < 40 && stains.length < 2; n++) {
+    const [sx, sy, r] = [3 + rand() * (W - 6), 2 + rand() * (H - 4), 1.6 + rand() * 2];
+    if (sy + r < ty - 1 || sy - r > ty + textH + 1 || sx + r < 6 || sx - r > W - 6) stains.push([sx, sy, r]);
   }
   const PAPER = [[236, 219, 172], [224, 202, 150], [208, 182, 126]];
   const img = c.createImageData(W, H), d = img.data;
@@ -409,16 +398,7 @@ const bardSlipArt = song => {
   }
   // The name: the ink's bleed first (a shade darker, one pixel down), then the ink itself
   const ink = [];
-  let y = ty;
-  lines.forEach(line => {
-    let x = Math.round((W - width(line)) / 2);
-    [...line].forEach(ch => {
-      const rows = glyph(ch);
-      rows.forEach((row, j) => [...row].forEach((v, i) => { if (v === "1") ink.push([x + i, y + j]); }));
-      x += rows[0].length + 1;
-    });
-    y += 10;
-  });
+  lines.forEach((line, k) => bardWrite(font, line, Math.round((W - bardTextWidth(font, line)) / 2), ty + k * 10, (x, y) => ink.push([x, y])));
   ink.forEach(([x, yy]) => {
     const under = get(x, yy + 1);
     if (under) set(x, yy + 1, under.map(v => Math.round(v * .86)));

@@ -294,6 +294,9 @@ leaveBtn.addEventListener("click", e => {
   applyScreen();
 });
 const setLeave = on => on ? document.body.append(leaveBtn) : leaveBtn.remove();
+setLeave(document.body.classList.contains("epic"));
+document.addEventListener("epic", e => setLeave(e.detail));
+
 // ── Kamelot code (easter egg: the epic finale at any time) ──
 // Typing k a m e l o t (outside the search field), like armstrong, opens the epic finale at once,
 // whatever the time and the screen (its override comes after the metal one, so it wins over the
@@ -312,8 +315,6 @@ document.addEventListener("keydown", e => {
   epicAt = Date.now();
   applyScreen();
 });
-setLeave(document.body.classList.contains("epic"));
-document.addEventListener("epic", e => setLeave(e.detail));
 
 everySecond.push(() => {  // show / hide "More epicness ?" in the last 10 s of a metal show
   const left = document.body.classList.contains("metal") ? metalLeft() : 0;

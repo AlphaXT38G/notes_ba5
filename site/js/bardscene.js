@@ -19,18 +19,21 @@
 // { render(values), resize(scale), ready() }, values being the animated uniforms (see
 // BARD_UNIFORMS), ready() saying "compiling", "ready" or "failed".
 
+// A few vector helpers for the scene's numbers worked out here, and written into the shader (glsl)
+const bardV = {
+  dot: (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2],
+  sub: (a, b) => a.map((c, i) => c - b[i]),
+  norm: a => { const l = Math.hypot(a[0], a[1], a[2]); return a.map(c => c / l); },
+  cross: (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]],
+  glsl: a => `vec3(${a.map(c => +c.toFixed(4)).join(", ")})`,
+};
 // The lute's frame, in the knight's own coordinates (x his left, y up, z where he looks): the
-// soundboard faces him forward and up, the neck goes to his left and up. Made orthonormal here,
-// then written into the shader as numbers.
+// soundboard faces him forward and up, the neck goes to his left and up. Made orthonormal here.
 const bardLute = (() => {
-  const norm = v => { const l = Math.hypot(v[0], v[1], v[2]); return v.map(c => c / l); };
-  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-  const n = norm([.12, .42, 1]);
-  const u0 = norm([1, .48, -.12]), k = dot(u0, n);
-  const u = norm(u0.map((c, i) => c - n[i] * k));
-  const v = [n[1] * u[2] - n[2] * u[1], n[2] * u[0] - n[0] * u[2], n[0] * u[1] - n[1] * u[0]];
-  const glsl = a => `vec3(${a.map(c => c.toFixed(4)).join(",")})`;
-  return { u: glsl(u), v: glsl(v), n: glsl(n) };
+  const { dot, norm, cross, glsl } = bardV;
+  const n = norm([.12, .42, 1]), u0 = norm([1, .48, -.12]);
+  const u = norm(u0.map((c, i) => c - n[i] * dot(u0, n)));
+  return { u: glsl(u), v: glsl(cross(n, u)), n: glsl(n) };
 })();
 
 // The camera and the fire, shared with bard.js, which finds where the fire is in the painting
@@ -39,14 +42,11 @@ const BARD_CAM = { ro: [-.04, .55, -1.55], ta: [-.04, .37, .3], focal: 1.5 };
 const BARD_FIRE = [-.56, 0, -.2];
 // Where a point of the scene shows, in the painting's units: [x, y] from its centre, in heights
 const bardProject = P => {
-  const sub = (a, b) => a.map((c, i) => c - b[i]), dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-  const norm = a => { const l = Math.sqrt(dot(a, a)); return a.map(c => c / l); };
-  const cw = norm(sub(BARD_CAM.ta, BARD_CAM.ro)), cu = norm([cw[2], 0, -cw[0]]);
-  const cv = [cw[1] * cu[2] - cw[2] * cu[1], cw[2] * cu[0] - cw[0] * cu[2], cw[0] * cu[1] - cw[1] * cu[0]];
+  const { dot, sub, norm, cross } = bardV;
+  const cw = norm(sub(BARD_CAM.ta, BARD_CAM.ro)), cu = norm([cw[2], 0, -cw[0]]), cv = cross(cw, cu);  // as in main()
   const d = sub(P, BARD_CAM.ro), z = dot(d, cw);
   return [dot(d, cu) / z * BARD_CAM.focal, dot(d, cv) / z * BARD_CAM.focal];
 };
-const bardVec = a => `vec3(${a.join(", ")})`;
 
 // uTime: seconds; uMood: 0 epic mix, 1 Dragonborn; uPlay: how much he plays (0 still, 1 playing);
 // uStrum: the right hand across the strings (-1 to 1); uFret: the left hand along the neck;
@@ -64,7 +64,7 @@ uniform float uTime, uMood, uPlay, uStrum, uFret, uPitch, uYaw, uFlare, uRing;
 const vec3 KNIGHT = vec3(.22, 0., .32);
 const vec3 KF = vec3(-.6, 0., -.8);
 const vec3 KX = vec3(-.8, 0., .6);
-const vec3 FIRE = ${bardVec(BARD_FIRE)};
+const vec3 FIRE = ${bardV.glsl(BARD_FIRE)};
 const vec3 ROCK = vec3(.62, .3, .86);
 const vec3 MOON = vec3(-.3613, .1305, .9232);  // normalised      // towards the moon, behind them on the left
 const vec3 LU = ${bardLute.u}, LV = ${bardLute.v}, LN = ${bardLute.n};  // the lute: neck, across, soundboard
@@ -422,7 +422,7 @@ float bayer4(vec2 a) { return bayer2(.5 * a) * .25 + bayer2(a); }
 
 void main() {
   vec2 uv = (gl_FragCoord.xy - .5 * uRes) / uRes.y;
-  vec3 ro = ${bardVec(BARD_CAM.ro)}, ta = ${bardVec(BARD_CAM.ta)};
+  vec3 ro = ${bardV.glsl(BARD_CAM.ro)}, ta = ${bardV.glsl(BARD_CAM.ta)};
   vec3 cw = normalize(ta - ro), cu = normalize(cross(vec3(0., 1., 0.), cw)), cv = cross(cw, cu);
   vec3 rd = normalize(uv.x * cu + uv.y * cv + ${BARD_CAM.focal.toFixed(2)} * cw);
 
