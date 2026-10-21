@@ -41,7 +41,7 @@ site/                 the index page (HTML, CSS, JS inlined into one dist/index.
 tools/bartender/      remakes the bartender's layers from source.webp (open it through a local
                       server, see below): cut-out, joints, bar counter and desk bell
 subjects.json         subjects: id, display name, exam rules, optional "weeks" and "color"
-<subject>/            course.tex, cheatsheet.tex, week/weekNN.tex, extra PDFs...
+<subject>/            course.tex, cheatsheet.tex, week/NN.tex, extra PDFs...
 _shared/              course.sty and cheatsheet.sty, shared by every course / cheat sheet
 dist/                 build output (git-ignored): PDFs, previews, index.html
 ```
@@ -366,12 +366,12 @@ Android WebViews). One syntax they do not know makes the browser reject a whole 
 
 ## LaTeX notes
 
-- Weekly notes are `week/weekNN.tex` standalone documents (see `compsec/week/`); they appear in
+- Weekly notes are `week/NN.tex` standalone documents (`01.tex`, `02.tex`...; only files in a `week/` folder are weekly notes) (see `compsec/week/`); they appear in
   the "weekly notes" section of their subject, with a progress bar (`"weeks"` in `subjects.json`
   sets its length, 14 by default).
 - `swent` is the exception: its weeks are chapters `\input` by `course.tex`
   (`weeks/week1a.tex`, `week1b.tex`...). `builder/latex.py` builds one PDF per week from
-  generated `_weekNN.tex` files (git-ignored). Name new chapters `weekN` + optional letter.
+  generated `_weekNN.tex` files (git-ignored), published as `week/NN.pdf`. Name new chapters `weekN` + optional letter.
 - Courses and cheat sheets load `_shared/course.sty` / `_shared/cheatsheet.sty` (layout, boxes,
   footer with the repository link). Change the look of all of them there.
 - A PDF without a matching `.tex` (e.g. `respsoft/cheatsheets/*.pdf`) is copied as is.

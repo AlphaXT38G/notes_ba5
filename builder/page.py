@@ -11,7 +11,7 @@ import shutil
 import subprocess
 from datetime import datetime
 
-from .config import CONFIG, DIST, KINDS, NEW_DAYS, ORDER, PALETTE, ROOT, SEMESTER_WEEKS, SITE, WEEK
+from .config import CONFIG, DIST, KINDS, NEW_DAYS, ORDER, PALETTE, ROOT, SEMESTER_WEEKS, SITE, weekly
 from .latex import course_weeks
 from .log import err, ok
 from .previews import preview
@@ -56,7 +56,7 @@ def label(p, root):
     """Display name of a PDF: "Course notes", "Week 03", or the file name with spaces."""
     if p.relative_to(root).as_posix() in KINDS:
         return KINDS[p.relative_to(root).as_posix()]
-    m = WEEK.fullmatch(p.stem)
+    m = weekly(p)
     if m:
         return f"Week {m[1]}{m[2]}"
     return p.stem.replace("_", " ")
@@ -71,7 +71,7 @@ def sources(subject, p, root):
     src = ROOT / subject / p.relative_to(root)
     tex = src.with_suffix(".tex")
     if not tex.exists():
-        m = WEEK.fullmatch(p.stem)
+        m = weekly(p)
         parts = course_weeks(ROOT / subject).get(int(m[1]), []) if m else []
         return [(ROOT / subject / i).with_suffix(".tex") for i in parts] or [src]
     inputs = re.findall(r"\\(?:input|include)\{([^}]+)\}", tex.read_text(encoding="utf-8", errors="replace"))
@@ -141,13 +141,13 @@ def fold(subject, pdfs, root, when, shots, noun, grouped=True, extra=""):
 def progress(weeks, subject):
     """Bar showing the latest weekly note against the length of the semester.
 
-    Progress is the highest week number published (week04 -> 4/14), not the number of files,
+    Progress is the highest week number published (week/04.pdf -> 4/14), not the number of files,
     so a missing week does not shift the bar. Capped at 100%.
     """
     if not weeks:
         return ""
     total = subject.get("weeks", SEMESTER_WEEKS)
-    last = max(int(WEEK.fullmatch(p.stem)[1]) for p in weeks)
+    last = max(int(weekly(p)[1]) for p in weeks)
     pct = min(100, round(100 * last / total))
     return (
         f'<span class="progress" title="Week {last} of {total}">'
@@ -179,8 +179,8 @@ def build_index():
                 natural(p.relative_to(root)),
             ),
         )
-        # Weekly notes are recognised by their name (weekNN), wherever they are stored
-        weeks = [p for p in rest if WEEK.fullmatch(p.stem)]
+        # Weekly notes are recognised by their name (files in a week/ folder)
+        weeks = [p for p in rest if weekly(p)]
         others = [p for p in rest if p not in weeks]
         links = "".join(link(s["id"], p, root, when[p], shots[p]) for p in main)
         links += fold(s["id"], weeks, root, when, shots, "weekly note", grouped=False, extra=progress(weeks, s))

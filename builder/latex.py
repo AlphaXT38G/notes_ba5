@@ -9,10 +9,10 @@ from .config import DIST, ROOT
 from .log import BOLD, RESET, err, info, ok
 
 # ── Weekly notes written as chapters ─────────────────────────────────────────
-# Most subjects have one standalone document per week (week/week01.tex). swent is the
+# Most subjects have one standalone document per week (week/01.tex). swent is the
 # exception: its weeks are chapters \input by course.tex (weeks/week1a.tex, week1b.tex, ...),
 # several parts per week. Each week is then also built as its own PDF from a small generated
-# document (<subject>/_weekNN.tex, git-ignored) with the course preamble and that week's parts.
+# document (<subject>/_weekNN.tex, git-ignored, published as week/NN.pdf) with the course preamble and that week's parts.
 WEEK_PART = re.compile(r"week_?(\d+)[a-z]?", re.I)  # week1a, week1b, week3, ...
 
 def course_weeks(subject_dir):
@@ -103,9 +103,9 @@ def build_subject(subject, results):
 
         pdf = tex.with_suffix(".pdf")
         if proc.returncode == 0 and pdf.exists():
-            # Mirror the source layout: week/week01.tex -> dist/<subject>/week/week01.pdf;
-            # generated weeks go to the same place: _week01.tex -> dist/<subject>/week/week01.pdf
-            dest = out_dir / ("week/" + tex.stem[1:] + ".pdf" if tex in week_docs else rel.with_suffix(".pdf"))
+            # Mirror the source layout: week/01.tex -> dist/<subject>/week/01.pdf;
+            # generated weeks go to the same place: _week01.tex -> dist/<subject>/week/01.pdf
+            dest = out_dir / ("week/" + tex.stem[len("_week"):] + ".pdf" if tex in week_docs else rel.with_suffix(".pdf"))
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(pdf, dest)
             ok(f"{rel.as_posix()}  →  dist/{subject}/{dest.relative_to(out_dir).as_posix()}")
