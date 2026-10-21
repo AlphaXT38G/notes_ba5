@@ -33,6 +33,7 @@ const TAPE_BANDS = [
   ] },
   { name: "Epic finale", short: "EPIC", tapes: [
     { file: "epic.mp3", icon: "🔥", short: "Epic", name: "Epic finale", color: "#2a62d4" },
+    { file: "dragonborn.mp3", icon: "🐉", short: "Dragon", name: "Dragonborn", color: "#8a5a1c" },
   ] },
   { name: "Christmas", short: "XMAS", tapes: [
     { file: "jingle-bell-rock.mp3", icon: "🔔", short: "Rock", name: "Jingle Bell Rock", color: "#c8102e" },
