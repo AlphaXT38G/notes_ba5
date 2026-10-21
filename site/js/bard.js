@@ -2,19 +2,19 @@
 // The finale's music player: a knight playing the lute, sitting in the grass against a mossy
 // boulder by a campfire, a little pixel art painting in the bottom left corner (his scene is
 // ray-marched in bardscene.js, css/bard.css). It replaces the metal show's amp when the finale
-// takes over. Its controls are in the painting itself (the pixel art "UI", below): the song's title
-// written in a corner, the knight to play / pause, the fire to change the song.
+// takes over. The song's title is lettered in pixels in the bottom right corner of the painting,
+// and its two controls are inked on a scrap of parchment slipped behind it, askew, sticking out
+// at its bottom right corner: play / pause (or sound, while muted) and the next song.
 // The finale has two songs (BARD_SONGS), each with its mood in the scene: the Two Steps From Hell
 // mix (audio/epic.mp3: blue arcane fire, blue motes) and Dragonborn, the theme of Skyrim
 // (audio/dragonborn.mp3: a red fire, a starry night, a dragon crossing the moon). When one ends
 // the next one comes; the song chosen is remembered.
-// Clicking the knight plays / pauses: playing, he strums at the song's pace, nodding, his left
-// hand moving along the neck; paused, he dozes, chin down, and the fire burns lower. Clicking the
-// fire changes the song, as a little show (bardNext): he stops and looks up at the fire, strums a
-// flourish (a chord plucked with Web Audio), the fire is drawn in, then bursts in the new song's
-// colour, a shock wave runs over the grass, the title dissolves pixel by pixel and the new one
-// appears, and the new song starts. Two buttons, hidden until focused, do the same from the
-// keyboard.
+// Playing, he strums at the song's pace, nodding, his left hand moving along the neck; paused, he
+// dozes, chin down, and the fire burns lower. A song change is a little show (bardNext): he stops
+// and looks up at the fire, strums a flourish (a chord plucked with Web Audio), the fire is drawn
+// in, then bursts in the new song's colour, a shock wave runs over the grass, the title dissolves
+// pixel by pixel and the new one appears, and the new song starts. The painting itself answers
+// too: a click on the knight plays / pauses, on the fire changes the song.
 // As the other screens' music, the song autoplays muted when the page has had no gesture yet, and
 // the sound comes on at the first click or key press anywhere.
 const BARD_SONGS = [
@@ -33,7 +33,13 @@ const epicMuted = () => !!epicRiff && epicRiff.muted;
 const bard = document.createElement("div");
 bard.id = "bard";
 bard.innerHTML = '<div class="stage"><canvas class="ui"></canvas><span class="flash"></span><span class="notes"></span></div>' +
-  '<button type="button" class="sr toggle"></button><button type="button" class="sr next"></button><span class="sr" aria-live="polite"></span>';
+  '<div class="slip"><div class="paper"><button type="button" class="toggle">' +
+  // the glyphs, as if inked with a quill: pause, play, sound off (one shows, css/bard.css), next
+  '<svg class="i-pause" viewBox="0 0 24 24"><path d="M9.2 5.5c-.5 4.3-.3 8.6.1 13M14.9 5.5c.4 4.4.3 8.7-.1 13"/></svg>' +
+  '<svg class="i-play" viewBox="0 0 24 24"><path class="ink" d="M7.6 5.2c3.9 2 7.5 4.3 10.9 6.9-3.4 2.4-7 4.6-10.8 6.7-.4-4.6-.4-9.1-.1-13.6z"/></svg>' +
+  '<svg class="i-sound" viewBox="0 0 24 24"><path class="ink" d="M3.8 9.4h3.6l4.8-3.8v12.8l-4.8-3.8H3.8z"/><path d="M15.6 9.2l5 5.6M20.6 9.2l-5 5.6"/></svg>' +
+  '</button><button type="button" class="next"><svg viewBox="0 0 24 24"><path d="M5.5 6.2c2.2 1.8 4.2 3.7 6 5.8-1.8 2-3.8 3.9-6 5.8M12.3 6.2c2.2 1.8 4.2 3.7 6 5.8-1.8 2-3.8 3.9-6 5.8"/></svg></button></div></div>' +
+  '<span class="sr" aria-live="polite"></span>';
 const bardStage = bard.querySelector(".stage"), bardUI = bard.querySelector(".ui"), bardUx = bardUI.getContext("2d");
 const bardToggleBtn = bard.querySelector(".toggle"), bardNextBtn = bard.querySelector(".next"), bardSay = bard.querySelector("span.sr");
 let bardShown = bardSong;  // the song whose title is written (changed halfway through a change)
@@ -43,9 +49,12 @@ const paintBard = () => {
   const song = BARD_SONGS[bardShown], next = BARD_SONGS[(bardSong + 1) % BARD_SONGS.length];
   const toggle = !epicPlaying ? "Play the music" : epicMuted() ? "Turn the sound on" : "Pause the music";
   bard.classList.toggle("playing", epicPlaying);
+  bard.classList.toggle("muted", epicMuted());
   bard.classList.toggle("mood-1", song.mood === 1);
-  bardToggleBtn.textContent = `${toggle} (${song.name})`;
-  bardNextBtn.textContent = `Next song: ${next.name}`;
+  bardToggleBtn.title = toggle;
+  bardToggleBtn.setAttribute("aria-label", `${toggle} (${song.name})`);
+  bardNextBtn.title = `Next song: ${next.name}`;
+  bardNextBtn.setAttribute("aria-label", bardNextBtn.title);
   // the tooltip says what a click does where the pointer is
   bardStage.title = bardHover === "fire" ? `The fire: next song (${next.name})` : `The knight: ${toggle.toLowerCase()} · the fire: next song`;
 };
@@ -237,68 +246,59 @@ const bardWarm = () => {
   bardScene = createBardScene(bardCanvas);
 };
 
-// ── The pixel art UI, over the painting at its own resolution (each of its pixels one of the
-// painting's): the song's title in the top right corner, over the dark trunk, as on the covers of
-// those videos (capitals of a pixel font, a dark outline, an ornament under them in the fire's
-// colour), and little glyphs saying what a click does: » by the fire (on hover, always a
-// little on touch screens, and for the first seconds), ▶ over the knight when paused, ❚❚ when the
-// pointer is over him while he plays, a speaker crossed out while the song is muted. During a song
-// change the title dissolves pixel by pixel and the new one appears the same way.
-let bardTitle = null, bardShownAt = 0;  // bardTitle: the title's pixels, made once per song and size
-const BARD_GLYPHS = {
-  next: ["1..1..", ".1..1.", "..1..1", ".1..1.", "1..1.."],
-  play: ["1...", "11..", "111.", "1111", "111.", "11..", "1..."],
-  pause: ["11.11", "11.11", "11.11", "11.11", "11.11", "11.11"],
-  muted: ["..1.....", ".11.1.1.", "111..1..", "111.1.1.", ".11.....", "..1....."],
-};
+// ── The title, lettered in pixels over the painting at its own resolution (each of its pixels one
+// of the painting's), in the bottom right corner, as on the covers of those videos: capitals of a
+// small pixel font, a dark outline, a thin ornament above them in the fire's colour. During a song
+// change it dissolves pixel by pixel and the new one appears the same way.
+let bardTitle = null;  // the title's pixels, made once per song and size
 const bardUIColour = () => BARD_SONGS[bardShown].mood ? [255, 92, 70] : [140, 180, 255];
-// A pixel font of 5 x 7 capitals, drawn by hand (each letter: seven rows of five pixels): a
-// browser font shrunk to a few pixels and cut out turns to mush
+// A pixel font of capitals five pixels high, drawn by hand (each letter: five rows of its own
+// width): a browser font shrunk to a few pixels and cut out turns to mush
 const BARD_FONT = (() => {
   const src = {
-    A: "01110 10001 10001 11111 10001 10001 10001", B: "11110 10001 10001 11110 10001 10001 11110",
-    C: "01110 10001 10000 10000 10000 10001 01110", D: "11110 10001 10001 10001 10001 10001 11110",
-    E: "11111 10000 10000 11110 10000 10000 11111", F: "11111 10000 10000 11110 10000 10000 10000",
-    G: "01110 10001 10000 10111 10001 10001 01111", H: "10001 10001 10001 11111 10001 10001 10001",
-    I: "01110 00100 00100 00100 00100 00100 01110", J: "00111 00010 00010 00010 00010 10010 01100",
-    K: "10001 10010 10100 11000 10100 10010 10001", L: "10000 10000 10000 10000 10000 10000 11111",
-    M: "10001 11011 10101 10101 10001 10001 10001", N: "10001 10001 11001 10101 10011 10001 10001",
-    O: "01110 10001 10001 10001 10001 10001 01110", P: "11110 10001 10001 11110 10000 10000 10000",
-    Q: "01110 10001 10001 10001 10101 10010 01101", R: "11110 10001 10001 11110 10100 10010 10001",
-    S: "01111 10000 10000 01110 00001 00001 11110", T: "11111 00100 00100 00100 00100 00100 00100",
-    U: "10001 10001 10001 10001 10001 10001 01110", V: "10001 10001 10001 10001 10001 01010 00100",
-    W: "10001 10001 10001 10101 10101 10101 01010", X: "10001 10001 01010 00100 01010 10001 10001",
-    Y: "10001 10001 01010 00100 00100 00100 00100", Z: "11111 00001 00010 00100 01000 10000 11111",
+    A: ".##. #..# #### #..# #..#", B: "###. #..# ###. #..# ###.", C: ".### #... #... #... .###",
+    D: "###. #..# #..# #..# ###.", E: "#### #... ###. #... ####", F: "#### #... ###. #... #...",
+    G: ".### #... #.## #..# .###", H: "#..# #..# #### #..# #..#", I: "### .#. .#. .#. ###",
+    J: "..## ...# ...# #..# .##.", K: "#..# #.#. ##.. #.#. #..#", L: "#... #... #... #... ####",
+    M: "#...# ##.## #.#.# #...# #...#", N: "#..# ##.# #.## #..# #..#", O: ".##. #..# #..# #..# .##.",
+    P: "###. #..# ###. #... #...", Q: ".##. #..# #..# #.#. .#.#", R: "###. #..# ###. #.#. #..#",
+    S: ".### #... .##. ...# ###.", T: "### .#. .#. .#. .#.", U: "#..# #..# #..# #..# .##.",
+    V: "#...# #...# .#.#. .#.#. ..#..", W: "#...# #...# #.#.# ##.## #...#", X: "#..# #..# .##. #..# #..#",
+    Y: "#.# #.# .#. .#. .#.", Z: "#### ...# .##. #... ####",
   };
   const font = {};
   Object.keys(src).forEach(k => { font[k] = src[k].split(" "); });
+  font[" "] = ["..", "..", "..", "..", ".."];
   return font;
 })();
-// The title's pixels: the name in the pixel font, right-aligned (1), the ornament under it (2), and
+// The title's pixels: the name in the pixel font, right-aligned (1), the ornament above it (2), and
 // their outline (3): a lit pixel's neighbours. Too wide for the painting (phones), it goes on two
 // lines.
 const bardTitleArt = (song, W, H) => {
   const px = new Uint8Array(W * H), rnd = new Float32Array(W * H);
-  const width = text => text.length * 6 - 1;
+  const glyph = ch => BARD_FONT[ch] || BARD_FONT[" "];
+  const width = text => [...text].reduce((w, ch) => w + glyph(ch)[0].length + 1, -1);
   const name = song.name.toUpperCase(), words = name.split(" ");
   let lines = [name];
-  if (width(name) > W - 8 && words.length > 1) {
+  if (width(name) > W * .7 && words.length > 1) {
     const half = Math.ceil(words.length / 2);
     lines = [words.slice(0, half).join(" "), words.slice(half).join(" ")];
   }
   const put = (x, y, v) => { if (x >= 0 && x < W && y >= 0 && y < H) px[y * W + x] = v; };
-  let y = 3, right = W - 4, widest = 0;
+  const right = W - 4;
+  let y = H - 4 - lines.length * 7 + 2, widest = 0;
+  const oy = y - 3;
   lines.forEach(line => {
     let x = right - width(line);
     widest = Math.max(widest, width(line));
     [...line].forEach(ch => {
-      const rows = BARD_FONT[ch];
-      if (rows) rows.forEach((row, j) => [...row].forEach((v, i) => { if (v === "1") put(x + i, y + j, 1); }));
-      x += 6;
+      const rows = glyph(ch);
+      rows.forEach((row, j) => [...row].forEach((v, i) => { if (v === "#") put(x + i, y + j, 1); }));
+      x += rows[0].length + 1;
     });
-    y += 9;
+    y += 7;
   });
-  const oy = y, ox = Math.round(right - widest * .8), cx = Math.round(right - widest * .4);
+  const ox = Math.round(right - widest * .7), cx = Math.round(right - widest * .35);
   for (let i = ox; i <= right; i++) put(i, oy, 2);  // a line, a diamond in its middle
   [[0, -1], [-1, 0], [1, 0], [0, 1]].forEach(([dx, dy]) => put(cx + dx, oy + dy, 2));
   for (let yy = 0; yy < H; yy++) for (let xx = 0; xx < W; xx++) {
@@ -312,15 +312,6 @@ const bardTitleArt = (song, W, H) => {
   }
   return { song, W, H, px, rnd, img: bardUx.createImageData(W, H) };
 };
-const bardGlyph = (name, x, y, rgb, alpha) => {
-  if (alpha <= .02) return;
-  const rows = BARD_GLYPHS[name], c = bardUx;
-  x = Math.round(x); y = Math.round(y);
-  c.fillStyle = `rgba(8,6,18,${(alpha * .8).toFixed(2)})`;  // the outline, then the glyph
-  rows.forEach((row, j) => [...row].forEach((v, i) => { if (v === "1") c.fillRect(x + i - 1, y + j - 1, 3, 3); }));
-  c.fillStyle = `rgba(${rgb.join(",")},${alpha.toFixed(2)})`;
-  rows.forEach((row, j) => [...row].forEach((v, i) => { if (v === "1") c.fillRect(x + i, y + j, 1, 1); }));
-};
 const bardDrawUI = now => {
   const W = bardUI.width, H = bardUI.height;
   if (!W || !H) return;
@@ -329,6 +320,8 @@ const bardDrawUI = now => {
   // How much of the title shows: all of it, or dissolving / appearing during a change
   const s = swapStart < 0 ? -1 : (now - swapStart) / 1000;
   const k = s < 0 ? 1 : s < .6 ? 1 - s / .6 : s < 1.25 ? 0 : Math.min(1, (s - 1.25) / .65);
+  if (k === 1 && bardTitle.drawn === 1) return;  // nothing changed since the last frame
+  bardTitle.drawn = k;
   const t = bardTitle, d = t.img.data;
   for (let i = 0; i < W * H; i++) {
     const v = t.px[i] && t.rnd[i] < k ? t.px[i] : 0, o = i * 4;
@@ -338,24 +331,13 @@ const bardDrawUI = now => {
     else d[o + 3] = 0;
   }
   bardUx.putImageData(t.img, 0, 0);
-  // The glyphs, where the fire and the knight are in the painting
-  const at = P => { const [x, y] = bardProject(P); return [W / 2 + x * H, H / 2 - y * H]; };
-  const [fx, fy] = at([BARD_FIRE[0], .3, BARD_FIRE[2]]), [kx, ky] = at(BARD_KNIGHT);
-  const pulse = .5 + .5 * Math.sin(now / 400), early = now - bardShownAt < 6000;
-  const touch = matchMedia("(pointer: coarse)").matches;
-  if (s < 0) {
-    bardGlyph("next", fx + 7, fy - 4, rgb, bardHover === "fire" ? 1 : early || touch ? .35 + .3 * pulse : 0);
-    if (!epicPlaying) bardGlyph("play", kx - 2, ky - 3, [246, 240, 226], .45 + .4 * pulse);
-    else if (bardHover === "knight") bardGlyph("pause", kx - 2, ky - 3, [246, 240, 226], .8);
-  }
-  if (epicMuted()) bardGlyph("muted", W - 11, H - 9, [246, 240, 226], .5 + .45 * pulse);
 };
 // The UI's canvas has the painting's size (or the frame's, in painting pixels, without WebGL)
 const bardUISize = () => {
   const box = bardStage.getBoundingClientRect();
   const W = bardCanvas && bardScene ? bardCanvas.width : Math.round(box.width / BARD_PIXEL);
   const H = bardCanvas && bardScene ? bardCanvas.height : Math.round(box.height / BARD_PIXEL);
-  if (bardUI.width !== W || bardUI.height !== H) { bardUI.width = W; bardUI.height = H; }
+  if (bardUI.width !== W || bardUI.height !== H) { bardUI.width = W; bardUI.height = H; bardTitle = null; }
 };
 
 // Music notes flying out of the painting at the burst (removed when their animation ends)
@@ -460,7 +442,6 @@ const setEpicMusic = on => {
     document.addEventListener("pointerdown", epicSound, { once: true });
     document.addEventListener("keydown", epicSound, { once: true });
   }
-  bardShownAt = performance.now();
   if (bardScene) bardScene.resize(bardScale);
   addEventListener("resize", bardResize);
   bardCheck();
