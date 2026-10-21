@@ -1,0 +1,338 @@
+% =========================================================
+\chapter{Lecture 2 : Principles of computer security}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Nobody knows how to build a system without bugs, so
+experience gave us \textbf{8 (+2) rules of thumb} (Saltzer \& Schroeder) to design
+security mechanisms: keep it simple, refuse by default, check every access, do not rely on
+secrecy of the design, never trust a single person, give only the rights needed, share as
+little as possible, make security easy to use. \\
+\textbf{Why is it useful?} These principles are a \textbf{toolbox to judge a design}: when
+you look at a system (or an attack), you can ask ``which principle was violated?''. Most
+real-world breaches (Heartbleed, MongoDB, S3 leaks, \ldots) are a principle that was
+broken because of a bad tradeoff.
+\end{rembox}
+
+\begin{rembox}[title=Where do the principles come from?]
+Saltzer \& Schroeder, \textit{The Protection of Information in Computer Systems} (1975),
+abbreviated \textbf{[SS75]}: \textbf{8 (+2) principles} at the core of security
+engineering practice. Experience has shown that they \textbf{guide} the design and
+contribute to an implementation without security flaws. They are still used today
+(e.g.\ to analyse the threat model of machine learning systems).
+\end{rembox}
+
+\begin{exbox}[title=Heartbleed (CVE-2014-0160) --- why simplicity matters]
+In OpenSSL (used for HTTPS), the \textit{Heartbeat} feature lets a client send a small
+piece of data that the server echoes back. The attacker sends 1 byte but
+\textbf{claims} to have sent 64\,000 bytes; the server, \textbf{without checking the
+actual length}, replies with the byte plus 63\,999 bytes of its private memory.
+\begin{itemize}
+  \item \textbf{Feature complexity} --- Heartbeat was a non-essential feature: the
+        added complexity created a \textbf{new attack surface}.
+  \item \textbf{Codebase complexity} --- the bug was a single missing bounds check,
+        hidden for two years because the huge codebase made auditing difficult.
+\end{itemize}
+\end{exbox}
+
+\section{1 -- Economy of mechanism}
+
+\begin{defnbox}[title=Economy of mechanism]
+``Keep the [security mechanism / implementation] design as \textbf{simple and small}
+as possible.'' (KISS principle)
+\end{defnbox}
+
+\begin{rembox}[title=Why?]
+The mechanism needs to be \textbf{easy to audit and verify}. Operational testing is not
+appropriate to evaluate security (penetration testing is nevertheless valuable).
+\end{rembox}
+
+\begin{defnbox}[title=Trusted Computing Base (TCB)]
+\textbf{Every component} of the system (hardware / firmware / software) on which the
+security policy relies. The TCB is \textbf{trusted} to operate correctly for the
+security policy to hold.
+\end{defnbox}
+
+\begin{propbox}[title=Consequences of the TCB]
+\begin{itemize}
+  \item If something goes wrong \textbf{within} the TCB, \textbf{the security policy
+        may be violated}; a failure \textbf{outside} the TCB should not matter for the
+        policy.
+  \item The TCB must be kept \textbf{small} to \textbf{ease verification} (economy of
+        mechanism) and \textbf{diminish the attack surface}.
+\end{itemize}
+\end{propbox}
+
+\begin{warnbox}[title=The verb ``to trust'']
+The only proper use of ``to trust'' in security engineering is
+\textbf{``X trusts Y will do Z''}.
+\end{warnbox}
+
+\section{2 -- Fail-safe defaults}
+
+\begin{defnbox}[title=Fail-safe defaults]
+``Base access decisions on \textbf{permission} rather than \textbf{exclusion}.'' [SS75]
+\\
+If something fails, be as secure as if it does not fail: errors / uncertainty should
+err \textbf{on the side of the security policy}. Do \textbf{not} try to fix!
+\end{defnbox}
+
+\begin{propbox}[title={Whitelist, not blacklist}]
+Use a \textbf{whitelist} (list what is allowed), not a blacklist (list what is
+forbidden): a \textbf{lack of permission is easy to detect and solve}, whereas a
+forgotten exclusion silently grants access.
+\end{propbox}
+
+\begin{exbox}[title=Fail-safe defaults]
+\begin{itemize}
+  \item Security door: if no permission, do not open.
+  \item Form input: if no permission to write in $X$, do not write anywhere.
+\end{itemize}
+\end{exbox}
+
+\begin{exbox}[title=MongoDB ransomware (2017) --- ease of use vs.\ security]
+For a while, the default installation had \textbf{authentication turned off} and was
+\textbf{bound to all network interfaces} (0.0.0.0) instead of localhost. Attackers
+scanned the whole internet, connected without password, stole/deleted the data and left
+a ransom note. Unsafe defaults + users who do not read the manual = no access control.
+\end{exbox}
+
+\begin{rembox}[title=Ransomware]
+A ransomware \textbf{denies you access to your own data}, most commonly by
+\textbf{encrypting your files}; the attacker then demands a \textbf{ransom payment} in
+exchange for the key needed to decrypt them. Its prevalence exploded with the arrival of
+cryptocurrencies.
+\end{rembox}
+
+\section{3 -- Complete mediation}
+
+\begin{defnbox}[title=Complete mediation]
+``\textbf{Every access to every object} must be checked for authority.'' [SS75]
+\end{defnbox}
+
+\begin{defnbox}[title=Reference monitor]
+The component that \textbf{mediates ALL actions from subjects on objects} and ensures
+they are according to the \textbf{policy}. It takes as input the request
+(subject $\to$ object) and the policy, and writes to an \textbf{audit log}.
+\end{defnbox}
+
+\begin{warnbox}[title=Difficult to implement]
+\begin{itemize}
+  \item \textbf{Performance} --- checking everything is slow.
+  \item \textbf{Time to check vs.\ time to use} --- the permission may change between
+        the check and the use.
+  \item \textbf{Modern distributed systems} --- you can only check what you see!
+\end{itemize}
+\end{warnbox}
+
+\begin{exbox}[title=Missing mediation --- the ``Gold Member'' cookie]
+A streaming platform checks the subscription in the database \textbf{only once at
+login}, then stores \texttt{\{'user': 'Alice', 'status': 'paid'\}} in a session cookie
+and only looks at the cookie afterwards. Alice subscribes, logs in, unsubscribes (the DB
+is correctly updated to ``unpaid''), and can still watch premium content until her
+session expires: \textbf{violation of complete mediation}.
+\end{exbox}
+
+\section{4 -- Open design}
+
+\begin{defnbox}[title=Open design]
+``The design should \textbf{not be secret}.'' [SS75] \\
+When you design, \textbf{algorithms are public}; only \textbf{key elements} are kept
+secret:
+\begin{itemize}
+  \item \textbf{Crypto} --- only keep the key secret;
+  \item \textbf{Authentication} --- only keep the password secret;
+  \item \textbf{Obfuscation} --- only keep the used noise secret.
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title=Historical formulations]
+\begin{itemize}
+  \item \textbf{Kerckhoffs} (1883): the design of a system should not require secrecy.
+  \item \textbf{Shannon} (1949): ``the enemy knows the system'' --- design systems
+        assuming the enemy immediately gains full familiarity with them.
+  \item \textbf{Baran} (1964): the paradox of secrecy about secrecy --- without
+        widespread scrutiny, weaknesses are more likely to be overlooked.
+\end{itemize}
+\end{rembox}
+
+\begin{propbox}[title=Why open design?]
+\begin{itemize}
+  \item Open design results in \textbf{better \& easier auditing}. \textbf{Linus' law}
+        (Raymond, 1997): ``given enough eyeballs, all bugs are shallow'' --- more of a
+        mantra: it needs many eyeballs, and defect density is high.
+  \item \textbf{Secrecy is unrealistic}: assuming the design stays secret is a way to
+        build a \textbf{bad threat model}.
+  \item Key principle behind the academic discipline devoted to understanding computer
+        security.
+\end{itemize}
+Famous failure of a closed design: \textbf{GSM encryption}.
+\end{propbox}
+
+\begin{exbox}[title=Security through obscurity does not work]
+\begin{itemize}
+  \item \textbf{Hidden instance (2017)}: data of 198 million US voters stored on a
+        public server with no authentication; the only ``protection'' was a
+        ``semi-secret'' URL. A researcher found it.
+  \item \textbf{Addresses are not safe}: the whole IPv4 space ($2^{32}\approx 4$
+        billion addresses) could be scanned in about 3 minutes in 2013 --- picking a
+        random port (0--65535) \textbf{is not hiding the service}.
+\end{itemize}
+\end{exbox}
+
+\section{5 -- Separation of privilege}
+
+\begin{defnbox}[title=Privilege]
+A \textbf{privilege} allows a user to perform an action on a computer system that may
+have security consequences (e.g.\ create a file in a directory, access a device, write
+to a socket for communicating over the Internet).
+\end{defnbox}
+
+\begin{defnbox}[title=Separation of privilege]
+``No single accident, deception, or breach of trust is sufficient to compromise the
+protected information.'' [SS75] \\
+Requiring \textbf{multiple conditions} to execute an action improves security
+(e.g.\ two keys to open a safe, two factors to authenticate).
+\end{defnbox}
+
+\begin{warnbox}[title=Problems]
+\textbf{Availability?} (more conditions = more ways to be blocked),
+\textbf{Responsibility?} (who is accountable?), \textbf{Complexity!}
+\end{warnbox}
+
+\begin{exbox}[title=Payment system of a business]
+\textbf{Goal}: the attacker must not steal money. \textbf{Threat model}: the attacker
+can corrupt \emph{at most one} principal (no collusion). If a manager can both
+\textit{create a vendor}, \textit{create an order} and \textit{approve} it, a single
+corrupted manager registers a fake shell company and pays it. \\
+\textbf{Solution: split roles} --- Procurement can \textbf{only} create/approve vendors;
+Finance can \textbf{only} approve payments for vendors already in the system.
+Reminiscent of \textbf{separation of powers} / ``checks and balances''.
+\end{exbox}
+
+\section{6 -- Least privilege}
+
+\begin{defnbox}[title=Least privilege]
+``Every program and every user of the system should operate using the \textbf{least set
+of privileges necessary} to complete the job.'' [SS75] \\
+Rights are \textbf{added as needed} and \textbf{discarded after use}.
+\end{defnbox}
+
+\begin{propbox}[title=Least privilege in practice]
+\begin{itemize}
+  \item \textbf{Damage control} --- minimize high-privilege actions \& interactions
+        (related to economy of mechanism: small TCB).
+  \item \textbf{``Need-to-know'' principle} --- e.g.\ guest accounts at EPFL,
+        \textbf{data minimization} principle (data protection).
+\end{itemize}
+\end{propbox}
+
+\section{7 -- Least common mechanism}
+
+\begin{defnbox}[title=Least common mechanism]
+``Minimize the amount of mechanism \textbf{common to more than one user} and depended on
+by all users.'' [SS75] \\
+Every shared mechanism represents a \textbf{potential information path between users}
+and must be designed with great care so that it does not unintentionally compromise
+security.
+\end{defnbox}
+
+\begin{propbox}[title=Link with economy of mechanism]
+\begin{itemize}
+  \item \textbf{(Design)} interactions make it hard to validate the security design;
+  \item \textbf{(Implementation)} interactions may lead to unintentional leaks of
+        information --- \textbf{unintended channels}: use of \texttt{/tmp}, shared cache.
+\end{itemize}
+\end{propbox}
+
+\begin{warnbox}[title={Mechanisms, not code}]
+This principle refers to \textbf{mechanisms}, not to code: reusable code that has been
+tested many times is \textbf{helpful} for security. The problem is the
+\textbf{isolation of data}.
+\end{warnbox}
+
+\begin{exbox}[title=Symlink attack in \texttt{/tmp}]
+A \textbf{symbolic link} (symlink) is a ``shortcut'' file: when the OS accesses it, it is
+automatically redirected to the real file it points to. \\
+A root program writes \texttt{echo "Service is starting..." > /tmp/starting.log}. A
+non-root user (corrupted by the adversary) also has write access to \texttt{/tmp} and
+runs \texttt{ln -s /var/log/dmesg /tmp/starting.log}: the root program now overwrites a
+system log, breaking \textbf{log integrity}. The common mechanism is the \texttt{/tmp}
+directory, shared between low-privilege users and root processes. (Modern Linux
+mitigates it in \texttt{/tmp}, but it still works e.g.\ in \texttt{/home/user}.)
+\end{exbox}
+
+\section{8 -- Psychological acceptability}
+
+\begin{defnbox}[title=Psychological acceptability]
+``It is essential that the human interface be designed for \textbf{ease of use}, so that
+users routinely and automatically apply the protection mechanisms correctly.'' [SS75]
+\end{defnbox}
+
+\begin{propbox}[title=What it implies]
+\begin{itemize}
+  \item \textbf{Hide the complexity} introduced by security mechanisms: they should not
+        make the resource more difficult to access than if they were not present.
+  \item The \textbf{mental model} of the (honest) users must match the security policy
+        and security mechanisms.
+  \item \textbf{Cultural acceptability} --- not all mechanisms are acceptable everywhere
+        (face recognition in cultures that cover the face, register of everyone who
+        sleeps in a dorm).
+\end{itemize}
+\end{propbox}
+
+\begin{exbox}[title=Amazon S3 ``Any Authenticated AWS User'']
+Psychological acceptability is \textbf{not just for end users}: system administrators
+are also users of a configuration UI. Admins thought the option meant ``any
+authenticated user \emph{in my account}'' whereas it meant ``anyone with \emph{any} AWS
+account'' (free to create) $\Rightarrow$ several leaks from 2017. In 2023 AWS added a
+fail-safe default (block public access) --- \textbf{safer defaults have tradeoffs}
+(users struggled to share buckets).
+\end{exbox}
+
+\section{Extra principles from physical security}
+
+\begin{warnbox}[title=Difficult to transpose to computer security!]
+The last two principles come from physical security and are hard to apply to computer
+systems.
+\end{warnbox}
+
+\begin{defnbox}[title=9 -- Work factor]
+``Compare the \textbf{cost of circumventing} the mechanism with the \textbf{resources of
+a potential attacker}.'' [SS75] \\
+It helps \textbf{refining the threat model}, but cost is \textbf{difficult to
+quantify} (cost of compromising insiders? of finding a bug? monetization?).
+\end{defnbox}
+
+\begin{defnbox}[title=10 -- Compromise recording]
+``\textbf{Reliably record} that a compromise of information has occurred [\ldots] in
+place of more elaborate mechanisms that completely prevent loss.'' [SS75] \\
+Keep \textbf{tamper-evident logs}: they may enable recovery (integrity).
+\end{defnbox}
+
+\begin{warnbox}[title=Logs are not magic]
+What if you cannot recover (e.g.\ confidentiality already lost)? How to keep the log's
+integrity? Logs may be a vulnerability (privacy)? Logging the log (availability)?
+\textbf{Logging is not a guarantee that the compromise is detected.}
+\end{warnbox}
+
+\begin{keybox}[title=Summary]
+``Since no one knows how to build a system without flaws, the alternative is to rely on
+eight design principles, which tend to reduce both the number and the seriousness of any
+flaws.'' [SS75]
+\begin{itemize}
+  \item \textbf{Economy of mechanism} --- keep it simple!
+  \item \textbf{Fail-safe defaults} --- safe defaults; if there is a problem, your move
+        should comply with the policy.
+  \item \textbf{Complete mediation} --- verify \emph{every} action.
+  \item \textbf{Open design} --- make the design (and implementation) available.
+  \item \textbf{Separation of privilege} --- never rely on \emph{only one} entity or
+        action.
+  \item \textbf{Least privilege} --- only the privileges needed, only while needed.
+  \item \textbf{Least common mechanism} --- minimize shared mechanisms (isolate data).
+  \item \textbf{Psychological acceptability} --- security must be easy to use correctly.
+\end{itemize}
+Principles help identify safe and unsafe \textbf{patterns}: do \textbf{not} use them as a
+blind checklist, but as tools to weigh design decisions. They are easy to violate ---
+typically through \textbf{improperly evaluated tradeoffs}.
+\end{keybox}

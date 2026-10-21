@@ -9,11 +9,19 @@ from .config import DIST, ROOT
 from .log import BOLD, RESET, err, info, ok
 
 # ── Weekly notes written as chapters ─────────────────────────────────────────
-# Most subjects have one standalone document per week (week/week01.tex). swent is the
-# exception: its weeks are chapters \input by course.tex (weeks/week1a.tex, week1b.tex, ...),
-# several parts per week. Each week is then also built as its own PDF from a small generated
-# document (<subject>/_weekNN.tex, git-ignored) with the course preamble and that week's parts.
-WEEK_PART = re.compile(r"week_?(\d+)[a-z]?", re.I)  # week1a, week1b, week3, ...
+# A week is a chapter \input by course.tex: week/01.tex for compsec (one part per week), or
+# weeks/week1a.tex, week1b.tex, ... for swent (several parts per week). Each week is also built
+# as its own PDF from a small generated document (<subject>/_weekNN.tex, git-ignored, published
+# as week/NN.pdf) with the course preamble and that week's parts.
+WEEK_PART = re.compile(r"week_?(\d+)[a-z]?|(\d+)[a-z]?", re.I)  # week1a, week3 (any folder), or 01, 3b (week/ only)
+
+def week_part(inp):
+    """Week number of an input name (week/01, weeks/week1a), or None if it is not a weekly part."""
+    path = Path(inp)
+    m = WEEK_PART.fullmatch(path.name)
+    if not m or (m[1] is None and path.parent.name != "week"):
+        return None
+    return int(m[1] or m[2])
 
 def course_weeks(subject_dir):
     """Weekly chapters of course.tex: {week number: [inputs, in course order]} ({} if none)."""
@@ -22,9 +30,9 @@ def course_weeks(subject_dir):
         return {}
     weeks = {}
     for inp in re.findall(r"\\input\{([^}]+)\}", course.read_text(encoding="utf-8", errors="replace")):
-        m = WEEK_PART.fullmatch(Path(inp).name)
-        if m:
-            weeks.setdefault(int(m[1]), []).append(inp)
+        n = week_part(inp)
+        if n is not None:
+            weeks.setdefault(n, []).append(inp)
     return weeks
 
 def week_documents(subject_dir):
@@ -103,9 +111,9 @@ def build_subject(subject, results):
 
         pdf = tex.with_suffix(".pdf")
         if proc.returncode == 0 and pdf.exists():
-            # Mirror the source layout: week/week01.tex -> dist/<subject>/week/week01.pdf;
-            # generated weeks go to the same place: _week01.tex -> dist/<subject>/week/week01.pdf
-            dest = out_dir / ("week/" + tex.stem[1:] + ".pdf" if tex in week_docs else rel.with_suffix(".pdf"))
+            # Mirror the source layout: week/01.tex -> dist/<subject>/week/01.pdf;
+            # generated weeks go to the same place: _week01.tex -> dist/<subject>/week/01.pdf
+            dest = out_dir / ("week/" + tex.stem[len("_week"):] + ".pdf" if tex in week_docs else rel.with_suffix(".pdf"))
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(pdf, dest)
             ok(f"{rel.as_posix()}  →  dist/{subject}/{dest.relative_to(out_dir).as_posix()}")

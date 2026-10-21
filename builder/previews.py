@@ -32,7 +32,7 @@ def content_page(p):
     return end + 1 if end < len(pages) and pages[end] else 1
 
 def preview(p):
-    """Small PNG of a page of a PDF (week01.pdf -> week01.pdf.p1.png), or None.
+    """Small PNG of a page of a PDF (01.pdf -> 01.pdf.p1.png), or None.
 
     The first page, except for course notes, where the title page and the table of contents
     say nothing: their preview shows the first page of content instead (see content_page).
