@@ -2,8 +2,8 @@
 // 10 s before a metal show ends, a "More epicness ?" medallion shows up. Clicked, it queues the
 // epic finale, summoned in the last seconds of the show, which takes over right when the metal
 // ends (css/epic.css): a blue and violet fantasy night with blue fire on the effects canvas
-// (fx.js), the amp playing epic music in a loop. It lasts until its "Back to normal" button is
-// clicked.
+// (fx.js), and its music played by a knight with a lute by a campfire (bard.js). It lasts until
+// its "Back to normal" button is clicked. The kamelot code (below) opens it at any time.
 let epicQueued = false, epicAt = 0;  // epicAt: when it started (0 = not running)
 SCREENS.epic = { className: "epic", subtitle: "Behold… more epicness.", transition: "epic" };
 OVERRIDES.push(phase => {  // runs after the metal override (metal.js is loaded first)
@@ -275,39 +275,10 @@ const summonSound = left => {
 // The show ended without the finale (e.g. by the clock), or the finale ended: nothing to summon
 document.addEventListener("metal", e => { if (!e.detail && !epicAt) endSummoning(); });
 document.addEventListener("epic", e => { if (!e.detail) endSummoning(); });
-// Epic music: a Two Steps From Hell mix (audio/epic.mp3, 25 tracks), looped, on the same amp
-// (turned blue). The song is loaded as soon as the button is clicked (paused), so it starts at once
-// when the metal ends; the click also counts as the gesture browsers need for sound.
-let epicRiff = null, epicPlaying = false;
-const epicMuted = () => !!epicRiff && epicRiff.muted;
-const preloadEpic = () => { if (!epicRiff) epicRiff = preloadTrack("epic.mp3"); };
-const epicPlay = () => {
-  if (!epicRiff) epicRiff = screenTrack("epic.mp3", { muted: !screenGesture() });  // e.g. ?screen=epic: muted until a click
-  else epicRiff.play().catch(() => {});
-  epicPlaying = true;
-  paintAmp();
-};
-const epicSound = () => { if (epicMuted()) { epicRiff.muted = false; soundAt = performance.now(); paintAmp(); } };
-const setEpicMusic = on => {
-  document.removeEventListener("pointerdown", epicSound);
-  document.removeEventListener("keydown", epicSound);
-  if (!on) {
-    dropTrack(epicRiff);
-    epicRiff = null; epicPlaying = false;
-    amp.classList.remove("epic");
-    if (!document.body.classList.contains("metal")) amp.remove();
-    return;
-  }
-  amp.classList.add("epic");
-  document.body.append(amp);
-  epicPlay();
-  if (epicMuted()) {
-    document.addEventListener("pointerdown", epicSound, { once: true });
-    document.addEventListener("keydown", epicSound, { once: true });
-  }
-};
-setEpicMusic(document.body.classList.contains("epic"));
-document.addEventListener("epic", e => setEpicMusic(e.detail));
+// The finale's music (a Two Steps From Hell mix, then Dragonborn) and its player, the knight with
+// the lute, are in bard.js: the "More epicness ?" click loads the song ahead with preloadEpic(), so
+// it starts at once when the metal ends; the click also counts as the gesture browsers need for
+// sound.
 
 // "Back to normal": a small button in the bottom right corner during the epic finale. It ends the
 // epic and the page falls back to whatever the clock says (the calm night after the metal show,
@@ -326,12 +297,32 @@ const setLeave = on => on ? document.body.append(leaveBtn) : leaveBtn.remove();
 setLeave(document.body.classList.contains("epic"));
 document.addEventListener("epic", e => setLeave(e.detail));
 
+// ── Kamelot code (easter egg: the epic finale at any time) ──
+// Typing k a m e l o t (outside the search field), like armstrong, opens the epic finale at once,
+// whatever the time and the screen (its override comes after the metal one, so it wins over the
+// shows too). It lasts like the finale after a metal show; typed again in it, it does what
+// "Back to normal" does. Typing is a gesture, so its music plays with sound at once.
+const KAMELOT = [..."kamelot"];
+let kamelotPos = 0;  // how many letters of the word have been typed so far
+document.addEventListener("keydown", e => {
+  if (e.target.matches("input")) return;  // typing in the search field never triggers it
+  const k = e.key.toLowerCase();
+  kamelotPos = k === KAMELOT[kamelotPos] ? kamelotPos + 1 : (k === KAMELOT[0] ? 1 : 0);
+  if (kamelotPos !== KAMELOT.length) return;
+  kamelotPos = 0;
+  if (epicAt || document.body.dataset.phase === "epic") { leaveBtn.click(); return; }  // even mid-transition
+  epicQueued = false;
+  epicAt = Date.now();
+  applyScreen();
+});
+
 everySecond.push(() => {  // show / hide "More epicness ?" in the last 10 s of a metal show
   const left = document.body.classList.contains("metal") ? metalLeft() : 0;
   if (left > 0 && left <= 10) {
     if (!moreBtn.isConnected) {
       moreBtn.classList.remove("queued");
       document.body.append(moreBtn);
+      bardWarm();  // the bard's shader starts compiling now, in case the finale comes
     }
     paintMore();
   } else moreBtn.remove();

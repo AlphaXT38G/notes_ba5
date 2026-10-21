@@ -96,7 +96,13 @@ rise, the medallion implodes and bursts in a white flash and a shock wave right 
 song ends, with a whoosh and a boom. Instead of going back to the day, the page turns into
 an epic fantasy finale ⚔️:
 a blue and violet night with an aurora, realistic blue fire, embers, floating arcane
-lights and a rune circle, while the amp (now blue) plays Two Steps From Hell in a loop. It lasts
+lights and a rune circle. In the bottom left corner, a little pixel art painting, ray-traced
+live: a knight playing the lute, his back against a mossy boulder, by a campfire whose
+light and shadows play on his armour. He plays Two Steps From Hell, then Dragonborn
+(Skyrim), its title lettered in pixels in a corner of the painting. Click him to pause (he
+dozes off); the next song waits on an old parchment leaning behind the painting: click it (or
+the fire) to change the song, and watch the fire burst into the new song's
+colours (blue and arcane, or red under a starry night, with a dragon crossing the moon). It lasts
 until you click the small **"Back to normal"** button in the bottom right corner, which
 brings back the usual look for the time of day (day, the calm night after the show,
 or the jazz bar at night).
@@ -120,7 +126,7 @@ Add `?screen=evening`, `?screen=closing`, `?screen=metal`, `?screen=epic`, `?scr
 `?screen=christmas` or `?screen=christmas-night` (or `1` / `0`) to the URL to force a
 screen (or the day) at any time.
 
-It hides seven easter eggs: a surprise banner that shows up on some visits,
+It hides eight easter eggs: a surprise banner that shows up on some visits,
 something that happens when you type the Konami code (↑↑↓↓←→←→BA), the metal
 takeover at any time of day if you click the flame button 20 times within a minute,
 Christmas at any time of the year if you type `yeti` (outside the Christmas
@@ -128,6 +134,7 @@ period, type it again on a Christmas screen to leave; in the jazz bar, it brings
 Christmas back), and the jazz bar at any time
 if you type `armstrong` (type it again in the bar to go back to the screen of the
 moment: the day, the calm night, the bar at bar time, or Christmas in December), and the
-calm night at any time if you type `peace` (type it again to leave). And if it all gets
+calm night at any time if you type `peace` (type it again to leave), and the epic finale
+at any time, even over the shows, if you type `kamelot` (type it again to leave). And if it all gets
 too much, type `normal`: the plain page comes back, whatever is on (type it again to
 let the clock decide).

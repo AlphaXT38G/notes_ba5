@@ -11,7 +11,7 @@ LaTeX notes for the BA5 IN semester at EPFL. `build.py` compiles every subject t
 runs the build and publishes `dist/` at <https://alphaxt38g.github.io/notes_ba5/>.
 
 The index page has grown a lot of personality: a flame mode, a jazz bar at night (closed by a
-life-size Gigachad bartender at 00:45), a metal show at 01:00, an epic finale, a calm night with
+life-size Gigachad bartender at 00:45), a metal show at 01:00, an epic finale (with a knight playing the lute by a campfire), a calm night with
 crickets until 05:30, Christmas screens in December, a vintage cassette deck by day, easter eggs. Most of the code is there, in `site/`.
 
 ## Repository layout
@@ -34,8 +34,9 @@ site/                 the index page (HTML, CSS, JS inlined into one dist/index.
                         bartender by an image generator, used as an illustration in this
                         non-commercial project); frost.png is the frost the snowman's
                         snowball leaves on the window
-  audio/                the screens' music, mp3 files copied to dist/audio/: jazz, metal, epic,
-                        calm (the night's forest) and jingle-bell-rock (Christmas); the day's
+  audio/                the screens' music, mp3 files copied to dist/audio/: jazz, metal, epic
+                        and dragonborn (the epic finale's two songs), calm (the night's forest)
+                        and jingle-bell-rock (Christmas); the day's
                         cassette deck plays them too; megalovania is the Christmas snowman's
                         (his fifth button)
 tools/bartender/      remakes the bartender's layers from source.webp (open it through a local
@@ -124,7 +125,9 @@ sax and a forced `?screen=`, so it shows the day (or the calm night), the bar it
 field brings the calm night at any time, like `yeti` (over the day, the jazz bar and Christmas, not
 over the shows, which it comes back after); `yeti` or `armstrong` typed after it wins, and typed
 again on the calm night it goes back to the normal screen of that moment (on the calm night of the
-clock, it does nothing). `normal` typed anywhere but the search field brings back the day at any
+clock, it does nothing). `kamelot` typed anywhere but the search field opens the epic finale at
+any time, over every screen, the shows included; typed again in it, it does what "Back to normal"
+does. `normal` typed anywhere but the search field brings back the day at any
 time, over every screen, the shows included: it drops every other egg and a forced `?screen=`, and
 keeps the day even when the clock brings a screen; an egg typed or clicked after it wins, and typed
 again it lets the clock decide.
@@ -170,7 +173,9 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `sansfight.js` | the fight that comes with the snowman's Megalovania (`sfStart()` / `sfEnd()`, called by `snowman.js`): the scene over the page and black around him (`#xdark`), the battle box and stats (`#xfight`), one opening line then attacks without end (bones, blue bones, bone waves, bone rain, sine waves of bones, a turning propeller of bones, bouncing bone snowflakes, eruptions after red warnings, closing rings, skull blasters, crossing blasters, on a full-window canvas; bones turn, are outlined, glow when blue, leave trails; faster and more overlapping as it goes), the dioramas behind it (`sansscenes.js`, one every 22 s), hits (a crunch, the screen shaking, the box flashing red), the pixel heart exactly at the pointer (or moved by the arrow keys, then left there until the mouse moves), the flame rising from his eye (WebGL, a volume of noise ray-marched, following his gaze); reduced motion: no fight |
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
-| `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), "Back to normal" |
+| `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), "Back to normal", the `kamelot` code (the finale at any time) |
+| `bardscene.js` | `createBardScene()`: the epic finale's bard, a pixel art painting ray-marched in WebGL (distance fields): a knight in armour and a blue surcoat playing the lute against a mossy boulder (gauntlets with fingers, sabatons), a campfire lighting him (traced soft shadows), mirror steel (a second ray), ambient occlusion, flames and sparks, a sky with the moon and firs; two moods (`uMood`: blue arcane fire, or Dragonborn's red fire, starry night and Milky Way, and dragon); `bardProject()` says where a point of the scene shows in the painting; posterised with Bayer dithering at a low resolution; compiled in the background (`ready()`), every ray in one loop so the scene is written out once |
+| `bard.js` | the epic finale's music player (`BARD_SONGS`: the Two Steps From Hell mix `audio/epic.mp3`, then Dragonborn `audio/dragonborn.mp3`, the next when one ends, the choice remembered): the painting of `bardscene.js` in a frame, the title lettered over it in a hand-drawn pixel font (bottom right), the next song's name (a larger 5 x 7 pixel font, solid ink) on an aged parchment drawn in pixels, standing behind the painting's top right corner like the next tape's case behind the cassette deck (a click on it changes the song); a click on the knight plays / pauses (he strums at the song's pace, nods, dozes when paused), on the fire changes the song with a show (he looks at the fire, a flourish plucked in Web Audio, the fire drawn in then bursting in the new colour with a shock wave, the title dissolving pixel by pixel); `preloadEpic()` for the "More epicness ?" click |
 | `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, night forest sounds (`audio/calm.mp3`, quieter), dawn birds made with Web Audio, firefly jar; the `peace` code (the last override: the calm night at any time; `startPeace()`, also called by the Christmas jar) |
 | `normal.js` | `normal` code: the day at any time, over every screen (the very last override, after `calm.js`); typed again, back to the clock's screen |
 | `tapes.js` | the day's cassette deck (no screen only): an early-80s hi-fi deck (VU meters, LED counter, piano keys ⏏ ◀◀ ▶❚❚ ▶▶ and the station key) whose music comes in bands (`TAPE_BANDS`): Lofi Girl mixes, then the screens' music (jazz, late night, metal, epic, Christmas), then Radio Impuls live. A tape is a YouTube video (a `youtube.js` player; every YouTube tape is warmed up, ads included, once the deck is first reached for), an mp3 of `site/audio/` or a live stream (`<audio>`). The station key goes to the next band, ⏏ or the next tape's case behind the deck to the next tape of the band (door opens, tape out, new one in, door closes); never plays by itself, the tape is remembered |
@@ -179,7 +184,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 ### CSS files, in cascade order
 
 `base.css` (layout, cards, search, previews) → `flames.css` → `surprise.css` → `jazz.css` → `closing.css` →
-`metal.css` → `epic.css` → `christmas.css` → `snowman.css` → `sansfight.css` → `calm.css` → `tapes.css` → `screens.css` (effects canvas, view transitions) → `konami.css`.
+`metal.css` → `epic.css` → `bard.css` → `christmas.css` → `snowman.css` → `sansfight.css` → `calm.css` → `tapes.css` → `screens.css` (effects canvas, view transitions) → `konami.css`.
 The Konami file is last on purpose: during its animation `body.rift .wrap` must win over every
 theme's `.wrap` rule.
 
@@ -217,7 +222,7 @@ Current screens:
 | `evening` | `night` | 21:30 – 00:45, or the `armstrong` code | `jazz.js`, `jazz.css`, `armstrong.js` |
 | `closing` | `night` | 00:45 – 01:00 | `jazz.js`, `jazz.css`, `closing.js`, `closing.css` |
 | `metal` | `metal` | 01:00:00 – 01:01:51 (the song 3 times), or 20 flame clicks, or the Christmas guitar | `metal.js`, `metal.css` |
-| `epic` | `epic` | after a metal show, if "More epicness ?" was clicked | `epic.js`, `epic.css` |
+| `epic` | `epic` | after a metal show, if "More epicness ?" was clicked, or the `kamelot` code | `epic.js`, `epic.css`, `bardscene.js`, `bard.js`, `bard.css` |
 | `calm` | `calm` | 01:01:51 – 05:30, unless the epic finale runs (a `normal` screen), or the `peace` code, or the Christmas jar | `calm.js`, `calm.css` |
 | `christmas` | `christmas` | Dec 10 – Jan 3, 06:00 – 18:00 (replaces the day) | `christmas.js`, `christmas.css` |
 | `christmas-night` | `christmas` | Dec 10 – Jan 3, 18:00 – 06:00 (replaces the day, the jazz bar and the calm night) | `christmas.js`, `christmas.css` |
@@ -349,6 +354,12 @@ Android WebViews). One syntax they do not know makes the browser reject a whole 
   size so they stack exactly, and only `transform` / `translate` / `scale` animate them. Each moving
   layer reaches under the one that hides its joint (the forearm goes up under the rolled sleeve),
   and the layer behind loses that part, so a move never opens a gap nor shows a ghost.
+- **WebGL shaders compile slowly on Windows**: Chrome goes through Direct3D, whose compiler copies
+  a function at every call and unrolls loops. A ray-marched scene called from a dozen places (march,
+  normal, shadows, reflection...) took 110 s to compile, freezing the page. Call the scene's
+  distance function from one loop only (`bardscene.js` traces every ray in one loop), start loops
+  at a uniform zero (WebGL 2), share noises instead of calling `noise()` in every branch, compile
+  with `KHR_parallel_shader_compile` and draw only once it is ready, and compile once per visit.
 - All scripts share one scope: prefix new top-level names if they could clash with another file's.
 - Remove a screen's extras (elements, timers, players) when its class turns off.
 

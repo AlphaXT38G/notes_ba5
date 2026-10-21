@@ -28,11 +28,12 @@
 @keyframes vt-fade-out{to{opacity:0}}
 @keyframes vt-dawn-in{from{opacity:0;filter:brightness(1.6)}}
 /* Phones: the music players of the screens (#vinyl, #amp, #jar, #xmusic and its #xsleeve; the
-   day's #tapedeck has its own rule in tapes.css) sit in the bottom left corner, over the page.
-   Room is left under the last card so it can be scrolled clear of them, and their labels are
-   smaller */
+   day's #tapedeck and the epic finale's #bard have their own rules in tapes.css and bard.css) sit
+   in the bottom left corner, over the page. Room is left under the last card so it can be
+   scrolled clear of them, and their labels are smaller */
 @media(max-width:640px){
-  body.night .wrap,body.metal .wrap,body.epic .wrap,body.calm .wrap{padding-bottom:7rem}
+  body.night .wrap,body.metal .wrap,body.calm .wrap{padding-bottom:7rem}
+  body.epic .wrap{padding-bottom:9.5rem}
   body.christmas .wrap{padding-bottom:9.5rem}
   #vinyl .label,#amp .label,#jar .label,#xmusic .label{font-size:.7rem;max-width:11rem}
 }

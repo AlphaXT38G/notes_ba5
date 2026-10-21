@@ -82,10 +82,5 @@ body.epic section::after{box-shadow:-10px 0 34px -10px rgba(170,90,255,.9);anima
 #leave{position:fixed;right:1rem;bottom:1rem;z-index:45;padding:.35rem .7rem;color:#c9d4ff;font:600 .75rem system-ui,sans-serif;background:rgba(12,10,40,.75);border:1px solid rgba(140,160,255,.45);border-radius:999px;cursor:pointer}
 #leave:hover,#leave:focus-visible{color:#fff;border-color:#b9c8ff;box-shadow:0 0 12px rgba(120,150,255,.6)}
 body.epic #fire{display:none}  /* no flame mode during the finale */
-/* The amp during the epic finale: same cabinet, lit by arcane blue light */
-#amp.epic .cab{box-shadow:0 6px 20px rgba(0,0,0,.8),0 0 0 2px #2b2b55,0 0 26px rgba(110,140,255,.8),0 0 60px rgba(150,80,255,.45)}
-#amp.epic .logo{color:#9fd8ff;text-shadow:0 0 6px #6fa8ff}
-#amp.epic .cone{background:radial-gradient(circle,#9fd8ff 0 10%,#11112a 14%,#24245a 40%,#0b0b20 42%,#1d1d46 70%,#000 72%)}
-#amp.epic .label{background:rgba(12,10,40,.9);border-color:rgba(140,160,255,.6)}
 /* Reduced motion */
 @media(prefers-reduced-motion:reduce){body.epic section::after,body.epic::before,body.epic h1{animation:none}#more,#more>span,#more>img,#more .m-sparks b,#more .m-shine{animation:none}#more .m-sparks{display:none}#summon{display:none}}
