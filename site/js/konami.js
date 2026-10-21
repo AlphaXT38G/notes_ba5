@@ -105,7 +105,7 @@ async function rift() {
   // pieces, once the letters are put back together.
   const wrap = document.querySelector(".wrap");
   const shown = sel => [...document.querySelectorAll(sel)].filter(el => el.getBoundingClientRect().width > 0);
-  const music = shown("#vinyl, #amp, #xmusic, #tapedeck");
+  const music = shown("#vinyl, #amp, #bard, #xmusic, #tapedeck");
   const boxes = [...shown("header h1, #search, .view button, .view, .tools button, .links li, .bar, .new, .thumb, main section"), ...music];
   const returning = [...shown("header h1, header .sub, #search, .view, .tools button, main section, footer"), ...music];
   const { letters, restore } = splitLetters([wrap, ...music]);
