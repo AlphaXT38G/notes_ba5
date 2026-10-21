@@ -25,13 +25,14 @@ and the conventions to follow.
 Subjects, their display names and exam rules live in [`subjects.json`](subjects.json).
 Put `course.tex` / `cheatsheet.tex` in `<id>/` and rebuild; the page updates itself.
 
-Every standalone `.tex` in `<id>/` and its subfolders (e.g. `week/01.tex`) is
+Every standalone `.tex` in `<id>/` and its subfolders (those with a `\documentclass`) is
 compiled, and PDFs without a matching `.tex` (e.g. `cheatsheets/*.pdf`) are copied
-as is. One exception: swent's weeks are chapters of `course.tex` (`weeks/week1a.tex`,
-`week1b.tex`, ...); the build also turns each week into its own PDF from a generated
-`_weekNN.tex` (git-ignored), so they show up like the other weekly notes.
+as is. Weekly notes are chapters of `course.tex`, not standalone documents: compsec's are
+`week/01.tex`, `02.tex`, ... and swent's are `weeks/week1a.tex`, `week1b.tex`, ... (several parts
+per week). The build also turns each week into its own PDF (`week/NN.pdf`) from a generated
+`_weekNN.tex` (git-ignored), so they show up in the weekly notes section.
 
-On the page, the course notes come first, then two collapsible sections: weekly notes (PDFs in a `week/` folder, named `NN`, with a semester progress bar) and every other
+On the page, the course notes come first, then two collapsible sections: weekly notes (the `week/NN.pdf` built from the course's chapters, with a semester progress bar) and every other
 PDF, grouped by folder. Dates come from the last commit touching each document,
 and documents changed in the last 4 days get a "New" badge (the site is rebuilt
 every day, so the badges expire even without a push).

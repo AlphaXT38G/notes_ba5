@@ -1,250 +1,693 @@
 % =========================================================
-\chapter{Week1 : Part A}
+\chapter{Lecture 5 : Applied cryptography}
 % =========================================================
 
-\section{Agentic Software Development}
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} How Alice can send a message to Bob so that Eve,
+who sees everything on the wire, \textbf{cannot read it}. We start from broken historical
+ciphers (Caesar, substitution) to learn how attackers think, define the different kinds
+of attackers, see the only \emph{perfectly} secure cipher (one-time pad) and why it is
+impractical, then how real systems approximate it (\textbf{stream ciphers}), and finally
+how two strangers can agree on a secret key over a public channel
+(\textbf{Diffie-Hellman}). \\
+\textbf{Why is it useful?} Cryptography protects every HTTPS page, every VPN, every
+encrypted backup and every messaging app. Understanding its basics tells you
+\emph{what} a cipher guarantees (and what it does not, e.g.\ integrity), and why the
+golden rule is: \textbf{never design your own crypto, use vetted standards}.
+\end{rembox}
 
-\begin{center}
-\includegraphics[width=\linewidth]{images/goal.png}
-\end{center}
+\section{Module 1 -- Introduction}
 
-\begin{exbox}[title=What the agent does not know]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item \textbf{Context} --- why the codebase is the way it is (the auth layer looks strange for a reason).
-  \item \textbf{Decomposition} --- turning ``build the food ordering feature'' into one reviewable change.
-  \item \textbf{Acceptance criteria} --- what ``done'' means; if you do not say, it decides optimistically.
-  \item \textbf{Permissions} --- what it may touch, and what must be approved by you first.
+\begin{rembox}[title=Why cryptography matters]
+\begin{itemize}
+  \item \textbf{Data in transit} --- securing communication (e.g.\ HTTPS, VPNs).
+  \item \textbf{Data at rest} --- securing stored information (e.g.\ encrypted
+        backups).
 \end{itemize}
-\tcblower
-\centering
-\textcolor{redColor}{\itshape Only you have these --- the agentic loop is blind to them.}
-\end{exbox}
+Cryptography is also the building block for \textbf{integrity} (ensuring data has not
+been tampered with: hashing, signatures), \textbf{authentication} (verifying identity:
+protocols), \textbf{anonymity}, etc. This lecture focuses on the basics of using
+cryptography for \textbf{confidentiality}.
+\end{rembox}
 
-\begin{center}
-\includegraphics[width=\linewidth]{images/agent-context.png}
-\textcolor{redColor}{\itshape Write down the rules for the agent (it will help your team agree on them)}
-\end{center}
-
-\begin{minipage}{\linewidth}
-\textbf{What if the agent opened this PR?}
-
-\begin{center}
-\includegraphics[width=\linewidth]{images/reviewing-a-PR.png}
-Answer with : \textcolor{redColor}{\itshape "I can't review this. Please split it: the total calculation in one PR, the config change in another, and drop all unrelated screen edits."}
-\end{center}
-\end{minipage}
-
-\begin{exbox}[title=How agentic can go wrong]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item \textbf{Confidently wrong at scale} \\
-        \textit{``refactored 30 files and broke one thing in each''}
-  \item \textbf{Hallucinated dependencies} \\
-        \textit{``imported a library that doesn't exist, and added one that shouldn't''}
-  \item \textbf{Tests that pass and check nothing} \\
-        \textit{``wrote tests and coverage went up, but correctness went down''}
-  \item \textbf{Plausible architecture drift} \\
-        \textit{``every feature is fine in isolation, but nothing fits together anymore''}
-\end{itemize}
-\end{exbox}
-
-\noindent
-\begin{minipage}[t]{0.48\linewidth}
-\includegraphics[width=\linewidth]{images/vide-coding.png}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.48\linewidth}
-\includegraphics[width=\linewidth]{images/agentic-dev.png}
-\end{minipage}
-
-\section{Requirements}
-
-\begin{center}
-\textcolor{redColor}{\itshape\bfseries Listen relentlessly $\cdot$ Listen for the need behind the want}
-\end{center}
-
-\begin{exbox}[title=How do we define requirements?]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item Most users are not precise and objective.
-  \item Elicit requirements by talking \& listening to (potential) users.
-  \item Group users in equivalence classes around personas.
-  \item Develop user stories.
-\end{itemize}
-\end{exbox}
-
-\begin{exbox}[title=Can I use an LLM instead of real users?]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item \textbf{Not for the persona, and not for the need}
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{Five user stories in ten seconds --- fluent, plausible, well-structured.}
-      \item \textit{But nobody said any of it.}
-      \item \textit{This is the faster-horses failure, with better grammar.}
-    \end{itemize}
-  \item \textbf{Yes, once a real person has told you something}
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{Turn a vague sentence into a testable one.}
-      \item \textit{Propose the edge cases you did not think of.}
-      \item \textit{Draft acceptance criteria.}
-    \end{itemize}
-\end{itemize}
-\tcblower
-\centering
-\textcolor{redColor}{\itshape Use an LLM to sharpen a requirement you got from a person --- not to invent the person.}
-\end{exbox}
-
-\section{User Story}
-
-\begin{defnbox}[title=User story template]
-\begin{center}
-\ttfamily
-\begin{tabular}{@{}r l @{\qquad} >{\normalfont\itshape\footnotesize\color{black!55}}l@{}}
-As a      & \textcolor{blueColor}{[role]},          & who is the primary stakeholder? \\[5pt]
-I want to & \textcolor{redColor}{[action]},         & what effect does she want the story to have? \\[5pt]
-so that   & \textcolor{greenColor}{[reason]}.       & what value will she derive from that effect? \\
-\end{tabular}
-\end{center}
-\tcblower
-{\itshape Example.}\quad
-{\ttfamily As a \textcolor{blueColor}{SwEnt student}, I want to
-\textcolor{redColor}{learn about software requirements}, so that
-\textcolor{greenColor}{I can engineer better software}.}
+\begin{defnbox}[title=Secure communication over an insecure channel]
+The core problem: we need a way for \textbf{Alice} to send a message to \textbf{Bob},
+so that \textbf{Eve} (the adversary) \textbf{cannot read it}. \\
+Confidentiality for data at rest can be seen as a particular case, where
+Alice $=$ Bob (you ``send'' the data to your future self).
 \end{defnbox}
 
-\begin{warnbox}
-\begin{itemize}[leftmargin=1.2em, itemsep=3pt]
-  \item If you can only fill the template with a very generic role or reason, the feature
-        is probably not something a real user actually cares about.
-  \item The developer is not an end user --- ``as a developer'' is not a valid role in a
-        user story.
-  \item If the story dictates \emph{how} it should be implemented, it is too specific:
-        a user story states the problem, not the solution.
+\begin{defnbox}[title=Encryption and decryption]
+\textbf{Confidentiality}: information cannot be accessed by unauthorized parties.
+\begin{itemize}
+  \item \textbf{Encryption algorithm} --- cryptographic instructions that convert a
+        \textbf{plaintext} message into \textbf{ciphertext}.
+  \item \textbf{Decryption algorithm} --- cryptographic instructions that convert a
+        ciphertext message into plaintext.
 \end{itemize}
+Both encryption and decryption algorithms require a \textbf{key}: encryption cannot be
+reversed without the key. As functions, with plaintext $M$ (original message), key $K$
+(secret value) and ciphertext $C$ (scrambled message):
+\[
+  C = E_K(M) \qquad\text{and}\qquad M = D_K(C).
+\]
+\end{defnbox}
+
+\begin{algbox}[title=Cryptographic algorithms for confidentiality]
+\begin{enumerate}
+  \item Get a key $k$ shared between Alice and Bob.
+  \item Alice encrypts the message: $m \to \mathrm{Enc}(k, m)$.
+  \item Alice sends $\mathrm{Enc}(k, m)$ over the insecure channel.
+  \item Bob decrypts: $\mathrm{Dec}(k, \mathrm{Enc}(k, m)) \to m$.
+\end{enumerate}
+\end{algbox}
+
+\begin{rembox}[title=Intuition]
+Think of the algorithm as a \textbf{lock design} and the key as \textbf{the key}: the
+lock design is public (open design, Lecture 2 / Kerckhoffs), only the key is secret.
+Step 1 (sharing the key) is the hard part, and comes back at the end of the lecture.
+\end{rembox}
+
+\begin{defnbox}[title=Invertibility (the core requirement)]
+The decryption function $D_K$ \textbf{must} be the \textbf{inverse} of $E_K$:
+\[
+  \forall K, M,\quad D_K\big(E_K(M)\big) = M .
+\]
+If not, Bob cannot recover the original message $M$. \\
+\textbf{Security requirement}: to provide security, these functions must also be
+\textbf{hard to invert without knowing the key} $K$.
+\end{defnbox}
+
+\begin{rembox}[title=Two requirements that pull in opposite directions]
+\textbf{Correctness}: \emph{with} the key, inverting is easy. \textbf{Security}:
+\emph{without} the key, inverting is hard. The whole art of cryptography is to get both
+at the same time.
+\end{rembox}
+
+\begin{defnbox}[title=Hard to invert: the key space and brute force]
+\textbf{Key space}: the set of all possible keys. \\
+\textbf{Concrete meaning of ``hard to invert''}: to find the plaintext $M$, in an ideal
+cryptosystem, the only viable attack for Eve must be to \textbf{try every single possible
+secret key} $K$ (a \textbf{brute-force attack}). \\
+\textbf{Goal}: a secure scheme forces the attacker into this situation.
+\end{defnbox}
+
+\begin{defnbox}[title=Caesar's cipher]
+\begin{itemize}
+  \item \textbf{Encryption}: shift each letter by a fixed number $K$.
+  \item \textbf{Decryption}: shift each letter by $-K$.
+  \item \textbf{Key space}: only 25 possible keys.
+\end{itemize}
+\end{defnbox}
+
+\begin{exbox}[title={Caesar with $K = 3$}]
+\texttt{ATTACK AT DAWN} $\xrightarrow{K=3}$ \texttt{DWWDFN DW GDZQ}
+($A \to D$, $T \to W$, \ldots). \\
+\textbf{Security insight}: $\log_2(25) \approx 4.6$ bits of security --- \textbf{far too
+small} for real-world use (a brute force is trivial). It is still pedagogically useful to
+introduce a first real attack.
+\end{exbox}
+
+\begin{defnbox}[title=Frequency analysis attack]
+\begin{itemize}
+  \item Eve knows that Alice wrote a long-enough message for Bob in English.
+  \item She knows that the most frequent letter in English is `e'.
+  \item She identifies the most frequent letter in the ciphertext: it likely corresponds
+        to `e'.
+  \item She then directly recovers the key (a number between 0 and 25).
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title=Why it works]
+Caesar maps every `e' to the \emph{same} ciphertext letter, so the ciphertext keeps the
+\textbf{statistics} of English. Eve does not even need to try the 25 keys: one look at the
+letter counts gives the shift.
+\end{rembox}
+
+\begin{defnbox}[title=Substitution cipher]
+Encryption/decryption by \textbf{permuting the alphabet}: each letter is mapped to a
+unique, different letter, defined by a \textbf{permutation} of the 26 letters (the key).
+\begin{center}
+\texttt{ABCDEFGHIJKLMNOPQRSTUVWXYZ} \\
+\texttt{HOWBUGIACRYEVZXPJQMSNTFDKL}
+\end{center}
+\textbf{Key space}: $26! \approx 4.03 \times 10^{26}$ possible keys, i.e.\
+$\log_2(26!) \approx 88.4$ bits of security?
+\end{defnbox}
+
+\begin{warnbox}[title={The flaw, again}]
+This key space looks big enough, but the cipher is \textbf{still easily broken} by the
+same frequency analysis. \textbf{Vulnerability}: the cipher \textbf{preserves the
+statistical properties} of the plaintext language (e.g.\ single-letter frequencies). With
+a long enough ciphertext, statistical analysis breaks the cipher, rendering the full $26!$
+key space \textbf{irrelevant}. \\
+E.g.\ on the whole Harry Potter series encrypted with one key, Eve guesses the most
+likely letter mappings, uses a dictionary to rule out keys that give non-English text,
+and finds $K$ in a few tries.
 \end{warnbox}
 
-\begin{exbox}[title=Good user stories: INVEST]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item \textbf{\textcolor{blueColor}{I}ndependent} ---
-        \textit{self-contained; can be built without waiting on other stories}
-  \item \textbf{\textcolor{blueColor}{N}egotiable} ---
-        \textit{captures the problem, not the solution, leaving room for the implementor}
-  \item \textbf{\textcolor{blueColor}{V}aluable} ---
-        \textit{delivers value the end user can see}
-  \item \textbf{\textcolor{blueColor}{E}stimable} ---
-        \textit{small enough that the effort can be estimated}
-  \item \textbf{\textcolor{blueColor}{S}mall} ---
-        \textit{fits inside a single sprint}
-  \item \textbf{\textcolor{blueColor}{T}estable} ---
-        \textit{comes with clear acceptance criteria}
-\end{itemize}
-\end{exbox}
+\begin{rembox}[title=Goal of the adversary]
+Eve does not necessarily need the \emph{full} key: depending on the scenario, recovering
+part of it (the mapping of some letters) may be enough. Sometimes the goal is even
+smaller: Eve may only want to know whether Alice sent ``Yes'' or ``No''.
+\end{rembox}
 
-\begin{exbox}[title=What to do about shared needs?]
-\small
-\newcommand{\story}[1]{\par\smallskip
-  \colorbox{black!5}{\parbox{\dimexpr\linewidth-2\fboxsep}{\itshape #1}}\par\smallskip}
-\begin{itemize}[leftmargin=1.5em, itemsep=6pt]
-  \item \textbf{Truly universal desire} --- one story with a deliberately generic role.
-        \story{As a user, I want to reset my password, so that I can regain access to my account.}
-  \item \textbf{Capture fine distinctions in separate user stories.}
-        \story{As a student or teacher, I want to access the course materials on Moodle, so that I can use them for studying or teaching, respectively.}
-  \item \textbf{Persona groups (``meta-persona'')} --- one role standing for several personas that share the need.
-        \story{As a member of the IT department\ldots\\ As a mobile app user\ldots}
-\end{itemize}
-\end{exbox}
-
-\section{Validating \& Prioritizing Requirements}
-
-\begin{exbox}[title=Validating requirements: are they right?]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item \textbf{Is your software really answering users' needs and wants?}
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{use prototypes to elicit feedback}
-      \item \textit{validate ``in the wild''}
-    \end{itemize}
-  \item \textbf{The outcome of validation is typically not true/false} --- it is a
-        matter of degree, not a binary verdict.
-\end{itemize}
-\end{exbox}
-
-\begin{exbox}[title=Prioritizing requirements]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item \textbf{Importance of features varies constantly.}
-  \item \textbf{Common prioritization schemes}
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{P0 / P1 / P2}
-      \item \textit{MoSCoW: must-have, should-have, could-have, won't-have}
-    \end{itemize}
-  \item \textbf{Prioritization is primarily driven by value to the user}
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{but also weighs technical feasibility, legality, cost, \ldots}
-    \end{itemize}
-\end{itemize}
-\end{exbox}
-
-\section{Epics}
-
-\begin{defnbox}[title=Epic]
-\small
-An \textbf{epic} is a broad set of features that spans \textbf{multiple user stories}.
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item Captures larger, more complex user needs.
-  \item Enables a comprehensive understanding of a feature set.
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{once divided into actionable, specific user stories, the big picture can get lost}
-    \end{itemize}
-  \item Useful for organizing work.
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{ensures the development process stays aligned with user needs}
-    \end{itemize}
-  \item A \textbf{user story} then becomes a specific, actionable item that contributes to
-        the broader goal of the epic.
-\end{itemize}
-\tcblower
-\textbf{Example.}\quad Epic: \emph{Personalized and Streamlined Dining Experience}.
-\smallskip
-
-\textit{As a user of PolyFood, I want the app to understand my habits, preferences, and
-context, so that ordering food becomes faster, smarter, and more enjoyable over time.}
-\end{defnbox}
-
-\begin{exbox}[title=User flow vs.\ epic]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item \textbf{User flow} --- a specific sequence of steps a user takes to accomplish one
-        task in the app, from start to finish.
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{\textbf{Login flow}: launch screen $\to$ login screen $\to$ error
-            handling for wrong credentials $\to$ main dashboard on success}
-    \end{itemize}
-  \item \textbf{Epic} --- a broader, high-level feature or goal that usually spans several
-        user flows or smaller tasks.
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{\textbf{Account Management} epic: login flow + password-reset flow +
-            account-creation flow + edit-profile flow}
-    \end{itemize}
-\end{itemize}
-\end{exbox}
-
-\begin{keybox}[title=Recipe for user-centric software]
-\small
-\begin{enumerate}[leftmargin=1.6em, itemsep=3pt]
-  \item Elicit user requirements.
-  \item Formulate user stories.
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt, label=--]
-      \item \textit{should be \textbf{I}ndependent, \textbf{N}egotiable, \textbf{V}aluable,
-            \textbf{E}stimable, \textbf{S}mall, and \textbf{T}estable}
-    \end{itemize}
-  \item Validate and prioritize them.
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt, label=--]
-      \item \textit{all stakeholders must be involved}
-    \end{itemize}
-  \item Organize user stories into epics.
-  \item Plan the work.
-\end{enumerate}
+\begin{keybox}[title=Lesson]
+A \textbf{big key space is necessary but not sufficient}. Security is about the
+\emph{best} attack, not only brute force.
 \end{keybox}
 
+\begin{defnbox}[title=Bits of security]
+\textbf{Goal}: an $N$-bit key should offer security as close to $N$ bits as possible,
+i.e.\ require $2^N$ attempts. \\
+\textbf{The break}: if a 1024-bit key is broken with only $2^{40}$ attempts (40 bits of
+security), the algorithm is considered \textbf{broken}. \\
+\textbf{Caesar lesson}: the 25-key space was cleverly reduced to \textbf{1 possibility};
+similarly the $\approx 88$ bits of the substitution cipher were reduced to a few tries.
+\end{defnbox}
+
+\begin{rembox}[title=Orders of magnitude]
+Each extra bit \textbf{doubles} the work. $2^{40} \approx 10^{12}$ operations is easy for
+a laptop; $2^{128}$ is far beyond all computers on Earth for billions of years. ``Broken''
+does not mean ``practically decrypted today'', it means \textbf{faster than brute
+force}.
+\end{rembox}
+
+\section{Module 2 -- Adversaries in cryptography}
+
+\begin{rembox}[title=Back to threat models]
+As in Lecture 1, security is always measured \textbf{relative to the power of the
+adversary}. Against Caesar and substitution, Eve's capabilities were very limited: she
+observed a long-enough ciphertext of English text (and had some compute power to test a
+few keys). This is not the only possible adversary model.
+\end{rembox}
+
+\begin{defnbox}[title=Types of adversaries]
+\begin{itemize}
+  \item \textbf{Passive eavesdropper} --- Eve can only \emph{read} the ciphertext.
+  \item \textbf{Active attacker} --- Eve can somehow \textbf{influence the system},
+        e.g.\ convince Alice to send Bob specific messages, observe the precise time
+        Bob takes to run his algorithm, etc.: anything that goes beyond just observing
+        communication.
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Known Plaintext Attack (KPA)]
+\textbf{Scenario}: Eve is given access to multiple pairs $(M, C)$ of messages and their
+corresponding ciphertexts, all encrypted with the secret key $K$. \\
+\textbf{Goal}: from these pairs, guess the key $K$ to decrypt other messages.
+\end{defnbox}
+
+\begin{propbox}[title=Why is KPA a realistic model?]
+\begin{itemize}
+  \item \textbf{Standard headers} --- many encrypted messages contain predictable parts
+        (``From:'', timestamps, packet destinations, \ldots).
+  \item \textbf{Malicious guessing} --- if Eve guesses a message (or part of it) and
+        observes its encryption, she has an $(M, C)$ pair.
+\end{itemize}
+\end{propbox}
+
+\begin{exbox}[title=KPA and the substitution cipher]
+Under KPA the substitution cipher becomes \textbf{even more broken}: if Eve knows that
+$M = $ \texttt{THE QUICK BROWN FOX}, she immediately recovers the mapping of many
+letters, drastically reducing the key space without any statistical analysis.
+\end{exbox}
+
+\begin{defnbox}[title=Chosen Plaintext Attack (CPA)]
+\textbf{Scenario}: Eve can convince Alice (or the system) to encrypt \textbf{arbitrary
+messages chosen by Eve} with the secret key. \\
+\textbf{More abstractly}: for any chosen plaintext $m$, Eve gets $E_K(m)$. We say that
+Eve has access to an \textbf{encryption oracle}.
+\end{defnbox}
+
+\begin{rembox}[title=KPA vs.\ CPA]
+In KPA, Eve does not choose which pairs she sees; in CPA she \emph{chooses} $m$ and gets
+$(m, \mathrm{Enc}(k, m))$. Hence CPA is a \textbf{strictly stronger} model than KPA:
+\[
+  \text{passive (ciphertext only)} \;<\; \text{KPA} \;<\; \text{CPA}.
+\]
+A scheme secure against a stronger adversary is also secure against the weaker ones.
+\end{rembox}
+
+\begin{propbox}[title=Why is CPA a realistic model?]
+\begin{itemize}
+  \item \textbf{Messaging app} --- with a few minutes of access to Alice's phone
+        (Signal, WhatsApp), Eve can send \emph{any} data she chooses to Bob and obtain an
+        $(M, C)$ pair.
+  \item \textbf{Encryption API} --- Eve interacts with an endpoint where she provides
+        data and receives the encrypted output.
+\end{itemize}
+\end{propbox}
+
+\begin{exbox}[title=CPA and the substitution cipher]
+The substitution cipher is \textbf{completely broken} by a CPA: Eve asks for the
+encryption of $M = $ \texttt{abcdefghijklmnopqrstuvwxyz}; the ciphertext \emph{is} the
+entire key (the full permutation), in just \textbf{one} query!
+\end{exbox}
+
+\begin{defnbox}[title=Side-channel attacks]
+Eve not only accesses an ideal oracle, but also \textbf{measures physical
+characteristics of the actual implementation} while it encrypts/decrypts.
+\begin{itemize}
+  \item \textbf{Timing attack} --- Eve measures \textbf{how long} it takes to encrypt a
+        given message or decrypt a ciphertext.
+  \item \textbf{Power analysis} --- Eve observes the \textbf{energy consumed} by the
+        device (e.g.\ a credit card) doing the crypto.
+\end{itemize}
+\end{defnbox}
+
+\begin{propbox}[title=Why are side channels realistic?]
+\begin{itemize}
+  \item \textbf{Malicious ownership} --- you often own a device (phone, smart card,
+        embedded chip) holding keys of \emph{another} principal (Google, your bank) that
+        are meant to be unreadable to you.
+  \item \textbf{DRM} --- the decryption key of a movie/song is embedded in your media
+        player or console; by measuring power or timing, an attacker could extract it.
+\end{itemize}
+\end{propbox}
+
+\begin{rembox}[title=Algorithm vs.\ implementation]
+A mathematically perfect cipher can still leak through its \textbf{implementation}
+(e.g.\ code that takes longer when a key bit is 1). Side channels attack the code and
+the hardware, not the math --- a reminder that security is about the whole system. As
+always, new adversary models can be defined, but always as a \textbf{strategic adversary
+with limited, well-defined resources}.
+\end{rembox}
+
+\section{Module 3 -- Perfect secrecy and the one-time pad}
+
+\begin{rembox}[title={Reminder: XOR ($\oplus$)}]
+\begin{center}
+\begin{tabular}{cc|c}
+$a$ & $b$ & $a \oplus b$ \\ \hline
+0 & 0 & 0 \\ 0 & 1 & 1 \\ 1 & 0 & 1 \\ 1 & 1 & 0
+\end{tabular}
+\end{center}
+Key properties: $a \oplus a = 0$, $a \oplus 0 = a$, hence $a \oplus b \oplus b = a$
+(XOR-ing twice with the same value cancels out). XOR with a random bit flips the input
+bit with probability $1/2$: the output is itself random.
+\end{rembox}
+
+\begin{defnbox}[title=One-Time Pad (OTP)]
+How to remove frequency analysis? Make sure that letters are \textbf{not} encrypted to
+the same values. \\
+\textbf{Key}: a string $k$ of \textbf{random} bits, \textbf{as long as the message},
+pre-shared between Alice and Bob.
+\[
+  \mathrm{Enc}(k, m) = m \oplus k \qquad\qquad \mathrm{Dec}(k, c) = c \oplus k
+\]
+Decryption works because $(m \oplus k) \oplus k = m$.
+\end{defnbox}
+
+\begin{exbox}[title=OTP on ``YEAH'']
+\begin{tabular}{ll}
+Message (ASCII \texttt{59454148}) & \texttt{01011001010001010100000101001000} \\
+$\oplus$ OTP key                   & \texttt{01110101000111010100101001001010} \\ \hline
+Ciphertext                         & \texttt{00101100010110000000101100000010}
+\end{tabular} \\[4pt]
+XOR-ing the ciphertext with the same key gives back the message. Encrypting ``YEAH''
+twice with \emph{different} keys gives \emph{different} ciphertexts, and ``YEAH'' and
+``NOPE'' can produce any ciphertext depending on the key: the ciphertext alone tells
+nothing.
+\end{exbox}
+
+\begin{defnbox}[title=Perfect secrecy]
+For any ciphertext $C$, \textbf{every possible plaintext $M$ is equally likely} as
+before seeing $C$: the ciphertext gives the adversary \textbf{zero new information} about
+$M$. Formally:
+\[
+  \forall m, c,\quad \PR\big(M = m \mid E_K(M) = c\big) = \PR(M = m).
+\]
+\end{defnbox}
+
+\begin{proofbox}[title=The OTP is perfectly secure]
+Messages $m$ have some prior probability $\PR(M = m)$ (``Yes'' may be more likely than
+``Autobus''), and the key $K$ is uniform on $n$-bit strings, independent of $M$. Since
+$E_K(m) = c \iff K = m \oplus c$:
+\begin{align*}
+  \PR(M = m \mid C = c)
+  &= \frac{\PR(M = m \cap K = m \oplus c)}{\PR(C = c)}
+   = \frac{\PR(M = m)\,\PR(K = m \oplus c)}{\PR(C = c)} \\
+  &= \frac{\PR(M = m)\, 2^{-n}}{2^{-n}}
+   = \PR(M = m),
+\end{align*}
+using independence of $M$ and $K$, and
+$\PR(C = c) = \sum_{m'} \PR(M = m')\,\PR(K = m' \oplus c) = 2^{-n}$.
+\end{proofbox}
+
+\begin{rembox}[title=Intuition]
+For a given ciphertext $c$, \emph{every} message $m$ is possible: there is exactly one key
+($k = m \oplus c$) that maps it to $c$, and all keys are equally likely. So even with
+infinite computing power, Eve cannot tell which message was sent.
+\end{rembox}
+
+\begin{defnbox}[title={One-time: never reuse the key}]
+One-time pads are called like this because they must \textbf{not} be reused. If the same
+key encrypts two messages:
+\[
+  C_1 \oplus C_2 = (M_1 \oplus K) \oplus (M_2 \oplus K) = M_1 \oplus M_2 ,
+\]
+the key cancels out. Eve cannot recover the full messages directly, but she learns
+information about the plaintexts, which can feed frequency analysis and help recover
+them.
+\end{defnbox}
+
+\begin{exbox}[title=Spaces vs.\ letters in ASCII]
+In ASCII, spaces start with \texttt{00} and letters with \texttt{01}. In $M_1 \oplus M_2$:
+\begin{itemize}
+  \item 2 letters: $01 \oplus 01 = 00$;
+  \item 2 spaces: $00 \oplus 00 = 00$;
+  \item letter $+$ space: $01 \oplus 00 = 01$ $\Rightarrow$ one of the messages has a
+        space at this position!
+\end{itemize}
+\end{exbox}
+
+\begin{exbox}[title={Exercise --- Key reuse}]
+Suppose Alice reuses the key $K$ to encrypt \textbf{two single-word English messages of
+length 5}, $M_1$ and $M_2$, producing $C_1 = M_1 \oplus K$ and $C_2 = M_2 \oplus K$. \\
+\textbf{Task}: show that Eve can ``likely'' recover the key and then the two messages
+$M_1$ and $M_2$. (Hint: Eve can look up an English dictionary of all the words of
+length 5.)
+\end{exbox}
+
+\begin{defnbox}[title=The key problem of the OTP]
+\textbf{Practical limitation}: OTP requires keys that are \textbf{truly random,
+message-length, and used only once}. \\
+\textbf{The showstopper}: securely pre-distributing message-length keys for real-world
+applications is \textbf{impractical}.
+\end{defnbox}
+
+\begin{rembox}[title=Why is it a showstopper?]
+To send 1~GB securely you first need to share 1~GB of secret randomness \emph{securely}
+--- but if you had a secure way to share 1~GB, you could just send the message that way!
+And reusing keys is not an option (see above).
+\end{rembox}
+
+\begin{defnbox}[title={OTP: integrity is NOT included (malleability)}]
+The OTP guarantees \textbf{confidentiality} (nobody can read it), but it \textbf{does
+not} guarantee \textbf{integrity} (nobody can tamper with it).
+\end{defnbox}
+
+\begin{exbox}[title=Bit-flipping attack]
+Eve flips bits of $C$ with a mask $\Delta$ (e.g.\ only the first bit set):
+$C' = C \oplus \Delta$. Bob decrypts
+\[
+  M' = C' \oplus K = (M \oplus K \oplus \Delta) \oplus K = M \oplus \Delta .
+\]
+Eve successfully changed the message ($M'$ is $M$ with one bit flipped)
+\textbf{without knowing $K$}. If Eve knows the format (e.g.\ ``PAY 0100 CHF''), she can
+change the amount in a controlled way.
+\end{exbox}
+
+\begin{warnbox}[title={Confidentiality $\neq$ integrity}]
+Encryption hides the content; it does \textbf{not} prove that the content was not
+modified. Integrity needs separate mechanisms (MACs, signatures --- later in the course).
+\end{warnbox}
+
+\section{Module 4 -- From OTP to stream ciphers}
+
+\begin{defnbox}[title=Symmetric encryption]
+Encryption of plaintext and decryption of ciphertext are done using \textbf{the same
+key}. Two main types:
+\begin{itemize}
+  \item \textbf{Block ciphers} --- operate on fixed-size blocks (e.g.\ 128 bits).
+        Example: \textbf{AES} (Advanced Encryption Standard).
+  \item \textbf{Stream ciphers} --- operate one bit/byte at a time, like a
+        \textbf{pseudo-OTP}. Example: \textbf{ChaCha20}.
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Symmetric cryptographic key]
+A \textbf{fixed-size} input to symmetric cryptographic primitives; the size of the key
+influences the level of security provided. Key properties:
+\begin{itemize}
+  \item \textbf{Known to both parties} --- partners must agree on the key
+        \textbf{before} starting to use the primitive (requires secure generation and
+        sharing protocols).
+  \item \textbf{It is reused} --- the key is pre-shared once and then reused (keys do
+        have a ``duration'').
+  \item \textbf{It must be secret} --- revealing the key eliminates any protection
+        provided by the primitive.
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title=Difference with the OTP]
+OTP key: as long as the message, used once. Symmetric key: \textbf{short and fixed}
+(e.g.\ 128 or 256 bits) and \textbf{reused} for many messages. The next definitions show
+how to get OTP-like encryption from such a short key.
+\end{rembox}
+
+\begin{defnbox}[title=Stream cipher (pseudo-OTP)]
+A stream cipher attempts to emulate the OTP's security while solving the key-length
+problem:
+\begin{enumerate}
+  \item \textbf{Short key} $K$ --- Alice and Bob share a small, manageable key (kept
+        secret).
+  \item \textbf{Key Stream Generator (KSG)} --- uses $K$ and an \textbf{Initialization
+        Vector (IV)} (which does \textbf{not} need to be secret) to produce an
+        arbitrarily long, \emph{pseudo-random} bit stream $S = \mathrm{stream}(K, IV)$.
+  \item \textbf{Encryption} --- $C = M \oplus S$.
+\end{enumerate}
+To \textbf{decrypt}, the receiver feeds the KSG with the shared key and the IV (sent with
+the ciphertext) to recreate the same stream $S$, then computes $C \oplus S = M$.
+\end{defnbox}
+
+\begin{propbox}[title=Security of the KSG]
+We generate potentially \textbf{infinitely long randomness} (the stream $S$) from a
+\textbf{finite secret} ($K$). Security depends entirely on $S$ being
+\textbf{computationally indistinguishable from a truly random OTP key}: unless one knows
+the key, one cannot distinguish the stream from a random string.
+\end{propbox}
+
+\begin{rembox}[title=Why does the KSG also take an IV?]
+Without an IV, the same key would always produce the \textbf{same stream} $S$, and two
+messages would be encrypted with the same ``pad'': XOR-ing the two ciphertexts recovers
+$M_1 \oplus M_2$ (the two-time pad above), and Eve could recover the prefix of $S$ and
+decode future messages. A fresh IV per message gives a \textbf{different stream for every
+message} while reusing the same key.
+\end{rembox}
+
+\begin{propbox}[title=Stream ciphers: strengths and weaknesses]
+\begin{center}
+\begin{tabular}{p{0.32\linewidth}|p{0.58\linewidth}}
+\textbf{Speed} (+) & Algorithms are linear in time and constant in space. \\
+\textbf{Low error propagation} (+) & Errors in one bit do not affect subsequent
+symbols. \\ \hline
+\textbf{Low diffusion} ($-$) & A change in one plaintext bit only affects one ciphertext
+bit. \\
+\textbf{Susceptibility to modification} ($-$) & Low diffusion makes it easier to tamper
+with the message (like the OTP).
+\end{tabular}
+\end{center}
+\end{propbox}
+
+\begin{rembox}[title=Diffusion]
+\textbf{Diffusion} = how much a small change in the input spreads to the output. Stream
+ciphers have none (bit $i$ of $C$ only depends on bit $i$ of $M$), which is exactly why
+the bit-flipping attack works on them.
+\end{rembox}
+
+\begin{defnbox}[title=Periodicity of key stream generators]
+Key stream generators which have a \textbf{finite state} are eventually
+\textbf{periodic}: if the message is longer than the period, the stream
+\textbf{repeats}. \\
+\textbf{The attack}: if the period is identified and too small, the key stream is known
+for the entire message.
+\end{defnbox}
+
+\begin{rembox}[title=Why finite state implies periodic]
+A KSG with $L$ bits of internal state has at most $2^L$ different states. Each output
+step moves deterministically to a next state, so after at most $2^L$ steps a state
+repeats, and from then on everything repeats: a repeating stream is a \textbf{reused
+pad}.
+\end{rembox}
+
+\begin{rembox}[title=Interlude on building KSGs]
+The next definitions illustrate design patterns for KSGs and the challenges of building
+secure ones; you are not expected to master the underlying math.
+\end{rembox}
+
+\begin{defnbox}[title=Linear Feedback Shift Register (LFSR)]
+A \textbf{linear recurrence relation}: the next output bit is a linear function (XOR) of
+previous bits. It extends an initial random sequence of bits into an arbitrary-length
+sequence of (maybe?) random-looking bits. \\
+\textbf{Advantage}: uses only \textbf{shift registers} (state storage) and \textbf{XOR
+gates} (feedback), so it is extremely fast and efficient in hardware.
+\end{defnbox}
+
+\begin{exbox}[title=LFSR example]
+Initial state of 4 bits $a_0, \ldots, a_3 = 1, 0, 0, 0$ and $a_n = a_{n-3} \oplus
+a_{n-4}$:
+\[
+  a_4 = a_1 \oplus a_0 = 1,\quad a_5 = a_2 \oplus a_1 = 0,\quad
+  a_6 = a_3 \oplus a_2 = 0,\quad a_7 = a_4 \oplus a_3 = 1,\ \ldots
+\]
+Output: $1, 0, 0, 0, 1, 0, 0, 1, 1, \ldots$
+\end{exbox}
+
+\begin{propbox}[title=Randomness of LFSRs]
+\begin{itemize}
+  \item \textbf{Maximal period} --- if the characteristic polynomial of the recurrence is
+        \emph{primitive}, an $L$-bit register reaches the maximum period of
+        $2^L - 1$ states before repeating (all non-zero states).
+  \item \textbf{Distribution property} --- every non-zero state appears exactly once in
+        the cycle, so the output is highly balanced: over one period it contains exactly
+        $2^{L-1}$ ones and $2^{L-1} - 1$ zeros.
+\end{itemize}
+\end{propbox}
+
+\begin{warnbox}[title=LFSR --- math danger]
+Despite passing some statistical tests, an LFSR is purely \textbf{linear}. Techniques like
+the Berlekamp-Massey algorithm (beyond the scope of the class) recover the entire LFSR
+state and key stream from only a \textbf{short segment of the output}, breaking the
+cipher. \textbf{LFSRs should not be used directly as key stream generators}, though they
+have traditionally been used as a building block of KSGs.
+\end{warnbox}
+
+\begin{rembox}[title=Why linearity is fatal]
+Linear means ``solvable with linear algebra'': each output bit gives one linear equation
+on the unknown initial state. With about $2L$ output bits (easy to get in a KPA), Eve
+solves the system and predicts the whole stream. ``Looks random'' (statistics) is not the
+same as ``unpredictable'' (security).
+\end{rembox}
+
+\begin{exbox}[title={A5/1 and modern stream ciphers}]
+\textbf{A5/1}, used historically to secure GSM mobile phone communications, combined
+\textbf{multiple LFSRs} in a non-linear way to overcome the linearity flaw while staying
+cheap. Despite this, mathematical weaknesses allow breaking it much faster than brute
+force: it is practically broken (recall the closed-design failure of GSM, Lecture 2). \\
+There are modern stream ciphers with \textbf{no known practical cryptanalysis}, e.g.\
+\textbf{Trivium} (based on NLFSRs, 3 shift registers glued with XOR and AND gates) and
+\textbf{Salsa20} (using different techniques).
+\end{exbox}
+
+\begin{keybox}[title=Bit security and consequences]
+\begin{itemize}
+  \item \textbf{Cost of breaking} --- exploiting a mathematical property or bug can break
+        the scheme much faster than $2^{|K|}$ attempts, \textbf{reducing the bit
+        security}.
+  \item \textbf{The difficulty} --- designing mathematically secure and subtly resistant
+        primitives is incredibly hard.
+  \item \textbf{Conclusion} --- \textbf{never design your own} stream cipher (block
+        cipher, or hash function).
+  \item \textbf{Best practice} --- use \textbf{well-vetted, peer-reviewed, standard
+        algorithms and their implementations} (AES, ChaCha20, SHA-3).
+\end{itemize}
+\end{keybox}
+
+\section{Module 5 -- Public-key cryptography}
+
+\begin{defnbox}[title=Key distribution problem]
+Symmetric ciphers are fast, but require a \textbf{pre-shared secret key}. How can Alice
+and Bob agree on a secret key if \textbf{all their communication is observed by Eve}?
+\end{defnbox}
+
+\begin{defnbox}[title=Public-key (asymmetric) cryptography]
+\textbf{The paradox}: before the 1970s, it was considered impossible to communicate
+securely without a pre-shared secret. \\
+\textbf{The revelation}: public-key cryptography allows two parties who have
+\textbf{never met} to establish a secure channel.
+\end{defnbox}
+
+\begin{defnbox}[title=Diffie-Hellman (DH) key exchange]
+Alice, Bob (and Eve) know large \textbf{public parameters}: a prime number $p$ and a
+generator $g$.
+\begin{itemize}
+  \item \textbf{Alice} chooses a \textbf{private} secret $a$, computes the
+        \textbf{public value} $A = g^a \bmod p$ and sends $A$ to Bob.
+  \item \textbf{Bob} chooses a \textbf{private} secret $b$, computes the
+        \textbf{public value} $B = g^b \bmod p$ and sends $B$ to Alice.
+\end{itemize}
+Both compute the same \textbf{shared secret}:
+\[
+  K = B^a = (g^b)^a = g^{ab} = (g^a)^b = A^b \pmod p .
+\]
+Alice computes $B^a$ (she has $a$), Bob computes $A^b$ (he has $b$). Eve sees $A$, $B$,
+$g$ and $p$, but cannot find $a$ or $b$ (discrete logarithm problem), so she cannot
+compute $K$.
+\end{defnbox}
+
+\begin{exbox}[title={Toy example (real $p$ has 2048+ bits)}]
+$p = 23$, $g = 5$. Alice picks $a = 4$: $A = 5^4 \bmod 23 = 625 \bmod 23 = 4$. Bob picks
+$b = 3$: $B = 5^3 \bmod 23 = 125 \bmod 23 = 10$. \\
+Alice: $K = 10^4 \bmod 23 = 18$. Bob: $K = 4^3 \bmod 23 = 64 \bmod 23 = 18$. Same key!
+Eve sees $23, 5, 4, 10$ but must find $a$ with $5^a \equiv 4 \pmod{23}$.
+\end{exbox}
+
+\begin{rembox}[title=Paint analogy]
+Mix a public colour with your secret colour and send the mix; each side adds its own
+secret colour to what it receives: both end up with the same final colour. Un-mixing
+paint (finding the secret colour) is hard, like the discrete logarithm.
+\end{rembox}
+
+\begin{defnbox}[title=Trapdoor functions]
+DH is one of many ways to use public-key cryptography to establish a shared secret (a
+shared key) to then do symmetric cryptography. They boil down to mathematical functions
+that are \textbf{easy to compute in one direction} but \textbf{hard (high complexity) to
+compute in the other direction}.
+\end{defnbox}
+
+\begin{defnbox}[title=Discrete Logarithm Problem (DLP)]
+Underlying difficulty of DH: computing $g^a \bmod p$ is cheap (fast modular
+exponentiation), but there is \textbf{no known fast (polynomial) algorithm} to recover
+$a$ from $A = g^a \bmod p$ (and $g$, $p$).
+\end{defnbox}
+
+\begin{rembox}[title=Beyond DH]
+Other ways to set a shared secret (or even to directly communicate), all involving
+interesting mathematics:
+\begin{itemize}
+  \item \textbf{RSA} --- based on the \textbf{factoring} problem.
+  \item \textbf{Elliptic Curve Cryptography (ECC)} --- the discrete logarithm problem on
+        elliptic curves instead of modulo $p$ (smaller keys for the same security).
+  \item \textbf{Post-quantum cryptography} --- new primitives (like \textbf{lattice
+        crypto}) to resist quantum computers.
+\end{itemize}
+\end{rembox}
+
+\begin{defnbox}[title=Man-In-The-Middle (MITM) attack]
+Vanilla DH is vulnerable to an \textbf{active} attack: DH only guarantees key
+\emph{agreement}, not \emph{authenticity} (verifying \emph{who} you are agreeing with).
+\begin{enumerate}
+  \item Eve intercepts $A$ from Alice and $B$ from Bob.
+  \item Eve sends her own value $E_B$ to Alice: Alice computes $K_{AE}$.
+  \item Eve sends her own value $E_A$ to Bob: Bob computes $K_{BE}$.
+\end{enumerate}
+Eve shares a key $K_{AE}$ with Alice and a separate key $K_{BE}$ with Bob: she can
+\textbf{read, modify, and relay} all communication.
+\end{defnbox}
+
+\begin{rembox}[title=Why it works]
+Alice believes $E_B$ comes from Bob, but nothing in the protocol proves it. Each side
+does a perfectly correct DH --- just with Eve. DH is secure against a \emph{passive}
+eavesdropper, not against an \emph{active} attacker (Module 2).
+\end{rembox}
+
+\begin{defnbox}[title=Identity verification problem]
+DH solves \textbf{key distribution}, but creates the \textbf{identity verification
+problem}.
+\begin{itemize}
+  \item \textbf{Solution}: DH must be paired with a mechanism (like \textbf{digital
+        signatures}) to verify identity (next week).
+  \item \textbf{Setup}: parties still need to trust a third party (a
+        \textbf{Certificate Authority}) for public key ownership.
+\end{itemize}
+\end{defnbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Encryption $C = E_K(M)$ must be \textbf{invertible with the key} and \textbf{hard
+        to invert without it}; ideally the best attack is brute force.
+  \item A big key space is not enough: \textbf{frequency analysis} breaks Caesar and
+        substitution ciphers. Security is measured in \textbf{bits of security}.
+  \item Adversary models: \textbf{passive} $<$ \textbf{KPA} $<$ \textbf{CPA}, plus
+        \textbf{side channels} on implementations.
+  \item The \textbf{one-time pad} is \textbf{perfectly secret} but needs a random,
+        message-length, single-use key, and is \textbf{malleable} (no integrity).
+  \item \textbf{Stream ciphers} expand a short key + IV into a pseudo-random stream;
+        never reuse a stream, never use plain LFSRs, \textbf{never design your own
+        crypto}.
+  \item \textbf{Diffie-Hellman} solves key distribution thanks to the \textbf{discrete
+        logarithm problem}, but needs \textbf{authentication} against MITM.
+\end{itemize}
+\end{keybox}

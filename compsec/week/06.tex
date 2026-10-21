@@ -1,250 +1,413 @@
 % =========================================================
-\chapter{Week1 : Part A}
+\chapter{Lecture 6 : Applied cryptography II}
 % =========================================================
 
-\section{Agentic Software Development}
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Lecture 5 only hid messages (confidentiality). Here we
+fix the two holes it left: \textbf{authenticity} (am I really talking to Bob, and not to
+Eve in the middle?) and \textbf{integrity} (was the message changed on the way?). With
+public keys we get \textbf{public-key encryption} and \textbf{digital signatures}, made
+fast thanks to \textbf{hash functions}; with a shared secret key we get \textbf{block
+ciphers} and their \textbf{modes of operation} (ECB, CBC, CTR) and \textbf{MACs}. Finally
+we combine encryption and MAC correctly (\textbf{Encrypt-then-MAC}). \\
+\textbf{Why is it useful?} Every real secure channel (HTTPS, messaging apps, software
+updates) needs all three properties at once. Knowing which tool gives which guarantee
+--- and which naive combinations leak or can be tampered with --- is what lets you
+choose the right standard primitive instead of building a broken one.
+\end{rembox}
 
-\begin{center}
-\includegraphics[width=\linewidth]{images/goal.png}
-\end{center}
+\section{Recap: where we stand}
 
-\begin{exbox}[title=What the agent does not know]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item \textbf{Context} --- why the codebase is the way it is (the auth layer looks strange for a reason).
-  \item \textbf{Decomposition} --- turning ``build the food ordering feature'' into one reviewable change.
-  \item \textbf{Acceptance criteria} --- what ``done'' means; if you do not say, it decides optimistically.
-  \item \textbf{Permissions} --- what it may touch, and what must be approved by you first.
+\begin{rembox}[title=Recap of Lecture 5]
+\begin{itemize}
+  \item \textbf{Confidentiality}: information cannot be accessed by unauthorized
+        parties. Eve observes the ciphertext $C = E_K(M)$, but is assumed \textbf{not to
+        see inside} Alice's and Bob's devices (no access to $K$ or $M$).
+  \item \textbf{Symmetric encryption}: encryption and decryption use the \textbf{same
+        pre-shared secret key} $K$.
+  \item \textbf{Diffie-Hellman}: with public $p, g$, Bob sends $B = g^b \bmod p$, Alice
+        sends $A = g^a \bmod p$; both compute $K = g^{ab} \bmod p$, which Eve cannot
+        compute (discrete logarithm).
 \end{itemize}
-\tcblower
-\centering
-\textcolor{redColor}{\itshape Only you have these --- the agentic loop is blind to them.}
-\end{exbox}
+\textbf{Open question}: how do Alice and Bob know they are talking to the right person,
+and not to Eve in the middle (MITM)?
+\end{rembox}
 
-\begin{center}
-\includegraphics[width=\linewidth]{images/agent-context.png}
-\textcolor{redColor}{\itshape Write down the rules for the agent (it will help your team agree on them)}
-\end{center}
+\section{Problem I: Authenticity}
 
-\begin{minipage}{\linewidth}
-\textbf{What if the agent opened this PR?}
+\begin{defnbox}[title=Authenticity]
+How do we \textbf{verify the identity} of the person to whom we are talking, while
+avoiding Eve in the middle? Bob wants to talk to Alice; Alice wants to make sure she is
+talking to Bob.
+\end{defnbox}
 
-\begin{center}
-\includegraphics[width=\linewidth]{images/reviewing-a-PR.png}
-Answer with : \textcolor{redColor}{\itshape "I can't review this. Please split it: the total calculation in one PR, the config change in another, and drop all unrelated screen edits."}
-\end{center}
-\end{minipage}
-
-\begin{exbox}[title=How agentic can go wrong]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item \textbf{Confidently wrong at scale} \\
-        \textit{``refactored 30 files and broke one thing in each''}
-  \item \textbf{Hallucinated dependencies} \\
-        \textit{``imported a library that doesn't exist, and added one that shouldn't''}
-  \item \textbf{Tests that pass and check nothing} \\
-        \textit{``wrote tests and coverage went up, but correctness went down''}
-  \item \textbf{Plausible architecture drift} \\
-        \textit{``every feature is fine in isolation, but nothing fits together anymore''}
+\begin{defnbox}[title=Public-key cryptography: key pairs and PKI]
+Each user has a \textbf{key pair}:
+\begin{itemize}
+  \item a \textbf{secret key} $SK$ (kept private), e.g.\ Bob's $SK = b$;
+  \item a \textbf{public key} $PK$ (published), e.g.\ Bob's $PK = B = g^b$.
 \end{itemize}
-\end{exbox}
+Public keys are published in a \textbf{Public Key Infrastructure (PKI)}, from which
+anyone can fetch the public key of the person they want to talk to.
+\end{defnbox}
 
-\noindent
-\begin{minipage}[t]{0.48\linewidth}
-\includegraphics[width=\linewidth]{images/vide-coding.png}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.48\linewidth}
-\includegraphics[width=\linewidth]{images/agentic-dev.png}
-\end{minipage}
+\begin{rembox}[title=Link with Diffie-Hellman]
+A DH public value $B = g^b$ \emph{is} a public key, and $b$ the secret key. The PKI
+(e.g.\ Certificate Authorities, Lecture 5) is what binds a public key to an
+\textbf{identity}: it answers ``is this really Alice's key?''.
+\end{rembox}
 
-\section{Requirements}
+\begin{defnbox}[title=Public-key encryption (confidentiality)]
+To send a confidential message to Alice, Bob fetches Alice's \textbf{public key} from the
+PKI and encrypts:
+\[
+  C = E_{PK_{\text{Alice}}}(M), \qquad M = D_{SK_{\text{Alice}}}(C).
+\]
+Only Alice, who holds $SK_{\text{Alice}}$, can decrypt. Eve also knows $PK$, but trying to
+decrypt with the public key gives garbage. Example: \textbf{RSA-OAEP}.
+\textbf{Don't design your own!}
+\end{defnbox}
 
+\begin{rembox}[title=Intuition: the padlock]
+The public key is an \textbf{open padlock} that Alice hands out to everybody; the secret
+key is the only key that opens it. Anyone can lock a box for Alice, only Alice can open
+it.
+\end{rembox}
+
+\begin{defnbox}[title=Digital signatures (signing and verification)]
+Bob \textbf{signs} with his \textbf{secret} key, Alice \textbf{verifies} with Bob's
+\textbf{public} key (from the PKI):
+\[
+  S = \mathrm{Sign}_{SK_{\text{Bob}}}(M), \qquad
+  V_{PK_{\text{Bob}}}(M, S) = \checkmark .
+\]
+\textbf{Unforgeability}: Eve cannot forge a signature $S$ on $M$ that verifies without
+knowing $SK$. Example: \textbf{NIST DSA}. \textbf{Don't design your own!}
+\end{defnbox}
+
+\begin{rembox}[title=Encryption vs.\ signature: who uses which key?]
 \begin{center}
-\textcolor{redColor}{\itshape\bfseries Listen relentlessly $\cdot$ Listen for the need behind the want}
-\end{center}
-
-\begin{exbox}[title=How do we define requirements?]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item Most users are not precise and objective.
-  \item Elicit requirements by talking \& listening to (potential) users.
-  \item Group users in equivalence classes around personas.
-  \item Develop user stories.
-\end{itemize}
-\end{exbox}
-
-\begin{exbox}[title=Can I use an LLM instead of real users?]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item \textbf{Not for the persona, and not for the need}
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{Five user stories in ten seconds --- fluent, plausible, well-structured.}
-      \item \textit{But nobody said any of it.}
-      \item \textit{This is the faster-horses failure, with better grammar.}
-    \end{itemize}
-  \item \textbf{Yes, once a real person has told you something}
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{Turn a vague sentence into a testable one.}
-      \item \textit{Propose the edge cases you did not think of.}
-      \item \textit{Draft acceptance criteria.}
-    \end{itemize}
-\end{itemize}
-\tcblower
-\centering
-\textcolor{redColor}{\itshape Use an LLM to sharpen a requirement you got from a person --- not to invent the person.}
-\end{exbox}
-
-\section{User Story}
-
-\begin{defnbox}[title=User story template]
-\begin{center}
-\ttfamily
-\begin{tabular}{@{}r l @{\qquad} >{\normalfont\itshape\footnotesize\color{black!55}}l@{}}
-As a      & \textcolor{blueColor}{[role]},          & who is the primary stakeholder? \\[5pt]
-I want to & \textcolor{redColor}{[action]},         & what effect does she want the story to have? \\[5pt]
-so that   & \textcolor{greenColor}{[reason]}.       & what value will she derive from that effect? \\
+\begin{tabular}{l|c|c}
+                   & \textbf{uses $PK$} & \textbf{uses $SK$} \\ \hline
+Encryption         & sender encrypts    & receiver decrypts  \\
+Signature          & receiver verifies  & sender signs
 \end{tabular}
 \end{center}
-\tcblower
-{\itshape Example.}\quad
-{\ttfamily As a \textcolor{blueColor}{SwEnt student}, I want to
-\textcolor{redColor}{learn about software requirements}, so that
-\textcolor{greenColor}{I can engineer better software}.}
+Encryption: \emph{anyone} can write to Alice, only Alice can read. Signature: only Bob can
+write (sign), \emph{anyone} can check it was Bob.
+\end{rembox}
+
+\begin{propbox}[title=Sign the hash of messages]
+Public-key operations are \textbf{computationally costly} compared with most symmetric
+key algorithms of equivalent security: signing and encrypting \textbf{is slow}. \\
+$\Rightarrow$ \textbf{Sign the hash} of messages instead of the message itself:
+\[
+  H = h(M), \qquad S = \mathrm{Sign}_{SK}(H), \qquad V_{PK}(H, S) = \checkmark ,
+\]
+where Alice recomputes $H = h(M)$ from the received $M$.
+\end{propbox}
+
+\begin{defnbox}[title=Hash function]
+A function $h(\cdot)$ that maps a message $M$ of \textbf{any length} to a \textbf{fixed
+short-length} output $H = h(M)$. Three security properties:
+\begin{itemize}
+  \item \textbf{Pre-image resistance} --- given $H = h(M)$, it is difficult to find $M$.
+  \item \textbf{Second pre-image resistance} --- given $M$, it is difficult to find an
+        $M' \neq M$ such that $h(M') = h(M)$.
+  \item \textbf{Collision resistance} --- it is difficult to find \emph{any} $M, M'$
+        (with $M \neq M'$) such that $h(M) = h(M')$.
+\end{itemize}
 \end{defnbox}
 
-\begin{warnbox}
-\begin{itemize}[leftmargin=1.2em, itemsep=3pt]
-  \item If you can only fill the template with a very generic role or reason, the feature
-        is probably not something a real user actually cares about.
-  \item The developer is not an end user --- ``as a developer'' is not a valid role in a
-        user story.
-  \item If the story dictates \emph{how} it should be implemented, it is too specific:
-        a user story states the problem, not the solution.
+\begin{rembox}[title=Understanding the three properties]
+\begin{itemize}
+  \item \textbf{Pre-image}: the hash is a one-way ``fingerprint'': from the fingerprint
+        you cannot rebuild the person.
+  \item \textbf{Second pre-image}: the attacker is given a \emph{fixed} $M$ and must
+        match its hash.
+  \item \textbf{Collision}: the attacker chooses \emph{both} messages freely --- an easier
+        task, so collision resistance is the strongest requirement. By the birthday
+        paradox, an $n$-bit hash only gives about $n/2$ bits of collision resistance.
 \end{itemize}
+Collisions must exist (infinitely many inputs, finitely many outputs); they must just be
+\textbf{hard to find}.
+\end{rembox}
+
+\begin{propbox}[title=Standard hash functions]
+\begin{itemize}
+  \item \textbf{MD5} (1991): 128-bit hash --- \textbf{insecure}.
+  \item \textbf{SHA-0, SHA-1}: 160 bits --- \textbf{insecure}.
+  \item \textbf{SHA-2} (224/256/384/512) --- OK but slow.
+  \item \textbf{SHA-3} (224/256/384/512).
+\end{itemize}
+\textbf{Don't design your own!} \\
+\textbf{Uses}: support digital signatures, build HMAC, password storage, file integrity,
+secure commitments, secure logging, blockchains, \ldots
+\end{propbox}
+
+\begin{propbox}[title=Which hash properties do signatures need?]
+When signing $h(M)$, \textbf{pre-image resistance is not needed} ($M$ is sent anyway).
+What matters:
+\begin{itemize}
+  \item \textbf{Second pre-image resistance} --- otherwise Eve finds $M' \neq M$ with
+        $h(M') = h(M)$, and Bob's signature on $M$ is also valid on $M'$.
+  \item \textbf{Collision resistance} --- otherwise Eve prepares two messages with the same
+        hash, gets Bob to sign the harmless one, and reuses the signature on the other.
+\end{itemize}
+\end{propbox}
+
+\begin{defnbox}[title={All together: asymmetric confidentiality and authentication}]
+Users have \textbf{two pairs} of keys (2 secret keys, 2 public keys): an
+\textbf{encryption} pair and a \textbf{signing} pair.
+\begin{itemize}
+  \item \textbf{Confidentiality}: $D_{SK}(C) = M$ with $C = E_{PK}(M)$.
+  \item \textbf{Authentication}: $V_{PK}(M, S) = \checkmark$ with
+        $S = \mathrm{Sign}_{SK}(M)$.
+\end{itemize}
+Bob sends to Alice
+\[
+  E_{PK_{\text{Alice}}}(M), \quad \mathrm{Sign}_{SK_{\text{Bob}}}\big(h(M)\big),
+\]
+encrypting with Alice's \textbf{encryption public key} and signing with his own
+\textbf{signing secret key}; Alice decrypts with her secret key and verifies with Bob's
+\textbf{verification public key}.
+\end{defnbox}
+
+\section{Problem II: Integrity}
+
+\begin{defnbox}[title=Integrity]
+Information cannot be \textbf{modified} by unauthorized parties. \\
+Eve now \textbf{writes} on the channel: Bob sends ``Banana'', Eve tampers with the
+ciphertext, and Alice decrypts ``Apple'' without noticing (recall the bit-flipping attack
+on the OTP, Lecture 5).
+\end{defnbox}
+
+\begin{propbox}[title=Message integrity through digital signatures]
+Digital signatures provide:
+\begin{itemize}
+  \item \textbf{Sender authenticity} --- the message comes from Bob;
+  \item \textbf{Message integrity} --- the signature $S$ only verifies if the message $M$
+        has not been modified;
+  \item \textbf{Non-repudiation} --- Bob cannot later deny having signed $M$: only his
+        secret key could produce $S$, and \emph{anyone} (a judge, a third party) can
+        check it with his public key.
+\end{itemize}
+\end{propbox}
+
+\subsection{Symmetric cryptography: block ciphers}
+
+\begin{defnbox}[title=Block cipher]
+And for symmetric cryptography? A block cipher encrypts a block with a pre-shared key:
+$C_i = E_K(M_i)$, $M_i = D_K(C_i)$. The algorithms work on \textbf{blocks} the size of the
+key, typically \textbf{128/256 bits}. \\
+\textbf{Problem}: messages are longer than a block! $\Rightarrow$ requires iteration
+$\Rightarrow$ block ciphers have a \textbf{mode of operation}.
+\end{defnbox}
+
+\begin{defnbox}[title={Mode 1: Electronic Code Book (ECB)}]
+Straightforward scheme: split $M = M_1 M_2 M_3 M_4$ into blocks (each the size of the key)
+and encrypt and decrypt \textbf{each block independently}:
+\[
+  C_i = E_K(M_i), \qquad M_i = D_K(C_i).
+\]
+\end{defnbox}
+
+\begin{warnbox}[title=The problem with ECB]
+If $M_i = M_j$ then $C_i = C_j$! Identical plaintext blocks give identical ciphertext
+blocks: \textbf{large information leakage} due to the lack of randomness across blocks'
+encryption (the same issue as substitution ciphers, but on whole blocks). Classic
+illustration: an image encrypted with ECB still shows its outline.
 \end{warnbox}
 
-\begin{exbox}[title=Good user stories: INVEST]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item \textbf{\textcolor{blueColor}{I}ndependent} ---
-        \textit{self-contained; can be built without waiting on other stories}
-  \item \textbf{\textcolor{blueColor}{N}egotiable} ---
-        \textit{captures the problem, not the solution, leaving room for the implementor}
-  \item \textbf{\textcolor{blueColor}{V}aluable} ---
-        \textit{delivers value the end user can see}
-  \item \textbf{\textcolor{blueColor}{E}stimable} ---
-        \textit{small enough that the effort can be estimated}
-  \item \textbf{\textcolor{blueColor}{S}mall} ---
-        \textit{fits inside a single sprint}
-  \item \textbf{\textcolor{blueColor}{T}estable} ---
-        \textit{comes with clear acceptance criteria}
-\end{itemize}
-\end{exbox}
-
-\begin{exbox}[title=What to do about shared needs?]
-\small
-\newcommand{\story}[1]{\par\smallskip
-  \colorbox{black!5}{\parbox{\dimexpr\linewidth-2\fboxsep}{\itshape #1}}\par\smallskip}
-\begin{itemize}[leftmargin=1.5em, itemsep=6pt]
-  \item \textbf{Truly universal desire} --- one story with a deliberately generic role.
-        \story{As a user, I want to reset my password, so that I can regain access to my account.}
-  \item \textbf{Capture fine distinctions in separate user stories.}
-        \story{As a student or teacher, I want to access the course materials on Moodle, so that I can use them for studying or teaching, respectively.}
-  \item \textbf{Persona groups (``meta-persona'')} --- one role standing for several personas that share the need.
-        \story{As a member of the IT department\ldots\\ As a mobile app user\ldots}
-\end{itemize}
-\end{exbox}
-
-\section{Validating \& Prioritizing Requirements}
-
-\begin{exbox}[title=Validating requirements: are they right?]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item \textbf{Is your software really answering users' needs and wants?}
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{use prototypes to elicit feedback}
-      \item \textit{validate ``in the wild''}
-    \end{itemize}
-  \item \textbf{The outcome of validation is typically not true/false} --- it is a
-        matter of degree, not a binary verdict.
-\end{itemize}
-\end{exbox}
-
-\begin{exbox}[title=Prioritizing requirements]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item \textbf{Importance of features varies constantly.}
-  \item \textbf{Common prioritization schemes}
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{P0 / P1 / P2}
-      \item \textit{MoSCoW: must-have, should-have, could-have, won't-have}
-    \end{itemize}
-  \item \textbf{Prioritization is primarily driven by value to the user}
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{but also weighs technical feasibility, legality, cost, \ldots}
-    \end{itemize}
-\end{itemize}
-\end{exbox}
-
-\section{Epics}
-
-\begin{defnbox}[title=Epic]
-\small
-An \textbf{epic} is a broad set of features that spans \textbf{multiple user stories}.
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item Captures larger, more complex user needs.
-  \item Enables a comprehensive understanding of a feature set.
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{once divided into actionable, specific user stories, the big picture can get lost}
-    \end{itemize}
-  \item Useful for organizing work.
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{ensures the development process stays aligned with user needs}
-    \end{itemize}
-  \item A \textbf{user story} then becomes a specific, actionable item that contributes to
-        the broader goal of the epic.
-\end{itemize}
-\tcblower
-\textbf{Example.}\quad Epic: \emph{Personalized and Streamlined Dining Experience}.
-\smallskip
-
-\textit{As a user of PolyFood, I want the app to understand my habits, preferences, and
-context, so that ordering food becomes faster, smarter, and more enjoyable over time.}
+\begin{defnbox}[title={Mode 2: Cipher Block Chaining (CBC)}]
+Add an \textbf{IV} and \textbf{propagate information across blocks} to introduce
+randomness.
+\begin{align*}
+  \text{Encryption: } & C_0 = IV, \quad C_i = E_K(M_i \oplus C_{i-1}) \\
+  \text{Decryption: } & C_0 = IV, \quad M_i = D_K(C_i) \oplus C_{i-1}
+\end{align*}
 \end{defnbox}
 
-\begin{exbox}[title=User flow vs.\ epic]
-\small
-\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
-  \item \textbf{User flow} --- a specific sequence of steps a user takes to accomplish one
-        task in the app, from start to finish.
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{\textbf{Login flow}: launch screen $\to$ login screen $\to$ error
-            handling for wrong credentials $\to$ main dashboard on success}
-    \end{itemize}
-  \item \textbf{Epic} --- a broader, high-level feature or goal that usually spans several
-        user flows or smaller tasks.
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt]
-      \item \textit{\textbf{Account Management} epic: login flow + password-reset flow +
-            account-creation flow + edit-profile flow}
-    \end{itemize}
+\begin{rembox}[title=Questions from the lecture]
+\begin{itemize}
+  \item What if the IV is incorrect? Is the full decryption wrong?
+  \item Can you decrypt a block alone? What do you need?
 \end{itemize}
-\end{exbox}
+(Hint: look at which values appear in the decryption formula of $M_i$.)
+\end{rembox}
 
-\begin{keybox}[title=Recipe for user-centric software]
-\small
-\begin{enumerate}[leftmargin=1.6em, itemsep=3pt]
-  \item Elicit user requirements.
-  \item Formulate user stories.
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt, label=--]
-      \item \textit{should be \textbf{I}ndependent, \textbf{N}egotiable, \textbf{V}aluable,
-            \textbf{E}stimable, \textbf{S}mall, and \textbf{T}estable}
-    \end{itemize}
-  \item Validate and prioritize them.
-    \begin{itemize}[leftmargin=1.3em, topsep=2pt, itemsep=1pt, label=--]
-      \item \textit{all stakeholders must be involved}
-    \end{itemize}
-  \item Organize user stories into epics.
-  \item Plan the work.
-\end{enumerate}
+\begin{defnbox}[title={Mode 3: Counter mode (CTR)}]
+Use an \textbf{increasing nonce} to add randomness \textbf{without dependencies between
+blocks}. A \textbf{nonce} is a random number used only \textbf{once}.
+\[
+  \text{Encryption: } C_i = E_K(\mathit{Nonce} + i) \oplus M_i;
+  \qquad
+  \text{Decryption: } M_i = E_K(\mathit{Nonce} + i) \oplus C_i .
+\]
+\end{defnbox}
+
+\begin{rembox}[title=CTR turns a block cipher into a stream cipher]
+$E_K(\mathit{Nonce}+1), E_K(\mathit{Nonce}+2), \ldots$ is a pseudo-random \textbf{key
+stream} XOR-ed with the message, exactly like a stream cipher (Lecture 5). Hence
+decryption only needs $E_K$ (no $D_K$, answering the slide's question ``do we need a
+decryption algorithm?''), blocks can be processed \textbf{in parallel}, and --- as with
+any pad --- a nonce must \textbf{never be reused} with the same key.
+\end{rembox}
+
+\begin{propbox}[title=Block ciphers: strengths and weaknesses]
+\textbf{Strengths}:
+\begin{itemize}
+  \item \textbf{High diffusion} --- information from one plaintext symbol is diffused
+        into several ciphertext symbols;
+  \item \textbf{Immunity to tampering} --- difficult to insert symbols without detection.
+\end{itemize}
+\textbf{Weaknesses}:
+\begin{itemize}
+  \item \textbf{Slow} --- an entire block must be accumulated before encryption /
+        decryption can begin;
+  \item \textbf{Error propagation} --- in some modes of operation errors affect several
+        bits/blocks.
+\end{itemize}
+Individual modes may not fall in these categories and may offer a different trade-off.
+It is the opposite profile of stream ciphers (Lecture 5).
+\end{propbox}
+
+\begin{keybox}[title=Modes of operation: summary]
+\begin{itemize}
+  \item \textbf{ECB} --- directly encrypt and decrypt single blocks. Large information
+        leakage due to lack of randomness across blocks' encryption.
+  \item \textbf{CBC} --- avoids ECB problems by using previous blocks to add randomness to
+        every encryption. Propagates errors and prevents single-block decryption.
+  \item \textbf{CTR} --- uses an increasing ``nonce'' to introduce randomness across
+        blocks' encryptions. Enables parallel encryption and decryption.
+\end{itemize}
 \end{keybox}
 
+\subsection{Integrity from symmetric cryptography: MACs}
+
+\begin{defnbox}[title=Message Authentication Code (MAC)]
+Takes a \textbf{fixed (short) size key} $K$ and a message $M$, and outputs a short
+$MAC_K(M)$. It is \textbf{hard to generate} a pair $\{M, MAC_K(M)\}$ \textbf{without
+knowing $K$}. Bob sends $\{M; MAC_K(M)\}$ using the pre-shared key $K$. Two properties:
+\begin{enumerate}
+  \item $M$ cannot be tampered with;
+  \item the message comes from Bob/Alice (whoever holds $K$).
+\end{enumerate}
+$\Rightarrow$ \textbf{Mutual authentication BUT no sender authenticity towards a 3rd
+party.}
+\end{defnbox}
+
+\begin{defnbox}[title=Repudiation]
+With a MAC, both Alice and Bob hold the same key $K$, so \textbf{both} can produce
+$MAC_K(M)$. Given $\{M = \text{``I don't like Charlie''}; MAC_K(M)\}$, Bob says ``it was
+Alice'' and Alice says ``it was Bob'': a third party (Charlie) \textbf{cannot tell} who
+wrote it.
+\end{defnbox}
+
+\begin{keybox}[title=MAC vs.\ digital signature]
+\begin{center}
+\begin{tabular}{l|c|c}
+                         & \textbf{MAC}       & \textbf{Signature}  \\ \hline
+Keys                     & one shared secret  & key pair $(SK, PK)$ \\
+Integrity                & yes                & yes                 \\
+Authenticity (to peer)   & yes                & yes                 \\
+Convince a third party   & no                 & yes                 \\
+Non-repudiation          & no                 & yes                 \\
+Speed                    & fast               & slow
+\end{tabular}
+\end{center}
+\end{keybox}
+
+\begin{defnbox}[title=CBC-MAC]
+Turning a block cipher into a MAC:
+\[
+  C_0 = 0 \ \text{[any fixed IV]}, \qquad C_i = E_K(M_i \oplus C_{i-1}), \qquad
+  MAC_K(M_1 \ldots M_n) = C_n .
+\]
+Differences with respect to CBC encryption:
+\begin{itemize}
+  \item CBC-MAC is \textbf{deterministic} (fixed IV);
+  \item only the \textbf{last block} is output.
+\end{itemize}
+\textbf{Limitation}: only secure if the length of message $M$ is known (fixed).
+\end{defnbox}
+
+\begin{rembox}[title=Why a fixed IV and why only the last block?]
+A MAC must be \textbf{recomputable} by the verifier: with a random IV, Alice could not
+recompute the same tag (and an attacker could adjust the IV to fix the first block).
+Since every block is chained into the next, the last block depends on the whole message:
+it is a short ``keyed fingerprint'' of $M$.
+\end{rembox}
+
+\subsection{All together: confidentiality and integrity (symmetric)}
+
+\begin{defnbox}[title=Encrypt-and-MAC]
+Send $E_K(M) \,\|\, MAC_K(M)$: encrypt the plaintext and MAC the \textbf{plaintext},
+in parallel.
+\begin{itemize}
+  \item[$\times$] \textbf{No integrity on the ciphertext} $\to$ the cipher can be
+        attacked; need to decrypt to know if valid.
+  \item[$\checkmark$] Integrity of the plaintext can be verified.
+  \item[$\times$] \textbf{May reveal information about the plaintext} $\to$ repeated
+        messages give repeated MACs (the IV of the MAC is fixed; can be solved with a
+        counter).
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=MAC-then-Encrypt]
+Send $E_K\big(M \,\|\, MAC_K(M)\big)$: MAC the plaintext, then encrypt plaintext and MAC
+together.
+\begin{itemize}
+  \item[$\times$] \textbf{No integrity of the ciphertext}: (in theory) possible to change
+        the ciphertext and still have a valid MAC; need to decrypt to know if valid.
+  \item[$\checkmark$] Integrity of the plaintext can be verified.
+  \item[$\checkmark$] No information on the plaintext either, since it is encrypted.
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Encrypt-then-MAC]
+Send $C \,\|\, MAC_K(C)$ with $C = E_K(M)$: encrypt first, then MAC the
+\textbf{ciphertext}.
+\begin{itemize}
+  \item[$\checkmark$] \textbf{Integrity of the ciphertext} $\to$ ensures you only read
+        valid messages! The cipher cannot be attacked.
+  \item[$\checkmark$] Integrity of the plaintext can be verified.
+  \item[$\checkmark$] No information on the plaintext either, since it is encrypted.
+\end{itemize}
+\end{defnbox}
+
+\begin{keybox}[title=Which composition to use?]
+\begin{center}
+\begin{tabular}{l|c|c|c}
+                     & \textbf{E\&M} & \textbf{MtE} & \textbf{EtM} \\ \hline
+Ciphertext integrity & $\times$      & $\times$     & $\checkmark$ \\
+Plaintext integrity  & $\checkmark$  & $\checkmark$ & $\checkmark$ \\
+Hides the plaintext  & $\times$      & $\checkmark$ & $\checkmark$
+\end{tabular}
+\end{center}
+\textbf{Encrypt-then-MAC} wins: the receiver checks the MAC \emph{before} decrypting, so
+forged ciphertexts are rejected without ever being fed to the decryption algorithm
+(fail-safe default, Lecture 2). Use separate keys for encryption and MAC.
+\end{keybox}
+
+\begin{keybox}[title={Summary: what we have learned about applied cryptography}]
+\begin{itemize}
+  \item \textbf{Symmetric cryptography}
+        \begin{itemize}
+          \item Confidentiality: stream ciphers, block ciphers (\textbf{modes of
+                operation}!).
+          \item Integrity / authentication: \textbf{Message Authentication Codes (MACs)}.
+        \end{itemize}
+  \item \textbf{Asymmetric cryptography}
+        \begin{itemize}
+          \item Confidentiality: \textbf{encryption} with the receiver's public key.
+          \item Integrity / authentication: \textbf{digital signatures} (+
+                non-repudiation).
+        \end{itemize}
+  \item \textbf{Hash functions}
+        \begin{itemize}
+          \item Three security properties (pre-image, second pre-image, collision).
+          \item Support digital signatures + other functions.
+        \end{itemize}
+\end{itemize}
+\end{keybox}
