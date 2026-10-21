@@ -1,18 +1,20 @@
 // ── The bard of the epic finale (body.epic) ───────────────────────────────────────────────────
 // The finale's music player: a knight playing the lute, sitting in the grass against a mossy
 // boulder by a campfire, a little pixel art painting in the bottom left corner (his scene is
-// ray-marched in bardscene.js), with a parchment under it naming the song (css/bard.css). It
-// replaces the metal show's amp when the finale takes over.
+// ray-marched in bardscene.js, css/bard.css). It replaces the metal show's amp when the finale
+// takes over. Its controls are in the painting itself (the pixel art "UI", below): the song's title
+// written in a corner, the knight to play / pause, the fire to change the song.
 // The finale has two songs (BARD_SONGS), each with its mood in the scene: the Two Steps From Hell
 // mix (audio/epic.mp3: blue arcane fire, blue motes) and Dragonborn, the theme of Skyrim
-// (audio/dragonborn.mp3: orange fire, snow, an aurora, a dragon crossing the moon). When one ends
+// (audio/dragonborn.mp3: a red fire, a starry night, a dragon crossing the moon). When one ends
 // the next one comes; the song chosen is remembered.
-// Clicking the painting plays / pauses: playing, he strums at the song's pace, nodding, his left
-// hand moving along the neck; paused, he dozes, chin down, and the fire burns lower. The wax seal
-// of the parchment changes the song, as a little show (bardNext): he stops and looks up at the
-// fire, strums a flourish (a chord plucked with Web Audio), the fire is drawn in, then bursts in
-// the new song's colour, a shock wave runs over the grass, the parchment rolls up and unrolls with
-// the new name, and the new song starts.
+// Clicking the knight plays / pauses: playing, he strums at the song's pace, nodding, his left
+// hand moving along the neck; paused, he dozes, chin down, and the fire burns lower. Clicking the
+// fire changes the song, as a little show (bardNext): he stops and looks up at the fire, strums a
+// flourish (a chord plucked with Web Audio), the fire is drawn in, then bursts in the new song's
+// colour, a shock wave runs over the grass, the title dissolves pixel by pixel and the new one
+// appears, and the new song starts. Two buttons, hidden until focused, do the same from the
+// keyboard.
 // As the other screens' music, the song autoplays muted when the page has had no gesture yet, and
 // the sound comes on at the first click or key press anywhere.
 const BARD_SONGS = [
@@ -30,22 +32,22 @@ const epicMuted = () => !!epicRiff && epicRiff.muted;
 
 const bard = document.createElement("div");
 bard.id = "bard";
-bard.innerHTML = '<button type="button" class="stage"><span class="flash"></span><span class="notes"></span></button>' +
-  '<div class="scroll"><span class="song"><b></b><small></small></span><button type="button" class="seal">♫</button></div>';
-const bardStage = bard.querySelector(".stage"), bardSeal = bard.querySelector(".seal");
-let bardShown = bardSong;  // the song named on the parchment (changed halfway through a change)
+bard.innerHTML = '<div class="stage"><canvas class="ui"></canvas><span class="flash"></span><span class="notes"></span></div>' +
+  '<button type="button" class="sr toggle"></button><button type="button" class="sr next"></button><span class="sr" aria-live="polite"></span>';
+const bardStage = bard.querySelector(".stage"), bardUI = bard.querySelector(".ui"), bardUx = bardUI.getContext("2d");
+const bardToggleBtn = bard.querySelector(".toggle"), bardNextBtn = bard.querySelector(".next"), bardSay = bard.querySelector("span.sr");
+let bardShown = bardSong;  // the song whose title is written (changed halfway through a change)
+let bardHover = null;      // what the pointer is over: "fire", "knight" or null
 
 const paintBard = () => {
   const song = BARD_SONGS[bardShown], next = BARD_SONGS[(bardSong + 1) % BARD_SONGS.length];
+  const toggle = !epicPlaying ? "Play the music" : epicMuted() ? "Turn the sound on" : "Pause the music";
   bard.classList.toggle("playing", epicPlaying);
-  bard.classList.toggle("mood-1", BARD_SONGS[bardShown].mood === 1);
-  bard.querySelector(".song b").textContent = song.name;
-  bard.querySelector(".song small").textContent = !epicPlaying ? "⚔️ Click the knight to play"
-    : epicMuted() ? "🔇 Click anywhere for sound" : `${song.icon} ${song.sub} · click to pause`;
-  bardStage.title = !epicPlaying ? "Play the music" : epicMuted() ? "Turn the sound on" : "Pause the music";
-  bardStage.setAttribute("aria-label", `${bardStage.title} (${song.name})`);
-  bardSeal.title = `Next song: ${next.name}`;
-  bardSeal.setAttribute("aria-label", bardSeal.title);
+  bard.classList.toggle("mood-1", song.mood === 1);
+  bardToggleBtn.textContent = `${toggle} (${song.name})`;
+  bardNextBtn.textContent = `Next song: ${next.name}`;
+  // the tooltip says what a click does where the pointer is
+  bardStage.title = bardHover === "fire" ? `The fire: next song (${next.name})` : `The knight: ${toggle.toLowerCase()} · the fire: next song`;
 };
 
 // The songs: <audio> tracks of screens.js, not looped, the next one coming when one ends
@@ -207,15 +209,25 @@ const bardFrame = now => {
   if (gap < 30) return;
   bardDrawn = now;
   const state = bardCheck();
-  if (state === "failed") { cancelAnimationFrame(bardRaf); return; }
-  if (state === "compiling") { bardStep(now, Math.min(gap, 100) / 1000); return; }
+  if (state === "compiling" || state === "failed") {  // the title and glyphs still show, over the plain night
+    bardStep(now, Math.min(gap, 100) / 1000);
+    bardUISize();
+    bardDrawUI(now);
+    return;
+  }
   // Too slow (many frames well over 33 ms): fewer pixels from now on. Longer gaps are a hidden tab
   bardSlow = gap > 55 && gap < 250 ? bardSlow + 1 : Math.max(0, bardSlow - 1);
   if (bardSlow > 20 && bardScale > .5) { bardScale *= .8; bardSlow = 0; bardScene.resize(bardScale); }
   bardStep(now, Math.min(gap, 100) / 1000);
   bardRender();
+  bardUISize();
+  bardDrawUI(now);
 };
-const bardResize = () => { if (bardScene) { bardScene.resize(bardScale); bardRender(); } };
+const bardResize = () => {
+  if (bardScene) { bardScene.resize(bardScale); bardRender(); }
+  bardUISize();
+  bardDrawUI(performance.now());
+};
 // The canvas and its scene are made once in the visit and kept, so that its shader compiles once:
 // when "More epicness ?" shows up (epic.js), ahead of the finale, or when the finale starts.
 // Without WebGL there is none: the frame shows a plain night drawn in CSS.
@@ -223,6 +235,127 @@ const bardWarm = () => {
   if (bardCanvas) return;
   bardCanvas = document.createElement("canvas");
   bardScene = createBardScene(bardCanvas);
+};
+
+// ── The pixel art UI, over the painting at its own resolution (each of its pixels one of the
+// painting's): the song's title in the top right corner, over the dark trunk, as on the covers of
+// those videos (capitals of a pixel font, a dark outline, an ornament under them in the fire's
+// colour), and little glyphs saying what a click does: » by the fire (on hover, always a
+// little on touch screens, and for the first seconds), ▶ over the knight when paused, ❚❚ when the
+// pointer is over him while he plays, a speaker crossed out while the song is muted. During a song
+// change the title dissolves pixel by pixel and the new one appears the same way.
+let bardTitle = null, bardShownAt = 0;  // bardTitle: the title's pixels, made once per song and size
+const BARD_GLYPHS = {
+  next: ["1..1..", ".1..1.", "..1..1", ".1..1.", "1..1.."],
+  play: ["1...", "11..", "111.", "1111", "111.", "11..", "1..."],
+  pause: ["11.11", "11.11", "11.11", "11.11", "11.11", "11.11"],
+  muted: ["..1.....", ".11.1.1.", "111..1..", "111.1.1.", ".11.....", "..1....."],
+};
+const bardUIColour = () => BARD_SONGS[bardShown].mood ? [255, 92, 70] : [140, 180, 255];
+// A pixel font of 5 x 7 capitals, drawn by hand (each letter: seven rows of five pixels): a
+// browser font shrunk to a few pixels and cut out turns to mush
+const BARD_FONT = (() => {
+  const src = {
+    A: "01110 10001 10001 11111 10001 10001 10001", B: "11110 10001 10001 11110 10001 10001 11110",
+    C: "01110 10001 10000 10000 10000 10001 01110", D: "11110 10001 10001 10001 10001 10001 11110",
+    E: "11111 10000 10000 11110 10000 10000 11111", F: "11111 10000 10000 11110 10000 10000 10000",
+    G: "01110 10001 10000 10111 10001 10001 01111", H: "10001 10001 10001 11111 10001 10001 10001",
+    I: "01110 00100 00100 00100 00100 00100 01110", J: "00111 00010 00010 00010 00010 10010 01100",
+    K: "10001 10010 10100 11000 10100 10010 10001", L: "10000 10000 10000 10000 10000 10000 11111",
+    M: "10001 11011 10101 10101 10001 10001 10001", N: "10001 10001 11001 10101 10011 10001 10001",
+    O: "01110 10001 10001 10001 10001 10001 01110", P: "11110 10001 10001 11110 10000 10000 10000",
+    Q: "01110 10001 10001 10001 10101 10010 01101", R: "11110 10001 10001 11110 10100 10010 10001",
+    S: "01111 10000 10000 01110 00001 00001 11110", T: "11111 00100 00100 00100 00100 00100 00100",
+    U: "10001 10001 10001 10001 10001 10001 01110", V: "10001 10001 10001 10001 10001 01010 00100",
+    W: "10001 10001 10001 10101 10101 10101 01010", X: "10001 10001 01010 00100 01010 10001 10001",
+    Y: "10001 10001 01010 00100 00100 00100 00100", Z: "11111 00001 00010 00100 01000 10000 11111",
+  };
+  const font = {};
+  Object.keys(src).forEach(k => { font[k] = src[k].split(" "); });
+  return font;
+})();
+// The title's pixels: the name in the pixel font, right-aligned (1), the ornament under it (2), and
+// their outline (3): a lit pixel's neighbours. Too wide for the painting (phones), it goes on two
+// lines.
+const bardTitleArt = (song, W, H) => {
+  const px = new Uint8Array(W * H), rnd = new Float32Array(W * H);
+  const width = text => text.length * 6 - 1;
+  const name = song.name.toUpperCase(), words = name.split(" ");
+  let lines = [name];
+  if (width(name) > W - 8 && words.length > 1) {
+    const half = Math.ceil(words.length / 2);
+    lines = [words.slice(0, half).join(" "), words.slice(half).join(" ")];
+  }
+  const put = (x, y, v) => { if (x >= 0 && x < W && y >= 0 && y < H) px[y * W + x] = v; };
+  let y = 3, right = W - 4, widest = 0;
+  lines.forEach(line => {
+    let x = right - width(line);
+    widest = Math.max(widest, width(line));
+    [...line].forEach(ch => {
+      const rows = BARD_FONT[ch];
+      if (rows) rows.forEach((row, j) => [...row].forEach((v, i) => { if (v === "1") put(x + i, y + j, 1); }));
+      x += 6;
+    });
+    y += 9;
+  });
+  const oy = y, ox = Math.round(right - widest * .8), cx = Math.round(right - widest * .4);
+  for (let i = ox; i <= right; i++) put(i, oy, 2);  // a line, a diamond in its middle
+  [[0, -1], [-1, 0], [1, 0], [0, 1]].forEach(([dx, dy]) => put(cx + dx, oy + dy, 2));
+  for (let yy = 0; yy < H; yy++) for (let xx = 0; xx < W; xx++) {
+    const k = yy * W + xx;
+    rnd[k] = Math.random();
+    if (px[k]) continue;
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]) {
+      const ny = yy + dy, nx = xx + dx;
+      if (ny >= 0 && ny < H && nx >= 0 && nx < W && (px[ny * W + nx] === 1 || px[ny * W + nx] === 2)) { px[k] = 3; break; }
+    }
+  }
+  return { song, W, H, px, rnd, img: bardUx.createImageData(W, H) };
+};
+const bardGlyph = (name, x, y, rgb, alpha) => {
+  if (alpha <= .02) return;
+  const rows = BARD_GLYPHS[name], c = bardUx;
+  x = Math.round(x); y = Math.round(y);
+  c.fillStyle = `rgba(8,6,18,${(alpha * .8).toFixed(2)})`;  // the outline, then the glyph
+  rows.forEach((row, j) => [...row].forEach((v, i) => { if (v === "1") c.fillRect(x + i - 1, y + j - 1, 3, 3); }));
+  c.fillStyle = `rgba(${rgb.join(",")},${alpha.toFixed(2)})`;
+  rows.forEach((row, j) => [...row].forEach((v, i) => { if (v === "1") c.fillRect(x + i, y + j, 1, 1); }));
+};
+const bardDrawUI = now => {
+  const W = bardUI.width, H = bardUI.height;
+  if (!W || !H) return;
+  const song = BARD_SONGS[bardShown], rgb = bardUIColour();
+  if (!bardTitle || bardTitle.song !== song || bardTitle.W !== W || bardTitle.H !== H) bardTitle = bardTitleArt(song, W, H);
+  // How much of the title shows: all of it, or dissolving / appearing during a change
+  const s = swapStart < 0 ? -1 : (now - swapStart) / 1000;
+  const k = s < 0 ? 1 : s < .6 ? 1 - s / .6 : s < 1.25 ? 0 : Math.min(1, (s - 1.25) / .65);
+  const t = bardTitle, d = t.img.data;
+  for (let i = 0; i < W * H; i++) {
+    const v = t.px[i] && t.rnd[i] < k ? t.px[i] : 0, o = i * 4;
+    if (v === 1) { d[o] = 246; d[o + 1] = 240; d[o + 2] = 226; d[o + 3] = 255; }
+    else if (v === 2) { d[o] = rgb[0]; d[o + 1] = rgb[1]; d[o + 2] = rgb[2]; d[o + 3] = 255; }
+    else if (v === 3) { d[o] = 8; d[o + 1] = 6; d[o + 2] = 18; d[o + 3] = 200; }
+    else d[o + 3] = 0;
+  }
+  bardUx.putImageData(t.img, 0, 0);
+  // The glyphs, where the fire and the knight are in the painting
+  const at = P => { const [x, y] = bardProject(P); return [W / 2 + x * H, H / 2 - y * H]; };
+  const [fx, fy] = at([BARD_FIRE[0], .3, BARD_FIRE[2]]), [kx, ky] = at(BARD_KNIGHT);
+  const pulse = .5 + .5 * Math.sin(now / 400), early = now - bardShownAt < 6000;
+  const touch = matchMedia("(pointer: coarse)").matches;
+  if (s < 0) {
+    bardGlyph("next", fx + 7, fy - 4, rgb, bardHover === "fire" ? 1 : early || touch ? .35 + .3 * pulse : 0);
+    if (!epicPlaying) bardGlyph("play", kx - 2, ky - 3, [246, 240, 226], .45 + .4 * pulse);
+    else if (bardHover === "knight") bardGlyph("pause", kx - 2, ky - 3, [246, 240, 226], .8);
+  }
+  if (epicMuted()) bardGlyph("muted", W - 11, H - 9, [246, 240, 226], .5 + .45 * pulse);
+};
+// The UI's canvas has the painting's size (or the frame's, in painting pixels, without WebGL)
+const bardUISize = () => {
+  const box = bardStage.getBoundingClientRect();
+  const W = bardCanvas && bardScene ? bardCanvas.width : Math.round(box.width / BARD_PIXEL);
+  const H = bardCanvas && bardScene ? bardCanvas.height : Math.round(box.height / BARD_PIXEL);
+  if (bardUI.width !== W || bardUI.height !== H) { bardUI.width = W; bardUI.height = H; }
 };
 
 // Music notes flying out of the painting at the burst (removed when their animation ends)
@@ -238,7 +371,7 @@ const bardNotes = () => {
   }
 };
 
-// Changing the song (the seal, or the end of a song)
+// Changing the song (the fire, or the end of a song)
 const bardLater = (ms, fn) => bardTimers.push(setTimeout(fn, ms));
 const bardNext = () => {
   if (swapStart >= 0) return;
@@ -250,17 +383,17 @@ const bardNext = () => {
   epicRiff = bardTrack(preloadTrack(song.file, { loop: false }));  // ready, paused, until it is its turn
   epicRiff.muted = muted;
   epicPlaying = true;  // a song chosen is a song to hear
-  const start = () => { bardShown = bardSong; epicPlay(); };
-  if (bardStill() || !bardScene) { start(); bardVal.uMood = song.mood; bardRender(); return; }
+  const start = () => { bardShown = bardSong; bardSay.textContent = `Now playing: ${song.name}`; epicPlay(); };
+  if (bardStill() || !bardScene) { start(); bardVal.uMood = song.mood; bardRender(); bardDrawUI(performance.now()); return; }
   swapStart = performance.now();
   swapFrom = bardVal.uMood;
-  bard.classList.add("swap");  // the parchment rolls up
+  bard.classList.add("swap");
   paintBard();
   bardLater(450, () => { if (!muted) bardChord(song); });
   bardLater(1250, () => {
     if (!muted) bardWhoomp();
     bardShown = bardSong;
-    bard.classList.remove("swap");  // and unrolls with the new name
+    bard.classList.remove("swap");
     bard.classList.add("burst");
     bardNotes();
     paintBard();
@@ -269,21 +402,36 @@ const bardNext = () => {
   bardLater(BARD_SWAP * 1000, () => { swapStart = -1; bard.classList.remove("burst"); });
 };
 
-bardStage.addEventListener("click", e => {
-  e.stopPropagation();
-  bardAudioReady();
+// What is under the pointer: the fire (a circle around it in the painting) or the knight (the rest)
+const bardWhere = e => {
+  const box = bardStage.getBoundingClientRect(), H = box.height;
+  const x = (e.clientX - box.left - box.width / 2) / H, y = (box.height / 2 - (e.clientY - box.top)) / H;
+  const [fx, fy] = bardProject([BARD_FIRE[0], .15, BARD_FIRE[2]]);
+  return Math.hypot(x - fx, y - fy) < .2 ? "fire" : "knight";
+};
+const bardToggle = () => {
   if (performance.now() - bardSoundAt < 600 || swapStart >= 0) return;  // this same click just turned the sound on
   if (epicMuted()) epicSound();
   else if (epicPlaying) epicPause();
   else epicPlay();
-  if (bardStill()) { bardStep(performance.now(), 1); bardRender(); }
-});
-bardSeal.addEventListener("click", e => {
-  e.stopPropagation();
-  bardAudioReady();
+  if (bardStill()) { bardStep(performance.now(), 1); bardRender(); bardDrawUI(performance.now()); }
+};
+const bardChange = () => {
   if (epicMuted()) epicSound();
   bardNext();
+};
+bardStage.addEventListener("click", e => {
+  e.stopPropagation();
+  bardAudioReady();
+  if (bardWhere(e) === "fire") bardChange(); else bardToggle();
 });
+bardStage.addEventListener("pointermove", e => {
+  const where = e.pointerType === "touch" ? null : bardWhere(e);
+  if (where !== bardHover) { bardHover = where; paintBard(); }
+});
+bardStage.addEventListener("pointerleave", () => { bardHover = null; paintBard(); });
+bardToggleBtn.addEventListener("click", e => { e.stopPropagation(); bardAudioReady(); bardToggle(); });
+bardNextBtn.addEventListener("click", e => { e.stopPropagation(); bardAudioReady(); bardChange(); });
 
 const setEpicMusic = on => {
   document.removeEventListener("pointerdown", epicSound);
@@ -312,15 +460,17 @@ const setEpicMusic = on => {
     document.addEventListener("pointerdown", epicSound, { once: true });
     document.addEventListener("keydown", epicSound, { once: true });
   }
-  if (!bardScene) return;
-  bardScene.resize(bardScale);
+  bardShownAt = performance.now();
+  if (bardScene) bardScene.resize(bardScale);
   addEventListener("resize", bardResize);
   bardCheck();
   if (bardStill()) {  // one still picture, once the shader is ready
     const still = () => {
-      if (!bardScene || !bard.isConnected) return;
-      if (bardCheck() === "compiling") { bardTimers.push(setTimeout(still, 250)); return; }
+      if (!bard.isConnected) return;
+      bardUISize();
       bardStep(performance.now(), 1);
+      bardDrawUI(performance.now());
+      if (bardCheck() === "compiling") { bardTimers.push(setTimeout(still, 250)); return; }
       bardRender();
     };
     still();

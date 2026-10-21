@@ -1,50 +1,37 @@
 /* The bard of the epic finale (js/bard.js, his scene in js/bardscene.js): a little pixel art
    painting in the bottom left corner, framed in dark iron with a thin golden fillet and haloed by
-   the colour of its fire (--glow: arcane blue for the epic mix, amber for Dragonborn), its canvas
-   shown with crisp pixels. Under it, a parchment names the song, with a wax seal that changes it.
-   Its width follows the room beside the courses (--bw), the painting is 3:2. Only transform and
-   opacity animate. */
+   the colour of its fire (--glow: arcane blue for the epic mix, red for Dragonborn), its canvases
+   (the painting, and over it the pixel art UI: the title and the glyphs) shown with crisp pixels.
+   A click on the knight plays / pauses, on the fire changes the song; two buttons, out of sight
+   until focused, do the same from the keyboard. Its width follows the room beside the courses
+   (--bw), the painting is 3:2. Only transform and opacity animate. */
 #bard{--bw:clamp(12rem,calc((100vw - 960px) / 2 - 2.2rem),19rem);--glow:110,150,255;position:fixed;left:1.1rem;bottom:1.1rem;z-index:40;width:var(--bw);color:#3b2410;font:600 .78rem system-ui,sans-serif}
-#bard.mood-1{--glow:255,150,60}
+#bard.mood-1{--glow:255,70,50}
 #bard .stage{position:relative;display:block;width:100%;height:calc(var(--bw) * 2 / 3);padding:0;border:0;border-radius:.35rem;background:#070814;cursor:pointer;box-shadow:0 0 0 2px #1d1b30,0 0 0 3px rgba(214,178,96,.6),0 0 0 6px #0c0b17,0 0 0 7px rgba(140,150,200,.25),0 12px 30px rgba(0,0,0,.75)}
 #bard .stage::after{content:"";position:absolute;top:-12px;right:-12px;bottom:-12px;left:-12px;z-index:-1;border-radius:.9rem;box-shadow:0 0 30px rgba(var(--glow),.6);pointer-events:none;will-change:opacity;animation:bard-glow 2.6s ease-in-out infinite alternate}
-#bard .stage:focus-visible{outline:2px solid rgba(var(--glow),.9);outline-offset:9px}
+#bard:focus-within .stage{outline:2px solid rgba(var(--glow),.9);outline-offset:9px}
 #bard canvas{display:block;width:100%;height:100%;border-radius:.35rem;image-rendering:crisp-edges;image-rendering:pixelated}
+#bard canvas.ui{position:absolute;top:0;left:0;pointer-events:none}
+/* The keyboard's buttons: out of sight, there for the keyboard and screen readers */
+#bard .sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 /* The burst of a song change: a flash from the fire (bottom left of the painting) and notes
    flying out */
 #bard .flash{position:absolute;top:0;right:0;bottom:0;left:0;border-radius:.35rem;background:radial-gradient(circle at 22% 72%,rgba(255,255,255,.95),rgba(var(--glow),.55) 35%,transparent 75%);opacity:0;pointer-events:none}
 #bard.burst .flash{animation:bard-flash 1.1s ease-out}
 #bard .notes{position:absolute;left:0;right:0;bottom:30%;pointer-events:none}
 #bard .notes i{position:absolute;bottom:0;color:rgb(var(--glow));font:normal 1.3rem Georgia,serif;text-shadow:0 0 8px rgba(var(--glow),.9);opacity:0;animation:bard-note 1.7s ease-out both}
-/* The parchment, rolled at both ends, overlapping the bottom of the frame. On a change its writing
-   rolls up (.swap) and unrolls with the new name. */
-#bard .scroll{position:relative;display:flex;align-items:center;gap:.4rem;width:86%;min-height:2.4rem;margin:-1rem auto 0;padding:.28rem .4rem .28rem .85rem;border-radius:.15rem;background:linear-gradient(#f3e2b8,#e2c88e 55%,#cfae6e);box-shadow:0 4px 12px rgba(0,0,0,.55),inset 0 0 10px rgba(120,70,20,.35)}
-#bard .scroll::before,#bard .scroll::after{content:"";position:absolute;top:-.18rem;bottom:-.18rem;width:.55rem;border-radius:.3rem;background:linear-gradient(90deg,#a9864a,#f0dcaa 45%,#9a7238);box-shadow:0 2px 5px rgba(0,0,0,.45)}
-#bard .scroll::before{left:-.3rem}
-#bard .scroll::after{right:-.3rem}
-#bard .song{display:flex;flex:1;flex-direction:column;min-width:0;transform-origin:50% 50%;transition:transform .45s cubic-bezier(.5,0,.3,1),opacity .45s}
-#bard .song b{overflow:hidden;font:700 .8rem/1.2 "Cinzel","Trajan Pro","Palatino Linotype","Book Antiqua",Georgia,serif;letter-spacing:.02em;white-space:nowrap;text-overflow:ellipsis}
-#bard .song small{overflow:hidden;color:#6e4a22;font:italic .7rem/1.25 "Palatino Linotype",Georgia,serif;white-space:nowrap;text-overflow:ellipsis}
-#bard.swap .song{opacity:0;transform:scaleX(.04)}
-/* The wax seal: next song */
-#bard .seal{flex:none;width:2rem;height:2rem;padding:0;color:#ffe1b0;font:700 .95rem Georgia,serif;border:0;border-radius:50%;background:radial-gradient(circle at 36% 30%,#e0563f,#9a1f16 58%,#5c0f0a);box-shadow:0 2px 5px rgba(0,0,0,.5),inset 0 0 0 3px rgba(90,12,8,.55),inset 0 1px 2px rgba(255,200,170,.5);cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
-#bard .seal:hover,#bard .seal:focus-visible{transform:rotate(-14deg) scale(1.1)}
-#bard.swap .seal{animation:bard-seal .7s ease-in-out}
 /* Without WebGL, or while its shader compiles (.tuning, "Tuning the lute…" pulsing): a plain night
    in the frame; the painting fades in once ready */
 #bard canvas{transition:opacity .8s}
-#bard.tuning canvas{opacity:0}
-#bard.tuning .stage::before{content:"Tuning the lute…";position:absolute;left:0;right:0;top:42%;color:#e9e6ff;font:italic .8rem "Palatino Linotype",Georgia,serif;text-align:center;text-shadow:0 0 8px rgba(var(--glow),.9);animation:bard-tune 1.4s ease-in-out infinite alternate}
+#bard.tuning canvas:not(.ui){opacity:0}
+#bard.tuning .stage::before{content:"Tuning the lute…";position:absolute;left:0;right:0;top:55%;color:#e9e6ff;font:italic .8rem "Palatino Linotype",Georgia,serif;text-align:center;text-shadow:0 0 8px rgba(var(--glow),.9);animation:bard-tune 1.4s ease-in-out infinite alternate}
 @keyframes bard-tune{from{opacity:.35}}
 #bard.flat .stage,#bard.tuning .stage{background:radial-gradient(30% 30% at 22% 75%,rgba(var(--glow),.55),transparent 70%),linear-gradient(#141238,#05040f 70%,#0c1a10 71%)}
 #bard.flat .stage::before{content:"🛡️🪕";position:absolute;right:18%;bottom:18%;font-size:2.4rem}
 @keyframes bard-glow{from{opacity:.45}to{opacity:1}}
 @keyframes bard-flash{0%{opacity:0}12%{opacity:1}100%{opacity:0}}
 @keyframes bard-note{0%{opacity:0;transform:none}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--r))}}
-@keyframes bard-seal{50%{transform:rotate(200deg) scale(.85)}100%{transform:rotate(360deg)}}
-/* Touch: a seal big enough for a finger */
-@media(pointer:coarse){#bard .seal{width:2.75rem;height:2.75rem}}
 /* Phones: a smaller painting (the room under the last card is in screens.css) */
-@media(max-width:640px){#bard{--bw:10.5rem}#bard .scroll{width:96%;min-height:2.1rem}#bard .song b{font-size:.7rem}#bard .song small{font-size:.62rem}}
+@media(max-width:640px){#bard{--bw:10.5rem}}
 /* Reduced motion */
-@media(prefers-reduced-motion:reduce){#bard.tuning .stage::before,#bard .stage::after,#bard.burst .flash,#bard.swap .seal{animation:none}#bard .notes{display:none}#bard .song{transition:none}}
+@media(prefers-reduced-motion:reduce){#bard.tuning .stage::before,#bard .stage::after,#bard.burst .flash{animation:none}#bard .notes{display:none}#bard canvas{transition:none}}
