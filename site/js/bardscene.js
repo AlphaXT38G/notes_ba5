@@ -33,10 +33,10 @@ const bardLute = (() => {
   return { u: glsl(u), v: glsl(v), n: glsl(n) };
 })();
 
-// The camera and the fire, shared with bard.js, which finds where the fire and the knight are in
-// the painting (bardProject) to make them clickable
+// The camera and the fire, shared with bard.js, which finds where the fire is in the painting
+// (bardProject) to make it clickable
 const BARD_CAM = { ro: [-.04, .55, -1.55], ta: [-.04, .37, .3], focal: 1.5 };
-const BARD_FIRE = [-.56, 0, -.2], BARD_KNIGHT = [.31, .45, .44];  // the knight: his chest
+const BARD_FIRE = [-.56, 0, -.2];
 // Where a point of the scene shows, in the painting's units: [x, y] from its centre, in heights
 const bardProject = P => {
   const sub = (a, b) => a.map((c, i) => c - b[i]), dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
