@@ -141,8 +141,15 @@ vec2 knight(vec3 q) {
   float legs = min(sdCone(q, vec3(-.09, .12, .02), kr, .085, .065), sdCone(q, kr, vec3(-.14, .075, .64), .064, .052));
   legs = min(legs, min(sdCone(q, vec3(.09, .12, .02), kl, .085, .065), sdCone(q, kl, vec3(.19, .06, .52), .064, .052)));
   legs = min(legs, min(length(q - kr) - .07, length(q - kl) - .07));
-  legs = min(legs, sdEll(q - vec3(-.14, .1, .68), vec3(.042, .07, .05)));
-  legs = min(legs, sdEll(q - vec3(.19, .075, .56), vec3(.042, .065, .05)));
+  // The feet, in sabatons: a heel, then the foot narrowing to a rounded toe, flattened like a shoe.
+  // The right one stands on its heel, toes up (the leg is stretched out); the left one is flat on
+  // the grass, toes forward.
+  vec3 fr = q - vec3(-.14, 0., 0.);
+  fr.x *= 1.35;
+  legs = min(legs, min(length(q - vec3(-.14, .065, .655)) - .045, sdCone(fr, vec3(0., .07, .67), vec3(-.01, .2, .74), .044, .026)));
+  vec3 fl = q - vec3(.19, 0., 0.);
+  fl.y = (fl.y - .035) * 1.5 + .035;
+  legs = min(legs, min(length(q - vec3(.19, .05, .53)) - .045, sdCone(fl, vec3(0., .035, .54), vec3(.015, .035, .7), .044, .026)));
   r = un(r, vec2(legs, 3.));
   // Arms: the right hand strums over the soundboard (uStrum, across the strings), the left one
   // holds the neck (uFret, along it); elbows out, with couters and gauntlets
