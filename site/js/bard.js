@@ -329,56 +329,101 @@ const bardDrawUI = now => {
   }
   bardUx.putImageData(t.img, 0, 0);
 };
-// ── The parchment of the next song, in pixel art too (one of its pixels, BARD_PIXEL CSS pixels):
-// old paper in three tones with a few blotches and stains, ragged edges burnt brown, the name in
-// faded brown ink, on one line or two. Its random draws are seeded by the name, so that it always
-// looks the same. Its lower part is hidden behind the frame.
+// ── The parchment of the next song, in pixel art too (one of its pixels, BARD_PIXEL CSS pixels,
+// kept straight on the screen: a pixel grid turned by CSS goes jagged): old paper in a few soft
+// tones, a stain or two away from the writing, ragged edges burnt brown; the name in capitals of a
+// larger hand-drawn font (7 pixels high, the title's 5 would be too cramped here), in solid brown
+// ink that bleeds a shade into the paper below each stroke, on one line or two. Its random draws
+// are seeded by the name, so that it always looks the same. Its lower part is hidden behind the
+// frame.
+const BARD_INK_FONT = (() => {
+  const src = {
+    A: "01110 10001 10001 11111 10001 10001 10001", B: "11110 10001 10001 11110 10001 10001 11110",
+    C: "01110 10001 10000 10000 10000 10001 01110", D: "11110 10001 10001 10001 10001 10001 11110",
+    E: "11111 10000 10000 11110 10000 10000 11111", F: "11111 10000 10000 11110 10000 10000 10000",
+    G: "01110 10001 10000 10111 10001 10001 01111", H: "10001 10001 10001 11111 10001 10001 10001",
+    I: "111 010 010 010 010 010 111", J: "00111 00010 00010 00010 00010 10010 01100",
+    K: "10001 10010 10100 11000 10100 10010 10001", L: "10000 10000 10000 10000 10000 10000 11111",
+    M: "10001 11011 10101 10101 10001 10001 10001", N: "10001 10001 11001 10101 10011 10001 10001",
+    O: "01110 10001 10001 10001 10001 10001 01110", P: "11110 10001 10001 11110 10000 10000 10000",
+    Q: "01110 10001 10001 10001 10101 10010 01101", R: "11110 10001 10001 11110 10100 10010 10001",
+    S: "01111 10000 10000 01110 00001 00001 11110", T: "11111 00100 00100 00100 00100 00100 00100",
+    U: "10001 10001 10001 10001 10001 10001 01110", V: "10001 10001 10001 10001 10001 01010 00100",
+    W: "10001 10001 10001 10101 10101 10101 01010", X: "10001 10001 01010 00100 01010 10001 10001",
+    Y: "10001 10001 01010 00100 00100 00100 00100", Z: "11111 00001 00010 00100 01000 10000 11111",
+    " ": "000 000 000 000 000 000 000",
+  };
+  const font = {};
+  Object.keys(src).forEach(k => { font[k] = src[k].split(" "); });
+  return font;
+})();
 let bardSlipFor = null;
 const bardSlipArt = song => {
   bardSlipFor = song;
   const canvas = bardNextBtn.querySelector("canvas"), c = canvas.getContext("2d");
   let seed = [...song.name].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7);
   const rand = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
-  const glyph = ch => BARD_FONT[ch] || BARD_FONT[" "];
+  const glyph = ch => BARD_INK_FONT[ch] || BARD_INK_FONT[" "];
   const width = text => [...text].reduce((w, ch) => w + glyph(ch)[0].length + 1, -1);
   const words = song.name.toUpperCase().split(" ");
   let lines = [words.join(" ")];
-  if (width(lines[0]) > 46 && words.length > 1) {
+  if (width(lines[0]) > 62 && words.length > 1) {
     const half = Math.ceil(words.length / 2);
     lines = [words.slice(0, half).join(" "), words.slice(half).join(" ")];
   }
-  const tw = Math.max(...lines.map(width));
-  const W = tw + 12, H = lines.length * 7 + 15;
+  const tw = Math.max(...lines.map(width)), textH = lines.length * 10 - 3;
+  const W = tw + 16, H = textH + 18, ty = 6;  // the writing from ty to ty + textH, the rest hidden
   canvas.width = W; canvas.height = H;
   canvas.style.width = `${W * BARD_PIXEL}px`; canvas.style.height = `${H * BARD_PIXEL}px`;
-  // The ragged outline: how far each column / row is eaten in from the edge
-  const top = [], bottom = [], left = [], right = [];
-  for (let x = 0; x < W; x++) { top.push(Math.floor(rand() * 2.2)); bottom.push(Math.floor(rand() * 2.2)); }
-  for (let y = 0; y < H; y++) { left.push(Math.floor(rand() * 2.2)); right.push(Math.floor(rand() * 2.2)); }
-  const stains = [0, 1].map(() => [2 + rand() * (W - 4), 3 + rand() * (H - 6), 1.5 + rand() * 2.5]);
+  // The ragged outline: how far each column / row is eaten in from the edge, in short runs
+  const ragged = n => {
+    const a = [];
+    let v = 0;
+    for (let k = 0; k < n; k++) { if (rand() < .35) v = Math.floor(rand() * 3); a.push(v); }
+    return a;
+  };
+  const top = ragged(W), bottom = ragged(W), left = ragged(H), right = ragged(H);
+  // Stains, kept off the writing
+  const stains = [];
+  while (stains.length < 2) {
+    const st = [3 + rand() * (W - 6), 2 + rand() * (H - 4), 1.6 + rand() * 2];
+    if (st[1] + st[2] < ty - 1 || st[1] - st[2] > ty + textH + 1 || st[0] + st[2] < 6 || st[0] - st[2] > W - 6) stains.push(st);
+    else if (rand() < .1) stains.push([2, H - 3, 1.5]);
+  }
+  const PAPER = [[236, 219, 172], [224, 202, 150], [208, 182, 126]];
   const img = c.createImageData(W, H), d = img.data;
-  const set = (x, y, rgb, a) => { const o = (y * W + x) * 4; d[o] = rgb[0]; d[o + 1] = rgb[1]; d[o + 2] = rgb[2]; d[o + 3] = a; };
+  const set = (x, y, rgb) => { const o = (y * W + x) * 4; d[o] = rgb[0]; d[o + 1] = rgb[1]; d[o + 2] = rgb[2]; d[o + 3] = 255; };
+  const get = (x, y) => { const o = (y * W + x) * 4; return d[o + 3] ? [d[o], d[o + 1], d[o + 2]] : null; };
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     const edge = Math.min(y - top[x], H - 1 - y - bottom[x], x - left[y], W - 1 - x - right[y]);
     if (edge < 0) continue;
-    const blotch = Math.sin(x * .45 + y * .2) + Math.sin(y * .7 - x * .15 + 2) + rand() * 1.6;
-    let rgb = blotch > 1.7 ? [233, 214, 165] : blotch > .2 ? [217, 192, 138] : [199, 168, 109];
-    if (stains.some(([sx, sy, r]) => Math.hypot(x - sx, y - sy) < r)) rgb = [188, 152, 94];
-    if (edge === 0) rgb = rand() < .7 ? [92, 56, 26] : [128, 86, 44];        // burnt
-    else if (edge === 1) rgb = rand() < .5 ? [160, 118, 66] : [182, 146, 90];  // scorched
-    set(x, y, rgb, 255);
+    // soft tones: broad waves, a little grain, cleaner where the name is written
+    const inText = y >= ty - 2 && y <= ty + textH + 1;
+    const tone = Math.sin(x * .21 + y * .13) * .8 + Math.sin(y * .35 - x * .09 + 2) * .6 + (rand() - .5) * (inText ? .3 : .9);
+    let rgb = PAPER[tone > .55 ? 0 : tone > -.6 ? 1 : 2];
+    if (stains.some(([sx, sy, r]) => Math.hypot(x - sx, y - sy) < r)) rgb = [190, 158, 100];
+    if (edge === 0) rgb = rand() < .75 ? [96, 58, 28] : [126, 84, 42];        // burnt
+    else if (edge === 1) rgb = rand() < .5 ? [168, 126, 72] : [186, 150, 94];  // scorched
+    else if (edge === 2 && rand() < .4) rgb = [198, 168, 112];
+    set(x, y, rgb);
   }
-  // The name, in faded ink
-  let y = 4;
+  // The name: the ink's bleed first (a shade darker, one pixel down), then the ink itself
+  const ink = [];
+  let y = ty;
   lines.forEach(line => {
     let x = Math.round((W - width(line)) / 2);
     [...line].forEach(ch => {
       const rows = glyph(ch);
-      rows.forEach((row, j) => [...row].forEach((v, i) => { if (v === "#") set(x + i, y + j, rand() < .8 ? [58, 34, 16] : [96, 62, 32], 255); }));
+      rows.forEach((row, j) => [...row].forEach((v, i) => { if (v === "1") ink.push([x + i, y + j]); }));
       x += rows[0].length + 1;
     });
-    y += 7;
+    y += 10;
   });
+  ink.forEach(([x, yy]) => {
+    const under = get(x, yy + 1);
+    if (under) set(x, yy + 1, under.map(v => Math.round(v * .86)));
+  });
+  ink.forEach(([x, yy]) => set(x, yy, [52, 30, 14]));
   c.putImageData(img, 0, 0);
 };
 

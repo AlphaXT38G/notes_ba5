@@ -20,15 +20,16 @@
 #bard.burst .flash{animation:bard-flash 1.1s ease-out}
 #bard .notes{position:absolute;left:0;right:0;bottom:30%;pointer-events:none}
 #bard .notes i{position:absolute;bottom:0;color:rgb(var(--glow));font:normal 1.3rem Georgia,serif;text-shadow:0 0 8px rgba(var(--glow),.9);opacity:0;animation:bard-note 1.7s ease-out both}
-/* The parchment of the next song (drawn in pixels by js/bard.js), leaning behind the painting's
-   top right corner like the next tape's case behind the cassette deck: only its top, with the name,
+/* The parchment of the next song (drawn in pixels by js/bard.js), standing behind the painting's
+   top right corner like the next tape's case behind the cassette deck (kept straight: a pixel grid
+   turned goes jagged): only its top, with the name,
    peeks out above the frame. It rises under the pointer; during a song change it sinks behind the
    frame and comes back up with the following name. */
-#bard .slip{position:absolute;right:1.4rem;bottom:calc(100% - .35rem);z-index:-1;padding:0;background:none;border:0;cursor:pointer;transform:rotate(5deg);transform-origin:50% 100%;filter:drop-shadow(0 3px 5px rgba(0,0,0,.55));transition:transform .35s cubic-bezier(.3,.7,.4,1.3)}
-#bard .slip canvas{display:block}
-#bard .slip:hover,#bard .slip:focus-visible{transform:rotate(2deg) translateY(-.45rem)}
+#bard .slip{position:absolute;right:1.4rem;bottom:calc(100% - .35rem);z-index:-1;padding:0;background:none;border:0;cursor:pointer;filter:drop-shadow(0 3px 5px rgba(0,0,0,.55));transition:transform .35s cubic-bezier(.3,.7,.4,1.3)}
+#bard .slip canvas{display:block;image-rendering:crisp-edges;image-rendering:pixelated}
+#bard .slip:hover,#bard .slip:focus-visible{transform:translateY(-8px)}
 #bard .slip:focus-visible{outline:2px solid rgba(var(--glow),.9);outline-offset:3px}
-#bard.swap .slip{transform:rotate(5deg) translateY(110%);transition-duration:.45s}
+#bard.swap .slip{transform:translateY(110%);transition-duration:.45s}
 /* Without WebGL, or while its shader compiles (.tuning, "Tuning the lute…" pulsing): a plain night
    in the frame; the painting fades in once ready */
 #bard canvas{transition:opacity .8s}
