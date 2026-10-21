@@ -2,9 +2,10 @@
 // The finale's music player: a knight playing the lute, sitting in the grass against a mossy
 // boulder by a campfire, a little pixel art painting in the bottom left corner (his scene is
 // ray-marched in bardscene.js, css/bard.css). It replaces the metal show's amp when the finale
-// takes over. The song's title is lettered in pixels in the bottom right corner of the painting,
-// and its two controls are inked on a scrap of parchment slipped behind it, askew, sticking out
-// at its bottom right corner: play / pause (or sound, while muted) and the next song.
+// takes over. The song's title is lettered in pixels in the bottom right corner of the painting.
+// As the next tape waits in its case behind the day's cassette deck, the next song waits on a
+// scrap of old parchment leaning behind the painting, its name inked in pixels on the part that
+// peeks out above the frame: clicking it changes the song. Clicking the knight plays / pauses.
 // The finale has two songs (BARD_SONGS), each with its mood in the scene: the Two Steps From Hell
 // mix (audio/epic.mp3: blue arcane fire, blue motes) and Dragonborn, the theme of Skyrim
 // (audio/dragonborn.mp3: a red fire, a starry night, a dragon crossing the moon). When one ends
@@ -13,8 +14,8 @@
 // dozes, chin down, and the fire burns lower. A song change is a little show (bardNext): he stops
 // and looks up at the fire, strums a flourish (a chord plucked with Web Audio), the fire is drawn
 // in, then bursts in the new song's colour, a shock wave runs over the grass, the title dissolves
-// pixel by pixel and the new one appears, and the new song starts. The painting itself answers
-// too: a click on the knight plays / pauses, on the fire changes the song.
+// pixel by pixel and the new one appears, the parchment dips behind the frame and comes back with
+// the following song's name, and the new song starts. A click on the fire changes the song too.
 // As the other screens' music, the song autoplays muted when the page has had no gesture yet, and
 // the sound comes on at the first click or key press anywhere.
 const BARD_SONGS = [
@@ -33,15 +34,10 @@ const epicMuted = () => !!epicRiff && epicRiff.muted;
 const bard = document.createElement("div");
 bard.id = "bard";
 bard.innerHTML = '<div class="stage"><canvas class="ui"></canvas><span class="flash"></span><span class="notes"></span></div>' +
-  '<div class="slip"><div class="paper"><button type="button" class="toggle">' +
-  // the glyphs, as if inked with a quill: pause, play, sound off (one shows, css/bard.css), next
-  '<svg class="i-pause" viewBox="0 0 24 24"><path d="M9.2 5.5c-.5 4.3-.3 8.6.1 13M14.9 5.5c.4 4.4.3 8.7-.1 13"/></svg>' +
-  '<svg class="i-play" viewBox="0 0 24 24"><path class="ink" d="M7.6 5.2c3.9 2 7.5 4.3 10.9 6.9-3.4 2.4-7 4.6-10.8 6.7-.4-4.6-.4-9.1-.1-13.6z"/></svg>' +
-  '<svg class="i-sound" viewBox="0 0 24 24"><path class="ink" d="M3.8 9.4h3.6l4.8-3.8v12.8l-4.8-3.8H3.8z"/><path d="M15.6 9.2l5 5.6M20.6 9.2l-5 5.6"/></svg>' +
-  '</button><button type="button" class="next"><svg viewBox="0 0 24 24"><path d="M5.5 6.2c2.2 1.8 4.2 3.7 6 5.8-1.8 2-3.8 3.9-6 5.8M12.3 6.2c2.2 1.8 4.2 3.7 6 5.8-1.8 2-3.8 3.9-6 5.8"/></svg></button></div></div>' +
+  '<button type="button" class="slip"><canvas></canvas></button><button type="button" class="sr toggle"></button>' +
   '<span class="sr" aria-live="polite"></span>';
 const bardStage = bard.querySelector(".stage"), bardUI = bard.querySelector(".ui"), bardUx = bardUI.getContext("2d");
-const bardToggleBtn = bard.querySelector(".toggle"), bardNextBtn = bard.querySelector(".next"), bardSay = bard.querySelector("span.sr");
+const bardToggleBtn = bard.querySelector(".toggle"), bardNextBtn = bard.querySelector(".slip"), bardSay = bard.querySelector("span.sr");
 let bardShown = bardSong;  // the song whose title is written (changed halfway through a change)
 let bardHover = null;      // what the pointer is over: "fire", "knight" or null
 
@@ -49,12 +45,13 @@ const paintBard = () => {
   const song = BARD_SONGS[bardShown], next = BARD_SONGS[(bardSong + 1) % BARD_SONGS.length];
   const toggle = !epicPlaying ? "Play the music" : epicMuted() ? "Turn the sound on" : "Pause the music";
   bard.classList.toggle("playing", epicPlaying);
-  bard.classList.toggle("muted", epicMuted());
   bard.classList.toggle("mood-1", song.mood === 1);
-  bardToggleBtn.title = toggle;
-  bardToggleBtn.setAttribute("aria-label", `${toggle} (${song.name})`);
-  bardNextBtn.title = `Next song: ${next.name}`;
+  bardToggleBtn.textContent = `${toggle} (${song.name})`;
+  // the parchment names the song that comes after the one shown (it changes while it is hidden)
+  const after = BARD_SONGS[(bardShown + 1) % BARD_SONGS.length];
+  bardNextBtn.title = `Next song: ${after.name}`;
   bardNextBtn.setAttribute("aria-label", bardNextBtn.title);
+  if (bardSlipFor !== after) bardSlipArt(after);
   // the tooltip says what a click does where the pointer is
   bardStage.title = bardHover === "fire" ? `The fire: next song (${next.name})` : `The knight: ${toggle.toLowerCase()} · the fire: next song`;
 };
@@ -332,6 +329,59 @@ const bardDrawUI = now => {
   }
   bardUx.putImageData(t.img, 0, 0);
 };
+// ── The parchment of the next song, in pixel art too (one of its pixels, BARD_PIXEL CSS pixels):
+// old paper in three tones with a few blotches and stains, ragged edges burnt brown, the name in
+// faded brown ink, on one line or two. Its random draws are seeded by the name, so that it always
+// looks the same. Its lower part is hidden behind the frame.
+let bardSlipFor = null;
+const bardSlipArt = song => {
+  bardSlipFor = song;
+  const canvas = bardNextBtn.querySelector("canvas"), c = canvas.getContext("2d");
+  let seed = [...song.name].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7);
+  const rand = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+  const glyph = ch => BARD_FONT[ch] || BARD_FONT[" "];
+  const width = text => [...text].reduce((w, ch) => w + glyph(ch)[0].length + 1, -1);
+  const words = song.name.toUpperCase().split(" ");
+  let lines = [words.join(" ")];
+  if (width(lines[0]) > 46 && words.length > 1) {
+    const half = Math.ceil(words.length / 2);
+    lines = [words.slice(0, half).join(" "), words.slice(half).join(" ")];
+  }
+  const tw = Math.max(...lines.map(width));
+  const W = tw + 12, H = lines.length * 7 + 15;
+  canvas.width = W; canvas.height = H;
+  canvas.style.width = `${W * BARD_PIXEL}px`; canvas.style.height = `${H * BARD_PIXEL}px`;
+  // The ragged outline: how far each column / row is eaten in from the edge
+  const top = [], bottom = [], left = [], right = [];
+  for (let x = 0; x < W; x++) { top.push(Math.floor(rand() * 2.2)); bottom.push(Math.floor(rand() * 2.2)); }
+  for (let y = 0; y < H; y++) { left.push(Math.floor(rand() * 2.2)); right.push(Math.floor(rand() * 2.2)); }
+  const stains = [0, 1].map(() => [2 + rand() * (W - 4), 3 + rand() * (H - 6), 1.5 + rand() * 2.5]);
+  const img = c.createImageData(W, H), d = img.data;
+  const set = (x, y, rgb, a) => { const o = (y * W + x) * 4; d[o] = rgb[0]; d[o + 1] = rgb[1]; d[o + 2] = rgb[2]; d[o + 3] = a; };
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const edge = Math.min(y - top[x], H - 1 - y - bottom[x], x - left[y], W - 1 - x - right[y]);
+    if (edge < 0) continue;
+    const blotch = Math.sin(x * .45 + y * .2) + Math.sin(y * .7 - x * .15 + 2) + rand() * 1.6;
+    let rgb = blotch > 1.7 ? [233, 214, 165] : blotch > .2 ? [217, 192, 138] : [199, 168, 109];
+    if (stains.some(([sx, sy, r]) => Math.hypot(x - sx, y - sy) < r)) rgb = [188, 152, 94];
+    if (edge === 0) rgb = rand() < .7 ? [92, 56, 26] : [128, 86, 44];        // burnt
+    else if (edge === 1) rgb = rand() < .5 ? [160, 118, 66] : [182, 146, 90];  // scorched
+    set(x, y, rgb, 255);
+  }
+  // The name, in faded ink
+  let y = 4;
+  lines.forEach(line => {
+    let x = Math.round((W - width(line)) / 2);
+    [...line].forEach(ch => {
+      const rows = glyph(ch);
+      rows.forEach((row, j) => [...row].forEach((v, i) => { if (v === "#") set(x + i, y + j, rand() < .8 ? [58, 34, 16] : [96, 62, 32], 255); }));
+      x += rows[0].length + 1;
+    });
+    y += 7;
+  });
+  c.putImageData(img, 0, 0);
+};
+
 // The UI's canvas has the painting's size (or the frame's, in painting pixels, without WebGL)
 const bardUISize = () => {
   const box = bardStage.getBoundingClientRect();
