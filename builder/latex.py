@@ -5,7 +5,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from .config import DIST, ROOT
+from .config import CONFIG, DIST, ROOT
 from .log import BOLD, RESET, err, info, ok
 
 # ── Weekly notes written as chapters ─────────────────────────────────────────
@@ -41,6 +41,9 @@ def week_documents(subject_dir):
     Same preamble as course.tex, then that week's chapters. The chapter counter starts where
     it is in the full course, so "Week2 : Part A" stays chapter 3 like in course.pdf.
     """
+    subject = next((s for s in CONFIG if s["id"] == subject_dir.name), {})
+    if not subject.get("week_pdfs", True):  # the weeks stay chapters of course.pdf, no duplicate PDFs
+        return []
     parts = course_weeks(subject_dir)
     if not parts:
         return []

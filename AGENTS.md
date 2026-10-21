@@ -40,7 +40,7 @@ site/                 the index page (HTML, CSS, JS inlined into one dist/index.
                         (his fifth button)
 tools/bartender/      remakes the bartender's layers from source.webp (open it through a local
                       server, see below): cut-out, joints, bar counter and desk bell
-subjects.json         subjects: id, display name, exam rules, optional "weeks" and "color"
+subjects.json         subjects: id, display name, exam rules, optional "weeks", "week_pdfs" and "color"
 <subject>/            course.tex, cheatsheet.tex, week/NN.tex (chapters), extra PDFs...
 _shared/              course.sty and cheatsheet.sty, shared by every course / cheat sheet
 dist/                 build output (git-ignored): PDFs, previews, index.html
@@ -366,14 +366,16 @@ Android WebViews). One syntax they do not know makes the browser reject a whole 
 
 ## LaTeX notes
 
-- Weekly notes are chapters `\input` by `course.tex`, not standalone documents: compsec's are
-  `week/01.tex`, `02.tex`... (one chapter per week, no `\documentclass`), swent's are
-  `weeks/week1a.tex`, `week1b.tex`... (several parts per week; name new ones `weekN` + optional
-  letter). `builder/latex.py` builds one PDF per week from generated `_weekNN.tex` files
-  (git-ignored: the course preamble plus that week's parts), published as `week/NN.pdf`. Those
-  PDFs appear in the "weekly notes" section of their subject, with a progress bar (`"weeks"` in
-  `subjects.json` sets its length, 14 by default). Only PDFs in a `week/` folder count as weekly
-  notes. A standalone document (with a `\documentclass`) is compiled on its own whatever its folder.
+- A course can be split into chapters `\input` by `course.tex`: compsec's are `week/01.tex`,
+  `02.tex`... (one lecture per file, no `\documentclass`), swent's `weeks/week1a.tex`,
+  `week1b.tex`... (several parts per week; name new ones `weekN` + optional letter). Unless the
+  subject says `"week_pdfs": false` in `subjects.json` (compsec: it would only repeat
+  `course.pdf`), `builder/latex.py` also builds one PDF per week from generated `_weekNN.tex`
+  files (git-ignored: the course preamble plus that week's parts), published as `week/NN.pdf`.
+- The "weekly notes" section of a card lists the PDFs of a `week/` or `notes/` folder named `NN`
+  or `weekNN` (`weekly()` in `builder/config.py`), with a progress bar (`"weeks"` in
+  `subjects.json` sets its length, 14 by default). compsec's weekly notes are the standalone
+  documents of `compsec/notes/` (`weekNN.tex`, each with its own `\documentclass`).
 - Courses and cheat sheets load `_shared/course.sty` / `_shared/cheatsheet.sty` (layout, boxes,
   footer with the repository link). Change the look of all of them there.
 - A PDF without a matching `.tex` (e.g. `respsoft/cheatsheets/*.pdf`) is copied as is.

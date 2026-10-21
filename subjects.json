@@ -1,5 +1,5 @@
 [
-  {"id": "compsec",  "name": "Computer security and privacy",                    "exam": ""},
+  {"id": "compsec",  "name": "Computer security and privacy",                    "exam": "", "week_pdfs": false},
   {"id": "swent",    "name": "The software enterprise - from ideas to products", "exam": ""},
   {"id": "modstoc",  "name": "Modèles stochastiques pour les communications",    "exam": ""},
   {"id": "nummet",   "name": "Numerical methods for visual computing and ML",    "exam": ""},

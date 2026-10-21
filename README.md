@@ -27,12 +27,13 @@ Put `course.tex` / `cheatsheet.tex` in `<id>/` and rebuild; the page updates its
 
 Every standalone `.tex` in `<id>/` and its subfolders (those with a `\documentclass`) is
 compiled, and PDFs without a matching `.tex` (e.g. `cheatsheets/*.pdf`) are copied
-as is. Weekly notes are chapters of `course.tex`, not standalone documents: compsec's are
-`week/01.tex`, `02.tex`, ... and swent's are `weeks/week1a.tex`, `week1b.tex`, ... (several parts
-per week). The build also turns each week into its own PDF (`week/NN.pdf`) from a generated
-`_weekNN.tex` (git-ignored), so they show up in the weekly notes section.
+as is. A course can be split into one file per lecture: `course.tex` then `\input`s
+chapters with no `\documentclass` (compsec's `week/01.tex`, `02.tex`, ...; swent's
+`weeks/week1a.tex`, ...). For some subjects the build also turns each week into its own PDF
+(`week/NN.pdf`, from a generated `_weekNN.tex`, git-ignored); compsec opts out
+(`"week_pdfs": false`), since those PDFs would repeat the course notes.
 
-On the page, the course notes come first, then two collapsible sections: weekly notes (the `week/NN.pdf` built from the course's chapters, with a semester progress bar) and every other
+On the page, the course notes come first, then two collapsible sections: weekly notes (PDFs named `weekNN` in a `notes/` folder, or the per-week PDFs above, with a semester progress bar) and every other
 PDF, grouped by folder. Dates come from the last commit touching each document,
 and documents changed in the last 4 days get a "New" badge (the site is rebuilt
 every day, so the badges expire even without a push).
@@ -40,6 +41,7 @@ every day, so the badges expire even without a push).
 Optional keys per subject in `subjects.json`:
 
 - `"weeks"`: length of the progress bar (default 14)
+- `"week_pdfs"`: `false` to not build one PDF per week from the chapters of `course.tex` (default true)
 - `"color"`: accent colour of the subject card (default: taken from a palette)
 
 The page also has a search field, a light/dark toggle and a flame mode 🔥. It works
