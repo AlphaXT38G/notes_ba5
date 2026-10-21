@@ -3,7 +3,7 @@
 // epic finale, summoned in the last seconds of the show, which takes over right when the metal
 // ends (css/epic.css): a blue and violet fantasy night with blue fire on the effects canvas
 // (fx.js), and its music played by a knight with a lute by a campfire (bard.js). It lasts until
-// its "Back to normal" button is clicked.
+// its "Back to normal" button is clicked. The kamelot code (below) opens it at any time.
 let epicQueued = false, epicAt = 0;  // epicAt: when it started (0 = not running)
 SCREENS.epic = { className: "epic", subtitle: "Behold… more epicness.", transition: "epic" };
 OVERRIDES.push(phase => {  // runs after the metal override (metal.js is loaded first)
@@ -294,6 +294,24 @@ leaveBtn.addEventListener("click", e => {
   applyScreen();
 });
 const setLeave = on => on ? document.body.append(leaveBtn) : leaveBtn.remove();
+// ── Kamelot code (easter egg: the epic finale at any time) ──
+// Typing k a m e l o t (outside the search field), like armstrong, opens the epic finale at once,
+// whatever the time and the screen (its override comes after the metal one, so it wins over the
+// shows too). It lasts like the finale after a metal show; typed again in it, it does what
+// "Back to normal" does. Typing is a gesture, so its music plays with sound at once.
+const KAMELOT = [..."kamelot"];
+let kamelotPos = 0;  // how many letters of the word have been typed so far
+document.addEventListener("keydown", e => {
+  if (e.target.matches("input")) return;  // typing in the search field never triggers it
+  const k = e.key.toLowerCase();
+  kamelotPos = k === KAMELOT[kamelotPos] ? kamelotPos + 1 : (k === KAMELOT[0] ? 1 : 0);
+  if (kamelotPos !== KAMELOT.length) return;
+  kamelotPos = 0;
+  if (epicAt || document.body.dataset.phase === "epic") { leaveBtn.click(); return; }  // even mid-transition
+  epicQueued = false;
+  epicAt = Date.now();
+  applyScreen();
+});
 setLeave(document.body.classList.contains("epic"));
 document.addEventListener("epic", e => setLeave(e.detail));
 
