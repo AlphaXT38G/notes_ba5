@@ -9,12 +9,12 @@
 //     so the plates show the fire, the grass and the sky
 //   - ambient occlusion darkens the creases (under the arms, where he leans on the rock)
 //   - the flames are a sheet of moving noise facing the camera, with sparks rising from them
-//   - the sky: stars, the moon, two rows of fir trees, and for Dragonborn an aurora, falling snow
-//     and a dragon crossing the moon from time to time
+//   - the sky: stars, the moon, two rows of fir trees, and for Dragonborn a starry night with the
+//     Milky Way and a dragon crossing the moon from time to time
 // Then the colours are tone mapped and posterised with ordered (Bayer) dithering at a low
 // resolution, shown with crisp pixels (css/bard.css): the look of a pixel art painting.
 // Two moods, mixed by uMood: 0 is the arcane night of the epic mix (blue fire, blue motes),
-// 1 is Dragonborn (orange fire, snow on the ground and the boulder, aurora, the dragon).
+// 1 is Dragonborn (a red fire, a starry night and the Milky Way, the dragon).
 // createBardScene(canvas) returns null without WebGL (bard.js then shows a plain frame); else
 // { render(values), resize(scale), ready() }, values being the animated uniforms (see
 // BARD_UNIFORMS), ready() saying "compiling", "ready" or "failed".
@@ -33,6 +33,21 @@ const bardLute = (() => {
   return { u: glsl(u), v: glsl(v), n: glsl(n) };
 })();
 
+// The camera and the fire, shared with bard.js, which finds where the fire and the knight are in
+// the painting (bardProject) to make them clickable
+const BARD_CAM = { ro: [-.04, .55, -1.55], ta: [-.04, .37, .3], focal: 1.5 };
+const BARD_FIRE = [-.56, 0, -.2], BARD_KNIGHT = [.31, .45, .44];  // the knight: his chest
+// Where a point of the scene shows, in the painting's units: [x, y] from its centre, in heights
+const bardProject = P => {
+  const sub = (a, b) => a.map((c, i) => c - b[i]), dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const norm = a => { const l = Math.sqrt(dot(a, a)); return a.map(c => c / l); };
+  const cw = norm(sub(BARD_CAM.ta, BARD_CAM.ro)), cu = norm([cw[2], 0, -cw[0]]);
+  const cv = [cw[1] * cu[2] - cw[2] * cu[1], cw[2] * cu[0] - cw[0] * cu[2], cw[0] * cu[1] - cw[1] * cu[0]];
+  const d = sub(P, BARD_CAM.ro), z = dot(d, cw);
+  return [dot(d, cu) / z * BARD_CAM.focal, dot(d, cv) / z * BARD_CAM.focal];
+};
+const bardVec = a => `vec3(${a.join(", ")})`;
+
 // uTime: seconds; uMood: 0 epic mix, 1 Dragonborn; uPlay: how much he plays (0 still, 1 playing);
 // uStrum: the right hand across the strings (-1 to 1); uFret: the left hand along the neck;
 // uPitch / uYaw: his head (chin down < 0 < looking up, his right < 0 < his left); uFlare: the fire
@@ -49,7 +64,7 @@ uniform float uTime, uMood, uPlay, uStrum, uFret, uPitch, uYaw, uFlare, uRing;
 const vec3 KNIGHT = vec3(.22, 0., .32);
 const vec3 KF = vec3(-.6, 0., -.8);
 const vec3 KX = vec3(-.8, 0., .6);
-const vec3 FIRE = vec3(-.56, 0., -.2);
+const vec3 FIRE = ${bardVec(BARD_FIRE)};
 const vec3 ROCK = vec3(.62, .3, .86);
 const vec3 MOON = vec3(-.3613, .1305, .9232);  // normalised      // towards the moon, behind them on the left
 const vec3 LU = ${bardLute.u}, LV = ${bardLute.v}, LN = ${bardLute.n};  // the lute: neck, across, soundboard
@@ -131,15 +146,30 @@ vec2 knight(vec3 q) {
   r = un(r, vec2(legs, 3.));
   // Arms: the right hand strums over the soundboard (uStrum, across the strings), the left one
   // holds the neck (uFret, along it); elbows out, with couters and gauntlets
-  vec3 hr = LC + LV * (.015 + .04 * uStrum) + LN * .07 - LU * .035;
-  vec3 hl = LC + LU * (.32 + uFret) - LN * .015 - LV * .025;
+  vec3 hr = LC + LV * (.03 + .04 * uStrum) + LN * .05 - LU * .035;
+  vec3 hl = LC + LU * (.32 + uFret) - LN * .012 - LV * .036;
   vec3 sr = vec3(-.19, .55, -.19), sl = vec3(.19, .55, -.19);
   vec3 er = mix(sr, hr, .5) + vec3(-.11, -.09, -.03), el = mix(sl, hl, .5) + vec3(.11, -.1, .02);
-  float arms = min(sdCone(q, sr, er, .056, .05), sdCone(q, er, hr, .05, .042));
-  arms = min(arms, min(sdCone(q, sl, el, .056, .05), sdCone(q, el, hl, .05, .042)));
+  // the forearms stop at the wrists, so that the hands show (below)
+  vec3 wr = hr + LV * .034 + LN * .006, wl = hl - LV * .034 - LN * .004;
+  float arms = min(sdCone(q, sr, er, .056, .05), sdCone(q, er, wr, .05, .036));
+  arms = min(arms, min(sdCone(q, sl, el, .056, .05), sdCone(q, el, wl, .05, .036)));
   arms = min(arms, min(length(q - er) - .058, length(q - el) - .058));
-  arms = min(arms, min(sdEll(q - hr, vec3(.045, .036, .05)), sdEll(q - hl, vec3(.04, .045, .04))));
   r = un(r, vec2(arms, 3.));
+  // The hands, in steel gauntlets: a palm, four fingers (one finger repeated) and a thumb. The
+  // right one over the strings, fingers pointing across them and curled onto the soundboard; the
+  // left one under the neck, its fingers wrapped over it. In a loop, written out once.
+  for (int k = ZERO; k < 2; k++) {
+    bool right = k == 0;
+    vec3 a = right ? -LV : LV, c = right ? LN : -LN, x = q - (right ? hr : hl);  // fingers, back of the hand
+    vec3 hp = vec3(dot(x, LU), dot(x, a), dot(x, c));
+    float hand = sdBox(hp, vec3(.027, .024, .011), .01);
+    vec3 f = hp;
+    f.x -= clamp(floor((f.x + .021) / .014 + .5), 0., 3.) * .014 - .021;
+    hand = min(hand, sdCone(f, vec3(0., .03, 0.), vec3(0., .062, -.02), .0095, .008));
+    hand = min(hand, sdCone(hp, vec3(right ? -.028 : .028, 0., .004), vec3(right ? -.03 : .03, .032, -.012), .009, .007));
+    r = un(r, vec2(hand, 3.));
+  }
   // The lute: a pear-shaped bowl cut flat by the soundboard, the neck, and the pegbox bent back
   vec3 l = toLute(q);
   float lute = smin(sdEll(l - vec3(-.03, 0., 0.), vec3(.13, .09, .075)), sdEll(l - vec3(.07, 0., 0.), vec3(.085, .062, .058)), .05);
@@ -218,18 +248,12 @@ vec3 tetra(int k) {
 }
 
 // ── Light ──
-vec3 fireColor() { return mix(vec3(.3, .62, 1.7), vec3(1.7, .72, .26), uMood); }
+vec3 fireColor() { return mix(vec3(.3, .62, 1.7), vec3(1.9, .16, .1), uMood); }
 float fireFlicker() {
   return (1. + .16 * sin(uTime * 11.) + .1 * sin(uTime * 17.3 + 1.) + .1 * sin(uTime * 5.1 + 2.)) * (1. + 1.8 * uFlare);
 }
 vec3 fireLight() { return FIRE + vec3(.02 * sin(uTime * 7.), .3 + .1 * uFlare, .02 * cos(uTime * 6.)); }
 vec3 moonColor() { return mix(vec3(.22, .3, .62), vec3(.3, .38, .55), uMood) * .55; }
-
-// Snow lying on what faces up, in the Dragonborn mood (none close to the fire); nz: a noise at p
-float snowCover(vec3 p, vec3 n, float nz) {
-  float s = smoothstep(.35, .85, n.y) * smoothstep(.25, .6, nz + .2);
-  return s * uMood * smoothstep(.3, .55, length(p.xz - FIRE.xz));
-}
 
 // The colour of each material at p (normal n). Two noises, coarse and fine, are computed once and
 // shared by every material: each noise() written out costs the compiler dearly.
@@ -240,12 +264,10 @@ vec3 albedo(vec3 p, vec3 n, float m) {
     float g = n1, blade = hash2(floor(p.xz * 70.));
     c = mix(vec3(.05, .12, .035), vec3(.14, .27, .07), g) * (.75 + .5 * blade);
     c = mix(c, vec3(.13, .1, .06), smoothstep(.42, .2, length(p.xz - FIRE.xz)));
-    c = mix(c, vec3(.78, .84, .95), snowCover(p, n, n2));
   } else if (m < 2.5) {  // stone, under a coat of moss on its top and its shady side
     float moss = smoothstep(.15, .55, n.y * .7 + n.z * .35 + .55 * n1 - .2);
     c = vec3(.21, .22, .24) * (.6 + .7 * n2);
     c = mix(c, mix(vec3(.06, .17, .04), vec3(.2, .36, .08), n2), moss);
-    c = mix(c, vec3(.8, .86, .96), snowCover(p, n, n1));
   } else if (m < 3.5) {
     c = vec3(.62, .64, .68);
   } else if (m < 4.5) {  // the mantle: deep blue, with folds
@@ -310,19 +332,17 @@ float firs(float az, float k, float seed) {
 }
 vec3 sky(vec3 rd) {
   float el = rd.y, az = atan(rd.x, rd.z);
-  vec3 top = mix(vec3(.008, .008, .035), vec3(.01, .02, .04), uMood);
-  vec3 low = mix(vec3(.07, .05, .2), vec3(.05, .1, .16), uMood);
+  vec3 top = mix(vec3(.008, .008, .035), vec3(.004, .006, .028), uMood);
+  vec3 low = mix(vec3(.07, .05, .2), vec3(.05, .05, .15), uMood);
   vec3 c = mix(low, top, smoothstep(-.05, .5, el));
   // Stars, twinkling
   vec3 sp = rd * 140., cell = floor(sp);
   float h = hash(cell);
-  if (h > .975) c += vec3(.7, .75, 1.) * (h - .975) * 40. * (.6 + .4 * sin(uTime * 3. + h * 90.)) * smoothstep(.03, .2, el) * step(length(fract(sp) - .5), .35);
-  // The aurora of Dragonborn: green curtains swaying
-  if (uMood > .01) {
-    float band = el - .3 - .07 * sin(az * 3. + uTime * .15) - .03 * sin(az * 9. - uTime * .3);
-    float curtain = exp(-band * band * 260.) * (.55 + .45 * sin(az * 26. + uTime * .6 + 3. * sin(az * 5.)));
-    c += vec3(.08, .55, .32) * curtain * .45 * uMood * smoothstep(-.2, .2, band + .1);
-  }
+  // Dragonborn's starry night: the Milky Way across the sky (a band of light, denser in stars)
+  float milky = exp(-pow(dot(rd, vec3(.62, .55, -.56)), 2.) * 60.) * uMood;
+  float few = mix(.975, .93, uMood) - .05 * milky;
+  if (h > few) c += vec3(.7, .75, 1.) * (h - few) * mix(40., 22., uMood) * (.6 + .4 * sin(uTime * 3. + h * 90.)) * smoothstep(.03, .2, el) * step(length(fract(sp) - .5), .35);
+  c += vec3(.16, .13, .26) * milky * (.5 + .5 * hash(floor(rd * 60.))) * smoothstep(0., .15, el);
   // The moon, its halo and its seas
   float md = dot(rd, MOON);
   c += vec3(.25, .3, .55) * pow(max(md, 0.), 300.) * .4 + vec3(.12, .12, .3) * pow(max(md, 0.), 25.) * .22;
@@ -349,8 +369,8 @@ vec3 sky(vec3 rd) {
 // ── The flames: a sheet facing the camera, noise rising through a flame shape ──
 vec3 flamePalette(float heat) {
   vec3 blue = mix(mix(vec3(.25, .08, .6), vec3(.15, .45, 1.3), smoothstep(.1, .45, heat)), vec3(1.4, 1.7, 2.), smoothstep(.5, .95, heat));
-  vec3 gold = mix(mix(vec3(.8, .1, .03), vec3(1.6, .55, .1), smoothstep(.1, .45, heat)), vec3(2., 1.7, .9), smoothstep(.5, .95, heat));
-  return mix(blue, gold, uMood);
+  vec3 red = mix(mix(vec3(.45, .01, .03), vec3(1.5, .07, .04), smoothstep(.1, .45, heat)), vec3(1.9, .55, .3), smoothstep(.6, .95, heat));
+  return mix(blue, red, uMood);
 }
 vec4 flames(vec3 ro, vec3 rd, float tHit) {
   vec3 nf = normalize(vec3(ro.x - FIRE.x, 0., ro.z - FIRE.z));
@@ -364,9 +384,10 @@ vec4 flames(vec3 ro, vec3 rd, float tHit) {
   if (hh < 0. || hh > 1.3 || abs(f.x) > .3) return vec4(0.);
   float n = noise(vec3(f.x * 13., f.y * 8. - uTime * 4.5, uTime * .6));
   float n2 = noise(vec3(f.x * 28., f.y * 20. - uTime * 8., 3.));
-  float w = .13 * (1. + .6 * max(uFlare, 0.)) * pow(max(1. - hh, 0.), .55);
+  // (never a zero width: smoothstep(0, 0, x) is undefined and left a patch of flame above the fire)
+  float w = .13 * (1. + .6 * max(uFlare, 0.)) * pow(max(1. - hh, 0.), .55) + .002;
   float x = f.x + (n - .5) * .09 * hh;
-  float dens = smoothstep(w, w * .15, abs(x)) * smoothstep(1.15, .15, hh + (n2 - .5) * .55);
+  float dens = smoothstep(w, w * .15, abs(x)) * smoothstep(1.15, .15, hh + (n2 - .5) * .55) * smoothstep(1., .8, hh);
   return vec4(flamePalette(dens * (1.15 - hh)) * dens, dens);
 }
 // Sparks rising from the fire (more in a burst), and in the arcane mood blue motes drifting around
@@ -394,9 +415,9 @@ float bayer4(vec2 a) { return bayer2(.5 * a) * .25 + bayer2(a); }
 
 void main() {
   vec2 uv = (gl_FragCoord.xy - .5 * uRes) / uRes.y;
-  vec3 ro = vec3(-.04, .55, -1.55), ta = vec3(-.04, .37, .3);
+  vec3 ro = ${bardVec(BARD_CAM.ro)}, ta = ${bardVec(BARD_CAM.ta)};
   vec3 cw = normalize(ta - ro), cu = normalize(cross(vec3(0., 1., 0.), cw)), cv = cross(cw, cu);
-  vec3 rd = normalize(uv.x * cu + uv.y * cv + 1.5 * cw);
+  vec3 rd = normalize(uv.x * cu + uv.y * cv + ${BARD_CAM.focal.toFixed(2)} * cw);
 
   // Every ray of the pixel is traced in this one loop, one step of map() per turn, so that map()
   // (the whole scene) is written out once in the compiled shader: compilers that copy a function
@@ -493,18 +514,6 @@ void main() {
   vec3 os = fireLight() - ro;
   float ft = dot(os, rd), fd = length(os - rd * ft);
   col += fireColor() * .035 * fireFlicker() / (1. + fd * fd * 30.);
-
-  // Falling snow, two layers (Dragonborn)
-  if (uMood > .01) {
-    vec2 s = gl_FragCoord.xy / uRes.y;
-    for (int k = ZERO; k < 2; k++) {
-      float fk = float(k), sc = 16. + fk * 10.;
-      vec2 g = s * sc + vec2(sin(uTime * .5 + fk) * 1.2 + s.y * 2., uTime * (.9 + fk * .7));
-      vec2 id = floor(g), f = fract(g) - .5;
-      vec2 o = vec2(hash2(id + 3.1 + fk), hash2(id + 5.7)) - .5;
-      if (hash2(id + fk * 7.) > .86) col += vec3(.75, .8, .9) * smoothstep(.2, .06, length(f - o * .6)) * uMood * (.5 + .5 * fk);
-    }
-  }
 
   col *= 1.3;  // exposure
   // Tone mapping, a vignette, then the pixel art look: few colours, ordered dithering
