@@ -96,7 +96,12 @@ rise, the medallion implodes and bursts in a white flash and a shock wave right 
 song ends, with a whoosh and a boom. Instead of going back to the day, the page turns into
 an epic fantasy finale ⚔️:
 a blue and violet night with an aurora, realistic blue fire, embers, floating arcane
-lights and a rune circle, while the amp (now blue) plays Two Steps From Hell in a loop. It lasts
+lights and a rune circle. In the bottom left corner, a little pixel art painting, ray-traced
+live: a knight playing the lute, his back against a mossy boulder, by a campfire whose
+light and shadows play on his armour. He plays Two Steps From Hell, then Dragonborn
+(Skyrim): click him to pause (he dozes off), or the wax seal of the parchment to change the
+song, and watch the fire burst into the new song's colours (blue and arcane, or orange
+under the snow, with an aurora and a dragon crossing the moon). It lasts
 until you click the small **"Back to normal"** button in the bottom right corner, which
 brings back the usual look for the time of day (day, the calm night after the show,
 or the jazz bar at night).
