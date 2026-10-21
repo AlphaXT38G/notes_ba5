@@ -255,6 +255,22 @@ tested many times is \textbf{helpful} for security. The problem is the
 \textbf{isolation of data}.
 \end{warnbox}
 
+\begin{exbox}[title=Two users sharing \texttt{/tmp}]
+Alice and Bob both run programs on a multi-user server, which gives everyone the same
+\texttt{/tmp}.
+\begin{enumerate}
+  \item Alice's program writes a temporary file \texttt{/tmp/report.tmp} containing her
+        private salary data.
+  \item Bob's program looks in \texttt{/tmp}, sees the file, and reads it (or overwrites
+        it, or replaces it with a link to something else).
+\end{enumerate}
+Nobody wrote a bug that says ``let Bob read Alice's data'': \texttt{/tmp} is common to all
+users, hence an \textbf{unintended information path} between them. \\
+\textbf{Better design}: give each user a \textbf{private temp directory} (e.g.\
+\texttt{/tmp/alice-xxxx/} with permissions only for Alice, or a per-user directory). Now
+there is no shared channel to abuse.
+\end{exbox}
+
 \begin{exbox}[title=Symlink attack in \texttt{/tmp}]
 A \textbf{symbolic link} (symlink) is a ``shortcut'' file: when the OS accesses it, it is
 automatically redirected to the real file it points to. \\
