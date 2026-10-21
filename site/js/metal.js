@@ -340,13 +340,6 @@ amp.innerHTML = '<span class="cab"><span class="panel"><span class="logo">BA5</s
   "<i></i>".repeat(5) + '</span></span><span class="grille"><span class="cone"></span><span class="cone"></span></span></span><span class="label"></span>';
 const riffMuted = () => !!riff && riff.muted;
 const paintAmp = () => {
-  if (amp.classList.contains("epic")) {  // the epic finale plays its own song on the same amp
-    amp.classList.toggle("playing", epicPlaying);
-    amp.querySelector(".label").textContent = !epicPlaying ? "✨ Click for epicness"
-      : epicMuted() ? "🔇 Click anywhere for sound" : "✨ Epic — click to pause";
-    amp.title = !epicPlaying ? "Play the music" : epicMuted() ? "Turn the sound on" : "Pause the music";
-    return;
-  }
   amp.classList.toggle("playing", rocking);
   // which of the three plays is on (a forced show plays it forever: no count)
   const count = metalLeft() === Infinity ? "" : ` ${Math.min(METAL_PLAYS, riffPlay + 1)}/${METAL_PLAYS}`;
@@ -405,12 +398,6 @@ const riffSound = () => {  // unmute a song that autoplayed muted
 amp.addEventListener("click", e => {
   e.stopPropagation();
   if (performance.now() - soundAt < 600) return;  // this same click just turned the sound on
-  if (amp.classList.contains("epic")) {  // epic song (see the epic finale below)
-    if (epicMuted()) epicSound();
-    else if (epicPlaying) { epicRiff.pause(); epicPlaying = false; paintAmp(); }
-    else epicPlay();
-    return;
-  }
   if (riffMuted()) riffSound();
   else if (rocking) { riff.pause(); rocking = false; paintAmp(); }
   else rock();
