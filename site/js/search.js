@@ -17,7 +17,8 @@ const searchLower = s => {
 };
 const searchFetch = () => {
   if (searchRequest) return;
-  searchRequest = fetch("search.json").then(r => r.json()).then(data => {
+  searchRequest = fetch("search.json").then(r => r.ok ? r.json() : null).then(data => {
+    if (!data) return;
     searchDocs = {};
     Object.keys(data).forEach(href => {
       searchDocs[href] = data[href].map(text => {
@@ -25,5 +26,5 @@ const searchFetch = () => {
         return { text, fold, low: searchLower(fold) };
       });
     });
-  });
+  }).catch(() => {});
 };
