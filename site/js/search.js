@@ -29,3 +29,4 @@ const searchFetch = () => {
   }).catch(() => {});
 };
 q.addEventListener("focus", searchFetch);
+q.addEventListener("input", searchFetch);
