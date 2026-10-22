@@ -3,7 +3,8 @@
 // fetched the first time the search field is used, so a visit without a search never downloads
 // it; without it (no pdftotext at build time, offline) the field searches the names only (ui.js).
 // Once it is there, searchInside (ui.js) keeps a document whose text holds every word typed, and
-// shows under it how many times they appear.
+// shows under it how many times they appear and extracts of up to three of its pages, each a link
+// to that page (#page=N, which the browsers' PDF viewers follow).
 // How a word is matched:
 //   - accents do not count ("modele" finds "modèle");
 //   - case does not count.
@@ -95,8 +96,9 @@ const searchExtract = (page, hit, href) => {
   return link;
 };
 
-// searchInside (ui.js): whether the text of a document matches the query (li.found). Asked again
-// only when the query changes.
+// searchInside (ui.js): whether the text of a document matches the query; its extracts shown
+// under it (li.found), or removed for an empty query or no match. Rebuilt only when the query
+// changes.
 const searchFind = (a, query) => {
   const li = a.parentNode, href = a.getAttribute("href"), pages = searchDocs[href];
   let box = li.querySelector(".hits");
@@ -113,6 +115,7 @@ const searchFind = (a, query) => {
   count.textContent = `${found.total} match${found.total > 1 ? "es" : ""}`
     + (found.pages > 1 ? ` on ${found.pages} pages` : "");
   box.append(count);
+  found.best.forEach(hit => box.append(searchExtract(pages[hit.i], hit, href)));
   li.append(box);
   return true;
 };
