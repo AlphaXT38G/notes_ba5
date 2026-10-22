@@ -68,6 +68,9 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 [data-view=previews] .solo a.doc span{flex-direction:row;flex-wrap:wrap;align-items:center;padding-top:.35rem}
 [data-view=previews] .solo a.doc .new{margin:0 0 0 .5rem;font-size:.68rem}
 [data-view=previews] .solo a.doc small{display:block;margin-top:.2rem}
+/* Extracts found inside a document (search.js): how many matches, then up to three lines of its
+   text, each a link to its page, the words found marked */
+.hits{padding:0 .75rem .55rem 1.5rem;border-bottom:1px solid var(--line)}
 #empty{color:var(--mut)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 /* Shared animation: a glow layer whose opacity breathes (see flames.css and epic.css) */
