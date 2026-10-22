@@ -30,3 +30,16 @@ const searchFetch = () => {
 };
 q.addEventListener("focus", searchFetch);
 q.addEventListener("input", searchFetch);
+
+// The query as terms: { len, re }. Parsed once per query, not once per document.
+let searchTermsFor = null, searchTerms = [];
+const searchTermsOf = query => {
+  if (query === searchTermsFor) return searchTerms;
+  searchTermsFor = query;
+  const found = query.match(/\S+/g) || [];
+  searchTerms = found.map(t => {
+    const fold = searchLower(searchFold(t));
+    return { len: fold.length, re: new RegExp(fold, "g") };
+  });
+  return searchTerms;
+};
