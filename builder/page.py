@@ -185,7 +185,7 @@ def build_index():
         # Weekly notes are recognised by their name (files in a week/ folder)
         weeks = [p for p in rest if weekly(p)]
         others = [p for p in rest if p not in weeks]
-        links = "".join(link(s["id"], p, root, when[p], shots[p]) for p in main)
+        links = "".join(link(s["id"], p, root, when[p], shots[p], solo=True) for p in main)
         links += fold(s["id"], weeks, root, when, shots, "weekly note", grouped=False, extra=progress(weeks, s))
         links += fold(s["id"], others, root, when, shots, "more document")
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
