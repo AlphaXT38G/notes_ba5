@@ -70,6 +70,7 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 [data-view=previews] .solo a.doc small{display:block;margin-top:.2rem}
 /* Extracts found inside a document (search.js): how many matches, then up to three lines of its
    text, each a link to its page, the words found marked */
+.links li.found > a.doc{border-bottom:0}
 .hits{padding:0 .75rem .55rem 1.5rem;border-bottom:1px solid var(--line)}
 #empty{color:var(--mut)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
