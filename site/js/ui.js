@@ -44,7 +44,8 @@ const runSearch = () => {
       any = any || ok;  // not ||=: too new for some Android browsers (Chromium before 85)
     });
     // A collapsible section is hidden when nothing in it matches, and opened while it holds a
-    // match found by document name (folder headings are hidden then, they would be misleading)
+    // match found by document name or text (folder headings are hidden then, they would be
+    // misleading)
     sec.querySelectorAll("details").forEach(d => {
       const inside = [...d.querySelectorAll(".links a.doc")].some(a => !a.parentNode.hidden);
       d.parentNode.hidden = !inside;
