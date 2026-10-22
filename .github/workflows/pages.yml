@@ -27,7 +27,8 @@ jobs:
         with:
           fetch-depth: 0  # full history: document dates come from git log
 
-      # poppler-utils provides pdftoppm, used for the first-page previews
+      # poppler-utils provides pdftoppm and pdftotext: the first-page previews and the text the
+      # search field looks into (dist/search.json)
       - name: Install LaTeX
         run: |
           sudo apt-get update

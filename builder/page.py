@@ -15,6 +15,7 @@ from .config import CONFIG, DIST, KINDS, NEW_DAYS, ORDER, PALETTE, ROOT, SEMESTE
 from .latex import course_weeks
 from .log import err, ok
 from .previews import preview
+from .search import pages, write_search
 
 def site_file(rel):
     """Text of a file of site/, on its own lines when inlined into the page."""
@@ -94,26 +95,30 @@ def is_new(when):
     """True for documents changed less than NEW_DAYS ago (they get the "New" badge)."""
     return (datetime.now() - when).days < NEW_DAYS
 
-def link(subject, p, root, when, shot=None):
-    """One <li> line: document name (+ "New" badge) on the left, size and date on the right.
+def link(subject, p, root, when, shot=None, text=None, solo=False):
+    """One <li> line: document name (+ "New" badge) on the left, pages, size and date on the right.
 
     It also carries the first-page thumbnail (or a "PDF" placeholder), only shown in the
-    Previews view; the size and date are repeated in the tooltip for that view.
-    Documents open in a new tab, so the index stays open next to them.
+    Previews view; the pages, size and date are repeated in the tooltip for that view.
+    Documents open in a new tab, so the index stays open next to them. solo: the document is alone
+    in its list (the course notes, the only document of a section), shown on a whole row in the
+    Previews view instead of a small thumbnail next to an empty row.
     """
     rel = p.relative_to(root).as_posix()
     badge = '<span class="new">New</span>' if is_new(when) else ""
-    meta = f"{p.stat().st_size / 1e6:.1f} MB · {when:%d %b %Y}"
+    count = f"{len(text)} page{'s' if len(text) > 1 else ''} · " if text else ""  # text: its pages (search.py)
+    meta = f"{count}{p.stat().st_size / 1e6:.1f} MB · {when:%d %b %Y}"
+    cls = ' class="solo"' if solo else ""
     thumb = (
         f'<img class="thumb" src="{subject}/{html.escape(shot.relative_to(root).as_posix())}" alt="" loading="lazy">'
         if shot else '<span class="thumb none">PDF</span>'
     )
     return (
-        f'<li><a href="{subject}/{html.escape(rel)}" target="_blank" rel="noopener" title="{meta}">{thumb}<span>{html.escape(label(p, root))}{badge}</span>'
+        f'<li{cls}><a class="doc" href="{subject}/{html.escape(rel)}" target="_blank" rel="noopener" title="{meta}">{thumb}<span>{html.escape(label(p, root))}{badge}</span>'
         f'<small>{meta}</small></a></li>'
     )
 
-def fold(subject, pdfs, root, when, shots, noun, grouped=True, extra=""):
+def fold(subject, pdfs, root, when, shots, texts, noun, grouped=True, extra=""):
     """Collapsible list of PDFs, with folder headings when grouped.
 
     The summary reads "<n> <noun>(s)", e.g. "4 weekly notes", followed by a "<k> new" badge
@@ -128,7 +133,7 @@ def fold(subject, pdfs, root, when, shots, noun, grouped=True, extra=""):
         if grouped and folder != "." and folder != group:
             items.append(f'<li class="group">{html.escape(folder)}</li>')
         group = folder
-        items.append(link(subject, p, root, when[p], shots[p]))
+        items.append(link(subject, p, root, when[p], shots[p], texts[p], solo=len(pdfs) == 1))
     n = len(pdfs)
     # The list is folded, so say on the summary when something new is inside
     fresh = sum(is_new(when[p]) for p in pdfs)
@@ -160,7 +165,7 @@ def natural(p):
 
 def build_index():
     """Write dist/index.html from whatever PDFs are in dist/ (subjects without any are hidden)."""
-    cards = []
+    cards, search = [], {}
     for i, s in enumerate(CONFIG):
         root = DIST / s["id"]
         pdfs = list(root.rglob("*.pdf")) if root.is_dir() else []
@@ -168,6 +173,8 @@ def build_index():
             continue
         when = {p: updated(s["id"], p, root) for p in pdfs}  # one git call per PDF, done once
         shots = {p: preview(p) for p in pdfs}               # first-page previews (None if unavailable)
+        texts = {p: pages(p) for p in pdfs}                 # text of each page (None if unavailable)
+        search.update((f"{s['id']}/{p.relative_to(root).as_posix()}", t) for p, t in texts.items())
         # Course notes stay visible on the card, everything else goes in the collapsible sections
         course = root / "course.pdf"
         main = [course] if course in pdfs else []
@@ -182,9 +189,9 @@ def build_index():
         # Weekly notes are recognised by their name (files in a week/ folder)
         weeks = [p for p in rest if weekly(p)]
         others = [p for p in rest if p not in weeks]
-        links = "".join(link(s["id"], p, root, when[p], shots[p]) for p in main)
-        links += fold(s["id"], weeks, root, when, shots, "weekly note", grouped=False, extra=progress(weeks, s))
-        links += fold(s["id"], others, root, when, shots, "more document")
+        links = "".join(link(s["id"], p, root, when[p], shots[p], texts[p], solo=True) for p in main)
+        links += fold(s["id"], weeks, root, when, shots, texts, "weekly note", grouped=False, extra=progress(weeks, s))
+        links += fold(s["id"], others, root, when, shots, texts, "more document")
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
         # --c = accent colour of the card, from subjects.json or the palette (in file order);
         # order = position among the cards, used when the two columns collapse into one (CSS .grid)
@@ -210,6 +217,7 @@ def build_index():
             shutil.copytree(SITE / folder, DIST / folder, dirs_exist_ok=True)
     (DIST / "index.html").write_text(page, encoding="utf-8")
     ok("dist/index.html")
+    write_search(search)
     check_script()
     check_compat()
 

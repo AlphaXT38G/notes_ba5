@@ -53,12 +53,37 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 .thumb{display:none}
 [data-view=previews] .links{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:.5rem;padding:.5rem .75rem}
 [data-view=previews] .links > .fold,[data-view=previews] .group{grid-column:1/-1}
-[data-view=previews] .links a{flex-direction:column;justify-content:flex-start;align-items:center;gap:.3rem;padding:.35rem;border:0;border-radius:.5rem;font-size:.75rem;line-height:1.25;text-align:center}
-[data-view=previews] .links a small{display:none}
+[data-view=previews] .links a.doc{flex-direction:column;justify-content:flex-start;align-items:center;gap:.3rem;padding:.35rem;border:0;border-radius:.5rem;font-size:.75rem;line-height:1.25;text-align:center}
+[data-view=previews] .links a.doc small{display:none}
 [data-view=previews] .thumb{display:block;width:100%;aspect-ratio:170/240;object-fit:cover;object-position:top;background:#fff;border:1px solid var(--line);border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.12)}
 [data-view=previews] .thumb.none{display:grid;place-items:center;color:var(--mut);font:700 .7rem ui-monospace,monospace;background:var(--acc-bg)}
-[data-view=previews] .links a .new{margin:.15rem 0 0;font-size:.6rem}
-[data-view=previews] .links a span{display:flex;flex-direction:column;align-items:center}
+[data-view=previews] .links a.doc .new{margin:.15rem 0 0;font-size:.6rem}
+[data-view=previews] .links a.doc span{display:flex;flex-direction:column;align-items:center}
+/* A document alone in its list (li.solo: the course notes of a card, the only document of a
+   section) or with extracts found inside (li.found, search.js) takes the whole row, its thumbnail
+   on the left and its name, pages, size and date beside it, instead of a small thumbnail next to
+   an empty row */
+[data-view=previews] .links > .solo,[data-view=previews] .links > .found{grid-column:1/-1}
+[data-view=previews] .solo > a.doc,[data-view=previews] .found > a.doc{display:block;position:relative;min-height:calc(78px * 240 / 170 + .7rem);padding-left:calc(78px + 1.25rem);font-size:.95rem;text-align:left}
+[data-view=previews] .solo .thumb,[data-view=previews] .found .thumb{position:absolute;left:.35rem;top:.35rem;width:78px}
+[data-view=previews] .solo a.doc span,[data-view=previews] .found a.doc span{flex-direction:row;flex-wrap:wrap;align-items:center;padding-top:.35rem}
+[data-view=previews] .solo a.doc .new,[data-view=previews] .found a.doc .new{margin:0 0 0 .5rem;font-size:.68rem}
+[data-view=previews] .solo a.doc small,[data-view=previews] .found a.doc small{display:block;margin-top:.2rem}
+/* Extracts found inside a document (search.js): how many matches, then up to three lines of its
+   text, each a link to its page, the words found marked */
+.links li.found > a.doc{border-bottom:0}
+.hits{padding:0 .75rem .55rem 1.5rem;border-bottom:1px solid var(--line)}
+.hits small{display:block;color:var(--mut);font-size:.75rem;margin-bottom:.15rem}
+.links a.hit{display:block;padding:.3rem .5rem;border:0;border-radius:.4rem;color:var(--fg);font-weight:400;font-size:.82rem;line-height:1.45;overflow-wrap:anywhere}
+.links a.hit b{margin-right:.4rem;color:var(--acc);font-size:.75rem;font-weight:700;white-space:nowrap}
+.hit mark{padding:0 .1em;border-radius:.2em;color:inherit;background:var(--acc-bg);box-shadow:inset 0 -2px 0 var(--acc);font-weight:600}
+.more-hits{margin:.15rem 0 0 .5rem;padding:.2rem .6rem;font:600 .75rem system-ui,sans-serif;color:var(--acc);background:none;border:1px solid var(--line);border-radius:999px;cursor:pointer}
+.more-hits:hover,.more-hits:focus-visible{border-color:var(--acc);background:var(--acc-bg)}
+/* with extracts, the thumbnail is placed on the whole row, so that they follow the name right
+   beside it instead of starting below it */
+[data-view=previews] .found{position:relative;min-height:calc(78px * 240 / 170 + .7rem)}
+[data-view=previews] .found > a.doc{position:static;min-height:0}
+[data-view=previews] .found .hits{padding-left:calc(78px + 1.25rem);border:0}
 #empty{color:var(--mut)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 /* Shared animation: a glow layer whose opacity breathes (see flames.css and epic.css) */
@@ -66,7 +91,11 @@ footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 /* Touch screens: no grey flash on tap, no double-tap zoom delay on the controls, and buttons at
    least 44 px high, the size of a fingertip */
 button,summary,.links a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-@media(pointer:coarse){.tools button{width:2.75rem;height:2.75rem}.view button{min-height:2.75rem}#search{min-height:2.75rem}}
+@media(pointer:coarse){.tools button{width:2.75rem;height:2.75rem}.view button{min-height:2.75rem}#search{min-height:2.75rem}.more-hits{min-height:2.75rem}}
 /* Phones: the search field takes the whole width, the Names / Previews switch goes below it,
-   split in two equal halves */
-@media(max-width:520px){.searchrow{flex-wrap:wrap}#search{flex-basis:100%}.view{flex:1}.view button{flex:1}}
+   split in two equal halves; in the Previews view, extracts found inside a document take the
+   whole width below its thumbnail, too narrow beside it */
+@media(max-width:520px){.searchrow{flex-wrap:wrap}#search{flex-basis:100%}.view{flex:1}.view button{flex:1}
+  [data-view=previews] .found{position:static;min-height:0}
+  [data-view=previews] .found > a.doc{position:relative;min-height:calc(78px * 240 / 170 + .7rem)}
+  [data-view=previews] .found .hits{padding-left:.35rem}}

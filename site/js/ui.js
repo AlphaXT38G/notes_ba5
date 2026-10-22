@@ -24,25 +24,30 @@ viewBtns.forEach(b => b.setAttribute("aria-pressed", b.dataset.view === (root.da
 
 // Search: keep subjects and documents whose text matches, open the sections holding a match.
 // Every word typed must appear (in any order, case-insensitive). If the subject itself matches
-// (name or code), the whole card stays as usual; otherwise only the matching documents are kept.
-// An empty field shows everything again and closes the sections.
+// (name or code), the whole card stays as usual; otherwise only the matching documents are kept:
+// by their name, or by what they say inside (searchInside, set by search.js once the text of the
+// PDFs is loaded; it also shows the extracts found under the document, and clears them when
+// given no query). An empty field shows everything again and closes the sections.
 const q = document.getElementById("search");
-q.addEventListener("input", () => {
+let searchInside = null;  // (link, query) => whether the document's text matches (search.js)
+const runSearch = () => {
   const words = q.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
   const hit = el => words.every(w => el.textContent.toLowerCase().includes(w));
   let shown = 0;  // number of subjects still visible, to show the no-result message
   document.querySelectorAll("main section").forEach(sec => {
     const whole = !words.length || hit(sec.querySelector("h2")) || hit(sec.querySelector(".code"));
     let any = whole;
-    sec.querySelectorAll(".links a").forEach(a => {
-      const ok = whole || hit(a);
+    sec.querySelectorAll(".links a.doc").forEach(a => {
+      let ok = whole || hit(a);
+      if (searchInside) ok = searchInside(a, ok ? "" : q.value) || ok;  // its extracts only when the name is not enough
       a.parentNode.hidden = !ok;
       any = any || ok;  // not ||=: too new for some Android browsers (Chromium before 85)
     });
     // A collapsible section is hidden when nothing in it matches, and opened while it holds a
-    // match found by document name (folder headings are hidden then, they would be misleading)
+    // match found by document name or text (folder headings are hidden then, they would be
+    // misleading)
     sec.querySelectorAll("details").forEach(d => {
-      const inside = [...d.querySelectorAll(".links a")].some(a => !a.parentNode.hidden);
+      const inside = [...d.querySelectorAll(".links a.doc")].some(a => !a.parentNode.hidden);
       d.parentNode.hidden = !inside;
       d.querySelectorAll(".group").forEach(g => g.hidden = !whole && !!words.length);
       d.open = words.length > 0 && inside && !whole;
@@ -51,7 +56,8 @@ q.addEventListener("input", () => {
     shown += any;
   });
   document.getElementById("empty").hidden = shown > 0;
-});
+};
+q.addEventListener("input", runSearch);
 
 // Easter egg codes (yeti, armstrong, peace, kamelot, normal): onCode(word, fn) runs fn when the
 // word is typed anywhere but the search field, letter by letter like the Konami code, or typed in

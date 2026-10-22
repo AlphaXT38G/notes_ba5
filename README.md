@@ -46,10 +46,18 @@ Optional keys per subject in `subjects.json`:
 
 The page also has a search field, a light/dark toggle and a flame mode 🔥. It works
 on phones too, including older Android browsers.
+The search looks at the names of the subjects and documents, and **inside the documents**:
+type `MAC` and every document that talks about MAC shows up, with how many times and
+extracts of its best pages (click one to open the PDF at that page). Accents do not matter,
+a word with a capital matches that case only (`MAC` is the acronym, `mac` also finds
+"machine"), and `"quoted words"` are searched as one phrase.
 A **Names / Previews** switch shows every document as a small thumbnail of its
-first page instead (for course notes, the first page after the table of contents).
-The thumbnails are made by `pdftoppm` and `pdftotext` (poppler); without them,
-the build still works and the page shows names only.
+first page instead (for course notes, the first page after the table of contents); a
+document alone in its list, like the course notes, takes the whole row with its pages,
+size and date beside it.
+The thumbnails and the text of the documents are made by `pdftoppm` and `pdftotext`
+(poppler); without them, the build still works and the page shows names only and
+searches the names only.
 
 In the bottom left corner, a vintage cassette deck 📼 plays music while you read, with
 VU meters, a tape counter and real keys (▶❚❚, ◀◀ / ▶▶ wind 30 s). Its station key
