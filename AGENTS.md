@@ -174,6 +174,12 @@ row, its thumbnail beside its name, pages, size and date.
 The search field finds subjects and documents by name (`ui.js`) and by what the documents say
 (`search.js`). How it is built, and why:
 
+- **The text is extracted at build time** (`builder/search.py`, `pdftotext`), not in the browser:
+  reading PDFs in the page would need a PDF library and download every PDF. Each PDF's text is
+  cached next to it (`<name>.pdf.txt`, remade when the PDF is newer), like the previews, so
+  `--index-only` stays fast. It is cleaned once there: ligatures become letters (NFKC), words cut
+  at line ends are joined, spaces collapse (a phrase is found across lines), and the dot leaders
+  of a table of contents become one "…".
 
 ### JS files, in load order
 
