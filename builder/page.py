@@ -118,7 +118,7 @@ def link(subject, p, root, when, shot=None, text=None, solo=False):
         f'<small>{meta}</small></a></li>'
     )
 
-def fold(subject, pdfs, root, when, shots, noun, grouped=True, extra=""):
+def fold(subject, pdfs, root, when, shots, texts, noun, grouped=True, extra=""):
     """Collapsible list of PDFs, with folder headings when grouped.
 
     The summary reads "<n> <noun>(s)", e.g. "4 weekly notes", followed by a "<k> new" badge
@@ -133,7 +133,7 @@ def fold(subject, pdfs, root, when, shots, noun, grouped=True, extra=""):
         if grouped and folder != "." and folder != group:
             items.append(f'<li class="group">{html.escape(folder)}</li>')
         group = folder
-        items.append(link(subject, p, root, when[p], shots[p], solo=len(pdfs) == 1))
+        items.append(link(subject, p, root, when[p], shots[p], texts[p], solo=len(pdfs) == 1))
     n = len(pdfs)
     # The list is folded, so say on the summary when something new is inside
     fresh = sum(is_new(when[p]) for p in pdfs)
@@ -190,8 +190,8 @@ def build_index():
         weeks = [p for p in rest if weekly(p)]
         others = [p for p in rest if p not in weeks]
         links = "".join(link(s["id"], p, root, when[p], shots[p], texts[p], solo=True) for p in main)
-        links += fold(s["id"], weeks, root, when, shots, "weekly note", grouped=False, extra=progress(weeks, s))
-        links += fold(s["id"], others, root, when, shots, "more document")
+        links += fold(s["id"], weeks, root, when, shots, texts, "weekly note", grouped=False, extra=progress(weeks, s))
+        links += fold(s["id"], others, root, when, shots, texts, "more document")
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
         # --c = accent colour of the card, from subjects.json or the palette (in file order);
         # order = position among the cards, used when the two columns collapse into one (CSS .grid)
