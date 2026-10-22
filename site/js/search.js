@@ -52,3 +52,18 @@ const searchTermAt = (t, page) => {
   return at;
 };
 
+// The pages where the terms are: null unless every term is somewhere in the document; best: the
+// first three of them.
+const searchPages = (pages, ts) => {
+  const seen = ts.map(() => false), hits = [];
+  let total = 0;
+  pages.forEach((page, i) => {
+    const at = ts.map(t => searchTermAt(t, page));
+    const n = at.reduce((sum, a) => sum + a.length, 0);
+    at.forEach((a, k) => { if (a.length) seen[k] = true; });
+    if (n) { total += n; hits.push({ i, at }); }
+  });
+  if (!seen.every(Boolean)) return null;
+  return { total, pages: hits.length, best: hits.slice(0, 3) };
+};
+
