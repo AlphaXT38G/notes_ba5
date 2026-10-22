@@ -45,7 +45,7 @@ tools/bartender/      remakes the bartender's layers from source.webp (open it t
 subjects.json         subjects: id, display name, exam rules, optional "weeks", "week_pdfs" and "color"
 <subject>/            course.tex, cheatsheet.tex, week/NN.tex (chapters), extra PDFs...
 _shared/              course.sty and cheatsheet.sty, shared by every course / cheat sheet
-dist/                 build output (git-ignored): PDFs, previews, index.html
+dist/                 build output (git-ignored): PDFs, previews, index.html, search.json
 ```
 
 ## Build and preview locally
