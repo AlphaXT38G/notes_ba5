@@ -189,6 +189,13 @@ The search field finds subjects and documents by name (`ui.js`) and by what the 
   `searchInside` (null until `search.js` has its text): `ui.js` is the file that always runs, so
   if `search.js` fails, or `search.json` is missing (no `pdftotext`, offline), the search by name
   still works. The text search is only asked about documents whose name does not match.
+- **Matching** (`search.js`): words match from the start of a word of the text, ignoring accents
+  and case, except that a word typed with a capital keeps its case (smart case: `MAC` is the
+  acronym, `mac` also finds "machine"); `"quoted words"` are one phrase; one-letter words are left
+  out. The text is folded once when loaded (accents removed character by character, so a position
+  in the folded text is a position in the original, which the extracts show), and the query is
+  parsed once per change, not once per document: a search over all the PDFs takes a few
+  milliseconds, even on a slow phone.
 
 ### JS files, in load order
 
