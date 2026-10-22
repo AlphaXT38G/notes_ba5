@@ -9,7 +9,8 @@
 //   - from the start of a word of the text: "sec" finds "security", not "insecure";
 //   - accents do not count ("modele" finds "modèle");
 //   - case does not count, unless the word typed has a capital (smart case): "MAC" finds the
-//     acronym MAC, "mac" finds "machine" too.
+//     acronym MAC, "mac" finds "machine" too;
+//   - "quoted words" are one phrase, found across line breaks.
 let searchDocs = null,     // link href -> its pages: [{ text, fold, low }] (fold: no accents, low: lowercase too)
     searchRequest = null;  // the request for search.json, made once
 // Accents removed one character at a time, so that a position in the folded text is the same
@@ -47,9 +48,9 @@ let searchTermsFor = null, searchTerms = [];
 const searchTermsOf = query => {
   if (query === searchTermsFor) return searchTerms;
   searchTermsFor = query;
-  const found = query.match(/\S+/g) || [];
+  const found = (query.match(/"[^"]*"|\S+/g) || []).map(t => t.replace(/"/g, "").trim());
   searchTerms = found.map(t => {
-    const fold = searchFold(t), cased = fold !== searchLower(fold);
+    const fold = searchFold(t).replace(/\s+/g, " "), cased = fold !== searchLower(fold);
     const text = (cased ? fold : searchLower(fold)).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     return { cased, len: fold.length, re: new RegExp("(^|[^A-Za-z0-9])" + text, "g") };
   });
