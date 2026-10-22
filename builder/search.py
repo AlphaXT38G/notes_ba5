@@ -4,6 +4,7 @@ Extracted with pdftotext (poppler), optional like the previews: without it there
 search.json and the page searches the documents' names only.
 """
 
+import re
 import subprocess
 import unicodedata
 
@@ -13,7 +14,8 @@ def pages(p):
     """Text of each page of a PDF (a list of strings), or None without pdftotext.
 
     Cached next to the PDF (01.pdf -> 01.pdf.txt, pages separated by form feeds), remade only when
-    the PDF is newer, like the previews. Ligatures (ﬁ) become plain letters (NFKC).
+    the PDF is newer, like the previews. Ligatures (ﬁ) become plain letters (NFKC), and words
+    cut at the end of a line are joined again.
     """
     txt = p.with_name(f"{p.name}.txt")
     if not (txt.exists() and txt.stat().st_mtime >= p.stat().st_mtime):
@@ -22,5 +24,6 @@ def pages(p):
         out = subprocess.run([PDFTOTEXT, "-enc", "UTF-8", str(p), "-"], capture_output=True).stdout
         txt.write_text(out.decode("utf-8", errors="replace"), encoding="utf-8")
     text = unicodedata.normalize("NFKC", txt.read_text(encoding="utf-8"))
+    text = re.sub(r"(\w)-\n(?=[a-zà-ÿ])", r"\1", text)  # secu-\nrity -> security
     # pdftotext ends every page with a form feed, the last one too: nothing after it
     return [page.strip() for page in text.split("\f")[:-1]]
