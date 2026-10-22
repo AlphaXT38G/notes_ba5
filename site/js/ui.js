@@ -52,3 +52,29 @@ q.addEventListener("input", () => {
   });
   document.getElementById("empty").hidden = shown > 0;
 });
+
+// Easter egg codes (yeti, armstrong, peace, kamelot, normal): onCode(word, fn) runs fn when the
+// word is typed anywhere but the search field, letter by letter like the Konami code, or typed in
+// the search field and sent with Enter, which is how phones (no keyboard outside a field) reach
+// them. The field is then emptied, all the cards come back and the phone's keyboard closes.
+// Either way it runs inside a key press, a user gesture: the screens' music can play with sound.
+const CODES = {};
+const onCode = (word, fn) => {
+  CODES[word] = fn;
+  let pos = 0;  // how many letters of the word have been typed so far
+  document.addEventListener("keydown", e => {
+    if (e.target.matches("input")) return;  // typing in the search field is a search
+    const k = e.key.toLowerCase();
+    pos = k === word[pos] ? pos + 1 : (k === word[0] ? 1 : 0);
+    if (pos === word.length) { pos = 0; fn(); }
+  });
+};
+q.addEventListener("keydown", e => {
+  const fn = e.key === "Enter" && CODES[q.value.trim().toLowerCase()];
+  if (!fn) return;
+  e.preventDefault();
+  q.value = "";
+  q.dispatchEvent(new Event("input"));
+  q.blur();
+  fn();
+});

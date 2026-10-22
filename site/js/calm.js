@@ -368,10 +368,11 @@ setCrickets(document.body.classList.contains("calm"));
 document.addEventListener("calm", e => setCrickets(e.detail));
 
 // ── Peace code (easter egg: the calm night at any time) ───────────────────────────────────────
-// Typing p e a c e (outside the search field), like yeti, brings the calm night at any time of
-// the day or the year, for the rest of the visit. It replaces the normal screens (the day), the
-// jazz bar and Christmas, but not the shows: the metal show and the epic finale still win, and the
-// calm night comes back after them. This override is the last one, so it would win over the yeti
+// Typing p e a c e (outside the search field, or in it then Enter: onCode, ui.js), like yeti,
+// brings the calm night at any time of the day or the year, for the rest of the visit. It replaces
+// the normal screens (the day), the jazz bar and Christmas; typed during a show, it ends it first
+// (leaveShows, epic.js), but a show that comes later still wins, and the calm night comes back
+// after it. This override is the last one, so it would win over the yeti
 // and armstrong eggs: it gives way when one of them is typed after it (the bar's jazzEgg, cleared
 // when peace is typed, is set again; yetiTyped changes).
 // Typed again on the calm night, it goes back to the normal screen of that moment: it drops its
@@ -381,14 +382,7 @@ OVERRIDES.push(phase => {
   if (!peaceEgg || !isNormal(phase) && screenClass(phase) !== "night" && screenClass(phase) !== "christmas") return phase;
   return "calm";
 });
-const PEACE = [..."peace"];
-let peacePos = 0;  // how many letters of the word have been typed so far
-document.addEventListener("keydown", e => {
-  if (e.target.matches("input")) return;  // typing in the search field never triggers it
-  const k = e.key.toLowerCase();
-  peacePos = k === PEACE[peacePos] ? peacePos + 1 : (k === PEACE[0] ? 1 : 0);
-  if (peacePos !== PEACE.length) return;
-  peacePos = 0;
+onCode("peace", () => {
   if (document.body.dataset.phase === "calm") {
     if (peaceEgg) peaceEgg = false;
     else if (forced === "calm") forcedDismissed = true;
@@ -400,6 +394,7 @@ document.addEventListener("keydown", e => {
 // fromXmas). The other eggs give way, so that leaving the calm night later goes back to the
 // clock; the jar keeps the yeti egg, so that leaving it goes back to Christmas.
 const startPeace = (fromXmas = false) => {
+  leaveShows();
   peaceEgg = true;
   peaceYeti = yetiTyped;
   jazzEgg = xmasJazz = false;

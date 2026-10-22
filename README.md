@@ -103,11 +103,10 @@ light and shadows play on his armour. He plays Two Steps From Hell, then Dragonb
 dozes off); the next song waits on an old parchment leaning behind the painting: click it (or
 the fire) to change the song, and watch the fire burst into the new song's
 colours (blue and arcane, or red under a starry night, with a dragon crossing the moon). It lasts
-until you click the small **"Back to normal"** button in the bottom right corner, which
-brings back the usual look for the time of day (day, the calm night after the show,
-or the jazz bar at night).
+until you type `kamelot` (see below), which brings back the usual look for the time of day
+(day, the calm night after the show, or the jazz bar at night), or another of the codes below.
 
-From **December 10 to January 3** Christmas replaces the day, the jazz bar and the
+From **December 1 to January 3** Christmas replaces the day, the jazz bar and the
 calm night: a
 Christmas day from 06:00 to 18:00 and a Christmas night from 18:00 to 06:00. A
 garland across the top (lit at night), falling snow,
@@ -135,6 +134,8 @@ Christmas back), and the jazz bar at any time
 if you type `armstrong` (type it again in the bar to go back to the screen of the
 moment: the day, the calm night, the bar at bar time, or Christmas in December), and the
 calm night at any time if you type `peace` (type it again to leave), and the epic finale
-at any time, even over the shows, if you type `kamelot` (type it again to leave). And if it all gets
+at any time if you type `kamelot` (type it again to leave). And if it all gets
 too much, type `normal`: the plain page comes back, whatever is on (type it again to
-let the clock decide).
+let the clock decide). Every code works on every screen, the shows included (typed during
+one, it ends it), and can be typed anywhere on the page or, on a phone, in the search
+field followed by Enter.
