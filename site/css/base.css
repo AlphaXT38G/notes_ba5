@@ -59,6 +59,10 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 [data-view=previews] .thumb.none{display:grid;place-items:center;color:var(--mut);font:700 .7rem ui-monospace,monospace;background:var(--acc-bg)}
 [data-view=previews] .links a.doc .new{margin:.15rem 0 0;font-size:.6rem}
 [data-view=previews] .links a.doc span{display:flex;flex-direction:column;align-items:center}
+/* A document alone in its list (li.solo: the course notes of a card, the only document of a
+   section) takes the whole row, its thumbnail on the left and its name, size and date beside it,
+   instead of a small thumbnail next to an empty row */
+[data-view=previews] .links > .solo{grid-column:1/-1}
 #empty{color:var(--mut)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 /* Shared animation: a glow layer whose opacity breathes (see flames.css and epic.css) */
