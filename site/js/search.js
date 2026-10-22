@@ -84,7 +84,7 @@ const searchExtract = (page, hit, href) => {
   link.rel = "noopener";
   const pageNo = document.createElement("b");
   pageNo.textContent = `p. ${hit.i + 1}`;
-  link.append(pageNo, text.slice(from, to));
+  link.append(pageNo, from > 0 ? "…" : "", text.slice(from, to), to < text.length ? "…" : "");
   return link;
 };
 
