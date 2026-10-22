@@ -164,7 +164,7 @@ def natural(p):
 
 def build_index():
     """Write dist/index.html from whatever PDFs are in dist/ (subjects without any are hidden)."""
-    cards = []
+    cards, search = [], {}
     for i, s in enumerate(CONFIG):
         root = DIST / s["id"]
         pdfs = list(root.rglob("*.pdf")) if root.is_dir() else []
@@ -173,6 +173,7 @@ def build_index():
         when = {p: updated(s["id"], p, root) for p in pdfs}  # one git call per PDF, done once
         shots = {p: preview(p) for p in pdfs}               # first-page previews (None if unavailable)
         texts = {p: pages(p) for p in pdfs}                 # text of each page (None if unavailable)
+        search.update((f"{s['id']}/{p.relative_to(root).as_posix()}", t) for p, t in texts.items())
         # Course notes stay visible on the card, everything else goes in the collapsible sections
         course = root / "course.pdf"
         main = [course] if course in pdfs else []
