@@ -67,6 +67,7 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 [data-view=previews] .solo .thumb{position:absolute;left:.35rem;top:.35rem;width:78px}
 [data-view=previews] .solo a.doc span{flex-direction:row;flex-wrap:wrap;align-items:center;padding-top:.35rem}
 [data-view=previews] .solo a.doc .new{margin:0 0 0 .5rem;font-size:.68rem}
+[data-view=previews] .solo a.doc small{display:block;margin-top:.2rem}
 #empty{color:var(--mut)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 /* Shared animation: a glow layer whose opacity breathes (see flames.css and epic.css) */
