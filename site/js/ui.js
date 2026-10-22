@@ -34,7 +34,7 @@ q.addEventListener("input", () => {
   document.querySelectorAll("main section").forEach(sec => {
     const whole = !words.length || hit(sec.querySelector("h2")) || hit(sec.querySelector(".code"));
     let any = whole;
-    sec.querySelectorAll(".links a").forEach(a => {
+    sec.querySelectorAll(".links a.doc").forEach(a => {
       const ok = whole || hit(a);
       a.parentNode.hidden = !ok;
       any = any || ok;  // not ||=: too new for some Android browsers (Chromium before 85)
@@ -42,7 +42,7 @@ q.addEventListener("input", () => {
     // A collapsible section is hidden when nothing in it matches, and opened while it holds a
     // match found by document name (folder headings are hidden then, they would be misleading)
     sec.querySelectorAll("details").forEach(d => {
-      const inside = [...d.querySelectorAll(".links a")].some(a => !a.parentNode.hidden);
+      const inside = [...d.querySelectorAll(".links a.doc")].some(a => !a.parentNode.hidden);
       d.parentNode.hidden = !inside;
       d.querySelectorAll(".group").forEach(g => g.hidden = !whole && !!words.length);
       d.open = words.length > 0 && inside && !whole;
