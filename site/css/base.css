@@ -79,6 +79,11 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 .hit mark{padding:0 .1em;border-radius:.2em;color:inherit;background:var(--acc-bg);box-shadow:inset 0 -2px 0 var(--acc);font-weight:600}
 .more-hits{margin:.15rem 0 0 .5rem;padding:.2rem .6rem;font:600 .75rem system-ui,sans-serif;color:var(--acc);background:none;border:1px solid var(--line);border-radius:999px;cursor:pointer}
 .more-hits:hover,.more-hits:focus-visible{border-color:var(--acc);background:var(--acc-bg)}
+/* with extracts, the thumbnail is placed on the whole row, so that they follow the name right
+   beside it instead of starting below it */
+[data-view=previews] .found{position:relative;min-height:calc(78px * 240 / 170 + .7rem)}
+[data-view=previews] .found > a.doc{position:static;min-height:0}
+[data-view=previews] .found .hits{padding-left:calc(78px + 1.25rem);border:0}
 #empty{color:var(--mut)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 /* Shared animation: a glow layer whose opacity breathes (see flames.css and epic.css) */
