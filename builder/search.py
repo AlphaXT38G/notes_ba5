@@ -10,6 +10,7 @@ import subprocess
 import unicodedata
 
 from .config import DIST, PDFTOTEXT
+from .log import ok
 
 def pages(p):
     """Text of each page of a PDF (a list of strings), or None without pdftotext.
@@ -39,3 +40,5 @@ def write_search(texts):
     if not texts:
         return
     (DIST / "search.json").write_text(json.dumps(texts, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    size = (DIST / "search.json").stat().st_size
+    ok(f"dist/search.json ({len(texts)} documents, {sum(map(len, texts.values()))} pages, {size / 1e3:.0f} kB)")
