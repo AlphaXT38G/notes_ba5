@@ -51,10 +51,17 @@ everywhere}:
 \end{itemize}
 \end{defnbox}
 
-\begin{warnbox}[title=TCB]
-The mechanisms that do authentication and authorization are in the \textbf{Trusted
-Computing Base}!
+\begin{warnbox}[title=Trusted Computing Base (TCB)]
+It contains the mechanisms that do authentication and authorization.
 \end{warnbox}
+
+\begin{rembox}[title={Origin of protection mechanisms (Lampson, 1971)}]
+The original motivation was to keep \textbf{one user's malice or error from harming other
+users}: by destroying/modifying another user's data, by reading/copying it without
+permission, or by degrading the service another user gets (the extreme case being a
+crash of the system). All these reasons are just as strong if ``user'' is replaced by
+``\textbf{program}''.
+\end{rembox}
 
 \section{Implementing access control}
 
@@ -77,29 +84,15 @@ common mechanism is about the isolation of data, and a single well-tested monito
 easier to verify (economy of mechanism, complete mediation).
 \end{rembox}
 
-\section{DAC vs.\ MAC}
+\section{Discretionary Access Control (DAC)}
 
-\begin{defnbox}[title=Who decides the access policy? Two approaches]
-\begin{itemize}
-  \item \textbf{Discretionary Access Control (DAC)} --- \textbf{object owners} assign
-        permissions (ownership of resources). E.g.\ Windows, Linux, macOS, social
-        networks.
-  \item \textbf{Mandatory Access Control (MAC)} --- a \textbf{central security policy}
-        assigns permissions. For organizations with need for central controls:
-        military (confidentiality), hospital (confidentiality and integrity), banking
-        (integrity).
-\end{itemize}
+\begin{defnbox}[title=Discretionary Access Control (DAC)]
+\textbf{Object owners} decide how their resources are shared: the owner assigns the
+permissions on what they own (e.g.\ Linux \texttt{chmod}, Windows, macOS, social
+networks). DAC policies are often conceptualized as an \textbf{access control matrix}.
 \end{defnbox}
 
-\begin{rembox}[title={Origin of protection mechanisms (Lampson, 1971)}]
-The original motivation was to keep \textbf{one user's malice or error from harming other
-users}: by destroying/modifying another user's data, by reading/copying it without
-permission, or by degrading the service another user gets (the extreme case being a
-crash of the system). All these reasons are just as strong if ``user'' is replaced by
-``\textbf{program}''.
-\end{rembox}
-
-\section{The access control matrix}
+\subsection{The access control matrix}
 
 \begin{defnbox}[title=Access control matrix]
 An \textbf{abstract} representation of all \textbf{permitted} triplets
@@ -139,7 +132,7 @@ with thousands of files or hundreds of users. Moreover it is:
 \end{itemize}
 \end{warnbox}
 
-\section{Access Control Lists (ACLs)}
+\subsection{Access Control Lists (ACLs)}
 
 \begin{defnbox}[title=Access Control List (ACL)]
 Associate permissions to \textbf{objects}: each object stores the \textbf{column} of the
@@ -196,18 +189,18 @@ network interface).
 fine-grained policies.
 \end{defnbox}
 
+\begin{propbox}[title=Negative permissions are checked first]
+If group permissions were checked first, a group would grant the access and the
+negative permission would never be applied. Checking \textbf{negative permissions first}
+is the fail-safe choice (deny overrides allow).
+\end{propbox}
+
 \begin{rembox}[title=RBAC vs.\ groups]
 With \textbf{roles}, a subject has the permissions of the \emph{one active} role; with
 \textbf{groups}, a subject has the union of the permissions of \emph{all} its groups.
 \end{rembox}
 
-\begin{propbox}[title=Negative permissions are checked first]
-If group permissions were checked first, a group would grant the access and the
-negative permission would never be applied. Checking \textbf{negative permissions first}
-is the fail-safe choice.
-\end{propbox}
-
-\section{Capabilities}
+\subsection{Capabilities}
 
 \begin{defnbox}[title=Capabilities]
 Associate permissions to \textbf{subjects}: each subject stores the \textbf{row} of the
@@ -244,7 +237,7 @@ computer (1976), Intel iAPX 432 (1981). The industry then adopted UNIX and its A
 Google Fuchsia (2016), WASI (2019), ARM Morello (2022), Scala capabilities at EPFL.
 \end{rembox}
 
-\section{Ambient authority and the confused deputy}
+\subsection{Ambient authority and the confused deputy}
 
 \begin{defnbox}[title=Ambient authority]
 \textbf{Ambient authority} is used by a subject if, for an action to succeed, it
@@ -297,6 +290,8 @@ servers, \ldots). Solutions:
 
 \section{DAC in practice: UNIX}
 
+\subsection{Principals and architecture}
+
 \begin{defnbox}[title=UNIX principals and groups]
 \begin{itemize}
   \item \textbf{User Identities (UIDs)} and \textbf{Group Identities (GIDs)}:
@@ -319,6 +314,8 @@ servers, \ldots). Solutions:
         $\Rightarrow$ \textbf{ambient authority}!
 \end{itemize}
 \end{propbox}
+
+\subsection{File permissions}
 
 \begin{defnbox}[title=UNIX file ACLs]
 Each file is assigned an \textbf{owner UID} and a \textbf{GID}, and has \textbf{9
@@ -356,6 +353,8 @@ Only \emph{one} class of bits is checked: an owner with \texttt{---} for owner b
 \texttt{rwx} for group is denied, even if they are in the group.
 \end{warnbox}
 
+\subsection{Special users and bits}
+
 \begin{defnbox}[title=Super user (\texttt{root})]
 Special user account with \textbf{User ID 0}: accesses system files and special
 operations, can access anything ((almost) all security checks disabled).
@@ -378,6 +377,25 @@ to do, and \emph{only} what it is meant to do? (e.g.\ a setuid-root \texttt{pyth
 gives root to anyone.)
 \end{warnbox}
 
+\begin{exbox}[title=Why a setuid-root program is dangerous]
+\begin{itemize}
+  \item It runs as \textbf{root whoever launches it}, and the launcher controls its
+        inputs (arguments, environment, file names). A single bug (buffer overflow, path
+        trick, command injection) gives the attacker \textbf{root}: a
+        \textbf{confused deputy}.
+  \item A \textbf{general-purpose} program must never be setuid root: with
+        \texttt{-rwsr-xr-x root python}, anyone can run
+        \texttt{python -c 'import os; os.setuid(0); os.system("/bin/sh")'} and get a
+        root shell. (The \texttt{python2.7} of the slide is \texttt{-rwxr-xr-x}, no
+        \texttt{s}: it is \emph{not} setuid, it shows what to avoid.)
+  \item It breaks \textbf{least privilege}: full root power for one small action.
+\end{itemize}
+\textbf{Mitigation}: few setuid-root programs, small and audited (economy of mechanism,
+like \texttt{/bin/passwd}); drop privileges once the privileged step is done; prefer
+finer-grained rights (Linux capabilities, \texttt{sudo} limited to one command); never
+make an interpreter or an editor setuid.
+\end{exbox}
+
 \begin{defnbox}[title=Sticky bit]
 ``Restricted deletion bit'' (\texttt{chmod +t}).
 \begin{itemize}
@@ -394,6 +412,8 @@ Special user (\textbf{User ID $-2$}) that owns no files and belongs to no user. 
 user to execute code you do not know (particularly obfuscated code): limits damages if it
 misbehaves / gets compromised.
 \end{defnbox}
+
+\subsection{Exercise}
 
 \begin{exbox}[title={Exercise --- ACL in Linux}]
 \texttt{drwxr-x--- 2 manager\_A core\_devs 4096 Sep 24 11:35 /project\_beta} \\
@@ -417,6 +437,44 @@ Same state, with a new subdirectory and a file inside it: \\
   \item Who do they need to contact to fix the problem?
 \end{enumerate}
 \end{exbox}
+
+\begin{algbox}[title={Solution --- ACL in Linux}]
+\texttt{/project\_beta} is \texttt{drwxr-x---}, i.e.\ owner \texttt{rwx}, group
+\texttt{r-x}, other \texttt{---}. Only \emph{one} class is
+checked (owner, else group, else other). On a directory: \texttt{r} = list (\texttt{ls}),
+\texttt{w} = create/delete files (\texttt{touch} of a new file), \texttt{x} = traverse
+(\texttt{cd}).
+\begin{center}
+\begin{tabular}{l|l|c|c|c}
+ & class used & \texttt{cd} (\texttt{x}) & \texttt{ls} (\texttt{r}) & \texttt{touch} (\texttt{w}) \\ \hline
+manager\_A   & owner: \texttt{rwx}   & OK     & OK     & OK     \\
+developer\_B & group: \texttt{r-x}   & OK     & OK     & denied \\
+intern\_C    & other: \texttt{---}   & denied & denied & denied
+\end{tabular}
+\end{center}
+\begin{itemize}
+  \item \textbf{manager\_A} is the owner: the owner bits apply (being sudo is not
+        needed).
+  \item \textbf{developer\_B} is not the owner but is in \texttt{core\_devs}: the group
+        bits apply; no \texttt{w} $\Rightarrow$ cannot create \texttt{notes.txt}.
+  \item \textbf{intern\_C} falls in ``other'' (\texttt{---}): everything is denied.
+\end{itemize}
+\textbf{Q1:} developer\_B cannot create files in \texttt{/project\_beta} (group has no
+\texttt{w}), so e.g.\ manager\_A runs \texttt{chmod g+w /project\_beta}, developer\_B runs
+\texttt{mkdir Foo} and creates the file, then manager\_A runs \texttt{chmod g-w
+/project\_beta} (or manager\_A, as sudo, creates \texttt{Foo} and does \texttt{chown
+developer\_B}). \\
+\textbf{Q2:} no. \texttt{cd /project\_beta/Foo} fails: intern\_C has no \texttt{x} on
+\texttt{/project\_beta} (``other'' is \texttt{---}). \texttt{Foo} being \texttt{r-x} for
+others does not help: \textbf{every directory on the path} must be traversable. The
+\texttt{cat} then runs from the unchanged working directory and does not find the file. \\
+\textbf{Q3:} no, same reason: \texttt{Permission denied} on \texttt{/project\_beta}, even
+though the file itself is world-readable (\texttt{r--}). \\
+\textbf{Q4:} \textbf{manager\_A}, the owner of \texttt{/project\_beta} (and sudo):
+developer\_B owns \texttt{Foo} but not the parent directory. manager\_A can add intern\_C
+to \texttt{core\_devs} (least-privilege-wise better than \texttt{chmod o+x}, which would
+open the directory to everybody).
+\end{algbox}
 
 \section{DAC in practice: Windows}
 
@@ -451,9 +509,54 @@ Windows runs with least privilege by default; elevated rights require
 ``Run as administrator''.
 \end{rembox}
 
+\section{Mandatory Access Control (MAC)}
+
+\begin{defnbox}[title=Mandatory Access Control (MAC)]
+A \textbf{central security policy} assigns the permissions, and \textbf{users cannot
+override it}, even for what they created. Used by organizations with a need for central
+controls.
+\end{defnbox}
+
+\begin{exbox}[title=Where is MAC used?]
+\begin{itemize}
+  \item \textbf{Military} --- focus on \textbf{confidentiality} (classification levels:
+        a document is readable only by users with a high enough clearance, whatever its
+        owner wants).
+  \item \textbf{Hospital} --- focus on \textbf{confidentiality and integrity}. The
+        hospital owns the patient records and limits their sharing; regulatory
+        requirements (e.g.\ \textbf{HIPAA} for health information) may limit it further.
+  \item \textbf{Banking} --- focus on \textbf{integrity} (e.g.\ whoever enters a transfer
+        cannot approve it).
+\end{itemize}
+\end{exbox}
+
+\section{DAC vs.\ MAC}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l X X@{}}
+\toprule
+ & \textbf{DAC} & \textbf{MAC} \\
+\midrule
+Who sets the permissions & The \textbf{owner} of the object & A \textbf{central authority} (the policy) \\
+Can a user change them?  & Yes, for what they own         & No, even for what they created \\
+Typical use & Windows, Linux, macOS, social networks & Military, hospitals, banking \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\begin{rembox}[title=It is not a question of scale]
+What separates them is \textbf{who has the authority to decide}, not the size of the
+system: a huge system can be DAC (a social network), a small one MAC. Test: if Alice
+creates a file, can she decide by herself who may read it? Yes $\Rightarrow$ DAC; no,
+the policy decides $\Rightarrow$ MAC.
+\end{rembox}
+
+\section{Summary}
+
 \begin{keybox}[title=Summary]
 \begin{itemize}
-  \item \textbf{Discretionary Access Control}: owners establish permissions.
+  \item \textbf{Discretionary Access Control}: owners establish permissions (in
+        \textbf{MAC}, a central policy does).
   \item Conceptualized as an \textbf{access control matrix}.
   \item Implemented in two flavors: \textbf{access control lists} (permissions
         associated to objects) and \textbf{capabilities} (permissions associated to
