@@ -419,6 +419,44 @@ Same state, with a new subdirectory and a file inside it: \\
 \end{enumerate}
 \end{exbox}
 
+\begin{algbox}[title={Solution --- ACL in Linux}]
+\texttt{/project\_beta} is \texttt{drwxr-x---}, i.e.\ owner \texttt{rwx}, group
+\texttt{r-x}, other \texttt{---}. Only \emph{one} class is
+checked (owner, else group, else other). On a directory: \texttt{r} = list (\texttt{ls}),
+\texttt{w} = create/delete files (\texttt{touch} of a new file), \texttt{x} = traverse
+(\texttt{cd}).
+\begin{center}
+\begin{tabular}{l|l|c|c|c}
+ & class used & \texttt{cd} (\texttt{x}) & \texttt{ls} (\texttt{r}) & \texttt{touch} (\texttt{w}) \\ \hline
+manager\_A   & owner: \texttt{rwx}   & OK     & OK     & OK     \\
+developer\_B & group: \texttt{r-x}   & OK     & OK     & denied \\
+intern\_C    & other: \texttt{---}   & denied & denied & denied
+\end{tabular}
+\end{center}
+\begin{itemize}
+  \item \textbf{manager\_A} is the owner: the owner bits apply (being sudo is not
+        needed).
+  \item \textbf{developer\_B} is not the owner but is in \texttt{core\_devs}: the group
+        bits apply; no \texttt{w} $\Rightarrow$ cannot create \texttt{notes.txt}.
+  \item \textbf{intern\_C} falls in ``other'' (\texttt{---}): everything is denied.
+\end{itemize}
+\textbf{Q1:} developer\_B cannot create files in \texttt{/project\_beta} (group has no
+\texttt{w}), so e.g.\ manager\_A runs \texttt{chmod g+w /project\_beta}, developer\_B runs
+\texttt{mkdir Foo} and creates the file, then manager\_A runs \texttt{chmod g-w
+/project\_beta} (or manager\_A, as sudo, creates \texttt{Foo} and does \texttt{chown
+developer\_B}). \\
+\textbf{Q2:} no. \texttt{cd /project\_beta/Foo} fails: intern\_C has no \texttt{x} on
+\texttt{/project\_beta} (``other'' is \texttt{---}). \texttt{Foo} being \texttt{r-x} for
+others does not help: \textbf{every directory on the path} must be traversable. The
+\texttt{cat} then runs from the unchanged working directory and does not find the file. \\
+\textbf{Q3:} no, same reason: \texttt{Permission denied} on \texttt{/project\_beta}, even
+though the file itself is world-readable (\texttt{r--}). \\
+\textbf{Q4:} \textbf{manager\_A}, the owner of \texttt{/project\_beta} (and sudo):
+developer\_B owns \texttt{Foo} but not the parent directory. manager\_A can add intern\_C
+to \texttt{core\_devs} (least-privilege-wise better than \texttt{chmod o+x}, which would
+open the directory to everybody).
+\end{algbox}
+
 \section{DAC in practice: Windows}
 
 \begin{defnbox}[title=Windows access control]
