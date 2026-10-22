@@ -27,7 +27,7 @@ viewBtns.forEach(b => b.setAttribute("aria-pressed", b.dataset.view === (root.da
 // (name or code), the whole card stays as usual; otherwise only the matching documents are kept.
 // An empty field shows everything again and closes the sections.
 const q = document.getElementById("search");
-q.addEventListener("input", () => {
+const runSearch = () => {
   const words = q.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
   const hit = el => words.every(w => el.textContent.toLowerCase().includes(w));
   let shown = 0;  // number of subjects still visible, to show the no-result message
@@ -51,7 +51,8 @@ q.addEventListener("input", () => {
     shown += any;
   });
   document.getElementById("empty").hidden = shown > 0;
-});
+};
+q.addEventListener("input", runSearch);
 
 // Easter egg codes (yeti, armstrong, peace, kamelot, normal): onCode(word, fn) runs fn when the
 // word is typed anywhere but the search field, letter by letter like the Konami code, or typed in
