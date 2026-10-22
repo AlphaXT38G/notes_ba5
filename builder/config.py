@@ -20,7 +20,7 @@ NEW_DAYS = 4         # documents changed more recently get a "New" badge
 SEMESTER_WEEKS = 14  # length of the progress bar, override with "weeks" in subjects.json
 PREVIEW_PX = 240     # longest side of the first-page previews, in pixels (shown smaller, for sharpness)
 PDFTOPPM = shutil.which("pdftoppm")    # makes the previews; optional
-PDFTOTEXT = shutil.which("pdftotext")  # finds where the content of course notes starts; optional
+PDFTOTEXT = shutil.which("pdftotext")  # text of the PDFs: the search, where course notes start; optional
 # One accent per subject (in subjects.json order), override with "color" in subjects.json
 PALETTE = ["#3b6fd8", "#d9622b", "#2f9e6b", "#b4459a", "#c99a1c", "#7a55d1", "#1f9bb0", "#d04452"]
 WEEK_FOLDERS = ("week", "notes")  # folders whose PDFs are weekly notes
