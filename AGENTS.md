@@ -185,6 +185,10 @@ The search field finds subjects and documents by name (`ui.js`) and by what the 
   a search costs nothing more. Its keys are the documents' links (`<subject>/<path>.pdf`), the
   `href` of each `a.doc`, so the page needs no other id. Pages are kept apart: an extract can say
   its page and link to it (`#page=N`, followed by the browsers' PDF viewers).
+- **`ui.js` keeps the search by name** and calls the text search through one hook,
+  `searchInside` (null until `search.js` has its text): `ui.js` is the file that always runs, so
+  if `search.js` fails, or `search.json` is missing (no `pdftotext`, offline), the search by name
+  still works. The text search is only asked about documents whose name does not match.
 
 ### JS files, in load order
 
