@@ -73,6 +73,7 @@ details .links{margin:0;border-top:0;padding-left:1rem}
 .links li.found > a.doc{border-bottom:0}
 .hits{padding:0 .75rem .55rem 1.5rem;border-bottom:1px solid var(--line)}
 .hits small{display:block;color:var(--mut);font-size:.75rem;margin-bottom:.15rem}
+.links a.hit{display:block;padding:.3rem .5rem;border:0;border-radius:.4rem;color:var(--fg);font-weight:400;font-size:.82rem;line-height:1.45;overflow-wrap:anywhere}
 #empty{color:var(--mut)}
 footer{margin-top:2rem;color:var(--mut);font-size:.8rem}
 /* Shared animation: a glow layer whose opacity breathes (see flames.css and epic.css) */
