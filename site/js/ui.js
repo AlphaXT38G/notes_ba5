@@ -27,6 +27,7 @@ viewBtns.forEach(b => b.setAttribute("aria-pressed", b.dataset.view === (root.da
 // (name or code), the whole card stays as usual; otherwise only the matching documents are kept.
 // An empty field shows everything again and closes the sections.
 const q = document.getElementById("search");
+let searchInside = null;  // (link, query) => whether the document's text matches (search.js)
 const runSearch = () => {
   const words = q.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
   const hit = el => words.every(w => el.textContent.toLowerCase().includes(w));
@@ -35,7 +36,8 @@ const runSearch = () => {
     const whole = !words.length || hit(sec.querySelector("h2")) || hit(sec.querySelector(".code"));
     let any = whole;
     sec.querySelectorAll(".links a.doc").forEach(a => {
-      const ok = whole || hit(a);
+      let ok = whole || hit(a);
+      if (searchInside) ok = searchInside(a, q.value) || ok;
       a.parentNode.hidden = !ok;
       any = any || ok;  // not ||=: too new for some Android browsers (Chromium before 85)
     });
