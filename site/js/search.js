@@ -8,7 +8,8 @@
 // How a word is matched:
 //   - from the start of a word of the text: "sec" finds "security", not "insecure";
 //   - accents do not count ("modele" finds "modèle");
-//   - case does not count.
+//   - case does not count, unless the word typed has a capital (smart case): "MAC" finds the
+//     acronym MAC, "mac" finds "machine" too.
 let searchDocs = null,     // link href -> its pages: [{ text, fold, low }] (fold: no accents, low: lowercase too)
     searchRequest = null;  // the request for search.json, made once
 // Accents removed one character at a time, so that a position in the folded text is the same
@@ -40,23 +41,23 @@ const searchFetch = () => {
 q.addEventListener("focus", searchFetch);
 q.addEventListener("input", searchFetch);
 
-// The query as terms: { len, re }, re matching from the start of a word ((^|non-letter) before
-// it, since older Safari has no lookbehind). Parsed once per query, not once per document.
+// The query as terms: { cased, len, re }, re matching from the start of a word ((^|non-letter)
+// before it, since older Safari has no lookbehind). Parsed once per query, not once per document.
 let searchTermsFor = null, searchTerms = [];
 const searchTermsOf = query => {
   if (query === searchTermsFor) return searchTerms;
   searchTermsFor = query;
   const found = query.match(/\S+/g) || [];
   searchTerms = found.map(t => {
-    const fold = searchLower(searchFold(t));
-    const text = fold.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return { len: fold.length, re: new RegExp("(^|[^A-Za-z0-9])" + text, "g") };
+    const fold = searchFold(t), cased = fold !== searchLower(fold);
+    const text = (cased ? fold : searchLower(fold)).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return { cased, len: fold.length, re: new RegExp("(^|[^A-Za-z0-9])" + text, "g") };
   });
   return searchTerms;
 };
 // Where a term is in a page: the start of each match (after the character before the word)
 const searchTermAt = (t, page) => {
-  const hay = page.low, at = [];
+  const hay = t.cased ? page.fold : page.low, at = [];
   t.re.lastIndex = 0;
   for (let m; (m = t.re.exec(hay));) at.push(m.index + m[1].length);
   return at;
