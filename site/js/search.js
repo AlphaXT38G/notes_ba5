@@ -4,7 +4,7 @@
 // it; without it (no pdftotext at build time, offline) the field searches the names only (ui.js).
 // Once it is there, searchInside (ui.js) keeps a document whose text holds every word typed, and
 // shows under it how many times they appear and extracts of its three best pages, each a link to
-// that page (#page=N, which the browsers' PDF viewers follow).
+// that page (#page=N, which the browsers' PDF viewers follow); a button shows the other pages.
 // How a word is matched:
 //   - from the start of a word of the text: "sec" finds "security", not "insecure";
 //   - accents do not count ("modele" finds "modèle");
@@ -66,7 +66,8 @@ const searchTermAt = (t, page) => {
 };
 
 // The pages where the terms are: null unless every term is somewhere in the document. best: the
-// three best pages (those holding every term, then those with the most matches), in page order.
+// three best pages (those holding every term, then those with the most matches), in page order;
+// rest: the other pages, in page order.
 const searchPages = (pages, ts) => {
   const seen = ts.map(() => false), hits = [];
   let total = 0;
@@ -79,7 +80,7 @@ const searchPages = (pages, ts) => {
   if (!seen.every(Boolean)) return null;
   const byPage = (x, y) => x.i - y.i;
   const best = hits.slice().sort((x, y) => (y.all - x.all) || (y.n - x.n) || byPage(x, y)).slice(0, 3);
-  return { total, pages: hits.length, best: best.sort(byPage) };
+  return { total, pages: hits.length, best: best.sort(byPage), rest: hits.filter(h => best.indexOf(h) < 0) };
 };
 
 // One extract: about a line of text around the first match of the page, cut at spaces, with
@@ -139,6 +140,16 @@ const searchFind = (a, query) => {
     + (found.pages > 1 ? ` on ${found.pages} pages` : "");
   box.append(count);
   found.best.forEach(hit => box.append(searchExtract(pages[hit.i], hit, ts, href)));
+  if (found.rest.length) {
+    const more = document.createElement("button");
+    more.type = "button";
+    more.className = "more-hits";
+    more.textContent = `${found.rest.length} more page${found.rest.length > 1 ? "s" : ""}`;
+    more.addEventListener("click", () => {
+      more.replaceWith(...found.rest.map(hit => searchExtract(pages[hit.i], hit, ts, href)));
+    });
+    box.append(more);
+  }
   li.append(box);
   return true;
 };
