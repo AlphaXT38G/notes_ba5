@@ -95,18 +95,19 @@ def is_new(when):
     """True for documents changed less than NEW_DAYS ago (they get the "New" badge)."""
     return (datetime.now() - when).days < NEW_DAYS
 
-def link(subject, p, root, when, shot=None, solo=False):
-    """One <li> line: document name (+ "New" badge) on the left, size and date on the right.
+def link(subject, p, root, when, shot=None, text=None, solo=False):
+    """One <li> line: document name (+ "New" badge) on the left, pages, size and date on the right.
 
     It also carries the first-page thumbnail (or a "PDF" placeholder), only shown in the
-    Previews view; the size and date are repeated in the tooltip for that view.
+    Previews view; the pages, size and date are repeated in the tooltip for that view.
     Documents open in a new tab, so the index stays open next to them. solo: the document is alone
     in its list (the course notes, the only document of a section), shown on a whole row in the
     Previews view instead of a small thumbnail next to an empty row.
     """
     rel = p.relative_to(root).as_posix()
     badge = '<span class="new">New</span>' if is_new(when) else ""
-    meta = f"{p.stat().st_size / 1e6:.1f} MB · {when:%d %b %Y}"
+    count = f"{len(text)} page{'s' if len(text) > 1 else ''} · " if text else ""  # text: its pages (search.py)
+    meta = f"{count}{p.stat().st_size / 1e6:.1f} MB · {when:%d %b %Y}"
     cls = ' class="solo"' if solo else ""
     thumb = (
         f'<img class="thumb" src="{subject}/{html.escape(shot.relative_to(root).as_posix())}" alt="" loading="lazy">'
@@ -188,7 +189,7 @@ def build_index():
         # Weekly notes are recognised by their name (files in a week/ folder)
         weeks = [p for p in rest if weekly(p)]
         others = [p for p in rest if p not in weeks]
-        links = "".join(link(s["id"], p, root, when[p], shots[p], solo=True) for p in main)
+        links = "".join(link(s["id"], p, root, when[p], shots[p], texts[p], solo=True) for p in main)
         links += fold(s["id"], weeks, root, when, shots, "weekly note", grouped=False, extra=progress(weeks, s))
         links += fold(s["id"], others, root, when, shots, "more document")
         exam = f'<p class="exam">Exam: {html.escape(s["exam"])}</p>' if s.get("exam") else ""
