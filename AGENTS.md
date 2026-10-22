@@ -161,7 +161,9 @@ later still wins over their egg.
   before the first paint.
 
 The result is a single self-contained `dist/index.html`: no request for CSS or JS. Only images
-(`site/img/`, e.g. the bartender's head) are separate files, copied to `dist/img/`.
+(`site/img/`, e.g. the bartender's head) are separate files, copied to `dist/img/`, with the music
+(`dist/audio/`) and `dist/search.json`, the text of the PDFs (`builder/search.py`), fetched by
+`search.js` the first time the search field is used.
 
 ### JS files, in load order
 
