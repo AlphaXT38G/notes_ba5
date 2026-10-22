@@ -180,6 +180,11 @@ The search field finds subjects and documents by name (`ui.js`) and by what the 
   `--index-only` stays fast. It is cleaned once there: ligatures become letters (NFKC), words cut
   at line ends are joined, spaces collapse (a phrase is found across lines), and the dot leaders
   of a table of contents become one "…".
+- **`dist/search.json` is a file of its own**, not inlined in `index.html` (about 0.5 MB, 150 kB
+  gzipped): it is fetched only the first time the field is focused or typed in, so a visit without
+  a search costs nothing more. Its keys are the documents' links (`<subject>/<path>.pdf`), the
+  `href` of each `a.doc`, so the page needs no other id. Pages are kept apart: an extract can say
+  its page and link to it (`#page=N`, followed by the browsers' PDF viewers).
 
 ### JS files, in load order
 
