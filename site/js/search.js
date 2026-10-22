@@ -2,7 +2,8 @@
 // The build writes search.json, the text of every PDF page by page (builder/search.py). It is
 // fetched the first time the search field is used, so a visit without a search never downloads
 // it; without it (no pdftotext at build time, offline) the field searches the names only (ui.js).
-// Once it is there, searchInside (ui.js) keeps a document whose text holds every word typed.
+// Once it is there, searchInside (ui.js) keeps a document whose text holds every word typed, and
+// shows under it how many times they appear.
 // How a word is matched:
 //   - accents do not count ("modele" finds "modèle");
 //   - case does not count.
@@ -108,6 +109,10 @@ const searchFind = (a, query) => {
   box = document.createElement("div");
   box.className = "hits";
   box.dataset.q = query;
+  const count = document.createElement("small");
+  count.textContent = `${found.total} match${found.total > 1 ? "es" : ""}`
+    + (found.pages > 1 ? ` on ${found.pages} pages` : "");
+  box.append(count);
   li.append(box);
   return true;
 };
