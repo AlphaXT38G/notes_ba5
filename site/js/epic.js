@@ -280,29 +280,35 @@ document.addEventListener("epic", e => { if (!e.detail) endSummoning(); });
 // it starts at once when the metal ends; the click also counts as the gesture browsers need for
 // sound.
 
-// Leaving the finale: the kamelot code typed again (below) or the normal code (normal.js). The
-// page falls back to whatever the clock says (the calm night after the metal show, the day, or
-// the jazz bar at night). As long as it runs, the calm night waits.
+// Leaving the finale: the kamelot code typed again, the normal code, or another code that brings
+// its own screen (leaveShows, below). The page falls back to whatever the clock says (the calm
+// night after the metal show, the day, or the jazz bar at night). As long as it runs, the calm
+// night waits.
 const leaveEpic = () => {
   epicAt = 0;
   epicQueued = false;
   if (forced === "epic") forcedDismissed = true;  // also leaves a ?screen=epic
   applyScreen();
 };
+// The shows (the metal show, the epic finale) win over the jazz bar, Christmas and the calm night.
+// A code typed during one (armstrong, yeti, peace: armstrong.js, christmas.js, calm.js) ends it
+// first, so that its screen shows at once: the easter egg shows stop, a forced ?screen=metal or
+// epic is left, and the metal show of the clock gives way until 01:01:51 (skipSlot, screens.js).
+const leaveShows = () => {
+  const phase = document.body.dataset.phase;
+  if (phase !== "metal" && phase !== "epic") return;
+  metalEggAt = epicAt = 0;
+  epicQueued = false;
+  if (forced === phase) forcedDismissed = true;
+  if (scheduledPhase() === "metal") skipSlot();
+};
 
 // ── Kamelot code (easter egg: the epic finale at any time) ──
-// Typing k a m e l o t (outside the search field), like armstrong, opens the epic finale at once,
-// whatever the time and the screen (its override comes after the metal one, so it wins over the
-// shows too). It lasts like the finale after a metal show; typed again in it, it leaves it.
-// Typing is a gesture, so its music plays with sound at once.
-const KAMELOT = [..."kamelot"];
-let kamelotPos = 0;  // how many letters of the word have been typed so far
-document.addEventListener("keydown", e => {
-  if (e.target.matches("input")) return;  // typing in the search field never triggers it
-  const k = e.key.toLowerCase();
-  kamelotPos = k === KAMELOT[kamelotPos] ? kamelotPos + 1 : (k === KAMELOT[0] ? 1 : 0);
-  if (kamelotPos !== KAMELOT.length) return;
-  kamelotPos = 0;
+// Typing k a m e l o t (outside the search field, or in it then Enter: onCode, ui.js) opens the
+// epic finale at once, whatever the time and the screen (its override comes after the metal one,
+// so it wins over the shows too). It lasts like the finale after a metal show; typed again in it,
+// it leaves it. Typing is a gesture, so its music plays with sound at once.
+onCode("kamelot", () => {
   if (epicAt || document.body.dataset.phase === "epic") return leaveEpic();  // even mid-transition
   epicQueued = false;
   epicAt = Date.now();

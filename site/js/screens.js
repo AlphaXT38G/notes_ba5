@@ -27,15 +27,27 @@
 const SCREENS = {}, SCHEDULE = [], OVERRIDES = [], everySecond = [];
 const sub = document.querySelector(".sub"), daySub = sub.textContent;
 const forced = (q => q.get("screen") || q.get("night"))(new URLSearchParams(location.search));
-let forcedDismissed = false;  // set by a "back to normal" button: the forced screen is left
+let forcedDismissed = false;  // set by an easter egg leaving the screen: the forced screen is left
 const clockSeconds = () => { const d = new Date(); return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds(); };
+// skippedSlot: a clock slot left by an easter egg (skipSlot, e.g. armstrong typed during the metal
+// show of 01:00): the clock gives the day instead until that slot ends, so the egg's screen shows
+let skippedSlot = null;
+const currentSlot = () => {
+  const t = clockSeconds();
+  for (const slot of SCHEDULE) {
+    const [from, to] = slot;
+    if (from <= to ? t >= from && t < to : t >= from || t < to) return slot;
+  }
+  return null;
+};
+const skipSlot = () => { skippedSlot = currentSlot(); };
 const scheduledPhase = () => {
   if (forced === "0") return null;
   if (forced in SCREENS && !forcedDismissed) return forced;
-  const t = clockSeconds();
-  for (const [from, to, name] of SCHEDULE) {
-    if (from <= to ? t >= from && t < to : t >= from || t < to) return name;
-  }
+  const slot = currentSlot();
+  if (slot !== skippedSlot) skippedSlot = null;  // that slot is over: the clock decides again
+  else if (slot) return null;
+  if (slot) return slot[2];
   return forced === "1" && SCHEDULE.length ? SCHEDULE[0][2] : null;
 };
 // The usual look of the moment: the day (no screen) or a "normal" screen

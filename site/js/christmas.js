@@ -43,8 +43,9 @@ SCREENS["christmas-night"] = { className: "christmas", subtitle: xmasSubtitle, t
 // the yeti egg then), so the fir shows there too and brings Christmas back.
 const isXmasDate = (d = new Date()) => (d.getMonth() === 11 && d.getDate() >= 10) || (d.getMonth() === 0 && d.getDate() <= 3);
 const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && t < 18 * 3600; };
-// Easter egg: typing y e t i (outside the search field) brings Christmas at any time of the year, day
-// or night by the clock as usual, for the rest of the visit. Outside the Christmas period, typing it
+// Easter egg: typing y e t i (outside the search field, or in it then Enter: onCode, ui.js) brings
+// Christmas at any time of the year, day or night by the clock as usual, for the rest of the visit,
+// over every screen (typed during a show, it ends it first: leaveShows, epic.js). Outside the Christmas period, typing it
 // on a Christmas screen (from the egg or a forced ?screen=christmas...) goes back to the normal
 // screen; during the period it does nothing there, Christmas is there anyway. What counts is the
 // screen shown, not the egg: typed in a jazz bar opened over Christmas (armstrong code, sax), it
@@ -61,14 +62,8 @@ OVERRIDES.push(phase => {
   return p;
 });
 
-const YETI = ["y", "e", "t", "i"];
-let yetiPos = 0;  // how many letters of the word have been typed so far
-document.addEventListener("keydown", e => {
-  if (e.target.matches("input")) return;  // typing in the search field never triggers it
-  const k = e.key.toLowerCase();
-  yetiPos = k === YETI[yetiPos] ? yetiPos + 1 : (k === YETI[0] ? 1 : 0);
-  if (yetiPos !== YETI.length) return;
-  yetiPos = 0;
+onCode("yeti", () => {
+  leaveShows();  // typed during a show, it ends it first (epic.js)
   const onXmas = document.body.classList.contains("christmas");
   if (onXmas && isXmasDate()) return;
   yetiTyped++;

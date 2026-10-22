@@ -1,8 +1,8 @@
 // ── Normal code (easter egg: back to the day, whatever is on) ─────────────────────────────────
-// Typing n o r m a l (outside the search field), like the Konami code, brings the page back to
-// its base look, the day, at any time and over any screen: the jazz bar, Christmas, the calm
-// night, and the shows too (the metal show and the epic finale stop at once). It drops every
-// other easter egg (armstrong, yeti, peace, the sax, the jar, the flame clicks or the guitar's
+// Typing n o r m a l (outside the search field, or in it then Enter: onCode, ui.js) brings the
+// page back to its base look, the day, at any time and over any screen: the jazz bar, Christmas,
+// the calm night, and the shows too (the metal show and the epic finale stop at once). It drops
+// every other easter egg (armstrong, yeti, peace, the sax, the jar, the flame clicks or the guitar's
 // metal show, a queued epic finale) and a forced ?screen=..., then keeps the day for the rest of
 // the visit, even when the clock brings a screen (the bar at 21:30, the metal show at 01:00).
 // This override is the last one, so it would win over every egg: it gives way when one of them
@@ -23,14 +23,7 @@ const startDay = () => {
   dayEggYeti = yetiTyped;
   applyScreen();
 };
-const NORMAL = [..."normal"];
-let normalPos = 0;  // how many letters of the word have been typed so far
-document.addEventListener("keydown", e => {
-  if (e.target.matches("input")) return;  // typing in the search field never triggers it
-  const k = e.key.toLowerCase();
-  normalPos = k === NORMAL[normalPos] ? normalPos + 1 : (k === NORMAL[0] ? 1 : 0);
-  if (normalPos !== NORMAL.length) return;
-  normalPos = 0;
+onCode("normal", () => {
   if (dayEgg) { dayEgg = false; applyScreen(); }  // typed again: the clock decides
   else startDay();
 });
