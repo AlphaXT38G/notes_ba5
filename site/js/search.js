@@ -3,8 +3,8 @@
 // fetched the first time the search field is used, so a visit without a search never downloads
 // it; without it (no pdftotext at build time, offline) the field searches the names only (ui.js).
 // Once it is there, searchInside (ui.js) keeps a document whose text holds every word typed, and
-// shows under it how many times they appear and extracts of up to three of its pages, each a link
-// to that page (#page=N, which the browsers' PDF viewers follow).
+// shows under it how many times they appear and extracts of its three best pages, each a link to
+// that page (#page=N, which the browsers' PDF viewers follow).
 // How a word is matched:
 //   - accents do not count ("modele" finds "modèle");
 //   - case does not count.
@@ -61,7 +61,7 @@ const searchTermAt = (t, page) => {
 };
 
 // The pages where the terms are: null unless every term is somewhere in the document. best: the
-// three best pages (those holding every term first).
+// three best pages (those holding every term, then those with the most matches).
 const searchPages = (pages, ts) => {
   const seen = ts.map(() => false), hits = [];
   let total = 0;
@@ -69,11 +69,11 @@ const searchPages = (pages, ts) => {
     const at = ts.map(t => searchTermAt(t, page));
     const n = at.reduce((sum, a) => sum + a.length, 0);
     at.forEach((a, k) => { if (a.length) seen[k] = true; });
-    if (n) { total += n; hits.push({ i, at, all: at.every(a => a.length) }); }
+    if (n) { total += n; hits.push({ i, n, at, all: at.every(a => a.length) }); }
   });
   if (!seen.every(Boolean)) return null;
   const byPage = (x, y) => x.i - y.i;
-  const best = hits.slice().sort((x, y) => (y.all - x.all) || byPage(x, y)).slice(0, 3);
+  const best = hits.slice().sort((x, y) => (y.all - x.all) || (y.n - x.n) || byPage(x, y)).slice(0, 3);
   return { total, pages: hits.length, best };
 };
 
