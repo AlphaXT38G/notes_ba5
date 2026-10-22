@@ -24,8 +24,10 @@ viewBtns.forEach(b => b.setAttribute("aria-pressed", b.dataset.view === (root.da
 
 // Search: keep subjects and documents whose text matches, open the sections holding a match.
 // Every word typed must appear (in any order, case-insensitive). If the subject itself matches
-// (name or code), the whole card stays as usual; otherwise only the matching documents are kept.
-// An empty field shows everything again and closes the sections.
+// (name or code), the whole card stays as usual; otherwise only the matching documents are kept:
+// by their name, or by what they say inside (searchInside, set by search.js once the text of the
+// PDFs is loaded; it also shows the extracts found under the document, and clears them when
+// given no query). An empty field shows everything again and closes the sections.
 const q = document.getElementById("search");
 let searchInside = null;  // (link, query) => whether the document's text matches (search.js)
 const runSearch = () => {
