@@ -165,6 +165,10 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 (`dist/audio/`) and `dist/search.json`, the text of the PDFs (`builder/search.py`), fetched by
 `search.js` the first time the search field is used.
 
+In the Previews view, a document alone in its list (the course notes, the only document of a
+section: `li.solo`, set by `page.py`) or with extracts found inside it (`li.found`) takes a whole
+row, its thumbnail beside its name, pages, size and date.
+
 ### JS files, in load order
 
 | File | What it does |
