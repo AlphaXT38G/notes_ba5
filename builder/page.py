@@ -15,7 +15,7 @@ from .config import CONFIG, DIST, KINDS, NEW_DAYS, ORDER, PALETTE, ROOT, SEMESTE
 from .latex import course_weeks
 from .log import err, ok
 from .previews import preview
-from .search import pages
+from .search import pages, write_search
 
 def site_file(rel):
     """Text of a file of site/, on its own lines when inlined into the page."""
@@ -216,6 +216,7 @@ def build_index():
             shutil.copytree(SITE / folder, DIST / folder, dirs_exist_ok=True)
     (DIST / "index.html").write_text(page, encoding="utf-8")
     ok("dist/index.html")
+    write_search(search)
     check_script()
     check_compat()
 
