@@ -115,10 +115,12 @@ dioramas of cut paper that change during the fight; a hit shakes the screen. Esc
 the end of the song end it.
 The word codes (`yeti`, `armstrong`, `peace`, `kamelot`, `normal`) work on every screen, the shows
 included. Each one is typed anywhere but the search field, letter by letter, or typed in the
-search field then Enter, for phones (`onCode()` in `ui.js`: the field is emptied and the keyboard
-closes). Typed during the metal show or the epic finale, `yeti`, `armstrong` and `peace` end it
-first (`leaveShows()` in `epic.js`; the metal show of the clock gives way until 01:01:51,
-`skipSlot()` in `screens.js`), while a show that comes later still wins over their egg.
+search field then Enter or the phone keyboard's search key (`onCode()` in `ui.js`, on the form's
+submit, since that key often sends no "Enter" keydown; the field is emptied and the keyboard
+closes; autocorrect is off in it, or kamelot becomes Camelot). Typed during the metal show or the
+epic finale, `yeti`, `armstrong` and `peace` end it first (`leaveShows()` in `epic.js`; the metal
+show of the clock gives way until 01:01:51, `skipSlot()` in `screens.js`), while a show that comes
+later still wins over their egg.
 
 - `yeti`: Christmas day or night by the clock, any time of the year. Outside the Christmas
   period, typed on a Christmas screen it goes back to the normal one; typed in a jazz bar opened

@@ -55,8 +55,11 @@ q.addEventListener("input", () => {
 
 // Easter egg codes (yeti, armstrong, peace, kamelot, normal): onCode(word, fn) runs fn when the
 // word is typed anywhere but the search field, letter by letter like the Konami code, or typed in
-// the search field and sent with Enter, which is how phones (no keyboard outside a field) reach
-// them. The field is then emptied, all the cards come back and the phone's keyboard closes.
+// the search field and sent, which is how phones (no keyboard outside a field) reach them. The
+// field is then emptied, all the cards come back and the phone's keyboard closes. Sent means the
+// form's submit (Enter, or a phone keyboard's search key), not a keydown of Enter: that key often
+// sends no "Enter" while a word is being composed (key "Unidentified", keyCode 229). Autocorrect
+// and autocapitalize are off in the field, or the keyboard would turn kamelot into Camelot.
 // Either way it runs inside a key press, a user gesture: the screens' music can play with sound.
 const CODES = {};
 const onCode = (word, fn) => {
@@ -69,10 +72,10 @@ const onCode = (word, fn) => {
     if (pos === word.length) { pos = 0; fn(); }
   });
 };
-q.addEventListener("keydown", e => {
-  const fn = e.key === "Enter" && CODES[q.value.trim().toLowerCase()];
+q.form.addEventListener("submit", e => {
+  e.preventDefault();  // never reloads the page: the search is already live
+  const fn = CODES[q.value.trim().toLowerCase()];
   if (!fn) return;
-  e.preventDefault();
   q.value = "";
   q.dispatchEvent(new Event("input"));
   q.blur();
