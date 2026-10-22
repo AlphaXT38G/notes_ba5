@@ -138,4 +138,4 @@ at any time if you type `kamelot` (type it again to leave). And if it all gets
 too much, type `normal`: the plain page comes back, whatever is on (type it again to
 let the clock decide). Every code works on every screen, the shows included (typed during
 one, it ends it), and can be typed anywhere on the page or, on a phone, in the search
-field followed by Enter.
+field followed by Enter (or the keyboard's 🔍 key).
