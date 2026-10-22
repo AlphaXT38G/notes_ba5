@@ -14,4 +14,5 @@ def pages(p):
         return None
     out = subprocess.run([PDFTOTEXT, "-enc", "UTF-8", str(p), "-"], capture_output=True).stdout
     text = out.decode("utf-8", errors="replace")
-    return [page.strip() for page in text.split("\f")]
+    # pdftotext ends every page with a form feed, the last one too: nothing after it
+    return [page.strip() for page in text.split("\f")[:-1]]
