@@ -22,6 +22,7 @@ builder/              the Python behind build.py
   config.py             paths, subjects.json, constants of the index page
   latex.py              compiling a subject's LaTeX into dist/<subject>/
   previews.py           first-page thumbnails of the PDFs (poppler)
+  search.py             the text of the PDFs, page by page, for the search: dist/search.json (poppler)
   page.py               dist/index.html: cards from dist/, assembled with site/
   log.py                coloured console output
 site/                 the index page (HTML, CSS, JS inlined into one dist/index.html, images)
