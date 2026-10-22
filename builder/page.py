@@ -109,7 +109,7 @@ def link(subject, p, root, when, shot=None):
         if shot else '<span class="thumb none">PDF</span>'
     )
     return (
-        f'<li><a href="{subject}/{html.escape(rel)}" target="_blank" rel="noopener" title="{meta}">{thumb}<span>{html.escape(label(p, root))}{badge}</span>'
+        f'<li><a class="doc" href="{subject}/{html.escape(rel)}" target="_blank" rel="noopener" title="{meta}">{thumb}<span>{html.escape(label(p, root))}{badge}</span>'
         f'<small>{meta}</small></a></li>'
     )
 
