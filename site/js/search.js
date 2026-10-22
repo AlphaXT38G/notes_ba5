@@ -2,3 +2,9 @@
 // The build writes search.json, the text of every PDF page by page (builder/search.py). It is
 // fetched the first time the search field is used, so a visit without a search never downloads
 // it; without it (no pdftotext at build time, offline) the field searches the names only (ui.js).
+// Accents removed one character at a time, so that a position in the folded text is the same
+// position in the original one (the extract shows the original)
+const searchFold = s => s.replace(/[^\x00-\x7f]/g, c => {
+  const base = c.normalize("NFD").charAt(0);
+  return base.charCodeAt(0) < 128 ? base : c;
+});
