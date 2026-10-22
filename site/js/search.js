@@ -67,3 +67,20 @@ const searchPages = (pages, ts) => {
   return { total, pages: hits.length, best: hits.slice(0, 3) };
 };
 
+// One extract: about a line of text around the first match of the page, a link to that page.
+// Built as nodes, never as HTML: the text comes from the PDFs.
+const searchExtract = (page, hit, href) => {
+  const first = hit.at.filter(a => a.length).map(a => a[0]).sort((x, y) => x - y)[0];
+  const text = page.text;
+  let from = Math.max(0, first - 60), to = Math.min(text.length, first + 110);
+  const link = document.createElement("a");
+  link.className = "hit";
+  link.href = `${href}#page=${hit.i + 1}`;
+  link.target = "_blank";
+  link.rel = "noopener";
+  const pageNo = document.createElement("b");
+  pageNo.textContent = `p. ${hit.i + 1}`;
+  link.append(pageNo, text.slice(from, to));
+  return link;
+};
+
