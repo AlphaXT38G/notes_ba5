@@ -18,6 +18,7 @@
   ],
   "js": [
     "js/ui.js",
+    "js/search.js",
     "js/flames.js",
     "js/surprise.js",
     "js/blackhole.js",
