@@ -169,6 +169,12 @@ In the Previews view, a document alone in its list (the course notes, the only d
 section: `li.solo`, set by `page.py`) or with extracts found inside it (`li.found`) takes a whole
 row, its thumbnail beside its name, pages, size and date.
 
+### The search
+
+The search field finds subjects and documents by name (`ui.js`) and by what the documents say
+(`search.js`). How it is built, and why:
+
+
 ### JS files, in load order
 
 | File | What it does |
