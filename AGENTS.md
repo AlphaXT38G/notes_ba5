@@ -205,6 +205,7 @@ The search field finds subjects and documents by name (`ui.js`) and by what the 
 | File | What it does |
 |---|---|
 | `ui.js` | light/dark toggle (`root` = `<html>`), Names / Previews switch, search by name (`runSearch()`, with the `searchInside` hook of `search.js`), `onCode()` (the easter egg words, typed on the page or in the search field then Enter) |
+| `search.js` | search inside the documents (see "The search" above): `search.json` fetched on the first use of the field, `searchFind()` (the `searchInside` hook of `ui.js`), the extracts under each document found, each a link to its page, and the button for the other pages |
 | `flames.js` | 🔥 flame mode, `setFire`, `crowded()` (anti pile-up helper), the 20-click easter egg |
 | `surprise.js` | random surprise banner |
 | `blackhole.js` | `createBlackHole()`: the Konami black hole, ray-traced in WebGL (light bent by gravity, disk with Doppler beaming, lensed stars), on two canvases so the page falls between its sky and its disk |
