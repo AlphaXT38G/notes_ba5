@@ -196,6 +196,9 @@ The search field finds subjects and documents by name (`ui.js`) and by what the 
   in the folded text is a position in the original, which the extracts show), and the query is
   parsed once per change, not once per document: a search over all the PDFs takes a few
   milliseconds, even on a slow phone.
+- **Extracts** are built as DOM nodes (never `innerHTML`: the text comes from the PDFs), three per
+  document (the pages holding every word, then the most matches, shown in page order), and the
+  other pages only when their button is clicked.
 
 ### JS files, in load order
 
