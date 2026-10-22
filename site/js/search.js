@@ -8,3 +8,5 @@ const searchFold = s => s.replace(/[^\x00-\x7f]/g, c => {
   const base = c.normalize("NFD").charAt(0);
   return base.charCodeAt(0) < 128 ? base : c;
 });
+// Lowercase
+const searchLower = s => s.toLowerCase();
