@@ -37,7 +37,7 @@ const runSearch = () => {
     let any = whole;
     sec.querySelectorAll(".links a.doc").forEach(a => {
       let ok = whole || hit(a);
-      if (searchInside) ok = searchInside(a, q.value) || ok;
+      if (searchInside) ok = searchInside(a, ok ? "" : q.value) || ok;  // its extracts only when the name is not enough
       a.parentNode.hidden = !ok;
       any = any || ok;  // not ||=: too new for some Android browsers (Chromium before 85)
     });
