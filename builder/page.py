@@ -131,7 +131,7 @@ def fold(subject, pdfs, root, when, shots, noun, grouped=True, extra=""):
         if grouped and folder != "." and folder != group:
             items.append(f'<li class="group">{html.escape(folder)}</li>')
         group = folder
-        items.append(link(subject, p, root, when[p], shots[p]))
+        items.append(link(subject, p, root, when[p], shots[p], solo=len(pdfs) == 1))
     n = len(pdfs)
     # The list is folded, so say on the summary when something new is inside
     fresh = sum(is_new(when[p]) for p in pdfs)
