@@ -61,7 +61,7 @@ const searchTermAt = (t, page) => {
 };
 
 // The pages where the terms are: null unless every term is somewhere in the document. best: the
-// three best pages (those holding every term, then those with the most matches).
+// three best pages (those holding every term, then those with the most matches), in page order.
 const searchPages = (pages, ts) => {
   const seen = ts.map(() => false), hits = [];
   let total = 0;
@@ -74,7 +74,7 @@ const searchPages = (pages, ts) => {
   if (!seen.every(Boolean)) return null;
   const byPage = (x, y) => x.i - y.i;
   const best = hits.slice().sort((x, y) => (y.all - x.all) || (y.n - x.n) || byPage(x, y)).slice(0, 3);
-  return { total, pages: hits.length, best };
+  return { total, pages: hits.length, best: best.sort(byPage) };
 };
 
 // One extract: about a line of text around the first match of the page, cut at spaces, a link
