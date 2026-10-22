@@ -1,5 +1,5 @@
 // ── Christmas (screens "christmas" and "christmas-night", body.christmas) ─────────────────────
-// From December 10 to January 3 the usual looks are replaced by Christmas (css/christmas.css):
+// From December 1 to January 3 the usual looks are replaced by Christmas (css/christmas.css):
 // the day screen from 6:00 to 18:00, the night screen from 18:00 to 6:00. Typing "yeti" brings
 // them at any time of the year. Both screens have:
 //   - a garland across the top (lit at night),
@@ -41,13 +41,13 @@ SCREENS["christmas-night"] = { className: "christmas", subtitle: xmasSubtitle, t
 // the jazz bar replaces it until the fir is clicked or the other one comes (18:00 or 6:00).
 // xmasPeace: the calm night was opened with the firefly jar (the peace egg of calm.js, which keeps
 // the yeti egg then), so the fir shows there too and brings Christmas back.
-const isXmasDate = (d = new Date()) => (d.getMonth() === 11 && d.getDate() >= 10) || (d.getMonth() === 0 && d.getDate() <= 3);
+const isXmasDate = (d = new Date()) => d.getMonth() === 11 || (d.getMonth() === 0 && d.getDate() <= 3);  // all December, and Jan 1 - 3
 const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && t < 18 * 3600; };
 // Easter egg: typing y e t i (outside the search field, or in it then Enter: onCode, ui.js) brings
 // Christmas at any time of the year, day or night by the clock as usual, for the rest of the visit,
-// over every screen (typed during a show, it ends it first: leaveShows, epic.js). Outside the Christmas period, typing it
-// on a Christmas screen (from the egg or a forced ?screen=christmas...) goes back to the normal
-// screen; during the period it does nothing there, Christmas is there anyway. What counts is the
+// over every screen (typed during a show, it ends it first: leaveShows, epic.js). Outside the
+// Christmas period, typing it on a Christmas screen (from the egg or a forced ?screen=christmas...)
+// goes back to the normal screen; during the period it does nothing there, Christmas is there anyway. What counts is the
 // screen shown, not the egg: typed in a jazz bar opened over Christmas (armstrong code, sax), it
 // brings Christmas back. It overrides a forced ?screen=.
 // yetiTyped: how many times it was typed, so that the armstrong code's bar gives way (armstrong.js)

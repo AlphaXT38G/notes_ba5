@@ -106,7 +106,7 @@ colours (blue and arcane, or red under a starry night, with a dragon crossing th
 until you type `kamelot` (see below), which brings back the usual look for the time of day
 (day, the calm night after the show, or the jazz bar at night), or another of the codes below.
 
-From **December 10 to January 3** Christmas replaces the day, the jazz bar and the
+From **December 1 to January 3** Christmas replaces the day, the jazz bar and the
 calm night: a
 Christmas day from 06:00 to 18:00 and a Christmas night from 18:00 to 06:00. A
 garland across the top (lit at night), falling snow,

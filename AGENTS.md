@@ -228,8 +228,8 @@ Current screens:
 | `metal` | `metal` | 01:00:00 – 01:01:51 (the song 3 times), or 20 flame clicks, or the Christmas guitar | `metal.js`, `metal.css` |
 | `epic` | `epic` | after a metal show, if "More epicness ?" was clicked, or the `kamelot` code, until a code leaves it | `epic.js`, `epic.css`, `bardscene.js`, `bard.js`, `bard.css` |
 | `calm` | `calm` | 01:01:51 – 05:30, unless the epic finale runs (a `normal` screen), or the `peace` code, or the Christmas jar | `calm.js`, `calm.css` |
-| `christmas` | `christmas` | Dec 10 – Jan 3, 06:00 – 18:00 (replaces the day) | `christmas.js`, `christmas.css` |
-| `christmas-night` | `christmas` | Dec 10 – Jan 3, 18:00 – 06:00 (replaces the day, the jazz bar and the calm night) | `christmas.js`, `christmas.css` |
+| `christmas` | `christmas` | Dec 1 – Jan 3, 06:00 – 18:00 (replaces the day) | `christmas.js`, `christmas.css` |
+| `christmas-night` | `christmas` | Dec 1 – Jan 3, 18:00 – 06:00 (replaces the day, the jazz bar and the calm night) | `christmas.js`, `christmas.css` |
 
 The Christmas screens depend on the date, so they are an override rather than a `SCHEDULE` slot:
 it only rewrites the normal screens (no screen, the calm night: `isNormal()` in `screens.js`) and
