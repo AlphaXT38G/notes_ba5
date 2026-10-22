@@ -77,16 +77,21 @@ const searchPages = (pages, ts) => {
   return { total, pages: hits.length, best: best.sort(byPage) };
 };
 
-// One extract: about a line of text around the first match of the page, cut at spaces, a link
-// to that page.
-// Built as nodes, never as HTML: the text comes from the PDFs.
-const searchExtract = (page, hit, href) => {
+// One extract: about a line of text around the first match of the page, cut at spaces, with
+// every match in it marked. Built as nodes, never as HTML: the text comes from the PDFs.
+const searchExtract = (page, hit, ts, href) => {
   const first = hit.at.filter(a => a.length).map(a => a[0]).sort((x, y) => x - y)[0];
   const text = page.text;
   let from = Math.max(0, first - 60), to = Math.min(text.length, first + 110);
   const space = text.indexOf(" ", from);
   if (from > 0 && space >= 0 && space < first) from = space + 1;
   if (to < text.length) to = text.lastIndexOf(" ", to) > first ? text.lastIndexOf(" ", to) : to;
+  // the marked spans: every match of every term inside the extract (overlaps merged)
+  const spans = [];
+  hit.at.forEach((a, k) => a.forEach(s => {
+    if (s >= from && s < to) spans.push([s, Math.min(to, s + ts[k].len)]);
+  }));
+  spans.sort((x, y) => x[0] - y[0]);
   const link = document.createElement("a");
   link.className = "hit";
   link.href = `${href}#page=${hit.i + 1}`;
@@ -94,7 +99,18 @@ const searchExtract = (page, hit, href) => {
   link.rel = "noopener";
   const pageNo = document.createElement("b");
   pageNo.textContent = `p. ${hit.i + 1}`;
-  link.append(pageNo, from > 0 ? "…" : "", text.slice(from, to), to < text.length ? "…" : "");
+  link.append(pageNo, from > 0 ? "…" : "");
+  let at = from;
+  spans.forEach(([s, e]) => {
+    if (e <= at) return;
+    s = Math.max(s, at);
+    link.append(text.slice(at, s));
+    const mark = document.createElement("mark");
+    mark.textContent = text.slice(s, e);
+    link.append(mark);
+    at = e;
+  });
+  link.append(text.slice(at, to), to < text.length ? "…" : "");
   return link;
 };
 
@@ -117,7 +133,7 @@ const searchFind = (a, query) => {
   count.textContent = `${found.total} match${found.total > 1 ? "es" : ""}`
     + (found.pages > 1 ? ` on ${found.pages} pages` : "");
   box.append(count);
-  found.best.forEach(hit => box.append(searchExtract(pages[hit.i], hit, href)));
+  found.best.forEach(hit => box.append(searchExtract(pages[hit.i], hit, ts, href)));
   li.append(box);
   return true;
 };
