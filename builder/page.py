@@ -15,6 +15,7 @@ from .config import CONFIG, DIST, KINDS, NEW_DAYS, ORDER, PALETTE, ROOT, SEMESTE
 from .latex import course_weeks
 from .log import err, ok
 from .previews import preview
+from .search import pages
 
 def site_file(rel):
     """Text of a file of site/, on its own lines when inlined into the page."""
@@ -171,6 +172,7 @@ def build_index():
             continue
         when = {p: updated(s["id"], p, root) for p in pdfs}  # one git call per PDF, done once
         shots = {p: preview(p) for p in pdfs}               # first-page previews (None if unavailable)
+        texts = {p: pages(p) for p in pdfs}                 # text of each page (None if unavailable)
         # Course notes stay visible on the card, everything else goes in the collapsible sections
         course = root / "course.pdf"
         main = [course] if course in pdfs else []
