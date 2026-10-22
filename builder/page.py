@@ -94,22 +94,25 @@ def is_new(when):
     """True for documents changed less than NEW_DAYS ago (they get the "New" badge)."""
     return (datetime.now() - when).days < NEW_DAYS
 
-def link(subject, p, root, when, shot=None):
+def link(subject, p, root, when, shot=None, solo=False):
     """One <li> line: document name (+ "New" badge) on the left, size and date on the right.
 
     It also carries the first-page thumbnail (or a "PDF" placeholder), only shown in the
     Previews view; the size and date are repeated in the tooltip for that view.
-    Documents open in a new tab, so the index stays open next to them.
+    Documents open in a new tab, so the index stays open next to them. solo: the document is alone
+    in its list (the course notes, the only document of a section), shown on a whole row in the
+    Previews view instead of a small thumbnail next to an empty row.
     """
     rel = p.relative_to(root).as_posix()
     badge = '<span class="new">New</span>' if is_new(when) else ""
     meta = f"{p.stat().st_size / 1e6:.1f} MB · {when:%d %b %Y}"
+    cls = ' class="solo"' if solo else ""
     thumb = (
         f'<img class="thumb" src="{subject}/{html.escape(shot.relative_to(root).as_posix())}" alt="" loading="lazy">'
         if shot else '<span class="thumb none">PDF</span>'
     )
     return (
-        f'<li><a class="doc" href="{subject}/{html.escape(rel)}" target="_blank" rel="noopener" title="{meta}">{thumb}<span>{html.escape(label(p, root))}{badge}</span>'
+        f'<li{cls}><a class="doc" href="{subject}/{html.escape(rel)}" target="_blank" rel="noopener" title="{meta}">{thumb}<span>{html.escape(label(p, root))}{badge}</span>'
         f'<small>{meta}</small></a></li>'
     )
 
