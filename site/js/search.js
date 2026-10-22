@@ -16,7 +16,7 @@ const searchLower = s => {
   return low.length === s.length ? low : s.replace(/[A-Z]/g, c => c.toLowerCase());
 };
 const searchFetch = () => {
-  if (searchRequest) return;
+  if (searchRequest || !window.fetch) return;
   searchRequest = fetch("search.json").then(r => r.ok ? r.json() : null).then(data => {
     if (!data) return;
     searchDocs = {};
