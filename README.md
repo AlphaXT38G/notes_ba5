@@ -134,7 +134,7 @@ Christmas back), and the jazz bar at any time
 if you type `armstrong` (type it again in the bar to go back to the screen of the
 moment: the day, the calm night, the bar at bar time, or Christmas in December), and the
 calm night at any time if you type `peace` (type it again to leave), and the epic finale
-at any time, even over the shows, if you type `kamelot` (type it again to leave). And if it all gets
+at any time if you type `kamelot` (type it again to leave). And if it all gets
 too much, type `normal`: the plain page comes back, whatever is on (type it again to
 let the clock decide). Every code works on every screen, the shows included (typed during
 one, it ends it), and can be typed anywhere on the page or, on a phone, in the search

@@ -93,11 +93,8 @@ The night screens follow the clock. Force one with the URL (`?night=`, the old n
 | `?screen=calm` | calm night (no dawn when forced outside 04:45 – 05:30) |
 | `?screen=christmas` / `?screen=christmas-night` | Christmas day / Christmas night |
 
-Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑↑↓↓←→←→BA, `yeti` typed
-(see the word codes below: Christmas day or night by the clock, any time of the year; outside
-the Christmas period, typed on a Christmas screen it goes back to the normal one; typed in a jazz
-bar opened over Christmas, it brings Christmas back), a random surprise banner on some visits, and
-on both Christmas screens (day and night) a small golden sax hidden among the tree ornaments that
+Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑↑↓↓←→←→BA, the word
+codes (below), a random surprise banner on some visits, and on both Christmas screens (day and night) a small golden sax hidden among the tree ornaments that
 opens the jazz bar; a little fir in the bar's bottom right corner brings Christmas back. A red
 guitar standing behind the green gift under the tree starts the metal show (then Christmas comes
 back), and a firefly jar swinging under the garland opens the calm night (like `peace`, but the
@@ -117,24 +114,28 @@ moved by the arrow keys) dodging bones and skull blasters, non-stop, faster and 
 dioramas of cut paper that change during the fight; a hit shakes the screen. Escape, game over or
 the end of the song end it.
 The word codes (`yeti`, `armstrong`, `peace`, `kamelot`, `normal`) work on every screen, the shows
-included: typed during the metal show or the epic finale, `yeti`, `armstrong` and `peace` end it
+included. Each one is typed anywhere but the search field, letter by letter, or typed in the
+search field then Enter, for phones (`onCode()` in `ui.js`: the field is emptied and the keyboard
+closes). Typed during the metal show or the epic finale, `yeti`, `armstrong` and `peace` end it
 first (`leaveShows()` in `epic.js`; the metal show of the clock gives way until 01:01:51,
-`skipSlot()` in `screens.js`), while a show that comes later still wins over their egg. Each one
-is typed anywhere but the search field, letter by letter, or typed in the search field then
-Enter, for phones (`onCode()` in `ui.js`: the field is emptied and the keyboard closes).
-`armstrong` opens the jazz bar at any time (over Christmas and the calm night too); typed again
-in the bar it goes back to
-the normal screen of that moment, by the clock alone: it drops the `armstrong` and `yeti` eggs, the
-sax and a forced `?screen=`, so it shows the day (or the calm night), the bar itself at bar time
-(21:30 – 01:00), or Christmas during the Christmas period. `peace` brings the calm night at any
-time, like `yeti` (over the day, the jazz bar and Christmas; a later show wins, and the calm night
-comes back after it); `yeti` or `armstrong` typed after it wins, and typed
-again on the calm night it goes back to the normal screen of that moment (on the calm night of the
-clock, it does nothing). `kamelot` opens the epic finale at any time, over every screen; typed
-again in it, it leaves it for the screen of the clock (the finale has no button for that).
-`normal` brings back the day at any time, over every screen: it drops every other egg and a
-forced `?screen=`, and keeps the day even when the clock brings a screen; an egg typed or clicked
-after it wins, and typed again it lets the clock decide.
+`skipSlot()` in `screens.js`), while a show that comes later still wins over their egg.
+
+- `yeti`: Christmas day or night by the clock, any time of the year. Outside the Christmas
+  period, typed on a Christmas screen it goes back to the normal one; typed in a jazz bar opened
+  over Christmas, it brings Christmas back.
+- `armstrong`: the jazz bar at any time (over Christmas and the calm night too). Typed again in
+  the bar it goes back to the normal screen of that moment, by the clock alone: it drops the
+  `armstrong` and `yeti` eggs, the sax and a forced `?screen=`, so it shows the day (or the calm
+  night), the bar itself at bar time (21:30 – 01:00), or Christmas during the Christmas period.
+- `peace`: the calm night at any time, over the day, the jazz bar and Christmas (a later show
+  wins, and the calm night comes back after it); `yeti` or `armstrong` typed after it wins. Typed
+  again on the calm night it goes back to the normal screen of that moment (on the calm night of
+  the clock, it does nothing).
+- `kamelot`: the epic finale at any time, over every screen. Typed again in it, it leaves it for
+  the screen of the clock (the finale has no button for that).
+- `normal`: the day at any time, over every screen. It drops every other egg and a forced
+  `?screen=`, and keeps the day even when the clock brings a screen; an egg typed or clicked
+  after it wins, and typed again it lets the clock decide.
 
 ## How the index page is built
 
