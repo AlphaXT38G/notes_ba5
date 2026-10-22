@@ -78,9 +78,6 @@ body.epic section::after{box-shadow:-10px 0 34px -10px rgba(170,90,255,.9);anima
 @keyframes s-flash{0%,50%{opacity:0}55%{opacity:1}62%{opacity:.95}86%,100%{opacity:0}}
 @keyframes s-word{0%,57%{opacity:0;transform:scale(1.7)}66%{opacity:1;transform:scale(1)}88%{opacity:1;transform:scale(.97)}100%{opacity:0;transform:scale(.92)}}
 @keyframes s-word2{0%,62%{opacity:0;transform:translateY(.6em)}72%{opacity:1;transform:none}88%{opacity:1}100%{opacity:0}}
-/* "Back to normal", small and discreet in the bottom right corner of the epic finale */
-#leave{position:fixed;right:1rem;bottom:1rem;z-index:45;padding:.35rem .7rem;color:#c9d4ff;font:600 .75rem system-ui,sans-serif;background:rgba(12,10,40,.75);border:1px solid rgba(140,160,255,.45);border-radius:999px;cursor:pointer}
-#leave:hover,#leave:focus-visible{color:#fff;border-color:#b9c8ff;box-shadow:0 0 12px rgba(120,150,255,.6)}
 body.epic #fire{display:none}  /* no flame mode during the finale */
 /* Reduced motion */
 @media(prefers-reduced-motion:reduce){body.epic section::after,body.epic::before,body.epic h1{animation:none}#more,#more>span,#more>img,#more .m-sparks b,#more .m-shine{animation:none}#more .m-sparks{display:none}#summon{display:none}}
