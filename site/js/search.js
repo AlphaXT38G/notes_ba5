@@ -2,6 +2,10 @@
 // The build writes search.json, the text of every PDF page by page (builder/search.py). It is
 // fetched the first time the search field is used, so a visit without a search never downloads
 // it; without it (no pdftotext at build time, offline) the field searches the names only (ui.js).
+// Once it is there, searchInside (ui.js) keeps a document whose text holds every word typed.
+// How a word is matched:
+//   - accents do not count ("modele" finds "modèle");
+//   - case does not count.
 let searchDocs = null,     // link href -> its pages: [{ text, fold, low }] (fold: no accents, low: lowercase too)
     searchRequest = null;  // the request for search.json, made once
 // Accents removed one character at a time, so that a position in the folded text is the same
@@ -26,6 +30,8 @@ const searchFetch = () => {
         return { text, fold, low: searchLower(fold) };
       });
     });
+    searchInside = searchFind;
+    if (q.value.trim()) runSearch();  // what is already typed is searched again, inside this time
   }).catch(() => {});
 };
 q.addEventListener("focus", searchFetch);
@@ -88,3 +94,20 @@ const searchExtract = (page, hit, href) => {
   return link;
 };
 
+// searchInside (ui.js): whether the text of a document matches the query (li.found). Asked again
+// only when the query changes.
+const searchFind = (a, query) => {
+  const li = a.parentNode, href = a.getAttribute("href"), pages = searchDocs[href];
+  let box = li.querySelector(".hits");
+  if (box && box.dataset.q === query) return true;
+  if (box) box.remove();
+  const ts = query && pages ? searchTermsOf(query) : [];
+  const found = ts.length ? searchPages(pages, ts) : null;
+  li.classList.toggle("found", !!found);
+  if (!found) return false;
+  box = document.createElement("div");
+  box.className = "hits";
+  box.dataset.q = query;
+  li.append(box);
+  return true;
+};
