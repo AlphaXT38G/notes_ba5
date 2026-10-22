@@ -6,6 +6,7 @@
 // shows under it how many times they appear and extracts of its three best pages, each a link to
 // that page (#page=N, which the browsers' PDF viewers follow).
 // How a word is matched:
+//   - from the start of a word of the text: "sec" finds "security", not "insecure";
 //   - accents do not count ("modele" finds "modèle");
 //   - case does not count.
 let searchDocs = null,     // link href -> its pages: [{ text, fold, low }] (fold: no accents, low: lowercase too)
@@ -39,7 +40,8 @@ const searchFetch = () => {
 q.addEventListener("focus", searchFetch);
 q.addEventListener("input", searchFetch);
 
-// The query as terms: { len, re }. Parsed once per query, not once per document.
+// The query as terms: { len, re }, re matching from the start of a word ((^|non-letter) before
+// it, since older Safari has no lookbehind). Parsed once per query, not once per document.
 let searchTermsFor = null, searchTerms = [];
 const searchTermsOf = query => {
   if (query === searchTermsFor) return searchTerms;
@@ -48,15 +50,15 @@ const searchTermsOf = query => {
   searchTerms = found.map(t => {
     const fold = searchLower(searchFold(t));
     const text = fold.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return { len: fold.length, re: new RegExp(text, "g") };
+    return { len: fold.length, re: new RegExp("(^|[^A-Za-z0-9])" + text, "g") };
   });
   return searchTerms;
 };
-// Where a term is in a page: the start of each match
+// Where a term is in a page: the start of each match (after the character before the word)
 const searchTermAt = (t, page) => {
   const hay = page.low, at = [];
   t.re.lastIndex = 0;
-  for (let m; (m = t.re.exec(hay));) at.push(m.index);
+  for (let m; (m = t.re.exec(hay));) at.push(m.index + m[1].length);
   return at;
 };
 
