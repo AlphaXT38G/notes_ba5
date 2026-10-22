@@ -4,11 +4,12 @@ Extracted with pdftotext (poppler), optional like the previews: without it there
 search.json and the page searches the documents' names only.
 """
 
+import json
 import re
 import subprocess
 import unicodedata
 
-from .config import PDFTOTEXT
+from .config import DIST, PDFTOTEXT
 
 def pages(p):
     """Text of each page of a PDF (a list of strings), or None without pdftotext.
@@ -29,3 +30,12 @@ def pages(p):
     text = re.sub(r"(\w)-\n(?=[a-zà-ÿ])", r"\1", text)  # secu-\nrity -> security
     # pdftotext ends every page with a form feed, the last one too: nothing after it
     return [re.sub(r"(?: ?\.){4,}", " …", re.sub(r"\s+", " ", page)).strip() for page in text.split("\f")[:-1]]
+
+def write_search(texts):
+    """dist/search.json: {"<subject>/<path>.pdf": [text of page 1, page 2...]}, the link of each
+    document on the page as its key. Fetched by site/js/search.js the first time someone searches.
+    """
+    texts = {href: t for href, t in texts.items() if t}
+    if not texts:
+        return
+    (DIST / "search.json").write_text(json.dumps(texts, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
