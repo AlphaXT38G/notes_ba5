@@ -52,7 +52,9 @@ extracts of its best pages (click one to open the PDF at that page). Accents do 
 a word with a capital matches that case only (`MAC` is the acronym, `mac` also finds
 "machine"), and `"quoted words"` are searched as one phrase.
 A **Names / Previews** switch shows every document as a small thumbnail of its
-first page instead (for course notes, the first page after the table of contents).
+first page instead (for course notes, the first page after the table of contents); a
+document alone in its list, like the course notes, takes the whole row with its pages,
+size and date beside it.
 The thumbnails are made by `pdftoppm` and `pdftotext` (poppler); without them,
 the build still works and the page shows names only.
 
