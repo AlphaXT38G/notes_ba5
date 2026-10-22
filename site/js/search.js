@@ -39,7 +39,8 @@ const searchTermsOf = query => {
   const found = query.match(/\S+/g) || [];
   searchTerms = found.map(t => {
     const fold = searchLower(searchFold(t));
-    return { len: fold.length, re: new RegExp(fold, "g") };
+    const text = fold.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return { len: fold.length, re: new RegExp(text, "g") };
   });
   return searchTerms;
 };
