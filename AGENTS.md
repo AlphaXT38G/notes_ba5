@@ -89,12 +89,12 @@ The night screens follow the clock. Force one with the URL (`?night=`, the old n
 | `?screen=1` | the first scheduled screen (the jazz bar) |
 | `?screen=evening` / `?screen=closing` | jazz bar / bar closing (the bartender comes ~9 s in, once the sign is dark) |
 | `?screen=metal` | metal show (does not end by itself when forced: the song plays on and on) |
-| `?screen=epic` | epic finale (until "Back to normal") |
+| `?screen=epic` | epic finale (until a code leaves it, e.g. `kamelot` again) |
 | `?screen=calm` | calm night (no dawn when forced outside 04:45 – 05:30) |
 | `?screen=christmas` / `?screen=christmas-night` | Christmas day / Christmas night |
 
 Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑↑↓↓←→←→BA, `yeti` typed
-anywhere but the search field (Christmas day or night by the clock, any time of the year; outside
+(see the word codes below: Christmas day or night by the clock, any time of the year; outside
 the Christmas period, typed on a Christmas screen it goes back to the normal one; typed in a jazz
 bar opened over Christmas, it brings Christmas back), a random surprise banner on some visits, and
 on both Christmas screens (day and night) a small golden sax hidden among the tree ornaments that
@@ -116,21 +116,25 @@ the courses and the pointer becomes a red heart (exactly where the pointer is, n
 moved by the arrow keys) dodging bones and skull blasters, non-stop, faster and faster, before
 dioramas of cut paper that change during the fight; a hit shakes the screen. Escape, game over or
 the end of the song end it.
-`armstrong` typed anywhere but the search field
-opens the jazz bar at any time (over Christmas and the calm night too, but not over the shows);
-typed again in the bar it goes back to
+The word codes (`yeti`, `armstrong`, `peace`, `kamelot`, `normal`) work on every screen, the shows
+included: typed during the metal show or the epic finale, `yeti`, `armstrong` and `peace` end it
+first (`leaveShows()` in `epic.js`; the metal show of the clock gives way until 01:01:51,
+`skipSlot()` in `screens.js`), while a show that comes later still wins over their egg. Each one
+is typed anywhere but the search field, letter by letter, or typed in the search field then
+Enter, for phones (`onCode()` in `ui.js`: the field is emptied and the keyboard closes).
+`armstrong` opens the jazz bar at any time (over Christmas and the calm night too); typed again
+in the bar it goes back to
 the normal screen of that moment, by the clock alone: it drops the `armstrong` and `yeti` eggs, the
 sax and a forced `?screen=`, so it shows the day (or the calm night), the bar itself at bar time
-(21:30 – 01:00), or Christmas during the Christmas period. `peace` typed anywhere but the search
-field brings the calm night at any time, like `yeti` (over the day, the jazz bar and Christmas, not
-over the shows, which it comes back after); `yeti` or `armstrong` typed after it wins, and typed
+(21:30 – 01:00), or Christmas during the Christmas period. `peace` brings the calm night at any
+time, like `yeti` (over the day, the jazz bar and Christmas; a later show wins, and the calm night
+comes back after it); `yeti` or `armstrong` typed after it wins, and typed
 again on the calm night it goes back to the normal screen of that moment (on the calm night of the
-clock, it does nothing). `kamelot` typed anywhere but the search field opens the epic finale at
-any time, over every screen, the shows included; typed again in it, it does what "Back to normal"
-does. `normal` typed anywhere but the search field brings back the day at any
-time, over every screen, the shows included: it drops every other egg and a forced `?screen=`, and
-keeps the day even when the clock brings a screen; an egg typed or clicked after it wins, and typed
-again it lets the clock decide.
+clock, it does nothing). `kamelot` opens the epic finale at any time, over every screen; typed
+again in it, it leaves it for the screen of the clock (the finale has no button for that).
+`normal` brings back the day at any time, over every screen: it drops every other egg and a
+forced `?screen=`, and keeps the day even when the clock brings a screen; an egg typed or clicked
+after it wins, and typed again it lets the clock decide.
 
 ## How the index page is built
 
@@ -156,7 +160,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 
 | File | What it does |
 |---|---|
-| `ui.js` | light/dark toggle (`root` = `<html>`), Names / Previews switch, search |
+| `ui.js` | light/dark toggle (`root` = `<html>`), Names / Previews switch, search, `onCode()` (the easter egg words, typed on the page or in the search field then Enter) |
 | `flames.js` | 🔥 flame mode, `setFire`, `crowded()` (anti pile-up helper), the 20-click easter egg |
 | `surprise.js` | random surprise banner |
 | `blackhole.js` | `createBlackHole()`: the Konami black hole, ray-traced in WebGL (light bent by gravity, disk with Doppler beaming, lensed stars), on two canvases so the page falls between its sky and its disk |
@@ -173,7 +177,7 @@ The result is a single self-contained `dist/index.html`: no request for CSS or J
 | `sansfight.js` | the fight that comes with the snowman's Megalovania (`sfStart()` / `sfEnd()`, called by `snowman.js`): the scene over the page and black around him (`#xdark`), the battle box and stats (`#xfight`), one opening line then attacks without end (bones, blue bones, bone waves, bone rain, sine waves of bones, a turning propeller of bones, bouncing bone snowflakes, eruptions after red warnings, closing rings, skull blasters, crossing blasters, on a full-window canvas; bones turn, are outlined, glow when blue, leave trails; faster and more overlapping as it goes), the dioramas behind it (`sansscenes.js`, one every 22 s), hits (a crunch, the screen shaking, the box flashing red), the pixel heart exactly at the pointer (or moved by the arrow keys, then left there until the mouse moves), the flame rising from his eye (WebGL, a volume of noise ray-marched, following his gaze); reduced motion: no fight |
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
-| `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), "Back to normal", the `kamelot` code (the finale at any time) |
+| `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), `leaveEpic()`, `leaveShows()` (a code typed during a show ends it), the `kamelot` code (the finale at any time) |
 | `bardscene.js` | `createBardScene()`: the epic finale's bard, a pixel art painting ray-marched in WebGL (distance fields): a knight in armour and a blue surcoat playing the lute against a mossy boulder (gauntlets with fingers, sabatons), a campfire lighting him (traced soft shadows), mirror steel (a second ray), ambient occlusion, flames and sparks, a sky with the moon and firs; two moods (`uMood`: blue arcane fire, or Dragonborn's red fire, starry night and Milky Way, and dragon); `bardProject()` says where a point of the scene shows in the painting; posterised with Bayer dithering at a low resolution; compiled in the background (`ready()`), every ray in one loop so the scene is written out once |
 | `bard.js` | the epic finale's music player (`BARD_SONGS`: the Two Steps From Hell mix `audio/epic.mp3`, then Dragonborn `audio/dragonborn.mp3`, the next when one ends, the choice remembered): the painting of `bardscene.js` in a frame, the title lettered over it in a hand-drawn pixel font (bottom right), the next song's name (a larger 5 x 7 pixel font, solid ink) on an aged parchment drawn in pixels, standing behind the painting's top right corner like the next tape's case behind the cassette deck (a click on it changes the song); a click on the knight plays / pauses (he strums at the song's pace, nods, dozes when paused), on the fire changes the song with a show (he looks at the fire, a flourish plucked in Web Audio, the fire drawn in then bursting in the new colour with a shock wave, the title dissolving pixel by pixel); `preloadEpic()` for the "More epicness ?" click |
 | `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, night forest sounds (`audio/calm.mp3`, quieter), dawn birds made with Web Audio, firefly jar; the `peace` code (the last override: the calm night at any time; `startPeace()`, also called by the Christmas jar) |
@@ -222,7 +226,7 @@ Current screens:
 | `evening` | `night` | 21:30 – 00:45, or the `armstrong` code | `jazz.js`, `jazz.css`, `armstrong.js` |
 | `closing` | `night` | 00:45 – 01:00 | `jazz.js`, `jazz.css`, `closing.js`, `closing.css` |
 | `metal` | `metal` | 01:00:00 – 01:01:51 (the song 3 times), or 20 flame clicks, or the Christmas guitar | `metal.js`, `metal.css` |
-| `epic` | `epic` | after a metal show, if "More epicness ?" was clicked, or the `kamelot` code | `epic.js`, `epic.css`, `bardscene.js`, `bard.js`, `bard.css` |
+| `epic` | `epic` | after a metal show, if "More epicness ?" was clicked, or the `kamelot` code, until a code leaves it | `epic.js`, `epic.css`, `bardscene.js`, `bard.js`, `bard.css` |
 | `calm` | `calm` | 01:01:51 – 05:30, unless the epic finale runs (a `normal` screen), or the `peace` code, or the Christmas jar | `calm.js`, `calm.css` |
 | `christmas` | `christmas` | Dec 10 – Jan 3, 06:00 – 18:00 (replaces the day) | `christmas.js`, `christmas.css` |
 | `christmas-night` | `christmas` | Dec 10 – Jan 3, 18:00 – 06:00 (replaces the day, the jazz bar and the calm night) | `christmas.js`, `christmas.css` |
