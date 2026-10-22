@@ -377,6 +377,25 @@ to do, and \emph{only} what it is meant to do? (e.g.\ a setuid-root \texttt{pyth
 gives root to anyone.)
 \end{warnbox}
 
+\begin{exbox}[title=Why a setuid-root program is dangerous]
+\begin{itemize}
+  \item It runs as \textbf{root whoever launches it}, and the launcher controls its
+        inputs (arguments, environment, file names). A single bug (buffer overflow, path
+        trick, command injection) gives the attacker \textbf{root}: a
+        \textbf{confused deputy}.
+  \item A \textbf{general-purpose} program must never be setuid root: with
+        \texttt{-rwsr-xr-x root python}, anyone can run
+        \texttt{python -c 'import os; os.setuid(0); os.system("/bin/sh")'} and get a
+        root shell. (The \texttt{python2.7} of the slide is \texttt{-rwxr-xr-x}, no
+        \texttt{s}: it is \emph{not} setuid, it shows what to avoid.)
+  \item It breaks \textbf{least privilege}: full root power for one small action.
+\end{itemize}
+\textbf{Mitigation}: few setuid-root programs, small and audited (economy of mechanism,
+like \texttt{/bin/passwd}); drop privileges once the privileged step is done; prefer
+finer-grained rights (Linux capabilities, \texttt{sudo} limited to one command); never
+make an interpreter or an editor setuid.
+\end{exbox}
+
 \begin{defnbox}[title=Sticky bit]
 ``Restricted deletion bit'' (\texttt{chmod +t}).
 \begin{itemize}
