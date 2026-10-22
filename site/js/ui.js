@@ -57,6 +57,10 @@ q.addEventListener("input", () => {
 // word is typed anywhere but the search field, letter by letter like the Konami code, or typed in
 // the search field and sent with Enter, which is how phones (no keyboard outside a field) reach
 // them. The field is then emptied, all the cards come back and the phone's keyboard closes.
+// Sending is the form's submit, not a keydown of Enter: a phone keyboard's search key (the
+// magnifier) often sends no "Enter" key at all while a word is being composed (key
+// "Unidentified", keyCode 229), but it always submits the form. The field has autocorrect and
+// autocapitalize off, or the keyboard would turn kamelot into Camelot.
 // Either way it runs inside a key press, a user gesture: the screens' music can play with sound.
 const CODES = {};
 const onCode = (word, fn) => {
@@ -69,10 +73,10 @@ const onCode = (word, fn) => {
     if (pos === word.length) { pos = 0; fn(); }
   });
 };
-q.addEventListener("keydown", e => {
-  const fn = e.key === "Enter" && CODES[q.value.trim().toLowerCase()];
+q.form.addEventListener("submit", e => {
+  e.preventDefault();  // never reloads the page: the search is already live
+  const fn = CODES[q.value.trim().toLowerCase()];
   if (!fn) return;
-  e.preventDefault();
   q.value = "";
   q.dispatchEvent(new Event("input"));
   q.blur();
