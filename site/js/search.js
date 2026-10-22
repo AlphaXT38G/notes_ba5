@@ -44,3 +44,11 @@ const searchTermsOf = query => {
   });
   return searchTerms;
 };
+// Where a term is in a page: the start of each match
+const searchTermAt = (t, page) => {
+  const hay = page.low, at = [];
+  t.re.lastIndex = 0;
+  for (let m; (m = t.re.exec(hay));) at.push(m.index);
+  return at;
+};
+
