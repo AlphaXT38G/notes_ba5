@@ -28,3 +28,4 @@ const searchFetch = () => {
     });
   }).catch(() => {});
 };
+q.addEventListener("focus", searchFetch);
