@@ -743,6 +743,103 @@ Donc la vitesse (le courant) arrive toujours \textbf{en retard} sur la poussée 
 \end{important}
 
 
+%=========================================================
+\section{Commentaires : vers l'impédance}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_09.png}
+
+\end{center}
+
+
+\textbf{Constat :}
+
+\begin{itemize}
+
+\item avec le condensateur, on observe un déphasage constant de $\pi/2$ entre $i(t)$ et $u(t)$ : $i(t)$ est en avance ;
+
+\item avec l'inductance, on observe un déphasage constant de $\pi/2$ entre $i(t)$ et $u(t)$ : $u(t)$ est en avance.
+
+\end{itemize}
+
+
+\begin{formula}
+
+\begin{itemize}
+
+\item Tension aux bornes de $R$ : $U = R\,I$ ;
+
+\item tension aux bornes de $C$ : $u(t) = \frac{I_0\sin(\omega t - \frac{\pi}{2})}{\omega C}$, de la forme $U = \frac{1}{\omega C}\,I_2$ ($I_2$ différent du courant $I$) ;
+
+\item tension aux bornes de $L$ : $u(t) = L\omega I_0\sin(\omega t + \frac{\pi}{2})$, de la forme $U = \omega L\,I_2$ ($I_2$ différent du courant $I$).
+
+\end{itemize}
+
+$\frac{1}{\omega C}$ est comparable à une résistance qui \textbf{diminue} avec la fréquence ; $\omega L$ est comparable à une résistance qui \textbf{augmente} avec la fréquence.
+
+\vspace{3pt}
+
+\textbf{Objectif :} proposer un outil mathématique permettant :
+
+\begin{itemize}
+
+\item d'absorber le problème du déphasage :
+\[
+A\sin(\omega t) + B\sin\!\left(\omega t - \frac{\pi}{2}\right) = A\sin(\omega t) + X\sin(\omega t) = (A + X)\sin(\omega t)
+\]
+
+\item d'assimiler la capacité (idem l'inductance) à une résistance \textbf{variable} $\rightarrow$ \textbf{impédance} ;
+
+\item de reproduire le déphasage en temps utile ;
+
+\item une représentation aisée quelle que soit la fréquence $\rightarrow$ \textbf{diagramme de Bode}.
+
+\end{itemize}
+
+où :
+
+\begin{itemize}
+
+\item $\frac{1}{\omega C}$ et $\omega L$ : en [$\Omega$] (comme des résistances) ;
+
+\item $I_2$ : le courant décalé de $\pm\frac{\pi}{2}$ [A] ;
+
+\item $A$, $B$ : amplitudes de deux sinus [V] ; $X$ : le terme qui remplacerait $B$ \og sans déphasage \fg{}.
+
+\end{itemize}
+
+\end{formula}
+
+Si on ne tient pas compte du déphasage, on pourrait penser que, pour le condensateur, $U$ dépend linéairement de $I$, avec la pente $\frac{1}{\omega C}$ à la place de $R$ ; cette pente varie avec la fréquence. Pour l'inductance, la pente est $\omega L$. Malheureusement le déphasage remet en question ces suppositions : on va donc construire la notion d'\textbf{impédance} (équivalent à une résistance variable avec la fréquence) avec les nombres complexes.
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+On a presque une loi d'Ohm pour le condensateur et la bobine : la taille de la tension est proportionnelle à la taille du courant, avec une \og résistance \fg{} $\frac{1}{\omega C}$ ou $\omega L$. Deux soucis :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item cette \og résistance \fg{} change avec la fréquence ;
+
+\item la tension et le courant ne sont pas synchronisés (décalage de $\frac{\pi}{2}$), donc on ne peut pas simplement additionner les tensions d'une résistance et d'un condensateur en série : un $\sin$ plus un $\sin$ décalé, ce n'est pas un simple $\sin$ plus grand.
+
+\end{enumerate}
+
+\textbf{Exemple de la fréquence :} pour $C = 1\,\mu\text{F}$, à $50\,\text{Hz}$ ($\omega \approx 314\,\text{rad/s}$) : $\frac{1}{\omega C} \approx 3.2\,\text{k}\Omega$ ; à $5\,\text{kHz}$ : $\approx 32\,\Omega$. Le condensateur laisse passer bien plus facilement les hautes fréquences.
+
+\vspace{3pt}
+
+\textbf{La solution} (la suite du chapitre) : un outil qui \og range \fg{} le décalage dans le nombre lui-même. Ce sont les nombres complexes.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
