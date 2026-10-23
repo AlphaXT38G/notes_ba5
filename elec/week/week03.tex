@@ -476,6 +476,74 @@ Pour être calculable, une maille ne doit pas inclure de sources de courant.
 \end{warning}
 
 
+%=========================================================
+\section{Loi des nœuds}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week03_08.png}
+
+\end{center}
+
+
+\begin{formula}
+
+Dans un nœud :
+
+\[
+\sum I_{\text{sortants}} - \sum I_{\text{entrants}} = 0
+\quad\text{ou encore}\quad
+\sum I_{\text{sortants}} = \sum I_{\text{entrants}}
+\]
+
+Rien ne se perd, rien ne se crée.
+
+où :
+
+\begin{itemize}
+
+\item $I_{\text{sortants}}$ : courants qui sortent du nœud [A] ;
+
+\item $I_{\text{entrants}}$ : courants qui entrent dans le nœud [A].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{warning}
+
+Pour être calculable, un nœud ne doit pas être relié à une source de tension.
+
+Un nœud intéressant doit regrouper au minimum trois courants.
+
+\end{warning}
+
+
+\begin{important}
+
+Poser l'ensemble des équations indépendantes satisfaisant la loi des mailles et la loi des nœuds : \textbf{calcul matriciel}.
+
+\vspace{3pt}
+
+\textbf{Constat :}
+
+\begin{itemize}
+
+\item avec un ordinateur : calcul rapide ;
+
+\item à la main : rapidement très long ;
+
+\item au moins on comprend à quoi cela sert.
+
+\end{itemize}
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
