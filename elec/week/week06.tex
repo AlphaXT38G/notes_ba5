@@ -394,6 +394,67 @@ La \textbf{forme canonique}, c'est réécrire la fonction pour qu'elle ne soit q
 \end{important}
 
 
+%=========================================================
+\section{Rappel : différence essentielle entre $R$ et $\underline{Z}$}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_04.png}
+
+\end{center}
+
+
+\begin{formula}
+
+Avec deux résistances, le rapport est une \textbf{valeur} :
+
+\[
+\frac{u_S}{u} = \frac{R_2}{R_1 + R_2}
+\]
+
+Avec des impédances, le rapport est une \textbf{fonction}, notée $\underline{H}(j\omega)$ et appelée \textbf{fonction de transfert} (avec un module et un argument) :
+
+\[
+\underline{H}(j\omega) = \frac{\underline{u}_S}{\underline{u}} = \frac{\underline{Z}_2}{\underline{Z}_1 + \underline{Z}_2}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $u$, $\underline{u}$ : tension d'entrée [V] ; $u_S$, $\underline{u}_S$ : tension de sortie [V] ;
+
+\item $R_1$, $R_2$ : résistances [$\Omega$] ; $\underline{Z}_1$, $\underline{Z}_2$ : impédances [$\Omega$] ;
+
+\item $\underline{H}(j\omega)$ : fonction de transfert [sans unité].
+
+\end{itemize}
+
+\end{formula}
+
+La fonction de transfert la plus simple est le diviseur résistif, avec deux résistances. Quelle que soit la fréquence, le rapport entre l'amplitude de sortie et celle d'entrée est constant, et il n'y a pas de décalage entre les deux signaux. Si l'une des résistances est remplacée par un condensateur, l'amplitude varie avec la fréquence, de même que le décalage.
+
+
+\begin{important}
+
+\textbf{En très simple : les deux dessins}
+
+\textbf{À gauche (deux résistances)} : la sortie (rouge) est un sinus plus petit que l'entrée (vert), mais \textbf{parfaitement aligné} : mêmes sommets au même moment. Et ce rapport de taille est le même pour toutes les fréquences : c'est juste un nombre, par exemple $0.5$.
+
+\vspace{3pt}
+
+\textbf{À droite (résistance et condensateur)} : la sortie est plus petite \textbf{et décalée} (ses sommets arrivent plus tôt ou plus tard). Et la taille comme le décalage changent selon la fréquence. Ce n'est plus un nombre, c'est une fonction de la fréquence : $\underline{H}(j\omega)$.
+
+\vspace{3pt}
+
+C'est pour dessiner cette fonction qu'on a besoin des diagrammes de Bode.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
