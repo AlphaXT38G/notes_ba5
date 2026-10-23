@@ -544,6 +544,127 @@ Poser l'ensemble des équations indépendantes satisfaisant la loi des mailles e
 \end{important}
 
 
+%=========================================================
+\section{Techniques de simplification : théorème de Millman}
+
+
+Le théorème de Millman est issu des lois de Kirchhoff. Il permet de calculer une tension d'un nœud quelconque en fonction de son voisinage.
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week03_09.png}
+
+\end{center}
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week03_10.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+V_X = \frac{\dfrac{V_1}{R_1} + \dfrac{V_2}{R_2} + \dfrac{V_3}{R_3} + \dfrac{V_4}{R_4} + I_A + I_B}{\dfrac{1}{R_1} + \dfrac{1}{R_2} + \dfrac{1}{R_3} + \dfrac{1}{R_4}}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $V_X$ : potentiel du nœud $X$ cherché [V] ;
+
+\item $V_k$ : potentiel connu à l'autre bout de la branche $k$ [V] ;
+
+\item $R_k$ : résistance de la branche $k$ [$\Omega$] ; $1/R_k$ en [S] (siemens) ;
+
+\item $V_k/R_k$ : un courant [A] ;
+
+\item $I_A$, $I_B$ : courants des sources de courant qui \textbf{entrent} dans $X$ [A] (sans elles, on enlève $I_A + I_B$).
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Le problème}
+
+On veut le potentiel $V_X$ d'un nœud $X$ relié par des résistances à des points dont on connaît le potentiel ($V_1$, $V_2$, \dots).
+
+\vspace{3pt}
+
+\textbf{Comment ça marche, en 4 étapes}
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item \textbf{On dessine les courants} de chaque branche, au hasard (entrants ou sortants) : un courant négatif veut juste dire qu'il va en réalité dans l'autre sens.
+
+\item \textbf{Loi d'Ohm dans chaque branche} : la tension aux bornes de $R_k$ est $V_k - V_X$, donc le courant qui entre dans $X$ est $I_k = \frac{V_k - V_X}{R_k}$.
+
+\item \textbf{Loi des nœuds en $X$} : la somme des courants entrants est nulle,
+\[
+\frac{V_1 - V_X}{R_1} + \frac{V_2 - V_X}{R_2} + \frac{V_3 - V_X}{R_3} - \frac{V_X - V_4}{R_4} = 0
+\]
+
+\item \textbf{On isole $V_X$} : on met les termes en $V_X$ d'un côté,
+\[
+V_X\left(\frac{1}{R_1} + \frac{1}{R_2} + \frac{1}{R_3} + \frac{1}{R_4}\right) = \frac{V_1}{R_1} + \frac{V_2}{R_2} + \frac{V_3}{R_3} + \frac{V_4}{R_4}
+\]
+puis on divise : on retrouve la formule.
+
+\end{enumerate}
+
+\textbf{L'intuition}
+
+$V_X$ est une \textbf{moyenne pondérée} des potentiels voisins, avec des poids $1/R_k$ : plus une résistance est petite, plus son voisin \og tire \fg{} $V_X$ vers son potentiel.
+
+\vspace{3pt}
+
+\textbf{Avec des sources de courant}
+
+Une source de courant impose son courant quel que soit $V_X$ : on ajoute juste son courant au numérateur ($+I_A$ s'il entre dans $X$, $-I_A$ s'il sort), et rien au dénominateur. La résistance $R_5$ en série avec la source n'apparaît pas : le courant est imposé de toute façon.
+
+\vspace{3pt}
+
+\textbf{Si un potentiel $V_i = 0$} (branche reliée à la masse) : le terme $V_i/R_i$ disparaît du numérateur, mais il faut \textbf{garder} $1/R_i$ au dénominateur.
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{1. Diviseur :} $V_1 = 10\,\text{V}$ par $R_1 = 1\,\text{k}\Omega$, et la masse ($V_2 = 0\,\text{V}$) par $R_2 = 1\,\text{k}\Omega$ :
+
+\[
+V_X = \frac{\frac{10}{1000} + 0}{\frac{1}{1000} + \frac{1}{1000}} = \frac{10\,\text{mA}}{2\,\text{mS}} = 5\,\text{V}
+\]
+
+\textbf{2. Trois branches :} $V_1 = 12\,\text{V}$, $R_1 = 2\,\text{k}\Omega$ ; $V_2 = 6\,\text{V}$, $R_2 = 1\,\text{k}\Omega$ ; masse ($V_3 = 0$), $R_3 = 2\,\text{k}\Omega$ :
+
+\[
+V_X = \frac{\frac{12}{2\text{k}} + \frac{6}{1\text{k}} + 0}{\frac{1}{2\text{k}} + \frac{1}{1\text{k}} + \frac{1}{2\text{k}}} = \frac{6 + 6 + 0\ \text{mA}}{0.5 + 1 + 0.5\ \text{mS}} = \frac{12\,\text{mA}}{2\,\text{mS}} = 6\,\text{V}
+\]
+
+Vérification par la loi des nœuds : $I_1 = \frac{12-6}{2\text{k}} = 3\,\text{mA}$, $I_2 = \frac{6-6}{1\text{k}} = 0$, $I_3 = \frac{0-6}{2\text{k}} = -3\,\text{mA}$ : la somme fait bien $0$.
+
+\vspace{3pt}
+
+\textbf{3. Avec une source de courant :} on reprend l'exemple 1 et on ajoute une source qui injecte $I_A = 5\,\text{mA}$ dans $X$ :
+
+\[
+V_X = \frac{10\,\text{mA} + 5\,\text{mA}}{2\,\text{mS}} = 7.5\,\text{V}
+\]
+
+\end{example}
+
+
 \end{multicols}
 
 \end{document}
