@@ -357,6 +357,85 @@ Le problème arrive quand on \textbf{mélange} : la résistance obéit à une si
 \end{important}
 
 
+%=========================================================
+\section{Circuit de base et analyse temporelle}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_04.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+i(t) = \frac{u_{IN}(t) - u_{OUT}(t)}{R} = C\,\frac{du_{OUT}}{dt}
+\quad\text{ou encore}\quad
+\]
+\[
+u_{IN}(t) = u_{OUT}(t) + RC\,\frac{du_{OUT}}{dt}
+\]
+
+C'est une équation différentielle du premier ordre.
+
+où :
+
+\begin{itemize}
+
+\item $u_{IN}(t)$ : tension d'entrée [V] ;
+
+\item $u_{OUT}(t)$ : tension de sortie, aux bornes du condensateur [V] ;
+
+\item $i(t)$ : courant de la boucle [A] ;
+
+\item $R$ : résistance [$\Omega$] ; $C$ : capacité [F] ; $RC$ : constante de temps [s].
+
+\end{itemize}
+
+\end{formula}
+
+\begin{itemize}
+
+\item Avec des \textbf{sinus}, l'analyse exploitera une méthode plus simple avec les \og complexes \fg{}.
+
+\item L'analyse temporelle est remplacée par une \textbf{analyse fréquentielle}.
+
+\end{itemize}
+
+En posant l'égalité du courant circulant dans la boucle (loi de Kirchhoff), on montre que celui-ci s'exprime linéairement en fonction de la différence de potentiel $u_{IN}(t) - u_{OUT}(t)$ autour de $R$, mais à partir de la \textbf{variation} de la tension autour de $C$. L'équation globale est donc de nature différentielle.
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+C'est le circuit RC de la semaine 03. Le même courant $i$ traverse la résistance et le condensateur, et on l'écrit de deux façons :
+
+\begin{itemize}
+
+\item \textbf{côté résistance} : $i = \frac{\text{tension aux bornes de } R}{R} = \frac{u_{IN} - u_{OUT}}{R}$ (loi d'Ohm) ;
+
+\item \textbf{côté condensateur} : $i = C\,\frac{du_{OUT}}{dt}$ (le courant dépend de la \textbf{vitesse} à laquelle la tension change).
+
+\end{itemize}
+
+On égale les deux : on obtient une équation avec $u_{OUT}$ \textbf{et} sa dérivée. Ici on ne la résout pas : on remarque juste qu'elle est pénible.
+
+\vspace{3pt}
+
+\textbf{Le dessin du condensateur à droite :} le courant arrache des électrons à la plaque du haut ($+$) et en apporte sur celle du bas ($-$). Les charges s'accumulent de part et d'autre, ce qui crée un champ électrique entre les plaques : c'est là qu'est stockée l'énergie.
+
+\vspace{3pt}
+
+\textbf{\og Analyse fréquentielle \fg{}} : au lieu de suivre le signal instant par instant (analyse temporelle), on regarde comment le circuit réagit selon la \textbf{fréquence} du sinus qu'on lui envoie.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
