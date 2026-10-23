@@ -243,6 +243,109 @@ Il n'y a pas de source. Exemple : la résistance.
 \end{definition}
 
 
+%=========================================================
+\section{Transformation de sources [1] : source linéaire de tension}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_01.png}
+
+\end{center}
+
+
+\begin{definition}
+
+\textbf{Source linéaire de tension}
+
+Source idéale et une résistance interne en série. $R_S$ est considérée comme la résistance interne de la source linéaire de tension.
+
+\end{definition}
+
+
+\begin{formula}
+
+Via la loi des mailles de Kirchhoff :
+
+\[
+R_S\,I + U - U_0 = 0
+\quad\text{ou encore}\quad
+\boxed{U = U_0 - R_S\,I}
+\]
+
+C'est l'équation d'une droite de pente négative ($-R_S$).
+
+\[
+I(U = 0) = \frac{U_0}{R_S}\ [\text{A}]
+\]
+
+où :
+
+\begin{itemize}
+
+\item $U_0$ : tension de la source idéale = tension à vide [V] ;
+
+\item $R_S$ : résistance interne (en série) [$\Omega$] ;
+
+\item $I$ : courant débité vers l'extérieur (le \og nuage \fg{}) [A] ;
+
+\item $U$ : tension disponible aux bornes de sortie [V] ;
+
+\item $I(U=0)$ : courant de court-circuit [A].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Le problème}
+
+Une vraie pile n'est pas une source idéale : plus on lui demande de courant, plus sa tension baisse un peu. On la modélise donc par une source idéale $U_0$ \textbf{plus} une petite résistance $R_S$ cachée à l'intérieur.
+
+\vspace{3pt}
+
+\textbf{Ce qui se passe}
+
+Le courant $I$ qui sort de la pile traverse d'abord $R_S$. Dans $R_S$, il \og perd \fg{} une tension $R_S\,I$ (loi d'Ohm). Ce qui reste pour l'extérieur, c'est $U = U_0 - R_S\,I$ : plus $I$ est grand, plus on perd.
+
+\vspace{3pt}
+
+\textbf{Lire le graphe (une droite qui descend)}
+
+\begin{itemize}
+
+\item \textbf{À vide} (rien de branché, $I = 0$) : rien ne se perd dans $R_S$, donc $U = U_0$. C'est le point en haut, sur l'axe $U$.
+
+\item \textbf{Court-circuit} (un fil entre les bornes, $U = 0$) : toute la tension $U_0$ est perdue dans $R_S$, et le courant est le plus grand possible, $I = U_0/R_S$. C'est le point en bas, sur l'axe $I$.
+
+\item Entre les deux, la droite descend avec la pente $-R_S$ : chaque ampère en plus fait perdre $R_S$ volts.
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{example}
+
+Pile $U_0 = 9\,\text{V}$, $R_S = 1\,\Omega$ :
+
+\begin{itemize}
+
+\item à vide : $U = 9\,\text{V}$ ;
+
+\item elle débite $I = 1\,\text{A}$ : $U = 9 - 1\cdot 1 = 8\,\text{V}$ ;
+
+\item en court-circuit : $I = 9/1 = 9\,\text{A}$ et $U = 0\,\text{V}$.
+
+\end{itemize}
+
+\end{example}
+
+
 \end{multicols}
 
 \end{document}
