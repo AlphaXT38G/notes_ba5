@@ -259,6 +259,82 @@ où :
 \end{formula}
 
 
+%=========================================================
+\section{Composants de base : le condensateur}
+
+
+\begin{definition}
+
+Un condensateur est un petit réservoir de charges électriques : il stocke de l'énergie en accumulant des charges sur ses deux plaques, comme un réservoir se remplit d'eau.
+
+\end{definition}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.25\linewidth
+]{../images/week03_02.png}
+
+\end{center}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week03_03.png}
+
+\end{center}
+
+
+\begin{formula}
+
+Avec une source de \textbf{tension} :
+
+\[
+i(t) = \frac{dq}{dt} = C\,\frac{du}{dt}
+\qquad
+q(t) = C\,u(t)
+\]
+
+avec $C$ la capacité du condensateur ; $q(t)$ est ici la charge du condensateur.
+
+\vspace{3pt}
+
+Avec une source de \textbf{courant} :
+
+\[
+du = \frac{i(t)\,dt}{C}
+\]
+
+On résout ici par une intégrale : si $i(t) = I$ est constant, c'est une constante dans le calcul intégral ; si le courant dépend de $t$, alors par exemple $i(t) = A\sin(\omega t)$.
+
+\vspace{3pt}
+
+où :
+
+\begin{itemize}
+
+\item $i(t)$ : courant qui traverse le condensateur [A] ;
+
+\item $u(t)$ : tension aux bornes du condensateur [V] ;
+
+\item $q(t)$ : charge stockée [C] (coulomb), $1\,\text{C} = 1\,\text{A}\cdot\text{s}$ ;
+
+\item $C$ : capacité [F] (farad), $1\,\text{F} = 1\,\text{C}/\text{V}$ ;
+
+\item $t$ : temps [s] ; $dq$, $du$, $dt$ : petites variations de $q$, $u$, $t$ ;
+
+\item $A$ : amplitude du courant [A] ; $\omega$ : pulsation [rad/s] ;
+
+\item $k$ : constante d'intégration [V] (la tension de départ).
+
+\end{itemize}
+
+\end{formula}
+
+
 \end{multicols}
 
 \end{document}
