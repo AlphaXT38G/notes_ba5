@@ -455,6 +455,117 @@ C'est pour dessiner cette fonction qu'on a besoin des diagrammes de Bode.
 \end{important}
 
 
+%=========================================================
+\section{Produits de termes de base et décibels}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_05.png}
+
+\end{center}
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item Les fonctions de transfert s'expriment à partir d'un \textbf{produit de termes de base}.
+
+\item On exploite une échelle logarithmique pour l'axe des modules : $\log(A\cdot B) = \log(A) + \log(B)$. Si $A$ et $B$ sont complexes : $|A\cdot B| = |A|\cdot|B|$ et $\log(|A\cdot B|) = \log|A| + \log|B|$.
+
+\item Quels sont les termes de base du premier ordre, et pourquoi les modules sont-ils calculés en dB ?
+
+\end{enumerate}
+
+
+\begin{formula}
+
+Le décibel (log en base 10), défini pour un rapport de puissances :
+
+\[
+\left|\frac{P_2}{P_1}\right|_{dB} = 10\log\left(\frac{P_2}{P_1}\right)
+\]
+\[
+10\log\left(\frac{U_2^2/R}{U_1^2/R}\right) = 10\log\left(\frac{U_2^2}{U_1^2}\right) = 10\log\left(\frac{U_2}{U_1}\right)^2
+\;\Rightarrow\;
+\boxed{\left|\frac{U_2}{U_1}\right|_{dB} = 20\log\left(\frac{U_2}{U_1}\right)}
+\]
+
+Les modules des 5 termes de base, en dB :
+
+\[
+|K|_{dB} = 20\log(K)
+\]
+\[
+\left|j\frac{\omega}{\omega_{Z1}}\right|_{dB} = 20\log\left(\frac{\omega}{\omega_{Z1}}\right)
+\]
+\[
+\left|1 + j\frac{\omega}{\omega_{Z2}}\right|_{dB} = 20\log\sqrt{1 + \left(\frac{\omega}{\omega_{Z2}}\right)^2}
+\]
+\[
+\left|\frac{1}{j\frac{\omega}{\omega_{P1}}}\right|_{dB} = 20\log\frac{1}{\left(\frac{\omega}{\omega_{P1}}\right)} = -20\log\left(\frac{\omega}{\omega_{P1}}\right)
+\]
+\[
+\left|\frac{1}{1 + j\frac{\omega}{\omega_{P2}}}\right|_{dB} = 20\log\frac{1}{\sqrt{1 + \left(\frac{\omega}{\omega_{P2}}\right)^2}} = -20\log\sqrt{1 + \left(\frac{\omega}{\omega_{P2}}\right)^2}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $P_1$, $P_2$ : puissances [W] ; $U_1$, $U_2$ : tensions [V] ; $R$ : résistance [$\Omega$] ;
+
+\item $|\cdot|_{dB}$ : module exprimé en décibels [dB] ; $\log$ : logarithme en base 10 ;
+
+\item $K$ : constante ; $\omega_{Z}$, $\omega_{P}$ : pulsations caractéristiques [rad/s] ; $\omega$ [rad/s].
+
+\end{itemize}
+
+\end{formula}
+
+Le module d'un produit est égal au produit des modules : via le logarithme, il suffit de \textbf{sommer} les valeurs en dB des différents modules. Le dB vient d'un rapport de puissances, $10\log(P_2/P_1)$ (comme en acoustique). Pour des tensions, on utilise $20\log(U_2/U_1)$ : comme $P = U^2/R$, extraire le carré du log revient à multiplier le log par 2 ($\log x^2 = 2\log x$), d'où le facteur 20 au lieu de 10.
+
+
+\begin{definition}
+
+\textbf{Décibel (dB)}
+
+Une façon d'exprimer un rapport (ici sortie/entrée) avec un logarithme : $20\log(\text{rapport})$ pour des tensions.
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{En très simple : pourquoi les décibels ?}
+
+Le logarithme a un super-pouvoir : il \textbf{transforme les multiplications en additions}. Notre fonction de transfert est une multiplication de briques ; en dB, elle devient une \textbf{addition} de briques. Et additionner des dessins, c'est facile : on empile les courbes.
+
+\vspace{3pt}
+
+\textbf{Les chiffres à connaître} (le rapport de tensions $\rightarrow$ en dB) :
+
+\begin{itemize}
+
+\item $\times 1$ $\rightarrow$ $0\,\text{dB}$ (rien ne change) ;
+
+\item $\times 10$ $\rightarrow$ $+20\,\text{dB}$ ; $\times 0.1$ $\rightarrow$ $-20\,\text{dB}$ ;
+
+\item $\times 2$ $\rightarrow$ $+6\,\text{dB}$ ; $\times 0.5$ $\rightarrow$ $-6\,\text{dB}$ ;
+
+\item $\times \frac{1}{\sqrt{2}} \approx 0.707$ $\rightarrow$ $-3\,\text{dB}$.
+
+\end{itemize}
+
+Positif = le circuit \textbf{agrandit} le signal ; négatif = il le \textbf{rétrécit}.
+
+\vspace{3pt}
+
+\textbf{Pourquoi 20 et pas 10 ?} Le dB est fait pour les puissances ($10\log$). Une puissance, c'est une tension au carré ($U^2/R$), et le log d'un carré, c'est deux fois le log : $10 \times 2 = 20$.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
