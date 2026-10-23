@@ -1,0 +1,1098 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Electronique I}}
+\fancyhead[C]{\small Sources, Thévenin, Norton et superposition}
+\fancyhead[R]{\small Week 04 -- 28/09-04/10/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+%=========================================================
+% SEPARATOR
+%=========================================================
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% DEFINITION - blue
+
+\newtcolorbox{definition}{
+enhanced,
+breakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+
+% IMPORTANT - pink
+
+\newtcolorbox{important}{
+enhanced,
+breakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+
+% FORMULAS - green
+
+\newtcolorbox{formula}{
+enhanced,
+breakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+
+% WARNING - orange
+
+\newtcolorbox{warning}{
+enhanced,
+breakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+
+% EXAMPLE - purple
+
+\newtcolorbox{example}{
+enhanced,
+breakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+
+% SUMMARY - yellow
+
+\newtcolorbox{summary}{
+enhanced,
+breakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+% a box only breaks once it has a few lines on this column: no lone title at the bottom
+\tcbset{lines before break=8}
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+\thispagestyle{fancy}
+
+\footnotesize
+
+\begin{multicols}{2}
+
+
+%=========================================================
+\section{Dipôles actifs et passifs}
+
+
+\begin{definition}
+
+\textbf{Dipôle actif}
+
+A une source d'énergie à l'intérieur : il a des sources actives.
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{Dipôle passif}
+
+Il n'y a pas de source. Exemple : la résistance.
+
+\end{definition}
+
+
+%=========================================================
+\section{Transformation de sources [1] : source linéaire de tension}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_01.png}
+
+\end{center}
+
+
+\begin{definition}
+
+\textbf{Source linéaire de tension}
+
+Source idéale et une résistance interne en série. $R_S$ est considérée comme la résistance interne de la source linéaire de tension.
+
+\end{definition}
+
+
+\begin{formula}
+
+Via la loi des mailles de Kirchhoff :
+
+\[
+R_S\,I + U - U_0 = 0
+\quad\text{ou encore}\quad
+\boxed{U = U_0 - R_S\,I}
+\]
+
+C'est l'équation d'une droite de pente négative ($-R_S$).
+
+\[
+I(U = 0) = \frac{U_0}{R_S}\ [\text{A}]
+\]
+
+où :
+
+\begin{itemize}
+
+\item $U_0$ : tension de la source idéale = tension à vide [V] ;
+
+\item $R_S$ : résistance interne (en série) [$\Omega$] ;
+
+\item $I$ : courant débité vers l'extérieur (le \og nuage \fg{}) [A] ;
+
+\item $U$ : tension disponible aux bornes de sortie [V] ;
+
+\item $I(U=0)$ : courant de court-circuit [A].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Le problème}
+
+Une vraie pile n'est pas une source idéale : plus on lui demande de courant, plus sa tension baisse un peu. On la modélise donc par une source idéale $U_0$ \textbf{plus} une petite résistance $R_S$ cachée à l'intérieur.
+
+\vspace{3pt}
+
+\textbf{Ce qui se passe}
+
+Le courant $I$ qui sort de la pile traverse d'abord $R_S$. Dans $R_S$, il \og perd \fg{} une tension $R_S\,I$ (loi d'Ohm). Ce qui reste pour l'extérieur, c'est $U = U_0 - R_S\,I$ : plus $I$ est grand, plus on perd.
+
+\vspace{3pt}
+
+\textbf{Lire le graphe (une droite qui descend)}
+
+\begin{itemize}
+
+\item \textbf{À vide} (rien de branché, $I = 0$) : rien ne se perd dans $R_S$, donc $U = U_0$. C'est le point en haut, sur l'axe $U$.
+
+\item \textbf{Court-circuit} (un fil entre les bornes, $U = 0$) : toute la tension $U_0$ est perdue dans $R_S$, et le courant est le plus grand possible, $I = U_0/R_S$. C'est le point en bas, sur l'axe $I$.
+
+\item Entre les deux, la droite descend avec la pente $-R_S$ : chaque ampère en plus fait perdre $R_S$ volts.
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{example}
+
+Pile $U_0 = 9\,\text{V}$, $R_S = 1\,\Omega$ :
+
+\begin{itemize}
+
+\item à vide : $U = 9\,\text{V}$ ;
+
+\item elle débite $I = 1\,\text{A}$ : $U = 9 - 1\cdot 1 = 8\,\text{V}$ ;
+
+\item en court-circuit : $I = 9/1 = 9\,\text{A}$ et $U = 0\,\text{V}$.
+
+\end{itemize}
+
+\end{example}
+
+
+%=========================================================
+\section{Transformation de sources [2] : source linéaire de courant}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_02.png}
+
+\end{center}
+
+
+\begin{definition}
+
+\textbf{Source linéaire de courant}
+
+Source idéale et une résistance interne en parallèle. $R_P$ est considérée comme la résistance interne de la source linéaire de courant.
+
+\end{definition}
+
+
+\begin{formula}
+
+Via la loi des nœuds de Kirchhoff :
+
+\[
+I_{CC} - \frac{U}{R_P} - I = 0
+\quad\text{ou encore}\quad
+\boxed{U = R_P\,I_{CC} - R_P\,I}
+\]
+
+C'est l'équation d'une droite de pente négative ($-R_P$).
+
+\[
+U(I = 0) = R_P\,I_{CC}\ [\text{V}]
+\]
+
+où :
+
+\begin{itemize}
+
+\item $I_{CC}$ : courant de la source idéale = courant de court-circuit [A] ;
+
+\item $R_P$ : résistance interne (en parallèle) [$\Omega$] ;
+
+\item $U/R_P$ : courant qui part dans $R_P$ [A] ;
+
+\item $I$ : courant débité vers l'extérieur [A] ;
+
+\item $U$ : tension aux bornes de sortie [V] ;
+
+\item $U(I=0)$ : tension à vide [V].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{L'image}
+
+La source idéale pousse toujours le même débit $I_{CC}$, comme une pompe. Mais à côté de la sortie, il y a une \og fuite \fg{} : la résistance $R_P$ en parallèle. Le courant se partage : une partie $U/R_P$ part dans la fuite, le reste $I$ va vers l'extérieur.
+
+\vspace{3pt}
+
+\textbf{Lire le graphe (encore une droite qui descend)}
+
+\begin{itemize}
+
+\item \textbf{À vide} (rien de branché, $I = 0$) : tout le courant part dans la fuite $R_P$, qui a donc la tension $U = R_P\,I_{CC}$ à ses bornes. C'est le point en haut.
+
+\item \textbf{Court-circuit} (un fil entre les bornes, $U = 0$) : le fil est bien plus facile que $R_P$, donc plus rien ne passe dans la fuite ($U/R_P = 0$) : tout sort, $I = I_{CC}$. C'est le point en bas.
+
+\item Entre les deux, la pente vaut $-R_P$.
+
+\end{itemize}
+
+\vspace{3pt}
+
+\textbf{À retenir :} même forme de graphe que la source de tension. C'est ce qui permet de passer de l'une à l'autre (section suivante).
+
+\end{important}
+
+
+\begin{example}
+
+$I_{CC} = 9\,\text{A}$, $R_P = 1\,\Omega$ :
+
+\begin{itemize}
+
+\item à vide : $U = 1 \cdot 9 = 9\,\text{V}$ ;
+
+\item elle débite $I = 1\,\text{A}$ : $U = 9 - 1\cdot 1 = 8\,\text{V}$ ;
+
+\item en court-circuit : $I = 9\,\text{A}$ et $U = 0\,\text{V}$.
+
+\end{itemize}
+
+Exactement les mêmes chiffres que la pile de l'exemple précédent !
+
+\end{example}
+
+
+%=========================================================
+\section{Transformation de sources [3] : tension $\leftrightarrow$ courant}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_03.png}
+
+\end{center}
+
+
+\textbf{Remplacement d'une source linéaire de tension par une source linéaire de courant, et réciproquement.}
+
+\begin{itemize}
+
+\item \textbf{Pourquoi :} caractéristiques communes (droite de pente négative).
+
+\item \textbf{Comment :} il faut que les caractéristiques aient exactement la même pente, et qu'elles passent par un même point (par exemple la tension à vide).
+
+\end{itemize}
+
+
+\begin{formula}
+
+Même pente : pour la tension, pente $= -R_S$ ; pour le courant, pente $= -R_P$ :
+
+\[
+R_S = R_P = R\ [\Omega]
+\]
+
+Même point (tension à vide) : $U_0$ d'un côté, $U(I=0) = R_P\,I_{CC}$ de l'autre. On obtient :
+
+\[
+\boxed{U_0 = R\,I_{CC}}\ [\text{V}]
+\]
+
+où :
+
+\begin{itemize}
+
+\item $R$ : la résistance interne commune [$\Omega$] (en série pour la source de tension, en parallèle pour la source de courant) ;
+
+\item $U_0$ : tension de la source de tension [V] ;
+
+\item $I_{CC}$ : courant de la source de courant [A].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{L'idée}
+
+Imagine deux boîtes fermées avec deux fils qui sortent. Dans l'une, une source de tension avec une résistance en série ; dans l'autre, une source de courant avec une résistance en parallèle. Si, quoi qu'on branche dessus, elles donnent toujours la même tension et le même courant, alors de l'extérieur il est \textbf{impossible} de savoir laquelle est laquelle : on peut remplacer l'une par l'autre.
+
+\vspace{3pt}
+
+\textbf{Comment s'en assurer}
+
+Ce que donne une boîte, c'est sa droite $U(I)$. Deux droites sont identiques si elles ont la même pente \textbf{et} un point en commun :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item même pente $\Rightarrow$ même résistance $R$ des deux côtés ;
+
+\item même tension à vide $\Rightarrow$ $U_0 = R\,I_{CC}$.
+
+\end{enumerate}
+
+\textbf{La recette}
+
+\begin{itemize}
+
+\item Tension $\to$ courant : on garde $R$ (on la met en parallèle) et on prend $I_{CC} = U_0/R$.
+
+\item Courant $\to$ tension : on garde $R$ (on la met en série) et on prend $U_0 = R\,I_{CC}$.
+
+\end{itemize}
+
+\textbf{À quoi ça sert}
+
+À simplifier : des sources de courant en parallèle s'additionnent, des sources de tension en série aussi. On transforme pour se retrouver dans le cas facile.
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Pile $9\,\text{V}$ et $1\,\Omega$ en série} $\Leftrightarrow$ \textbf{source de $9\,\text{A}$ avec $1\,\Omega$ en parallèle} ($I_{CC} = 9/1$).
+
+\vspace{3pt}
+
+Vérification avec une charge de $8\,\Omega$ branchée dessus :
+
+\begin{itemize}
+
+\item version tension : $I = \frac{9}{1 + 8} = 1\,\text{A}$, donc $U = 8 \cdot 1 = 8\,\text{V}$ ;
+
+\item version courant : les $9\,\text{A}$ se partagent entre $1\,\Omega$ et $8\,\Omega$ ; dans la charge, $I = 9\cdot\frac{1}{1 + 8} = 1\,\text{A}$, donc $U = 8\,\text{V}$.
+
+\end{itemize}
+
+Même résultat : la charge ne voit aucune différence.
+
+\end{example}
+
+
+%=========================================================
+\section{Le théorème de Thévenin (Léon Charles) : principe}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_04.png}
+
+\end{center}
+
+
+\begin{definition}
+
+\textbf{Modèle de Thévenin}
+
+Le circuit est un \textbf{dipôle}. Pour le monde extérieur, ce dipôle est assimilable à une boîte noire.
+
+\og Le dipôle (boîte noire) est constitué d'une source de tension en série avec une résistance. \fg{}
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+Prends n'importe quel circuit, aussi compliqué que tu veux (des piles, des sources de courant, plein de résistances), du moment qu'il n'en sort que deux fils $X$ et $Y$. Ce qui est branché sur $X$ et $Y$ (le \og nuage \fg{}) ne voit pas l'intérieur : il ne sent que la tension et le courant à ces deux fils.
+
+\vspace{3pt}
+
+Le théorème dit : de l'extérieur, ce gros circuit se comporte \textbf{exactement} comme une seule pile $V_{TH}$ avec une seule résistance $R_{IN}$ en série. C'est la \og source linéaire de tension \fg{} de la section \textit{Transformation de sources [1]}.
+
+\vspace{3pt}
+
+\textbf{Pourquoi c'est génial}
+
+Au lieu de refaire tous les calculs de Kirchhoff à chaque fois qu'on change ce qui est branché sur $X$ et $Y$, on remplace le circuit une fois pour toutes par deux éléments, puis tout devient un simple diviseur ou une loi d'Ohm.
+
+\vspace{3pt}
+
+\textbf{Il reste à trouver deux nombres :} $V_{TH}$ et $R_{IN}$. On peut les \textbf{mesurer} (avec une résistance, un ampèremètre $A$, un voltmètre $V$) ou les \textbf{calculer}.
+
+\end{important}
+
+
+\textbf{Expérimentation pour mesurer le modèle de Thévenin}
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_05.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+U_{2\_lu} = U_{1\_inconnu}
+\qquad
+R_{IN} = \frac{U_{1\_inconnu}}{I_{2\_lu}}
+\qquad
+R_{IN} = \frac{U_{2\_impos\acute{e}}}{I_{2\_lu}}
+\]
+
+\[
+U_{2\_lu} = \frac{R_2}{R_2 + R_{IN}}\,U_{1\_inconnu}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $U_{1\_inconnu}$ : tension de la source cachée dans la boîte ($= V_{TH}$) [V] ;
+
+\item $R_{IN}$ : résistance interne de la boîte [$\Omega$] ;
+
+\item $U_{2\_lu}$ : tension lue au voltmètre entre $X$ et $Y$ [V] ;
+
+\item $I_{2\_lu}$ : courant lu à l'ampèremètre [A] ;
+
+\item $U_{2\_impos\acute{e}}$ : tension imposée par une source extérieure [V] ;
+
+\item $R_2$ : résistance variable branchée entre $X$ et $Y$ [$\Omega$].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Les 4 expériences de la photo, une par une}
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item \textbf{Voltmètre seul entre $X$ et $Y$} (en haut à gauche) : un voltmètre ne laisse passer aucun courant, donc rien ne se perd dans $R_{IN}$. On lit directement $U_{2\_lu} = U_{1\_inconnu} = V_{TH}$. \textbf{Ça marche.}
+
+\item \textbf{Ampèremètre entre $X$ et $Y$} (en haut à droite) : c'est un court-circuit, le courant n'est limité que par $R_{IN}$, donc $R_{IN} = V_{TH}/I_{2\_lu}$. Sur papier OK, mais \textbf{danger en pratique} : si $R_{IN}$ est petite, le courant est énorme (ça chauffe, ça casse).
+
+\item \textbf{On éteint la source et on impose une tension} (au milieu) : sans $U_1$, seule $R_{IN}$ reste, donc $R_{IN} = U_{2\_impos\acute{e}}/I_{2\_lu}$. Sur papier OK, mais \textbf{impossible en pratique} : on ne peut pas ouvrir la boîte noire pour enlever sa source.
+
+\item \textbf{La bonne méthode : une résistance réglable $R_2$} (en bas). $R_2$ et $R_{IN}$ forment un diviseur de tension. On connaît déjà $U_{1\_inconnu}$ (expérience 1). On tourne $R_2$ jusqu'à lire \textbf{la moitié} : $U_{2\_lu} = U_{1\_inconnu}/2$. À ce moment, la tension se partage moitié-moitié, donc $R_2 = R_{IN}$ : il suffit de lire la valeur de $R_2$.
+
+\end{enumerate}
+
+\end{important}
+
+
+\textbf{Méthode de base pour calculer le modèle de Thévenin}
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_06.png}
+
+\end{center}
+
+
+La valeur de la \textbf{résistance} est obtenue :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item en éliminant les sources intérieures ;
+
+\item en évaluant la résistance vue depuis les bornes du dipôle.
+
+\end{enumerate}
+
+La valeur de la \textbf{source de tension} est obtenue :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item en laissant les bornes du dipôle à vide ;
+
+\item en calculant la tension aux bornes du dipôle.
+
+\end{enumerate}
+
+
+\begin{warning}
+
+\textbf{Remarque :}
+
+\begin{itemize}
+
+\item éliminer une source de tension $\rightarrow$ la remplacer par un court-circuit ;
+
+\item éliminer une source de courant $\rightarrow$ la remplacer par un circuit ouvert.
+
+\end{itemize}
+
+\end{warning}
+
+
+\begin{important}
+
+\textbf{Pourquoi on élimine les sources comme ça ?}
+
+\og Éliminer \fg{} une source, c'est la mettre à zéro :
+
+\begin{itemize}
+
+\item une source de tension à $0\,\text{V}$ ne crée aucune différence entre ses bornes : c'est un simple \textbf{fil} ;
+
+\item une source de courant à $0\,\text{A}$ ne laisse passer aucun courant : c'est un \textbf{trou} dans le circuit (circuit ouvert).
+
+\end{itemize}
+
+\textbf{Pourquoi \og à vide \fg{} pour $V_{TH}$ ?} Rien n'est branché, donc aucun courant ne traverse $R_{IN}$ : la tension entre $X$ et $Y$ est exactement celle de la pile $V_{TH}$ (comme l'expérience 1 du voltmètre).
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Le circuit de la photo} avec $U = 10\,\text{V}$, $I = 5\,\text{mA}$, $R_1 = R_2 = 1\,\text{k}\Omega$, $R_3 = 500\,\Omega$.
+
+\vspace{3pt}
+
+\textbf{1. $R_{IN}$} : on remplace $U$ par un fil et $I$ par un trou (schéma du haut). Depuis $X$ et $Y$, on voit $R_3$ en série avec ($R_1$ parallèle à $R_2$) :
+
+\[
+R_{IN} = R_3 + \frac{R_1 R_2}{R_1 + R_2} = 500 + 500 = 1\,\text{k}\Omega
+\]
+
+\textbf{2. $V_{TH}$} : bornes à vide (schéma du bas). Aucun courant dans $R_3$, donc $V_{TH}$ est la tension du nœud du milieu. Par Millman :
+
+\[
+V_{TH} = \frac{\frac{U}{R_1} + I}{\frac{1}{R_1} + \frac{1}{R_2}} = \frac{10\,\text{mA} + 5\,\text{mA}}{2\,\text{mS}} = 7.5\,\text{V}
+\]
+
+\textbf{Résultat :} tout le circuit équivaut à une pile de $7.5\,\text{V}$ en série avec $1\,\text{k}\Omega$.
+
+\end{example}
+
+
+%=========================================================
+\section{Le théorème de Norton (Edward) : principe}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_07.png}
+
+\end{center}
+
+
+\begin{definition}
+
+\textbf{Modèle de Norton}
+
+\og Un dipôle constitué d'une source de courant en parallèle avec une résistance. \fg{}
+
+Pour le monde extérieur, le dipôle réel ou le modèle sont fonctionnellement identiques.
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+C'est la même idée que Thévenin : n'importe quel circuit avec deux fils $X$ et $Y$ peut être remplacé, vu de l'extérieur, par un modèle tout petit. Sauf qu'au lieu d'une pile avec une résistance en série, on prend une \textbf{source de courant} $I_{NO}$ avec une résistance $R_{IN}$ en \textbf{parallèle}. C'est la \og source linéaire de courant \fg{} de la section \textit{Transformation de sources [2]}.
+
+\vspace{3pt}
+
+\textbf{Thévenin ou Norton ?}
+
+Ce sont deux habits pour la même boîte noire : Thévenin est la version \og source de tension \fg{}, Norton la version \og source de courant \fg{}. La transformation de sources permet de passer de l'un à l'autre. La résistance $R_{IN}$ est la même dans les deux.
+
+\vspace{3pt}
+
+\textbf{Il reste à trouver deux nombres :} $R_{IN}$ (comme pour Thévenin) et $I_{NO}$.
+
+\end{important}
+
+
+\textbf{Méthode de base pour calculer le modèle de Norton}
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_08.png}
+
+\end{center}
+
+
+La valeur de la \textbf{résistance} est obtenue :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item en éliminant les sources intérieures ;
+
+\item en évaluant la résistance vue depuis les bornes du dipôle.
+
+\end{enumerate}
+
+La valeur de la \textbf{source de courant} est obtenue :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item en court-circuitant les bornes du dipôle ;
+
+\item en calculant le courant de court-circuit.
+
+\end{enumerate}
+
+
+\begin{formula}
+
+\[
+I_{NO} = I_{Norton} = \text{courant qui passe dans un fil reliant } X \text{ à } Y
+\]
+
+où :
+
+\begin{itemize}
+
+\item $I_{NO}$ (ou $I_{Norton}$) : courant de la source de Norton = courant de court-circuit [A] ;
+
+\item $R_{IN}$ : résistance vue depuis $X$ et $Y$, sources éliminées [$\Omega$] ;
+
+\item $X$, $Y$ : les deux bornes du dipôle.
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Pourquoi le court-circuit donne $I_{NO}$ ?}
+
+Dans le modèle de Norton, si on relie $X$ et $Y$ par un fil, le fil est bien plus facile que $R_{IN}$ : tout le courant de la source passe dans le fil, rien dans $R_{IN}$. Le courant dans le fil vaut donc exactement $I_{NO}$.
+
+\vspace{3pt}
+
+C'est le miroir de Thévenin : pour Thévenin on laisse les bornes \textbf{ouvertes} et on mesure une \textbf{tension} ; pour Norton on les \textbf{relie} et on mesure un \textbf{courant}.
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Même circuit que pour Thévenin} : $U = 10\,\text{V}$, $I = 5\,\text{mA}$, $R_1 = R_2 = 1\,\text{k}\Omega$, $R_3 = 500\,\Omega$.
+
+\vspace{3pt}
+
+\textbf{1. $R_{IN}$} : même calcul que pour Thévenin, $R_{IN} = 1\,\text{k}\Omega$.
+
+\vspace{3pt}
+
+\textbf{2. $I_{NO}$} : on relie $X$ et $Y$ par un fil. $R_3$ va alors du nœud du milieu jusqu'en bas, comme $R_2$. Tension du nœud du milieu par Millman :
+
+\[
+V = \frac{\frac{10}{1\text{k}} + 5\,\text{mA}}{\frac{1}{1\text{k}} + \frac{1}{1\text{k}} + \frac{1}{500}} = \frac{15\,\text{mA}}{4\,\text{mS}} = 3.75\,\text{V}
+\]
+
+Le courant de court-circuit traverse $R_3$ :
+
+\[
+I_{NO} = \frac{3.75\,\text{V}}{500\,\Omega} = 7.5\,\text{mA}
+\]
+
+\textbf{Vérification :} $R_{IN}\,I_{NO} = 1\,\text{k}\Omega \cdot 7.5\,\text{mA} = 7.5\,\text{V} = V_{TH}$, comme trouvé avec Thévenin.
+
+\end{example}
+
+
+%=========================================================
+\section{Résumé et combinaison Thévenin -- Norton}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_09.png}
+
+\end{center}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item \textbf{Thévenin} : tension obtenue en mesurant (calculant) la tension à vide à la sortie ; résistance obtenue en éliminant toutes les sources internes.
+
+\item \textbf{Norton} : courant obtenu en mesurant (calculant) le courant de court-circuit à la sortie ; résistance obtenue en éliminant toutes les sources internes.
+
+\end{itemize}
+
+On va opérer des transformations Thévenin -- Norton en alternance et réaliser des réductions locales (permutations et fusions) jusqu'à obtenir un modèle limité à une source et une résistance.
+
+\end{summary}
+
+
+\begin{formula}
+
+\[
+U_{Th} = R_{IN}\,I_{Norton}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $U_{Th}$ : tension de Thévenin = tension à vide [V] ;
+
+\item $I_{Norton}$ : courant de Norton = courant de court-circuit [A] ;
+
+\item $R_{IN}$ : résistance interne, la même pour les deux modèles [$\Omega$].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{D'où vient $U_{Th} = R_{IN}\,I_{Norton}$ ?}
+
+C'est la transformation de sources ($U_0 = R\,I_{CC}$) appliquée aux deux modèles : même résistance, et même tension à vide. Dans le modèle de Norton à vide, tout $I_{Norton}$ passe dans $R_{IN}$, ce qui donne la tension $R_{IN}\,I_{Norton}$ : elle doit être égale à $U_{Th}$.
+
+\vspace{3pt}
+
+\textbf{Astuce pratique :} des trois nombres $U_{Th}$, $I_{Norton}$, $R_{IN}$, il suffit d'en calculer deux ; le troisième vient de la formule. Par exemple $R_{IN} = U_{Th}/I_{Norton}$ (tension à vide divisée par courant de court-circuit).
+
+\vspace{3pt}
+
+\textbf{La stratégie \og en alternance \fg{}}
+
+On simplifie un circuit morceau par morceau, en changeant d'habit selon ce qui arrange :
+
+\begin{itemize}
+
+\item des morceaux \textbf{en série} : on les met en Thévenin (les tensions et les résistances en série s'additionnent) ;
+
+\item des morceaux \textbf{en parallèle} : on les met en Norton (les courants s'additionnent, les résistances se mettent en parallèle).
+
+\end{itemize}
+
+On recommence jusqu'à ce qu'il ne reste qu'une source et une résistance.
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Deux piles en parallèle} sur $X$ et $Y$ : $10\,\text{V}$ avec $1\,\text{k}\Omega$ en série, et $5\,\text{V}$ avec $1\,\text{k}\Omega$ en série.
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item Chacune en Norton : $10\,\text{mA} \parallel 1\,\text{k}\Omega$ et $5\,\text{mA} \parallel 1\,\text{k}\Omega$.
+
+\item En parallèle, on fusionne : $I = 10 + 5 = 15\,\text{mA}$ et $R = 1\,\text{k} \parallel 1\,\text{k} = 500\,\Omega$.
+
+\item Retour en Thévenin : $U_{Th} = 500 \cdot 15\,\text{mA} = 7.5\,\text{V}$ avec $500\,\Omega$ en série.
+
+\end{enumerate}
+
+\end{example}
+
+
+%=========================================================
+\section{Théorème de superposition : principe}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_10.png}
+
+\end{center}
+
+
+\begin{definition}
+
+\textbf{Superposition}
+
+Remplir avec $A$ et $B$ pendant $10\,\text{s}$ équivaut à : 1) remplir avec $A$ durant $10\,\text{s}$, 2) puis avec $B$ pendant $10\,\text{s}$.
+
+En électronique linéaire, c'est la même chose : calculer la tension $U_S$ avec $U_1$ et $I_2$ en même temps est identique à la somme des contributions de $U_1$ et de $I_2$.
+
+\end{definition}
+
+
+\begin{formula}
+
+Nous aurons $U_S(U_1)$ et $U_S(I_2)$ :
+
+\[
+U_{S\_Total} = U_S(U_1) + U_S(I_2)
+\]
+
+où :
+
+\begin{itemize}
+
+\item $U_S$ : tension de sortie cherchée [V] ;
+
+\item $U_1$ : source de tension [V] ; $I_2$ : source de courant [A] ;
+
+\item $U_S(U_1)$ : tension de sortie quand $U_1$ agit seule [V] ;
+
+\item $U_S(I_2)$ : tension de sortie quand $I_2$ agit seule [V] ;
+
+\item $U_{S\_Total}$ : tension de sortie avec les deux sources [V].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+Quand plusieurs sources poussent en même temps dans un circuit, c'est compliqué à calculer d'un coup. Le théorème dit : on peut s'occuper des sources \textbf{une par une}, puis additionner les résultats. Comme la baignoire : l'eau des deux robinets ensemble, c'est l'eau du robinet $A$ plus l'eau du robinet $B$.
+
+\vspace{3pt}
+
+\textbf{La méthode, en 3 étapes}
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item On garde \textbf{une seule} source et on \textbf{éteint toutes les autres} : source de tension $\rightarrow$ fil (court-circuit), source de courant $\rightarrow$ trou (circuit ouvert), comme pour Thévenin.
+
+\item On calcule ce qu'on cherche (ici $U_S$) avec cette source seule : souvent un simple diviseur.
+
+\item On recommence pour chaque source, puis on \textbf{additionne} toutes les contributions.
+
+\end{enumerate}
+
+\textbf{Attention :} ça ne marche que pour un circuit \textbf{linéaire} (résistances, condensateurs, inductances, sources), et pour des tensions ou des courants, pas pour des puissances (elles dépendent de $U^2$).
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Le circuit de la photo} avec $U_1 = 10\,\text{V}$, $I_2 = 5\,\text{mA}$, $R_1 = R_2 = 1\,\text{k}\Omega$. Rien n'est branché en sortie : aucun courant dans $R_3$, donc $U_S$ est la tension aux bornes de $R_2$.
+
+\vspace{3pt}
+
+\textbf{1. $U_1$ seule} ($I_2$ remplacée par un trou) : diviseur $R_1$, $R_2$,
+
+\[
+U_S(U_1) = U_1\,\frac{R_2}{R_1 + R_2} = 10 \cdot \frac{1}{2} = 5\,\text{V}
+\]
+
+\textbf{2. $I_2$ seule} ($U_1$ remplacée par un fil) : $I_2$ passe dans $R_1$ parallèle à $R_2$,
+
+\[
+U_S(I_2) = I_2\,\frac{R_1 R_2}{R_1 + R_2} = 5\,\text{mA} \cdot 500\,\Omega = 2.5\,\text{V}
+\]
+
+\textbf{3. Somme :} $U_{S\_Total} = 5 + 2.5 = 7.5\,\text{V}$, comme avec Millman ou Thévenin.
+
+\end{example}
+
+
+\end{multicols}
+
+\end{document}
