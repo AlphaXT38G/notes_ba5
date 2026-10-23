@@ -8,6 +8,13 @@
 
 \coursetitle{Modèles stochastiques pour les communications}{BA5}{2026--2027}
 
+\begin{rembox}[title=Pourquoi ces notes ?]
+Ces notes \textbf{ne sont pas complètes} : le cours du professeur est bien plus complet et
+fait foi. Je les ai écrites pour moi, afin de \textbf{regrouper au même endroit les
+informations d'une notion} et mieux les voir, en particulier celles qui me semblaient peu
+claires dans le cours.
+\end{rembox}
+
 \tableofcontents
 \clearpage
 
@@ -130,13 +137,12 @@ est \textbf{entièrement déterminé par $\vect{\mu}$ et $\Sigma$}, c.-à-d. par
 
 \begin{propbox}[title={Densité d'un couple gaussien}]
 Pour $(X_1,X_2)$, avec $\rho$ le coefficient de corrélation ($|\rho|<1$) :
-\[
-f(x_1,x_2) = \frac{1}{2\pi\sigma_1\sigma_2\sqrt{1-\rho^2}}
-\exp\!\left\{-\frac{1}{2(1-\rho^2)}\left[
-\frac{(x_1-\mu_1)^2}{\sigma_1^2}
+\begin{align*}
+f(x_1,x_2) &= \frac{1}{2\pi\sigma_1\sigma_2\sqrt{1-\rho^2}}\,e^{-\frac{q(x_1,x_2)}{2(1-\rho^2)}},\\
+q(x_1,x_2) &= \frac{(x_1-\mu_1)^2}{\sigma_1^2}
 - \frac{2\rho(x_1-\mu_1)(x_2-\mu_2)}{\sigma_1\sigma_2}
-+ \frac{(x_2-\mu_2)^2}{\sigma_2^2}\right]\right\},
-\]
++ \frac{(x_2-\mu_2)^2}{\sigma_2^2},
+\end{align*}
 avec $\Sigma = \begin{pmatrix}\sigma_1^2 & \rho\sigma_1\sigma_2\\ \rho\sigma_1\sigma_2 &
 \sigma_2^2\end{pmatrix}$. La densité a la forme d'une colline centrée en $\vect\mu$.
 \end{propbox}
