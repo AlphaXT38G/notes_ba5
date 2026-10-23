@@ -872,6 +872,54 @@ I = \frac{V}{R_{EQ}}
 \end{example}
 
 
+%=========================================================
+\section{Simplifications intermédiaires (les inductances)}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week03_14.png}
+
+\end{center}
+
+
+\begin{formula}
+
+En série (même courant $i$, $V = V_{L1} + V_{L2}$) :
+
+\[
+\frac{L_{EQ}\,di}{dt} = \frac{L_1\,di}{dt} + \frac{L_2\,di}{dt}
+\quad\Rightarrow\quad
+L_{EQ} = L_1 + L_2
+\]
+
+En parallèle (même tension $V$, $i = i_1 + i_2$ donc $di = di_1 + di_2$) :
+
+\[
+di_1 + di_2 = \frac{V\,dt}{L_1} + \frac{V\,dt}{L_2} = di = \frac{V\,dt}{L_{EQ}}
+\quad\Rightarrow\quad
+\frac{1}{L_{EQ}} = \frac{1}{L_1} + \frac{1}{L_2}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $L_1$, $L_2$ : inductances [H] ; $L_{EQ}$ : inductance équivalente [H] ;
+
+\item $V$ : tension de la source [V] ; $V_{L1}$, $V_{L2}$ : tensions aux bornes de $L_1$, $L_2$ [V] ;
+
+\item $i$ : courant total [A] ; $i_1$, $i_2$ : courants dans $L_1$, $L_2$ [A] ;
+
+\item $di$, $dt$ : petites variations du courant [A] et du temps [s].
+
+\end{itemize}
+
+\end{formula}
+
+
 \end{multicols}
 
 \end{document}
