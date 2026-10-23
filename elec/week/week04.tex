@@ -994,6 +994,105 @@ On recommence jusqu'à ce qu'il ne reste qu'une source et une résistance.
 \end{example}
 
 
+%=========================================================
+\section{Théorème de superposition : principe}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_10.png}
+
+\end{center}
+
+
+\begin{definition}
+
+\textbf{Superposition}
+
+Remplir avec $A$ et $B$ pendant $10\,\text{s}$ équivaut à : 1) remplir avec $A$ durant $10\,\text{s}$, 2) puis avec $B$ pendant $10\,\text{s}$.
+
+En électronique linéaire, c'est la même chose : calculer la tension $U_S$ avec $U_1$ et $I_2$ en même temps est identique à la somme des contributions de $U_1$ et de $I_2$.
+
+\end{definition}
+
+
+\begin{formula}
+
+Nous aurons $U_S(U_1)$ et $U_S(I_2)$ :
+
+\[
+U_{S\_Total} = U_S(U_1) + U_S(I_2)
+\]
+
+où :
+
+\begin{itemize}
+
+\item $U_S$ : tension de sortie cherchée [V] ;
+
+\item $U_1$ : source de tension [V] ; $I_2$ : source de courant [A] ;
+
+\item $U_S(U_1)$ : tension de sortie quand $U_1$ agit seule [V] ;
+
+\item $U_S(I_2)$ : tension de sortie quand $I_2$ agit seule [V] ;
+
+\item $U_{S\_Total}$ : tension de sortie avec les deux sources [V].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+Quand plusieurs sources poussent en même temps dans un circuit, c'est compliqué à calculer d'un coup. Le théorème dit : on peut s'occuper des sources \textbf{une par une}, puis additionner les résultats. Comme la baignoire : l'eau des deux robinets ensemble, c'est l'eau du robinet $A$ plus l'eau du robinet $B$.
+
+\vspace{3pt}
+
+\textbf{La méthode, en 3 étapes}
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item On garde \textbf{une seule} source et on \textbf{éteint toutes les autres} : source de tension $\rightarrow$ fil (court-circuit), source de courant $\rightarrow$ trou (circuit ouvert), comme pour Thévenin.
+
+\item On calcule ce qu'on cherche (ici $U_S$) avec cette source seule : souvent un simple diviseur.
+
+\item On recommence pour chaque source, puis on \textbf{additionne} toutes les contributions.
+
+\end{enumerate}
+
+\textbf{Attention :} ça ne marche que pour un circuit \textbf{linéaire} (résistances, condensateurs, inductances, sources), et pour des tensions ou des courants, pas pour des puissances (elles dépendent de $U^2$).
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Le circuit de la photo} avec $U_1 = 10\,\text{V}$, $I_2 = 5\,\text{mA}$, $R_1 = R_2 = 1\,\text{k}\Omega$. Rien n'est branché en sortie : aucun courant dans $R_3$, donc $U_S$ est la tension aux bornes de $R_2$.
+
+\vspace{3pt}
+
+\textbf{1. $U_1$ seule} ($I_2$ remplacée par un trou) : diviseur $R_1$, $R_2$,
+
+\[
+U_S(U_1) = U_1\,\frac{R_2}{R_1 + R_2} = 10 \cdot \frac{1}{2} = 5\,\text{V}
+\]
+
+\textbf{2. $I_2$ seule} ($U_1$ remplacée par un fil) : $I_2$ passe dans $R_1$ parallèle à $R_2$,
+
+\[
+U_S(I_2) = I_2\,\frac{R_1 R_2}{R_1 + R_2} = 5\,\text{mA} \cdot 500\,\Omega = 2.5\,\text{V}
+\]
+
+\textbf{3. Somme :} $U_{S\_Total} = 5 + 2.5 = 7.5\,\text{V}$, comme avec Millman ou Thévenin.
+
+\end{example}
+
+
 \end{multicols}
 
 \end{document}
