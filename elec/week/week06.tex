@@ -1011,6 +1011,83 @@ Une constante, c'est un circuit qui multiplie le signal par le même nombre $K$ 
 \end{important}
 
 
+%=========================================================
+\section{Module des fonctions élémentaires [2] : $j\frac{\omega}{\omega_Z}$ et $\frac{1}{j\omega/\omega_P}$}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_14.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+\underline{H}(j\omega) = j\frac{\omega}{\omega_{Z1}}
+\;\Rightarrow\;
+|\underline{H}|_{dB} = 20\log\frac{\omega}{\omega_{Z1}}
+\quad\text{pente} = +20\,\text{dB/décade}
+\]
+\[
+\underline{H}(j\omega) = \frac{1}{j\frac{\omega}{\omega_{P1}}}
+\;\Rightarrow\;
+|\underline{H}|_{dB} = -20\log\frac{\omega}{\omega_{P1}}
+\quad\text{pente} = -20\,\text{dB/décade}
+\]
+
+Les deux droites coupent l'axe des $0\,\text{dB}$ à leur pulsation caractéristique ($\omega_{Z1}$ ou $\omega_{P1}$).
+
+où :
+
+\begin{itemize}
+
+\item $\omega_{Z1}$ : pulsation du zéro [rad/s] ; $\omega_{P1}$ : pulsation du pôle [rad/s] ;
+
+\item $\omega$ : pulsation [rad/s], axe en échelle logarithmique.
+
+\end{itemize}
+
+\end{formula}
+
+\textbf{Remarque importante :} travailler avec $a\log(X)$ sur une échelle logarithmique revient à travailler avec $a\,X$ sur une échelle linéaire. On peut donc représenter chaque dessin de manière linéaire, ce qui simplifie significativement la représentation globale (somme de dessins linéaires).
+
+Le second terme est un imaginaire pur : il donne une pente constante de $+20\,\text{dB}$ par décade sur toute l'échelle des pulsations, qui coupe l'axe des $0\,\text{dB}$ à la pulsation caractéristique. Pour les pulsations inférieures, ce terme atténue le signal d'entrée ; pour les supérieures, il l'amplifie. Le troisième terme est symétrique du second : pente constante de $-20\,\text{dB}$ par décade, coupant aussi l'axe des $0\,\text{dB}$ à la pulsation caractéristique. Il atténue au-dessus et amplifie en dessous.
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+\textbf{La brique $j\frac{\omega}{\omega_Z}$} : sa taille vaut $\frac{\omega}{\omega_Z}$, donc elle grandit avec la fréquence. Quand la fréquence est multipliée par 10, la taille aussi, soit $+20\,\text{dB}$. Sur l'axe en échelle log, ça donne une \textbf{droite qui monte} de $20\,\text{dB}$ par décade.
+
+\begin{itemize}
+
+\item elle vaut $1$ (donc $0\,\text{dB}$) pile quand $\omega = \omega_Z$ : c'est là qu'elle croise l'axe ;
+
+\item avant $\omega_Z$, elle est sous $0\,\text{dB}$ (elle rétrécit le signal) ; après, au-dessus (elle l'agrandit).
+
+\end{itemize}
+
+\textbf{La brique $\frac{1}{j\omega/\omega_P}$} : c'est l'inverse, une \textbf{droite qui descend} de $20\,\text{dB}$ par décade, qui croise aussi $0\,\text{dB}$ en $\omega_P$.
+
+\vspace{3pt}
+
+\textbf{Pourquoi une droite ?} Grâce à l'échelle log sur les deux axes (dB en haut, log en bas) : un \og $\log(\omega)$ \fg{} dessiné sur un axe en $\log(\omega)$, c'est une simple droite.
+
+\end{important}
+
+
+\begin{example}
+
+$\omega_Z = 10\,\text{rad/s}$ : à $\omega = 1$ $\rightarrow$ $-20\,\text{dB}$ ; à $\omega = 10$ $\rightarrow$ $0\,\text{dB}$ ; à $\omega = 100$ $\rightarrow$ $+20\,\text{dB}$ ; à $\omega = 1000$ $\rightarrow$ $+40\,\text{dB}$.
+
+\end{example}
+
+
 \end{multicols}
 
 \end{document}
