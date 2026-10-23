@@ -920,6 +920,61 @@ où :
 \end{formula}
 
 
+%=========================================================
+\section{Simplifications intermédiaires (capacités parallèles)}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week03_15.png}
+
+\end{center}
+
+La résolution peut se faire en posant $i = i_1 + i_2$, mais la méthode est plus simple avec les charges.
+
+\begin{formula}
+
+$V_1 = V_2$ car si la source est identique, les équipotentielles le sont aussi.
+
+\[
+Q_{EQ} = Q_1 + Q_2
+\]
+
+La charge totale qui sera déplacée, et donc stockée, est la même.
+
+\[
+Q_{EQ} = C_{EQ}\,V_2 = Q_1 + Q_2 = C_1 V_1 + C_2 V_1
+\quad\Rightarrow\quad
+C_{EQ}\,V_2 = (C_1 + C_2)\,V_1
+\]
+
+Finalement :
+
+\[
+\boxed{C_{EQ} = C_1 + C_2}
+\]
+
+(à comparer avec l'expression des résistances en parallèle).
+
+où :
+
+\begin{itemize}
+
+\item $C_1$, $C_2$ : capacités [F] ; $C_{EQ}$ : capacité équivalente [F] ;
+
+\item $Q_1$, $Q_2$, $Q_{EQ}$ : charges stockées [C] ;
+
+\item $V_1$, $V_2$ : tensions aux bornes [V] ;
+
+\item $i$, $i_1$, $i_2$ : courants [A].
+
+\end{itemize}
+
+\end{formula}
+
+
 \end{multicols}
 
 \end{document}
