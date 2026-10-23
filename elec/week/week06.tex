@@ -1224,6 +1224,78 @@ Cette fonction de transfert met en évidence trois termes de base, chacun avec u
 \end{important}
 
 
+%=========================================================
+\section{Diagramme de Bode : argument ou phase}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_17.png}
+
+\end{center}
+
+La phase $\operatorname{Arg}(\underline{H}(j\omega))$ est exprimée en radians, à $2\pi$ près.
+
+\textbf{Propriété :} l'argument d'un produit est égal à la somme des arguments.
+
+
+\begin{formula}
+
+\[
+\text{Si } \underline{H}(j\omega) = \underline{H}_1(j\omega)\cdot\underline{H}_2(j\omega)
+\quad\text{alors}\quad
+\operatorname{Arg}(\underline{H}(j\omega)) = \operatorname{Arg}(\underline{H}_1(j\omega)) + \operatorname{Arg}(\underline{H}_2(j\omega))
+\]
+
+Pour la forme canonique, l'argument est une somme (différence) d'arguments élémentaires :
+
+\[
+\operatorname{Arg}(\underline{H}(j\omega)) = \operatorname{Arg}(K) + \operatorname{Arg}\left(j\frac{\omega}{\omega_{Z1}}\right) + \operatorname{Arg}\left(1 + j\frac{\omega}{\omega_{Z2}}\right) + \cdots
+\]
+\[
+\cdots - \operatorname{Arg}\left(j\frac{\omega}{\omega_{P1}}\right) - \operatorname{Arg}\left(1 + j\frac{\omega}{\omega_{P2}}\right) - \cdots
+\]
+
+où :
+
+\begin{itemize}
+
+\item $\operatorname{Arg}$ : argument, la phase [rad] ou [°] ;
+
+\item les termes du numérateur (zéros) s'ajoutent, ceux du dénominateur (pôles) se soustraient.
+
+\end{itemize}
+
+\end{formula}
+
+L'argument d'un produit est égal à la somme des arguments, et l'argument d'un rapport à la différence des arguments. Comme pour le module, le dessin de la phase complète est facilité.
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+Pour la phase, pas besoin de décibels : les angles s'additionnent déjà tout seuls quand on multiplie des complexes (semaine 05 : multiplier, c'est tourner d'un angle puis d'un autre).
+
+\vspace{3pt}
+
+Même recette que pour le module :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item dessiner la phase de chaque brique toute seule ;
+
+\item additionner les briques du haut, soustraire celles du bas ;
+
+\item additionner les dessins, zone par zone.
+
+\end{enumerate}
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
