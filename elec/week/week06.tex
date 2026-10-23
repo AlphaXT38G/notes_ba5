@@ -1161,6 +1161,69 @@ Le dessin : plat jusqu'à $\omega_Z$, puis ça monte. Pour le pôle $\frac{1}{1 
 \end{important}
 
 
+%=========================================================
+\section{Exemple de diagramme de Bode : module}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_16.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+\underline{H}(j\omega) = \frac{j\frac{\omega}{\omega_2}}{\left(1 + j\frac{\omega}{\omega_1}\right)\cdot\left(1 + j\frac{\omega}{\omega_2}\right)}
+\quad\text{avec}\quad
+\omega_2 = 10^2\,\text{rad/s},\ \omega_1 = 10^3\,\text{rad/s}
+\]
+
+\[
+|\underline{H}|_{dB} = \left|j\frac{\omega}{\omega_2}\right|_{dB} + \left|\frac{1}{1 + j\frac{\omega}{\omega_2}}\right|_{dB} + \left|\frac{1}{1 + j\frac{\omega}{\omega_1}}\right|_{dB}
+\]
+
+où $\omega_1$, $\omega_2$ : pulsations caractéristiques [rad/s] ; $\omega$ [rad/s].
+
+\end{formula}
+
+Cette fonction de transfert met en évidence trois termes de base, chacun avec une allure propre et une pulsation caractéristique propre. Le dessin de chaque terme étant très simple, le dessin global demande très peu de travail, et le diagramme de Bode complet approxime bien la réalité.
+
+
+\begin{important}
+
+\textbf{En très simple : on empile les 3 briques (graphe de gauche)}
+
+\begin{itemize}
+
+\item \textbf{rouge} $j\frac{\omega}{\omega_2}$ : droite qui monte de $+20\,\text{dB/déc}$, qui croise $0\,\text{dB}$ en $\omega_2 = 100$ ;
+
+\item \textbf{bleu} $\frac{1}{1 + j\omega/\omega_2}$ : plat à $0\,\text{dB}$ jusqu'à $100$, puis descend de $-20\,\text{dB/déc}$ ;
+
+\item \textbf{vert} $\frac{1}{1 + j\omega/\omega_1}$ : plat à $0\,\text{dB}$ jusqu'à $1000$, puis descend de $-20\,\text{dB/déc}$.
+
+\end{itemize}
+
+\textbf{On additionne les pentes, zone par zone (graphe de droite)} :
+
+\begin{itemize}
+
+\item \textbf{avant 100} : seul le rouge bouge, $+20$ ; la courbe monte et arrive à $0\,\text{dB}$ en 100 ;
+
+\item \textbf{entre 100 et 1000} : rouge $+20$, bleu $-20$, vert $0$ : total $0$, c'est \textbf{plat} à $0\,\text{dB}$ ;
+
+\item \textbf{après 1000} : $+20 - 20 - 20 = -20\,\text{dB/déc}$, ça redescend.
+
+\end{itemize}
+
+\textbf{Résultat :} un \textbf{filtre passe-bande}. Il laisse passer les fréquences entre $100$ et $1000\,\text{rad/s}$ et atténue les autres.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
