@@ -735,6 +735,109 @@ L'erreur est petite ($3\,\text{dB}$ et $5.7°$ au pire) et le dessin se fait en 
 \end{important}
 
 
+%=========================================================
+\section{Circuit RC passe-haut}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_09.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+\underline{H}(j\omega) = \frac{\underline{V}_2}{\underline{V}_1} = \frac{R}{R + \frac{1}{j\omega C}} = \frac{j\omega RC}{1 + j\omega RC} = \frac{j\frac{\omega}{\omega_0}}{1 + j\frac{\omega}{\omega_0}}
+\]
+
+\[
+|\underline{H}(j\omega)| = \frac{\frac{\omega}{\omega_0}}{\sqrt{1 + \left(\frac{\omega}{\omega_0}\right)^2}}
+\qquad
+\operatorname{Arg}(\underline{H}(j\omega)) = \frac{\pi}{2} - \operatorname{arctg}\frac{\omega}{\omega_0}
+\]
+
+Autre représentation que l'on trouve dans la littérature (difficile à exploiter) :
+
+\[
+|\underline{H}(j\omega)| = \frac{1}{\sqrt{1 + \left(\frac{\omega_0}{\omega}\right)^2}}
+\qquad
+\operatorname{Arg}(\underline{H}(j\omega)) = \operatorname{arctg}\frac{\omega_0}{\omega}
+\]
+
+où $\omega_0 = 1/RC$ [rad/s] ; $\underline{V}_2$ : tension aux bornes de $R$ [V] ; les autres comme pour le passe-bas.
+
+\end{formula}
+
+Pour le filtre passe-haut, on obtient aussi une fonction de transfert et une pulsation caractéristique ($\omega_0 = 1/RC$), dont on déduit l'allure du module et de l'argument.
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_10.png}
+
+\end{center}
+
+
+\begin{formula}
+
+Asymptotes :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item pour $\omega \ll \omega_0$ : $\underline{H}(j\omega) = j\frac{\omega}{\omega_0}$ ;
+
+\item pour $\omega \gg \omega_0$ : $\underline{H}(j\omega) = 1$.
+
+\end{enumerate}
+
+Cas particulier, pour $\omega = \omega_0$ :
+
+\[
+\underline{H}(j\omega) = \frac{j}{1 + j}
+\qquad
+|\underline{H}(j\omega)| = \frac{1}{\sqrt 2}
+\qquad
+\operatorname{Arg}(\underline{H}(j\omega)) = 45°
+\]
+
+\end{formula}
+
+Comme pour le passe-bas, le passe-haut peut être étudié de manière complète (courbe réelle) ou approximative avec les asymptotes. On obtient deux courbes aux caractéristiques similaires au cas précédent.
+
+
+\begin{important}
+
+\textbf{En très simple : le passe-bas à l'envers}
+
+\textbf{Module} : à gauche, la courbe \textbf{monte} de $+20\,\text{dB}$ par décade (les graves sont très atténués) ; à partir de $\omega_0$, elle devient plate à $0\,\text{dB}$ (les aigus passent intacts).
+
+\vspace{3pt}
+
+\textbf{Phase} : elle part de $+90°$ (la sortie est en \textbf{avance} d'un quart de tour), passe par $+45°$ en $\omega_0$, et finit à $0°$.
+
+\vspace{3pt}
+
+\textbf{Comment trouver les asymptotes ?} On regarde qui \og gagne \fg{} dans $1 + j\frac{\omega}{\omega_0}$ :
+
+\begin{itemize}
+
+\item $\omega$ tout petit : le $1$ gagne, le bas vaut $\approx 1$, donc $\underline{H} \approx j\frac{\omega}{\omega_0}$ (une droite qui monte) ;
+
+\item $\omega$ très grand : le $j\frac{\omega}{\omega_0}$ gagne, il se simplifie avec celui du haut, donc $\underline{H} \approx 1$ (plat à $0\,\text{dB}$).
+
+\end{itemize}
+
+\textbf{L'autre écriture} (avec $\omega_0/\omega$) donne la même chose, mais elle ne se découpe pas en briques : c'est pour ça qu'elle est difficile à exploiter.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
