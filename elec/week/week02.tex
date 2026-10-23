@@ -468,6 +468,117 @@ où :
 \end{formula}
 
 
+%=========================================================
+\section{Valeurs moyennes (domaines continus)}
+
+
+\textbf{1) Approximation de la surface de la courbe par un histogramme}
+
+Comparable au domaine discret. L'erreur est grande car $\Delta t_i$ est grand.
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week02_03.png}
+
+\end{center}
+
+
+\textbf{2) Le \og pas \fg{} de calcul est plus fin}
+
+Toujours comparable au domaine discret. L'erreur est petite car $\Delta t_i$ est petit.
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week02_04.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+S_i = H_i \cdot \Delta t_i
+\qquad
+\text{Surface totale} = \sum_i H_i \cdot \Delta t_i
+\]
+
+\[
+\text{Moyenne} = \frac{\text{Surface totale}}{\text{NB échantillons} \cdot \Delta t} = \frac{\text{Surface totale}}{\text{Temps total}}
+\]
+
+\[
+\text{Somme totale} = \sum_i H_i
+\qquad
+\text{Moyenne} = \frac{\text{Somme totale}}{\text{NB échantillons}}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $H_i$ : hauteur de la $i$-ème barre = valeur du signal sur cet intervalle (p.\,ex. [V]) ;
+
+\item $\Delta t_i$ (ou $\Delta t$) : largeur d'une barre = pas de calcul [s] ;
+
+\item $S_i$ : surface d'une barre (p.\,ex. [V$\cdot$s]) ;
+
+\item $\text{Temps total} = \text{NB échantillons} \cdot \Delta t$ : durée analysée [s] ;
+
+\item $\text{Moyenne}$ : valeur moyenne du signal (même unité que $H_i$).
+
+\end{itemize}
+
+\end{formula}
+
+
+\textbf{3) Le \og pas \fg{} de calcul est infinitésimal : domaine continu}
+
+L'erreur est nulle.
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week02_05.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+dS = H(t)\cdot dt
+\qquad
+\text{Surface totale} = \int_0^T H(t)\,dt
+\]
+
+\[
+\text{Moyenne} = \frac{\text{Surface totale}}{\text{Période d'analyse}} = \frac{1}{T}\int_0^T H(t)\,dt
+\]
+
+où :
+
+\begin{itemize}
+
+\item $H(t)$ : valeur du signal à l'instant $t$ (p.\,ex. [V]) ;
+
+\item $dt$ : largeur infinitésimale d'une barre [s] ;
+
+\item $dS$ : surface d'une barre infinitésimale (p.\,ex. [V$\cdot$s]) ;
+
+\item $T$ : période d'analyse [s] ;
+
+\item $\text{Moyenne}$ : valeur moyenne du signal (même unité que $H(t)$).
+
+\end{itemize}
+
+\end{formula}
+
+
 \end{multicols}
 
 \end{document}
