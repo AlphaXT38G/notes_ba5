@@ -562,6 +562,207 @@ Même résultat : la charge ne voit aucune différence.
 \end{example}
 
 
+%=========================================================
+\section{Le théorème de Thévenin (Léon Charles) : principe}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_04.png}
+
+\end{center}
+
+
+\begin{definition}
+
+\textbf{Modèle de Thévenin}
+
+Le circuit est un \textbf{dipôle}. Pour le monde extérieur, ce dipôle est assimilable à une boîte noire.
+
+\og Le dipôle (boîte noire) est constitué d'une source de tension en série avec une résistance. \fg{}
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+Prends n'importe quel circuit, aussi compliqué que tu veux (des piles, des sources de courant, plein de résistances), du moment qu'il n'en sort que deux fils $X$ et $Y$. Ce qui est branché sur $X$ et $Y$ (le \og nuage \fg{}) ne voit pas l'intérieur : il ne sent que la tension et le courant à ces deux fils.
+
+\vspace{3pt}
+
+Le théorème dit : de l'extérieur, ce gros circuit se comporte \textbf{exactement} comme une seule pile $V_{TH}$ avec une seule résistance $R_{IN}$ en série. C'est la \og source linéaire de tension \fg{} de la section \textit{Transformation de sources [1]}.
+
+\vspace{3pt}
+
+\textbf{Pourquoi c'est génial}
+
+Au lieu de refaire tous les calculs de Kirchhoff à chaque fois qu'on change ce qui est branché sur $X$ et $Y$, on remplace le circuit une fois pour toutes par deux éléments, puis tout devient un simple diviseur ou une loi d'Ohm.
+
+\vspace{3pt}
+
+\textbf{Il reste à trouver deux nombres :} $V_{TH}$ et $R_{IN}$. On peut les \textbf{mesurer} (avec une résistance, un ampèremètre $A$, un voltmètre $V$) ou les \textbf{calculer}.
+
+\end{important}
+
+
+\textbf{Expérimentation pour mesurer le modèle de Thévenin}
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_05.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+U_{2\_lu} = U_{1\_inconnu}
+\qquad
+R_{IN} = \frac{U_{1\_inconnu}}{I_{2\_lu}}
+\qquad
+R_{IN} = \frac{U_{2\_impos\acute{e}}}{I_{2\_lu}}
+\]
+
+\[
+U_{2\_lu} = \frac{R_2}{R_2 + R_{IN}}\,U_{1\_inconnu}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $U_{1\_inconnu}$ : tension de la source cachée dans la boîte ($= V_{TH}$) [V] ;
+
+\item $R_{IN}$ : résistance interne de la boîte [$\Omega$] ;
+
+\item $U_{2\_lu}$ : tension lue au voltmètre entre $X$ et $Y$ [V] ;
+
+\item $I_{2\_lu}$ : courant lu à l'ampèremètre [A] ;
+
+\item $U_{2\_impos\acute{e}}$ : tension imposée par une source extérieure [V] ;
+
+\item $R_2$ : résistance variable branchée entre $X$ et $Y$ [$\Omega$].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Les 4 expériences de la photo, une par une}
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item \textbf{Voltmètre seul entre $X$ et $Y$} (en haut à gauche) : un voltmètre ne laisse passer aucun courant, donc rien ne se perd dans $R_{IN}$. On lit directement $U_{2\_lu} = U_{1\_inconnu} = V_{TH}$. \textbf{Ça marche.}
+
+\item \textbf{Ampèremètre entre $X$ et $Y$} (en haut à droite) : c'est un court-circuit, le courant n'est limité que par $R_{IN}$, donc $R_{IN} = V_{TH}/I_{2\_lu}$. Sur papier OK, mais \textbf{danger en pratique} : si $R_{IN}$ est petite, le courant est énorme (ça chauffe, ça casse).
+
+\item \textbf{On éteint la source et on impose une tension} (au milieu) : sans $U_1$, seule $R_{IN}$ reste, donc $R_{IN} = U_{2\_impos\acute{e}}/I_{2\_lu}$. Sur papier OK, mais \textbf{impossible en pratique} : on ne peut pas ouvrir la boîte noire pour enlever sa source.
+
+\item \textbf{La bonne méthode : une résistance réglable $R_2$} (en bas). $R_2$ et $R_{IN}$ forment un diviseur de tension. On connaît déjà $U_{1\_inconnu}$ (expérience 1). On tourne $R_2$ jusqu'à lire \textbf{la moitié} : $U_{2\_lu} = U_{1\_inconnu}/2$. À ce moment, la tension se partage moitié-moitié, donc $R_2 = R_{IN}$ : il suffit de lire la valeur de $R_2$.
+
+\end{enumerate}
+
+\end{important}
+
+
+\textbf{Méthode de base pour calculer le modèle de Thévenin}
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_06.png}
+
+\end{center}
+
+
+La valeur de la \textbf{résistance} est obtenue :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item en éliminant les sources intérieures ;
+
+\item en évaluant la résistance vue depuis les bornes du dipôle.
+
+\end{enumerate}
+
+La valeur de la \textbf{source de tension} est obtenue :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item en laissant les bornes du dipôle à vide ;
+
+\item en calculant la tension aux bornes du dipôle.
+
+\end{enumerate}
+
+
+\begin{warning}
+
+\textbf{Remarque :}
+
+\begin{itemize}
+
+\item éliminer une source de tension $\rightarrow$ la remplacer par un court-circuit ;
+
+\item éliminer une source de courant $\rightarrow$ la remplacer par un circuit ouvert.
+
+\end{itemize}
+
+\end{warning}
+
+
+\begin{important}
+
+\textbf{Pourquoi on élimine les sources comme ça ?}
+
+\og Éliminer \fg{} une source, c'est la mettre à zéro :
+
+\begin{itemize}
+
+\item une source de tension à $0\,\text{V}$ ne crée aucune différence entre ses bornes : c'est un simple \textbf{fil} ;
+
+\item une source de courant à $0\,\text{A}$ ne laisse passer aucun courant : c'est un \textbf{trou} dans le circuit (circuit ouvert).
+
+\end{itemize}
+
+\textbf{Pourquoi \og à vide \fg{} pour $V_{TH}$ ?} Rien n'est branché, donc aucun courant ne traverse $R_{IN}$ : la tension entre $X$ et $Y$ est exactement celle de la pile $V_{TH}$ (comme l'expérience 1 du voltmètre).
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Le circuit de la photo} avec $U = 10\,\text{V}$, $I = 5\,\text{mA}$, $R_1 = R_2 = 1\,\text{k}\Omega$, $R_3 = 500\,\Omega$.
+
+\vspace{3pt}
+
+\textbf{1. $R_{IN}$} : on remplace $U$ par un fil et $I$ par un trou (schéma du haut). Depuis $X$ et $Y$, on voit $R_3$ en série avec ($R_1$ parallèle à $R_2$) :
+
+\[
+R_{IN} = R_3 + \frac{R_1 R_2}{R_1 + R_2} = 500 + 500 = 1\,\text{k}\Omega
+\]
+
+\textbf{2. $V_{TH}$} : bornes à vide (schéma du bas). Aucun courant dans $R_3$, donc $V_{TH}$ est la tension du nœud du milieu. Par Millman :
+
+\[
+V_{TH} = \frac{\frac{U}{R_1} + I}{\frac{1}{R_1} + \frac{1}{R_2}} = \frac{10\,\text{mA} + 5\,\text{mA}}{2\,\text{mS}} = 7.5\,\text{V}
+\]
+
+\textbf{Résultat :} tout le circuit équivaut à une pile de $7.5\,\text{V}$ en série avec $1\,\text{k}\Omega$.
+
+\end{example}
+
+
 \end{multicols}
 
 \end{document}
