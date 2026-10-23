@@ -486,9 +486,10 @@ Le décibel (log en base 10), défini pour un rapport de puissances :
 \left|\frac{P_2}{P_1}\right|_{dB} = 10\log\left(\frac{P_2}{P_1}\right)
 \]
 \[
-10\log\left(\frac{U_2^2/R}{U_1^2/R}\right) = 10\log\left(\frac{U_2^2}{U_1^2}\right) = 10\log\left(\frac{U_2}{U_1}\right)^2
-\;\Rightarrow\;
-\boxed{\left|\frac{U_2}{U_1}\right|_{dB} = 20\log\left(\frac{U_2}{U_1}\right)}
+10\log\left(\frac{U_2^2/R}{U_1^2/R}\right) = 10\log\left(\frac{U_2}{U_1}\right)^2
+\]
+\[
+\Rightarrow\;\boxed{\left|\frac{U_2}{U_1}\right|_{dB} = 20\log\left(\frac{U_2}{U_1}\right)}
 \]
 
 Les modules des 5 termes de base, en dB :
@@ -582,7 +583,10 @@ width=1.0\linewidth
 \begin{formula}
 
 \[
-\underline{H}(j\omega) = \frac{\underline{V}_2}{\underline{V}_1} = \frac{\frac{1}{j\omega C}}{R + \frac{1}{j\omega C}} = \frac{1}{1 + j\omega RC} = \frac{1}{1 + j\frac{\omega}{\omega_0}}
+\underline{H}(j\omega) = \frac{\underline{V}_2}{\underline{V}_1} = \frac{\frac{1}{j\omega C}}{R + \frac{1}{j\omega C}} = \frac{1}{1 + j\omega RC}
+\]
+\[
+\underline{H}(j\omega) = \frac{1}{1 + j\frac{\omega}{\omega_0}}
 \quad\text{avec}\quad
 \omega_0 = \frac{1}{RC} = \frac{1}{\tau}
 \]
@@ -690,7 +694,8 @@ Diagramme réel (vert) et diagramme asymptotique (rouge pointillé).
 
 \[
 \text{Erreur du module en } \omega_0 : \ 20\log\frac{1}{\sqrt{2}} \approx -3\,\text{dB}
-\qquad
+\]
+\[
 \text{Erreur de phase en } 0.1\,\omega_0 : \ \operatorname{arctg}(0.1) \approx 5.7°
 \]
 
@@ -857,8 +862,9 @@ width=1.0\linewidth
 
 \[
 \text{Si } \underline{H}(j\omega) = \underline{H}_1(j\omega)\cdot\underline{H}_2(j\omega)
-\quad\text{alors}\quad
-|\underline{H}(j\omega)|_{dB} = |\underline{H}_1(j\omega)|_{dB} + |\underline{H}_2(j\omega)|_{dB}
+\]
+\[
+\Rightarrow\ |\underline{H}(j\omega)|_{dB} = |\underline{H}_1(j\omega)|_{dB} + |\underline{H}_2(j\omega)|_{dB}
 \]
 
 D'où l'intérêt de mettre la fonction de transfert sous la forme canonique : son module en dB est une somme de modules élémentaires, eux aussi en dB :
@@ -933,7 +939,8 @@ $\underline{H}(j\omega) = K$ = constante :
 
 \[
 K = 10 \;\Rightarrow\; 20\log(10) = 20\,\text{dB}
-\qquad
+\]
+\[
 K = 0.05 \;\Rightarrow\; 20\log(0.05) \approx -26\,\text{dB}
 \]
 
@@ -1030,13 +1037,17 @@ width=1.0\linewidth
 \underline{H}(j\omega) = j\frac{\omega}{\omega_{Z1}}
 \;\Rightarrow\;
 |\underline{H}|_{dB} = 20\log\frac{\omega}{\omega_{Z1}}
-\quad\text{pente} = +20\,\text{dB/décade}
+\]
+\[
+\text{pente} = +20\,\text{dB/décade}
 \]
 \[
 \underline{H}(j\omega) = \frac{1}{j\frac{\omega}{\omega_{P1}}}
 \;\Rightarrow\;
 |\underline{H}|_{dB} = -20\log\frac{\omega}{\omega_{P1}}
-\quad\text{pente} = -20\,\text{dB/décade}
+\]
+\[
+\text{pente} = -20\,\text{dB/décade}
 \]
 
 Les deux droites coupent l'axe des $0\,\text{dB}$ à leur pulsation caractéristique ($\omega_{Z1}$ ou $\omega_{P1}$).
@@ -1178,8 +1189,9 @@ width=1.0\linewidth
 
 \[
 \underline{H}(j\omega) = \frac{j\frac{\omega}{\omega_2}}{\left(1 + j\frac{\omega}{\omega_1}\right)\cdot\left(1 + j\frac{\omega}{\omega_2}\right)}
-\quad\text{avec}\quad
-\omega_2 = 10^2\,\text{rad/s},\ \omega_1 = 10^3\,\text{rad/s}
+\]
+\[
+\text{avec } \omega_2 = 10^2\,\text{rad/s},\ \omega_1 = 10^3\,\text{rad/s}
 \]
 
 \[
@@ -1245,8 +1257,9 @@ La phase $\operatorname{Arg}(\underline{H}(j\omega))$ est exprimée en radians, 
 
 \[
 \text{Si } \underline{H}(j\omega) = \underline{H}_1(j\omega)\cdot\underline{H}_2(j\omega)
-\quad\text{alors}\quad
-\operatorname{Arg}(\underline{H}(j\omega)) = \operatorname{Arg}(\underline{H}_1(j\omega)) + \operatorname{Arg}(\underline{H}_2(j\omega))
+\]
+\[
+\Rightarrow\ \operatorname{Arg}(\underline{H}(j\omega)) = \operatorname{Arg}(\underline{H}_1(j\omega)) + \operatorname{Arg}(\underline{H}_2(j\omega))
 \]
 
 Pour la forme canonique, l'argument est une somme (différence) d'arguments élémentaires :
@@ -1474,8 +1487,9 @@ Même fonction de transfert que pour l'exemple du module :
 
 \[
 \underline{H}(j\omega) = \frac{j\frac{\omega}{\omega_2}}{\left(1 + j\frac{\omega}{\omega_1}\right)\cdot\left(1 + j\frac{\omega}{\omega_2}\right)}
-\quad\text{avec}\quad
-\omega_2 = 10^2\,\text{rad/s},\ \omega_1 = 10^3\,\text{rad/s}
+\]
+\[
+\text{avec } \omega_2 = 10^2\,\text{rad/s},\ \omega_1 = 10^3\,\text{rad/s}
 \]
 
 \[
