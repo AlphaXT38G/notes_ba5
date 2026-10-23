@@ -1839,6 +1839,108 @@ C'est tout le secret du chapitre : avec un sinus, dériver revient à multiplier
 \end{important}
 
 
+%=========================================================
+\section{Cas particuliers : RC et RLC en signaux sinusoïdaux}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_23.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\textbf{Circuit RC} (même démarche, avec Kirchhoff, que pour le circuit de base) :
+
+\[
+\underline{i} = \frac{\underline{u}_{IN} - \underline{v}}{R} = \underline{v}\,j\omega C
+\;\Rightarrow\;
+\frac{\underline{u}_{IN}}{R} = \frac{\underline{v}}{R} + \underline{v}\,j\omega C = \underline{v}\left(\frac{1 + j\omega RC}{R}\right)
+\]
+\[
+\Rightarrow\quad
+\underline{v} = \underline{u}_{IN}\,\frac{1}{1 + j\omega RC}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $\underline{u}_{IN}$ : tension d'entrée [V] ; $\underline{v}$ : tension aux bornes de $C$ [V] ;
+
+\item $\underline{i}$ : courant de la boucle [A] ;
+
+\item $R$ [$\Omega$] ; $C$ [F] ; $\omega$ [rad/s].
+
+\end{itemize}
+
+\end{formula}
+
+On avait déjà exprimé ce montage sous forme temporelle, avec une \textbf{équation différentielle du premier ordre}. L'expression complexe est bien plus simple à exploiter (voir le cours sur les diagrammes de Bode pour l'analyse).
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_24.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\textbf{Circuit RLC} :
+
+\[
+\underline{u}_{IN} = R\,\underline{i} + \frac{\underline{i}}{j\omega C} + j\omega L\,\underline{i}
+\]
+\[
+\underline{v} = \underline{u}_{IN}\,\frac{j\omega L}{R + \frac{1}{j\omega C} + j\omega L} = \underline{u}_{IN}\,\frac{(j\omega)^2 LC}{1 + j\omega RC + (j\omega)^2 LC}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $\underline{v}$ : tension aux bornes de $L$ [V] ;
+
+\item $L$ [H] ; $LC$ en [s$^2$] ; $RC$ en [s] ; les autres comme ci-dessus.
+
+\end{itemize}
+
+\end{formula}
+
+Ce montage avait été exprimé il y a deux semaines par une \textbf{équation différentielle du second ordre}. L'expression complexe est aussi du second ordre (le $(j\omega)^2$), mais bien plus simple à exploiter.
+
+
+\begin{important}
+
+\textbf{En très simple : la même chose qu'en semaine 03, sans souffrir}
+
+En semaine 03, on avait obtenu pour le RC : $v_{IN} = v + RC\,\frac{dv}{dt}$. Avec un sinus, chaque $\frac{d}{dt}$ devient $\times j\omega$ :
+
+\[
+\underline{u}_{IN} = \underline{v} + RC\,j\omega\,\underline{v} = \underline{v}\,(1 + j\omega RC)
+\]
+
+On divise, et c'est fini : $\underline{v} = \frac{\underline{u}_{IN}}{1 + j\omega RC}$. C'est exactement le filtre passe-bas !
+
+\vspace{3pt}
+
+\textbf{Pour le RLC}, c'est simplement un diviseur de tension : l'impédance de la bobine ($j\omega L$) divisée par la somme des trois impédances en série. Pour enlever la fraction du milieu, on multiplie en haut et en bas par $j\omega C$ : en haut $j\omega L \cdot j\omega C = (j\omega)^2 LC$, en bas $R\,j\omega C + 1 + (j\omega)^2 LC$.
+
+\vspace{3pt}
+
+\textbf{\og Second ordre \fg{}} se voit au $(j\omega)^2$ : c'est la trace de la dérivée seconde $\frac{d^2}{dt^2}$ de la semaine 03.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
