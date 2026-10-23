@@ -1577,6 +1577,101 @@ Et comme $\underline{H}$ dépend de $\omega$, la réponse change selon la fréqu
 \end{important}
 
 
+%=========================================================
+\section{Filtre passe-bas}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_20.png}
+
+\end{center}
+
+La fonction de transfert calculée précédemment correspond à un \textbf{filtre passe-bas}.
+
+
+\begin{formula}
+
+\[
+\underline{H}(j\omega) = \frac{1}{1 + j\omega RC}
+\]
+
+Observations du \textbf{module} $|\underline{H}(j\omega)| = \frac{1}{\sqrt{1 + (\omega RC)^2}}$ :
+
+\begin{itemize}
+
+\item si $\omega \to 0$ alors $|\underline{H}(j\omega)| \to 1$ (pas d'atténuation) ;
+
+\item si $\omega \to \infty$ alors $|\underline{H}(j\omega)| \to 0$ (atténuation complète).
+
+\end{itemize}
+
+Observations de l'\textbf{argument} $\operatorname{Arg}(\underline{H}(j\omega)) = -\operatorname{arctg}(\omega RC)$ :
+
+\begin{itemize}
+
+\item si $\omega \to 0$ alors $\operatorname{Arg}(\underline{H}(j\omega)) = -\operatorname{arctg}(0) = 0$ ;
+
+\item si $\omega \to \infty$ alors $\operatorname{Arg}(\underline{H}(j\omega)) = -\operatorname{arctg}(\infty) = -\pi/2$.
+
+\end{itemize}
+
+où $\omega$ : pulsation [rad/s] ; $R$ [$\Omega$] ; $C$ [F] ; $\underline{H}$ sans unité ; l'argument en [rad].
+
+\end{formula}
+
+Pour mettre en évidence la nature du circuit, on analyse sa fonction de transfert en basses fréquences ($\omega$ assimilée à $0$) et en hautes fréquences ($\omega$ assimilée à $\infty$). C'est un filtre passe-bas : atténuation des hautes fréquences, les basses fréquences passent. Le déphasage est maximal à haute fréquence et vaut $-\pi/2$, alors qu'à basse fréquence il est nul.
+
+
+\begin{definition}
+
+\textbf{Filtre passe-bas}
+
+Un circuit qui laisse passer les sinus \textbf{lents} (basses fréquences) et bloque les sinus \textbf{rapides} (hautes fréquences).
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{En très simple : pourquoi ce circuit filtre}
+
+On prend la sortie aux bornes du condensateur. Or le condensateur change de comportement avec la fréquence :
+
+\begin{itemize}
+
+\item \textbf{sinus lent} ($\omega$ petit) : $|\underline{Z}_C| = \frac{1}{\omega C}$ est énorme, le condensateur est comme un \textbf{trou} (circuit ouvert). Aucun courant ne passe dans $R$, donc rien ne s'y perd : la sortie égale l'entrée ($|\underline{H}| = 1$) ;
+
+\item \textbf{sinus rapide} ($\omega$ grand) : $|\underline{Z}_C|$ devient minuscule, le condensateur est comme un \textbf{fil}. La sortie est court-circuitée : elle vaut $0$ ($|\underline{H}| = 0$).
+
+\end{itemize}
+
+Image du seau : si on remplit et vide très vite, le seau n'a pas le temps de changer de niveau, la tension à ses bornes reste presque plate.
+
+\vspace{3pt}
+
+\textbf{La fréquence de coupure :} la frontière entre \og passe \fg{} et \og bloque \fg{} est à $\omega_c = \frac{1}{RC}$. À cet endroit, $\omega RC = 1$, donc $|\underline{H}| = \frac{1}{\sqrt{2}} \approx 0.707$ et le déphasage vaut $-\operatorname{arctg}(1) = -\frac{\pi}{4}$.
+
+\end{important}
+
+
+\begin{example}
+
+$R = 1\,\text{k}\Omega$, $C = 1\,\mu\text{F}$ : $\omega_c = \frac{1}{10^3 \cdot 10^{-6}} = 1000\,\text{rad/s}$, soit $f_c = \frac{\omega_c}{2\pi} \approx 159\,\text{Hz}$.
+
+\begin{itemize}
+
+\item à $\omega = 100\,\text{rad/s}$ ($\omega RC = 0.1$) : $|\underline{H}| = \frac{1}{\sqrt{1.01}} \approx 0.995$, presque tout passe ;
+
+\item à $\omega = 10\,000\,\text{rad/s}$ ($\omega RC = 10$) : $|\underline{H}| = \frac{1}{\sqrt{101}} \approx 0.1$, il ne reste qu'un dixième.
+
+\end{itemize}
+
+\end{example}
+
+
 \end{multicols}
 
 \end{document}
