@@ -899,6 +899,101 @@ I_{NO} = \frac{3.75\,\text{V}}{500\,\Omega} = 7.5\,\text{mA}
 \end{example}
 
 
+%=========================================================
+\section{Résumé et combinaison Thévenin -- Norton}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_09.png}
+
+\end{center}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item \textbf{Thévenin} : tension obtenue en mesurant (calculant) la tension à vide à la sortie ; résistance obtenue en éliminant toutes les sources internes.
+
+\item \textbf{Norton} : courant obtenu en mesurant (calculant) le courant de court-circuit à la sortie ; résistance obtenue en éliminant toutes les sources internes.
+
+\end{itemize}
+
+On va opérer des transformations Thévenin -- Norton en alternance et réaliser des réductions locales (permutations et fusions) jusqu'à obtenir un modèle limité à une source et une résistance.
+
+\end{summary}
+
+
+\begin{formula}
+
+\[
+U_{Th} = R_{IN}\,I_{Norton}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $U_{Th}$ : tension de Thévenin = tension à vide [V] ;
+
+\item $I_{Norton}$ : courant de Norton = courant de court-circuit [A] ;
+
+\item $R_{IN}$ : résistance interne, la même pour les deux modèles [$\Omega$].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{D'où vient $U_{Th} = R_{IN}\,I_{Norton}$ ?}
+
+C'est la transformation de sources ($U_0 = R\,I_{CC}$) appliquée aux deux modèles : même résistance, et même tension à vide. Dans le modèle de Norton à vide, tout $I_{Norton}$ passe dans $R_{IN}$, ce qui donne la tension $R_{IN}\,I_{Norton}$ : elle doit être égale à $U_{Th}$.
+
+\vspace{3pt}
+
+\textbf{Astuce pratique :} des trois nombres $U_{Th}$, $I_{Norton}$, $R_{IN}$, il suffit d'en calculer deux ; le troisième vient de la formule. Par exemple $R_{IN} = U_{Th}/I_{Norton}$ (tension à vide divisée par courant de court-circuit).
+
+\vspace{3pt}
+
+\textbf{La stratégie \og en alternance \fg{}}
+
+On simplifie un circuit morceau par morceau, en changeant d'habit selon ce qui arrange :
+
+\begin{itemize}
+
+\item des morceaux \textbf{en série} : on les met en Thévenin (les tensions et les résistances en série s'additionnent) ;
+
+\item des morceaux \textbf{en parallèle} : on les met en Norton (les courants s'additionnent, les résistances se mettent en parallèle).
+
+\end{itemize}
+
+On recommence jusqu'à ce qu'il ne reste qu'une source et une résistance.
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Deux piles en parallèle} sur $X$ et $Y$ : $10\,\text{V}$ avec $1\,\text{k}\Omega$ en série, et $5\,\text{V}$ avec $1\,\text{k}\Omega$ en série.
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item Chacune en Norton : $10\,\text{mA} \parallel 1\,\text{k}\Omega$ et $5\,\text{mA} \parallel 1\,\text{k}\Omega$.
+
+\item En parallèle, on fusionne : $I = 10 + 5 = 15\,\text{mA}$ et $R = 1\,\text{k} \parallel 1\,\text{k} = 500\,\Omega$.
+
+\item Retour en Thévenin : $U_{Th} = 500 \cdot 15\,\text{mA} = 7.5\,\text{V}$ avec $500\,\Omega$ en série.
+
+\end{enumerate}
+
+\end{example}
+
+
 \end{multicols}
 
 \end{document}
