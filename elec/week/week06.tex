@@ -1296,6 +1296,84 @@ Même recette que pour le module :
 \end{important}
 
 
+%=========================================================
+\section{Phase des fonctions élémentaires [1] et [2] : $K$, $j\frac{\omega}{\omega_Z}$, $\frac{1}{j\omega/\omega_P}$}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_18.png}
+
+\end{center}
+
+
+\begin{formula}
+
+$\underline{H}(j\omega) = K$ = constante :
+
+\[
+\operatorname{Arg}(K) = 0 \ \text{pour}\ K > 0
+\qquad
+\operatorname{Arg}(K) = \pi \ (180°) \ \text{pour}\ K < 0
+\]
+
+\end{formula}
+
+Pour les termes constants, selon qu'ils sont positifs ou négatifs, l'argument donne deux déphasages possibles : $0$ ou $\pi$. Pour les modules, le signe n'intervenait pas : seule la valeur absolue comptait.
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_19.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+\underline{H}(j\omega) = j\frac{\omega}{\omega_{Z1}}
+\;\Rightarrow\;
+\operatorname{Arg}(\underline{H}(j\omega)) = \frac{\pi}{2} \ \text{ou}\ 90°
+\]
+\[
+\underline{H}(j\omega) = \frac{1}{j\frac{\omega}{\omega_{P1}}}
+\;\Rightarrow\;
+\operatorname{Arg}(\underline{H}(j\omega)) = -\frac{\pi}{2} \ \text{ou}\ -90°
+\]
+
+où $K$ : constante ; $\omega_{Z1}$, $\omega_{P1}$ : pulsations caractéristiques [rad/s] ; la phase en [rad] ou [°].
+
+\end{formula}
+
+Le second terme donne un déphasage constant de $90°$ : c'est un imaginaire pur, la partie réelle n'existe pas, et l'arctg$(Y/0)$ vaut toujours $90°$. Le troisième terme est le symétrique du second : un déphasage constant de $-90°$.
+
+
+\begin{important}
+
+\textbf{En très simple : trois lignes horizontales}
+
+\begin{itemize}
+
+\item \textbf{$K$ positif} : un nombre positif est sur l'axe réel, vers la droite : angle $0$. Le signal n'est pas décalé.
+
+\item \textbf{$K$ négatif} : il pointe vers la gauche : angle $180°$. Le signal est \textbf{retourné} (les bosses deviennent des creux).
+
+\item \textbf{$j\frac{\omega}{\omega_Z}$} : un nombre avec juste un $j$ pointe tout droit vers le haut : $+90°$, à toutes les fréquences (sa taille change, sa direction jamais).
+
+\item \textbf{$\frac{1}{j\omega/\omega_P}$} : diviser par $j$, c'est tourner d'un quart de tour en arrière : $-90°$, à toutes les fréquences.
+
+\end{itemize}
+
+Ces trois briques ont une phase \textbf{constante} : des lignes horizontales sur le diagramme.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
