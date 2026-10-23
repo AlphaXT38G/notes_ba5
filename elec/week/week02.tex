@@ -601,6 +601,57 @@ La valeur efficace $U_{EFF}$ d'un signal variable est la tension continue qui di
 \end{definition}
 
 
+\begin{important}
+
+\textbf{Pourquoi pas simplement la valeur moyenne ?}
+
+Une tension alternative (sinusoïde sans offset) est positive la moitié du temps et négative l'autre moitié : sa valeur moyenne vaut $0\,\text{V}$. Pourtant, une ampoule branchée dessus chauffe et éclaire. La moyenne ne dit donc rien de l'énergie transmise.
+
+\vspace{3pt}
+
+\textbf{L'idée}
+
+La puissance dans une résistance vaut $P = U^2/R$ : elle dépend de $U^2$, qui est toujours positif. Le signe de la tension ne compte pas : $+5\,\text{V}$ et $-5\,\text{V}$ chauffent autant. On cherche donc la tension \textbf{continue} $U_{EFF}$ qui chaufferait la résistance exactement autant que le signal variable, en moyenne sur une période.
+
+\vspace{3pt}
+
+\textbf{La formule générale (RMS)}
+
+En anglais : \textit{Root Mean Square} = racine de la moyenne du carré. On égale la puissance moyenne du signal et celle de la tension continue :
+
+\[
+\frac{1}{T}\int_0^T \frac{u^2(t)}{R}\,dt = \frac{U_{EFF}^2}{R}
+\quad\Rightarrow\quad
+U_{EFF} = \sqrt{\frac{1}{T}\int_0^T u^2(t)\,dt}
+\]
+
+($R$ se simplifie : la valeur efficace ne dépend que du signal.)
+
+\vspace{3pt}
+
+\textbf{Comment la calculer, en 3 étapes}
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item \textbf{Carré} : on élève le signal au carré, $u^2(t)$ (tout devient positif).
+
+\item \textbf{Moyenne} : on fait la moyenne de $u^2(t)$ sur une période, $\frac{1}{T}\int_0^T u^2(t)\,dt$ (comme dans la section \textit{Valeurs moyennes}, mais sur le carré).
+
+\item \textbf{Racine} : on prend la racine carrée pour revenir en volts.
+
+\end{enumerate}
+
+Pour la sinusoïde $u(t) = A\sin(2\pi f t)$ : le carré vaut en moyenne $A^2/2$ (voir l'exemple ci-dessous), donc $U_{EFF} = \sqrt{A^2/2} = A/\sqrt{2} \approx 0.707\,A$.
+
+\vspace{3pt}
+
+\textbf{Exemple concret}
+
+Les $230\,\text{V}$ d'une prise sont une valeur \textbf{efficace} : la tension crête vaut $A = 230\cdot\sqrt{2} \approx 325\,\text{V}$. Un radiateur branché sur la prise chauffe autant qu'avec $230\,\text{V}$ continus.
+
+\end{important}
+
+
 \begin{formula}
 
 Énergie = somme de toutes les puissances sur la période :
