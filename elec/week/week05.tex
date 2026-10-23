@@ -1071,6 +1071,98 @@ Pour passer de l'une à l'autre : la distance, c'est Pythagore ($\sqrt{3^2 + 4^2
 \end{important}
 
 
+%=========================================================
+\section{Calcul de l'argument : 4 cas}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_14.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\begin{enumerate}[leftmargin=*,itemsep=2pt,topsep=1pt]
+
+\item $\theta_1$ dans le \textbf{premier} quadrant (Im $> 0$, Re $> 0$) :
+\[
+\theta_1 = \operatorname{arctg}\!\left(\frac{\text{Im}}{\text{Re}}\right)
+\]
+
+\item $\theta_2$ dans le \textbf{second} quadrant (Im $> 0$, Re $< 0$) :
+\[
+\theta_2 = \pi + \operatorname{arctg}\!\left(\frac{\text{Im}}{\text{Re}}\right) = \pi - \operatorname{arctg}\!\left(\frac{|\text{Im}|}{|\text{Re}|}\right)
+\]
+
+\item $\theta_3$ dans le \textbf{troisième} quadrant (Im $< 0$, Re $< 0$) :
+\[
+\theta_3 = \pi + \operatorname{arctg}\!\left(\frac{\text{Im}}{\text{Re}}\right)
+\]
+
+\item $\theta_4$ dans le \textbf{quatrième} quadrant (Im $< 0$, Re $> 0$) :
+\[
+\theta_4 = \operatorname{arctg}\!\left(\frac{\text{Im}}{\text{Re}}\right) = -\operatorname{arctg}\!\left(\frac{|\text{Im}|}{|\text{Re}|}\right)
+\]
+
+\end{enumerate}
+
+où :
+
+\begin{itemize}
+
+\item $\theta_1, \dots, \theta_4$ : argument selon le quadrant [rad] ;
+
+\item Re, Im : parties réelle et imaginaire ; $|\cdot|$ : valeur absolue.
+
+\end{itemize}
+
+\end{formula}
+
+Le calcul de cet angle peut s'avérer délicat, car le cercle trigonométrique a 4 quadrants, et l'expression de l'angle diffère selon le quadrant. Chaque expression fait référence au rapport Im/Re et produit un résultat différent selon que Im est positif ou négatif, et de même pour Re.
+
+
+\begin{important}
+
+\textbf{En très simple : pourquoi l'arctangente se trompe}
+
+L'arctangente ne regarde que le \textbf{rapport} Im/Re. Or deux points opposés ont le même rapport : $1 + j$ (en haut à droite) et $-1 - j$ (en bas à gauche) donnent tous les deux $\frac{1}{1} = \frac{-1}{-1} = 1$. La calculatrice répond $\frac{\pi}{4}$ pour les deux, alors que le second est en face, à $\frac{\pi}{4} + \pi$.
+
+\vspace{3pt}
+
+\textbf{La règle simple :}
+
+\begin{itemize}
+
+\item point \textbf{à droite} (Re $> 0$) : l'arctangente a raison, $\theta = \operatorname{arctg}(\text{Im}/\text{Re})$ ;
+
+\item point \textbf{à gauche} (Re $< 0$) : elle se trompe d'un demi-tour, on ajoute $\pi$.
+
+\end{itemize}
+
+Le plus sûr : faire un petit dessin pour voir dans quel quart du cercle est le point.
+
+\end{important}
+
+
+\begin{example}
+
+$M = -1 + j$ : Re $= -1 < 0$, Im $= 1 > 0$, second quadrant.
+
+\[
+\rho = \sqrt{(-1)^2 + 1^2} = \sqrt{2}
+\qquad
+\theta = \pi + \operatorname{arctg}\!\left(\frac{1}{-1}\right) = \pi - \frac{\pi}{4} = \frac{3\pi}{4}
+\]
+
+La calculatrice seule aurait donné $\operatorname{arctg}(-1) = -\frac{\pi}{4}$, ce qui est faux (en bas à droite).
+
+\end{example}
+
+
 \end{multicols}
 
 \end{document}
