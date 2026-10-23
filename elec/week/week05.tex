@@ -150,7 +150,8 @@ fonttitle=\bfseries
 
 % FORMULAS - green
 
-\newtcolorbox{formula}{
+% optional argument: extra options, e.g. [unbreakable] for a box that multicols misplaces
+\newtcolorbox{formula}[1][]{
 enhanced,
 breakable,
 colback=Green,
@@ -158,7 +159,8 @@ colframe=GreenTitle,
 boxrule=0.7pt,
 arc=0mm,
 title=\textbf{Key formulas},
-fonttitle=\bfseries
+fonttitle=\bfseries,
+#1
 }
 
 
@@ -776,7 +778,7 @@ width=1.0\linewidth
 \end{itemize}
 
 
-\begin{formula}
+\begin{formula}[unbreakable]
 
 \begin{itemize}
 
