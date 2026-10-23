@@ -1271,6 +1271,123 @@ C'est LA chose à retenir. Multiplier un nombre par $j$, c'est le faire \textbf{
 \end{important}
 
 
+%=========================================================
+\section{Notion d'impédance complexe}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_17.png}
+
+\end{center}
+
+Avec $i(t) = I_0\sin(\omega t)$ :
+
+\begin{itemize}
+
+\item avec $R$ : $u_S(t) = R\,I_0\sin(\omega t) = U_0\sin(\omega t)$ ;
+
+\item avec $C$ : $u_S(t) = \frac{I_0}{\omega C}\sin\!\left(\omega t - \frac{\pi}{2}\right)$.
+
+\end{itemize}
+
+Idéalement, il faudrait avoir la forme $K\sin(\omega t)$ pour travailler avec $R$ et $C$ \textbf{sans se préoccuper du déphasage}.
+
+\textbf{Question :} comment transformer $M_1 = K_1\sin(\omega t - \pi/2)$ en $K_2\sin(\omega t)$ ?
+
+\textbf{Solution :} il fallait multiplier par $j^3 = -j$, donc $M_1 = K_1\sin(\omega t - \pi/2) = -j\,K_1\sin(\omega t)$.
+
+
+\begin{formula}
+
+Application avec $C$ :
+
+\[
+u_S(t) = \frac{I_0}{\omega C}\sin\!\left(\omega t - \frac{\pi}{2}\right) = -j\,\frac{I_0}{\omega C}\sin(\omega t) = \frac{I_0}{j\omega C}\sin(\omega t)
+\]
+
+Comparons $R$, $C$ et $L$ pour $i(t) = I_0\sin(\omega t)$ :
+
+\begin{itemize}
+
+\item avec $R$ : $u_S(t) = R\,i(t)$ ;
+
+\item avec $C$ : $\underline{u}_S = \underline{Z}_C\,\underline{i}$ \quad où \quad $\boxed{\underline{Z}_C = \dfrac{1}{j\omega C}}$ (impédance complexe) ;
+
+\item avec $L$ : $\underline{u}_S = \underline{Z}_L\,\underline{i}$ \quad où \quad $\boxed{\underline{Z}_L = j\omega L}$ (impédance complexe).
+
+\end{itemize}
+
+(L'écriture $u_S(t) = Z_C\,i(t)$ avec des fonctions du temps est impropre : on écrit les grandeurs complexes soulignées.)
+
+où :
+
+\begin{itemize}
+
+\item $\underline{Z}_C$, $\underline{Z}_L$ : impédances complexes du condensateur et de la bobine [$\Omega$] ;
+
+\item $\underline{u}_S$, $\underline{i}$ : tension [V] et courant [A] écrits en complexes (soulignés) ;
+
+\item $C$ : capacité [F] ; $L$ : inductance [H] ; $\omega$ : pulsation [rad/s] ; $j^2 = -1$ ;
+
+\item $K_1$, $K_2$ : amplitudes quelconques.
+
+\end{itemize}
+
+\end{formula}
+
+Le condensateur présente un déphasage de $\pi/2$ entre la tension à ses bornes et le courant qui le traverse, représenté par le facteur $j$. Ici $u(t) = -\frac{j}{\omega C}\,I_0\sin(\omega t)$, ou encore $u(t) = I_0\sin(\omega t) \cdot \frac{1}{j\omega C}$. Par analogie avec une résistance où $U = RI$, on peut considérer que $\frac{1}{j\omega C}$ se comporte comme une résistance (variable avec la fréquence).
+
+
+\begin{definition}
+
+\textbf{Impédance}
+
+La \og résistance généralisée \fg{} d'un composant en régime sinusoïdal : $\underline{Z} = \underline{u}/\underline{i}$, en ohms. Elle contient à la fois la taille (module) et le décalage (argument) entre tension et courant.
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+On veut une loi d'Ohm pour tout le monde : $\underline{u} = \underline{Z}\,\underline{i}$. Le problème du condensateur, c'est que sa tension est un sinus \textbf{décalé} d'un quart de tour en arrière. Or on vient de voir qu'un quart de tour en arrière, c'est \og diviser par $j$ \fg{}. Donc on range ce décalage dans la \og résistance \fg{} elle-même :
+
+\[
+\underline{Z}_C = \frac{1}{\omega C} \times \frac{1}{j} = \frac{1}{j\omega C}
+\]
+
+\begin{itemize}
+
+\item le $\frac{1}{\omega C}$ donne la \textbf{taille} (combien le condensateur freine) ;
+
+\item le $\frac{1}{j}$ donne le \textbf{décalage} (un quart de tour en arrière pour la tension).
+
+\end{itemize}
+
+Pour la bobine, c'est pareil mais la tension est en avance d'un quart de tour, donc on multiplie par $j$ : $\underline{Z}_L = j\omega L$.
+
+\vspace{3pt}
+
+\textbf{Le résultat magique :} une résistance, un condensateur et une bobine ont maintenant tous une \og résistance \fg{} : $R$, $\frac{1}{j\omega C}$, $j\omega L$. On calcule exactement comme avec des résistances (série, parallèle, diviseur\dots), juste avec des nombres complexes.
+
+\end{important}
+
+
+\begin{example}
+
+$C = 1\,\mu\text{F}$ à $f = 50\,\text{Hz}$ ($\omega \approx 314\,\text{rad/s}$) :
+\[
+\underline{Z}_C = \frac{1}{j \cdot 314 \cdot 10^{-6}} \approx \frac{3183}{j} = -3183\,j\ \Omega
+\]
+Module $3183\,\Omega$, argument $-\frac{\pi}{2}$ (la tension est en retard d'un quart de tour sur le courant).
+
+\end{example}
+
+
 \end{multicols}
 
 \end{document}
