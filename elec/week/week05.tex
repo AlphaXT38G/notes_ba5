@@ -576,6 +576,94 @@ Pourquoi ? La résistance réagit \textbf{instantanément} : $i = u/R$ à chaque
 \end{important}
 
 
+%=========================================================
+\section{Avec condensateur : déphasage entre $u$ et $i$}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_07.png}
+
+\end{center}
+
+
+\begin{formula}
+
+Avec une source de tension (calcul de dérivée) :
+
+\[
+u(t) = U_0\sin(\omega t)
+\;\Rightarrow\;
+i(t) = C\,\frac{du(t)}{dt} = C\omega U_0\cos(\omega t) = C\omega U_0\sin\!\left(\omega t + \frac{\pi}{2}\right)
+\]
+
+Entre $u$ et $i$, il y a un déphasage de $+\frac{\pi}{2}$ : $i(t)$ est en avance sur $u(t)$.
+
+\vspace{3pt}
+
+Avec une source de courant (un peu plus complexe, calcul d'intégrale) :
+
+\[
+i(t) = I_0\sin(\omega t) = C\,\frac{du(t)}{dt}
+\;\Rightarrow\;
+du = \frac{i(t)\,dt}{C}
+\]
+\[
+u(t) = \int \frac{i(t)\,dt}{C} = \int \frac{I_0\sin(\omega t)\,dt}{C}
+\quad (I_0 \text{ et } C \text{ constantes})
+\]
+\[
+u(t) = \frac{-I_0\cos(\omega t)}{\omega C} = \frac{-I_0\sin\!\left(\omega t + \frac{\pi}{2}\right)}{\omega C} = \frac{I_0\sin\!\left(\omega t - \frac{\pi}{2}\right)}{\omega C}
+\]
+
+Le même déphasage de $+\frac{\pi}{2}$.
+
+où :
+
+\begin{itemize}
+
+\item $U_0$ : amplitude de la tension [V] ; $I_0$ : amplitude du courant [A] ;
+
+\item $C$ : capacité [F] ; $\omega$ : pulsation [rad/s] ; $t$ : temps [s] ;
+
+\item $\frac{\pi}{2}$ : déphasage d'un quart de tour [rad] (un quart de période).
+
+\end{itemize}
+
+\end{formula}
+
+\textbf{Conclusion :} déphasage \textbf{constant} de $\frac{\pi}{2}$ entre courant et tension, quel que soit le temps $t$.
+
+
+\begin{important}
+
+\textbf{En très simple : le seau}
+
+Le condensateur est un seau, la tension est le niveau d'eau, le courant est le débit qui entre ou sort.
+
+\begin{itemize}
+
+\item Quand le niveau monte le plus vite (la tension passe par zéro en montant), c'est que le débit est \textbf{maximal}.
+
+\item Quand le niveau est tout en haut (tension maximale), il s'arrête un instant de monter avant de redescendre : le débit est \textbf{nul}.
+
+\end{itemize}
+
+Donc le courant atteint son maximum \textbf{un quart de période avant} la tension : le courant est \textbf{en avance} de $\frac{\pi}{2}$.
+
+\vspace{3pt}
+
+\textbf{D'où vient le $\frac{\pi}{2}$ dans les calculs ?} La dérivée de $\sin$ est $\cos$, et $\cos(x) = \sin(x + \frac{\pi}{2})$ : un cosinus, c'est un sinus avancé d'un quart de tour. Dériver décale donc de $+\frac{\pi}{2}$, intégrer de $-\frac{\pi}{2}$.
+
+\vspace{3pt}
+
+\textbf{Et la taille ?} L'amplitude de $u$ vaut $\frac{I_0}{\omega C}$ : c'est comme si le condensateur était une résistance de valeur $\frac{1}{\omega C}$, qui dépend de la fréquence.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
