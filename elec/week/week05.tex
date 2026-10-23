@@ -1482,6 +1482,101 @@ M_1 M_2 = 8\,e^{j3\pi/4}
 \end{example}
 
 
+%=========================================================
+\section{Application aux circuits : la fonction de transfert}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_19.png}
+
+\end{center}
+
+
+\begin{formula}
+
+Calcul de $\frac{u_S(t)}{u(t)}$, ou plutôt de $\frac{\underline{u}_S}{\underline{u}}$ (diviseur avec $R$ et $\underline{Z}_C$) :
+
+\[
+\frac{\underline{u}_S}{\underline{u}} = \frac{\underline{Z}_C}{R + \underline{Z}_C} = \frac{\frac{1}{j\omega C}}{R + \frac{1}{j\omega C}} = \frac{1}{1 + j\omega RC} = \underline{H}(j\omega)
+\]
+
+(ne pas laisser sous la forme du milieu : on multiplie en haut et en bas par $j\omega C$).
+
+\vspace{3pt}
+
+Ce rapport est appelé \textbf{fonction de transfert}. C'est une expression complexe dont on peut calculer le module $|\underline{H}(j\omega)|$ et l'argument $\operatorname{Arg}(\underline{H}(j\omega))$ :
+
+\[
+|\underline{H}(j\omega)| = \frac{1}{\sqrt{1 + (\omega RC)^2}}
+\qquad
+\operatorname{Arg}(\underline{H}(j\omega)) = -\operatorname{arctg}(\omega RC)
+\]
+
+\begin{itemize}
+
+\item module d'un produit = produit des modules ; module d'un rapport = rapport des modules ;
+
+\item argument d'un produit = somme des arguments ; argument d'un rapport = différence des arguments.
+
+\end{itemize}
+
+où :
+
+\begin{itemize}
+
+\item $\underline{u}$ : tension d'entrée, $\underline{u}_S$ : tension de sortie (complexes) [V] ;
+
+\item $\underline{H}(j\omega)$ : fonction de transfert [sans unité] (sortie/entrée) ;
+
+\item $|\underline{H}|$ : rapport des amplitudes sortie/entrée [sans unité] ;
+
+\item $\operatorname{Arg}(\underline{H})$ : déphasage de la sortie par rapport à l'entrée [rad] ;
+
+\item $R$ : résistance [$\Omega$] ; $C$ : capacité [F] ; $\omega$ : pulsation [rad/s] ; $\omega RC$ : sans unité.
+
+\end{itemize}
+
+\end{formula}
+
+Comme on représente maintenant aussi simplement un condensateur, on peut analyser des circuits combinant $R$ et $C$ comme lors des cours précédents. Ce circuit s'exprime comme un diviseur résistif, mais son expression dépend de $\omega$ : c'est la fonction de transfert. Le \textbf{module} permet de comparer, en fonction de $\omega$, les amplitudes du signal de sortie et du signal d'entrée. L'\textbf{argument} permet de comparer le déphasage entre la sortie et l'entrée.
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+C'est le diviseur de tension de la semaine 03 : $v_{R2} = v_{IN}\,\frac{R_2}{R_1 + R_2}$. On remplace juste la résistance du bas par l'impédance du condensateur. La fraction obtenue, $\underline{H}$, dit \textbf{ce que le circuit fait au sinus} :
+
+\begin{itemize}
+
+\item son \textbf{module} $|\underline{H}|$ : par combien la taille du sinus est multipliée (1 = intacte, 0.5 = moitié, 0 = disparue) ;
+
+\item son \textbf{argument} : de combien le sinus de sortie est décalé.
+
+\end{itemize}
+
+Et comme $\underline{H}$ dépend de $\omega$, la réponse change selon la fréquence.
+
+\vspace{3pt}
+
+\textbf{Comment on trouve le module et l'argument ?} $\underline{H} = \frac{1}{1 + j\omega RC}$ est un rapport :
+
+\begin{itemize}
+
+\item en haut, $1$ : module $1$, argument $0$ ;
+
+\item en bas, $1 + j\,\omega RC$ (à droite et en haut) : module $\sqrt{1^2 + (\omega RC)^2}$ (Pythagore), argument $\operatorname{arctg}(\omega RC)$ ;
+
+\item donc $|\underline{H}| = \frac{1}{\sqrt{1 + (\omega RC)^2}}$ et $\operatorname{Arg} = 0 - \operatorname{arctg}(\omega RC)$.
+
+\end{itemize}
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
