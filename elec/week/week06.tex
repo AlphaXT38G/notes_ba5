@@ -663,6 +663,78 @@ $R = 1\,\text{k}\Omega$, $C = 1\,\mu\text{F}$ : $\omega_0 = 1000\,\text{rad/s}$.
 \end{example}
 
 
+%=========================================================
+\section{Approximation asymptotique}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_08.png}
+
+\end{center}
+
+Diagramme réel (vert) et diagramme asymptotique (rouge pointillé).
+
+\begin{itemize}
+
+\item \textbf{Module :} deux asymptotes approximent correctement la courbe réelle. L'erreur maximale est obtenue à la pulsation caractéristique ; l'axe vertical étant en dB ($20\log$ du module), cette erreur représente $-3\,\text{dB}$.
+
+\item \textbf{Argument :} trois asymptotes. Une horizontale pour les basses fréquences jusqu'à $0.1\,\omega_0$, une autre horizontale de $10\,\omega_0$ aux hautes fréquences, et les deux sont reliées par une pente de $\pi/2$ pour deux décades. À la pulsation caractéristique, le déphasage est de $-45°$. L'écart maximal ($5.7°$) est en $0.1\,\omega_0$ et $10\,\omega_0$.
+
+\end{itemize}
+
+
+\begin{formula}
+
+\[
+\text{Erreur du module en } \omega_0 : \ 20\log\frac{1}{\sqrt{2}} \approx -3\,\text{dB}
+\qquad
+\text{Erreur de phase en } 0.1\,\omega_0 : \ \operatorname{arctg}(0.1) \approx 5.7°
+\]
+
+où :
+
+\begin{itemize}
+
+\item $\omega_0$ : pulsation caractéristique [rad/s] ;
+
+\item une \textbf{décade} : un intervalle où la pulsation est multipliée par 10.
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{definition}
+
+\textbf{Asymptote}
+
+Une droite dont la vraie courbe se rapproche de plus en plus, loin du point spécial. Ici, on remplace la vraie courbe par quelques segments de droite.
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{En très simple : on dessine avec une règle}
+
+La vraie courbe est arrondie, pénible à tracer point par point. Mais loin de $\omega_0$, elle est presque parfaitement droite. Alors on la remplace par des \textbf{segments de droite} :
+
+\begin{itemize}
+
+\item \textbf{module} : une ligne plate à $0\,\text{dB}$ jusqu'à $\omega_0$, puis une ligne qui descend de $20\,\text{dB}$ par décade. C'est un \og coude \fg{} en $\omega_0$. La vraie courbe passe juste $3\,\text{dB}$ sous le coude ;
+
+\item \textbf{phase} : plat à $0°$ jusqu'à $\omega_0/10$, plat à $-90°$ après $10\,\omega_0$, et une rampe droite entre les deux, qui passe par $-45°$ en $\omega_0$.
+
+\end{itemize}
+
+L'erreur est petite ($3\,\text{dB}$ et $5.7°$ au pire) et le dessin se fait en 30 secondes avec une règle.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
