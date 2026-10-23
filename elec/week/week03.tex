@@ -665,6 +665,52 @@ V_X = \frac{10\,\text{mA} + 5\,\text{mA}}{2\,\text{mS}} = 7.5\,\text{V}
 \end{example}
 
 
+%=========================================================
+\section{Simplifications intermédiaires (résistances)}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week03_11.png}
+
+\end{center}
+
+
+\begin{formula}
+
+En série (même courant $I$) :
+
+\[
+V = R_1 I + R_2 I = R_{EQ} I
+\quad\Rightarrow\quad
+R_{EQ} = R_1 + R_2
+\]
+
+En parallèle (même tension $V$, $I = I_1 + I_2$) :
+
+\[
+I = \frac{V}{R_{EQ}} = \frac{V}{R_1} + \frac{V}{R_2}
+\quad\Rightarrow\quad
+\frac{1}{R_{EQ}} = \frac{1}{R_1} + \frac{1}{R_2}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $R_1$, $R_2$ : résistances [$\Omega$] ; $R_{EQ}$ : résistance équivalente [$\Omega$] ;
+
+\item $V$ : tension de la source [V] ;
+
+\item $I$ : courant total [A] ; $I_1$, $I_2$ : courants dans $R_1$ et $R_2$ [A].
+
+\end{itemize}
+
+\end{formula}
+
+
 \end{multicols}
 
 \end{document}
