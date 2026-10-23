@@ -1672,6 +1672,86 @@ $R = 1\,\text{k}\Omega$, $C = 1\,\mu\text{F}$ : $\omega_c = \frac{1}{10^3 \cdot 
 \end{example}
 
 
+%=========================================================
+\section{Filtre passe-haut}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_21.png}
+
+\end{center}
+
+$R$ et $C$ sont permutés. Calcul de $\underline{H}(j\omega) = \underline{u}_S/\underline{u}$ : la fonction de transfert est celle d'un \textbf{filtre passe-haut}.
+
+
+\begin{formula}
+
+\[
+\frac{\underline{u}_S}{\underline{u}} = \frac{R}{R + \underline{Z}_C} = \frac{R}{R + \frac{1}{j\omega C}} = \frac{j\omega RC}{1 + j\omega RC} = \underline{H}(j\omega)
+\]
+
+Observations du \textbf{module} $|\underline{H}(j\omega)| = \frac{\omega RC}{\sqrt{1 + (\omega RC)^2}}$ :
+
+\begin{itemize}
+
+\item si $\omega \to 0$ alors $|\underline{H}(j\omega)| \to 0$ (atténuation complète) ;
+
+\item si $\omega \to \infty$ alors $|\underline{H}(j\omega)| \to 1$ (pas d'atténuation).
+
+\end{itemize}
+
+Observations de l'\textbf{argument} $\operatorname{Arg}(\underline{H}(j\omega)) = \frac{\pi}{2} - \operatorname{arctg}(\omega RC)$ :
+
+\begin{itemize}
+
+\item si $\omega \to 0$ alors $\operatorname{Arg}(\underline{H}(j\omega)) = \pi/2$ ;
+
+\item si $\omega \to \infty$ alors $\operatorname{Arg}(\underline{H}(j\omega)) = \pi/2 - \pi/2 = 0$.
+
+\end{itemize}
+
+où $\omega$ : pulsation [rad/s] ; $R$ [$\Omega$] ; $C$ [F] ; $\underline{H}$ sans unité ; l'argument en [rad].
+
+\end{formula}
+
+Étudiée aux limites comme précédemment, cette fonction de transfert révèle un filtre passe-haut : à basse fréquence la sortie ne reproduit quasiment plus rien, alors qu'à haute fréquence elle reproduit tout le signal d'entrée. Le déphasage est maximal à basse fréquence et vaut $\pi/2$, alors qu'à haute fréquence il est nul.
+
+
+\begin{definition}
+
+\textbf{Filtre passe-haut}
+
+Un circuit qui laisse passer les sinus \textbf{rapides} (hautes fréquences) et bloque les sinus \textbf{lents} (basses fréquences). L'inverse du passe-bas.
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+Cette fois on prend la sortie aux bornes de la \textbf{résistance}, et le condensateur est sur le chemin, en série :
+
+\begin{itemize}
+
+\item \textbf{sinus lent} : le condensateur est un \textbf{trou}, aucun courant ne passe, donc aucune tension aux bornes de $R$ : sortie $= 0$ ;
+
+\item \textbf{sinus rapide} : le condensateur est un \textbf{fil}, toute l'entrée arrive sur $R$ : sortie $=$ entrée.
+
+\end{itemize}
+
+\textbf{Le module, pas à pas :} en haut $j\,\omega RC$ a pour module $\omega RC$ et pour argument $\frac{\pi}{2}$ (il est sur l'axe imaginaire, vers le haut). En bas, $1 + j\omega RC$ : module $\sqrt{1 + (\omega RC)^2}$, argument $\operatorname{arctg}(\omega RC)$. Rapport des modules, différence des arguments : on retrouve les formules.
+
+\vspace{3pt}
+
+\textbf{À retenir :} même circuit, mêmes composants, mais on échange leur place et le filtre s'inverse. La fréquence de coupure est la même, $\omega_c = \frac{1}{RC}$, avec là aussi $|\underline{H}| = \frac{1}{\sqrt 2}$ et un déphasage de $\frac{\pi}{4}$.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
