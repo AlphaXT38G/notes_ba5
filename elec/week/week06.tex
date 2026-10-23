@@ -299,6 +299,101 @@ D'un coup d'œil, on voit si le circuit laisse passer les graves, les aigus, ou 
 \end{important}
 
 
+%=========================================================
+\section{Objectifs de la séance : la forme canonique}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_03.png}
+
+\end{center}
+
+\begin{itemize}
+
+\item \textbf{Rappel :} différence essentielle entre diviseur de tension résistif et fonction de transfert.
+
+\item \textbf{Écriture} des fonctions de transfert avec une combinaison de termes du premier ordre (forme canonique).
+
+\item \textbf{Dessiner} le module et l'argument de la fonction de transfert.
+
+\end{itemize}
+
+
+\begin{formula}
+
+Cinq termes du premier ordre (forme canonique) :
+
+\[
+\underline{H}(j\omega) = K \cdot \frac{j\frac{\omega}{\omega_{Z1}} \cdot \left(1 + j\frac{\omega}{\omega_{Z2}}\right)\left(1 + j\frac{\omega}{\omega_{Z3}}\right)\cdots\left(1 + j\frac{\omega}{\omega_{Zk}}\right)}{j\frac{\omega}{\omega_{P1}} \cdot \left(1 + j\frac{\omega}{\omega_{P2}}\right)\left(1 + j\frac{\omega}{\omega_{P3}}\right)\cdots\left(1 + j\frac{\omega}{\omega_{Pl}}\right)}
+\]
+
+(notation libre, mais elle doit permettre de différencier les pulsations).
+
+où :
+
+\begin{itemize}
+
+\item $K$ : une constante [sans unité] ;
+
+\item $\omega_{Zi}$ ($i = 1, \dots, k$) : pulsations des \textbf{zéros} (dans le numérateur) [rad/s] ;
+
+\item $\omega_{Pi}$ ($i = 1, \dots, l$) : pulsations des \textbf{pôles} (dans le dénominateur) [rad/s] ;
+
+\item $\omega$ : pulsation du signal [rad/s].
+
+\end{itemize}
+
+\end{formula}
+
+\begin{itemize}
+
+\item Le dessin du module $|\underline{H}(j\omega)|$ est exprimé en \textbf{dB} (décibels) : échelle linéaire.
+
+\item Le dessin de l'argument $\operatorname{Arg}(\underline{H}(j\omega))$ est exprimé en \textbf{radians} ou \textbf{degrés} : échelle linéaire.
+
+\item Dans les deux cas, l'axe des pulsations est représenté sur une \textbf{échelle logarithmique}.
+
+\end{itemize}
+
+Les fonctions de transfert sont souvent des produits de termes de base simples, dits du premier ordre, répartis en 5 catégories. Dans ces termes apparaissent des \textbf{pulsations caractéristiques} : on parle de \textbf{pôle} quand la pulsation est dans un terme du dénominateur, et de \textbf{zéro} quand elle est dans un terme du numérateur. Ces termes de base sont individuellement très faciles à dessiner (des dessins linéaires par intervalles) ; en les combinant, il est très simple de dessiner le module et l'argument de la fonction complète.
+
+
+\begin{important}
+
+\textbf{En très simple : les 5 briques}
+
+Toute fonction de transfert de ce cours se construit avec seulement \textbf{5 briques} :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item $K$ : un simple nombre ;
+
+\item $j\frac{\omega}{\omega_Z}$ : un \og $j\omega$ tout seul \fg{} en haut ;
+
+\item $1 + j\frac{\omega}{\omega_Z}$ : un \og 1 plus $j\omega$ \fg{} en haut ;
+
+\item $\frac{1}{j\omega/\omega_P}$ : un \og $j\omega$ tout seul \fg{} en bas ;
+
+\item $\frac{1}{1 + j\omega/\omega_P}$ : un \og 1 plus $j\omega$ \fg{} en bas.
+
+\end{enumerate}
+
+La \textbf{forme canonique}, c'est réécrire la fonction pour qu'elle ne soit qu'une multiplication de ces briques. Chaque brique a sa propre \og fréquence spéciale \fg{} ($\omega_Z$ ou $\omega_P$), là où elle change de comportement.
+
+\vspace{3pt}
+
+\textbf{Zéro ou pôle ?} Un zéro est en haut de la fraction, un pôle en bas. Le nom vient des maths : en haut, la brique peut annuler la fraction (zéro) ; en bas, elle peut la faire exploser (pôle).
+
+\vspace{3pt}
+
+\textbf{Échelle logarithmique} : sur l'axe des fréquences, les graduations ne vont pas $1, 2, 3, 4$ mais $1, 10, 100, 1000$ : chaque pas multiplie par 10. Ça permet de voir sur un seul dessin des fréquences très petites et très grandes.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
