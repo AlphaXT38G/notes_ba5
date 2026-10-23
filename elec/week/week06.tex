@@ -566,6 +566,103 @@ Positif = le circuit \textbf{agrandit} le signal ; négatif = il le \textbf{rét
 \end{important}
 
 
+%=========================================================
+\section{L'exemple le plus simple : le filtre passe-bas}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_06.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+\underline{H}(j\omega) = \frac{\underline{V}_2}{\underline{V}_1} = \frac{\frac{1}{j\omega C}}{R + \frac{1}{j\omega C}} = \frac{1}{1 + j\omega RC} = \frac{1}{1 + j\frac{\omega}{\omega_0}}
+\quad\text{avec}\quad
+\omega_0 = \frac{1}{RC} = \frac{1}{\tau}
+\]
+
+Module et argument :
+
+\[
+|\underline{H}(j\omega)| = \frac{1}{\sqrt{1 + \left(\frac{\omega}{\omega_0}\right)^2}}
+\qquad
+\operatorname{Arg}(\underline{H}(j\omega)) = -\operatorname{arctg}\frac{\omega}{\omega_0}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $\underline{V}_1$ : tension d'entrée [V] ; $\underline{V}_2$ : tension de sortie, aux bornes de $C$ [V] ;
+
+\item $R$ [$\Omega$] ; $C$ [F] ; $\tau = RC$ : constante de temps [s] ;
+
+\item $\omega_0$ : pulsation caractéristique (de coupure) [rad/s].
+
+\end{itemize}
+
+\end{formula}
+
+On illustre les échelles logarithmiques avec les filtres du cours précédent, le passe-bas et le passe-haut. Le produit $RC$ correspond à une pulsation particulièrement importante, la pulsation caractéristique $\omega_0 = 1/RC$. Pour dessiner ce comportement, la méthode la plus longue mais la plus sûre est de dessiner un grand nombre de points.
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_07.png}
+
+\end{center}
+
+Recherche des asymptotes et cas particulier. Le module est tracé en $20\log_{10}(|\underline{H}(j\omega)|)$. Entre les très basses fréquences et la pulsation de coupure, l'évolution du module est très lente ; à partir de la pulsation de coupure, la pente s'accélère violemment ($-20\,\text{dB/décade}$). Pour l'argument, le déphasage est très faible en basses fréquences, s'accélère vers la pulsation de coupure et un peu au-delà, puis se stabilise à $-90°$. On travaillera plus simplement avec des courbes \textbf{asymptotiques} qui approximent correctement la réalité.
+
+
+\begin{important}
+
+\textbf{En très simple : lire le diagramme du passe-bas}
+
+\textbf{En haut (le module en dB)} :
+
+\begin{itemize}
+
+\item à gauche (fréquences basses), la courbe est plate à $0\,\text{dB}$ : le signal passe sans être rétréci ;
+
+\item à partir de $\omega_0$, elle plonge : $-20\,\text{dB}$ à chaque fois que la fréquence est multipliée par 10 (une \textbf{décade}). Le signal est divisé par 10 à chaque décade.
+
+\end{itemize}
+
+\textbf{En bas (la phase)} : elle part de $0°$ (pas de décalage), passe par $-45°$ pile à $\omega_0$, et finit à $-90°$ (décalage d'un quart de tour en retard).
+
+\vspace{3pt}
+
+\textbf{Pourquoi $\omega_0 = 1/RC$ ?} C'est là que $\frac{\omega}{\omega_0} = 1$ : la partie réelle ($1$) et la partie imaginaire ($\omega/\omega_0$) du dénominateur sont égales. Avant, le \og 1 \fg{} domine ; après, c'est le \og $j\omega/\omega_0$ \fg{}.
+
+\end{important}
+
+
+\begin{example}
+
+$R = 1\,\text{k}\Omega$, $C = 1\,\mu\text{F}$ : $\omega_0 = 1000\,\text{rad/s}$.
+
+\begin{itemize}
+
+\item à $\omega = 1000$ : $|\underline{H}| = \frac{1}{\sqrt 2}$, soit $-3\,\text{dB}$, et $-45°$ ;
+
+\item à $\omega = 10\,000$ : $|\underline{H}| \approx 0.1$, soit $-20\,\text{dB}$ ;
+
+\item à $\omega = 100\,000$ : $|\underline{H}| \approx 0.01$, soit $-40\,\text{dB}$.
+
+\end{itemize}
+
+\end{example}
+
+
 \end{multicols}
 
 \end{document}
