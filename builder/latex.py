@@ -110,7 +110,10 @@ def build_subject(subject, results):
             str(tex),
         ]
 
-        proc = subprocess.run(cmd, capture_output=True, text=True)
+        # errors="replace": TeX writes raw bytes ("Missing character: There is no \xb0") and cuts
+        # long lines in the middle of a UTF-8 character; decoding them strictly raised in CI and
+        # stopped the whole build before dist/index.html was written
+        proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
 
         pdf = tex.with_suffix(".pdf")
         if proc.returncode == 0 and pdf.exists():
