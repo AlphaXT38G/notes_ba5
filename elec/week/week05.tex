@@ -840,6 +840,95 @@ On a presque une loi d'Ohm pour le condensateur et la bobine : la taille de la t
 \end{important}
 
 
+%=========================================================
+\section{Le sinus et le cercle trigonométrique}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_10.png}
+
+\end{center}
+
+Fonction de base : $y(t) = A\sin(\omega t)$. Ne pas représenter le signal sur l'axe des $Y$, mais sur le \textbf{cercle trigonométrique}.
+
+Quel que soit le nombre de périodes, le profil d'une sinusoïde se répète tous les $2\pi$ et ne change pas. La position du point sur le cercle dépend de la rotation obtenue au bout d'un temps $t$, qui vaut $\omega t$. Au bout d'une période complète, $\omega t = 2k\pi$ et on repasse par le point d'origine sur l'axe horizontal.
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_11.png}
+
+\end{center}
+
+
+\begin{formula}
+
+Comment définir un point $M$ sur le cercle ? Plusieurs écritures :
+
+\begin{itemize}
+
+\item coordonnées polaires : $M = \rho\,e^{i\theta}$, avec $\omega t = \theta$ et $A = \rho$ ;
+
+\item projections de $M$ sur l'axe des $X$ et l'axe des $Y$ :
+\[
+y_1 = \rho\sin(\omega t) = \rho\sin(\theta)
+\qquad
+x_1 = \rho\cos(\omega t) = \rho\cos(\theta)
+\]
+
+\end{itemize}
+
+où :
+
+\begin{itemize}
+
+\item $A = \rho$ : amplitude du sinus = rayon du cercle (unité du signal, p.\,ex. [V]) ;
+
+\item $\theta = \omega t$ : angle parcouru [rad] ;
+
+\item $x_1$, $y_1$ : projections de $M$ sur les axes $X$ et $Y$ (même unité que $\rho$) ;
+
+\item $k$ : nombre entier de tours.
+
+\end{itemize}
+
+\end{formula}
+
+Tout point $M$ du cercle peut être représenté par le rayon du cercle et l'angle que ce point forme avec le centre et l'axe des $X$.
+
+
+\begin{important}
+
+\textbf{En très simple : la grande roue}
+
+Imagine une chèvre assise sur une grande roue qui tourne à vitesse constante. Si on regarde seulement sa \textbf{hauteur} au cours du temps, on obtient exactement une courbe sinus : elle monte, redescend, passe sous le centre, remonte\dots
+
+\vspace{3pt}
+
+Au lieu de dessiner la courbe qui ondule, on peut donc juste dessiner \textbf{la roue et la position de la chèvre} : un point $M$ qui tourne sur un cercle.
+
+\begin{itemize}
+
+\item le rayon $\rho$ de la roue = l'amplitude $A$ du sinus ;
+
+\item l'angle $\theta$ dont elle a tourné = $\omega t$ ($\omega$ est la vitesse de rotation) ;
+
+\item sa hauteur $y_1 = \rho\sin\theta$ = la valeur du sinus à cet instant ;
+
+\item sa position horizontale $x_1 = \rho\cos\theta$ = le cosinus.
+
+\end{itemize}
+
+\textbf{Pourquoi c'est mieux ?} Un déphasage devient tout simple : c'est juste un point qui est \textbf{plus loin ou moins loin} sur la roue (un angle de plus). Deux sinus décalés de $\frac{\pi}{2}$, ce sont deux chèvres séparées d'un quart de tour.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
