@@ -906,6 +906,111 @@ où :
 \end{important}
 
 
+%=========================================================
+\section{Module des fonctions élémentaires [1] : la constante $K$}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_12.png}
+
+\end{center}
+
+
+\begin{formula}
+
+$\underline{H}(j\omega) = K$ = constante :
+
+\begin{itemize}
+
+\item si $|K| > 1$, alors $|K|_{dB} > 0$ ;
+
+\item si $|K| < 1$, alors $|K|_{dB} < 0$.
+
+\end{itemize}
+
+\[
+K = 10 \;\Rightarrow\; 20\log(10) = 20\,\text{dB}
+\qquad
+K = 0.05 \;\Rightarrow\; 20\log(0.05) \approx -26\,\text{dB}
+\]
+
+où $K$ : constante [sans unité] ; $\omega$ en [rad/s], sur une échelle logarithmique.
+
+\end{formula}
+
+Le choix de la pulsation de départ de l'axe est arbitraire, mais doit faciliter la représentation du domaine étudié. Le premier des cinq termes de base est une constante : si elle est supérieure à 1, le module est positif en dB, et négatif dans le cas contraire.
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_13.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+|\underline{H}(j\omega)|_{dB} = 20\log|\underline{H}(j\omega)|
+\]
+
+\renewcommand{\arraystretch}{1.2}
+
+\begin{center}
+
+\begin{tabular}{|c|c||c|c|}
+
+\hline
+
+$|\underline{H}|$ & $|\underline{H}|_{dB}$ & $|\underline{H}|$ & $|\underline{H}|_{dB}$ \tabularnewline
+
+\hline
+
+$1$ & $0\,\text{dB}$ & $0.1$ & $-20\,\text{dB}$ \tabularnewline
+
+$10$ & $20\,\text{dB}$ & $0.01$ & $-40\,\text{dB}$ \tabularnewline
+
+$100$ & $40\,\text{dB}$ & $0.001$ & $-60\,\text{dB}$ \tabularnewline
+
+$1000$ & $60\,\text{dB}$ & $0.5$ & $-6\,\text{dB}$ \tabularnewline
+
+$2$ & $6\,\text{dB}$ & & \tabularnewline
+
+\hline
+
+\end{tabular}
+
+\end{center}
+
+\end{formula}
+
+Ces quelques valeurs constantes particulières seront très utiles par la suite.
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+Une constante, c'est un circuit qui multiplie le signal par le même nombre $K$ à \textbf{toutes} les fréquences : son diagramme est une \textbf{ligne horizontale}, à la hauteur $20\log K$.
+
+\begin{itemize}
+
+\item $K$ plus grand que 1 (le circuit amplifie) : la ligne est au-dessus de $0\,\text{dB}$ ;
+
+\item $K$ plus petit que 1 (le circuit atténue) : la ligne est en dessous.
+
+\end{itemize}
+
+\textbf{Le truc pour le tableau :} chaque zéro de plus derrière le 1 ajoute $20\,\text{dB}$ ($10 \rightarrow 20$, $100 \rightarrow 40$, $1000 \rightarrow 60$) ; chaque zéro après la virgule en enlève 20. Et doubler, c'est $+6\,\text{dB}$.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
