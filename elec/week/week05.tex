@@ -289,6 +289,74 @@ Le chapitre se fait en 3 étapes : (1) voir pourquoi le condensateur et la bobin
 \end{important}
 
 
+%=========================================================
+\section{Rappels composants R, C, L}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_03.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+U = R\,I
+\qquad
+i(t) = \frac{dq}{dt} = C\,\frac{du}{dt}
+\qquad
+u(t) = L\,\frac{di}{dt}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $U$, $u(t)$ : tension [V] ; $I$, $i(t)$ : courant [A] ;
+
+\item $R$ : résistance [$\Omega$] ; $C$ : capacité [F] ; $L$ : inductance [H] ;
+
+\item $q$ : charge [C] ; $t$ : temps [s].
+
+\end{itemize}
+
+\end{formula}
+
+
+Le degré de complexité n'est pas le même selon que l'on analyse :
+
+\begin{itemize}
+
+\item \textbf{des résistances uniquement} : les équations sont linéaires et basées sur la loi d'Ohm ; séries et parallèles faciles à fusionner, transformations étoile $\leftrightarrow$ triangle faciles ;
+
+\item \textbf{des condensateurs uniquement} : en exploitant la notion de charge ($Q = CV$), on décrit aussi un système linéaire (même facilité) ;
+
+\item \textbf{des inductances uniquement} : même facilité ;
+
+\item \textbf{une combinaison de résistances et de condensateurs} : plus délicat, car elle met en évidence des \textbf{équations différentielles} (du premier ordre pour un seul condensateur).
+
+\end{itemize}
+
+La combinaison RL donne la même complexité, et RLC des équations du second ordre. Dans ce cours, on se limite aux combinaisons \textbf{R et C}.
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+Un seul type de composant à la fois, c'est facile : que des résistances, que des condensateurs ou que des bobines, on fusionne tout comme d'habitude.
+
+\vspace{3pt}
+
+Le problème arrive quand on \textbf{mélange} : la résistance obéit à une simple multiplication ($U = RI$), mais le condensateur obéit à une dérivée ($i = C\,du/dt$). Mettre les deux dans la même équation donne une équation où apparaissent une grandeur et sa dérivée : une équation différentielle, difficile à résoudre à la main. Tout le chapitre sert à éviter ça.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
