@@ -664,6 +664,85 @@ Donc le courant atteint son maximum \textbf{un quart de période avant} la tensi
 \end{important}
 
 
+%=========================================================
+\section{Avec inductance : déphasage entre $u$ et $i$}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_08.png}
+
+\end{center}
+
+
+\begin{formula}
+
+Avec une source de courant (calcul de dérivée) :
+
+\[
+i(t) = I_0\sin(\omega t)
+\;\Rightarrow\;
+u(t) = L\,\frac{di(t)}{dt} = L\omega I_0\cos(\omega t) = L\omega I_0\sin\!\left(\omega t + \frac{\pi}{2}\right)
+\]
+
+Entre $u$ et $i$, il y a un déphasage de $+\frac{\pi}{2}$, et cette fois c'est $u(t)$ qui est en avance sur $i(t)$.
+
+\vspace{3pt}
+
+Avec une source de tension (plus complexe, calcul d'intégrale) :
+
+\[
+u(t) = U_0\sin(\omega t) = L\,\frac{di(t)}{dt}
+\;\Rightarrow\;
+di = \frac{u(t)\,dt}{L}
+\]
+\[
+i(t) = \int \frac{u(t)\,dt}{L} = \int \frac{U_0\sin(\omega t)\,dt}{L}
+\]
+\[
+i(t) = \frac{-U_0\cos(\omega t)}{\omega L} = \frac{-U_0\sin\!\left(\omega t + \frac{\pi}{2}\right)}{\omega L} = \frac{U_0\sin\!\left(\omega t - \frac{\pi}{2}\right)}{\omega L}
+\]
+
+On a encore un déphasage entre $u$ et $i$ de $+\frac{\pi}{2}$ en faveur de $u(t)$.
+
+où :
+
+\begin{itemize}
+
+\item $U_0$ : amplitude de la tension [V] ; $I_0$ : amplitude du courant [A] ;
+
+\item $L$ : inductance [H] ; $\omega$ : pulsation [rad/s] ; $t$ : temps [s].
+
+\end{itemize}
+
+\end{formula}
+
+\textbf{Conclusion :} déphasage \textbf{constant} de $\frac{\pi}{2}$ entre courant et tension, cette fois avec $u(t)$ en avance.
+
+
+\begin{important}
+
+\textbf{En très simple : la roue lourde}
+
+La bobine est une grosse roue lourde : la tension est la poussée, le courant est la vitesse de la roue. On pousse fort, mais la roue met du temps à prendre de la vitesse ; on arrête de pousser, elle continue sur sa lancée.
+
+\vspace{3pt}
+
+Donc la vitesse (le courant) arrive toujours \textbf{en retard} sur la poussée (la tension) : la tension est \textbf{en avance} de $\frac{\pi}{2}$. C'est l'inverse du condensateur.
+
+\vspace{3pt}
+
+\textbf{Pour retenir qui est en avance :} le mot \textbf{CIVIL}. Dans \textbf{C}, le courant \textbf{I} vient avant la tension \textbf{V} ; dans \textbf{L}, la tension \textbf{V} vient avant le courant \textbf{I}.
+
+\vspace{3pt}
+
+\textbf{Et la taille ?} L'amplitude de $u$ vaut $L\omega I_0$ : la bobine agit comme une résistance de valeur $\omega L$, qui \textbf{augmente} avec la fréquence.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
