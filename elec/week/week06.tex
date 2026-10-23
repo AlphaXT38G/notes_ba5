@@ -1088,6 +1088,79 @@ $\omega_Z = 10\,\text{rad/s}$ : à $\omega = 1$ $\rightarrow$ $-20\,\text{dB}$ ;
 \end{example}
 
 
+%=========================================================
+\section{Module des fonctions élémentaires [3] : $1 + j\frac{\omega}{\omega_Z}$ et son inverse}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_15.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+\underline{H}(j\omega) = 1 + j\frac{\omega}{\omega_{Z2}}
+\quad\text{et}\quad
+|\underline{H}(j\omega)| = \sqrt{1 + \left(\frac{\omega}{\omega_{Z2}}\right)^2}
+\]
+
+\begin{itemize}
+
+\item comportement à \textbf{basses fréquences} identique à une constante de valeur $1$, soit $|\underline{H}|_{dB} = 0\,\text{dB}$ ;
+
+\item comportement à \textbf{hautes fréquences} identique au terme $j\frac{\omega}{\omega_{Z2}}$, soit $+20\,\text{dB/déc}$.
+
+\end{itemize}
+
+\[
+\underline{H}(j\omega) = \frac{1}{1 + j\frac{\omega}{\omega_{P2}}}
+\quad\text{et}\quad
+|\underline{H}(j\omega)| = \frac{1}{\sqrt{1 + \left(\frac{\omega}{\omega_{P2}}\right)^2}}
+\]
+
+\begin{itemize}
+
+\item comportement à \textbf{basses fréquences} identique à une constante de valeur $1$, soit $0\,\text{dB}$ ;
+
+\item comportement à \textbf{hautes fréquences} identique au terme $\frac{1}{j\omega/\omega_{P2}}$, soit $-20\,\text{dB/déc}$.
+
+\end{itemize}
+
+Erreur maximale, à la pulsation caractéristique : $+3\,\text{dB}$ pour le zéro, $-3\,\text{dB}$ pour le pôle.
+
+où $\omega_{Z2}$, $\omega_{P2}$ : pulsations caractéristiques [rad/s] ; $\omega$ [rad/s].
+
+\end{formula}
+
+Le quatrième terme ressemble au second, mais avec un $+1$ en plus : il a donc une partie réelle et une partie imaginaire. Son module met en évidence 2 asymptotes : une horizontale entre les basses pulsations et la pulsation caractéristique (pour $\omega \ll \omega_{Z}$, le terme $\omega/\omega_Z$ est négligeable devant 1), et une à $+20\,\text{dB/déc}$ au-delà (le $1$ est négligeable devant le terme imaginaire, et on retrouve le second terme). Les asymptotes approximent bien la réalité : l'erreur maximale est à la pulsation caractéristique et vaut $+3\,\text{dB}$. Le cinquième terme est le symétrique du quatrième, avec une erreur maximale de $-3\,\text{dB}$.
+
+
+\begin{important}
+
+\textbf{En très simple : le \og coude \fg{}}
+
+Dans $1 + j\frac{\omega}{\omega_Z}$, il y a une bagarre entre le $1$ et le $j\frac{\omega}{\omega_Z}$ :
+
+\begin{itemize}
+
+\item \textbf{fréquence basse} : $\frac{\omega}{\omega_Z}$ est minuscule, le $1$ gagne. La brique vaut $\approx 1$, donc \textbf{plat à $0\,\text{dB}$} ;
+
+\item \textbf{fréquence haute} : $\frac{\omega}{\omega_Z}$ est énorme, il gagne. La brique se comporte comme $j\frac{\omega}{\omega_Z}$ : \textbf{droite qui monte} de $20\,\text{dB/décade}$ ;
+
+\item \textbf{pile en $\omega_Z$} : égalité, la brique vaut $1 + j$, de module $\sqrt{2}$, soit $+3\,\text{dB}$. C'est le seul endroit où le coude se trompe un peu.
+
+\end{itemize}
+
+Le dessin : plat jusqu'à $\omega_Z$, puis ça monte. Pour le pôle $\frac{1}{1 + j\omega/\omega_P}$, c'est pareil à l'envers : plat jusqu'à $\omega_P$, puis ça descend (c'est le passe-bas !).
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
