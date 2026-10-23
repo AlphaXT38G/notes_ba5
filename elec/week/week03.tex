@@ -975,6 +975,50 @@ où :
 \end{formula}
 
 
+%=========================================================
+\section{Simplifications intermédiaires (capacités séries)}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week03_16.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+V = V_1 + V_2 \;\text{ et }\; dV = dV_1 + dV_2
+\;\Rightarrow\;
+\frac{i\,dt}{C_{EQ}} = \frac{i_1\,dt}{C_1} + \frac{i_2\,dt}{C_2} = \frac{i\,dt}{C_1} + \frac{i\,dt}{C_2}
+\]
+
+Or $i = i_1 = i_2$ : on peut factoriser par $i\,dt$ et on a directement :
+
+\[
+\boxed{\frac{1}{C_{EQ}} = \frac{1}{C_1} + \frac{1}{C_2}}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $C_1$, $C_2$ : capacités [F] ; $C_{EQ}$ : capacité équivalente [F] ;
+
+\item $V$ : tension totale [V] ; $V_1$, $V_2$ : tensions aux bornes de $C_1$, $C_2$ [V] ;
+
+\item $i$, $i_1$, $i_2$ : courants [A] (tous égaux en série) ;
+
+\item $dV$, $dt$ : petites variations de la tension [V] et du temps [s].
+
+\end{itemize}
+
+\end{formula}
+
+
 \end{multicols}
 
 \end{document}
