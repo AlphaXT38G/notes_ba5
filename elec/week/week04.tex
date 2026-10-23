@@ -346,6 +346,111 @@ Pile $U_0 = 9\,\text{V}$, $R_S = 1\,\Omega$ :
 \end{example}
 
 
+%=========================================================
+\section{Transformation de sources [2] : source linéaire de courant}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_02.png}
+
+\end{center}
+
+
+\begin{definition}
+
+\textbf{Source linéaire de courant}
+
+Source idéale et une résistance interne en parallèle. $R_P$ est considérée comme la résistance interne de la source linéaire de courant.
+
+\end{definition}
+
+
+\begin{formula}
+
+Via la loi des nœuds de Kirchhoff :
+
+\[
+I_{CC} - \frac{U}{R_P} - I = 0
+\quad\text{ou encore}\quad
+\boxed{U = R_P\,I_{CC} - R_P\,I}
+\]
+
+C'est l'équation d'une droite de pente négative ($-R_P$).
+
+\[
+U(I = 0) = R_P\,I_{CC}\ [\text{V}]
+\]
+
+où :
+
+\begin{itemize}
+
+\item $I_{CC}$ : courant de la source idéale = courant de court-circuit [A] ;
+
+\item $R_P$ : résistance interne (en parallèle) [$\Omega$] ;
+
+\item $U/R_P$ : courant qui part dans $R_P$ [A] ;
+
+\item $I$ : courant débité vers l'extérieur [A] ;
+
+\item $U$ : tension aux bornes de sortie [V] ;
+
+\item $U(I=0)$ : tension à vide [V].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{L'image}
+
+La source idéale pousse toujours le même débit $I_{CC}$, comme une pompe. Mais à côté de la sortie, il y a une \og fuite \fg{} : la résistance $R_P$ en parallèle. Le courant se partage : une partie $U/R_P$ part dans la fuite, le reste $I$ va vers l'extérieur.
+
+\vspace{3pt}
+
+\textbf{Lire le graphe (encore une droite qui descend)}
+
+\begin{itemize}
+
+\item \textbf{À vide} (rien de branché, $I = 0$) : tout le courant part dans la fuite $R_P$, qui a donc la tension $U = R_P\,I_{CC}$ à ses bornes. C'est le point en haut.
+
+\item \textbf{Court-circuit} (un fil entre les bornes, $U = 0$) : le fil est bien plus facile que $R_P$, donc plus rien ne passe dans la fuite ($U/R_P = 0$) : tout sort, $I = I_{CC}$. C'est le point en bas.
+
+\item Entre les deux, la pente vaut $-R_P$.
+
+\end{itemize}
+
+\vspace{3pt}
+
+\textbf{À retenir :} même forme de graphe que la source de tension. C'est ce qui permet de passer de l'une à l'autre (section suivante).
+
+\end{important}
+
+
+\begin{example}
+
+$I_{CC} = 9\,\text{A}$, $R_P = 1\,\Omega$ :
+
+\begin{itemize}
+
+\item à vide : $U = 1 \cdot 9 = 9\,\text{V}$ ;
+
+\item elle débite $I = 1\,\text{A}$ : $U = 9 - 1\cdot 1 = 8\,\text{V}$ ;
+
+\item en court-circuit : $I = 9\,\text{A}$ et $U = 0\,\text{V}$.
+
+\end{itemize}
+
+Exactement les mêmes chiffres que la pile de l'exemple précédent !
+
+\end{example}
+
+
 \end{multicols}
 
 \end{document}
