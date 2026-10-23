@@ -451,6 +451,117 @@ Exactement les mêmes chiffres que la pile de l'exemple précédent !
 \end{example}
 
 
+%=========================================================
+\section{Transformation de sources [3] : tension $\leftrightarrow$ courant}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week04_03.png}
+
+\end{center}
+
+
+\textbf{Remplacement d'une source linéaire de tension par une source linéaire de courant, et réciproquement.}
+
+\begin{itemize}
+
+\item \textbf{Pourquoi :} caractéristiques communes (droite de pente négative).
+
+\item \textbf{Comment :} il faut que les caractéristiques aient exactement la même pente, et qu'elles passent par un même point (par exemple la tension à vide).
+
+\end{itemize}
+
+
+\begin{formula}
+
+Même pente : pour la tension, pente $= -R_S$ ; pour le courant, pente $= -R_P$ :
+
+\[
+R_S = R_P = R\ [\Omega]
+\]
+
+Même point (tension à vide) : $U_0$ d'un côté, $U(I=0) = R_P\,I_{CC}$ de l'autre. On obtient :
+
+\[
+\boxed{U_0 = R\,I_{CC}}\ [\text{V}]
+\]
+
+où :
+
+\begin{itemize}
+
+\item $R$ : la résistance interne commune [$\Omega$] (en série pour la source de tension, en parallèle pour la source de courant) ;
+
+\item $U_0$ : tension de la source de tension [V] ;
+
+\item $I_{CC}$ : courant de la source de courant [A].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{L'idée}
+
+Imagine deux boîtes fermées avec deux fils qui sortent. Dans l'une, une source de tension avec une résistance en série ; dans l'autre, une source de courant avec une résistance en parallèle. Si, quoi qu'on branche dessus, elles donnent toujours la même tension et le même courant, alors de l'extérieur il est \textbf{impossible} de savoir laquelle est laquelle : on peut remplacer l'une par l'autre.
+
+\vspace{3pt}
+
+\textbf{Comment s'en assurer}
+
+Ce que donne une boîte, c'est sa droite $U(I)$. Deux droites sont identiques si elles ont la même pente \textbf{et} un point en commun :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item même pente $\Rightarrow$ même résistance $R$ des deux côtés ;
+
+\item même tension à vide $\Rightarrow$ $U_0 = R\,I_{CC}$.
+
+\end{enumerate}
+
+\textbf{La recette}
+
+\begin{itemize}
+
+\item Tension $\to$ courant : on garde $R$ (on la met en parallèle) et on prend $I_{CC} = U_0/R$.
+
+\item Courant $\to$ tension : on garde $R$ (on la met en série) et on prend $U_0 = R\,I_{CC}$.
+
+\end{itemize}
+
+\textbf{À quoi ça sert}
+
+À simplifier : des sources de courant en parallèle s'additionnent, des sources de tension en série aussi. On transforme pour se retrouver dans le cas facile.
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Pile $9\,\text{V}$ et $1\,\Omega$ en série} $\Leftrightarrow$ \textbf{source de $9\,\text{A}$ avec $1\,\Omega$ en parallèle} ($I_{CC} = 9/1$).
+
+\vspace{3pt}
+
+Vérification avec une charge de $8\,\Omega$ branchée dessus :
+
+\begin{itemize}
+
+\item version tension : $I = \frac{9}{1 + 8} = 1\,\text{A}$, donc $U = 8 \cdot 1 = 8\,\text{V}$ ;
+
+\item version courant : les $9\,\text{A}$ se partagent entre $1\,\Omega$ et $8\,\Omega$ ; dans la charge, $I = 9\cdot\frac{1}{1 + 8} = 1\,\text{A}$, donc $U = 8\,\text{V}$.
+
+\end{itemize}
+
+Même résultat : la charge ne voit aucune différence.
+
+\end{example}
+
+
 \end{multicols}
 
 \end{document}
