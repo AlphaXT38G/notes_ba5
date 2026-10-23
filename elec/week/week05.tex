@@ -1752,6 +1752,93 @@ Cette fois on prend la sortie aux bornes de la \textbf{résistance}, et le conde
 \end{important}
 
 
+%=========================================================
+\section{Les composants de base en sinusoïdal}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_22.png}
+
+\end{center}
+
+
+\begin{formula}
+
+Composant passif quelconque, d'impédance $\underline{Z}$ : $\underline{v} = f_1(\underline{i})$ et $\underline{i} = f_2(\underline{v})$.
+
+\vspace{3pt}
+
+\renewcommand{\arraystretch}{1.6}
+
+\begin{center}
+
+\begin{tabular}{|c|c|c|}
+
+\hline
+
+& $\underline{v}$ (impédance) & $\underline{i}$ (admittance) \tabularnewline
+
+\hline
+
+$R$ & $R\,\underline{i}$ & $\dfrac{\underline{v}}{R}$ \tabularnewline
+
+\hline
+
+$C$ & $\dfrac{1}{j\omega C}\,\underline{i}$ & $\underline{v}\,j\omega C$ \tabularnewline
+
+\hline
+
+$L$ & $j\omega L\,\underline{i}$ & $\dfrac{1}{j\omega L}\,\underline{v}$ \tabularnewline
+
+\hline
+
+\end{tabular}
+
+\end{center}
+
+où :
+
+\begin{itemize}
+
+\item $\underline{v}$ : tension complexe entre $A$ et $B$ [V] ; $\underline{i}$ : courant complexe [A] ;
+
+\item $\underline{Z}$ : impédance [$\Omega$] ; son inverse $\underline{Y} = 1/\underline{Z}$ : admittance [S] ;
+
+\item $R$ [$\Omega$] ; $C$ [F] ; $L$ [H] ; $\omega$ [rad/s].
+
+\end{itemize}
+
+\end{formula}
+
+Les circuits simples combinant $R$, $C$ et $L$ exploitent l'écriture complexe (impédance) de chaque composant, ce qui permet de déduire la fonction de transfert du montage. Le tableau résume l'expression des \textbf{impédances} (la tension en fonction du courant) et des \textbf{admittances} (le contraire).
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+C'est la \og carte d'identité \fg{} des trois composants en sinusoïdal, à comparer avec le tableau de la semaine 03 :
+
+\begin{itemize}
+
+\item les \textbf{dérivées} $\frac{d}{dt}$ sont devenues des \textbf{multiplications par $j\omega$} ;
+
+\item les \textbf{intégrales} $\int dt$ sont devenues des \textbf{divisions par $j\omega$}.
+
+\end{itemize}
+
+C'est tout le secret du chapitre : avec un sinus, dériver revient à multiplier par $j\omega$ (le $\omega$ pour la taille, le $j$ pour le quart de tour). Plus aucune équation différentielle, juste des multiplications.
+
+\vspace{3pt}
+
+\textbf{Admittance :} c'est l'inverse de l'impédance, elle dit à quel point le composant \og laisse passer \fg{} le courant. Pratique pour les composants en parallèle, où les admittances s'additionnent.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
