@@ -1,0 +1,243 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Electronique I}}
+\fancyhead[C]{\small Signaux et grandeurs électriques}
+\fancyhead[R]{\small Week 02 -- 14-20/09/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+%=========================================================
+% SEPARATOR
+%=========================================================
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% DEFINITION - blue
+
+\newtcolorbox{definition}{
+enhanced,
+breakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+
+% IMPORTANT - pink
+
+\newtcolorbox{important}{
+enhanced,
+breakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+
+% FORMULAS - green
+
+\newtcolorbox{formula}{
+enhanced,
+breakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+
+% WARNING - orange
+
+\newtcolorbox{warning}{
+enhanced,
+breakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+
+% EXAMPLE - purple
+
+\newtcolorbox{example}{
+enhanced,
+breakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+
+% SUMMARY - yellow
+
+\newtcolorbox{summary}{
+enhanced,
+breakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+\thispagestyle{fancy}
+
+\footnotesize
+
+\begin{multicols}{2}
+
+
+%=========================================================
+\section{C'est quoi un signal ?}
+
+
+\begin{definition}
+
+\begin{itemize}
+
+\item Il véhicule une information (le signal véhicule un message).
+
+\item Un phénomène est à l'origine de sa génération (de l'énergie est nécessaire pour le produire : cours d'électrotechnique).
+
+\item Notion dynamique : $I$ (charges en déplacement).
+
+\item Notion statique : $U$ (répartition de charges).
+
+\end{itemize}
+
+\end{definition}
+
+
+\end{multicols}
+
+\end{document}
