@@ -838,6 +838,74 @@ Comme pour le passe-bas, le passe-haut peut être étudié de manière complète
 \end{important}
 
 
+%=========================================================
+\section{Diagramme de Bode : module}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_11.png}
+
+\end{center}
+
+\textbf{Propriété :} le module d'un produit est égal au produit des modules, or le log d'un produit est égal à une somme de logs.
+
+
+\begin{formula}
+
+\[
+\text{Si } \underline{H}(j\omega) = \underline{H}_1(j\omega)\cdot\underline{H}_2(j\omega)
+\quad\text{alors}\quad
+|\underline{H}(j\omega)|_{dB} = |\underline{H}_1(j\omega)|_{dB} + |\underline{H}_2(j\omega)|_{dB}
+\]
+
+D'où l'intérêt de mettre la fonction de transfert sous la forme canonique : son module en dB est une somme de modules élémentaires, eux aussi en dB :
+
+\[
+|\underline{H}(j\omega)|_{dB} = |K|_{dB} + \left|j\frac{\omega}{\omega_{Z1}}\right|_{dB} + \left|1 + j\frac{\omega}{\omega_{Z2}}\right|_{dB} + \cdots
+\]
+\[
+\cdots + \left|\frac{1}{j\frac{\omega}{\omega_{P1}}}\right|_{dB} + \cdots + \left|\frac{1}{1 + j\frac{\omega}{\omega_{Pl}}}\right|_{dB}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $\underline{H}_1$, $\underline{H}_2$ : deux morceaux (briques) de la fonction de transfert ;
+
+\item $|\cdot|_{dB}$ : module en décibels [dB] ;
+
+\item $\omega_{Zi}$, $\omega_{Pi}$ : pulsations des zéros et des pôles [rad/s].
+
+\end{itemize}
+
+\end{formula}
+
+\textbf{But :} faciliter le tracé du diagramme de Bode. Le module d'un produit est égal au produit des modules, et le module d'un rapport est égal au rapport des modules. Le dessin du module complet est grandement facilité, car les modules de chaque terme de base donnent des allures très simples.
+
+
+\begin{important}
+
+\textbf{En très simple : la recette du module}
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item On écrit la fonction comme une multiplication de briques (forme canonique).
+
+\item On dessine le module en dB de \textbf{chaque brique toute seule} (des segments de droite, voir les sections suivantes).
+
+\item On \textbf{additionne} les dessins, intervalle par intervalle : à chaque fréquence, la hauteur totale = la somme des hauteurs de chaque brique.
+
+\end{enumerate}
+
+Ça marche grâce aux dB : multiplier les briques revient à additionner leurs dB. Les briques du bas (pôles) comptent en \textbf{négatif} : diviser, c'est soustraire en dB.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
