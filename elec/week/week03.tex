@@ -335,6 +335,81 @@ où :
 \end{formula}
 
 
+%=========================================================
+\section{Composants de base : l'inductance}
+
+
+\begin{definition}
+
+Une inductance est une bobine de fil qui s'oppose aux changements du courant qui la traverse : elle stocke de l'énergie dans un champ magnétique, comme une roue lancée qui résiste quand on veut l'accélérer ou la freiner.
+
+\end{definition}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.2\linewidth
+]{../images/week03_04.png}
+
+\end{center}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week03_05.png}
+
+\end{center}
+
+
+\begin{formula}
+
+Avec une source de \textbf{courant} :
+
+\[
+u(t) = L\,\frac{di}{dt}
+\]
+
+Avec une source de \textbf{tension} :
+
+\[
+\frac{u(t)\,dt}{L} = di
+\]
+
+où :
+
+\begin{itemize}
+
+\item $u(t)$ : tension aux bornes de l'inductance [V] ;
+
+\item $i(t)$ : courant qui la traverse [A] ;
+
+\item $L$ : inductance [H] (henry), $1\,\text{H} = 1\,\text{V}\cdot\text{s}/\text{A}$ ;
+
+\item $t$ : temps [s] ; $di$, $dt$ : petites variations de $i$ et $t$ ;
+
+\item $k$ : constante d'intégration [A] (le courant de départ) ;
+
+\item énergie magnétique $\frac{1}{2}L I^2$ [J], analogue à l'énergie cinétique $\frac{1}{2}m v^2$ ($m$ : masse [kg], $v$ : vitesse [m/s]).
+
+\end{itemize}
+
+\end{formula}
+
+
+\textbf{Résumé des trois composants}
+
+\begin{center}
+
+\includegraphics[
+width=0.8\linewidth
+]{../images/week03_06.png}
+
+\end{center}
+
+
 \end{multicols}
 
 \end{document}
