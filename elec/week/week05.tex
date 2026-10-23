@@ -491,6 +491,91 @@ Une fois que tout s'est calmé : la sortie a pris son allure définitive et ne c
 \end{important}
 
 
+%=========================================================
+\section{Avec résistance : pas de déphasage entre $u$ et $i$}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_06.png}
+
+\end{center}
+
+
+\begin{formula}
+
+Avec une source de tension :
+
+\[
+u(t) = U_0\sin(\omega t)
+\;\Rightarrow\;
+i(t) = \frac{u(t)}{R} = \frac{U_0\sin(\omega t)}{R} = I_0\sin(\omega t),
+\quad
+I_0 = \frac{U_0}{R}
+\]
+
+Avec une source de courant :
+
+\[
+i(t) = I_0\sin(\omega t)
+\;\Rightarrow\;
+u(t) = R\,i(t) = R\,I_0\sin(\omega t) = U_0\sin(\omega t),
+\quad
+U_0 = R\,I_0
+\]
+
+Conséquence (avec les valeurs efficaces) :
+
+\[
+i(t) = I_0\sin(\omega t) = I\sqrt{2}\,\sin(\omega t)
+\qquad
+u(t) = U_0\sin(\omega t) = U\sqrt{2}\,\sin(\omega t)
+\]
+
+où :
+
+\begin{itemize}
+
+\item $U_0$, $I_0$ : amplitudes (valeurs crêtes) de la tension [V] et du courant [A], parfois notées $\widehat{U_0}$, $\widehat{I_0}$ ;
+
+\item $U$ (ou $U_{EFF}$), $I$ (ou $I_{EFF}$) : valeurs efficaces [V], [A], utilisées dans le calcul des puissances ;
+
+\item $\omega$ : pulsation [rad/s], $\omega = 2\pi f$ avec $f$ la fréquence [Hz] ;
+
+\item $t$ : temps [s] ; $R$ : résistance [$\Omega$].
+
+\end{itemize}
+
+\end{formula}
+
+\textbf{Conclusion :} avec $R$, courant et tension sont \textbf{en phase} (les deux dépendent de $\sin(\omega t)$).
+
+\begin{warning}
+
+\textbf{Petite remarque :} il y a parfois une confusion entre la notation de l'amplitude et celle de la valeur efficace. $\widehat{I_0}$, $\widehat{U_0}$ pour l'amplitude et $I_{EFF}$, $U_{EFF}$ pour la valeur efficace lèveraient toute ambiguïté, mais $I$ et $U$ sont couramment utilisées pour les valeurs efficaces. Si elles apparaissent dans $I\sqrt{2}\sin(\omega t)$ ou $U\sqrt{2}\sin(\omega t)$, le doute n'est plus permis : ce sont des valeurs efficaces.
+
+\end{warning}
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+\og En phase \fg{} veut dire que la tension et le courant montent et descendent \textbf{exactement en même temps} : quand la tension est au maximum, le courant aussi ; quand elle passe par zéro, lui aussi.
+
+\vspace{3pt}
+
+Pourquoi ? La résistance réagit \textbf{instantanément} : $i = u/R$ à chaque instant, sans mémoire. Si $u$ est un sinus, $i$ est le même sinus, juste divisé par $R$ : même forme, même rythme, pas de retard.
+
+\vspace{3pt}
+
+\textbf{Le $\omega$ :} c'est la vitesse à laquelle le sinus tourne. Un tour complet ($2\pi$ radians) se fait en une période $T = 1/f$, donc $\omega = 2\pi f$. Pour le secteur à $50\,\text{Hz}$ : $\omega = 2\pi \cdot 50 \approx 314\,\text{rad/s}$.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
