@@ -436,6 +436,61 @@ On égale les deux : on obtient une équation avec $u_{OUT}$ \textbf{et} sa dér
 \end{important}
 
 
+%=========================================================
+\section{Exemples de signaux : saut indiciel et sinus}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_05.png}
+
+\end{center}
+
+L'équation différentielle est posée de la même façon pour les deux cas, seule l'excitation change. Dans les deux cas, on suppose la \textbf{capacité déchargée} au départ ($u_{OUT}(0) = 0$). Au bout d'un \og certain \fg{} temps, la sortie atteint son \textbf{régime permanent}.
+
+\begin{itemize}
+
+\item \textbf{Saut indiciel} (exemple : variations brutales d'une horloge, front montant ou descendant) : la réponse $u_{OUT}(t)$ se décompose en un phénomène \textbf{transitoire} et un phénomène \textbf{permanent}.
+
+\item \textbf{Signal sinusoïdal} : le circuit présente lui aussi une superposition d'un transitoire et d'un permanent. Mais l'intérêt de l'étude se limite au \textbf{permanent}, le démarrage n'ayant que peu d'intérêt.
+
+\end{itemize}
+
+L'étude du permanent peut exploiter un autre outil mathématique, qui permet de s'affranchir de la résolution d'une équation différentielle : les nombres complexes.
+
+
+\begin{definition}
+
+\textbf{Régime transitoire}
+
+Le début, quand le circuit \og s'adapte \fg{} au signal qu'on vient de lui envoyer (le condensateur se charge).
+
+\textbf{Régime permanent}
+
+Une fois que tout s'est calmé : la sortie a pris son allure définitive et ne change plus de forme.
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{En très simple : les deux graphes}
+
+\textbf{À gauche (saut indiciel)} : on passe d'un coup de $0$ à une tension fixe (bleu). La sortie (rouge) ne suit pas d'un coup : le condensateur se remplit, elle monte en courbe, puis se colle à l'entrée. La montée, c'est le transitoire ; le plat d'après, c'est le permanent.
+
+\vspace{3pt}
+
+\textbf{À droite (sinus)} : l'entrée (bleu) est une grande vague. La sortie (rouge) est aussi une vague de \textbf{même fréquence}, mais \textbf{plus petite} et \textbf{décalée dans le temps}. Le condensateur n'a pas le temps de suivre toutes les oscillations.
+
+\vspace{3pt}
+
+\textbf{À retenir :} avec un sinus, une fois le permanent atteint, la sortie est toujours un sinus de même fréquence. Seules deux choses changent : sa \textbf{taille} (amplitude) et son \textbf{décalage} (déphasage). Les nombres complexes sont l'outil parfait pour décrire exactement ces deux choses.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
