@@ -649,7 +649,7 @@ V_X = \frac{\frac{10}{1000} + 0}{\frac{1}{1000} + \frac{1}{1000}} = \frac{10\,\t
 \textbf{2. Trois branches :} $V_1 = 12\,\text{V}$, $R_1 = 2\,\text{k}\Omega$ ; $V_2 = 6\,\text{V}$, $R_2 = 1\,\text{k}\Omega$ ; masse ($V_3 = 0$), $R_3 = 2\,\text{k}\Omega$ :
 
 \[
-V_X = \frac{\frac{12}{2\text{k}} + \frac{6}{1\text{k}} + 0}{\frac{1}{2\text{k}} + \frac{1}{1\text{k}} + \frac{1}{2\text{k}}} = \frac{6 + 6 + 0\ \text{mA}}{0.5 + 1 + 0.5\ \text{mS}} = \frac{12\,\text{mA}}{2\,\text{mS}} = 6\,\text{V}
+V_X = \frac{\frac{12}{2\text{k}} + \frac{6}{1\text{k}} + 0}{\frac{1}{2\text{k}} + \frac{1}{1\text{k}} + \frac{1}{2\text{k}}} = \frac{(6 + 6 + 0)\,\text{mA}}{(0.5 + 1 + 0.5)\,\text{mS}} = \frac{12\,\text{mA}}{2\,\text{mS}} = 6\,\text{V}
 \]
 
 Vérification par la loi des nœuds : $I_1 = \frac{12-6}{2\text{k}} = 3\,\text{mA}$, $I_2 = \frac{6-6}{1\text{k}} = 0$, $I_3 = \frac{0-6}{2\text{k}} = -3\,\text{mA}$ : la somme fait bien $0$.
@@ -732,9 +732,11 @@ Triangle $\to$ étoile :
 
 \[
 R_A = \frac{R_{AB}\,R_{AC}}{R_{AB} + R_{AC} + R_{BC}}
-\quad
+\]
+\[
 R_B = \frac{R_{AB}\,R_{BC}}{R_{AB} + R_{AC} + R_{BC}}
-\quad
+\]
+\[
 R_C = \frac{R_{AC}\,R_{BC}}{R_{AB} + R_{AC} + R_{BC}}
 \]
 
@@ -742,7 +744,8 @@ R_C = \frac{R_{AC}\,R_{BC}}{R_{AB} + R_{AC} + R_{BC}}
 
 \[
 R_{AB} = \frac{R_A R_B + R_A R_C + R_B R_C}{R_C}
-\quad
+\]
+\[
 R_{BC} = \frac{R_A R_B + R_A R_C + R_B R_C}{R_A}
 \]
 \[
@@ -946,8 +949,9 @@ La charge totale qui sera déplacée, et donc stockée, est la même.
 
 \[
 Q_{EQ} = C_{EQ}\,V_2 = Q_1 + Q_2 = C_1 V_1 + C_2 V_1
-\quad\Rightarrow\quad
-C_{EQ}\,V_2 = (C_1 + C_2)\,V_1
+\]
+\[
+\Rightarrow\quad C_{EQ}\,V_2 = (C_1 + C_2)\,V_1
 \]
 
 Finalement :
@@ -992,8 +996,9 @@ width=1.0\linewidth
 
 \[
 V = V_1 + V_2 \;\text{ et }\; dV = dV_1 + dV_2
-\;\Rightarrow\;
-\frac{i\,dt}{C_{EQ}} = \frac{i_1\,dt}{C_1} + \frac{i_2\,dt}{C_2} = \frac{i\,dt}{C_1} + \frac{i\,dt}{C_2}
+\]
+\[
+\Rightarrow\;\frac{i\,dt}{C_{EQ}} = \frac{i_1\,dt}{C_1} + \frac{i_2\,dt}{C_2} = \frac{i\,dt}{C_1} + \frac{i\,dt}{C_2}
 \]
 
 Or $i = i_1 = i_2$ : on peut factoriser par $i\,dt$ et on a directement :
@@ -1124,7 +1129,8 @@ Méthode 2 (avec la tension du condensateur) :
 
 \[
 i(t) = \frac{v_{IN}(t) - v(t)}{R} = C\,\frac{dv}{dt}
-\quad\text{ou encore}\quad
+\]
+\[
 \boxed{v_{IN}(t) = v(t) + RC\,\frac{dv}{dt}}
 \]
 
