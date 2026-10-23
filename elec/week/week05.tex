@@ -978,6 +978,99 @@ Le nombre complexe, c'est une façon d'écrire ce couple comme \textbf{un seul n
 \end{important}
 
 
+%=========================================================
+\section{Intérêt de ces représentations : module et argument}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_13.png}
+
+\end{center}
+
+Nous pourrons nous affranchir d'utiliser des $\sin(\omega t)$ : à tout moment, on peut retrouver $y_1 = \rho\sin(\theta)$ et $x_1 = \rho\cos(\theta)$, car $M$ (ou $\overrightarrow{OM}$) véhicule \textbf{deux informations} :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item sa \og longueur \fg{}, appelée \textbf{module} ;
+
+\item son déphasage par rapport à l'axe des $X$ (réels), appelé \textbf{argument}.
+
+\end{enumerate}
+
+
+\begin{formula}
+
+Module (d'après Pythagore) :
+
+\[
+\left\|\overrightarrow{OM}\right\|^2 = \left\|\overrightarrow{Ox_1}\right\|^2 + \left\|\overrightarrow{Oy_1}\right\|^2
+\quad\Rightarrow\quad
+\rho^2 = x_1^2 + y_1^2
+\quad\text{soit}\quad
+\rho = \sqrt{x_1^2 + y_1^2}
+\]
+
+Argument :
+
+\[
+\sin(\theta) = \frac{y_1}{\rho} = \frac{y_1}{\sqrt{x_1^2 + y_1^2}}
+\qquad
+\cos(\theta) = \frac{x_1}{\rho} = \frac{x_1}{\sqrt{x_1^2 + y_1^2}}
+\]
+\[
+\operatorname{tg}(\theta) = \frac{y_1}{x_1} = \frac{\text{Im}}{\text{Re}}
+\qquad
+\theta = \operatorname{tg}^{-1}\!\left(\frac{\text{Im}}{\text{Re}}\right) = \operatorname{arctg}\!\left(\frac{\text{Im}}{\text{Re}}\right)
+\ \text{(pas tout à fait)}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $\rho$ : module, la longueur de $\overrightarrow{OM}$ (unité du signal) ;
+
+\item $\theta$ : argument, l'angle avec l'axe réel [rad] ;
+
+\item $x_1 = \text{Re}$ : partie réelle ; $y_1 = \text{Im}$ : partie imaginaire.
+
+\end{itemize}
+
+\end{formula}
+
+On n'exploitera pas le diagramme de Fresnel dans ce cours. Le module est simplement l'hypoténuse d'un triangle rectangle ; le rapport d'une projection à l'hypoténuse donne le sinus (projection sur $Y$) ou le cosinus (projection sur $X$) de l'angle. L'angle s'obtient avec l'arctg du rapport des deux projections, Im sur Re.
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+Il y a deux façons de dire où est un point :
+
+\begin{itemize}
+
+\item \textbf{\og va 3 à droite et 4 en haut \fg{}} : c'est $x_1 + j\,y_1 = 3 + 4j$ (forme cartésienne) ;
+
+\item \textbf{\og va tout droit sur 5, en tournant de 53° \fg{}} : c'est le module $\rho = 5$ et l'argument $\theta$ (forme polaire).
+
+\end{itemize}
+
+Pour passer de l'une à l'autre : la distance, c'est Pythagore ($\sqrt{3^2 + 4^2} = 5$), et l'angle, c'est l'arctangente de \og en haut divisé par à droite \fg{} ($\operatorname{arctg}(4/3) \approx 0.93\,\text{rad} \approx 53°$).
+
+\vspace{3pt}
+
+\textbf{Pourquoi ça nous intéresse ?} Pour un signal, le module est la \textbf{taille} du sinus (son amplitude) et l'argument est son \textbf{décalage} (sa phase). Les deux informations qu'on veut connaître tiennent dans un seul nombre.
+
+\vspace{3pt}
+
+\textbf{\og Pas tout à fait \fg{} :} l'arctangente se trompe quand le point est à gauche (Re $< 0$), voir la section suivante.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
