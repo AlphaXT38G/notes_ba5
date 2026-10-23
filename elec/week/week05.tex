@@ -1163,6 +1163,114 @@ La calculatrice seule aurait donné $\operatorname{arctg}(-1) = -\frac{\pi}{4}$,
 \end{example}
 
 
+%=========================================================
+\section{Autres propriétés des nombres complexes : le $j$}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_15.png}
+
+\end{center}
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_16.png}
+
+\end{center}
+
+L'évolution du point $M$ sur le cercle permet de démontrer quelques propriétés. $M$ s'écrit comme une somme \og vectorielle \fg{} : un cosinus sur le plan réel et un sinus sur le plan imaginaire, identifié par le symbole $j$. On vérifie ces propriétés en faisant des déphasages de $0$ à $\pi/2$, à $\pi$, à $3\pi/2$.
+
+
+\begin{formula}
+
+\[
+M = x_1 + j\,y_1 = \rho\cos(\theta_1) + j\,\rho\sin(\theta_1)
+\qquad
+M_1 = \rho\cos(0) + j\,\rho\sin(0) = \rho
+\]
+
+\textbf{1) Passer de $M_1$ à $M_2$} (déphasage $\frac{\pi}{2}$) :
+\[
+M_2 = \rho\cos\frac{\pi}{2} + j\,\rho\sin\frac{\pi}{2} = j\,\rho = j\,M_1
+\]
+Conséquence 1 : ajouter un déphasage de $\pi/2$ à un nombre $M$ revient à \textbf{multiplier $M$ par $j$}.
+
+\vspace{3pt}
+
+\textbf{2) Passer de $M_1$ à $M_3$} (déphasage $\pi$) :
+\[
+M_3 = \rho\cos(\pi) + j\,\rho\sin(\pi) = -\rho = -M_1
+\]
+Conséquence 2.a : ajouter un déphasage de $\pi$ revient à \textbf{multiplier par $-1$}. Et $M_3 = j\,M_2 = j^2 M_1$, donc :
+\[
+\boxed{j^2 = -1}
+\]
+
+\textbf{3) Passer de $M_1$ à $M_4$} (déphasage $3\pi/2$) :
+\[
+M_4 = \rho\cos\frac{3\pi}{2} + j\,\rho\sin\frac{3\pi}{2} = -j\,\rho = -j\,M_1
+\]
+Conséquence 3.a : ajouter un déphasage de $3\pi/2$ revient à \textbf{multiplier par $-j$}. Et $M_4 = j\,M_3 = j^2 M_2 = j^3 M_1$, donc :
+\[
+\boxed{j^3 = -j}
+\]
+
+\textbf{Conséquence 4 :}
+\[
+-j = \frac{-j \cdot j}{j} = \frac{1}{j}
+\qquad
+j^4 = j^3 \cdot j = -j \cdot j = -(-1) = 1
+\]
+
+où :
+
+\begin{itemize}
+
+\item $j$ : l'unité imaginaire, $j^2 = -1$ [sans unité] ;
+
+\item $M_1, \dots, M_4$ : le même point tourné de $0$, $\frac{\pi}{2}$, $\pi$, $\frac{3\pi}{2}$ ;
+
+\item $\rho$ : module ; $\theta$ : argument [rad].
+
+\end{itemize}
+
+\end{formula}
+
+Un déphasage de $\pi$ représente deux déphasages de $\pi/2$, chacun impliquant une multiplication par $j$ : on multiplie donc par $j^2$. Comme on retrouve $-M_1$, on en déduit $j^2 = -1$. Avec $j^4 = 1$, on retombe sur nos pattes.
+
+
+\begin{important}
+
+\textbf{En très simple : $j$ = \og tourner d'un quart de tour \fg{}}
+
+C'est LA chose à retenir. Multiplier un nombre par $j$, c'est le faire \textbf{tourner d'un quart de tour} ($90°$, soit $\frac{\pi}{2}$) dans le sens inverse des aiguilles d'une montre, sans changer sa longueur.
+
+\begin{itemize}
+
+\item $\times j$ une fois : un quart de tour ($\frac{\pi}{2}$) ;
+
+\item $\times j$ deux fois ($j^2$) : un demi-tour, le nombre pointe à l'opposé, c'est-à-dire $\times(-1)$. Voilà pourquoi $j^2 = -1$ ;
+
+\item $\times j$ trois fois ($j^3$) : trois quarts de tour, c'est $-j$ ;
+
+\item $\times j$ quatre fois ($j^4$) : un tour complet, on revient au départ : $1$.
+
+\end{itemize}
+
+\textbf{Et diviser par $j$ ?} C'est tourner d'un quart de tour dans l'autre sens : $\frac{1}{j} = -j$.
+
+\vspace{3pt}
+
+\textbf{Le lien avec l'électronique :} le condensateur et la bobine décalent le sinus d'un quart de tour ($\frac{\pi}{2}$). Avec les complexes, ce décalage devient une simple multiplication par $j$ (ou division par $j$).
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
