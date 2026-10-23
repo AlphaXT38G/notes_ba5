@@ -12,209 +12,400 @@
 \clearpage
 
 % =========================================================
-\chapter{Module 1 : Variables aléatoires}
+\chapter{La gaussienne}
 % =========================================================
 
-\begin{rembox}[title=À propos de ces notes]
-Seuls les points nécessitant une explication plus poussée sont détaillés ici. Le reste
-(définitions, formules, propriétés) se trouve déjà dans la cheatsheet.
+\begin{rembox}[title=À propos de ce chapitre]
+Seuls les points de la gaussienne qui demandent une vraie explication sont détaillés ici ;
+les définitions et formules de base sont déjà dans le cours. L'essentiel porte sur les v.a.
+\textbf{conjointement gaussiennes} (section 1.2), puis sur le théorème central limite et les
+processus gaussiens.
 \end{rembox}
 
-\section{Variable aléatoire}
+% =========================================================
+\section{Les réflexes à avoir sur la gaussienne scalaire}
+% =========================================================
 
-\subsection{Rappels}
+Les formules (densité, $\mu$, $\sigma^2$, fonction $Q$) sont dans le cours. Ce qui pose
+problème en pratique, c'est de savoir \emph{quand} les appliquer.
 
-\begin{defnbox}[title=Fonction de répartition]
-Une v.a. est caractérisée par sa \textbf{fonction de répartition} $F_X(x)$, qui est la
-probabilité que $X$ prenne une valeur inférieure ou égale au réel $x$ :
-\[
-F_X(x) = P(X \leq x) = P(A), \qquad A = \{\zeta \in \Omega \mid X(\zeta) \leq x\}.
-\]
-\end{defnbox}
+\begin{keybox}[title={Le réflexe : la fonction caractéristique}]
+Pour montrer qu'une v.a. est gaussienne, on calcule sa fonction caractéristique et on
+reconnaît $e^{jm\omega - v\omega^2/2}$ : c'est celle de $\mathcal{N}(m,v)$, et elle
+\textbf{détermine la loi}. Tout ce qui suit s'en déduit en deux lignes :
+\begin{itemize}
+\item $Y=aX+b$ : $\Phi_Y(\omega) = e^{jb\omega}\Phi_X(a\omega) = e^{j(a\mu+b)\omega -
+  a^2\sigma^2\omega^2/2}$, donc $Y\sim\mathcal{N}(a\mu+b,a^2\sigma^2)$ ;
+\item $X_1+X_2$ \textbf{indépendantes} : $\Phi_{X_1+X_2}=\Phi_{X_1}\Phi_{X_2}$, donc les moyennes
+  \emph{et les variances} s'additionnent.
+\end{itemize}
+\end{keybox}
 
-\begin{defnbox}[title=Densité de probabilité]
-La fonction de \textbf{densité de probabilité} est définie par
-\[
-f_X(x) = \frac{dF_X(x)}{dx}.
-\]
-\end{defnbox}
+\begin{warnbox}[title={Trois pièges}]
+\begin{itemize}
+\item Une \textbf{somme} de gaussiennes n'est gaussienne que si elles sont indépendantes ou,
+  plus généralement, \emph{conjointement} gaussiennes (section suivante).
+\item Un \textbf{mélange} de gaussiennes (on tire $\mathcal{N}(\mu_1,\sigma_1^2)$ avec
+  probabilité $p$, sinon $\mathcal{N}(\mu_2,\sigma_2^2)$) n'est \emph{pas} gaussien : sa densité
+  est $pf_1+(1-p)f_2$, ce n'est pas la somme de deux v.a.
+\item Convention de $\operatorname{erf}$ : elle varie selon les ouvrages, donc la formule de $F_X$
+  en $1-\operatorname{erf}$ peut tromper. Retenir celle en $Q$ : $F_X(x) = 1 -
+  Q\big(\frac{x-\mu}{\sigma}\big)$, avec $Q(-u)=1-Q(u)$.
+\end{itemize}
+\end{warnbox}
 
-\subsection{Fonction d'une variable aléatoire}
-
-Soit $g(\cdot)$ une fonction continue. Si $X$ est une v.a. continue, l'expression
-$Y = g(X)$ désigne également une v.a. continue. Soit $y$ une valeur particulière de $Y$, et
-$x_1, x_2, \ldots, x_m$ les $m$ racines respectives de l'équation $y = g(x)$.
-
-\begin{propbox}[title={Densité de $Y = g(X)$}]
-La densité de probabilité de $Y = g(X)$ est donnée par
-\[
-f_Y(y) = \sum_i \frac{f_X(x_i)}{|g'(x_i)|}
-\]
-où la somme porte sur toutes les racines $x_i$ de $y = g(x)$. Cette formule est tout à fait
-générale, et s'applique à tous les cas où $X$ est continue.
-\end{propbox}
-
-\subsection{Espérance d'une fonction d'une variable aléatoire}
-
-\begin{defnbox}[title=Espérance]
-L'\textbf{espérance} de la fonction $g(X)$, où $X$ est une v.a. de densité de probabilité
-$f_X(x)$, est définie par
-\[
-\E[g(X)] = \int_{-\infty}^{\infty} g(x) f_X(x)\,dx
-\]
-pour autant que cette intégrale converge absolument.
-\end{defnbox}
-
-\begin{defnbox}[title=Moment d'ordre $n$]
-Si $g(X) = X^n$, l'espérance porte le nom de \textbf{moment d'ordre $n$} :
-\[
-\E[X^n] = \int_{-\infty}^{\infty} x^n f_X(x)\,dx.
-\]
-\end{defnbox}
-
-\begin{defnbox}[title=Variance et écart-type]
-La v.a. $Y = X - \mu_X$ est une v.a. \textbf{centrée} vu que $\E[Y] = 0$. La
-\textbf{variance} de la v.a. $X$ est le moment d'ordre 2 de $Y = X - \mu_X$, et l'écart-type
-$\sigma_X$ est la racine carrée de la variance :
-\begin{align*}
-\Var[X] = \sigma_X^2 &= \E[(X - \mu_X)^2] = \int_{-\infty}^{\infty} (x - \mu_X)^2 f_X(x)\,dx
-\\
-&= \E[X^2] - \mu_X^2 = \int_{-\infty}^{\infty} x^2 f_X(x)\,dx - \mu_X^2.
-\end{align*}
-Dans le cas discret, avec $P(X = x_i) = p_i$,
-\[
-\mu_X = \E[X] = \sum_i p_i x_i, \qquad \Var[X] = \sigma_X^2 = \E[(X-\mu_X)^2] = \sum_i p_i
-(x_i - \mu_X)^2.
-\]
-\end{defnbox}
-
-\begin{exbox}[title=Une v.a. sans moments -- la loi de Cauchy]
-Les moments peuvent ne pas exister pour certaines v.a. La densité de probabilité de la v.a.
-de Cauchy est
-\[
-f_X(x) = \frac{1}{\pi (1 + x^2)}.
-\]
-On vérifie qu'il s'agit bien d'une densité de probabilité :
-\[
-\int_{-\infty}^{\infty} f_X(x)\,dx = \frac{1}{\pi}\Big[\arctan(x)\Big]_{-\infty}^{\infty} = 1.
-\]
-Par contre,
-\[
-\int_{-\infty}^{\infty} |x f_X(x)|\,dx = \frac{2}{\pi} \int_0^{\infty} \frac{x}{1+x^2}\,dx =
-\frac{1}{\pi}\Big[\ln(1+x^2)\Big]_0^{\infty} = \infty,
-\]
-donc $x f_X(x)$ n'est pas absolument intégrable, et $\E[X]$ n'est pas défini.
+\begin{exbox}[title={Le carré d'une normale : loi du $\chi^2$}]
+Pour $Z\sim\mathcal{N}(0,1)$ et $Y=Z^2$, les racines de $y=z^2$ sont $\pm\sqrt y$ avec
+$|g'|=2\sqrt y$, donc $f_Y(y) = 2\,\frac{f_Z(\sqrt y)}{2\sqrt y} = \frac{e^{-y/2}}{\sqrt{2\pi y}}$
+pour $y>0$ : c'est $\chi^2(1)$. Si les $Z_i\sim\mathcal{N}(0,1)$ sont \textbf{indépendantes},
+$\sum_{i=1}^n Z_i^2\sim\chi^2(n)$.
 \end{exbox}
 
-\subsection{Transformées}
 
-\begin{defnbox}[title=Fonction caractéristique]
-L'opérateur d'espérance mathématique appliqué à la v.a. complexe $\exp(j\omega X)$, où $j$
-est la racine carrée de $-1$, définit la \textbf{fonction caractéristique} $\Phi_X(\omega)$
-de la v.a. $X$ :
+\section{Variables aléatoires conjointement gaussiennes}
+% =========================================================
+
+\subsection{Pourquoi ce concept ?}
+
+Savoir que $X_1$ est gaussienne et que $X_2$ est gaussienne \textbf{ne dit presque rien} sur
+le couple $(X_1,X_2)$ : les lois marginales ne déterminent pas la loi jointe. On dit que
+$X_1,\dots,X_n$ sont \textbf{conjointement gaussiennes} (ou \emph{multivariées}, ou un
+\emph{vecteur gaussien}) lorsque \emph{le vecteur entier} suit une loi gaussienne, ce qui est
+bien plus fort que « chaque composante est gaussienne ». Cette hypothèse donne alors accès à
+des propriétés remarquables (combinaisons linéaires, indépendance, conditionnement).
+
+\begin{warnbox}[title={Marginales gaussiennes $\not\Rightarrow$ conjointement gaussiennes}]
+Soit $X \sim \mathcal{N}(0,1)$ et $S = \pm1$ équiprobable, indépendant de $X$. Posons $Y = SX$.
+Alors $Y\sim\mathcal{N}(0,1)$ : $X$ et $Y$ sont gaussiennes. Mais :
+\begin{itemize}
+\item $X + Y = 0$ avec probabilité $\frac12$ : la somme n'est pas gaussienne (elle a un
+  atome en $0$), donc $(X,Y)$ \textbf{n'est pas} conjointement gaussien ;
+\item $\Cov[X,Y] = \E[S]\,\E[X^2] = 0$ : non corrélées, et pourtant \textbf{dépendantes}
+  ($|Y| = |X|$).
+\end{itemize}
+\end{warnbox}
+
+\subsection{Définition}
+
+\begin{defnbox}[title={Vecteur gaussien}]
+Soit $\vect{X} = (X_1,\dots,X_n)^T$, de moyenne $\vect{\mu} = \E[\vect{X}]$ et de matrice
+de covariance
 \[
-\Phi_X(\omega) = \E[e^{j\omega X}] = \int_{-\infty}^{\infty} e^{j\omega x} f_X(x)\,dx.
+\Sigma = \E\big[(\vect{X}-\vect{\mu})(\vect{X}-\vect{\mu})^T\big],
+\qquad \Sigma_{ik} = \Cov[X_i,X_k], \quad \Sigma_{ii} = \sigma_i^2 .
 \]
-C'est le complexe conjugué de la transformée de Fourier de $f_X(x)$. Elle existe toujours car
-$|\Phi_X(\omega)| \leq \int_{-\infty}^{\infty} |f_X(x)|\,dx = 1$, et est maximale en $\omega =
-0$ car $\Phi_X(0) = 1$.
+$X_1,\dots,X_n$ sont \textbf{conjointement gaussiennes}, noté $\vect{X} \sim
+\mathcal{N}(\vect{\mu},\Sigma)$, si leur densité jointe est
+\[
+f_{\vect{X}}(\vect{x}) = \frac{1}{\sqrt{(2\pi)^n \det\Sigma}}\;
+\exp\!\Big(-\tfrac12(\vect{x}-\vect{\mu})^T\Sigma^{-1}(\vect{x}-\vect{\mu})\Big).
+\]
 \end{defnbox}
 
-\begin{propbox}[title=Transformée inverse]
-\[
-f_X(x) = \frac{1}{2\pi} \int_{-\infty}^{\infty} e^{-j\omega x} \Phi_X(\omega)\,d\omega.
-\]
-Si deux v.a. continues ont la même fonction caractéristique, elles ont la même densité de
-probabilité, et vice-versa.
+\begin{propbox}[title={Trois définitions équivalentes}]
+Pour un vecteur $\vect{X}$, il est équivalent de dire que :
+\begin{enumerate}
+\item la densité est celle ci-dessus (si $\Sigma$ est inversible) ;
+\item la fonction caractéristique est
+  $\Phi_{\vect{X}}(\vect{\omega}) = \E[e^{j\vect{\omega}^T\vect{X}}] =
+  e^{\,j\vect{\mu}^T\vect{\omega} - \frac12\vect{\omega}^T\Sigma\vect{\omega}}$ ;
+\item \textbf{toute combinaison linéaire} $\vect{a}^T\vect{X} = \sum_i a_iX_i$ est une v.a.
+  gaussienne (pour tout $\vect{a}\in\R^n$).
+\end{enumerate}
+La fonction caractéristique (2) est la plus générale : elle fonctionne aussi quand $\Sigma$ est
+\textbf{singulière} (pas de densité, une composante est alors combinaison linéaire des
+autres). La définition (3) est la plus pratique pour démontrer qu'un vecteur est gaussien.
 \end{propbox}
 
-\begin{propbox}[title=Moments via la fonction caractéristique]
-En dérivant $\Phi_X(\omega)$ par rapport à $\omega$ et en évaluant en $\omega = 0$ :
-\[
-\frac{d\Phi_X(\omega)}{d\omega}\bigg|_{\omega=0} = j \E[X] \quad \Longrightarrow \quad
-\E[X] = \frac{1}{j} \frac{d\Phi_X(\omega)}{d\omega}\bigg|_{\omega=0}.
-\]
-Plus généralement, pour le moment d'ordre $k$ :
-\[
-\E[X^k] = \frac{1}{j^k} \frac{d^k \Phi_X(\omega)}{d\omega^k}\bigg|_{\omega=0}.
-\]
-\end{propbox}
-
-\begin{defnbox}[title=Fonction génératrice des moments]
-De la même manière qu'on peut étendre la transformée de Fourier à la transformée de Laplace
-en prenant un complexe $s$ au lieu de $j\omega$, on définit la \textbf{fonction génératrice
-des moments} :
-\[
-\hat{\Phi}_X(s) = \E[e^{sX}] = \int_{-\infty}^{\infty} e^{sx} f_X(x)\,dx.
-\]
-\end{defnbox}
-
-\begin{defnbox}[title=Fonction génératrice de cumulants]
-On utilise aussi parfois la \textbf{fonction génératrice de cumulant}, ou \textbf{seconde
-fonction caractéristique},
-\[
-\Psi_X(\omega) = \ln \Phi_X(\omega).
-\]
-\end{defnbox}
-
-\begin{defnbox}[title=Fonction génératrice de probabilité (cas discret)]
-Dans le cas d'une v.a. discrète $X$ prenant des valeurs uniformément espacées $S_X = \{0, 1,
-2, 3, \ldots\} = \mathbb{N}$, on définit une \textbf{fonction génératrice de probabilité},
-qui est l'espérance de la fonction $z^X$, i.e. la transformée en $z$ de $p_k$ :
-\[
-G_X(z) = \E[z^X] = \sum_{k=0}^{\infty} z^k P(X=k) = \sum_{k=0}^{\infty} z^k p_k.
-\]
-\end{defnbox}
-
-\begin{propbox}[title=Propriétés de $G_X(z)$]
-On retrouve les probabilités $p_k$ en dérivant $k$ fois $G_X(z)$ par rapport à $z$, et en
-évaluant cette dérivée en $z = 0$ :
-\[
-p_k = P(X=k) = \frac{1}{k!} \frac{d^k G_X(z)}{dz^k}\bigg|_{z=0}.
-\]
-En dérivant $k$ fois $G_X(z)$ mais en évaluant cette dérivée à présent en $z=1$, on trouve
-les moments factoriaux de $X$, à partir desquels on peut retrouver tous les moments de $X$ :
-\[
-\E[X(X-1)(X-2)\cdots(X-k+1)] = \frac{d^k G_X(z)}{dz^k}\bigg|_{z=1}.
-\]
-Remarquons finalement que $G_X(1) = \sum_{k=0}^{\infty} p_k = 1$.
-\end{propbox}
-
-\subsection{Inégalités}
-
-\begin{rembox}[title=Pourquoi borner plutôt que calculer ?]
-Très souvent en pratique, on ne connaît pas complètement la densité de probabilité $f_X(x)$
-d'une v.a. $X$. Il est donc très utile de pouvoir borner une probabilité ou l'espérance d'une
-fonction de cette v.a.
+\begin{rembox}[title={Ce que contient $\Sigma$}]
+$\Sigma$ est \textbf{symétrique} et \textbf{semi-définie positive} : $\vect{a}^T\Sigma\vect{a}
+= \Var[\vect{a}^T\vect{X}] \geq 0$. Elle est inversible (définie positive) ssi aucune
+combinaison linéaire non triviale des $X_i$ n'est constante. Le \textbf{coefficient de
+corrélation} est $\rho_{ik} = \Cov[X_i,X_k]/(\sigma_i\sigma_k) \in [-1,1]$. Un vecteur gaussien
+est \textbf{entièrement déterminé par $\vect{\mu}$ et $\Sigma$}, c.-à-d. par les moments d'ordre
+1 et 2 : c'est ce qui rend les calculs gaussiens purement algébriques.
 \end{rembox}
 
-\begin{propbox}[title=Inégalité de Markov]
-Si $X \geq 0$ et $a > 0$,
+\subsection{Le cas à deux dimensions}
+
+\begin{propbox}[title={Densité d'un couple gaussien}]
+Pour $(X_1,X_2)$, avec $\rho$ le coefficient de corrélation ($|\rho|<1$) :
 \[
-P(X \geq a) \leq \frac{\E[X]}{a}.
+f(x_1,x_2) = \frac{1}{2\pi\sigma_1\sigma_2\sqrt{1-\rho^2}}
+\exp\!\left\{-\frac{1}{2(1-\rho^2)}\left[
+\frac{(x_1-\mu_1)^2}{\sigma_1^2}
+- \frac{2\rho(x_1-\mu_1)(x_2-\mu_2)}{\sigma_1\sigma_2}
++ \frac{(x_2-\mu_2)^2}{\sigma_2^2}\right]\right\},
 \]
+avec $\Sigma = \begin{pmatrix}\sigma_1^2 & \rho\sigma_1\sigma_2\\ \rho\sigma_1\sigma_2 &
+\sigma_2^2\end{pmatrix}$. La densité a la forme d'une colline centrée en $\vect\mu$.
 \end{propbox}
 
-\begin{propbox}[title=Inégalité de Tchebytcheff]
-En posant $D = (X-\mu_X)^2$ et $b = \sqrt{a}$ dans l'inégalité de Markov,
-\[
-P(|X - \mu_X| \geq b) \leq \frac{\sigma_X^2}{b^2}.
-\]
+\begin{propbox}[title={Courbes de niveau}]
+La densité est constante là où $(\vect{x}-\vect{\mu})^T\Sigma^{-1}(\vect{x}-\vect{\mu})$ est
+constant : ce sont des \textbf{ellipses} centrées en $\vect\mu$, dont les axes sont les
+\textbf{vecteurs propres de $\Sigma$} et dont les demi-longueurs sont proportionnelles à
+$\sqrt{\lambda_i}$ (valeurs propres).
+\begin{itemize}
+\item $\rho = 0$ et $\sigma_1 = \sigma_2$ : cercles ; $\rho = 0$ et $\sigma_1\neq\sigma_2$ :
+  ellipses \emph{alignées sur les axes} ;
+\item $\rho > 0$ : ellipses inclinées « vers le haut » (les deux v.a. croissent ensemble),
+  $\rho < 0$ : vers le bas ;
+\item $|\rho|\to 1$ : l'ellipse s'aplatit sur une droite ($X_2$ devient fonction affine de
+  $X_1$).
+\end{itemize}
+Comme $(\vect X-\vect\mu)^T\Sigma^{-1}(\vect X-\vect\mu) \sim \chi^2(n)$, la probabilité
+d'être dans l'ellipse $\{(\vect x-\vect\mu)^T\Sigma^{-1}(\vect x-\vect\mu)\leq c\}$ vaut, pour $n=2$,
+$1 - e^{-c/2}$.
 \end{propbox}
 
-\begin{thmbox}[title=Inégalité de Jensen]
-Une fonction $g : I \subseteq \mathbb{R} \to \mathbb{R} \cup \{\infty\}$ est \textbf{convexe}
-si pour tout $x, x' \in I$ et pour tout $0 \leq t \leq 1$,
+\subsection{Construction : d'où vient un vecteur gaussien ?}
+
+L'idée qui rend tout simple : \textbf{un vecteur gaussien est une transformation linéaire de
+gaussiennes normales indépendantes}.
+
+\begin{keybox}[title={Fabriquer un vecteur gaussien}]
+Soit $\vect Z = (Z_1,\dots,Z_n)^T$ avec les $Z_i\sim\mathcal{N}(0,1)$ \textbf{indépendantes}
+(i.e. $\vect Z \sim \mathcal{N}(\vect 0, I)$). Si $\Sigma = LL^T$ (factorisation de Cholesky, ou $L
+= \Sigma^{1/2}$), alors
 \[
-g(tx + (1-t)x') \leq t\,g(x) + (1-t)\,g(x').
+\vect X = \vect\mu + L\vect Z \sim \mathcal{N}(\vect\mu,\Sigma).
 \]
-Une fonction $g$ convexe et continue est toujours minorée par une fonction linéaire passant
-par un point de son graphe : pour tout $a \in \mathbb{R}$, il existe $\theta \in \mathbb{R}$
-tel que pour tout $x \in \mathbb{R}$, $g(x) \geq g(a) + \theta(x-a)$. En prenant $a = \E[X]$
-et $x = X$, puis en prenant l'espérance des deux côtés, il s'ensuit que
+Pour $n = 2$ :
 \[
-\E[g(X)] \geq g(\E[X]).
+X_1 = \mu_1 + \sigma_1 Z_1,\qquad
+X_2 = \mu_2 + \sigma_2\big(\rho Z_1 + \sqrt{1-\rho^2}\,Z_2\big).
+\]
+On vérifie : $\Var[X_2] = \sigma_2^2(\rho^2+1-\rho^2) = \sigma_2^2$ et $\Cov[X_1,X_2] =
+\sigma_1\sigma_2\rho$. $X_2$ est un mélange de la « partie » de $X_1$ (coefficient $\rho$) et
+d'un bruit indépendant. C'est aussi la méthode pour \textbf{simuler} un vecteur gaussien.
+\end{keybox}
+
+\subsection{Transformations linéaires}
+
+\begin{thmbox}[title={Une transformation linéaire garde la gaussianité}]
+Si $\vect X \sim \mathcal{N}(\vect\mu,\Sigma)$, $A$ est une matrice $m\times n$ et $\vect b
+\in\R^m$, alors
+\[
+\vect Y = A\vect X + \vect b \;\sim\; \mathcal{N}\big(A\vect\mu + \vect b,\; A\Sigma A^T\big).
 \]
 \end{thmbox}
+
+\begin{proofbox}[title=Preuve]
+$\Phi_{\vect Y}(\vect\omega) = \E[e^{j\vect\omega^T(A\vect X+\vect b)}] =
+e^{j\vect\omega^T\vect b}\,\Phi_{\vect X}(A^T\vect\omega) = e^{j(A\vect\mu+\vect b)^T\vect\omega
+- \frac12\vect\omega^T(A\Sigma A^T)\vect\omega}$. (Si $A$ est carrée inversible, on retrouve
+la même chose par changement de variables : $f_{\vect Y}(\vect y) = f_{\vect X}(A^{-1}\vect
+y)/|\det A|$.)
+\end{proofbox}
+
+\begin{propbox}[title={Conséquences}]
+\begin{itemize}
+\item \textbf{Toute combinaison linéaire} de v.a. conjointement gaussiennes est gaussienne :
+  \[
+  \sum_i a_iX_i \sim \mathcal{N}\Big(\sum_i a_i\mu_i,\;\sum_{i,k}a_ia_k\Cov[X_i,X_k]\Big).
+  \]
+  En particulier pour une somme : $X_1+X_2 \sim \mathcal{N}(\mu_1+\mu_2,\;
+  \sigma_1^2+\sigma_2^2+2\Cov[X_1,X_2])$. La covariance \emph{ne disparaît} que si les $X_i$ sont
+  non corrélées.
+\item \textbf{Les marginales} (et tous les sous-vecteurs) sont gaussiennes : on prend pour $A$
+  une matrice qui sélectionne des composantes, et on lit $\mu_i$, $\sigma_i^2$ sur $\vect\mu$ et
+  la diagonale de $\Sigma$.
+\item \textbf{Décorrélation} : $\Sigma$ étant symétrique, $\Sigma = U\Lambda U^T$ avec $U$
+  orthogonale. Alors $\vect Y = U^T(\vect X-\vect\mu)$ a pour covariance $\Lambda$ (diagonale) :
+  les composantes de $\vect Y$ sont \textbf{indépendantes}, de variances $\lambda_i$. C'est la
+  base de l'analyse en composantes principales (et des développements de Karhunen--Loève).
+\item \textbf{Blanchiment} : si $\Sigma$ est définie positive, $\vect Z = \Sigma^{-1/2}(\vect
+  X-\vect\mu)\sim\mathcal{N}(\vect 0,I)$.
+\end{itemize}
+\end{propbox}
+
+\subsection{Non corrélées $\Longleftrightarrow$ indépendantes}
+
+\begin{keybox}[title={Propriété fondamentale du cas gaussien}]
+Si $X_1,\dots,X_n$ sont \textbf{conjointement gaussiennes}, alors
+\[
+\Cov[X_i,X_k]=0\ \ \forall i\neq k
+\quad\Longleftrightarrow\quad
+X_1,\dots,X_n \text{ sont indépendantes.}
+\]
+En général (hors cas gaussien), « indépendantes $\Rightarrow$ non corrélées » est vrai mais
+\textbf{pas la réciproque}. Pour un couple : $(X_1,X_2)$ conjointement gaussien est indépendant
+ssi $\rho = 0$.
+\end{keybox}
+
+\begin{proofbox}[title=Preuve]
+Si les covariances croisées sont nulles, $\Sigma = \diag(\sigma_1^2,\dots,\sigma_n^2)$ et
+$\Phi_{\vect X}(\vect\omega) = \prod_i e^{j\mu_i\omega_i - \sigma_i^2\omega_i^2/2} = \prod_i
+\Phi_{X_i}(\omega_i)$ : la fonction caractéristique conjointe se factorise, ce qui caractérise
+l'indépendance. Sur la densité : $\det\Sigma = \prod\sigma_i^2$ et l'exposant devient une
+somme, donc $f_{\vect X} = \prod_i f_{X_i}$. L'autre sens est vrai pour toute loi.
+\end{proofbox}
+
+\begin{warnbox}[title={L'hypothèse « conjointement » est indispensable}]
+Le contre-exemple $Y = SX$ ci-dessus donne deux gaussiennes non corrélées mais dépendantes. Si on
+vous dit « $X$ et $Y$ sont gaussiennes non corrélées », \textbf{vous ne pouvez pas conclure}
+qu'elles sont indépendantes : il faut « conjointement gaussiennes ».
+\end{warnbox}
+
+\subsection{Loi conditionnelle}
+
+\begin{thmbox}[title={La loi conditionnelle est gaussienne}]
+Soit $(X,Y)$ conjointement gaussiens. Alors $X$ sachant $Y=y$ est gaussienne :
+\[
+X\mid Y=y \;\sim\;\mathcal{N}\!\Big(\mu_X + \rho\,\frac{\sigma_X}{\sigma_Y}(y-\mu_Y),\;
+\sigma_X^2(1-\rho^2)\Big),
+\qquad \rho\frac{\sigma_X}{\sigma_Y} = \frac{\Cov[X,Y]}{\sigma_Y^2}.
+\]
+Plus généralement, si $\vect X = (\vect X_1,\vect X_2)$ est partitionné (avec $\Sigma_{ik}$ les
+blocs de $\Sigma$),
+\[
+\vect X_1\mid\vect X_2=\vect x_2 \;\sim\; \mathcal{N}\Big(\vect\mu_1 +
+\Sigma_{12}\Sigma_{22}^{-1}(\vect x_2-\vect\mu_2),\;
+\Sigma_{11}-\Sigma_{12}\Sigma_{22}^{-1}\Sigma_{21}\Big).
+\]
+\end{thmbox}
+
+\begin{proofbox}[title={Idée de la preuve (cas scalaire)}]
+Posons $W = X - c\,Y$ avec $c = \Cov[X,Y]/\sigma_Y^2$. Alors $\Cov[W,Y] = \Cov[X,Y] -
+c\sigma_Y^2 = 0$, et $(W,Y)$ est conjointement gaussien (transformation linéaire de $(X,Y)$) :
+$W$ et $Y$ sont donc \textbf{indépendantes}. Comme $X = W + cY$, sachant $Y=y$ on a $X = W + cy$
+avec $W$ de loi inchangée : $\E[X|Y=y] = \E[W] + cy = \mu_X + c(y-\mu_Y)$ et $\Var[X|Y=y] =
+\Var[W] = \sigma_X^2 - c^2\sigma_Y^2 = \sigma_X^2(1-\rho^2)$.
+\end{proofbox}
+
+\begin{keybox}[title={Ce qu'il faut retenir}]
+\begin{itemize}
+\item $\E[X\mid Y=y]$ est \textbf{affine en $y$}, et $\Var[X\mid Y]$ est \textbf{constante}
+  (ne dépend pas de $y$) ;
+\item observer $Y$ réduit la variance de $X$ d'un facteur $1-\rho^2$ ; si $\rho=0$ on retombe
+  sur la loi de $X$, si $|\rho|=1$ la variance conditionnelle est nulle ;
+\item l'\textbf{estimateur optimal} de $X$ au sens de l'erreur quadratique moyenne est $\E[X|Y]$,
+  qui est \emph{linéaire} dans le cas gaussien : l'estimation optimale est alors
+  l'estimation linéaire, et l'erreur $X-\E[X|Y]$ est gaussienne, indépendante de $Y$
+  (principe d'orthogonalité) ;
+\item hors cas gaussien, $\E[X|Y]$ est en général non linéaire.
+\end{itemize}
+\end{keybox}
+
+\subsection{Moments d'ordre supérieur}
+
+\begin{propbox}[title={Formule d'Isserlis (Wick)}]
+Si $X_1,\dots,X_n$ sont conjointement gaussiennes de \textbf{moyennes nulles} :
+\begin{itemize}
+\item $\E[X_1X_2\cdots X_{2k+1}] = 0$ (nombre impair de facteurs) ;
+\item $\E[X_1X_2X_3X_4] = \E[X_1X_2]\E[X_3X_4] + \E[X_1X_3]\E[X_2X_4] + \E[X_1X_4]\E[X_2X_3]$ ;
+\item plus généralement, pour un nombre pair de facteurs, la somme, sur tous les
+  \textbf{appariements} des indices, du produit des covariances de chaque paire.
+\end{itemize}
+En prenant tous les $X_i$ égaux à $X$ on retrouve $\E[X^{2k}] = (2k-1)!!\,\sigma^{2k}$ (il y a
+$(2k-1)!!$ appariements de $2k$ objets). La formule sert à calculer, par exemple, $\E[X^2Y^2] =
+\E[X^2]\E[Y^2] + 2\E[XY]^2$.
+\end{propbox}
+
+\subsection{Exemple complet}
+
+\begin{exbox}[title={Calculs avec un couple gaussien}]
+Soit $\vect X = (X_1,X_2)^T \sim \mathcal{N}(\vect\mu,\Sigma)$ avec $\vect\mu = (1,2)^T$ et
+$\Sigma = \begin{pmatrix}4&2\\2&9\end{pmatrix}$. Donc $\sigma_1=2$, $\sigma_2=3$,
+$\rho = 2/6 = 1/3$.
+\begin{enumerate}
+\item \emph{Marginale} : $X_2 \sim \mathcal{N}(2, 9)$, et $P(X_2>5) = Q\big(\frac{5-2}{3}\big) =
+  Q(1)\approx 0{,}159$.
+\item \emph{Somme} : $S = X_1+X_2$ est gaussienne (combinaison linéaire), de moyenne $3$ et de
+  variance $4+9+2\cdot2 = 17$ : $P(S>5) = Q\big(\frac{2}{\sqrt{17}}\big)\approx Q(0{,}485)$.
+\item \emph{Différence} : $D = X_1 - X_2$ a pour variance $4+9-2\cdot 2 = 9$, et $\Cov[S,D] =
+  \Var[X_1]-\Var[X_2] = -5 \neq 0$ : $S$ et $D$ sont corrélées donc dépendantes.
+\item \emph{Conditionnement} : $X_1\mid X_2 = y\ \sim\ \mathcal{N}\big(1 + \tfrac{2}{9}(y-2),\;
+  4 - \tfrac{4}{9}\big) = \mathcal{N}\big(1+\tfrac29(y-2),\tfrac{32}{9}\big)$.
+\item \emph{Décorrélation} : $Y_1 = X_1$ et $Y_2 = X_2 - \tfrac{2}{4}X_1$ (c.-à-d. $X_2 - cX_1$
+  avec $c = \Cov/\sigma_1^2$) sont non corrélées et conjointement gaussiennes, donc
+  \textbf{indépendantes}, avec $\Var[Y_2] = 9 - 1 = 8$.
+\end{enumerate}
+\end{exbox}
+
+\begin{keybox}[title={Méthode type face à un exercice}]
+\begin{enumerate}
+\item Repérer $\vect\mu$ et $\Sigma$ ; vérifier que le vecteur est \emph{conjointement}
+  gaussien (donné, ou obtenu par transformation linéaire d'un vecteur gaussien).
+\item Une quantité qui est une combinaison linéaire est gaussienne : calculer sa
+  \textbf{moyenne} et sa \textbf{variance} (avec les covariances), puis standardiser et
+  utiliser $Q$.
+\item Pour de l'indépendance : vérifier la \textbf{covariance nulle} (et le caractère conjoint).
+\item Pour un conditionnement : formule de la moyenne affine / variance constante.
+\end{enumerate}
+\end{keybox}
+
+% =========================================================
+\section{Théorème central limite}
+% =========================================================
+
+\begin{thmbox}[title={Théorème central limite}]
+Soit $X_1,X_2,\dots$ i.i.d. de moyenne $\mu$ et de variance $\sigma^2<\infty$. Alors
+\[
+Z_n = \sum_{i=1}^n\frac{X_i-\mu}{\sqrt{n\sigma^2}}
+\ \xrightarrow{\text{loi}}\ Z\sim\mathcal{N}(0,1),
+\qquad\text{i.e.}\quad \lim_{n\to\infty}F_{Z_n}(z) = 1 - Q(z) \ \ \forall z.
+\]
+En pratique : $S_n = \sum_{i=1}^n X_i \approx \mathcal{N}(n\mu,\,n\sigma^2)$ et la moyenne
+empirique $\bar X_n \approx \mathcal{N}(\mu,\,\sigma^2/n)$ pour $n$ grand.
+\end{thmbox}
+
+\begin{proofbox}[title={Idée de la preuve}]
+Avec $Y_i = (X_i-\mu)/\sigma$ (moyenne 0, variance 1), $\Phi_{Y}(u) = 1 - \frac{u^2}{2} +
+o(u^2)$, donc $\Phi_{Z_n}(\omega) = \Phi_Y(\omega/\sqrt n)^n = \big(1 - \frac{\omega^2}{2n} +
+o(\frac1n)\big)^n \to e^{-\omega^2/2}$, la fonction caractéristique de $\mathcal{N}(0,1)$.
+La convergence des fonctions caractéristiques entraîne la convergence en loi.
+\end{proofbox}
+
+\begin{propbox}[title={Approximation d'une binomiale}]
+Si $X\sim\text{Bin}(n,p)$, somme de $n$ Bernoulli, alors pour $n$ grand $X\approx
+\mathcal{N}(np,np(1-p))$ et, avec \textbf{correction de continuité},
+\[
+P(X\leq k) \approx 1 - Q\!\left(\frac{k+\frac12-np}{\sqrt{np(1-p)}}\right).
+\]
+\end{propbox}
+
+\begin{rembox}[title={Pourquoi on suppose « gaussien » en pratique}]
+Le TCL explique que l'effet cumulé de nombreuses petites contributions indépendantes (bruit
+thermique d'un récepteur, interférences) soit approximativement gaussien \textbf{quelle que
+soit la loi de chacune}. Mise en garde : il faut la variance finie (la loi de Cauchy n'a pas de
+moyenne, et la moyenne de $n$ Cauchy reste Cauchy), et l'approximation est mauvaise dans les
+\textbf{queues extrêmes} (probabilités d'erreur très faibles).
+\end{rembox}
+
+% =========================================================
+\section{Processus gaussiens}
+% =========================================================
+
+\begin{defnbox}[title={Processus gaussien}]
+$X(t)$ est un \textbf{processus gaussien} si, pour tout $n$ et tous instants $t_1,\dots,t_n$, le
+vecteur $(X(t_1),\dots,X(t_n))$ est \textbf{conjointement gaussien} (idem en temps discret $X(n)$).
+Sa loi est donc entièrement fixée par la moyenne $\mu_X(t)=\E[X(t)]$ et la fonction de
+covariance $C_X(t_1,t_2) = \Cov[X(t_1),X(t_2)]$ : l'analyse au second ordre suffit.
+\end{defnbox}
+
+\begin{propbox}[title={Propriétés}]
+\begin{itemize}
+\item \textbf{Stationnaire au sens large $\Rightarrow$ stationnaire au sens strict} : la loi
+  jointe ne dépend que de $\mu$ et $\Sigma$, qui ne changent pas par décalage temporel si le
+  processus est WSS. Ceci est faux pour un processus quelconque.
+\item \textbf{Stabilité par opérations linéaires} : la sortie d'un filtre linéaire (LTI), la
+  dérivée ou l'intégrale $\int X(t)\,dt$, et toute combinaison linéaire d'échantillons restent
+  gaussiennes (extension de « transformation linéaire d'un vecteur gaussien »). Il suffit de
+  calculer la moyenne et l'autocorrélation de la sortie.
+\item \textbf{Bruit blanc gaussien} : des échantillons non corrélés, conjointement gaussiens,
+  sont \textbf{indépendants} (propriété du cas gaussien).
+\item Deux processus conjointement gaussiens non corrélés sont indépendants.
+\end{itemize}
+\end{propbox}
+
+\begin{exbox}[title={Processus de Wiener}]
+$W(0)=0$, les accroissements sont \textbf{indépendants} et $W(t_2)-W(t_1)\sim\mathcal{N}(0,t_2-t_1)$
+(normalisé). C'est un processus gaussien, de moyenne nulle et de covariance $C_W(t_1,t_2) =
+\min(t_1,t_2)$. Il n'est \textbf{pas} stationnaire ($\Var[W(t)] = t$ croît).
+\end{exbox}
+
+% =========================================================
 
 \end{document}
