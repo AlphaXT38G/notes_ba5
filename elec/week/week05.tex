@@ -1388,6 +1388,100 @@ Module $3183\,\Omega$, argument $-\frac{\pi}{2}$ (la tension est en retard d'un 
 \end{example}
 
 
+%=========================================================
+\section{Petite parenthèse : produit et rapport en module et argument}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_18.png}
+
+\end{center}
+
+
+\begin{formula}
+
+Coordonnées polaires, adaptées au calcul de produits et de rapports :
+
+\[
+M_1 = \rho_1\,e^{j\theta_1}
+\qquad
+M_2 = \rho_2\,e^{j\theta_2}
+\]
+
+Produit :
+
+\[
+M_1 M_2 = \rho_1 e^{j\theta_1}\,\rho_2 e^{j\theta_2} = \rho_1\rho_2\,e^{j(\theta_1 + \theta_2)}
+\]
+
+Rapport :
+
+\[
+\frac{M_1}{M_2} = \frac{\rho_1 e^{j\theta_1}}{\rho_2 e^{j\theta_2}} = \frac{\rho_1}{\rho_2}\,e^{j(\theta_1 - \theta_2)}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $\rho_1$, $\rho_2$ : modules de $M_1$ et $M_2$ ;
+
+\item $\theta_1$, $\theta_2$ : arguments [rad] ;
+
+\item $e^{j\theta} = \cos\theta + j\sin\theta$ : le point du cercle de rayon 1 à l'angle $\theta$.
+
+\end{itemize}
+
+\end{formula}
+
+\begin{itemize}
+
+\item \textbf{Produit} : le module est le produit des modules, l'argument est la somme des arguments.
+
+\item \textbf{Rapport} : le module est le rapport des modules, l'argument est la différence des arguments.
+
+\end{itemize}
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+Un nombre complexe, c'est \og une longueur et un angle \fg{}. Quand on les multiplie :
+
+\begin{itemize}
+
+\item les \textbf{longueurs se multiplient} (comme des nombres normaux) ;
+
+\item les \textbf{angles s'additionnent} (on tourne de l'un, puis de l'autre).
+
+\end{itemize}
+
+Quand on divise : les longueurs se divisent, les angles se soustraient.
+
+\vspace{3pt}
+
+\textbf{Pourquoi c'est utile ?} Une fonction de transfert est souvent un rapport, du genre $\frac{1}{1 + j\omega RC}$. Pas besoin de développer : module $=$ module du haut divisé par module du bas, argument $=$ argument du haut moins argument du bas.
+
+\end{important}
+
+
+\begin{example}
+
+$M_1 = 2\,e^{j\pi/4}$ et $M_2 = 4\,e^{j\pi/2}$ :
+
+\[
+M_1 M_2 = 8\,e^{j3\pi/4}
+\qquad
+\frac{M_1}{M_2} = 0.5\,e^{-j\pi/4}
+\]
+
+\end{example}
+
+
 \end{multicols}
 
 \end{document}
