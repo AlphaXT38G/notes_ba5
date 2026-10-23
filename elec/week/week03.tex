@@ -711,6 +711,167 @@ où :
 \end{formula}
 
 
+%=========================================================
+\section{Théorème de Kennelly}
+
+
+Théorème de Kennelly : utile pour des transformations de structures en étoile vers triangle et réciproquement.
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week03_12.png}
+
+\end{center}
+
+
+\begin{formula}
+
+Triangle $\to$ étoile :
+
+\[
+R_A = \frac{R_{AB}\,R_{AC}}{R_{AB} + R_{AC} + R_{BC}}
+\quad
+R_B = \frac{R_{AB}\,R_{BC}}{R_{AB} + R_{AC} + R_{BC}}
+\quad
+R_C = \frac{R_{AC}\,R_{BC}}{R_{AB} + R_{AC} + R_{BC}}
+\]
+
+Étoile $\to$ triangle :
+
+\[
+R_{AB} = \frac{R_A R_B + R_A R_C + R_B R_C}{R_C}
+\quad
+R_{BC} = \frac{R_A R_B + R_A R_C + R_B R_C}{R_A}
+\]
+\[
+R_{AC} = \frac{R_A R_B + R_A R_C + R_B R_C}{R_B}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $A$, $B$, $C$ : les trois bornes de la structure ;
+
+\item $R_A$, $R_B$, $R_C$ : résistances de l'étoile, chacune entre une borne et le centre [$\Omega$] ;
+
+\item $R_{AB}$, $R_{BC}$, $R_{AC}$ : résistances du triangle, chacune entre deux bornes [$\Omega$].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Le problème}
+
+Certains circuits n'ont ni résistances en série, ni résistances en parallèle (comme le pont de l'exemple ci-dessous) : on ne peut rien fusionner, et il faudrait poser toutes les équations de Kirchhoff.
+
+\vspace{3pt}
+
+\textbf{L'idée}
+
+Trois résistances reliant trois bornes $A$, $B$, $C$ peuvent être montées de deux façons :
+
+\begin{itemize}
+
+\item en \textbf{étoile} (ou en T) : chaque résistance va d'une borne à un point central commun ;
+
+\item en \textbf{triangle} (ou en $\Pi$) : chaque résistance relie directement deux bornes.
+
+\end{itemize}
+
+Les deux sont \textbf{équivalentes} si, vues de l'extérieur, elles se comportent pareil : même résistance entre chaque paire de bornes. On peut alors remplacer l'une par l'autre sans rien changer au reste du circuit.
+
+\vspace{3pt}
+
+\textbf{Comment retenir les formules}
+
+\begin{itemize}
+
+\item Triangle $\to$ étoile : $R_A$ = produit des deux côtés du triangle qui touchent $A$, divisé par la somme des trois côtés.
+
+\item Étoile $\to$ triangle : $R_{AB}$ = somme des produits deux à deux, divisée par la résistance de l'étoile \textbf{opposée} ($R_C$, celle qui ne touche ni $A$ ni $B$).
+
+\end{itemize}
+
+\textbf{Méthode de démonstration}
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item Déconnecter une borne (par exemple $C$, laissée en l'air).
+
+\item Regarder la résistance entre les deux autres bornes :
+
+\begin{itemize}
+
+\item étoile : $R_A + R_B$ (en série, $R_C$ ne sert plus) ;
+
+\item triangle : $R_{AB}$ en parallèle avec $(R_{AC} + R_{BC})$.
+
+\end{itemize}
+
+\item Les égaler, puis recommencer pour les deux autres bornes : 3 équations, 3 inconnues, on trouve les formules.
+
+\end{enumerate}
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Triangle de trois $3\,\text{k}\Omega$} :
+
+\[
+R_A = R_B = R_C = \frac{3\text{k}\cdot 3\text{k}}{3\text{k} + 3\text{k} + 3\text{k}} = 1\,\text{k}\Omega
+\]
+
+Et dans l'autre sens, une étoile de trois $1\,\text{k}\Omega$ donne $R_{AB} = \frac{1 + 1 + 1}{1}\,\text{k}\Omega = 3\,\text{k}\Omega$.
+
+\end{example}
+
+
+\textbf{Justification avec un exemple}
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week03_13.png}
+
+\end{center}
+
+Imaginons qu'on veuille calculer le courant $I$. Dans ce circuit, il n'y a ni résistances en série, ni résistances en parallèle. Sans réduction, il faudrait poser les équations à partir des lois de Kirchhoff.
+
+Une fois que l'on obtient par transformation l'un des deux circuits, on voit que la situation est débloquée, car des résistances se retrouvent en série et/ou en parallèle et peuvent donc fusionner.
+
+\begin{example}
+
+\textbf{Pas à pas (triangle $ABC$ en étoile, à droite) :}
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item On remplace le triangle $R_1$, $R_2$, $R_3$ par l'étoile $R_A$, $R_B$, $R_C$ de centre $X$.
+
+\item $R_C$ et $R_4$ sont en série ; $R_B$ et $R_5$ aussi.
+
+\item Ces deux branches relient $X$ à $D$ : elles sont en parallèle.
+
+\item Le tout est en série avec $R_A$ :
+\[
+R_{EQ} = R_A + \frac{(R_C + R_4)(R_B + R_5)}{R_C + R_4 + R_B + R_5}
+\qquad
+I = \frac{V}{R_{EQ}}
+\]
+
+\end{enumerate}
+
+\end{example}
+
+
 \end{multicols}
 
 \end{document}
