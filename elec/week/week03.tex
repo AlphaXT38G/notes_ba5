@@ -1199,6 +1199,87 @@ Avec $R = 1\,\text{k}\Omega$ et $C = 1\,\mu\text{F}$ : $\tau = 10^3 \cdot 10^{-6
 \end{example}
 
 
+%=========================================================
+\section{Cas particulier : circuit RLC (équation différentielle du second ordre)}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.9\linewidth
+]{../images/week03_19.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+v_{IN}(t) = R\,i(t) + \frac{1}{C}\int i(t)\,dt + L\,\frac{di}{dt}
+\]
+
+\[
+C\,\frac{dv_{IN}}{dt} = RC\,\frac{di}{dt} + i(t) + LC\,\frac{d^2 i}{dt^2} = i(t) + RC\,\frac{di}{dt} + LC\,\frac{d^2 i}{dt^2}
+\]
+
+Cas particulier si $V_{IN}$ = cte :
+
+\[
+0 = i(t) + RC\,\frac{di}{dt} + LC\,\frac{d^2 i}{dt^2}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $v_{IN}(t)$ : tension d'entrée [V] ; $V_{IN}$ : sa valeur si elle est constante [V] ;
+
+\item $i(t)$ : courant de la maille [A] ;
+
+\item $R$ : résistance [$\Omega$] ; $C$ : capacité [F] ; $L$ : inductance [H] ;
+
+\item $\frac{di}{dt}$ : dérivée première du courant [A/s] ; $\frac{d^2 i}{dt^2}$ : dérivée seconde [A/s$^2$] ;
+
+\item $RC$ en [s] et $LC$ en [s$^2$].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{D'où vient l'équation ?}
+
+Même idée que pour le RC : loi des mailles, $v_{IN} = v_R + v_C + v_L$, puis on remplace chaque tension par la loi de son composant (le même courant $i$ traverse les trois) :
+
+\begin{itemize}
+
+\item résistance : $v_R = R\,i$ ;
+
+\item condensateur : $v_C = \frac{1}{C}\int i\,dt$ ;
+
+\item inductance : $v_L = L\,\frac{di}{dt}$.
+
+\end{itemize}
+
+Il reste une intégrale : pour s'en débarrasser, on \textbf{dérive} toute l'équation par rapport au temps (l'intégrale redevient $i$, $\frac{di}{dt}$ devient $\frac{d^2 i}{dt^2}$), puis on multiplie par $C$.
+
+\vspace{3pt}
+
+\textbf{Pourquoi « second ordre » ?}
+
+Une dérivée seconde ($\frac{d^2 i}{dt^2}$) apparaît : deux composants stockent de l'énergie (le condensateur et l'inductance).
+
+\vspace{3pt}
+
+\textbf{Le cas $V_{IN}$ constant}
+
+Sa dérivée est nulle, donc le membre de gauche vaut $0$ : le circuit évolue \og tout seul \fg{}. L'énergie fait des allers-retours entre le condensateur (énergie électrique) et l'inductance (énergie magnétique), pendant que la résistance en dissipe une partie à chaque passage : le courant \textbf{oscille en s'amortissant}, comme une balançoire freinée par les frottements.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
