@@ -1941,6 +1941,93 @@ On divise, et c'est fini : $\underline{v} = \frac{\underline{u}_{IN}}{1 + j\omeg
 \end{important}
 
 
+%=========================================================
+\section{Exemples d'application : impédances équivalentes}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week05_25.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\textbf{Premier circuit} ($R_1$ en parallèle avec la branche $R_2$ + $C$) :
+
+\[
+\underline{Z}_A = R_2 + \underline{Z}_C = R_2 + \frac{1}{j\omega C} = \frac{1 + j\omega R_2 C}{j\omega C}
+\]
+\[
+\underline{Z}_{EQ1} = \frac{R_1\,\underline{Z}_A}{R_1 + \underline{Z}_A} = \frac{R_1\,\frac{1 + j\omega R_2 C}{j\omega C}}{R_1 + \frac{1 + j\omega R_2 C}{j\omega C}} = \frac{R_1(1 + j\omega R_2 C)}{j\omega C R_1 + 1 + j\omega R_2 C}
+\]
+\[
+\underline{Z}_{EQ1} = \frac{R_1(1 + j\omega R_2 C)}{1 + j\omega C(R_1 + R_2)}
+\]
+
+\textbf{Second circuit} ($R_1$ parallèle à $C$, le tout en série avec $R_2$) :
+
+\[
+\underline{Z}_B = \frac{R_1\,\underline{Z}_C}{R_1 + \underline{Z}_C} = \frac{R_1\,\frac{1}{j\omega C}}{R_1 + \frac{1}{j\omega C}} = \frac{R_1}{1 + j\omega R_1 C}
+\]
+\[
+\underline{Z}_{EQ2} = \underline{Z}_B + R_2 = \frac{R_1}{1 + j\omega R_1 C} + \frac{R_2(1 + j\omega R_1 C)}{1 + j\omega R_1 C}
+\]
+\[
+\underline{Z}_{EQ2} = \frac{R_1 + R_2 + j\omega R_1 R_2 C}{1 + j\omega R_1 C} = (R_1 + R_2)\,\frac{1 + j\omega\frac{R_1 R_2}{R_1 + R_2}C}{1 + j\omega R_1 C}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $\underline{Z}_A$, $\underline{Z}_B$ : impédances intermédiaires [$\Omega$] ;
+
+\item $\underline{Z}_{EQ1}$, $\underline{Z}_{EQ2}$ : impédances équivalentes de chaque circuit [$\Omega$] ;
+
+\item $R_1$, $R_2$ [$\Omega$] ; $C$ [F] ; $\omega$ [rad/s].
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{En très simple}
+
+Les impédances se combinent \textbf{exactement comme des résistances} :
+
+\begin{itemize}
+
+\item en \textbf{série} : on additionne, $\underline{Z} = \underline{Z}_1 + \underline{Z}_2$ ;
+
+\item en \textbf{parallèle} : produit sur somme, $\underline{Z} = \frac{\underline{Z}_1\,\underline{Z}_2}{\underline{Z}_1 + \underline{Z}_2}$.
+
+\end{itemize}
+
+La méthode : on part du morceau le plus \og intérieur \fg{} (cadre bleu pointillé), on le remplace par une seule impédance ($\underline{Z}_A$ ou $\underline{Z}_B$), puis on combine avec ce qui reste (cadre rouge). À la fin, on nettoie : on multiplie en haut et en bas par $j\omega C$ pour qu'il n'y ait plus de fraction dans la fraction.
+
+\vspace{3pt}
+
+\textbf{Vérifier son résultat avec les deux extrêmes} (le condensateur est un trou à $\omega = 0$, un fil à $\omega \to \infty$) :
+
+\begin{itemize}
+
+\item $\underline{Z}_{EQ1}$, $\omega = 0$ : la branche $R_2 + C$ est coupée, il reste $R_1$. La formule donne bien $\frac{R_1 \cdot 1}{1} = R_1$ ;
+
+\item $\underline{Z}_{EQ1}$, $\omega \to \infty$ : $C$ est un fil, il reste $R_1 \parallel R_2$. La formule donne $\frac{R_1\,j\omega R_2 C}{j\omega C(R_1 + R_2)} = \frac{R_1 R_2}{R_1 + R_2}$ ;
+
+\item $\underline{Z}_{EQ2}$, $\omega = 0$ : $C$ est un trou, il reste $R_1 + R_2$ ; $\omega \to \infty$ : $C$ court-circuite $R_1$, il reste $R_2$. La formule donne bien les deux.
+
+\end{itemize}
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
