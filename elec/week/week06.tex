@@ -1374,6 +1374,87 @@ Ces trois briques ont une phase \textbf{constante} : des lignes horizontales sur
 \end{important}
 
 
+%=========================================================
+\section{Phase des fonctions élémentaires [3] : $1 + j\frac{\omega}{\omega_Z}$ et son inverse}
+
+
+\begin{center}
+
+\includegraphics[
+width=1.0\linewidth
+]{../images/week06_20.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\[
+\underline{H}(j\omega) = 1 + j\frac{\omega}{\omega_{Z2}}
+\;\Rightarrow\;
+\operatorname{Arg} = \operatorname{arctg}\frac{\omega}{\omega_{Z2}}
+\]
+
+\begin{itemize}
+
+\item basses fréquences : identique à une constante de valeur $1$, soit $\phi = 0$ ;
+
+\item hautes fréquences : identique au terme $j\frac{\omega}{\omega_{Z2}}$, soit $\phi = \pi/2$ ;
+
+\item en $\omega_{Z2}$ : $\operatorname{Arg}(\underline{H}(j\omega_{Z2})) = \pi/4$ ou $45°$ ;
+
+\item en $0.1\,\omega_{Z2}$ : $\operatorname{arctg}(0.1) = 0.1$ rad, soit $5.7°$ (écart avec l'asymptote).
+
+\end{itemize}
+
+\[
+\underline{H}(j\omega) = \frac{1}{1 + j\frac{\omega}{\omega_{P2}}}
+\;\Rightarrow\;
+\operatorname{Arg} = -\operatorname{arctg}\frac{\omega}{\omega_{P2}}
+\]
+
+\begin{itemize}
+
+\item basses fréquences : constante de valeur $1$, soit $\phi = 0$ ;
+
+\item hautes fréquences : identique au terme $\frac{1}{j\omega/\omega_{P2}}$, soit $\phi = -\pi/2$ ;
+
+\item en $\omega_{P2}$ : $-45°$.
+
+\end{itemize}
+
+où $\phi$ : phase [rad] ou [°] ; $\omega_{Z2}$, $\omega_{P2}$ : pulsations caractéristiques [rad/s].
+
+\end{formula}
+
+Le quatrième terme a une partie réelle et une partie imaginaire. Son allure se décompose en trois zones : les basses pulsations jusqu'à $0.1\,\omega_{Z}$ donnent un déphasage nul ; de $10\,\omega_{Z}$ aux hautes pulsations, un déphasage de $90°$ ; la zone intermédiaire rejoint les deux asymptotes, avec $45°$ à la pulsation caractéristique. L'erreur maximale entre la courbe réelle et l'asymptotique vaut $5.7°$, aux deux pulsations $0.1\,\omega_Z$ et $10\,\omega_Z$. Le cinquième terme est le symétrique du quatrième : asymptote à $-90°$ et $-45°$ à la pulsation caractéristique, avec la même erreur maximale de $5.7°$ en valeur absolue.
+
+
+\begin{important}
+
+\textbf{En très simple : la rampe sur deux décades}
+
+Même bagarre que pour le module entre le $1$ et le $j\frac{\omega}{\omega_Z}$ :
+
+\begin{itemize}
+
+\item \textbf{fréquence basse} : le $1$ gagne, le nombre pointe vers la droite : $0°$ ;
+
+\item \textbf{fréquence haute} : le $j\frac{\omega}{\omega_Z}$ gagne, il pointe vers le haut : $90°$ ;
+
+\item \textbf{pile en $\omega_Z$} : $1 + j$, pile entre les deux : $45°$.
+
+\end{itemize}
+
+\textbf{Le dessin à la règle} : plat à $0°$ jusqu'à $\frac{\omega_Z}{10}$, plat à $90°$ à partir de $10\,\omega_Z$, et entre les deux une \textbf{rampe droite} qui monte de $90°$ en deux décades (donc $45°$ par décade) et passe par $45°$ en $\omega_Z$.
+
+\vspace{3pt}
+
+\textbf{Attention, différence avec le module :} le coude du module est en $\omega_Z$, mais la rampe de la phase commence une décade \textbf{avant} et finit une décade \textbf{après}. Pour le pôle, même chose vers le bas : de $0°$ à $-90°$.
+
+\end{important}
+
+
 \end{multicols}
 
 \end{document}
