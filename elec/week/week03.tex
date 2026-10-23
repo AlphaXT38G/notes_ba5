@@ -1097,6 +1097,108 @@ $v_{IN} = 10\,\text{V}$ :
 \end{example}
 
 
+%=========================================================
+\section{Cas particulier : circuit RC (équation différentielle du premier ordre)}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.9\linewidth
+]{../images/week03_18.png}
+
+\end{center}
+
+
+\begin{formula}
+
+Méthode 1 (loi des mailles avec le courant) :
+
+\[
+R\,i(t) + \frac{1}{C}\int i(t)\,dt - v_{IN}(t) = 0
+\;\Rightarrow\;
+i(t) + RC\,\frac{di}{dt} = C\,\frac{dv_{IN}}{dt}
+\]
+
+Méthode 2 (avec la tension du condensateur) :
+
+\[
+i(t) = \frac{v_{IN}(t) - v(t)}{R} = C\,\frac{dv}{dt}
+\quad\text{ou encore}\quad
+\boxed{v_{IN}(t) = v(t) + RC\,\frac{dv}{dt}}
+\]
+
+où :
+
+\begin{itemize}
+
+\item $v_{IN}(t)$ : tension d'entrée [V] ;
+
+\item $v(t)$ : tension aux bornes du condensateur [V] ;
+
+\item $i(t)$ : courant de la maille [A] ;
+
+\item $R$ : résistance [$\Omega$] ; $C$ : capacité [F] ;
+
+\item $RC = \tau$ : constante de temps [s] ($\Omega \cdot \text{F} = \text{s}$).
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{D'où vient l'équation ?}
+
+On fait le tour de la maille (loi des mailles) : la tension de la source se partage entre la résistance et le condensateur, $v_{IN} = v_R + v$. On remplace chaque morceau par la loi de son composant :
+
+\begin{itemize}
+
+\item résistance : $v_R = R\,i$ ;
+
+\item condensateur : $i = C\,\frac{dv}{dt}$ (le même courant traverse les deux).
+
+\end{itemize}
+
+Donc $v_{IN} = R\,C\,\frac{dv}{dt} + v$ : une équation où apparaît $v$ \textbf{et sa dérivée}, c'est une \textbf{équation différentielle}.
+
+\vspace{3pt}
+
+\textbf{Pourquoi « premier ordre » ?}
+
+Il n'y a qu'une dérivée première ($\frac{dv}{dt}$), pas de dérivée seconde : un seul composant stocke de l'énergie (le condensateur).
+
+\vspace{3pt}
+
+\textbf{Ce que ça veut dire physiquement}
+
+Le condensateur ne peut pas changer de tension instantanément : il se remplit à travers $R$. Plus $\tau = RC$ est grand, plus il se charge lentement.
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Charge sous tension constante :} $v_{IN} = E$ dès $t = 0$, condensateur vide ($v(0) = 0$). La solution de l'équation est :
+
+\[
+v(t) = E\left(1 - e^{-t/\tau}\right)
+\]
+
+\begin{itemize}
+
+\item à $t = \tau$ : $v \approx 63\,\%$ de $E$ ;
+
+\item à $t = 5\tau$ : $v \approx 99\,\%$ de $E$ (considéré chargé).
+
+\end{itemize}
+
+Avec $R = 1\,\text{k}\Omega$ et $C = 1\,\mu\text{F}$ : $\tau = 10^3 \cdot 10^{-6} = 1\,\text{ms}$, chargé en $5\,\text{ms}$ environ.
+
+\end{example}
+
+
 \end{multicols}
 
 \end{document}
