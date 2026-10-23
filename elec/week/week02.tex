@@ -650,6 +650,30 @@ Pour la sinusoïde $u(t) = A\sin(2\pi f t)$ : le carré vaut en moyenne $A^2/2$ 
 
 \vspace{3pt}
 
+\textbf{Ce qu'on fait sur la photo}
+
+On passe par l'énergie, parce que c'est elle qui « chauffe » la résistance :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item \textbf{Énergie sur une période} : on additionne toutes les puissances instantanées, $E = \int_0^T u^2(t)/R\,dt$ [J]. Pour la sinusoïde, on trouve $E = A^2 T/(2R)$.
+
+\item \textbf{Puissance moyenne} : on divise l'énergie par la durée, $P_{EFF} = E/T = A^2/(2R)$ [W]. C'est la puissance qu'une tension continue devrait fournir pour chauffer autant.
+
+\item \textbf{Tension efficace} : une tension continue $U_{EFF}$ fournit $U_{EFF}^2/R$. On égale : $U_{EFF}^2/R = A^2/(2R)$, donc $U_{EFF} = A/\sqrt{2}$ [V].
+
+\end{enumerate}
+
+C'est exactement « carré, moyenne, racine » : le carré est dans $u^2(t)$, la moyenne est la division par $T$, la racine est la dernière étape.
+
+\vspace{3pt}
+
+\textbf{Valeur efficace : tension ou puissance ?}
+
+La valeur efficace d'une tension est une \textbf{tension} : $U_{EFF}$ en [V]. On peut aussi prendre la valeur efficace d'un courant : $I_{EFF}$ en [A]. $P_{EFF}$ n'est pas « la valeur efficace » : c'est la \textbf{puissance moyenne} [W], l'outil qui sert à la définir. On calcule $P_{EFF}$, puis on en déduit $U_{EFF}$ (ou $I_{EFF}$ avec $P_{EFF} = R\,I_{EFF}^2$).
+
+\vspace{3pt}
+
 \textbf{Exemple concret}
 
 Les $230\,\text{V}$ d'une prise sont une valeur \textbf{efficace} : la tension crête vaut $A = 230\cdot\sqrt{2} \approx 325\,\text{V}$. Un radiateur branché sur la prise chauffe autant qu'avec $230\,\text{V}$ continus.
