@@ -12,6 +12,25 @@
 
 \section{Lecture 5 - Applied Cryptography I}
 
+\begin{warn}[title=Why cryptography matters]
+    \begin{itemize}
+        \item \textbf{Data in transit:} securing communication
+        \item \textbf{Data at rest:} securing stored information
+    \end{itemize}
+\end{warn}
+
+\begin{defn}[title=Confidentiality]
+    Information cannot be accessed by \textbf{unauthorized parties}.
+    \par\vspace{1pt}{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/lecture05/encryption-flow.png}\par}\vspace{1pt}
+    Encryption cannot be reversed without a \textbf{key}.
+\end{defn}
+
+\begin{thm}[title=Core requirement: Invertibility]
+    \[ \forall K, M,\ D_K(E_K(M)) = M \]
+    If not, Bob cannot recover the original message $M$.\\
+    \textbf{Security requirement:} these functions must also be \textbf{hard to invert} \textit{without} knowing the key $K$.
+\end{thm}
+
 \iffalse
 \section{Lecture 5 - Network \& File Syscalls}
 
