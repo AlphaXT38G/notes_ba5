@@ -561,6 +561,81 @@ puissance infinie : c'est une idéalisation.
 
 \end{simple}
 
+
+%=========================================================
+\section{Réponse d'un système LTI à un processus WSS}
+
+
+\begin{definition}
+
+Système LTI de réponse impulsionnelle $h$ et de transmittance (fonction de transfert)
+
+\[
+H(f) = \int_{-\infty}^\infty h(t)e^{-j2\pi ft}dt, \qquad \text{qui existe si } \int|h| < \infty
+\]
+
+Entrée $X(t)$ WSS, sortie $Y(t) = \int h(s)X(t-s)\,ds$.
+
+\end{definition}
+
+
+\begin{formula}
+
+\[
+E[Y(t)] = \int h(s)\mu_X\,ds = H(0)\,\mu_X
+\]
+\[
+R_Y(\tau) = \iint h(s)h(r)R_X(\tau - s + r)\,ds\,dr
+\]
+
+$Y$ est donc \textbf{WSS}. \textbf{Théorème 2} :
+
+\[
+\boxed{S_Y(f) = |H(f)|^2\,S_X(f)}
+\]
+
+Densités spectrales mutuelles :
+
+\[
+S_{YX}(f) = H(f)S_X(f) \qquad S_{XY}(f) = H^\star(f)S_X(f)
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{D'où vient $|H|^2$.} Dans $S_Y = \mathcal F(R_Y)$, on pose $u = \tau - s + r$ :
+l'intégrale se sépare en $\int h(s)e^{-j2\pi fs}ds = H(f)$, $\int h(r)e^{j2\pi fr}dr =
+H^\star(f)$ et $\int R_X(u)e^{-j2\pi fu}du = S_X(f)$.
+
+\end{important}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item \textbf{Bruit blanc à bande étroite} = bruit blanc filtré par un passe-bande idéal ($H(f)
+= 1$ si $f_0 - B < |f| < f_0 + B$, 0 sinon).
+
+\item \textbf{Dérivée} $Y = dX/dt$ : $H(f) = 2\pi jf$, donc $S_Y(f) = 4\pi^2f^2S_X(f)$ et
+$R_Y(\tau) = -\frac{d^2R_X}{d\tau^2}(\tau)$.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{simple}
+
+On fait passer du bruit dans un filtre. Le filtre multiplie chaque fréquence du
+\textbf{signal} par $H(f)$, donc chaque fréquence de la \textbf{puissance} par $|H(f)|^2$
+(la puissance, c'est le carré). Bruit blanc dans un passe-bande : il ne reste du bruit que dans
+la bande, partout ailleurs c'est le silence.
+
+\end{simple}
+
 \end{multicols}
 
 
