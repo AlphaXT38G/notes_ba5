@@ -669,6 +669,62 @@ et devient moins haut ; (4) additionner.
 
 \end{simple}
 
+
+%=========================================================
+\section{Espérance, moments et variance}
+
+
+\begin{formula}
+
+\[
+E[g(X)] = \int_{-\infty}^{\infty} g(x)\,f_X(x)\,dx
+\]
+
+(si l'intégrale converge absolument).
+
+\begin{itemize}
+
+\item Moment d'ordre $n$ : $E[X^n] = \int x^n f_X(x)\,dx$.
+
+\item Moyenne : $\mu_X = E[X]$. $Y = X - \mu_X$ est \textbf{centrée} ($E[Y] = 0$).
+
+\item Variance : $\sigma_X^2 = \mathrm{VAR}[X] = E[(X-\mu_X)^2] = E[X^2] - \mu_X^2$.
+$\sigma_X$ : écart-type.
+
+\end{itemize}
+
+\textbf{Cas discret} : $\mu_X = \sum_i p_i x_i$, $\ \sigma_X^2 = \sum_i p_i (x_i - \mu_X)^2$.
+
+\end{formula}
+
+
+\begin{example}
+
+\textbf{Linéarité} (slides) : si $g(X) = a_0 + a_1 X + \dots + a_n X^n$, alors $E[g(X)] = a_0 +
+a_1 E[X] + \dots + a_n E[X^n]$. C'est ce qui donne $\sigma_X^2 = E[X^2] - 2\mu_X E[X] + \mu_X^2
+= E[X^2] - \mu_X^2$.
+
+\end{example}
+
+
+\begin{warning}
+
+\textbf{Les moments peuvent ne pas exister.} V.a. de Cauchy : $f_X(x) = \frac{1}{\pi(1+x^2)}$.
+C'est bien une densité ($\frac1\pi[\operatorname{Arctg} x]_{-\infty}^{\infty} = 1$), mais
+$\int |x| f_X(x)\,dx = \frac1\pi[\ln(1+x^2)]_0^\infty = \infty$ : $E[X]$ n'est pas défini.
+
+\end{warning}
+
+
+\begin{simple}
+
+L'espérance, c'est la \textbf{moyenne qu'on obtiendrait en répétant l'expérience des milliers
+de fois} : chaque valeur, pondérée par sa chance. Le point d'équilibre du tas de sable. La
+variance mesure à quel point les valeurs sont \textbf{éparpillées} autour de cette moyenne :
+petite variance, tout est serré au milieu ; grande variance, ça part dans tous les sens.
+
+\end{simple}
+
 \end{multicols}
 
 
