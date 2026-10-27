@@ -387,6 +387,63 @@ n'y a plus que du grain.
 
 \end{simple}
 
+
+%=========================================================
+\section{Application : codage PCM et DPCM}
+
+
+\begin{definition}
+
+\textbf{PCM} (MIC) : on quantifie chaque échantillon directement, en l'arrondissant au $i\Delta$
+le plus proche ($\Delta$ : pas de quantification). Simple et rapide, mais n'exploite pas la
+redondance : environ 64 kbps pour la parole.
+
+\vspace{3pt}
+
+\textbf{Bruit de quantification} $q(n) = X(n) - Q(X(n))$ (en négligeant les dépassements de
+plage) : sous des hypothèses raisonnables, uniforme sur $[-\Delta/2,\Delta/2]$, indépendant
+d'un échantillon à l'autre, donc un \textbf{bruit blanc} :
+
+\[
+\sigma_q^2 = \frac{\Delta^2}{12} \qquad R_q(k) = \sigma_q^2\delta(k) \qquad \mathrm{SNR} =
+\frac{\sigma_X^2}{\sigma_q^2}
+\]
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{DPCM} : on \textbf{prédit} $X(n)$ à partir des échantillons précédents, $Y(n)$, et on ne
+quantifie et transmet que l'erreur de prédiction $e(n) = X(n) - Y(n)$. Le récepteur refait la
+même prédiction et ajoute l'erreur reçue.
+
+\vspace{3pt}
+
+Le prédicteur minimise la variance de $e$, donc $\sigma_e^2 \ll \sigma_X^2$ : pour le même
+nombre de bits, bruit de quantification bien plus faible ; pour la même qualité, moins de bits
+(environ 16 kbps).
+
+\end{definition}
+
+
+\begin{important}
+
+En pratique, on prédit à partir des échantillons \textbf{quantifiés} $X_q(n-1),\dots$ (le
+prédicteur est dans la boucle autour du quantificateur) : les erreurs de quantification sont
+prises en compte et ne s'accumulent pas.
+
+\end{important}
+
+
+\begin{simple}
+
+Au lieu d'envoyer chaque valeur en entier, on envoie seulement « \textbf{la surprise} » : la
+différence entre la vraie valeur et ce qu'on pouvait deviner. Comme la parole change
+doucement, la surprise est petite, donc il faut moins de bits pour l'écrire.
+
+\end{simple}
+
 \end{multicols}
 
 
