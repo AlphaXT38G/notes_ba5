@@ -499,6 +499,52 @@ quel point une valeur ressemble à celle d'il y a 1, 2, ..., $m$ pas.
 
 \end{simple}
 
+
+%=========================================================
+\section{Application : vocodeur LPC}
+
+
+\begin{definition}
+
+\textbf{Synthèse de la parole} (modèle simplifié) : un filtre AR de coefficients $a_k$, excité
+par $u(n)$ :
+
+\begin{itemize}
+
+\item sons \textbf{voisés} (/a/, /i/, /v/) : train périodique d'impulsions d'amplitude $\sigma$
+(les cordes vocales), de période le \textbf{pitch} ;
+
+\item sons \textbf{non voisés} (/f/, /s/, /t/) : bruit blanc de variance $\sigma^2$.
+
+\end{itemize}
+
+Sur des blocs courts (10 à 30 ms), la parole est considérée stationnaire.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Vocodeur} (\emph{voice coder}) : pour chaque bloc, l'émetteur ne transmet que : voisé
+ou non, le pitch, le gain $\sigma$, et les coefficients de prédiction $h(k)$ (estimées des
+$-a_k$, ordre $m = p$). Le récepteur resynthétise la parole avec le modèle.
+
+\vspace{3pt}
+
+Débit d'environ 4.8 kbps, voire 2.4 kbps (au lieu de 16), mais la parole devient
+\textbf{synthétique}.
+
+\end{formula}
+
+
+\begin{simple}
+
+Au lieu d'envoyer le son, on envoie la \textbf{recette} pour le refaire : « une voix grave, qui
+dit un son en /a/, à tel volume ». À l'arrivée, une petite machine reproduit le son à partir
+de la recette. Très économique, mais ça sonne comme un robot.
+
+\end{simple}
+
 \end{multicols}
 
 
