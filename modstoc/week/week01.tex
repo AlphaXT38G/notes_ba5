@@ -874,6 +874,105 @@ forme de bol, la moyenne des hauteurs est au-dessus de la hauteur au point moyen
 
 \end{simple}
 
+
+%=========================================================
+\section{V.a. discrètes usuelles}
+
+
+\begin{formula}
+
+\textbf{Bernoulli ($p$)} : $X = I_A$ (indicatrice d'un évènement $A$, $p = P(A)$), $S_X =
+\{0,1\}$.
+
+\[
+\mu_X = p \quad \sigma_X^2 = p(1-p) \quad G_X(z) = 1-p+pz
+\]
+
+\textbf{Binomiale ($n,p$)} : nombre de succès en $n$ Bernoulli indépendantes, $X = I_{A_1} +
+\dots + I_{A_n}$.
+
+\[
+p_k = \binom nk p^k(1-p)^{n-k}, \quad k = 0,\dots,n
+\]
+\[
+\mu_X = np \quad \sigma_X^2 = np(1-p) \quad G_X(z) = (1-p+pz)^n
+\]
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Géométrique ($p$), version 1} : $X$ = nombre d'\textbf{échecs} avant le 1er succès,
+$S_X = \{0,1,2,\dots\}$.
+
+\[
+p_k = p(1-p)^k \qquad \mu_X = \frac{1-p}{p}
+\]
+\[
+\sigma_X^2 = \frac{1-p}{p^2} \qquad G_X(z) = \frac{p}{1-(1-p)z}
+\]
+
+\textbf{Version 2} : $X' = X+1$ = nombre d'\textbf{essais} jusqu'au 1er succès, $S_{X'} =
+\{1,2,\dots\}$.
+
+\[
+p'_k = p(1-p)^{k-1} \qquad \mu_{X'} = \frac1p
+\]
+\[
+\sigma_{X'}^2 = \frac{1-p}{p^2} \qquad G_{X'}(z) = \frac{pz}{1-(1-p)z}
+\]
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Poisson ($\mu > 0$)} : nombre d'arrivées pendant une unité de temps dans un processus
+de Poisson, $S_X = \mathbb N$.
+
+\[
+p_k = \frac{\mu^k}{k!}e^{-\mu} \quad \mu_X = \mu \quad \sigma_X^2 = \mu \quad G_X(z) =
+e^{\mu(z-1)}
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Poisson = limite de la binomiale} : si $X \sim B(n,p)$ avec $n\to\infty$, $p \to 0$ et
+$np = \mu$ fixé, alors $P(X = k) \to \frac{\mu^k}{k!}e^{-\mu}$.
+
+\vspace{3pt}
+
+Preuve : $p_0 = (1-\mu/n)^n \to e^{-\mu}$, et $\frac{p_{k+1}}{p_k} = \frac{(1-k/n)\mu}{(k+1)(1-
+\mu/n)} \to \frac{\mu}{k+1}$, donc $p_k \to \frac{\mu^k}{k!}p_0$. (Exercice 5 : même chose avec
+$G_X(z) = (1-p+pz)^n \to e^{\mu(z-1)}$.)
+
+\end{important}
+
+
+\begin{simple}
+
+\begin{itemize}
+
+\item \textbf{Bernoulli} : une pièce truquée lancée \textbf{une} fois (1 = pile, chance $p$).
+
+\item \textbf{Binomiale} : on la lance $n$ fois, on compte les piles.
+
+\item \textbf{Géométrique} : on la lance jusqu'au premier pile, on compte combien de fois il a
+fallu attendre. Attention aux deux versions : on compte les ratés (dès 0) ou les lancers (dès
+1).
+
+\item \textbf{Poisson} : énormément de lancers, chacun avec une toute petite chance (des
+millions de gens qui pourraient chacun appeler un standard) : on compte combien d'appels
+arrivent en une heure.
+
+\end{itemize}
+
+\end{simple}
+
 \end{multicols}
 
 
