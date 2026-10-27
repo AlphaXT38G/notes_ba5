@@ -366,6 +366,69 @@ liés ($C_X\to0$), une longue trajectoire explore tout.
 
 \end{simple}
 
+
+%=========================================================
+\section{Autres formes d'ergodisme et exemples}
+
+
+\begin{definition}
+
+\textbf{Par rapport à la variance} :
+
+\[
+E[\langle X^2\rangle_T - \mu_X^2]\to\sigma_X^2 \qquad \mathrm{VAR}[\langle X^2\rangle_T -
+\mu_X^2]\to0
+\]
+
+\textbf{Par rapport à l'auto-corrélation}, avec $\langle X(t+\tau)X(t)\rangle_T = \frac1T
+\int_0^TX(t+\tau)X(t)\,dt$ :
+
+\[
+E[\langle X(t+\tau)X(t)\rangle_T] \to R_X(\tau)
+\]
+\[
+\mathrm{VAR}[\langle X(t+\tau)X(t)\rangle_T]\to0
+\]
+
+On se ramène au cas de la moyenne avec $Z(t,\tau) = X(t+\tau)X(t)$.
+
+\vspace{3pt}
+
+\textbf{En distribution} (plus fort, pour un SSS) : les estimées temporelles des fonctions de
+répartition convergent en moyenne quadratique vers elles.
+
+\end{definition}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item \textbf{Sinusoïde à phase uniforme} : ergodique par rapport à sa moyenne si $f_0 \ne 0$
+(chaque trajectoire est une sinusoïde centrée en 0, de moyenne temporelle nulle), et à sa
+variance (exercice 5). Si $f_0 = 0$ : $X(t,\varphi_0) = a\sin\varphi_0$ est constante, sa
+moyenne temporelle vaut $a\sin\varphi_0 \ne 0$ : \textbf{pas} ergodique.
+
+\item \textbf{Phase et amplitude aléatoires} $X(t) = A\sin(2\pi f_0t + \Phi)$, $A\in\{a_1,a_2\}$
+(Bernoulli) : ergodique par rapport à sa moyenne, mais \textbf{pas} à sa variance (certaines
+trajectoires ont l'amplitude $a_1$, d'autres $a_2$).
+
+\item \textbf{Séquence binaire aléatoire} : ergodique par rapport à sa moyenne par le
+corollaire ($C_X(\tau) = 0$ pour $|\tau| \ge T$).
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{simple}
+
+Le contre-exemple à retenir : si chaque trajectoire « choisit » au départ quelque chose qu'elle
+garde pour toujours (une amplitude, une constante), suivre une seule trajectoire ne montre
+qu'\textbf{un} choix. On ne peut pas deviner les autres : pas ergodique.
+
+\end{simple}
+
 \end{multicols}
 
 
