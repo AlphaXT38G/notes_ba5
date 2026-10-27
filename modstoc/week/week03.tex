@@ -451,6 +451,80 @@ indépendants, on le touchera une infinité de fois, c'est garanti.
 
 \end{simple}
 
+
+%=========================================================
+\section{Critères de convergence presque sûre}
+
+
+\begin{formula}
+
+\textbf{Théorème 1} (condition suffisante, toute suite) : si pour tout $\varepsilon > 0$
+
+\[
+\sum_{n=1}^\infty P(|X_n - X| \ge \varepsilon) < \infty \;\Longrightarrow\;
+X_n\xrightarrow{\text{p.s.}} X
+\]
+
+\textbf{Théorème 2} (v.a. $X_n$ \textbf{indépendantes}) : la même condition est
+\textbf{nécessaire et suffisante}.
+
+\vspace{3pt}
+
+\textbf{Théorème 3} (nécessaire et suffisante, toute suite, moins pratique) :
+
+\[
+X_n\xrightarrow{\text{p.s.}} X \;\Longleftrightarrow\; P(|X_n - X| \ge \varepsilon \text{
+i.o.}) = 0 \;\; \forall\varepsilon > 0
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Idée de la preuve du théorème 1} : par le premier lemme de Borel-Cantelli, avec
+probabilité 1, $|X_n - X| \ge \varepsilon$ n'arrive qu'un \textbf{nombre fini} de fois. Après
+le dernier, $|X_n - X| < \varepsilon$ : c'est la définition de la limite.
+
+\vspace{3pt}
+
+\textbf{Théorème 2, sens nécessaire} : si la somme diverge, le second lemme donne $|X_n - X|
+\ge \varepsilon$ une infinité de fois avec probabilité 1, donc pas de limite.
+
+\end{important}
+
+
+\begin{example}
+
+Suites de v.a. \textbf{indépendantes} (le cours) :
+
+\begin{itemize}
+
+\item \textbf{Suite 1} : $X_n = 1$ avec probabilité $1/n^2$, 0 sinon. $\sum 1/n^2 < \infty$ :
+converge p.s. vers 0 (théorème 1).
+
+\item \textbf{Suite 2} : $X_n = 1$ avec probabilité $1/n$, 0 sinon. $\sum 1/n = \infty$ :
+\textbf{ne converge pas} p.s. vers 0 (théorème 2).
+
+\item \textbf{Suite 3} : $X_n = n$ avec probabilité $1/n^2$, 0 sinon : converge p.s. vers 0.
+
+\item \textbf{Suite 4} : $X_n = \sqrt n$ avec probabilité $1/n$, 0 sinon : ne converge pas p.s.
+vers 0.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{simple}
+
+En pratique : on calcule $P(|X_n - X| \ge \varepsilon)$, on \textbf{additionne} sur tous les
+$n$. Somme finie : ça converge presque sûrement. Somme infinie et $X_n$ indépendantes : ça ne
+converge pas. Seule la \textbf{probabilité} d'être loin compte ici, pas la distance : la suite
+3 converge même si $X_n = n$ devient énorme, parce que ça arrive de plus en plus rarement.
+
+\end{simple}
+
 \end{multicols}
 
 
