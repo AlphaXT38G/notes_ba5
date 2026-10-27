@@ -477,6 +477,71 @@ contient le même nombre, parce que seul l'écart entre deux cases compte.
 
 \end{simple}
 
+
+%=========================================================
+\section{Exemples : bruit blanc, MA, AR, ARMA}
+
+
+\begin{definition}
+
+\textbf{Sinusoïde à phase uniforme} $X(n) = a\sin(2\pi f_0n + \Phi)$ : $\mu_X = 0$,
+$R_X(n_1,n_2) = \frac{a^2}2\cos(2\pi f_0(n_1-n_2))$.
+
+\vspace{3pt}
+
+\textbf{Bruit blanc} : moyenne nulle et
+
+\[
+R_N(n_1,n_2) = \begin{cases}\sigma_N^2 & n_1 = n_2 \\ 0 & n_1 \ne n_2\end{cases}
+\]
+
+Une suite de v.a. centrées \textbf{non corrélées}. Contrairement au continu, sa variance
+$\sigma_N^2$ est \textbf{finie} (le Dirac discret vaut 1 en 0).
+
+\end{definition}
+
+
+\begin{formula}
+
+$U(n)$ : \textbf{processus d'innovation}, par défaut un bruit blanc de variance $\sigma_U^2$.
+
+\begin{itemize}
+
+\item \textbf{MA($m$)} (moyenne mobile) : $X(n) = \sum_{k=0}^mb_kU(n-k)$.
+
+\item \textbf{AR($p$)} (auto-régressif), calculé récursivement à partir de $p$ valeurs
+initiales, coefficients choisis pour que le système soit stable :
+
+\[
+X(n) = -\sum_{k=1}^pa_kX(n-k) + U(n)
+\]
+
+\item \textbf{ARMA($m,p$)} : $X(n) = -\sum_{k=1}^pa_kX(n-k) + \sum_{k=0}^mb_kU(n-k)$.
+
+\item \textbf{ARIMA} : $Y(n) = Y(n-1) + X(n)$, avec $X$ ARMA (l'analogue d'une intégration).
+
+\end{itemize}
+
+Très utilisés pour les séries temporelles.
+
+\end{formula}
+
+
+\begin{simple}
+
+\begin{itemize}
+
+\item \textbf{MA} : la valeur d'aujourd'hui est un mélange des \textbf{chocs} au hasard des
+derniers jours.
+
+\item \textbf{AR} : la valeur d'aujourd'hui est un mélange des \textbf{valeurs} des jours
+précédents, plus un nouveau choc. Comme la température : demain ressemble à aujourd'hui, avec
+un peu de surprise.
+
+\end{itemize}
+
+\end{simple}
+
 \end{multicols}
 
 
