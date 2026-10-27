@@ -725,6 +725,89 @@ petite variance, tout est serré au milieu ; grande variance, ça part dans tous
 
 \end{simple}
 
+
+%=========================================================
+\section{Transformées}
+
+
+\begin{formula}
+
+\textbf{Fonction caractéristique :}
+
+\[
+\Phi_X(\omega) = E[e^{j\omega X}] = \int_{-\infty}^{\infty} e^{j\omega x} f_X(x)\,dx
+\]
+
+\textbf{Inverse :} $\displaystyle f_X(x) = \frac{1}{2\pi}\int_{-\infty}^{\infty}
+e^{-j\omega x}\Phi_X(\omega)\,d\omega$
+
+\textbf{Moments :} $\displaystyle E[X^k] = \frac{1}{j^k}\,\frac{d^k\Phi_X(\omega)}{d\omega^k}
+\Big|_{\omega=0}$
+
+\end{formula}
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item $\Phi_X$ est le \textbf{conjugué de la transformée de Fourier} de $f_X$.
+
+\item Elle \textbf{existe toujours} : $|\Phi_X(\omega)| \le \int f_X(x)\,dx = 1$, maximale en
+$\omega = 0$ où $\Phi_X(0) = 1$.
+
+\item Même fonction caractéristique $\Leftrightarrow$ même densité : $f_X$ et $\Phi_X$ sont
+deux descriptions équivalentes.
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{formula}
+
+\textbf{Fonction génératrice des moments} ($s$ complexe, comme Laplace) :
+
+\[
+\hat\Phi_X(s) = E[e^{sX}] = \int_{-\infty}^\infty e^{sx}f_X(x)\,dx
+\]
+
+\textbf{Génératrice des cumulants} (seconde fonction caractéristique) :
+$\Psi_X(\omega) = \ln\Phi_X(\omega)$.
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Fonction génératrice de probabilité} ($X$ discrète, $S_X = \mathbb N$) :
+
+\[
+G_X(z) = E[z^X] = \sum_{k=0}^{\infty} z^k p_k
+\]
+
+\[
+p_k = \frac{1}{k!}\frac{d^kG_X(z)}{dz^k}\Big|_{z=0} \qquad G_X(1) = 1
+\]
+
+\[
+E[X(X-1)\cdots(X-k+1)] = \frac{d^kG_X(z)}{dz^k}\Big|_{z=1}
+\]
+
+En particulier $\mu_X = G_X'(1)$ et $\sigma_X^2 = G_X''(1) + G_X'(1) - G_X'(1)^2$.
+
+\end{formula}
+
+
+\begin{simple}
+
+Une transformée, c'est \textbf{ranger la même information dans une autre boîte}, plus pratique
+pour certains calculs. La fonction caractéristique contient toute la loi de $X$, et ses
+dérivées en 0 donnent les moments sans faire d'intégrale. $G_X(z)$, c'est pareil pour les v.a.
+entières : un polynôme dont le coefficient devant $z^k$ est la chance que $X = k$.
+
+\end{simple}
+
 \end{multicols}
 
 
