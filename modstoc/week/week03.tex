@@ -604,6 +604,78 @@ valeurs tirées.
 
 \end{simple}
 
+
+%=========================================================
+\section{Convergence en probabilité et loi des grands nombres}
+
+
+\begin{definition}
+
+$X_n$ converge \textbf{en probabilité} vers $X$ (qui peut être une constante) si
+
+\[
+\lim_{n\to\infty}P(|X - X_n| \ge \varepsilon) = 0 \quad\text{pour tout } \varepsilon > 0
+\]
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Presque sûre $\Rightarrow$ en probabilité.} Par le théorème 3 et le lemme 1 (ii) :
+
+\[
+0 = P(|X_n - X|\ge\varepsilon\text{ i.o.}) = \lim_{n\to\infty}P\Big(\bigcup_{k\ge
+n}\{|X_k-X|\ge\varepsilon\}\Big)
+\]
+
+et cette probabilité est $\ge P(|X_n - X| \ge \varepsilon)$, qui tend donc vers 0.
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Loi faible des grands nombres.} $\{X_n\}$ indépendantes, même moyenne $\mu$, même
+variance $\sigma^2$, et $\bar X_n = \frac1n\sum_{i=1}^nX_i$. Alors pour tout $\varepsilon > 0$ :
+
+\[
+\lim_{n\to\infty}P(|\bar X_n - \mu| > \varepsilon) = 0
+\]
+
+\textbf{Preuve} : $E[\bar X_n] = \mu$ et, les termes croisés étant nuls (indépendance),
+$\mathrm{VAR}[\bar X_n] = \frac{1}{n^2}n\sigma^2 = \frac{\sigma^2}n$. Tchebytcheff :
+
+\[
+P(|\bar X_n - \mu| > \varepsilon) \le \frac{\sigma^2}{n\varepsilon^2} \to 0
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Loi forte des grands nombres} (slides) : pour des $X_n$ i.i.d., $P(\bar X_n \to \mu) =
+1$, c'est-à-dire $\bar X_n \xrightarrow{\text{p.s.}} \mu$.
+
+\vspace{3pt}
+
+Les 4 suites d'exemple convergent toutes \textbf{en probabilité} vers 0, car $P(|X_n| >
+\varepsilon) \to 0$ (même les suites 2 et 4, qui ne convergent pas presque sûrement).
+
+\end{important}
+
+
+\begin{simple}
+
+En probabilité : pour un $n$ grand \textbf{fixé}, la chance que $X_n$ soit loin de la cible
+est minuscule. Mais ça ne dit pas qu'un même chemin reste près de la cible pour toujours (il
+peut encore faire de rares écarts, comme la suite 2). Loi des grands nombres : si on fait la
+moyenne de beaucoup de lancers, la moyenne obtenue s'approche de la vraie moyenne. C'est pour
+ça que faire beaucoup de mesures et les moyenner marche.
+
+\end{simple}
+
 \end{multicols}
 
 
