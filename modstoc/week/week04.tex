@@ -634,6 +634,81 @@ l'écart). Au sens strict, on le demande pour tout.
 
 \end{simple}
 
+
+%=========================================================
+\section{Stationnarité : les exemples}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item \textbf{Poisson et Wiener} : \textbf{pas} WSS ($\mu_X(t) = \lambda t$, $R_X =
+\min\{t_1,t_2\}$ dépendent du temps). Mais leurs \textbf{accroissements} sont stationnaires : la
+loi de $X(t+\tau) - X(t)$ ne dépend pas de $t$.
+
+\item \textbf{PAM sans décalage} ($X_c$) : pas WSS, mais \textbf{cyclo-stationnaire} de période
+$T$ : $X(t-D)$ avec $D$ uniforme sur $[0,T]$ est WSS. \textbf{Avec décalage} $D$ : WSS.
+
+\item \textbf{Sinusoïde à phase de Bernoulli} : pas WSS (donc pas SSS). \textbf{À phase
+uniforme} : WSS, et même SSS.
+
+\item \textbf{Quadrature} : WSS ; pas SSS en général, sauf si $A$ et $B$ sont normales
+(exercice 4).
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{important}
+
+\textbf{Phase uniforme $\Rightarrow$ SSS.} On montre que la fonction caractéristique de
+$(X(t_1),\dots,X(t_n))$ ne change pas en décalant tous les temps de $c$ :
+
+\[
+\Phi(\omega_1,\dots,\omega_n) = \frac1{2\pi}\int_0^{2\pi}e^{j\sum_k\omega_k\sin(2\pi f_0t_k +
+\varphi)}d\varphi
+\]
+
+Le changement de variable $\psi = \varphi - 2\pi f_0c$ donne la même intégrale sur une autre
+période de $2\pi$, qui vaut la même chose (l'intégrande est $2\pi$-périodique en $\psi$).
+
+\vspace{3pt}
+
+\textbf{Quadrature pas SSS} : si $A$ est à valeurs dans $[-1,1]$ et $B$ normale, pour $x\ge1$,
+$F_{X(0)}(x) = P(A\le x) = 1 > 1 - Q(x) = P(B\le x) = F_{X(1/4f_0)}(x)$ : la loi de $X(t)$
+change avec $t$.
+
+\end{important}
+
+
+\begin{definition}
+
+\textbf{Conjointement stationnaires au sens large} : $X$ et $Y$ WSS et $R_{XY}(t_1,t_2) =
+R_{XY}(t_1-t_2)$. Alors :
+
+\begin{itemize}
+
+\item \textbf{P3.} $R_{XY}(\tau) = R_{YX}(-\tau)$ ($X$, $Y$ réels) ;
+
+\item \textbf{P4.} $|R_{XY}(\tau)| \le \sqrt{R_X(0)R_Y(0)}$ et $|R_{XY}(\tau)| \le
+\frac{R_X(0) + R_Y(0)}2$.
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{simple}
+
+Le processus de Poisson compte des arrivées : il ne fait que monter, donc demain il est plus
+haut qu'aujourd'hui, il a forcément une heure préférée. Mais le nombre d'arrivées
+\textbf{pendant une heure} a toujours la même loi, peu importe laquelle. C'est ça, des
+accroissements stationnaires.
+
+\end{simple}
+
 \end{multicols}
 
 
