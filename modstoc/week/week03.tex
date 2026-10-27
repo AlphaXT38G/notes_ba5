@@ -331,6 +331,55 @@ une chance zéro de se produire.
 
 \end{simple}
 
+
+%=========================================================
+\section{Continuité des probabilités}
+
+
+\begin{formula}
+
+\textbf{Lemme 1 (i)} Suite \textbf{croissante} $A_1 \subseteq A_2 \subseteq \dots$, de limite
+$A = \bigcup_{n=1}^\infty A_n$ :
+
+\[
+P(A) = \lim_{n\to\infty}P(A_n)
+\]
+
+\textbf{Lemme 1 (ii)} Suite \textbf{décroissante} $B_1 \supseteq B_2 \supseteq \dots$, de limite
+$B = \bigcap_{n=1}^\infty B_n$ :
+
+\[
+P(B) = \lim_{n\to\infty}P(B_n)
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Preuve de (i).} On écrit $A$ comme une union d'évènements \textbf{disjoints} : $A =
+A_1 \cup (A_2\setminus A_1) \cup (A_3 \setminus A_2) \cup \dots$ L'axiome A3' donne
+
+\[
+P(A) = P(A_1) + \lim_{n\to\infty}\sum_{k=1}^{n-1}\big(P(A_{k+1}) - P(A_k)\big)
+\]
+\[
+= \lim_{n\to\infty} P(A_n)
+\]
+
+(une somme télescopique). (ii) se démontre pareil avec les compléments.
+
+\end{important}
+
+
+\begin{simple}
+
+Si des évènements grossissent petit à petit (comme une tache d'encre qui s'étale), la chance
+de la tache finale est la limite des chances des taches intermédiaires. Pas de saut surprise
+à l'infini.
+
+\end{simple}
+
 \end{multicols}
 
 
