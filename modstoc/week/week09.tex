@@ -603,6 +603,63 @@ attendu entre deux clients. Trois façons de raconter la même histoire.
 
 \end{simple}
 
+
+%=========================================================
+\section{Processus de Poisson : deux définitions}
+
+
+\begin{definition}
+
+\textbf{Définition 1.} Poisson homogène d'intensité $\lambda > 0$ : un processus de comptage
+avec
+
+\begin{itemize}
+
+\item \textbf{H1.} \textbf{accroissements indépendants} (des intervalles disjoints sont
+indépendants) ;
+
+\item \textbf{H2.} \textbf{homogène} (accroissements stationnaires) : $P(N(t+T) - N(t) = n_0) =
+P(N(T) = n_0)$ ;
+
+\item \textbf{H3.} pas d'arrivées groupées :
+
+\[
+P(N(\Delta t) = 1) = \lambda\Delta t + o(\Delta t)
+\]
+\[
+P(N(\Delta t)\ge2) = o(\Delta t)
+\]
+
+donc $P(N(\Delta t) = 0) = 1 - \lambda\Delta t + o(\Delta t)$ ($f$ est $o(\Delta t)$ si
+$f(\Delta t)/\Delta t\to0$).
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{Définition 2.} H1, et \textbf{H2'} : pour tous $t, T\ge0$,
+
+\[
+P(N(t+T) - N(t) = n) = \frac{(\lambda T)^n}{n!}e^{-\lambda T}
+\]
+
+\textbf{Théorème 1} : les deux définitions sont équivalentes.
+
+\end{definition}
+
+
+\begin{simple}
+
+Des clients qui arrivent \textbf{complètement au hasard} : ce qui se passe dans un intervalle
+n'influence pas un autre (H1), toutes les heures se valent (H2), et deux clients n'arrivent
+jamais pile en même temps (H3). Ces trois règles de bon sens suffisent à imposer que le nombre
+de clients dans une durée $T$ suit une loi de Poisson de moyenne $\lambda T$.
+
+\end{simple}
+
 \end{multicols}
 
 
