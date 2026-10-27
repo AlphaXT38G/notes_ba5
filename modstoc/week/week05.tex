@@ -636,6 +636,43 @@ la bande, partout ailleurs c'est le silence.
 
 \end{simple}
 
+
+%=========================================================
+\section{PAM dans un canal et codage en ligne}
+
+
+\begin{definition}
+
+Le PAM est vu comme un train de Dirac $A_d(t) = \sum_kA_k\delta(t-kT-D)$, de densité spectrale
+$\frac1T\hat S_A(e^{-2\pi jfT})$, \textbf{mis en forme} par un filtre $G(f)$, puis envoyé sur un
+canal linéaire $H(f)$ :
+
+\[
+S_Y(f) = \frac1T|H(f)|^2|G(f)|^2\hat S_A(e^{-2\pi jfT})
+\]
+
+Un canal \textbf{dispersif} ($H$ pas constant) déforme les pulses : chacun déborde sur les
+suivants, c'est l'\textbf{interférence intersymbole}.
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Codage en ligne} (détaillé en Communications numériques), deux approches :
+
+\begin{itemize}
+
+\item agir sur le pulse $G(f)$ : si le canal ne passe pas le continu ($H(0) = 0$), le pulse
+$+a$ sur $[0,T/2[$, $-a$ sur $[T/2,T[$, avec $A_k = \pm1$ : \textbf{code de Manchester} ;
+
+\item corréler les $A_k$ pour changer $\hat S_A$ : code \textbf{duobinaire} $B_k = A_k +
+A_{k-1}$ (3 niveaux), codes \textbf{différentiels} $B_k = A_k\oplus B_{k-1}$.
+
+\end{itemize}
+
+\end{example}
+
 \end{multicols}
 
 
