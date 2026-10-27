@@ -282,6 +282,88 @@ la façon dont deux instants sont liés.
 
 \end{simple}
 
+
+%=========================================================
+\section{Processus stochastique : définitions}
+
+
+\begin{definition}
+
+Un \textbf{processus stochastique} $X(t,\zeta)$ est une fonction à la fois du résultat $\zeta$
+et du temps $t$. Temps continu ($t\in\mathbb R$) dans ce module.
+
+\begin{itemize}
+
+\item $\zeta$ fixé : une fonction déterministe du temps, une \textbf{trajectoire}
+(réalisation).
+
+\item $t$ fixé : une \textbf{v.a.} $X(t)$.
+
+\end{itemize}
+
+En échantillonnant en $t_1,\dots,t_n$, on obtient $n$ v.a. Le processus est spécifié par toutes
+les répartitions jointes, pour tout $n$ et tous $t_1,\dots,t_n$ :
+
+\[
+F_{X_1\dots X_n}(x_1,\dots,x_n;t_1,\dots,t_n)
+\]
+\[
+= P(X(t_1)\le x_1;\dots;X(t_n)\le x_n)
+\]
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Analyse au second ordre} : on se contente des moments d'ordre 1 et 2.
+
+\[
+\mu_X(t) = E[X(t)]
+\]
+\[
+R_X(t_1,t_2) = E[X(t_1)X(t_2)] \quad\text{(auto-corrélation)}
+\]
+\[
+C_X(t_1,t_2) = R_X(t_1,t_2) - \mu_X(t_1)\mu_X(t_2)
+\]
+
+(auto-covariance), et le coefficient d'auto-corrélation :
+\[
+\rho_X(t_1,t_2) = \frac{C_X(t_1,t_2)}{\sqrt{C_X(t_1,t_1)C_X(t_2,t_2)}}
+\]
+
+$C_X(t,t) = \mathrm{VAR}[X(t)]$ ; $R_X(t,t) = E[X^2(t)]$ : la \textbf{puissance moyenne}.
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Deux processus} : cross-corrélation et cross-covariance
+
+\[
+R_{XY}(t_1,t_2) = E[X(t_1)Y(t_2)]
+\]
+\[
+C_{XY}(t_1,t_2) = R_{XY}(t_1,t_2) - \mu_X(t_1)\mu_Y(t_2)
+\]
+
+\textbf{Orthogonaux} : $R_{XY} = 0$ pour tous $t_1,t_2$. \textbf{Non corrélés} : $C_{XY} = 0$
+pour tous $t_1,t_2$.
+
+\end{formula}
+
+
+\begin{simple}
+
+Imaginez 1000 personnes qui enregistrent chacune le bruit de leur radio : 1000 courbes
+différentes (les trajectoires). Si on regarde \textbf{toutes} les courbes à 14h pile, on a 1000
+nombres : c'est la v.a. $X(t)$. $\mu_X(t)$ : la moyenne de ces nombres à l'instant $t$.
+$R_X(t_1,t_2)$ : est-ce que la valeur à $t_1$ et celle à $t_2$ ont tendance à aller ensemble ?
+
+\end{simple}
+
 \end{multicols}
 
 
