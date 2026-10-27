@@ -283,6 +283,54 @@ devient petite ? juste la forme de la loi s'approche ? D'où 4 définitions.
 
 \end{simple}
 
+
+%=========================================================
+\section{Convergence presque sûre}
+
+
+\begin{definition}
+
+En fixant un résultat $\zeta$, $\{X_n(\zeta)\}$ est une \textbf{suite de réels}. Si elle
+converge vers $X(\zeta)$ pour \textbf{tout} $\zeta$ : convergence \textbf{sûre} (partout). Si
+les $\zeta$ où elle ne converge pas ont une probabilité nulle :
+
+\[
+P\big(\{\zeta \mid \lim_{n\to\infty}X_n(\zeta) = X(\zeta)\}\big) = 1
+\]
+
+$\{X_n\}$ converge \textbf{presque sûrement} (presque partout, avec probabilité 1) :
+$X_n \xrightarrow{\text{p.s.}} X$ (ou $\xrightarrow{\text{a.s.}}$, $\xrightarrow{\text{w.p.1}}$).
+
+\end{definition}
+
+
+\begin{important}
+
+Cette probabilité est \textbf{difficile à calculer directement}. On passe par des critères
+sur $\sum_{n=1}^\infty P(|X_n - X| \ge \varepsilon)$, pour tout $\varepsilon > 0$ :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item continuité des probabilités ;
+
+\item lemmes de Borel-Cantelli, pour une suite d'évènements $\{A_n\}$ ;
+
+\item on les applique aux évènements $A_n = \{|X_n - X| \ge \varepsilon\}$.
+
+\end{enumerate}
+
+\end{important}
+
+
+\begin{simple}
+
+On lance l'expérience \textbf{une fois} : ça donne toute une suite de nombres $X_1, X_2,
+\dots$ (un chemin). Presque sûre veut dire : \textbf{presque tous les chemins} finissent par
+arriver à la cible. Il peut exister des chemins bizarres qui n'y arrivent pas, mais ils ont
+une chance zéro de se produire.
+
+\end{simple}
+
 \end{multicols}
 
 
