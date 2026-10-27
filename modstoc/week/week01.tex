@@ -310,6 +310,86 @@ révise la brique de base : \textbf{une seule} variable aléatoire.
 
 \end{simple}
 
+
+%=========================================================
+\section{Axiomes de probabilité}
+
+
+\begin{definition}
+
+\begin{itemize}
+
+\item $\zeta_i$ : résultat de la $i$-ème expérience.
+
+\item Évènement $A, B, \dots$ : un ensemble de résultats $\{\text{quelques } \zeta_i\}$.
+
+\item $\Omega = \{\text{tous les } \zeta_i\}$ : évènement certain ; $\emptyset$ : évènement
+impossible.
+
+\end{itemize}
+
+La probabilité $P(A)$ est un réel qui satisfait :
+
+\begin{itemize}
+
+\item \textbf{A1.} $P(A) \ge 0$
+
+\item \textbf{A2.} $P(\Omega) = 1$
+
+\item \textbf{A3.} ($\Omega$ fini) si $A \cap B = \emptyset$, alors $P(A\cup B) = P(A) + P(B)$
+
+\item \textbf{A3'.} ($\Omega$ infini) si $A_i \cap A_j = \emptyset$ pour $i \ne j$, alors
+$P\big(\bigcup_{i=1}^\infty A_i\big) = \sum_{i=1}^\infty P(A_i)$
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{formula}
+
+Corollaires (avec $\bar A = \Omega \setminus A$) :
+
+\[
+P(\bar A) = 1 - P(A) \qquad P(A) \le 1 \qquad P(\emptyset) = 0
+\]
+
+\[
+P(A \cup B) = P(A) + P(B) - P(A \cap B)
+\]
+
+\[
+A \subseteq B \;\Rightarrow\; P(A) \le P(B)
+\]
+
+\end{formula}
+
+
+\begin{example}
+
+\textbf{Preuve de $P(\bar A) = 1 - P(A)$} (slides) : $\Omega = A \cup \bar A$ donc
+$P(A\cup\bar A) = 1$, et $A \cap \bar A = \emptyset$ donc $P(A \cup \bar A) = P(A) +
+P(\bar A)$ par A3.
+
+\vspace{3pt}
+
+\textbf{Preuve de $P(A\cup B)$} : on découpe en morceaux disjoints, $A \cup B = (A\cap\bar
+B) \cup (A \cap B) \cup (\bar A \cap B)$, avec $P(A) = P(A\cap\bar B) + P(A\cap B)$ et $P(B) =
+P(\bar A\cap B) + P(A\cap B)$. En additionnant, $A\cap B$ est compté deux fois : on le retire
+une fois.
+
+\end{example}
+
+
+\begin{simple}
+
+Une probabilité, c'est une \textbf{quantité de « chance » à partager}, il y en a exactement 1
+en tout. Elle n'est jamais négative, et si deux évènements ne peuvent pas arriver ensemble,
+leurs chances s'additionnent. Pour $A \cup B$ : si on additionne les deux, la partie commune
+$A\cap B$ est comptée deux fois, donc on l'enlève une fois.
+
+\end{simple}
+
 \end{multicols}
 
 
