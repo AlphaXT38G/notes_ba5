@@ -379,6 +379,52 @@ place.
 
 \end{simple}
 
+
+%=========================================================
+\section{Probabilité d'erreur}
+
+
+\begin{formula}
+
+\[
+P_e = (1-p)\int_\gamma^\infty f_{Z|A=-1}(z)\,dz + p\int_{-\infty}^\gamma f_{Z|A=1}(z)\,dz
+\]
+
+Avec $p = 1/2$ ($\gamma = 0$), et l'\textbf{énergie par bit} $E_b = \int g^2(t)\,dt = a^2T$ :
+
+\[
+\boxed{P_e = \frac12\operatorname{erfc}\Big(\sqrt{\frac{E_b}{N_0}}\Big) =
+Q\Big(\sqrt{\frac{2E_b}{N_0}}\Big)}
+\]
+
+avec $\operatorname{erfc}(x) = \frac2{\sqrt\pi}\int_x^\infty e^{-\xi^2}d\xi = 2Q(\sqrt2x)$.
+
+\end{formula}
+
+
+\begin{important}
+
+$P_e$ ne dépend que du rapport $E_b/N_0$ (souvent en dB) et décroît très vite quand il
+augmente : de l'ordre de $10^{-2}$ vers 5 dB et de $10^{-16}$ vers 15 dB sur la figure du cours.
+
+\vspace{3pt}
+
+\textbf{Exercice 18} : que devient $P_e$ si $\gamma = 0$ mais $p\ne1/2$ ? quel $\gamma$
+choisir sans connaître $p$ ? doubler $T$ ou doubler $a$ pour passer de $P_e = 10^{-3}$ à
+$10^{-6}$ ?
+
+\end{important}
+
+
+\begin{simple}
+
+Une erreur, c'est quand le bruit pousse la valeur reçue \textbf{du mauvais côté} de la
+frontière. Plus l'énergie d'un bit est grande par rapport au bruit, plus les deux cloches sont
+éloignées, et plus c'est rare. $Q(x)$, c'est juste « la chance qu'une cloche normale dépasse
+$x$ ».
+
+\end{simple}
+
 \end{multicols}
 
 
