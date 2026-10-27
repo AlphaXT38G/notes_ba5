@@ -491,6 +491,78 @@ $A_i$ séparément, et on fait la moyenne pondérée. \textbf{Bayes} : on retour
 
 \end{simple}
 
+
+%=========================================================
+\section{Variable aléatoire et fonction de répartition}
+
+
+\begin{definition}
+
+Une \textbf{variable aléatoire} (v.a.) est une fonction qui associe à chaque résultat $\zeta$
+un réel $X(\zeta)$, telle que :
+
+\begin{itemize}
+
+\item \textbf{C1.} $\{\zeta \mid X(\zeta) \le x\}$ est un évènement pour tout $x\in\mathbb R$ ;
+
+\item \textbf{C2.} $P(X = \infty) = P(X = -\infty) = 0$.
+
+\end{itemize}
+
+$S_X = \{X(\zeta) \mid \zeta\in\Omega\}$ : l'ensemble des valeurs que $X$ peut prendre.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Fonction de répartition} (CDF) :
+
+\[
+F_X(x) = P(X \le x)
+\]
+
+\begin{itemize}
+
+\item $0 \le F_X(x) \le 1$, $\lim_{x\to-\infty}F_X(x) = 0$, $\lim_{x\to\infty}F_X(x) = 1$ ;
+
+\item croissante : $a < b \Rightarrow F_X(a) \le F_X(b)$ ;
+
+\item $P(a < X \le b) = F_X(b) - F_X(a)$ ;
+
+\item continue à droite : $F_X(x) = F_X(x^+)$.
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{definition}
+
+\begin{itemize}
+
+\item \textbf{V.a. discrète} : $S_X = \{x_1, x_2, \dots\}$ dénombrable. $F_X$ est en
+\textbf{escalier}, avec un saut en chaque $x_i$ : $p_i = P(X = x_i) = F_X(x_i) - F_X(x_i^-)$.
+
+\item \textbf{V.a. continue} : $F_X$ continue. Alors $P(X = x) = 0$ pour tout $x$.
+
+\item \textbf{V.a. mixte} : $F_X$ discontinue mais pas en escalier (un peu des deux).
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{simple}
+
+Une v.a., c'est juste \textbf{un nombre qui sort d'une expérience} : on lance un dé, la v.a.
+dit « 4 ». $F_X(x)$ répond à une seule question : « quelle est la chance que le nombre soit
+\textbf{au plus} $x$ ? ». Elle monte de 0 à 1. Si $X$ ne prend que quelques valeurs, elle
+monte par marches (discrète) ; si $X$ peut prendre n'importe quelle valeur, elle monte en
+douceur (continue), et tomber pile sur une valeur précise a une chance nulle.
+
+\end{simple}
+
 \end{multicols}
 
 
