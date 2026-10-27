@@ -973,6 +973,128 @@ arrivent en une heure.
 
 \end{simple}
 
+
+%=========================================================
+\section{V.a. continues usuelles}
+
+
+\begin{formula}
+
+\textbf{Uniforme sur $[a,b]$} : $f_X(x) = \frac1{b-a}$ sur $[a,b]$, 0 sinon.
+
+\[
+\mu_X = \frac{a+b}2 \quad \sigma_X^2 = \frac{(b-a)^2}{12} \quad \Phi_X(\omega) =
+\frac{e^{j\omega b} - e^{j\omega a}}{(b-a)j\omega}
+\]
+
+\textbf{Gaussienne $\mathcal N(\mu,\sigma^2)$}, $S_X = \mathbb R$ :
+
+\[
+f_X(x) = \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}} \quad \mu_X = \mu \quad
+\sigma_X^2 = \sigma^2
+\]
+\[
+\Phi_X(\omega) = e^{j\mu\omega - \frac{\sigma^2\omega^2}{2}}
+\]
+
+$F_X$ n'a pas de forme analytique : tables de $Q(\cdot)$ ou $\operatorname{erf}(\cdot)$.
+$\mathcal N(0,1)$ s'appelle la v.a. \textbf{normale}.
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Pourquoi la gaussienne est partout} : c'est une excellente approximation d'une
+\textbf{somme d'un grand nombre} de v.a. dont on ne connaît pas bien la loi (théorème central
+limite, semaine 3).
+
+\vspace{3pt}
+
+\textbf{Conseil du Moodle pour l'exercice 8a} ($\Phi_X$ de la gaussienne) : on ne connaît pas la
+primitive, mais on sait que l'intégrale d'une densité sur $\mathbb R$ vaut 1. On complète
+l'argument de l'exponentielle en un carré parfait $(x-m)^2$ ($m$ complexe, sans $x$), on sort
+de l'intégrale ce qui ne dépend pas de $x$, et il reste la densité d'une gaussienne de moyenne
+$m$, dont l'intégrale vaut 1.
+
+\end{important}
+
+
+\begin{formula}
+
+\textbf{Exponentielle ($\lambda > 0$)} : temps entre deux arrivées d'un processus de Poisson,
+$S_X = [0,\infty[$.
+
+\[
+f_X(x) = \lambda e^{-\lambda x} \quad F_X(x) = 1 - e^{-\lambda x}
+\]
+\[
+\mu_X = \frac1\lambda \quad \sigma_X^2 = \frac1{\lambda^2} \quad \Phi_X(\omega) =
+\frac{\lambda}{\lambda - j\omega}
+\]
+
+\textbf{Sans mémoire} (la seule v.a. continue qui l'est) :
+
+\[
+P(X > t+T \mid X > t) = \frac{P(X>t+T)}{P(X>t)}
+\]
+\[
+= \frac{e^{-\lambda(t+T)}}{e^{-\lambda t}} = e^{-\lambda T} = P(X > T)
+\]
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Gamma $G(\lambda,\alpha)$} ($\lambda$ : « rate », $\alpha$ : « shape »), $S_X =
+]0,\infty[$ :
+
+\[
+f_X(x) = \frac{\lambda(\lambda x)^{\alpha-1}e^{-\lambda x}}{\Gamma(\alpha)} \quad \mu_X =
+\frac\alpha\lambda \quad \sigma_X^2 = \frac{\alpha}{\lambda^2}
+\]
+\[
+\Phi_X(\omega) = \frac{1}{(1-j\omega/\lambda)^\alpha}
+\]
+
+avec $\Gamma(u) = \int_0^\infty x^{u-1}e^{-x}dx$, $\Gamma(u+1) = u\Gamma(u)$, $\Gamma(u) =
+(u-1)!$ si $u\in\mathbb N$, $\Gamma(1/2) = \sqrt\pi$.
+
+\begin{itemize}
+
+\item $G(\lambda, m)$, $m \in \mathbb N$ : \textbf{Erlang} ; avec $m = 1$ : exponentielle.
+
+\item $G(1/2, \nu/2)$ : \textbf{Chi-carré} $\chi^2(\nu)$ à $\nu$ degrés de liberté.
+
+\item Si $X \sim \mathcal N(0,1)$, $Y = X^2 \sim \chi^2(1)$ (exercice 10, avec la formule de
+$Y = X^2$).
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{simple}
+
+\begin{itemize}
+
+\item \textbf{Uniforme} : toutes les valeurs de l'intervalle ont la même chance, le tas de
+sable est plat.
+
+\item \textbf{Gaussienne} : la cloche. Beaucoup de valeurs près de $\mu$, de moins en moins en
+s'éloignant ; $\sigma$ dit la largeur de la cloche.
+
+\item \textbf{Exponentielle} : le temps qu'on attend le bus quand les bus arrivent
+complètement au hasard. Sans mémoire : avoir déjà attendu 10 minutes ne rapproche pas le bus,
+on repart comme si on venait d'arriver.
+
+\item \textbf{Gamma / Erlang} : attendre non pas 1 mais $m$ bus.
+
+\end{itemize}
+
+\end{simple}
+
 \end{multicols}
 
 
