@@ -491,6 +491,79 @@ d'aujourd'hui.
 
 \end{simple}
 
+
+%=========================================================
+\section{Train de pulses modulés en amplitude (PAM)}
+
+
+\begin{definition}
+
+Pulses $g(t-kT)$ modulés par des v.a. $A_k$ :
+
+\[
+X_c(t) = \sum_{k=-\infty}^{\infty}A_k\,g(t-kT)
+\]
+
+avec $\int|g| < \infty$, $\int|g|^2 < \infty$, $E[A_k] = \mu_A$, $E[A_kA_l] = R_A(k-l)$. Sa
+moyenne $\mu_{X_c}(t) = \mu_A\sum_kg(t-kT)$ dépend de $t$.
+
+\vspace{3pt}
+
+On ajoute un \textbf{décalage aléatoire} $D$ uniforme sur $[0,T]$, indépendant des $A_k$ :
+
+\[
+X(t) = \sum_{k=-\infty}^{\infty}A_k\,g(t-kT-D)
+\]
+
+\end{definition}
+
+
+\begin{formula}
+
+\[
+\mu_X(t) = \frac{\mu_A}{T}\int_{-\infty}^{\infty}g(s)\,ds
+\]
+\[
+R_X(t_1,t_2) = \frac1T\sum_{n=-\infty}^{\infty}R_A(n)\int_{-\infty}^{\infty}g(s)\,g(t_2-t_1+nT+s)
+\,ds
+\]
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Séquence binaire aléatoire} : pulse rectangulaire $g(t) = a\,\mathbb 1_{[0,T]}(t)$ et
+$A_k$ \textbf{indépendants} ($R_A(0) = \sigma_A^2 + \mu_A^2$, $R_A(n) = \mu_A^2$ sinon) :
+
+\[
+\mu_X = a\mu_A
+\]
+\[
+R_X(t_1,t_2) = \begin{cases} a^2\sigma_A^2\big(1 - \frac{|t_1-t_2|}{T}\big) + a^2\mu_A^2 &
+|t_1-t_2| < T \\ a^2\mu_A^2 & \text{sinon}\end{cases}
+\]
+\[
+C_X(t_1,t_2) = \begin{cases} a^2\sigma_A^2\big(1 - \frac{|t_1-t_2|}{T}\big) & |t_1-t_2| < T \\
+0 & \text{sinon}\end{cases}
+\]
+
+(Exercice 2 : le retrouver plus simplement en conditionnant sur $D$, avec les probabilités
+totales.)
+
+\end{formula}
+
+
+\begin{simple}
+
+C'est la façon d'envoyer des bits : toutes les $T$ secondes, on envoie une petite impulsion
+$g$, multipliée par le symbole $A_k$ (par exemple $+1$ ou $-1$). Le décalage $D$, c'est qu'on
+ne sait pas quand le premier symbole a commencé : ça rend toutes les heures équivalentes. Le
+résultat : deux instants dans le \textbf{même} créneau sont liés (même symbole), deux instants
+écartés de plus de $T$ ne le sont plus (symboles indépendants), d'où le triangle.
+
+\end{simple}
+
 \end{multicols}
 
 
