@@ -321,6 +321,72 @@ peu l'erreur, et le filtre ne serait pas le meilleur.
 
 \end{simple}
 
+
+%=========================================================
+\section{Application : restauration d'image}
+
+
+\begin{definition}
+
+Modèle de dégradation (« image » à une dimension pour commencer) :
+
+\[
+X(n) = \sum_ib(i)S(n-i) + N(n)
+\]
+
+$S$ : image idéale, $X$ : image dégradée, $b$ : filtre de dégradation (mouvement de la
+caméra...) de transmittance $B(f)$, $N$ : bruit additif. On cherche $H(f)$ tel que la sortie
+$Y$ soit proche de $S$.
+
+\end{definition}
+
+
+\begin{warning}
+
+\textbf{Filtrage inverse} $H_{\mathrm{inv}}(f) = 1/B(f)$ : $\tilde Y(f) = \tilde S(f) +
+\tilde N(f)/B(f)$ (transformées de Fourier des signaux, pas des densités spectrales). Si $B(f)$
+est très petit à certaines fréquences, le bruit $\tilde N/B$ explose et écrase l'image. Et si
+l'image est seulement bruitée ($B = 1$), il ne fait rien.
+
+\end{warning}
+
+
+\begin{formula}
+
+\textbf{Wiener}, avec $D = S$, $N$ centré et indépendant de $S$ :
+
+\[
+S_{DX}(f) = B^\star(f)S_S(f) \qquad S_X(f) = |B(f)|^2S_S(f) + S_N(f)
+\]
+\[
+H(f) = \frac1{B(f)}\cdot\frac{|B(f)|^2S_S(f)}{|B(f)|^2S_S(f) + S_N(f)}
+\]
+
+Une cascade : un filtre qui \textbf{réduit le bruit}, puis le \textbf{filtre inverse}. Sans
+bruit, c'est le filtre inverse ; avec $B = 1$, c'est le Wiener qui débruite. En 2D, même formule
+en $(f_1,f_2)$.
+
+\end{formula}
+
+
+\begin{important}
+
+Limites : le critère des moindres carrés n'est pas celui de l'\oe il (variantes avec des
+paramètres $\alpha$, $\beta$), une image n'est pas stationnaire (version adaptative, algorithme
+LMS), et il faut connaître $S_S$ et $S_N$.
+
+\end{important}
+
+
+\begin{simple}
+
+Une photo floue et granuleuse. Le filtre inverse « défloute » à fond, mais il amplifie aussi
+le grain là où le flou avait presque tout effacé : catastrophe. Wiener est plus malin : il ne
+défloute que là où le signal est plus fort que le bruit, et laisse tomber les fréquences où il
+n'y a plus que du grain.
+
+\end{simple}
+
 \end{multicols}
 
 
