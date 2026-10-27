@@ -525,6 +525,85 @@ converge pas. Seule la \textbf{probabilité} d'être loin compte ici, pas la dis
 
 \end{simple}
 
+
+%=========================================================
+\section{Convergence en distribution et théorème central limite}
+
+
+\begin{definition}
+
+$F_n$ : fonction de répartition de $X_n$. S'il existe une fonction de répartition continue $F$
+(celle d'une v.a. $X$) telle que, pour tout $x$,
+
+\[
+\lim_{n\to\infty}F_n(x) = F(x)
+\]
+
+$X_n$ converge \textbf{en distribution} vers $X$ : $X_n \xrightarrow{\text{dis}} X$. C'est la
+convergence \textbf{la plus faible}.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Théorème central limite.} $\{X_n\}$ i.i.d. (indépendantes et identiquement
+distribuées), de moyenne $\mu$ et variance $\sigma^2$. Soit
+
+\[
+Z_n = \sum_{i=1}^n\frac{X_i - \mu}{\sqrt{n\sigma^2}}
+\]
+
+Alors $Z_n \xrightarrow{\text{dis}} Z \sim \mathcal N(0,1)$ :
+
+\[
+\lim_{n\to\infty} F_{Z_n}(z) = \frac{1}{\sqrt{2\pi}}\int_{-\infty}^z e^{-x^2/2}\,dx
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Preuve} avec la fonction caractéristique (indépendance, puis même loi, puis Taylor) :
+
+\[
+\Phi_{Z_n}(\omega) = \prod_{i=1}^n E\Big[e^{j\omega\frac{X_i - \mu}{\sigma\sqrt n}}\Big] =
+\Big(E\Big[e^{j\omega\frac{X - \mu}{\sigma\sqrt n}}\Big]\Big)^n
+\]
+\[
+= \Big(1 + \tfrac{j\omega}{\sigma\sqrt n}\underbrace{E[X-\mu]}_{0} + \tfrac{(j\omega)^2}{2\sigma^2
+n}\underbrace{E[(X-\mu)^2]}_{\sigma^2} + \dots\Big)^n
+\]
+\[
+\approx \Big(1 - \frac{\omega^2}{2n}\Big)^n \xrightarrow[n\to\infty]{} e^{-\omega^2/2}
+\]
+
+C'est la fonction caractéristique de $\mathcal N(0,1)$, qui détermine la loi.
+
+\end{important}
+
+
+\begin{important}
+
+Valable aussi sous des hypothèses plus faibles (indépendantes, même $\mu$ et même $\sigma^2$,
+pas forcément même loi). C'est \textbf{la raison de l'importance des gaussiennes} : un
+phénomène qui est la somme de nombreuses petites contributions indépendantes est gaussien, sans
+même connaître la loi de chaque contribution.
+
+\end{important}
+
+
+\begin{simple}
+
+Additionnez plein de petits hasards indépendants (des milliers d'électrons qui s'agitent, des
+milliers de petites erreurs) : quelle que soit la forme de chaque petit hasard, le total a la
+forme d'une \textbf{cloche}. C'est pour ça que le bruit est presque toujours gaussien. « En
+distribution » veut juste dire que c'est la \textbf{forme de la loi} qui s'approche, pas les
+valeurs tirées.
+
+\end{simple}
+
 \end{multicols}
 
 
