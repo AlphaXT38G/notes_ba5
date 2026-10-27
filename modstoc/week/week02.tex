@@ -344,6 +344,71 @@ profil en $y$ », savoir $y$ ne dit rien sur $x$.
 
 \end{simple}
 
+
+%=========================================================
+\section{Fonctions de deux v.a. et jacobien}
+
+
+\begin{formula}
+
+$Z = g_1(X,Y)$, $W = g_2(X,Y)$, et $(x_i,y_i)$ les racines de $z = g_1(x,y)$, $w = g_2(x,y)$.
+Jacobien :
+
+\[
+J(x,y) = \det\begin{pmatrix} \frac{\partial g_1}{\partial x} & \frac{\partial g_1}{\partial
+y} \\[2pt] \frac{\partial g_2}{\partial x} & \frac{\partial g_2}{\partial y}\end{pmatrix}
+\]
+
+\[
+f_{ZW}(z,w) = \sum_i \frac{f_{XY}(x_i,y_i)}{|J(x_i,y_i)|}
+\]
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Cas linéaire} $\mathbf z = A\mathbf x + \mathbf b$, avec $\det A \ne 0$ : une seule
+racine $\mathbf x = A^{-1}(\mathbf z - \mathbf b)$, et $J = \det A$ partout.
+
+\[
+f_{\mathbf Z}(\mathbf z) = \frac{f_{\mathbf X}(A^{-1}(\mathbf z - \mathbf b))}{|\det A|}
+\]
+
+\end{formula}
+
+
+\begin{example}
+
+\textbf{Somme de deux v.a. indépendantes} $Z = X+Y$. Il faut deux équations : on ajoute $W =
+Y$ (qui ne nous intéresse pas), ce qui donne $A = \begin{pmatrix}1&1\\0&1\end{pmatrix}$, $\det
+A = 1$. Donc $f_{ZW}(z,w) = f_{XY}(z-w, w) = f_X(z-w)f_Y(w)$, puis la marginale :
+
+\[
+f_Z(z) = \int_{-\infty}^\infty f_X(z-w)\,f_Y(w)\,dw \quad\Rightarrow\quad f_Z = f_X \star f_Y
+\]
+
+\end{example}
+
+
+\begin{important}
+
+La densité de la \textbf{somme} de deux v.a. \textbf{indépendantes} est le \textbf{produit de
+convolution} de leurs densités.
+
+\end{important}
+
+
+\begin{simple}
+
+Comme pour une seule v.a. : on change de coordonnées, et le jacobien dit de combien la
+transformation \textbf{étire ou écrase les surfaces}. Si elle étire, le sable s'étale et sa
+hauteur baisse d'autant. Astuce à retenir : quand on veut une seule nouvelle variable (comme
+$X+Y$), on invente une deuxième bidon ($W = Y$) pour pouvoir utiliser la formule, puis on
+l'intègre pour s'en débarrasser.
+
+\end{simple}
+
 \end{multicols}
 
 
