@@ -724,6 +724,67 @@ gigantesque quand il arrive. Alors que presque sûrement, seule la rareté compt
 
 \end{simple}
 
+
+%=========================================================
+\section{Relations entre les convergences}
+
+
+\begin{formula}
+
+\[
+\begin{array}{ccc}
+\text{presque sûre} & & \\
+& \searrow & \\
+& & \text{en probabilité} \\
+& \nearrow & \downarrow \\
+\text{moy. quadratique} & & \text{en distribution}
+\end{array}
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item Presque sûre et moyenne quadratique sont les seules sans lien direct (suite 2 : m.q. mais
+pas p.s. ; suite 3 : p.s. mais pas m.q.).
+
+\item La plus faible est la convergence \textbf{en distribution}.
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{summary}
+
+\begin{tabular}{@{}lcccc@{}}
+Suite & p.s. & m.q. & proba & dis. \\
+\hline
+1 : $1$, $1/n^2$ & oui & oui & oui & oui \\
+2 : $1$, $1/n$ & non & oui & oui & oui \\
+3 : $n$, $1/n^2$ & oui & non & oui & oui \\
+4 : $\sqrt n$, $1/n$ & non & non & oui & oui \\
+\end{tabular}
+
+\vspace{3pt}
+
+(valeur prise, avec sa probabilité ; sinon 0. Limite : 0.)
+
+\end{summary}
+
+
+\begin{simple}
+
+Pensez à une pyramide. En haut, les deux convergences \textbf{exigeantes} (presque sûre :
+chaque chemin arrive ; quadratique : l'erreur moyenne s'éteint). Chacune entraîne celle du
+milieu (en probabilité : être loin devient rare), qui entraîne celle du bas, la plus
+gentille (en distribution : seule la forme de la loi s'approche).
+
+\end{simple}
+
 \end{multicols}
 
 
