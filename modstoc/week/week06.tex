@@ -586,6 +586,63 @@ blanc, $S_N(f) = \sigma_N^2$ sur toute la bande.
 
 \end{formula}
 
+
+%=========================================================
+\section{Système LTI à temps discret}
+
+
+\begin{formula}
+
+$H(f) = \sum_lh(l)e^{-j2\pi fl}$ (si $\sum|h| < \infty$), $\hat H(z) = \sum_lh(l)z^{-l}$, $H(f) =
+\hat H(e^{2\pi jf})$. Sortie $Y(n) = \sum_lh(l)X(n-l)$, WSS si $X$ l'est :
+
+\[
+E[Y(n)] = H(0)\mu_X
+\]
+\[
+R_Y(k) = \sum_l\sum_mh(l)h(m)R_X(k+l-m)
+\]
+\[
+S_Y(f) = |H(f)|^2S_X(f) \qquad \hat S_Y(z) = \hat H(z)\hat H(1/z)\hat S_X(z)
+\]
+\[
+S_{YX}(f) = H(f)S_X(f) \qquad S_{XY}(f) = H^\star(f)S_X(f)
+\]
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{ARMA} = innovation $U$ filtrée par
+
+\[
+\hat H_{\mathrm{ARMA}}(z) = \frac{\hat B(z)}{\hat A(z)} = \frac{\sum_{k=0}^mb_kz^{-k}}{1 +
+\sum_{k=1}^pa_kz^{-k}}
+\]
+\[
+S_X(f) = \sigma_U^2\frac{|\sum_{k=0}^mb_ke^{-2\pi jfk}|^2}{|1 + \sum_{k=1}^pa_ke^{-2\pi
+jfk}|^2}
+\]
+
+MA : $\hat A = 1$ (que des zéros). AR : $\hat B = 1$ (que des pôles).
+
+\vspace{3pt}
+
+\textbf{Factorisation spectrale} : si $\int_{-1/2}^{1/2}|\ln S_X(f)|df < \infty$, il existe
+$\hat G$ tel que $\hat S_X(z) = \hat G(z)\hat G(z^{-1})$, soit $S_X(f) = G(f)G^\star(f)$.
+
+\end{formula}
+
+
+\begin{simple}
+
+Un processus ARMA, c'est du \textbf{bruit blanc passé dans un filtre}. Le bruit blanc a toutes
+les fréquences à plat, et le filtre sculpte ce spectre plat : son spectre est juste $\sigma_U^2$
+fois $|H|^2$. Et presque tout processus peut se voir comme ça.
+
+\end{simple}
+
 \end{multicols}
 
 
