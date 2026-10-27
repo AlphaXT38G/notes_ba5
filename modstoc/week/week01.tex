@@ -612,6 +612,63 @@ valeurs $x_i$.
 
 \end{simple}
 
+
+%=========================================================
+\section{Fonction d'une variable aléatoire}
+
+
+\begin{formula}
+
+Soit $Y = g(X)$, $X$ continue, et $x_1,\dots,x_m$ les \textbf{racines} de $y = g(x)$. Alors :
+
+\[
+f_Y(y) = \sum_{i=1}^m \frac{f_X(x_i)}{|g'(x_i)|}
+\]
+
+Formule générale, valable dès que $X$ est continue.
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{D'où elle vient.} L'évènement $\{y < Y \le y + \Delta y\}$ est l'union des
+évènements $\{X \text{ proche de } x_i\}$, sur des intervalles de largeur $|\Delta x_i|$.
+Donc $f_Y(y)|\Delta y| = \sum_i f_X(x_i)|\Delta x_i|$, et $|\Delta y|/|\Delta x_i| \to
+|g'(x_i)|$.
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{$Y = X^2$} (slides). Pour $y > 0$ :
+
+\[
+F_Y(y) = P(-\sqrt y \le X \le \sqrt y) = F_X(\sqrt y) - F_X(-\sqrt y)
+\]
+
+et $F_Y(y) = 0$ si $y \le 0$. En dérivant :
+
+\[
+f_Y(y) = \frac{f_X(\sqrt y)}{2\sqrt y} + \frac{f_X(-\sqrt y)}{2\sqrt y}, \quad y > 0.
+\]
+
+Avec la formule : les racines sont $\pm\sqrt y$ et $|g'(\pm\sqrt y)| = 2\sqrt y$ : même
+résultat.
+
+\end{example}
+
+
+\begin{simple}
+
+On a la loi de $X$, on veut celle de $Y = g(X)$. La recette : (1) pour un $y$ donné,
+\textbf{trouver tous les $x$} qui donnent ce $y$ ; (2) prendre la densité de $X$ en chacun ;
+(3) diviser par $|g'|$, parce que si $g$ \textbf{étire} l'axe (pente forte), le sable s'étale
+et devient moins haut ; (4) additionner.
+
+\end{simple}
+
 \end{multicols}
 
 
