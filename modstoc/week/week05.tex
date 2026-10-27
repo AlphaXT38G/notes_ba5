@@ -493,6 +493,74 @@ fréquences donne la puissance totale. Et on l'obtient simplement en prenant Fou
 
 \end{simple}
 
+
+%=========================================================
+\section{Exemples de densités spectrales}
+
+
+\begin{example}
+
+\textbf{Sinusoïde à phase uniforme} :
+
+\[
+S_X(f) = \frac{a^2}4\big(\delta(f-f_0) + \delta(f+f_0)\big)
+\]
+
+\textbf{Bruit blanc} $N(t)$ : WSS, de densité spectrale \textbf{constante} :
+
+\[
+S_N(f) = \frac{N_0}2 \qquad R_N(\tau) = \frac{N_0}2\delta(\tau)
+\]
+
+\end{example}
+
+
+\begin{warning}
+
+$R_N(0) = \infty$ : le bruit blanc est \textbf{irréalisable} en pratique (une définition
+rigoureuse passe par le processus de Wiener). C'est un modèle idéalisé, facile à manipuler ;
+le bruit thermique des résistances s'en approche sur une large gamme de fréquences. Bruit blanc
+\textbf{gaussien} : on suppose en plus $N(t)$ gaussien. Moyenne nulle par défaut.
+
+\end{warning}
+
+
+\begin{example}
+
+\textbf{Bruit blanc à bande étroite} : $S_N(f) = N_0/2$ si $f_0 - B < |f| < f_0 + B$, 0 sinon.
+
+\[
+R_N(\tau) = 2N_0B\cos(2\pi f_0\tau)\operatorname{sinc}(2B\tau)
+\]
+
+\textbf{PAM} ($G = \mathcal F(g)$, $\hat S_A$ : transformée de Fourier discrète de $R_A(n)$,
+la densité spectrale des $A_k$, module 4) :
+
+\[
+S_X(f) = \frac1T\,G(f)\,G(-f)\,\hat S_A(e^{-2\pi jfT})
+\]
+
+Pulse rectangulaire, $A_k$ indépendants :
+
+\[
+S_X(f) = a^2\sigma_A^2T\operatorname{sinc}^2(fT) + a^2\mu_A^2\delta(f)
+\]
+
+C'est bien la transformée de Fourier de $R_X$ de la semaine 4 : le triangle donne le
+$\operatorname{sinc}^2$, la constante $a^2\mu_A^2$ donne le Dirac.
+
+\end{example}
+
+
+\begin{simple}
+
+\textbf{Bruit blanc} : comme la lumière blanche qui contient toutes les couleurs, il contient
+\textbf{toutes les fréquences à égalité}. Conséquence : deux instants, même très proches, n'ont
+rien à voir entre eux ($R_N$ est un pic en 0). Il est tellement agité qu'il aurait une
+puissance infinie : c'est une idéalisation.
+
+\end{simple}
+
 \end{multicols}
 
 
