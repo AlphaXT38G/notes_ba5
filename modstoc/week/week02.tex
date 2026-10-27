@@ -825,6 +825,113 @@ sortie est la somme des petites réponses : c'est la convolution.
 
 \end{simple}
 
+
+%=========================================================
+\section{Rappels de traitement du signal (2) : transformées}
+
+
+\begin{formula}
+
+\textbf{Fourier (convention COM-300)} :
+
+\[
+X(f) = \int_{\mathbb R} x(t)\,e^{-j2\pi ft}\,dt
+\]
+
+\begin{itemize}
+
+\item $\mathcal F(\delta) = 1$ ; $\mathcal F(x(\cdot - t_0))(f) = e^{-j2\pi ft_0}X(f)$ ;
+$\mathcal F(x')(f) = j2\pi f X(f)$ ;
+
+\item $\mathcal F(x * y) = \mathcal F(x)\,\mathcal F(y)$ ; inverse : $\mathcal F^{-1}(X)(t) =
+\mathcal F(X)(-t)$.
+
+\end{itemize}
+
+\textbf{Réponse fréquentielle} $H = \mathcal F(h)$ : $y = h*x \Rightarrow Y(f) = H(f)X(f)$.
+
+\end{formula}
+
+
+\begin{example}
+
+$h(t) = \operatorname{sinc}(t) = \frac{\sin\pi t}{\pi t}$, $H(f) = \operatorname{rect}(f) =
+\mathbb 1[|f| < \frac12]$, et $x(t) = \operatorname{sinc}(t/2)$, $X(f) = 2\cdot\mathbb 1[|f| <
+\frac14]$. La convolution est pénible, mais $Y(f) = H(f)X(f) = 2\cdot\mathbb 1[|f|<\frac14] =
+X(f)$ : donc $y = x$.
+
+\end{example}
+
+
+\begin{formula}
+
+\textbf{Transformée en $Z$} (signal discret) :
+
+\[
+\hat x(z) = \sum_{n\in\mathbb Z} x(n)z^{-n}, \quad z \in \mathrm{ROC}
+\]
+
+Linéaire, $\mathcal Z(x*y) = \mathcal Z(x)\mathcal Z(y)$, décalage : $x(n-n_0) \to
+z^{-n_0}\hat x(z)$.
+
+\vspace{3pt}
+
+\textbf{Fourier discrète} (DTFT), si le cercle unité est dans la ROC :
+
+\[
+X(f) = \hat x(e^{j2\pi f}) = \sum_{n\in\mathbb Z} x(n)e^{-j2\pi fn}
+\]
+
+\textbf{Fonction de transfert} $\hat h = \mathcal Z(h)$ : $\hat y(z) = \hat h(z)\hat x(z)$.
+
+\end{formula}
+
+
+\begin{example}
+
+\textbf{Équation de récurrence} $y(n) + a\,y(n-1) = x(n) + b\,x(n-1) + c\,x(n-2)$. On applique
+$\mathcal Z$ des deux côtés :
+
+\[
+\hat y(z)(1 + az^{-1}) = \hat x(z)(1 + bz^{-1} + cz^{-2})
+\]
+\[
+\hat h(z) = \frac{1 + bz^{-1} + cz^{-2}}{1 + az^{-1}}
+\]
+
+\end{example}
+
+
+\begin{formula}
+
+\textbf{Laplace} (celle d'Analyse IV, utilisée en COM-300 pour des signaux \textbf{causaux}) :
+
+\[
+\mathcal L(x)(s) = \int_0^\infty x(t)e^{-st}\,dt, \qquad \mathcal L(x')(s) = s\,\mathcal L(x)(s)
+- x(0)
+\]
+
+\end{formula}
+
+
+\begin{warning}
+
+La convention de Fourier de COM-300 n'est \textbf{pas} celle de COM-202 (ni du livre de
+Prandoni et Vetterli). Et attention : $\Phi_X(\omega) = E[e^{j\omega X}]$ a un signe $+$ dans
+l'exponentielle, c'est le \textbf{conjugué} de la transformée de Fourier de $f_X$.
+
+\end{warning}
+
+
+\begin{simple}
+
+Une transformée, c'est regarder le signal en \textbf{notes de musique} (fréquences) au lieu
+de le regarder dans le temps. L'avantage : la convolution, compliquée dans le temps, devient
+une simple \textbf{multiplication} en fréquence. Le filtre devient « je multiplie chaque note
+par un réglage du volume $H(f)$ ».
+
+\end{simple}
+
 \end{multicols}
 
 
