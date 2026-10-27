@@ -274,6 +274,76 @@ La question nouvelle : comment ils sont \textbf{liés} entre eux.
 
 \end{simple}
 
+
+%=========================================================
+\section{Paire de v.a. : répartition et densité jointes}
+
+
+\begin{formula}
+
+\textbf{Fonction de répartition jointe} :
+
+\[
+F_{XY}(x,y) = P(X\le x, Y \le y)
+\]
+
+\textbf{Marginales} : $F_X(x) = \lim_{y\to\infty} F_{XY}(x,y)$, $F_Y(y) = \lim_{x\to\infty}
+F_{XY}(x,y)$.
+
+\vspace{3pt}
+
+\textbf{Densité jointe} :
+
+\[
+f_{XY}(x,y) = \frac{\partial^2 F_{XY}(x,y)}{\partial x\,\partial y}, \qquad \iint f_{XY} = 1
+\]
+
+\[
+P(a_1 < X \le a_2, b_1 < Y \le b_2) = \int_{a_1}^{a_2}\!\!\int_{b_1}^{b_2} f_{XY}(x,y)\,dy\,dx
+\]
+
+\textbf{Densités marginales} : on intègre l'autre variable.
+
+\[
+f_X(x) = \int_{-\infty}^\infty f_{XY}(x,y)\,dy \qquad f_Y(y) = \int_{-\infty}^\infty
+f_{XY}(x,y)\,dx
+\]
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Cas discret}, $p_{ij} = P(X = x_i, Y = y_j)$ :
+
+\[
+f_{XY}(x,y) = \sum_{i,j} p_{ij}\,\delta(x-x_i)\,\delta(y-y_j)
+\]
+
+\end{formula}
+
+
+\begin{definition}
+
+$X$ et $Y$ sont \textbf{indépendantes} si $F_{XY}(x,y) = F_X(x)F_Y(y)$, d'où $f_{XY}(x,y) =
+f_X(x)f_Y(y)$ (cas discret : $P(X = a, Y = b) = P(X=a)P(Y=b)$).
+
+\vspace{3pt}
+
+Si $X$ et $Y$ sont indépendantes, $g(X)$ et $h(Y)$ le sont aussi.
+
+\end{definition}
+
+
+\begin{simple}
+
+La densité jointe, c'est le tas de sable posé \textbf{sur une table} (le plan $x,y$) au lieu
+d'une ligne. La marginale de $X$, c'est ce qu'on voit en regardant le tas de côté : on écrase
+tout le sable le long de $y$. Indépendantes : la forme du tas est juste « profil en $x$ fois
+profil en $y$ », savoir $y$ ne dit rien sur $x$.
+
+\end{simple}
+
 \end{multicols}
 
 
