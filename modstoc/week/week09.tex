@@ -444,6 +444,61 @@ doucement, la surprise est petite, donc il faut moins de bits pour l'écrire.
 
 \end{simple}
 
+
+%=========================================================
+\section{Filtre de prédiction linéaire}
+
+
+\begin{formula}
+
+$X(n)$ WSS. On estime $X(n)$ à partir des $m$ échantillons précédents :
+
+\[
+Y(n) = \sum_{k=1}^mh(k)X(n-k)
+\]
+
+en minimisant $\varepsilon = E[(X(n) - Y(n))^2]$ : Wiener avec $D(n) = X(n)$, donc $R_{DX}(k)
+= R_X(k)$, filtre à réponse impulsionnelle finie. Les équations de Wiener-Hopf deviennent les
+\textbf{équations de Yule-Walker} :
+
+\[
+\sum_{l=1}^mh(l)R_X(k-l) = R_X(k), \quad 1\le k\le m
+\]
+
+Avec $\mathbf r_X = [R_X(1)\dots R_X(m)]^T$ et $\mathbf h = [h(1)\dots h(m)]^T$ :
+
+\[
+\Phi_X\mathbf h = \mathbf r_X \qquad \mathbf h = \Phi_X^{-1}\mathbf r_X
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+Il faut inverser la matrice de corrélation $\Phi_X$ (symétrique, Toeplitz).
+
+\begin{itemize}
+
+\item Symétrique : $\Phi_X = Q^T\Lambda Q$ avec $Q$ orthogonale (décomposition de
+\textbf{Karhunen-Loève}, qui décorrèle les échantillons), $\Phi_X^{-1} = \sum_i\lambda_i^{-1}
+\mathbf q_i\mathbf q_i^T$. Élégant, mais calculer les valeurs propres coûte cher.
+
+\item En pratique : l'algorithme de \textbf{Levinson}, qui exploite la structure de Toeplitz.
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{simple}
+
+Deviner la prochaine valeur comme un mélange des $m$ dernières. Les bons poids $h(k)$ se
+trouvent en résolvant un petit système linéaire, qui ne demande que l'auto-corrélation : à
+quel point une valeur ressemble à celle d'il y a 1, 2, ..., $m$ pas.
+
+\end{simple}
+
 \end{multicols}
 
 
