@@ -542,6 +542,50 @@ un peu de surprise.
 
 \end{simple}
 
+
+%=========================================================
+\section{Ergodisme et densité spectrale en discret}
+
+
+\begin{formula}
+
+\textbf{Moyenne temporelle} : $\langle X(n)\rangle_m = \frac1{2m+1}\sum_{n=-m}^mX(n)$, non
+biaisée. \textbf{Ergodique par rapport à la moyenne} ssi
+
+\[
+\lim_{m\to\infty}\frac1{2m+1}\sum_{k=-2m}^{2m}C_X(k)\Big(1 - \frac{|k|}{2m+1}\Big) = 0
+\]
+
+Suffisant : $\lim_{k\to\infty}C_X(k) = 0$.
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Densité spectrale} : transformée de Fourier \textbf{discrète} de $R_X$, périodique de
+période 1, on regarde $-\frac12\le f\le\frac12$.
+
+\[
+S_X(f) = \sum_{k=-\infty}^{\infty}R_X(k)e^{-j2\pi fk}
+\]
+\[
+R_X(k) = \int_{-1/2}^{1/2}S_X(f)e^{j2\pi fk}df
+\]
+
+En $z$ : $\hat S_X(z) = \sum_kR_X(k)z^{-k}$, et $S_X(f) = \hat S_X(e^{j2\pi f})$.
+
+\vspace{3pt}
+
+$E[X^2(n)] = R_X(0) = \int_{-1/2}^{1/2}S_X(f)\,df$ ; $S_X$ réelle, paire, $\ge0$.
+
+\vspace{3pt}
+
+\textbf{Exemples} : sinusoïde, $S_X(f) = \frac{a^2}4(\delta(f-f_0) + \delta(f+f_0))$ ; bruit
+blanc, $S_N(f) = \sigma_N^2$ sur toute la bande.
+
+\end{formula}
+
 \end{multicols}
 
 
