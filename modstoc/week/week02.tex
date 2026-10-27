@@ -740,6 +740,91 @@ l'ellipse soit bien droite, et alors les composantes deviennent indépendantes.
 
 \end{simple}
 
+
+%=========================================================
+\section{Rappels de traitement du signal (1) : systèmes LTI}
+
+
+\begin{definition}
+
+Résumé de Salim Najib (COM-202 pour COM-300), avec \textbf{les conventions de COM-300}.
+
+\vspace{3pt}
+
+\textbf{Signal} : une fonction $x:\mathbb R\to\mathbb C$ (continu) ou une suite $x:\mathbb
+Z\to\mathbb C$ (discret). \textbf{Système} $\mathcal H$ : transforme un signal en un autre,
+$y = \mathcal H(x)$.
+
+\begin{itemize}
+
+\item \textbf{Linéaire} : $\mathcal H(\alpha x_1 + x_2) = \alpha\mathcal H(x_1) + \mathcal
+H(x_2)$.
+
+\item \textbf{Invariant dans le temps} : décaler l'entrée de $t_0$ décale la sortie de $t_0$.
+
+\end{itemize}
+
+Linéaire + invariant = \textbf{LTI}, aussi appelé \textbf{filtre}.
+
+\end{definition}
+
+
+\begin{example}
+
+$\mathcal H_1(x)(t) = x(t^2)$ est linéaire mais \textbf{pas} invariant : il change le
+déroulement du temps. $\mathcal H_2(x)(n) = 0.5(x(n) + x(n-1))$ (moyenne des deux derniers
+jours) est LTI.
+
+\end{example}
+
+
+\begin{formula}
+
+\textbf{Réponse impulsionnelle} $h = \mathcal H(\delta)$ (Kronecker en discret, Dirac en
+continu). Alors, pour tout signal $x$ :
+
+\[
+\mathcal H(x) = x * h
+\]
+\[
+(x*h)(n) = \sum_{k\in\mathbb Z} x(k)h(n-k)
+\]
+\[
+(x*h)(t) = \int_{\mathbb R} x(\tau)h(t-\tau)\,d\tau
+\]
+
+La convolution est bilinéaire et symétrique ($x*h = h*x$).
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Causal} : $y(t)$ ne dépend que de $x(\tau)$ pour $\tau \le t$. \textbf{BIBO stable} :
+entrée bornée $\Rightarrow$ sortie bornée. Pour un système LTI :
+
+\begin{itemize}
+
+\item causal $\Leftrightarrow h(t) = 0$ pour $t < 0$ ;
+
+\item BIBO stable $\Leftrightarrow \sum_n|h(n)| < \infty$ (discret), $\int|h(t)|\,dt <
+\infty$ (continu).
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{simple}
+
+Un filtre LTI, c'est une \textbf{machine qui ne change pas d'humeur} (invariante) et qui
+traite les morceaux d'un signal séparément puis additionne (linéaire). Pour savoir tout ce
+qu'elle fait, il suffit de lui donner \textbf{une seule claque} (l'impulsion $\delta$) et
+d'écouter sa réponse $h$. N'importe quel signal est une somme de petites claques, donc la
+sortie est la somme des petites réponses : c'est la convolution.
+
+\end{simple}
+
 \end{multicols}
 
 
