@@ -284,6 +284,43 @@ somme simple de l'énoncé (comme dans les solutions) est technique et hors exer
 
 \end{important}
 
+
+%=========================================================
+\section{Rappel : le filtre de Wiener}
+
+
+\begin{formula}
+
+Entrée $X(n)$ WSS, sortie $Y(n) = \sum_kh(k)X(n-k)$, réponse désirée $D(n)$, erreur $e(n) =
+D(n) - Y(n)$, on minimise $\varepsilon = E[e^2(n)]$ :
+
+\[
+\sum_lh(l)R_X(k-l) = R_{DX}(k) \quad\Rightarrow\quad H(f) = \frac{S_{DX}(f)}{S_X(f)}
+\]
+
+(non causal), ou, en causal, les \textbf{équations de Wiener-Hopf} : $\sum_{l\ge0}h(l)R_X(k-l)
+= R_{DX}(k)$ pour $k\ge0$.
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Exercice 8} (filtre de prédiction ci-dessous) : l'erreur $e(n)$ et l'entrée $X$ sont
+\textbf{orthogonales}. C'est ce que disent les équations : pour chaque $k$ où le filtre a un
+coefficient, $E[e(n)X(n-k)] = R_{DX}(k) - \sum_lh(l)R_X(k-l) = 0$.
+
+\end{important}
+
+
+\begin{simple}
+
+Le meilleur filtre est celui dont l'erreur restante n'a \textbf{plus rien en commun} avec ce
+qu'on a vu à l'entrée : s'il restait un lien, on pourrait s'en servir pour corriger encore un
+peu l'erreur, et le filtre ne serait pas le meilleur.
+
+\end{simple}
+
 \end{multicols}
 
 
