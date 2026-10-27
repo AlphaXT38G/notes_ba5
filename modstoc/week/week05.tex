@@ -285,6 +285,87 @@ garder la réponse en $\operatorname{Arctan}$.
 
 \end{important}
 
+
+%=========================================================
+\section{Ergodisme par rapport à la moyenne}
+
+
+\begin{definition}
+
+$X(t)$ WSS. On estime la moyenne d'ensemble $\mu_X = E[X(t)]$ par la \textbf{moyenne
+temporelle} d'une seule réalisation :
+
+\[
+\langle X(t)\rangle_T = \frac1T\int_0^TX(t)\,dt
+\]
+
+$X$ est \textbf{ergodique par rapport à sa moyenne} si, quand $T\to\infty$,
+
+\[
+E[\langle X(t)\rangle_T]\to\mu_X \qquad \mathrm{VAR}[\langle X(t)\rangle_T] \to 0
+\]
+
+(alors $\langle X(t)\rangle_T$ converge en moyenne quadratique vers $\mu_X$).
+
+\end{definition}
+
+
+\begin{formula}
+
+La première condition est toujours vraie (estimateur \textbf{non biaisé}) : $E[\langle
+X\rangle_T] = \frac1T\int_0^T\mu_X\,dt = \mu_X$. Pour la seconde :
+
+\[
+\mathrm{VAR}[\langle X\rangle_T] = \frac1{T^2}\int_0^T\!\!\int_0^TC_X(t-s)\,dt\,ds
+\]
+\[
+= \frac2T\int_0^TC_X(\tau)\Big(1 - \frac\tau T\Big)d\tau
+\]
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Théorème 1} (nécessaire et suffisant) : $X$ WSS est ergodique par rapport à sa moyenne
+ssi
+
+\[
+\lim_{T\to\infty}\frac1T\int_0^TC_X(\tau)\Big(1 - \frac\tau T\Big)d\tau = 0
+\]
+
+\textbf{Corollaire 1} (suffisant) : si $\lim_{\tau\to\infty}C_X(\tau) = 0$, $X$ est ergodique
+par rapport à sa moyenne.
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Preuve du corollaire.} Pour $\varepsilon > 0$, il existe $T_0$ tel que $|C_X(\tau)| <
+\varepsilon$ pour $\tau > T_0$. On coupe l'intégrale en $T_0$ et on borne $|C_X| \le C_X(0)$
+avant $T_0$ :
+
+\[
+\frac1T\Big|\int_0^TC_X(\tau)\big(1-\tfrac\tau T\big)d\tau\Big| \le C_X(0)\frac{T_0}T +
+\varepsilon\Big(1 - \frac{T_0}T\Big)
+\]
+
+qui tend vers $\varepsilon$, et ce pour tout $\varepsilon > 0$.
+
+\end{important}
+
+
+\begin{simple}
+
+Deux façons de faire une moyenne : demander à \textbf{1000 personnes} leur valeur au même
+instant (moyenne d'ensemble), ou suivre \textbf{une seule personne} très longtemps (moyenne
+temporelle). Ergodique : les deux donnent la même chose, une seule longue mesure suffit. Ça
+marche si le processus « oublie » son passé : quand deux instants très éloignés ne sont plus
+liés ($C_X\to0$), une longue trajectoire explore tout.
+
+\end{simple}
+
 \end{multicols}
 
 
