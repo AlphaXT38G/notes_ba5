@@ -1,0 +1,730 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+\definecolor{Teal}{HTML}{E0F5F3}
+
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+\definecolor{TealTitle}{HTML}{1F6F68}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Modèles stochastiques}}
+\fancyhead[C]{\small Ergodisme, densité spectrale, systèmes LTI}
+\fancyhead[R]{\small Week 05 --- 05-11/10/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+% DEFINITION - blue
+\newtcolorbox{definition}{
+enhanced,
+unbreakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+% IMPORTANT - pink
+\newtcolorbox{important}{
+enhanced,
+unbreakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+% FORMULAS - green
+\newtcolorbox{formula}{
+enhanced,
+unbreakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+% WARNING - orange
+\newtcolorbox{warning}{
+enhanced,
+unbreakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+% EXAMPLE - purple
+\newtcolorbox{example}{
+enhanced,
+unbreakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+% SUMMARY - orange
+\newtcolorbox{summary}{
+enhanced,
+unbreakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+
+% SIMPLE - teal: the same idea again, in the plainest words, with an everyday picture
+\newtcolorbox{simple}{
+enhanced,
+unbreakable,
+colback=Teal,
+colframe=TealTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Expliqué simplement},
+fonttitle=\bfseries
+}
+
+
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+%\footnotesize   --> To reduce the size of the text
+
+\thispagestyle{fancy}
+
+
+
+\begin{multicols}{2}
+
+
+%=========================================================
+\section{Où on en est}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item Mardi : module 3, ergodisme.
+
+\item Vendredi : module 3, densité spectrale, réponse d'un système LTI à des signaux
+aléatoires.
+
+\item Exercices M3 : 9 (mardi) ; 10, 11 (vendredi).
+
+\end{itemize}
+
+\end{summary}
+
+
+\begin{important}
+
+\textbf{Conseils du Moodle.}
+
+\begin{itemize}
+
+\item \textbf{Exercice 10} (difficile, prépare le 11) : une transformation linéaire $Y = AX$ de
+gaussiennes multivariées donne des gaussiennes multivariées. Au point b, il faut trouver la
+matrice $A$ qui \textbf{décorrèle} les deux gaussiennes : $Y$ est alors formé de 2 gaussiennes
+indépendantes.
+
+\item \textbf{Exercice 11} : passer de $\operatorname{Arctan}(\dots)$ à
+$\operatorname{Arcsin}(\dots)$ demande des manipulations trigonométriques fastidieuses, on peut
+garder la réponse en $\operatorname{Arctan}$.
+
+\end{itemize}
+
+\end{important}
+
+
+%=========================================================
+\section{Ergodisme par rapport à la moyenne}
+
+
+\begin{definition}
+
+$X(t)$ WSS. On estime la moyenne d'ensemble $\mu_X = E[X(t)]$ par la \textbf{moyenne
+temporelle} d'une seule réalisation :
+
+\[
+\langle X(t)\rangle_T = \frac1T\int_0^TX(t)\,dt
+\]
+
+$X$ est \textbf{ergodique par rapport à sa moyenne} si, quand $T\to\infty$,
+
+\[
+E[\langle X(t)\rangle_T]\to\mu_X \qquad \mathrm{VAR}[\langle X(t)\rangle_T] \to 0
+\]
+
+(alors $\langle X(t)\rangle_T$ converge en moyenne quadratique vers $\mu_X$).
+
+\end{definition}
+
+
+\begin{formula}
+
+La première condition est toujours vraie (estimateur \textbf{non biaisé}) : $E[\langle
+X\rangle_T] = \frac1T\int_0^T\mu_X\,dt = \mu_X$. Pour la seconde :
+
+\[
+\mathrm{VAR}[\langle X\rangle_T] = \frac1{T^2}\int_0^T\!\!\int_0^TC_X(t-s)\,dt\,ds
+\]
+\[
+= \frac2T\int_0^TC_X(\tau)\Big(1 - \frac\tau T\Big)d\tau
+\]
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Théorème 1} (nécessaire et suffisant) : $X$ WSS est ergodique par rapport à sa moyenne
+ssi
+
+\[
+\lim_{T\to\infty}\frac1T\int_0^TC_X(\tau)\Big(1 - \frac\tau T\Big)d\tau = 0
+\]
+
+\textbf{Corollaire 1} (suffisant) : si $\lim_{\tau\to\infty}C_X(\tau) = 0$, $X$ est ergodique
+par rapport à sa moyenne.
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Preuve du corollaire.} Pour $\varepsilon > 0$, il existe $T_0$ tel que $|C_X(\tau)| <
+\varepsilon$ pour $\tau > T_0$. On coupe l'intégrale en $T_0$ et on borne $|C_X| \le C_X(0)$
+avant $T_0$ :
+
+\[
+\frac1T\Big|\int_0^TC_X(\tau)\big(1-\tfrac\tau T\big)d\tau\Big| \le C_X(0)\frac{T_0}T +
+\varepsilon\Big(1 - \frac{T_0}T\Big)
+\]
+
+qui tend vers $\varepsilon$, et ce pour tout $\varepsilon > 0$.
+
+\end{important}
+
+
+\begin{simple}
+
+Deux façons de faire une moyenne : demander à \textbf{1000 personnes} leur valeur au même
+instant (moyenne d'ensemble), ou suivre \textbf{une seule personne} très longtemps (moyenne
+temporelle). Ergodique : les deux donnent la même chose, une seule longue mesure suffit. Ça
+marche si le processus « oublie » son passé : quand deux instants très éloignés ne sont plus
+liés ($C_X\to0$), une longue trajectoire explore tout.
+
+\end{simple}
+
+
+%=========================================================
+\section{Autres formes d'ergodisme et exemples}
+
+
+\begin{definition}
+
+\textbf{Par rapport à la variance} :
+
+\[
+E[\langle X^2\rangle_T - \mu_X^2]\to\sigma_X^2 \qquad \mathrm{VAR}[\langle X^2\rangle_T -
+\mu_X^2]\to0
+\]
+
+\textbf{Par rapport à l'auto-corrélation}, avec $\langle X(t+\tau)X(t)\rangle_T = \frac1T
+\int_0^TX(t+\tau)X(t)\,dt$ :
+
+\[
+E[\langle X(t+\tau)X(t)\rangle_T] \to R_X(\tau)
+\]
+\[
+\mathrm{VAR}[\langle X(t+\tau)X(t)\rangle_T]\to0
+\]
+
+On se ramène au cas de la moyenne avec $Z(t,\tau) = X(t+\tau)X(t)$.
+
+\vspace{3pt}
+
+\textbf{En distribution} (plus fort, pour un SSS) : les estimées temporelles des fonctions de
+répartition convergent en moyenne quadratique vers elles.
+
+\end{definition}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item \textbf{Sinusoïde à phase uniforme} : ergodique par rapport à sa moyenne si $f_0 \ne 0$
+(chaque trajectoire est une sinusoïde centrée en 0, de moyenne temporelle nulle), et à sa
+variance (exercice 5). Si $f_0 = 0$ : $X(t,\varphi_0) = a\sin\varphi_0$ est constante, sa
+moyenne temporelle vaut $a\sin\varphi_0 \ne 0$ : \textbf{pas} ergodique.
+
+\item \textbf{Phase et amplitude aléatoires} $X(t) = A\sin(2\pi f_0t + \Phi)$, $A\in\{a_1,a_2\}$
+(Bernoulli) : ergodique par rapport à sa moyenne, mais \textbf{pas} à sa variance (certaines
+trajectoires ont l'amplitude $a_1$, d'autres $a_2$).
+
+\item \textbf{Séquence binaire aléatoire} : ergodique par rapport à sa moyenne par le
+corollaire ($C_X(\tau) = 0$ pour $|\tau| \ge T$).
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{simple}
+
+Le contre-exemple à retenir : si chaque trajectoire « choisit » au départ quelque chose qu'elle
+garde pour toujours (une amplitude, une constante), suivre une seule trajectoire ne montre
+qu'\textbf{un} choix. On ne peut pas deviner les autres : pas ergodique.
+
+\end{simple}
+
+
+%=========================================================
+\section{Densité spectrale de puissance}
+
+
+\begin{formula}
+
+$X(t)$ WSS. \textbf{Densité spectrale de puissance} (relations de \textbf{Wiener-Khintchine}) :
+
+\[
+S_X(f) = \int_{-\infty}^{\infty}R_X(\tau)\,e^{-j2\pi f\tau}\,d\tau
+\]
+\[
+R_X(\tau) = \int_{-\infty}^{\infty}S_X(f)\,e^{j2\pi f\tau}\,df
+\]
+
+\textbf{Puissance moyenne} :
+
+\[
+E[X^2(t)] = R_X(0) = \int_{-\infty}^\infty S_X(f)\,df
+\]
+
+\end{formula}
+
+
+\begin{warning}
+
+Bien définie si $\int|R_X(\tau)|\,d\tau < \infty$. Faux si $\mu_X \ne 0$, car $R_X(\tau) =
+C_X(\tau) + \mu_X^2$. Alors soit on ajoute un Dirac, $S_X(f) = \mathcal F(C_X)(f) +
+\mu_X^2\delta(f)$, soit (de préférence) on travaille avec le processus centré $X - \mu_X$.
+Certains processus centrés ne la vérifient quand même pas : ceux à dépendances à long terme
+(fin du cours).
+
+\end{warning}
+
+
+\begin{formula}
+
+\textbf{Propriétés} ($X$ réel) :
+
+\begin{itemize}
+
+\item \textbf{P1.} $S_X(f)$ est \textbf{réelle et paire} (car $R_X$ est paire).
+
+\item \textbf{P2.} $S_X(f) \ge 0$ pour tout $f$.
+
+\item \textbf{P3.} $h(f) = S_X(f)/R_X(0)$ est une densité de probabilité.
+
+\end{itemize}
+
+\textbf{Densité spectrale mutuelle} : $S_{XY}(f) = \mathcal F(R_{XY})(f)$, en général
+complexe.
+
+\end{formula}
+
+
+\begin{simple}
+
+$S_X(f)$ dit \textbf{combien de puissance} le processus met à chaque fréquence, comme
+l'égaliseur d'une chaîne hi-fi : beaucoup de graves, peu d'aigus... Additionner sur toutes les
+fréquences donne la puissance totale. Et on l'obtient simplement en prenant Fourier de $R_X$.
+
+\end{simple}
+
+
+%=========================================================
+\section{Exemples de densités spectrales}
+
+
+\begin{example}
+
+\textbf{Sinusoïde à phase uniforme} :
+
+\[
+S_X(f) = \frac{a^2}4\big(\delta(f-f_0) + \delta(f+f_0)\big)
+\]
+
+\textbf{Bruit blanc} $N(t)$ : WSS, de densité spectrale \textbf{constante} :
+
+\[
+S_N(f) = \frac{N_0}2 \qquad R_N(\tau) = \frac{N_0}2\delta(\tau)
+\]
+
+\end{example}
+
+
+\begin{warning}
+
+$R_N(0) = \infty$ : le bruit blanc est \textbf{irréalisable} en pratique (une définition
+rigoureuse passe par le processus de Wiener). C'est un modèle idéalisé, facile à manipuler ;
+le bruit thermique des résistances s'en approche sur une large gamme de fréquences. Bruit blanc
+\textbf{gaussien} : on suppose en plus $N(t)$ gaussien. Moyenne nulle par défaut.
+
+\end{warning}
+
+
+\begin{example}
+
+\textbf{Bruit blanc à bande étroite} : $S_N(f) = N_0/2$ si $f_0 - B < |f| < f_0 + B$, 0 sinon.
+
+\[
+R_N(\tau) = 2N_0B\cos(2\pi f_0\tau)\operatorname{sinc}(2B\tau)
+\]
+
+\textbf{PAM} ($G = \mathcal F(g)$, $\hat S_A$ : transformée de Fourier discrète de $R_A(n)$,
+la densité spectrale des $A_k$, module 4) :
+
+\[
+S_X(f) = \frac1T\,G(f)\,G(-f)\,\hat S_A(e^{-2\pi jfT})
+\]
+
+Pulse rectangulaire, $A_k$ indépendants :
+
+\[
+S_X(f) = a^2\sigma_A^2T\operatorname{sinc}^2(fT) + a^2\mu_A^2\delta(f)
+\]
+
+C'est bien la transformée de Fourier de $R_X$ de la semaine 4 : le triangle donne le
+$\operatorname{sinc}^2$, la constante $a^2\mu_A^2$ donne le Dirac.
+
+\end{example}
+
+
+\begin{simple}
+
+\textbf{Bruit blanc} : comme la lumière blanche qui contient toutes les couleurs, il contient
+\textbf{toutes les fréquences à égalité}. Conséquence : deux instants, même très proches, n'ont
+rien à voir entre eux ($R_N$ est un pic en 0). Il est tellement agité qu'il aurait une
+puissance infinie : c'est une idéalisation.
+
+\end{simple}
+
+
+%=========================================================
+\section{Réponse d'un système LTI à un processus WSS}
+
+
+\begin{definition}
+
+Système LTI de réponse impulsionnelle $h$ et de transmittance (fonction de transfert)
+
+\[
+H(f) = \int_{-\infty}^\infty h(t)e^{-j2\pi ft}dt, \qquad \text{qui existe si } \int|h| < \infty
+\]
+
+Entrée $X(t)$ WSS, sortie $Y(t) = \int h(s)X(t-s)\,ds$.
+
+\end{definition}
+
+
+\begin{formula}
+
+\[
+E[Y(t)] = \int h(s)\mu_X\,ds = H(0)\,\mu_X
+\]
+\[
+R_Y(\tau) = \iint h(s)h(r)R_X(\tau - s + r)\,ds\,dr
+\]
+
+$Y$ est donc \textbf{WSS}. \textbf{Théorème 2} :
+
+\[
+\boxed{S_Y(f) = |H(f)|^2\,S_X(f)}
+\]
+
+Densités spectrales mutuelles :
+
+\[
+S_{YX}(f) = H(f)S_X(f) \qquad S_{XY}(f) = H^\star(f)S_X(f)
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{D'où vient $|H|^2$.} Dans $S_Y = \mathcal F(R_Y)$, on pose $u = \tau - s + r$ :
+l'intégrale se sépare en $\int h(s)e^{-j2\pi fs}ds = H(f)$, $\int h(r)e^{j2\pi fr}dr =
+H^\star(f)$ et $\int R_X(u)e^{-j2\pi fu}du = S_X(f)$.
+
+\end{important}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item \textbf{Bruit blanc à bande étroite} = bruit blanc filtré par un passe-bande idéal ($H(f)
+= 1$ si $f_0 - B < |f| < f_0 + B$, 0 sinon).
+
+\item \textbf{Dérivée} $Y = dX/dt$ : $H(f) = 2\pi jf$, donc $S_Y(f) = 4\pi^2f^2S_X(f)$ et
+$R_Y(\tau) = -\frac{d^2R_X}{d\tau^2}(\tau)$.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{simple}
+
+On fait passer du bruit dans un filtre. Le filtre multiplie chaque fréquence du
+\textbf{signal} par $H(f)$, donc chaque fréquence de la \textbf{puissance} par $|H(f)|^2$
+(la puissance, c'est le carré). Bruit blanc dans un passe-bande : il ne reste du bruit que dans
+la bande, partout ailleurs c'est le silence.
+
+\end{simple}
+
+
+%=========================================================
+\section{PAM dans un canal et codage en ligne}
+
+
+\begin{definition}
+
+Le PAM est vu comme un train de Dirac $A_d(t) = \sum_kA_k\delta(t-kT-D)$, de densité spectrale
+$\frac1T\hat S_A(e^{-2\pi jfT})$, \textbf{mis en forme} par un filtre $G(f)$, puis envoyé sur un
+canal linéaire $H(f)$ :
+
+\[
+S_Y(f) = \frac1T|H(f)|^2|G(f)|^2\hat S_A(e^{-2\pi jfT})
+\]
+
+Un canal \textbf{dispersif} ($H$ pas constant) déforme les pulses : chacun déborde sur les
+suivants, c'est l'\textbf{interférence intersymbole}.
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Codage en ligne} (détaillé en Communications numériques), deux approches :
+
+\begin{itemize}
+
+\item agir sur le pulse $G(f)$ : si le canal ne passe pas le continu ($H(0) = 0$), le pulse
+$+a$ sur $[0,T/2[$, $-a$ sur $[T/2,T[$, avec $A_k = \pm1$ : \textbf{code de Manchester} ;
+
+\item corréler les $A_k$ pour changer $\hat S_A$ : code \textbf{duobinaire} $B_k = A_k +
+A_{k-1}$ (3 niveaux), codes \textbf{différentiels} $B_k = A_k\oplus B_{k-1}$.
+
+\end{itemize}
+
+\end{example}
+
+
+%=========================================================
+\section{Processus à valeurs complexes}
+
+
+\begin{formula}
+
+$X(t)\in\mathbb C$ : on conjugue le second facteur.
+
+\[
+R_X(t_1,t_2) = E[X(t_1)X^\star(t_2)]
+\]
+\[
+C_X(t_1,t_2) = R_X(t_1,t_2) - \mu_X(t_1)\mu_X^\star(t_2)
+\]
+
+Si $X$ est WSS : $R_X(-\tau) = R_X^\star(\tau)$, $R_X(0) = E[|X(t)|^2]$, et $S_X(f)$ est
+toujours \textbf{réelle}.
+
+\end{formula}
+
+
+%=========================================================
+\section{Résumé de la semaine}
+
+
+\begin{summary}
+
+\textbf{Exercices M3} : 9 ; 10, 11.
+
+\vspace{3pt}
+
+\textbf{À retenir}
+
+\begin{itemize}
+
+\item Ergodique (moyenne) : $\langle X\rangle_T\to\mu_X$ en m.q. $\Leftrightarrow
+\frac1T\int_0^TC_X(\tau)(1-\frac\tau T)d\tau\to0$ ; suffit : $C_X(\tau)\to0$.
+
+\item $S_X = \mathcal F(R_X)$, réelle, paire, $\ge0$ ; $R_X(0) = \int S_X$.
+
+\item Bruit blanc : $S_N = N_0/2$, $R_N = \frac{N_0}2\delta$.
+
+\item LTI : $\mu_Y = H(0)\mu_X$, $S_Y = |H|^2S_X$, $S_{YX} = HS_X$.
+
+\item PAM : $S_X = \frac1T|G|^2\hat S_A$ ; interférence intersymbole, codage en ligne.
+
+\end{itemize}
+
+\end{summary}
+
+\end{multicols}
+
+
+\end{document}

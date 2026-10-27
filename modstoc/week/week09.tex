@@ -1,0 +1,940 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+\definecolor{Teal}{HTML}{E0F5F3}
+
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+\definecolor{TealTitle}{HTML}{1F6F68}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Modèles stochastiques}}
+\fancyhead[C]{\small Wiener, prédiction linéaire et Poisson}
+\fancyhead[R]{\small Week 09 --- 02-08/11/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+% DEFINITION - blue
+\newtcolorbox{definition}{
+enhanced,
+unbreakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+% IMPORTANT - pink
+\newtcolorbox{important}{
+enhanced,
+unbreakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+% FORMULAS - green
+\newtcolorbox{formula}{
+enhanced,
+unbreakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+% WARNING - orange
+\newtcolorbox{warning}{
+enhanced,
+unbreakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+% EXAMPLE - purple
+\newtcolorbox{example}{
+enhanced,
+unbreakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+% SUMMARY - orange
+\newtcolorbox{summary}{
+enhanced,
+unbreakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+
+% SIMPLE - teal: the same idea again, in the plainest words, with an everyday picture
+\newtcolorbox{simple}{
+enhanced,
+unbreakable,
+colback=Teal,
+colframe=TealTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Expliqué simplement},
+fonttitle=\bfseries
+}
+
+
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+%\footnotesize   --> To reduce the size of the text
+
+\thispagestyle{fancy}
+
+
+
+\begin{multicols}{2}
+
+
+%=========================================================
+\section{Où on en est}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item Semaine 7 : break. Semaine 8 : office hours le mardi, \textbf{midterm} (modules 1 à 3)
+le vendredi. Pas de nouvelle matière, donc pas de notes pour ces deux semaines.
+
+\item Mardi : module 4 (fin), filtre de Wiener et prédiction linéaire ; module 5, processus de
+Poisson : définition, équations de Kolmogorov, loi.
+
+\item Vendredi : module 5, propriétés, bruit impulsif de Poisson (\emph{shot noise}).
+
+\item Exercices M4 : 1, 4 (mardi) ; 5, 8, 9 (vendredi).
+
+\end{itemize}
+
+\end{summary}
+
+
+\begin{important}
+
+\textbf{Conseils du Moodle pour l'exercice M4 4.}
+
+\begin{itemize}
+
+\item \textbf{4 b} : s'arrêter à une expression avec une \textbf{double somme}. La réduire à la
+somme simple de l'énoncé (comme dans les solutions) est technique et hors exercice.
+
+\item \textbf{4 c} : partir des formules données plus haut dans l'énoncé.
+
+\end{itemize}
+
+\end{important}
+
+
+%=========================================================
+\section{Rappel : le filtre de Wiener}
+
+
+\begin{formula}
+
+Entrée $X(n)$ WSS, sortie $Y(n) = \sum_kh(k)X(n-k)$, réponse désirée $D(n)$, erreur $e(n) =
+D(n) - Y(n)$, on minimise $\varepsilon = E[e^2(n)]$ :
+
+\[
+\sum_lh(l)R_X(k-l) = R_{DX}(k) \quad\Rightarrow\quad H(f) = \frac{S_{DX}(f)}{S_X(f)}
+\]
+
+(non causal), ou, en causal, les \textbf{équations de Wiener-Hopf} : $\sum_{l\ge0}h(l)R_X(k-l)
+= R_{DX}(k)$ pour $k\ge0$.
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Exercice 8} (filtre de prédiction ci-dessous) : l'erreur $e(n)$ et l'entrée $X$ sont
+\textbf{orthogonales}. C'est ce que disent les équations : pour chaque $k$ où le filtre a un
+coefficient, $E[e(n)X(n-k)] = R_{DX}(k) - \sum_lh(l)R_X(k-l) = 0$.
+
+\end{important}
+
+
+\begin{simple}
+
+Le meilleur filtre est celui dont l'erreur restante n'a \textbf{plus rien en commun} avec ce
+qu'on a vu à l'entrée : s'il restait un lien, on pourrait s'en servir pour corriger encore un
+peu l'erreur, et le filtre ne serait pas le meilleur.
+
+\end{simple}
+
+
+%=========================================================
+\section{Application : restauration d'image}
+
+
+\begin{definition}
+
+Modèle de dégradation (« image » à une dimension pour commencer) :
+
+\[
+X(n) = \sum_ib(i)S(n-i) + N(n)
+\]
+
+$S$ : image idéale, $X$ : image dégradée, $b$ : filtre de dégradation (mouvement de la
+caméra...) de transmittance $B(f)$, $N$ : bruit additif. On cherche $H(f)$ tel que la sortie
+$Y$ soit proche de $S$.
+
+\end{definition}
+
+
+\begin{warning}
+
+\textbf{Filtrage inverse} $H_{\mathrm{inv}}(f) = 1/B(f)$ : $\tilde Y(f) = \tilde S(f) +
+\tilde N(f)/B(f)$ (transformées de Fourier des signaux, pas des densités spectrales). Si $B(f)$
+est très petit à certaines fréquences, le bruit $\tilde N/B$ explose et écrase l'image. Et si
+l'image est seulement bruitée ($B = 1$), il ne fait rien.
+
+\end{warning}
+
+
+\begin{formula}
+
+\textbf{Wiener}, avec $D = S$, $N$ centré et indépendant de $S$ :
+
+\[
+S_{DX}(f) = B^\star(f)S_S(f) \qquad S_X(f) = |B(f)|^2S_S(f) + S_N(f)
+\]
+\[
+H(f) = \frac1{B(f)}\cdot\frac{|B(f)|^2S_S(f)}{|B(f)|^2S_S(f) + S_N(f)}
+\]
+
+Une cascade : un filtre qui \textbf{réduit le bruit}, puis le \textbf{filtre inverse}. Sans
+bruit, c'est le filtre inverse ; avec $B = 1$, c'est le Wiener qui débruite. En 2D, même formule
+en $(f_1,f_2)$.
+
+\end{formula}
+
+
+\begin{important}
+
+Limites : le critère des moindres carrés n'est pas celui de l'\oe il (variantes avec des
+paramètres $\alpha$, $\beta$), une image n'est pas stationnaire (version adaptative, algorithme
+LMS), et il faut connaître $S_S$ et $S_N$.
+
+\end{important}
+
+
+\begin{simple}
+
+Une photo floue et granuleuse. Le filtre inverse « défloute » à fond, mais il amplifie aussi
+le grain là où le flou avait presque tout effacé : catastrophe. Wiener est plus malin : il ne
+défloute que là où le signal est plus fort que le bruit, et laisse tomber les fréquences où il
+n'y a plus que du grain.
+
+\end{simple}
+
+
+%=========================================================
+\section{Application : codage PCM et DPCM}
+
+
+\begin{definition}
+
+\textbf{PCM} (MIC) : on quantifie chaque échantillon directement, en l'arrondissant au $i\Delta$
+le plus proche ($\Delta$ : pas de quantification). Simple et rapide, mais n'exploite pas la
+redondance : environ 64 kbps pour la parole.
+
+\vspace{3pt}
+
+\textbf{Bruit de quantification} $q(n) = X(n) - Q(X(n))$ (en négligeant les dépassements de
+plage) : sous des hypothèses raisonnables, uniforme sur $[-\Delta/2,\Delta/2]$, indépendant
+d'un échantillon à l'autre, donc un \textbf{bruit blanc} :
+
+\[
+\sigma_q^2 = \frac{\Delta^2}{12} \qquad R_q(k) = \sigma_q^2\delta(k) \qquad \mathrm{SNR} =
+\frac{\sigma_X^2}{\sigma_q^2}
+\]
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{DPCM} : on \textbf{prédit} $X(n)$ à partir des échantillons précédents, $Y(n)$, et on ne
+quantifie et transmet que l'erreur de prédiction $e(n) = X(n) - Y(n)$. Le récepteur refait la
+même prédiction et ajoute l'erreur reçue.
+
+\vspace{3pt}
+
+Le prédicteur minimise la variance de $e$, donc $\sigma_e^2 \ll \sigma_X^2$ : pour le même
+nombre de bits, bruit de quantification bien plus faible ; pour la même qualité, moins de bits
+(environ 16 kbps).
+
+\end{definition}
+
+
+\begin{important}
+
+En pratique, on prédit à partir des échantillons \textbf{quantifiés} $X_q(n-1),\dots$ (le
+prédicteur est dans la boucle autour du quantificateur) : les erreurs de quantification sont
+prises en compte et ne s'accumulent pas.
+
+\end{important}
+
+
+\begin{simple}
+
+Au lieu d'envoyer chaque valeur en entier, on envoie seulement « \textbf{la surprise} » : la
+différence entre la vraie valeur et ce qu'on pouvait deviner. Comme la parole change
+doucement, la surprise est petite, donc il faut moins de bits pour l'écrire.
+
+\end{simple}
+
+
+%=========================================================
+\section{Filtre de prédiction linéaire}
+
+
+\begin{formula}
+
+$X(n)$ WSS. On estime $X(n)$ à partir des $m$ échantillons précédents :
+
+\[
+Y(n) = \sum_{k=1}^mh(k)X(n-k)
+\]
+
+en minimisant $\varepsilon = E[(X(n) - Y(n))^2]$ : Wiener avec $D(n) = X(n)$, donc $R_{DX}(k)
+= R_X(k)$, filtre à réponse impulsionnelle finie. Les équations de Wiener-Hopf deviennent les
+\textbf{équations de Yule-Walker} :
+
+\[
+\sum_{l=1}^mh(l)R_X(k-l) = R_X(k), \quad 1\le k\le m
+\]
+
+Avec $\mathbf r_X = [R_X(1)\dots R_X(m)]^T$ et $\mathbf h = [h(1)\dots h(m)]^T$ :
+
+\[
+\Phi_X\mathbf h = \mathbf r_X \qquad \mathbf h = \Phi_X^{-1}\mathbf r_X
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+Il faut inverser la matrice de corrélation $\Phi_X$ (symétrique, Toeplitz).
+
+\begin{itemize}
+
+\item Symétrique : $\Phi_X = Q^T\Lambda Q$ avec $Q$ orthogonale (décomposition de
+\textbf{Karhunen-Loève}, qui décorrèle les échantillons), $\Phi_X^{-1} = \sum_i\lambda_i^{-1}
+\mathbf q_i\mathbf q_i^T$. Élégant, mais calculer les valeurs propres coûte cher.
+
+\item En pratique : l'algorithme de \textbf{Levinson}, qui exploite la structure de Toeplitz.
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{simple}
+
+Deviner la prochaine valeur comme un mélange des $m$ dernières. Les bons poids $h(k)$ se
+trouvent en résolvant un petit système linéaire, qui ne demande que l'auto-corrélation : à
+quel point une valeur ressemble à celle d'il y a 1, 2, ..., $m$ pas.
+
+\end{simple}
+
+
+%=========================================================
+\section{Application : vocodeur LPC}
+
+
+\begin{definition}
+
+\textbf{Synthèse de la parole} (modèle simplifié) : un filtre AR de coefficients $a_k$, excité
+par $u(n)$ :
+
+\begin{itemize}
+
+\item sons \textbf{voisés} (/a/, /i/, /v/) : train périodique d'impulsions d'amplitude $\sigma$
+(les cordes vocales), de période le \textbf{pitch} ;
+
+\item sons \textbf{non voisés} (/f/, /s/, /t/) : bruit blanc de variance $\sigma^2$.
+
+\end{itemize}
+
+Sur des blocs courts (10 à 30 ms), la parole est considérée stationnaire.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Vocodeur} (\emph{voice coder}) : pour chaque bloc, l'émetteur ne transmet que : voisé
+ou non, le pitch, le gain $\sigma$, et les coefficients de prédiction $h(k)$ (estimées des
+$-a_k$, ordre $m = p$). Le récepteur resynthétise la parole avec le modèle.
+
+\vspace{3pt}
+
+Débit d'environ 4.8 kbps, voire 2.4 kbps (au lieu de 16), mais la parole devient
+\textbf{synthétique}.
+
+\end{formula}
+
+
+\begin{simple}
+
+Au lieu d'envoyer le son, on envoie la \textbf{recette} pour le refaire : « une voix grave, qui
+dit un son en /a/, à tel volume ». À l'arrivée, une petite machine reproduit le son à partir
+de la recette. Très économique, mais ça sonne comme un robot.
+
+\end{simple}
+
+
+%=========================================================
+\section{Processus de comptage}
+
+
+\begin{definition}
+
+$\{N(t), t\in\mathbb R^+\}$ est un \textbf{processus de comptage} si $N(t)$ est le nombre
+d'évènements dans $[0,t]$ :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item temps continu, valeurs entières $\ge0$ ;
+
+\item $N(0) = 0$ ;
+
+\item $t_1 < t_2 \Rightarrow N(t_1) \le N(t_2)$ ;
+
+\item le nombre d'évènements dans $]t_1,t_2]$ est $N(t_2) - N(t_1)$.
+
+\end{enumerate}
+
+\end{definition}
+
+
+\begin{formula}
+
+Deux processus associés (temps discret, valeurs continues) :
+
+\begin{itemize}
+
+\item $S(n)$ : \textbf{temps d'arrivée} du $n$-ième évènement ;
+
+\item $T(n)$ : \textbf{temps entre arrivées}, entre le $n$-ième et le $(n+1)$-ième.
+
+\end{itemize}
+
+\[
+N(t)\ge n \Leftrightarrow S(n)\le t \qquad S(n) = \sum_{m=0}^{n-1}T(m)
+\]
+\[
+T(n) = S(n+1) - S(n) \;(n\ge1),\quad T(0) = S(1)
+\]
+\[
+N(t) = \max\{n : S(n)\le t\} \qquad S(n) = \inf\{t : N(t) = n\}
+\]
+
+\end{formula}
+
+
+\begin{simple}
+
+Un compteur à l'entrée d'un magasin. $N(t)$ : combien de clients sont entrés depuis
+l'ouverture. $S(n)$ : à quelle heure est entré le $n$-ième. $T(n)$ : combien de temps on a
+attendu entre deux clients. Trois façons de raconter la même histoire.
+
+\end{simple}
+
+
+%=========================================================
+\section{Processus de Poisson : deux définitions}
+
+
+\begin{definition}
+
+\textbf{Définition 1.} Poisson homogène d'intensité $\lambda > 0$ : un processus de comptage
+avec
+
+\begin{itemize}
+
+\item \textbf{H1.} \textbf{accroissements indépendants} (des intervalles disjoints sont
+indépendants) ;
+
+\item \textbf{H2.} \textbf{homogène} (accroissements stationnaires) : $P(N(t+T) - N(t) = n_0) =
+P(N(T) = n_0)$ ;
+
+\item \textbf{H3.} pas d'arrivées groupées :
+
+\[
+P(N(\Delta t) = 1) = \lambda\Delta t + o(\Delta t)
+\]
+\[
+P(N(\Delta t)\ge2) = o(\Delta t)
+\]
+
+donc $P(N(\Delta t) = 0) = 1 - \lambda\Delta t + o(\Delta t)$ ($f$ est $o(\Delta t)$ si
+$f(\Delta t)/\Delta t\to0$).
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{Définition 2.} H1, et \textbf{H2'} : pour tous $t, T\ge0$,
+
+\[
+P(N(t+T) - N(t) = n) = \frac{(\lambda T)^n}{n!}e^{-\lambda T}
+\]
+
+\textbf{Théorème 1} : les deux définitions sont équivalentes.
+
+\end{definition}
+
+
+\begin{simple}
+
+Des clients qui arrivent \textbf{complètement au hasard} : ce qui se passe dans un intervalle
+n'influence pas un autre (H1), toutes les heures se valent (H2), et deux clients n'arrivent
+jamais pile en même temps (H3). Ces trois règles de bon sens suffisent à imposer que le nombre
+de clients dans une durée $T$ suit une loi de Poisson de moyenne $\lambda T$.
+
+\end{simple}
+
+
+%=========================================================
+\section{Équations de Kolmogorov}
+
+
+\begin{formula}
+
+$p_n(t) = P(N(t) = n)$. Avec H1--H3 :
+
+\[
+p_0(t+\Delta t) = P(N(\Delta t) = 0)\,p_0(t) = (1-\lambda\Delta t + o(\Delta t))\,p_0(t)
+\]
+
+et, par les probabilités totales, pour $n > 0$ :
+
+\[
+p_n(t+\Delta t) = (1-\lambda\Delta t)p_n(t) + \lambda\Delta t\,p_{n-1}(t) + o(\Delta t)
+\]
+
+En divisant par $\Delta t\to0$ : les \textbf{équations de Kolmogorov}
+
+\[
+\frac{dp_0}{dt}(t) = -\lambda p_0(t) \qquad \frac{dp_n}{dt}(t) = -\lambda p_n(t) + \lambda
+p_{n-1}(t)
+\]
+
+avec $p_0(0) = 1$, $p_n(0) = 0$ pour $n\ge1$.
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Solution} (par récurrence sur $n$, ou par la fonction génératrice, exercice 1) :
+
+\[
+p_0(t) = e^{-\lambda t} \qquad p_n(t) = \frac{(\lambda t)^n}{n!}e^{-\lambda t}
+\]
+
+$N(t)$ suit la loi de Poisson du module 1 (la limite de la binomiale) ; avec H2, on obtient
+H2', d'où l'équivalence des définitions.
+
+\end{formula}
+
+
+\begin{simple}
+
+On regarde ce qui peut se passer pendant un tout petit instant $\Delta t$ : soit rien, soit
+exactement un client. Pour avoir $n$ clients à $t + \Delta t$, soit on en avait déjà $n$ et
+personne n'arrive, soit on en avait $n-1$ et un arrive. Ça donne des équations qui disent
+comment les probabilités \textbf{coulent} de case en case avec le temps.
+
+\end{simple}
+
+
+%=========================================================
+\section{Propriétés du processus de Poisson}
+
+
+\begin{formula}
+
+\begin{itemize}
+
+\item \textbf{P1.} $G_N(z;t) = e^{\lambda t(z-1)}$, $\ \mu_N(t) = \lambda t$, $\ \sigma_N^2(t) =
+\lambda t$.
+
+\item \textbf{P2.} $R_N(t_1,t_2) = \lambda^2t_1t_2 + \lambda\min(t_1,t_2)$ (exercice 2 :
+écrire $N(t_2) = N(t_1) + (N(t_2) - N(t_1))$ pour $t_1\le t_2$).
+
+\item \textbf{P3. Superposition} : $M$ processus de Poisson indépendants de taux $\lambda_i$
+donnent un processus de Poisson de taux $\lambda = \sum_i\lambda_i$.
+
+\item \textbf{P4. Décomposition} : si chaque évènement va au sous-processus $i$ avec
+probabilité $p_i$ ($\sum p_i = 1$), on obtient $M$ processus de Poisson \textbf{indépendants}
+de taux $p_i\lambda$.
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Preuve de P4} ($M = 2$). Sachant $N(t) = n_1 + n_2$, $N_1(t)$ est binomiale de
+paramètre $p_1$ :
+
+\[
+P(N_1 = n_1, N_2 = n_2) = \binom{n_1+n_2}{n_1}p_1^{n_1}p_2^{n_2}\frac{(\lambda
+t)^{n_1+n_2}}{(n_1+n_2)!}e^{-\lambda t}
+\]
+\[
+= \frac{(p_1\lambda t)^{n_1}}{n_1!}e^{-p_1\lambda t}\cdot\frac{(p_2\lambda
+t)^{n_2}}{n_2!}e^{-p_2\lambda t}
+\]
+
+Le produit montre l'indépendance ; en sommant sur $n_2$, $N_1$ est Poisson de taux $p_1\lambda$.
+
+\end{important}
+
+
+\begin{simple}
+
+\textbf{Superposition} : deux portes, chacune avec des clients au hasard ; tous ensemble, c'est
+encore des clients au hasard, avec les taux qui s'additionnent. \textbf{Décomposition} : on
+tire à pile ou face pour envoyer chaque client à gauche ou à droite ; chaque côté reçoit des
+clients au hasard, et les deux côtés ne s'influencent même pas.
+
+\end{simple}
+
+
+%=========================================================
+\section{Temps d'arrivée et temps entre arrivées}
+
+
+\begin{formula}
+
+\textbf{P5.} Les temps d'arrivée $S(n)$ suivent une loi d'\textbf{Erlang} (exercice 4) :
+
+\[
+f_{S(n)}(s) = \frac{\lambda(\lambda s)^{n-1}}{(n-1)!}e^{-\lambda s}, \quad s\ge0
+\]
+
+\textbf{P6.} Les temps entre arrivées $T(n)$ sont des \textbf{exponentielles i.i.d.} de moyenne
+$1/\lambda$ :
+
+\[
+f_{T(n)}(t) = \lambda e^{-\lambda t}, \quad t\ge0
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Preuve de P6.} $P(T(0) > t) = P(N(t) = 0) = e^{-\lambda t}$. Pour $n\ge1$, par les
+accroissements indépendants, $T(n)$ est indépendant du passé :
+
+\[
+P(T(n) > t) = P(N(s_n + t) - N(s_n) = 0 | S(n) = s_n)
+\]
+\[
+= P(N(t) = 0) = e^{-\lambda t}
+\]
+
+\vspace{3pt}
+
+\textbf{Définition 3.} Avec des $T(n)$ exponentielles i.i.d. de moyenne $1/\lambda$, $S(n) =
+\sum_{m=0}^{n-1}T(m)$ et $N(t) = \max\{n : S(n)\le t\}$ : processus de Poisson d'intensité
+$\lambda$. L'exponentielle est la seule v.a. continue sans mémoire.
+
+\end{important}
+
+
+\begin{simple}
+
+Le temps entre deux clients est \textbf{exponentiel} : c'est l'attente du bus qui n'a pas de
+mémoire. Et l'heure d'arrivée du $n$-ième client, c'est la somme de $n$ attentes
+exponentielles : une Erlang (la Gamma du module 1).
+
+\end{simple}
+
+
+%=========================================================
+\section{Poisson sur $\mathbb R$ et bruit impulsif}
+
+
+\begin{definition}
+
+\textbf{Poisson sur $\mathbb R$} (processus ponctuel, pour les dispositifs physiques ou
+optiques) : $N(t)$ défini pour tout $t$, avec $N(0) = 0$ (donc $N(t)\le0$ pour $t\le0$),
+$\dots\le S(-1)\le S(0)\le0 < S(1)\le\dots$, $T(n) = S(n+1) - S(n)$ pour $n\in\mathbb Z$. Les
+$T(n)$ sont encore exponentielles i.i.d. (y compris $T(0) = S(1) - S(0)$, par l'absence de
+mémoire), et P1 à P4 restent vraies.
+
+\vspace{3pt}
+
+\textbf{Bruit impulsif de Poisson} (\emph{shot noise}), $h$ déterministe :
+
+\[
+X_h(t) = \sum_{n=-\infty}^{\infty}h(t - S(n))
+\]
+
+\textbf{Composé} : $\hat X_h(t) = \sum_nA_nh(t-S(n))$, $A_n$ i.i.d. indépendants de $N$. Avec
+$h$ l'échelon unité, $X_h = N$.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Lemme 1} (dérivée d'un processus, même non stationnaire) : si $X'(t) =
+\frac{dX}{dt}(t)$,
+
+\[
+\mu_{X'}(t) = \frac{d\mu_X}{dt}(t) \qquad R_{X'}(t_1,t_2) = \frac{\partial^2R_X}{\partial
+t_1\partial t_2}(t_1,t_2)
+\]
+
+Avec $h = \delta$, $X_\delta = dN/dt$ (un Dirac à chaque arrivée) :
+
+\[
+\mu_{X_\delta} = \lambda \qquad R_{X_\delta}(t_1,t_2) = \lambda^2 + \lambda\delta(t_1-t_2)
+\]
+\[
+S_{X_\delta}(f) = \lambda^2\delta(f) + \lambda
+\]
+
+\end{formula}
+
+
+\begin{formula}
+
+Pour un $h$ quelconque (absolument intégrable), $X_h = h * X_\delta$, donc $S_{X_h}(f) =
+\lambda^2H^2(0)\delta(f) + \lambda|H(f)|^2$. \textbf{Théorème de Campbell} :
+
+\begin{itemize}
+
+\item \textbf{P7.} $\displaystyle \mu_{X_h} = \lambda H(0) = \lambda\int h(s)\,ds$, $\
+\displaystyle \sigma_{X_h}^2 = \lambda\int|H(f)|^2df = \lambda\int h^2(s)\,ds$ (Parseval).
+
+\item \textbf{P8.} Composé : $\mu = \lambda\mu_A\int h(s)\,ds$, $\ \sigma^2 = \lambda(\mu_A^2 +
+\sigma_A^2)\int h^2(s)\,ds$.
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{simple}
+
+Chaque arrivée (un électron, un photon) donne une petite \textbf{bosse} $h$ dans le courant,
+et le courant total est la somme de toutes les bosses. Campbell dit tout simplement : la
+moyenne, c'est (nombre de bosses par seconde) $\times$ (aire d'une bosse) ; la variance,
+c'est (nombre de bosses par seconde) $\times$ (aire de la bosse au carré).
+
+\end{simple}
+
+
+%=========================================================
+\section{Résumé de la semaine}
+
+
+\begin{summary}
+
+\textbf{Exercices M4} : 1, 4 ; 5, 8, 9.
+
+\vspace{3pt}
+
+\textbf{À retenir}
+
+\begin{itemize}
+
+\item Wiener : $H = S_{DX}/S_X$ ; erreur orthogonale à l'entrée ; restauration
+$H = \frac1B\cdot\frac{|B|^2S_S}{|B|^2S_S + S_N}$.
+
+\item PCM : $\sigma_q^2 = \Delta^2/12$ ; DPCM : on quantifie l'erreur de prédiction.
+
+\item Prédiction : Yule-Walker $\Phi_X\mathbf h = \mathbf r_X$ (Toeplitz, Levinson) ; vocodeur
+LPC.
+
+\item Poisson : H1 + H2 + H3 $\Leftrightarrow$ H1 + H2' ; Kolmogorov ; $p_n(t) =
+\frac{(\lambda t)^n}{n!}e^{-\lambda t}$.
+
+\item $\mu = \sigma^2 = \lambda t$, $R_N = \lambda^2t_1t_2 + \lambda\min(t_1,t_2)$ ;
+superposition, décomposition.
+
+\item $S(n)$ Erlang, $T(n)$ exponentielles i.i.d.
+
+\item Shot noise et Campbell : $\mu = \lambda\int h$, $\sigma^2 = \lambda\int h^2$.
+
+\end{itemize}
+
+\end{summary}
+
+\end{multicols}
+
+
+\end{document}
