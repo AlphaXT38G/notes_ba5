@@ -429,6 +429,70 @@ qu'\textbf{un} choix. On ne peut pas deviner les autres : pas ergodique.
 
 \end{simple}
 
+
+%=========================================================
+\section{Densité spectrale de puissance}
+
+
+\begin{formula}
+
+$X(t)$ WSS. \textbf{Densité spectrale de puissance} (relations de \textbf{Wiener-Khintchine}) :
+
+\[
+S_X(f) = \int_{-\infty}^{\infty}R_X(\tau)\,e^{-j2\pi f\tau}\,d\tau
+\]
+\[
+R_X(\tau) = \int_{-\infty}^{\infty}S_X(f)\,e^{j2\pi f\tau}\,df
+\]
+
+\textbf{Puissance moyenne} :
+
+\[
+E[X^2(t)] = R_X(0) = \int_{-\infty}^\infty S_X(f)\,df
+\]
+
+\end{formula}
+
+
+\begin{warning}
+
+Bien définie si $\int|R_X(\tau)|\,d\tau < \infty$. Faux si $\mu_X \ne 0$, car $R_X(\tau) =
+C_X(\tau) + \mu_X^2$. Alors soit on ajoute un Dirac, $S_X(f) = \mathcal F(C_X)(f) +
+\mu_X^2\delta(f)$, soit (de préférence) on travaille avec le processus centré $X - \mu_X$.
+Certains processus centrés ne la vérifient quand même pas : ceux à dépendances à long terme
+(fin du cours).
+
+\end{warning}
+
+
+\begin{formula}
+
+\textbf{Propriétés} ($X$ réel) :
+
+\begin{itemize}
+
+\item \textbf{P1.} $S_X(f)$ est \textbf{réelle et paire} (car $R_X$ est paire).
+
+\item \textbf{P2.} $S_X(f) \ge 0$ pour tout $f$.
+
+\item \textbf{P3.} $h(f) = S_X(f)/R_X(0)$ est une densité de probabilité.
+
+\end{itemize}
+
+\textbf{Densité spectrale mutuelle} : $S_{XY}(f) = \mathcal F(R_{XY})(f)$, en général
+complexe.
+
+\end{formula}
+
+
+\begin{simple}
+
+$S_X(f)$ dit \textbf{combien de puissance} le processus met à chaque fréquence, comme
+l'égaliseur d'une chaîne hi-fi : beaucoup de graves, peu d'aigus... Additionner sur toutes les
+fréquences donne la puissance totale. Et on l'obtient simplement en prenant Fourier de $R_X$.
+
+\end{simple}
+
 \end{multicols}
 
 
