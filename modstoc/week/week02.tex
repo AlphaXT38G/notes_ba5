@@ -474,6 +474,66 @@ pourtant si on connaît $X$, on connaît presque $Y$.
 
 \end{simple}
 
+
+%=========================================================
+\section{Transformées d'une paire}
+
+
+\begin{formula}
+
+\textbf{Fonction caractéristique jointe} :
+
+\[
+\Phi_{XY}(\omega_1,\omega_2) = E\big[e^{j(\omega_1X+\omega_2Y)}\big]
+\]
+
+(conjugué de la transformée de Fourier 2D de $f_{XY}$). Inverse :
+
+\[
+f_{XY}(x,y) = \frac{1}{4\pi^2}\iint e^{-j(\omega_1x+\omega_2y)}\Phi_{XY}(\omega_1,\omega_2)\,
+d\omega_1 d\omega_2
+\]
+
+\begin{itemize}
+
+\item Marginales : $\Phi_X(\omega) = \Phi_{XY}(\omega,0)$, $\Phi_Y(\omega) =
+\Phi_{XY}(0,\omega)$.
+
+\item Moments : $E[X^mY^n] = \frac{1}{j^{m+n}}\frac{\partial^{m+n}\Phi_{XY}}{\partial\omega_1^m
+\partial\omega_2^n}\big|_{(0,0)}$.
+
+\item Génératrice des moments : $\hat\Phi_{XY}(s_1,s_2) = E[e^{s_1X+s_2Y}]$.
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+Si $X$ et $Y$ sont \textbf{indépendantes} :
+
+\[
+\Phi_{XY}(\omega_1,\omega_2) = \Phi_X(\omega_1)\Phi_Y(\omega_2)
+\]
+
+et pour $Z = X+Y$ (convolution des densités $\leftrightarrow$ produit des transformées) :
+
+\[
+\Phi_Z(\omega) = \Phi_X(\omega)\,\Phi_Y(\omega)
+\]
+
+\end{important}
+
+
+\begin{simple}
+
+Additionner deux v.a. indépendantes, c'est une convolution, donc une intégrale pénible. Avec
+les fonctions caractéristiques, c'est juste une \textbf{multiplication}. On multiplie, puis on
+reconnaît la fonction caractéristique d'une loi connue.
+
+\end{simple}
+
 \end{multicols}
 
 
