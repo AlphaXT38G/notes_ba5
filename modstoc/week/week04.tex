@@ -364,6 +364,64 @@ $R_X(t_1,t_2)$ : est-ce que la valeur à $t_1$ et celle à $t_2$ ont tendance à
 
 \end{simple}
 
+
+%=========================================================
+\section{Exemples : sinusoïdes aléatoires}
+
+
+\begin{example}
+
+\textbf{Sinusoïde à phase aléatoire} $X(t) = a\sin(2\pi f_0t + \Phi)$, $a$, $f_0$ constantes.
+
+\vspace{3pt}
+
+\textbf{Cas 1 : $\Phi \in \{0,\pi\}$ équiprobable} (Bernoulli). Deux trajectoires,
+$a\sin(2\pi f_0t)$ et $-a\sin(2\pi f_0t)$. À $t_0$ fixé, $X(t_0) = \pm a\sin(2\pi f_0 t_0)$.
+
+\[
+\mu_X(t) = 0
+\]
+\[
+R_X(t_1,t_2) = a^2\sin(2\pi f_0t_1)\sin(2\pi f_0t_2)
+\]
+\[
+= \frac{a^2}2\big[\cos(2\pi f_0(t_1-t_2)) - \cos(2\pi f_0(t_1+t_2))\big]
+\]
+
+\textbf{Cas 2 : $\Phi$ uniforme sur $[0,2\pi]$} ($X(t)$ est une v.a. continue ; exercice 1) :
+
+\[
+\mu_X(t) = 0 \qquad R_X(t_1,t_2) = \frac{a^2}2\cos(2\pi f_0(t_1-t_2))
+\]
+
+\end{example}
+
+
+\begin{example}
+
+\textbf{Sinusoïdes en quadrature à amplitudes aléatoires} : $X(t) = A\cos(2\pi f_0 t) +
+B\sin(2\pi f_0t)$, $A$ et $B$ indépendantes, moyennes nulles, même variance $\sigma^2$.
+
+\[
+\mu_X(t) = 0 \qquad R_X(t_1,t_2) = \sigma^2\cos(2\pi f_0(t_1-t_2))
+\]
+
+Si $\sigma^2 = a^2/2$, mêmes moments d'ordre 1 et 2 que la sinusoïde à phase uniforme, mais
+\textbf{en général ce sont deux processus différents}.
+
+\end{example}
+
+
+\begin{simple}
+
+On a une onde parfaite, mais on ne sait pas \textbf{où elle commence}. Si le départ peut être
+n'importe où (phase uniforme), toutes les heures se ressemblent : le lien entre deux instants
+ne dépend que de l'écart $t_1 - t_2$. Si la phase ne vaut que 0 ou $\pi$, certaines heures
+sont spéciales (là où le sinus vaut 0, $X$ vaut 0 à coup sûr), et $R_X$ dépend aussi de $t_1 +
+t_2$.
+
+\end{simple}
+
 \end{multicols}
 
 
