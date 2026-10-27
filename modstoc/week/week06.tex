@@ -333,6 +333,52 @@ $+a$ ou de $-a$, en forme de cloche, qu'il faut classer.
 
 \end{simple}
 
+
+%=========================================================
+\section{Seuil optimal et rapport de vraisemblance}
+
+
+\begin{formula}
+
+Le récepteur optimal choisit « 1 » ($A_n = 1$, hypothèse $H_0$) si
+
+\[
+P(A_n = 1 | Z = z) > P(A_n = -1|Z = z)
+\]
+
+et « 0 » sinon. Par Bayes, cela revient à comparer le \textbf{rapport de vraisemblance}
+
+\[
+L(z) = \frac{f_{Z|A=1}(z|A_n = 1)}{f_{Z|A=-1}(z|A_n=-1)} = \exp\Big(\frac{4az}{N_0/T}\Big)
+\]
+
+à $(1-p)/p$. Le seuil optimal vérifie $L(\gamma) = (1-p)/p$ :
+
+\[
+\gamma = \frac{N_0}{4aT}\ln\frac{1-p}p
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+On suppose ici que la probabilité \textbf{a priori} $p$ est connue. Si $p = 1/2$ (bits
+équiprobables), $\gamma = 0$.
+
+\end{important}
+
+
+\begin{simple}
+
+On reçoit $z$. Deux suspects : le bit 1 (cloche centrée en $+a$) ou le bit 0 (cloche centrée en
+$-a$). On choisit celui qui rend $z$ \textbf{le plus probable}, en tenant compte de qui est le
+plus fréquent. Si les deux bits sont aussi fréquents, la frontière est pile au milieu, en 0.
+Si les 1 sont plus fréquents, on pousse la frontière vers les 0 pour leur laisser plus de
+place.
+
+\end{simple}
+
 \end{multicols}
 
 
