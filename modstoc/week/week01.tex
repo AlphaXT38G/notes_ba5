@@ -390,6 +390,107 @@ $A\cap B$ est comptée deux fois, donc on l'enlève une fois.
 
 \end{simple}
 
+
+%=========================================================
+\section{Probabilité conditionnelle et indépendance}
+
+
+\begin{definition}
+
+\textbf{Probabilité conditionnelle} de $A$ sachant que $B$ s'est produit :
+
+\[
+P(A|B) = \frac{P(A\cap B)}{P(B)} \quad \text{si } P(B) \ne 0,
+\]
+
+et $P(A|B) = 0$ si $P(B) = 0$.
+
+\textbf{Partition} de $\Omega$ : $[A_1,\dots,A_n]$ tels que $A_1\cup\dots\cup A_n = \Omega$ et
+$A_i\cap A_j = \emptyset$ pour $i\ne j$.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Théorème des probabilités totales :}
+
+\[
+P(B) = \sum_{i=1}^n P(B|A_i)\,P(A_i)
+\]
+
+\textbf{Règle de Bayes :}
+
+\[
+P(A_i|B) = \frac{P(B|A_i)\,P(A_i)}{\sum_{j=1}^n P(B|A_j)\,P(A_j)}
+\]
+
+\end{formula}
+
+
+\begin{example}
+
+\textbf{Preuve des probabilités totales} (exercice 1) : $B = B\cap\Omega = B \cap (A_1 \cup
+\dots \cup A_n) = (B\cap A_1) \cup \dots \cup (B \cap A_n)$, des morceaux disjoints, donc
+$P(B) = \sum_i P(B\cap A_i) = \sum_i P(B|A_i)P(A_i)$.
+
+\vspace{3pt}
+
+\textbf{Preuve de Bayes} (exercice 2) : $P(A_i\cap B) = P(A_i|B)P(B) = P(B|A_i)P(A_i)$, puis on
+remplace $P(B)$ par les probabilités totales.
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{Indépendance.} $A$ et $B$ sont indépendants si $P(A\cap B) = P(A)\,P(B)$ (alors
+$P(A|B) = P(A)$ et $P(B|A) = P(B)$).
+
+\vspace{3pt}
+
+$A$, $B$, $C$ sont indépendants si et seulement si \textbf{les quatre} conditions sont
+vraies :
+
+\[
+P(A \cap B) = P(A)P(B), \quad P(A\cap C) = P(A)P(C),
+\]
+\[
+P(B\cap C) = P(B)P(C),
+\]
+\[
+P(A\cap B\cap C) = P(A)P(B)P(C).
+\]
+
+\end{definition}
+
+
+\begin{warning}
+
+Indépendants \textbf{deux à deux} ne suffit pas. Exemple des slides : trois évènements de
+probabilité $\frac12$ avec $P(A\cap B) = P(A\cap C) = P(B\cap C) = \frac14$ (chaque paire est
+indépendante), mais $A\cap B\cap C = \emptyset$, donc $P(A\cap B\cap C) = 0 \ne \frac18$.
+
+\end{warning}
+
+
+\begin{simple}
+
+$P(A|B)$, c'est : « on \textbf{sait} que $B$ est arrivé, on ne regarde plus que le monde où $B$
+est vrai ». On se restreint à $B$ et on renormalise (on divise par $P(B)$).
+
+\vspace{3pt}
+
+\textbf{Probabilités totales} : pour savoir la chance de $B$, on regarde chaque cas possible
+$A_i$ séparément, et on fait la moyenne pondérée. \textbf{Bayes} : on retourne la flèche, de
+« la cause donne l'effet » à « je vois l'effet, quelle était la cause ? ».
+
+\vspace{3pt}
+
+\textbf{Indépendants} : savoir que l'un est arrivé ne change rien à la chance de l'autre.
+
+\end{simple}
+
 \end{multicols}
 
 
