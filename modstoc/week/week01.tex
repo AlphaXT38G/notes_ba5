@@ -808,6 +808,72 @@ entières : un polynôme dont le coefficient devant $z^k$ est la chance que $X =
 
 \end{simple}
 
+
+%=========================================================
+\section{Inégalités}
+
+
+\begin{formula}
+
+\textbf{Markov} ($X \ge 0$, $a > 0$) :
+
+\[
+P(X \ge a) \le \frac{E[X]}{a}
+\]
+
+\textbf{Tchebytcheff} ($b > 0$) :
+
+\[
+P(|X - \mu_X| \ge b) \le \frac{\sigma_X^2}{b^2}
+\]
+
+\textbf{Jensen} ($g$ convexe et continue) :
+
+\[
+E[g(X)] \ge g(E[X])
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Les preuves, en une ligne chacune.}
+
+\begin{itemize}
+
+\item \textbf{Markov} : $E[X] = \int_0^\infty x f_X \ge \int_a^\infty x f_X \ge
+\int_a^\infty a f_X = a\,P(X\ge a)$.
+
+\item \textbf{Tchebytcheff} : Markov appliqué à $D = (X-\mu_X)^2$ avec $a = b^2$ :
+$P(D\ge b^2) \le E[D]/b^2 = \sigma_X^2/b^2$, et $\{D\ge b^2\} = \{|X-\mu_X| \ge b\}$.
+
+\item \textbf{Jensen} : une fonction convexe est au-dessus de ses tangentes : $g(x) \ge g(a) +
+\theta(x-a)$. On prend $a = E[X]$, $x = X$, et l'espérance.
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{example}
+
+\textbf{Chernoff} (exercice 13) : pour $X \ge 0$, $x > 0$ et $s > 0$, $P(X > x) \le e^{-sx}\hat
+\Phi_X(s)$. À la base des grandes déviations (module 10).
+
+\end{example}
+
+
+\begin{simple}
+
+Souvent on ne connaît pas toute la loi, juste la moyenne ou la variance. Les inégalités
+disent quand même \textbf{quelque chose}. Markov : si en moyenne une classe a 4 de moyenne,
+il ne peut pas y avoir beaucoup d'élèves au-dessus de 40 (au plus 1 sur 10). Tchebytcheff :
+si la variance est petite, il est rare d'être loin de la moyenne. Jensen : pour une courbe en
+forme de bol, la moyenne des hauteurs est au-dessus de la hauteur au point moyen.
+
+\end{simple}
+
 \end{multicols}
 
 
