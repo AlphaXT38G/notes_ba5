@@ -643,6 +643,77 @@ fois $|H|^2$. Et presque tout processus peut se voir comme ça.
 
 \end{simple}
 
+
+%=========================================================
+\section{Filtre optimal de Wiener}
+
+
+\begin{definition}
+
+Un filtre $h$ transforme l'entrée $X(n)$ (WSS) en $Y(n) = \sum_kh(k)X(n-k)$. On veut $Y$
+\textbf{le plus proche possible} d'une réponse désirée $D(n)$, au sens des moindres carrés :
+avec $e(n) = D(n) - Y(n)$, on minimise
+
+\[
+\varepsilon = E[e^2(n)] = E[(D(n) - Y(n))^2]
+\]
+
+\begin{itemize}
+
+\item \textbf{Filtrage d'un signal bruité} : $X = S + N$, $D = S$.
+
+\item \textbf{Prédiction} : on donne $X(n-1),\dots,X(n-N)$, et $D(n) = X(n)$.
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{formula}
+
+\[
+\varepsilon = R_D(0) - 2\sum_kh(k)R_{DX}(k) + \sum_k\sum_lh(k)h(l)R_X(k-l)
+\]
+
+On annule $\partial\varepsilon/\partial h(k)$ pour tout $k$ :
+
+\[
+\sum_{l=-\infty}^\infty h(l)R_X(k-l) = R_{DX}(k)
+\]
+
+En Fourier, $H(f)S_X(f) = S_{DX}(f)$ :
+
+\[
+\boxed{H(f) = \frac{S_{DX}(f)}{S_X(f)}}
+\]
+
+\end{formula}
+
+
+\begin{warning}
+
+Ce filtre n'est \textbf{pas causal} : pas de traitement en temps réel. Cas causal : $h(k) = 0$
+pour $k < 0$, et pour $k\ge0$ seulement :
+
+\[
+\sum_{l=0}^\infty h(l)R_X(k-l) = R_{DX}(k)
+\]
+
+les \textbf{équations de Wiener-Hopf} (équations normales). Plus dures en fréquence : il faut la
+transformée de $[R_{DX}(k)]_+$ ($R_{DX}(k)$ pour $k\ge0$, 0 sinon), pas $S_{DX}$.
+
+\end{warning}
+
+
+\begin{simple}
+
+On a un signal abîmé, on veut le réparer avec un filtre. Wiener dit quel filtre est le
+meilleur \textbf{en moyenne}. L'idée de la formule : aux fréquences où l'entrée ressemble
+beaucoup à ce qu'on veut ($S_{DX}$ grand), on laisse passer ; aux fréquences où il n'y a
+surtout que du bruit ($S_X$ grand mais $S_{DX}$ petit), on coupe.
+
+\end{simple}
+
 \end{multicols}
 
 
