@@ -660,6 +660,60 @@ de clients dans une durée $T$ suit une loi de Poisson de moyenne $\lambda T$.
 
 \end{simple}
 
+
+%=========================================================
+\section{Équations de Kolmogorov}
+
+
+\begin{formula}
+
+$p_n(t) = P(N(t) = n)$. Avec H1--H3 :
+
+\[
+p_0(t+\Delta t) = P(N(\Delta t) = 0)\,p_0(t) = (1-\lambda\Delta t + o(\Delta t))\,p_0(t)
+\]
+
+et, par les probabilités totales, pour $n > 0$ :
+
+\[
+p_n(t+\Delta t) = (1-\lambda\Delta t)p_n(t) + \lambda\Delta t\,p_{n-1}(t) + o(\Delta t)
+\]
+
+En divisant par $\Delta t\to0$ : les \textbf{équations de Kolmogorov}
+
+\[
+\frac{dp_0}{dt}(t) = -\lambda p_0(t) \qquad \frac{dp_n}{dt}(t) = -\lambda p_n(t) + \lambda
+p_{n-1}(t)
+\]
+
+avec $p_0(0) = 1$, $p_n(0) = 0$ pour $n\ge1$.
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Solution} (par récurrence sur $n$, ou par la fonction génératrice, exercice 1) :
+
+\[
+p_0(t) = e^{-\lambda t} \qquad p_n(t) = \frac{(\lambda t)^n}{n!}e^{-\lambda t}
+\]
+
+$N(t)$ suit la loi de Poisson du module 1 (la limite de la binomiale) ; avec H2, on obtient
+H2', d'où l'équivalence des définitions.
+
+\end{formula}
+
+
+\begin{simple}
+
+On regarde ce qui peut se passer pendant un tout petit instant $\Delta t$ : soit rien, soit
+exactement un client. Pour avoir $n$ clients à $t + \Delta t$, soit on en avait déjà $n$ et
+personne n'arrive, soit on en avait $n-1$ et un arrive. Ça donne des équations qui disent
+comment les probabilités \textbf{coulent} de case en case avec le temps.
+
+\end{simple}
+
 \end{multicols}
 
 
