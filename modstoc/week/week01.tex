@@ -563,6 +563,55 @@ douceur (continue), et tomber pile sur une valeur précise a une chance nulle.
 
 \end{simple}
 
+
+%=========================================================
+\section{Densité de probabilité}
+
+
+\begin{formula}
+
+\[
+f_X(x) = \frac{dF_X(x)}{dx}
+\]
+
+\begin{itemize}
+
+\item $f_X(x) \ge 0$ et $\int_{-\infty}^{\infty} f_X(x)\,dx = 1$ ;
+
+\item $F_X(a) = P(X\le a) = \int_{-\infty}^a f_X(x)\,dx$ ;
+
+\item $P(a < X \le b) = \int_a^b f_X(x)\,dx$, donc $P(x < X \le x+\Delta x) \approx
+f_X(x)\Delta x$ quand $\Delta x \to 0$.
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Cas discret}, avec les impulsions de Dirac et $p_i = P(X = x_i)$ :
+
+\[
+f_X(x) = \sum_i p_i\,\delta(x - x_i)
+\]
+
+Alors $p_i \ge 0$, $\sum_i p_i = 1$, $F_X(a) = \sum_{x_i \le a} p_i$.
+
+\end{formula}
+
+
+\begin{simple}
+
+La densité $f_X(x)$ n'est \textbf{pas} une probabilité : c'est une probabilité \textbf{par
+unité de longueur}. La probabilité, c'est l'\textbf{aire} sous la courbe. Comme un tas de
+sable étalé sur une ligne : là où le tas est haut, $X$ tombe souvent ; la quantité de sable
+entre $a$ et $b$ est la chance que $X$ tombe entre $a$ et $b$, et il y a 1 kilo de sable en
+tout. Pour une v.a. discrète, le sable est en petits tas pointus (les Dirac) posés sur les
+valeurs $x_i$.
+
+\end{simple}
+
 \end{multicols}
 
 
