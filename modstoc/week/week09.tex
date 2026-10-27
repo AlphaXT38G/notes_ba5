@@ -821,6 +821,82 @@ exponentielles : une Erlang (la Gamma du module 1).
 
 \end{simple}
 
+
+%=========================================================
+\section{Poisson sur $\mathbb R$ et bruit impulsif}
+
+
+\begin{definition}
+
+\textbf{Poisson sur $\mathbb R$} (processus ponctuel, pour les dispositifs physiques ou
+optiques) : $N(t)$ défini pour tout $t$, avec $N(0) = 0$ (donc $N(t)\le0$ pour $t\le0$),
+$\dots\le S(-1)\le S(0)\le0 < S(1)\le\dots$, $T(n) = S(n+1) - S(n)$ pour $n\in\mathbb Z$. Les
+$T(n)$ sont encore exponentielles i.i.d. (y compris $T(0) = S(1) - S(0)$, par l'absence de
+mémoire), et P1 à P4 restent vraies.
+
+\vspace{3pt}
+
+\textbf{Bruit impulsif de Poisson} (\emph{shot noise}), $h$ déterministe :
+
+\[
+X_h(t) = \sum_{n=-\infty}^{\infty}h(t - S(n))
+\]
+
+\textbf{Composé} : $\hat X_h(t) = \sum_nA_nh(t-S(n))$, $A_n$ i.i.d. indépendants de $N$. Avec
+$h$ l'échelon unité, $X_h = N$.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Lemme 1} (dérivée d'un processus, même non stationnaire) : si $X'(t) =
+\frac{dX}{dt}(t)$,
+
+\[
+\mu_{X'}(t) = \frac{d\mu_X}{dt}(t) \qquad R_{X'}(t_1,t_2) = \frac{\partial^2R_X}{\partial
+t_1\partial t_2}(t_1,t_2)
+\]
+
+Avec $h = \delta$, $X_\delta = dN/dt$ (un Dirac à chaque arrivée) :
+
+\[
+\mu_{X_\delta} = \lambda \qquad R_{X_\delta}(t_1,t_2) = \lambda^2 + \lambda\delta(t_1-t_2)
+\]
+\[
+S_{X_\delta}(f) = \lambda^2\delta(f) + \lambda
+\]
+
+\end{formula}
+
+
+\begin{formula}
+
+Pour un $h$ quelconque (absolument intégrable), $X_h = h * X_\delta$, donc $S_{X_h}(f) =
+\lambda^2H^2(0)\delta(f) + \lambda|H(f)|^2$. \textbf{Théorème de Campbell} :
+
+\begin{itemize}
+
+\item \textbf{P7.} $\displaystyle \mu_{X_h} = \lambda H(0) = \lambda\int h(s)\,ds$, $\
+\displaystyle \sigma_{X_h}^2 = \lambda\int|H(f)|^2df = \lambda\int h^2(s)\,ds$ (Parseval).
+
+\item \textbf{P8.} Composé : $\mu = \lambda\mu_A\int h(s)\,ds$, $\ \sigma^2 = \lambda(\mu_A^2 +
+\sigma_A^2)\int h^2(s)\,ds$.
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{simple}
+
+Chaque arrivée (un électron, un photon) donne une petite \textbf{bosse} $h$ dans le courant,
+et le courant total est la somme de toutes les bosses. Campbell dit tout simplement : la
+moyenne, c'est (nombre de bosses par seconde) $\times$ (aire d'une bosse) ; la variance,
+c'est (nombre de bosses par seconde) $\times$ (aire de la bosse au carré).
+
+\end{simple}
+
 \end{multicols}
 
 
