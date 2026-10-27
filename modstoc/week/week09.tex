@@ -714,6 +714,61 @@ comment les probabilités \textbf{coulent} de case en case avec le temps.
 
 \end{simple}
 
+
+%=========================================================
+\section{Propriétés du processus de Poisson}
+
+
+\begin{formula}
+
+\begin{itemize}
+
+\item \textbf{P1.} $G_N(z;t) = e^{\lambda t(z-1)}$, $\ \mu_N(t) = \lambda t$, $\ \sigma_N^2(t) =
+\lambda t$.
+
+\item \textbf{P2.} $R_N(t_1,t_2) = \lambda^2t_1t_2 + \lambda\min(t_1,t_2)$ (exercice 2 :
+écrire $N(t_2) = N(t_1) + (N(t_2) - N(t_1))$ pour $t_1\le t_2$).
+
+\item \textbf{P3. Superposition} : $M$ processus de Poisson indépendants de taux $\lambda_i$
+donnent un processus de Poisson de taux $\lambda = \sum_i\lambda_i$.
+
+\item \textbf{P4. Décomposition} : si chaque évènement va au sous-processus $i$ avec
+probabilité $p_i$ ($\sum p_i = 1$), on obtient $M$ processus de Poisson \textbf{indépendants}
+de taux $p_i\lambda$.
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Preuve de P4} ($M = 2$). Sachant $N(t) = n_1 + n_2$, $N_1(t)$ est binomiale de
+paramètre $p_1$ :
+
+\[
+P(N_1 = n_1, N_2 = n_2) = \binom{n_1+n_2}{n_1}p_1^{n_1}p_2^{n_2}\frac{(\lambda
+t)^{n_1+n_2}}{(n_1+n_2)!}e^{-\lambda t}
+\]
+\[
+= \frac{(p_1\lambda t)^{n_1}}{n_1!}e^{-p_1\lambda t}\cdot\frac{(p_2\lambda
+t)^{n_2}}{n_2!}e^{-p_2\lambda t}
+\]
+
+Le produit montre l'indépendance ; en sommant sur $n_2$, $N_1$ est Poisson de taux $p_1\lambda$.
+
+\end{important}
+
+
+\begin{simple}
+
+\textbf{Superposition} : deux portes, chacune avec des clients au hasard ; tous ensemble, c'est
+encore des clients au hasard, avec les taux qui s'additionnent. \textbf{Décomposition} : on
+tire à pile ou face pour envoyer chaque client à gauche ou à droite ; chaque côté reçoit des
+clients au hasard, et les deux côtés ne s'influencent même pas.
+
+\end{simple}
+
 \end{multicols}
 
 
