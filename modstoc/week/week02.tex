@@ -639,6 +639,107 @@ Conditionnelle : $f_{X_1|X_2\dots X_n} = \frac{f_{X_1\dots X_n}}{f_{X_2\dots X_n
 
 \end{formula}
 
+
+%=========================================================
+\section{V.a. gaussiennes multivariées}
+
+
+\begin{definition}
+
+$X_1,\dots,X_n$ sont \textbf{gaussiennes jointes} (multivariées) ssi
+
+\[
+f_{\mathbf X}(\mathbf x) = \frac{1}{\sqrt{(2\pi)^n\det\Sigma}}\,e^{-\frac12(\mathbf x -
+\boldsymbol\mu)^T\Sigma^{-1}(\mathbf x - \boldsymbol\mu)}
+\]
+
+avec $\boldsymbol\mu = [E[X_1]\dots E[X_n]]^T$ et la \textbf{matrice de covariance}
+$\Sigma_{ik} = \mathrm{COV}[X_i,X_k]$ (variances sur la diagonale), symétrique et
+semi-définie positive.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Fonction caractéristique} :
+
+\[
+\Phi_{\mathbf X}(\boldsymbol\omega) = e^{j\boldsymbol\mu^T\boldsymbol\omega - \frac12
+\boldsymbol\omega^T\Sigma\boldsymbol\omega}
+\]
+
+\textbf{Moments} ($X_i$ gaussiennes jointes, de moyenne nulle) :
+
+\[
+E[X_1X_2X_3X_4] = E[X_1X_2]E[X_3X_4] + E[X_1X_3]E[X_2X_4]
+\]
+\[
++ E[X_1X_4]E[X_2X_3]
+\]
+\[
+E[X_1X_2\cdots X_{2k+1}] = 0 \qquad E[X^{2k+1}] = 0
+\]
+\[
+E[X^{2k}] = 1\cdot3\cdot5\cdots(2k-1)\,\sigma_X^{2k}
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item Une gaussienne jointe est \textbf{entièrement déterminée par ses moments d'ordre 1 et 2}
+($\boldsymbol\mu$ et $\Sigma$) : tous les autres moments s'en déduisent.
+
+\item Les courbes de niveau ($(\mathbf x-\boldsymbol\mu)^T\Sigma^{-1}(\mathbf x -
+\boldsymbol\mu)$ constant) sont des \textbf{ellipses} en 2D, orientées selon $\sigma_{X_1}$,
+$\sigma_{X_2}$ et $\rho$.
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{formula}
+
+\textbf{Transformation linéaire} $\mathbf Y = A\mathbf X$ :
+
+\[
+f_{\mathbf Y}(\mathbf y) = \frac{1}{\sqrt{(2\pi)^n|\det S|}}\,e^{-\frac12(\mathbf y - \mathbf
+m)^TS^{-1}(\mathbf y - \mathbf m)}
+\]
+\[
+\text{avec}\quad S = A\Sigma A^T, \qquad \mathbf m = A\boldsymbol\mu
+\]
+
+Une transformation linéaire de gaussiennes jointes donne des \textbf{gaussiennes jointes}.
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Application} : on choisit $A$ qui \textbf{diagonalise} $\Sigma$, pour décorréler les
+composantes du vecteur. (Le Moodle le rappelle pour l'exercice M3 10 : pour des gaussiennes
+jointes, décorrélées veut dire indépendantes.)
+
+\end{important}
+
+
+\begin{simple}
+
+Un vecteur gaussien, c'est une cloche en plusieurs dimensions. Vue de dessus, c'est une
+\textbf{ellipse} : ronde si les composantes n'ont rien à voir, allongée et penchée si elles
+sont liées. Super pouvoir : pour la connaître, il suffit de la \textbf{moyenne} (où est le
+centre) et de la \textbf{covariance} (forme de l'ellipse). Et si on la tourne ou l'étire
+(transformation linéaire), ça reste une cloche gaussienne : on peut la tourner pour que
+l'ellipse soit bien droite, et alors les composantes deviennent indépendantes.
+
+\end{simple}
+
 \end{multicols}
 
 
