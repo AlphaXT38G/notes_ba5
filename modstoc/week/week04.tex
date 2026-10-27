@@ -564,6 +564,76 @@ résultat : deux instants dans le \textbf{même} créneau sont liés (même symb
 
 \end{simple}
 
+
+%=========================================================
+\section{Stationnarité au sens strict et au sens large}
+
+
+\begin{definition}
+
+\textbf{Stationnaire au sens strict} (SSS) : toutes les propriétés statistiques sont
+indépendantes de l'origine des temps : pour tous $n$, $t_1,\dots,t_n$ et $c$,
+
+\[
+F_{X(t_1)\dots X(t_n)}(\cdot\,;t_1,\dots,t_n)
+\]
+\[
+= F_{X(t_1+c)\dots X(t_n+c)}(\cdot\,;t_1+c,\dots,t_n+c)
+\]
+
+En particulier ($n = 1$), la loi de $X(t)$ ne dépend pas de $t$.
+
+\vspace{3pt}
+
+\textbf{Stationnaire au sens large} (WSS, du second ordre) :
+
+\[
+\mu_X(t) = \mu_X \qquad R_X(t_1,t_2) = R_X(t_1-t_2)
+\]
+
+\end{definition}
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item SSS $\Rightarrow$ WSS, mais pas l'inverse.
+
+\item Pour un processus \textbf{gaussien}, SSS $\Leftrightarrow$ WSS (déterminé par ses moments
+d'ordre 1 et 2).
+
+\item Vérifier WSS est en général facile, SSS beaucoup plus difficile.
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{formula}
+
+Propriétés de $R_X(\tau)$ d'un processus WSS :
+
+\begin{itemize}
+
+\item \textbf{P1.} $X$ réel : $R_X(\tau) = R_X(-\tau)$ (paire).
+
+\item \textbf{P2.} $|R_X(\tau)| \le R_X(0) = E[X^2(t)]$ (car $|\rho| \le 1$).
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{simple}
+
+Stationnaire, c'est un processus qui n'a \textbf{pas d'heure préférée} : si on filme le
+processus maintenant ou dans une heure, on ne peut pas faire la différence. Au sens large, on
+demande ça seulement pour la moyenne et pour le lien entre deux instants (il ne dépend que de
+l'écart). Au sens strict, on le demande pour tout.
+
+\end{simple}
+
 \end{multicols}
 
 
