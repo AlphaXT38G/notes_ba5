@@ -380,6 +380,77 @@ de la tache finale est la limite des chances des taches intermédiaires. Pas de 
 
 \end{simple}
 
+
+%=========================================================
+\section{Lemmes de Borel-Cantelli}
+
+
+\begin{definition}
+
+$\{A_n \text{ i.o.}\}$ (\emph{infinitely often}) : l'évènement « une infinité des $A_n$ se
+produisent ».
+
+\[
+\{A_n \text{ i.o.}\} = \bigcap_{n=1}^\infty \bigcup_{k\ge n} A_k
+\]
+
+Car $\zeta$ est dans une infinité de $A_k$ $\Leftrightarrow$ pour tout $n$, $\zeta$ est dans au
+moins un des $A_n, A_{n+1}, \dots$
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Premier lemme} (toute suite d'évènements) :
+
+\[
+\sum_{n=1}^\infty P(A_n) < \infty \;\Longrightarrow\; P(A_n \text{ i.o.}) = 0
+\]
+
+\textbf{Second lemme} (évènements \textbf{indépendants}) :
+
+\[
+\sum_{n=1}^\infty P(A_n) = \infty \;\Longrightarrow\; P(A_n \text{ i.o.}) = 1
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Preuve du premier.} $\bigcup_{k\ge n}A_k$ décroît avec $n$, donc par le lemme 1 (ii) :
+
+\[
+P(A_n\text{ i.o.}) = \lim_{n\to\infty}P\Big(\bigcup_{k\ge n}A_k\Big) \le \lim_{n\to\infty}
+\sum_{k\ge n}P(A_k) = 0
+\]
+
+car le reste d'une série convergente tend vers 0.
+
+\vspace{3pt}
+
+\textbf{Preuve du second.} Par le complément, l'indépendance et $1 - x \le e^{-x}$ :
+
+\[
+P\Big(\bigcap_{k\ge n}\bar A_k\Big) = \prod_{k\ge n}(1-P(A_k)) \le e^{-\sum_{k\ge n}P(A_k)} = 0
+\]
+
+donc $P(A_n\text{ i.o.}) = 1$.
+
+\end{important}
+
+
+\begin{simple}
+
+On lance des fléchettes, une par jour, et $A_n$ = « je touche le centre le jour $n$ ». Si la
+somme de toutes les chances est \textbf{finie} (les chances baissent vite, comme $1/n^2$), on
+ne touchera le centre qu'un nombre fini de fois : un jour, c'est fini pour toujours. Si la somme
+est \textbf{infinie} (elles baissent lentement, comme $1/n$) et que les jours sont
+indépendants, on le touchera une infinité de fois, c'est garanti.
+
+\end{simple}
+
 \end{multicols}
 
 
