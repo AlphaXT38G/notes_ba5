@@ -278,6 +278,61 @@ continu.
 
 \end{simple}
 
+
+%=========================================================
+\section{PAM bruité : la chaîne de transmission}
+
+
+\begin{definition}
+
+Transmission binaire en \textbf{bande de base} (sans porteuse) : les bits $A_k$ (indépendants,
+$+1$ avec probabilité $p$ pour le bit « 1 », $-1$ avec probabilité $1-p$ pour le bit « 0 »)
+sont mis en forme par le pulse rectangulaire $g(t) = a\,\mathbb 1_{[0,T]}(t)$, passent dans un
+canal, auquel s'ajoute un \textbf{bruit blanc gaussien} $N(t)$ ($S_N = N_0/2$) indépendant de
+$X$, puis dans un filtre de réception, sont échantillonnés toutes les $T$ et un
+\textbf{détecteur} à seuil $\gamma$ décide « 1 » si l'échantillon est $\ge\gamma$, « 0 » sinon.
+
+\vspace{3pt}
+
+Cas le plus simple : canal \textbf{non dispersif} ($H(f) = 1$), signaux synchronisés :
+
+\[
+Y(t) = \sum_kA_k\,a\,\mathbb 1_{[0,T]}(t-kT) + N(t)
+\]
+
+\end{definition}
+
+
+\begin{formula}
+
+Filtre adapté au pulse rectangulaire : on \textbf{intègre} $Y$ sur une période et on divise par
+$T$ :
+
+\[
+Z((n+1)T) = \frac1T\int_{nT}^{(n+1)T}Y(t)\,dt
+\]
+\[
+= aA_n + \frac1T\int_{nT}^{(n+1)T}N(t)\,dt
+\]
+
+Sachant $A_n$, $Z$ est \textbf{gaussienne}, de moyenne $\pm a$ et de variance
+
+\[
+\frac1{T^2}\iint R_N(t-s)\,dt\,ds = \frac{N_0}{2T^2}\iint\delta(t-s)\,dt\,ds = \frac{N_0}{2T}
+\]
+
+\end{formula}
+
+
+\begin{simple}
+
+Chaque bit est un créneau, à la hauteur $+a$ ou $-a$, et du bruit vient brouiller le tout. Le
+récepteur fait la \textbf{moyenne} du signal pendant la durée du créneau : le créneau reste, et
+le bruit, qui part dans tous les sens, se moyenne et diminue. Il reste une valeur autour de
+$+a$ ou de $-a$, en forme de cloche, qu'il faut classer.
+
+\end{simple}
+
 \end{multicols}
 
 
