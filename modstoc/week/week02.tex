@@ -598,6 +598,47 @@ $Y$ possibles, on retombe sur la moyenne de $X$ tout court.
 
 \end{simple}
 
+
+%=========================================================
+\section{V.a. complexes et vecteurs de dimension $n$}
+
+
+\begin{formula}
+
+$Z = X + jY$ ($X$, $Y$ réelles) :
+
+\[
+\mu_Z = \mu_X + j\mu_Y \qquad \sigma_Z^2 = E[|Z-\mu_Z|^2] = \sigma_X^2 + \sigma_Y^2
+\]
+\[
+\mathrm{COV}[Z,W] = E[(Z^\star - \mu_Z^\star)(W-\mu_W)]
+\]
+
+Matrice de covariance hermitienne et semi-définie positive.
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Vecteur} $\mathbf X = (X_1,\dots,X_n)$ :
+
+\[
+F_{\mathbf X}(\mathbf x) = P(X_1\le x_1,\dots,X_n\le x_n)
+\]
+\[
+f_{\mathbf X}(\mathbf x) = \frac{\partial^n F_{\mathbf X}}{\partial x_1\cdots\partial x_n}
+\]
+
+Marginale : on intègre sur toutes les autres variables, $f_{X_1}(x_1) = \int\cdots\int
+f_{\mathbf X}\,dx_2\cdots dx_n$.
+
+\vspace{3pt}
+
+Conditionnelle : $f_{X_1|X_2\dots X_n} = \frac{f_{X_1\dots X_n}}{f_{X_2\dots X_n}}$.
+
+\end{formula}
+
 \end{multicols}
 
 
