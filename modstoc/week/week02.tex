@@ -409,6 +409,71 @@ l'intègre pour s'en débarrasser.
 
 \end{simple}
 
+
+%=========================================================
+\section{Espérance, covariance et corrélation}
+
+
+\begin{formula}
+
+\[
+E[g(X,Y)] = \iint g(x,y)\,f_{XY}(x,y)\,dx\,dy
+\]
+
+\begin{itemize}
+
+\item $E[X+Y] = E[X] + E[Y]$ \textbf{toujours} (l'espérance est linéaire).
+
+\item $E[XY] = E[X]E[Y]$ si $X$ et $Y$ sont \textbf{indépendantes}.
+
+\item Moments joints : $E[X^nY^m] = \iint x^ny^m f_{XY}\,dx\,dy$.
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Covariance} et \textbf{coefficient de corrélation} :
+
+\[
+\mathrm{COV}[X,Y] = E[(X-\mu_X)(Y-\mu_Y)] = E[XY] - E[X]E[Y]
+\]
+\[
+\rho = \frac{\mathrm{COV}[X,Y]}{\sigma_X\sigma_Y}, \qquad \mathrm{COV}[X,X] = \sigma_X^2
+\]
+
+\begin{itemize}
+
+\item $|\mathrm{COV}[X,Y]| \le \sigma_X\sigma_Y$, donc $|\rho| \le 1$ (exercice 7 : partir de
+$E[(X-\lambda Y)^2] \ge 0$ pour tout $\lambda$).
+
+\item \textbf{Décorrélées} : $\mathrm{COV}[X,Y] = 0$. \textbf{Orthogonales} : $E[XY] = 0$.
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{warning}
+
+Indépendantes $\Rightarrow$ décorrélées. \textbf{La réciproque est fausse} en général
+(exercice 8 : $X = \cos\Theta$, $Y = \sin\Theta$ avec $\Theta$ uniforme sur $[0,2\pi]$).
+
+\end{warning}
+
+
+\begin{simple}
+
+La covariance dit si deux nombres ont tendance à \textbf{monter ensemble} (positive), l'un
+monte quand l'autre descend (négative), ou s'en fichent \textbf{en ligne droite} (nulle).
+$\rho$, c'est la même chose ramenée entre $-1$ et $1$. Attention : $\rho = 0$ veut juste dire
+« pas de lien en ligne droite ». Un point qui tourne sur un cercle a $X$ et $Y$ décorrélés,
+pourtant si on connaît $X$, on connaît presque $Y$.
+
+\end{simple}
+
 \end{multicols}
 
 
