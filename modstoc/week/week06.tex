@@ -425,6 +425,58 @@ $x$ ».
 
 \end{simple}
 
+
+%=========================================================
+\section{Processus à temps discret}
+
+
+\begin{definition}
+
+Le temps $t\in\mathbb R$ est remplacé par un entier $n\in\mathbb Z$ (le numéro de
+l'échantillon : du temps discrétisé, mais aussi par exemple l'indice d'un pixel). Un processus
+à temps discret est \textbf{une suite de v.a.} $X(n)$. Mêmes définitions :
+
+\[
+\mu_X(n) = E[X(n)] \qquad R_X(n_1,n_2) = E[X(n_1)X(n_2)]
+\]
+\[
+C_X(n_1,n_2) = R_X(n_1,n_2) - \mu_X(n_1)\mu_X(n_2)
+\]
+
+et $R_{XY}$, $C_{XY}$, orthogonaux, non corrélés, comme au module 3.
+
+\end{definition}
+
+
+\begin{formula}
+
+Avec $m$ échantillons $X(n_1),\dots,X(n_m)$ : \textbf{matrice de corrélation} $(\Phi_X)_{ik} =
+R_X(n_i,n_k)$ et \textbf{matrice de covariance} $(\Gamma_X)_{ik} = C_X(n_i,n_k)$.
+
+\vspace{3pt}
+
+\textbf{Stationnarité} : mêmes définitions (SSS, WSS : $\mu_X$ constante, $R_X(n_1-n_2)$). Si
+$X$ est WSS, la matrice de corrélation d'ordre $m$ est
+
+\[
+\Phi_X = \begin{pmatrix} R_X(0) & R_X(1) & \cdots & R_X(m-1) \\ R_X(1) & R_X(0) & \cdots &
+R_X(m-2) \\ \vdots & & \ddots & \vdots \\ R_X(m-1) & R_X(m-2) & \cdots & R_X(0)\end{pmatrix}
+\]
+
+\textbf{symétrique}, \textbf{semi-définie positive} et \textbf{de Toeplitz} (constante le long
+des diagonales, car $R_X(n,n-k) = R_X(k)$).
+
+\end{formula}
+
+
+\begin{simple}
+
+Rien de neuf, on remplace les intégrales sur le temps par des sommes sur les cases. La matrice
+de corrélation d'un processus stationnaire a une forme très régulière : chaque diagonale
+contient le même nombre, parce que seul l'écart entre deux cases compte.
+
+\end{simple}
+
 \end{multicols}
 
 
