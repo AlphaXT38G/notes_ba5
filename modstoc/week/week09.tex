@@ -545,6 +545,64 @@ de la recette. Très économique, mais ça sonne comme un robot.
 
 \end{simple}
 
+
+%=========================================================
+\section{Processus de comptage}
+
+
+\begin{definition}
+
+$\{N(t), t\in\mathbb R^+\}$ est un \textbf{processus de comptage} si $N(t)$ est le nombre
+d'évènements dans $[0,t]$ :
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=1pt]
+
+\item temps continu, valeurs entières $\ge0$ ;
+
+\item $N(0) = 0$ ;
+
+\item $t_1 < t_2 \Rightarrow N(t_1) \le N(t_2)$ ;
+
+\item le nombre d'évènements dans $]t_1,t_2]$ est $N(t_2) - N(t_1)$.
+
+\end{enumerate}
+
+\end{definition}
+
+
+\begin{formula}
+
+Deux processus associés (temps discret, valeurs continues) :
+
+\begin{itemize}
+
+\item $S(n)$ : \textbf{temps d'arrivée} du $n$-ième évènement ;
+
+\item $T(n)$ : \textbf{temps entre arrivées}, entre le $n$-ième et le $(n+1)$-ième.
+
+\end{itemize}
+
+\[
+N(t)\ge n \Leftrightarrow S(n)\le t \qquad S(n) = \sum_{m=0}^{n-1}T(m)
+\]
+\[
+T(n) = S(n+1) - S(n) \;(n\ge1),\quad T(0) = S(1)
+\]
+\[
+N(t) = \max\{n : S(n)\le t\} \qquad S(n) = \inf\{t : N(t) = n\}
+\]
+
+\end{formula}
+
+
+\begin{simple}
+
+Un compteur à l'entrée d'un magasin. $N(t)$ : combien de clients sont entrés depuis
+l'ouverture. $S(n)$ : à quelle heure est entré le $n$-ième. $T(n)$ : combien de temps on a
+attendu entre deux clients. Trois façons de raconter la même histoire.
+
+\end{simple}
+
 \end{multicols}
 
 
