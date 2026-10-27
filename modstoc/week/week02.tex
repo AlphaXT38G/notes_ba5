@@ -534,6 +534,70 @@ reconnaît la fonction caractéristique d'une loi connue.
 
 \end{simple}
 
+
+%=========================================================
+\section{Densité et espérance conditionnelles}
+
+
+\begin{formula}
+
+\textbf{Cas discret} : $P(X = x_i | Y = y_j) = \frac{P(X=x_i, Y=y_j)}{P(Y=y_j)}$ (0 si
+$P(Y = y_j) = 0$).
+
+\vspace{3pt}
+
+\textbf{Cas continu} ($P(Y = y) = 0$, on passe par la limite sur $y \le Y < y+\Delta y$) :
+
+\[
+f_{X|Y}(x|y) = \frac{f_{XY}(x,y)}{f_Y(y)} \qquad f_{Y|X}(y|x) = \frac{f_{XY}(x,y)}{f_X(x)}
+\]
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Espérance conditionnelle} :
+
+\[
+E[X|y] = \int_{-\infty}^\infty x\,f_{X|Y}(x|y)\,dx
+\]
+\[
+E[X|y_j] = \sum_i x_i\, P(X = x_i|Y=y_j)
+\]
+
+$E[X|y] = g(y)$ est une fonction \textbf{déterministe} de $y$, mais $E[X|Y] = g(Y)$ est une
+\textbf{v.a.}, et :
+
+\[
+E\big[E[X|Y]\big] = E[X]
+\]
+
+\end{formula}
+
+
+\begin{formula}
+
+\textbf{Probabilités totales en espérance} ($[A_1,\dots,A_m]$ partition de $\Omega$) :
+
+\[
+E[g(X)] = \sum_{i=1}^m E[g(X)|A_i]\,P(A_i)
+\]
+
+$X$ discrète, $Y$ continue : $P(X = x_i) = \int P(X = x_i | Y = y) f_Y(y)\,dy$.
+
+\end{formula}
+
+
+\begin{simple}
+
+$f_{X|Y}(x|y)$ : on \textbf{coupe} le tas de sable en tranche à la hauteur $Y = y$, et on
+regarde le profil de cette tranche (renormalisé pour qu'il fasse 1). $E[X|Y]$ : « ma meilleure
+moyenne pour $X$ si on me dit $Y$ ». Et si on fait la moyenne de ces moyennes sur tous les
+$Y$ possibles, on retombe sur la moyenne de $X$ tout court.
+
+\end{simple}
+
 \end{multicols}
 
 
