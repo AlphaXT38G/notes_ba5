@@ -769,6 +769,58 @@ clients au hasard, et les deux côtés ne s'influencent même pas.
 
 \end{simple}
 
+
+%=========================================================
+\section{Temps d'arrivée et temps entre arrivées}
+
+
+\begin{formula}
+
+\textbf{P5.} Les temps d'arrivée $S(n)$ suivent une loi d'\textbf{Erlang} (exercice 4) :
+
+\[
+f_{S(n)}(s) = \frac{\lambda(\lambda s)^{n-1}}{(n-1)!}e^{-\lambda s}, \quad s\ge0
+\]
+
+\textbf{P6.} Les temps entre arrivées $T(n)$ sont des \textbf{exponentielles i.i.d.} de moyenne
+$1/\lambda$ :
+
+\[
+f_{T(n)}(t) = \lambda e^{-\lambda t}, \quad t\ge0
+\]
+
+\end{formula}
+
+
+\begin{important}
+
+\textbf{Preuve de P6.} $P(T(0) > t) = P(N(t) = 0) = e^{-\lambda t}$. Pour $n\ge1$, par les
+accroissements indépendants, $T(n)$ est indépendant du passé :
+
+\[
+P(T(n) > t) = P(N(s_n + t) - N(s_n) = 0 | S(n) = s_n)
+\]
+\[
+= P(N(t) = 0) = e^{-\lambda t}
+\]
+
+\vspace{3pt}
+
+\textbf{Définition 3.} Avec des $T(n)$ exponentielles i.i.d. de moyenne $1/\lambda$, $S(n) =
+\sum_{m=0}^{n-1}T(m)$ et $N(t) = \max\{n : S(n)\le t\}$ : processus de Poisson d'intensité
+$\lambda$. L'exponentielle est la seule v.a. continue sans mémoire.
+
+\end{important}
+
+
+\begin{simple}
+
+Le temps entre deux clients est \textbf{exponentiel} : c'est l'attente du bus qui n'a pas de
+mémoire. Et l'heure d'arrivée du $n$-ième client, c'est la somme de $n$ attentes
+exponentielles : une Erlang (la Gamma du module 1).
+
+\end{simple}
+
 \end{multicols}
 
 
