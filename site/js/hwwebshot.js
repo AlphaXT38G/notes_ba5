@@ -111,3 +111,14 @@ const hwWebShot = (x, y) => {
     hwShotTimers.push(setTimeout(hwWebShotEnd, HW_SHOT_MS + 2600));
   };
 };
+const hwWebShotEnd = () => {
+  if (hwShotFly) hwShotFly.cancel();
+  hwShotFly = null;
+  hwShotWebs.forEach(el => el.remove());
+  hwShotWebs = [];
+  if (hwShotStuck) hwShotStuck.stop();
+  hwShotStuck = null;
+  hwShotTimers.forEach(clearTimeout);
+  hwShotTimers = [];
+};
+hwPart({ off() { hwWebShotEnd(); } });
