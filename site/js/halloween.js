@@ -60,3 +60,14 @@ onCode("boo", () => {
   applyScreen();
 });
 
+// The two layers, and the parts of the screen. A part is { on(), off(), night(isNight) }, all
+// optional: on / off when the screen comes and goes, night when it turns from day to night
+// (and once right after on).
+const hwBack = document.createElement("div"), hwFront = document.createElement("div");
+hwBack.id = "hwscene";
+hwFront.id = "hwfront";
+hwBack.setAttribute("aria-hidden", "true");
+const HW_PARTS = [];
+const hwPart = part => HW_PARTS.push(part);
+const hwNight = () => document.body.dataset.phase === "halloween-night";
+const hwStill = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
