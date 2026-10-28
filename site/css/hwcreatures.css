@@ -83,3 +83,9 @@ body.halloween .searchrow,body.halloween .view{position:relative}
 #hwghost canvas{position:absolute;left:0;top:0;width:100%;height:100%}
 #hwfront #hwghost .hit{position:absolute;left:35%;right:35%;top:12%;bottom:40%;pointer-events:auto;cursor:pointer}
 @media(max-width:700px){#hwghost{width:9rem}}
+/* The screamer: the zombie bursts out of the top left corner and lunges until it fills the
+   window, shaking, then is gone */
+#hwscream{position:fixed;inset:0;z-index:1000;background:#000;pointer-events:none;overflow:hidden;animation:hw-black 1.1s steps(1) forwards}
+#hwscream img{position:absolute;left:calc(50vw - 50vmax);top:calc(50vh - 38vmax);width:100vmax;height:100vmax;object-fit:cover;animation:hw-lunge 1.1s cubic-bezier(.2,.9,.3,1) forwards}
+@keyframes hw-black{0%{background:transparent}8%,100%{background:#000}}
+@keyframes hw-lunge{0%{transform:translate(calc(-50vw + 4vmax),calc(-50vh + 2vmax)) scale(.1) rotate(-14deg)}14%{transform:translate(-1.5vmax,1vmax) scale(.98) rotate(-3deg)}24%{transform:translate(1.5vmax,-1vmax) scale(1.06) rotate(2deg)}34%{transform:translate(-1vmax,-1.5vmax) scale(1.1) rotate(-2deg)}46%{transform:translate(1.2vmax,1vmax) scale(1.14) rotate(1.5deg)}60%{transform:translate(-.8vmax,.6vmax) scale(1.18) rotate(-1deg)}86%{transform:scale(1.24);opacity:1}100%{transform:scale(1.26);opacity:0}}
