@@ -158,7 +158,8 @@ period, type it again on a Christmas screen to leave; in the jazz bar, it brings
 Christmas back), Halloween at any time of the year if you type `boo` (type it again to
 leave), and the jazz bar at any time
 if you type `armstrong` (type it again in the bar to go back to the screen of the
-moment: the day, the calm night, the bar at bar time, or Christmas in December), and the
+moment: the day, the calm night, the bar at bar time, Christmas in December or Halloween
+at the end of October), and the
 calm night at any time if you type `peace` (type it again to leave), and the epic finale
 at any time if you type `kamelot` (type it again to leave). And if it all gets
 too much, type `normal`: the plain page comes back, whatever is on (type it again to
