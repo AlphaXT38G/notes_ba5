@@ -31,3 +31,13 @@ const HW_POSES = [
   { name: "shroud", joints: [[0, .7, 0], [0, .52, 0], [0, .32, 0], [0, 0, 0], [-.2, .45, 0], [-.22, .43, .3], [-.18, .42, .62],
     [.2, .45, 0], [.22, .44, .3], [.18, .43, .62], [0, -1.25, -.1], [0, .7, 0], [0, 0, 0], [0, 0, 1]] },
 ];
+const hwGhostEl = document.createElement("div"), hwGhostCv = document.createElement("canvas"), hwGhostHit = document.createElement("div");
+hwGhostEl.id = "hwghost";
+hwGhostHit.className = "hit";
+hwGhostHit.title = "A ghost";
+hwGhostEl.append(hwGhostCv, hwGhostHit);
+let hwGh = null, hwGhRaf = null, hwGhLast = 0, hwGhIn = 12, hwGhNext = 0;
+const hwWisps = [];
+
+const hwRotY = ([x, y, z], a) => [x * Math.cos(a) + z * Math.sin(a), y, -x * Math.sin(a) + z * Math.cos(a)];
+const hwAngle = a => Math.atan2(Math.sin(a), Math.cos(a));  // in -pi..pi
