@@ -54,3 +54,56 @@ const hwWindow = (x, y, w, h, cls, rnd) => {
   return s;
 };
 
+// The vampire passing behind the great window, in silhouette against its light: a cape over broad
+// shoulders, its high collar standing in two points, a head with pointed ears, eyes glinting red
+const hwVampire = (x, y) => `<path d="M${x - 18},${y}L${x - 15},${y - 18}Q${x - 12},${y - 25} ${x - 5},${y - 26}H${x + 5}Q${x + 12},${y - 25} ${x + 15},${y - 18}L${x + 18},${y}Z` +
+  `M${x - 5},${y - 26}L${x - 12},${y - 41}L${x - 2},${y - 30}ZM${x + 5},${y - 26}L${x + 12},${y - 41}L${x + 2},${y - 30}Z` +
+  `M${x - 4},${y - 36}L${x - 8},${y - 43}L${x - 2.5},${y - 39}ZM${x + 4},${y - 36}L${x + 8},${y - 43}L${x + 2.5},${y - 39}Z"/>` +
+  `<ellipse cx="${x}" cy="${y - 34}" rx="4.6" ry="6.2"/>` +
+  `<circle class="draceye" cx="${x - 1.8}" cy="${y - 34}" r=".8"/><circle class="draceye" cx="${x + 1.8}" cy="${y - 34}" r=".8"/>`;
+
+const hwCastleTower = ([x, w, top, kind], rnd, index) => {
+  const l = x - w / 2, r = x + w / 2, H = HW_BASE - top;
+  // the body, its moonlit side, its corner buttresses with their sloping caps
+  let s = `<rect class="tw" x="${l}" y="${top}" width="${w}" height="${H}"/><rect class="rim" x="${f1(r - 4)}" y="${top}" width="4" height="${H}"/>`;
+  for (const [bx, dir] of [[l - 5, -1], [r, 1]]) {
+    for (let y = top + 60; y < HW_BASE; y += 70) s += `<path class="tw" d="M${f1(bx)},${f1(Math.min(HW_BASE, y + 70))}V${f1(y + 8)}L${f1(bx + (dir > 0 ? 0 : 5))},${f1(y)}L${f1(bx + 5)},${f1(y + (dir > 0 ? 8 : 0))}V${f1(Math.min(HW_BASE, y + 70))}Z"/>`;
+  }
+  // string courses: a lit edge, the shadow below it; gargoyles at the corners of some of them
+  for (let y = top + 48, k = 0; y < HW_BASE - 30; y += 56, k++) {
+    s += `<rect class="mold" x="${l - 2}" y="${f1(y)}" width="${w + 4}" height="2.4"/><rect class="mshade" x="${l}" y="${f1(y + 2.4)}" width="${w}" height="3.5"/>`;
+    if (k % 2 === 0 && w > 38) s += hwGargoyle(r + 1, y - 1, 1) + hwGargoyle(l - 1, y - 1, -1);
+  }
+  if (kind === "spire") {
+    const h = w * 2, peak = top - h;
+    s += `<path class="roof" d="M${l - 6},${top}L${x},${f1(peak)}L${r + 6},${top}Z"/><path class="roof-rim" d="M${x},${f1(peak)}L${r + 6},${top}h-5Z"/>` +
+      hwCrockets(l - 6, top, x, peak, -1) + hwCrockets(r + 6, top, x, peak, 1) +
+      hwPinnacle(l - 4, top + 1, 22) + hwPinnacle(r + 4, top + 1, 22) +
+      `<path class="spire" d="M${x},${f1(peak)}v-26M${x - 5},${f1(peak - 18)}h10"/><circle class="roof" cx="${x}" cy="${f1(peak - 6)}" r="2.2"/>` +
+      `<rect class="mold" x="${l - 6}" y="${top - 1}" width="${w + 12}" height="3"/>`;
+  } else {
+    // parapet on machicolations, battlements, bartizans hanging at the corners
+    const py = top - 12;
+    s += `<rect class="tw" x="${l - 6}" y="${py}" width="${w + 12}" height="14"/><rect class="mold" x="${l - 6}" y="${py}" width="${w + 12}" height="2"/>`;
+    for (let k = l - 4; k < r + 4; k += 8) s += `<path class="tw" d="M${f1(k)},${top + 2}h5l-1,7h-3Z"/><rect class="mshade" x="${f1(k + 1)}" y="${top + 2}" width="3" height="5"/>`;
+    for (let k = l - 6; k < r + 6; k += 11) s += `<rect class="tw" x="${f1(k)}" y="${py - 9}" width="6.5" height="10"/><path class="spike" d="M${f1(k + 3.2)},${py - 9}v-6"/>`;
+    for (const bx of [l - 12, r + 2]) {
+      s += `<rect class="tw" x="${f1(bx)}" y="${py - 4}" width="10" height="30"/><path class="tw" d="M${f1(bx)},${py + 26}L${f1(bx + 5)},${py + 40}L${f1(bx + 10)},${py + 26}Z"/>` +
+        `<path class="roof" d="M${f1(bx - 2)},${py - 4}L${f1(bx + 5)},${py - 26}L${f1(bx + 12)},${py - 4}Z"/><path class="spire" d="M${f1(bx + 5)},${py - 26}v-8"/>` +
+        `<path class="win" d="${hwLancet(bx + 3.5, py + 16, 3, 9)}"/>`;
+    }
+  }
+  // lancet windows: one or two columns, from under the roof down to the walls; the row of a portal
+  // is its window, filling the storey between the two string courses
+  const cols = w > 60 ? 2 : 1, ww = Math.min(13, w / 4.5);
+  for (let y = top + 40, row = 0; y < HW_BASE - 70; y += 56, row++) {
+    const portal = Object.keys(HW_PORTALS).find(n => HW_PORTALS[n].tower === index && HW_PORTALS[n].row === row);
+    if (portal) { s += hwPortal(portal, x, y, HW_PORTALS[portal].w, y - (top + 48 + 56 * (row - 1) + 9)); continue; }
+    for (let c = 0; c < cols; c++) {
+      const cx = cols === 1 ? x - ww / 2 : l + w * (c ? .72 : .14), v = rnd();
+      s += hwWindow(cx, y, ww, ww * 2.4, v < .45 ? "win lit" : v < .6 ? "win lit flick" : "win", rnd);
+    }
+  }
+  return s;
+};
+
