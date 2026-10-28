@@ -28,8 +28,9 @@ let sfSoul = [0, 0], sfMoved = 0;
 // The quakes the fight lands with: [seconds after the start of the run, strength] (a strength
 // above 1 shakes harder than any hit). As the dark falls: a heavy blow, then aftershocks dying out
 // with a last big one; when the attacks begin: a shorter run, as he strikes.
-const SF_QUAKE_IN = [[.05, 1.7], [.4, 1], [.7, 1.3], [1, .8], [1.3, 1.1], [1.65, .7], [2, .9], [2.4, .5], [2.9, 1.4]];
-const SF_QUAKE_GO = [[0, 1.6], [.3, 1], [.55, 1.2], [.85, .7], [1.2, .5]];
+const SF_QUAKE_IN = [[.05, 1.8], [.25, 1.2], [.42, 1.5], [.6, 1], [.78, 1.3], [.95, .9], [1.15, 1.2], [1.35, .8],
+  [1.55, 1.1], [1.8, .7], [2.05, 1], [2.3, .6], [2.55, .8], [2.9, 1.6]];
+const SF_QUAKE_GO = [[0, 1.7], [.2, 1.1], [.38, 1.4], [.58, .9], [.8, 1.1], [1.05, .6], [1.35, .5]];
 const sfQuake = run => { SF.quakes = SF.quakes.concat(run.map(([dt, s]) => [SF.t + dt, s])); };
 
 // The red heart, in pixels (11 x 10), and its two halves when it breaks
