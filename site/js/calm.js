@@ -370,11 +370,11 @@ document.addEventListener("calm", e => setCrickets(e.detail));
 // ── Peace code (easter egg: the calm night at any time) ───────────────────────────────────────
 // Typing p e a c e (outside the search field, or in it then Enter: onCode, ui.js), like yeti,
 // brings the calm night at any time of the day or the year, for the rest of the visit. It replaces
-// the normal screens (the day), the jazz bar and Christmas; typed during a show, it ends it first
-// (leaveShows, epic.js), but a show that comes later still wins, and the calm night comes back
-// after it. This override is the last one, so it would win over the yeti
-// and armstrong eggs: it gives way when one of them is typed after it (the bar's jazzEgg, cleared
-// when peace is typed, is set again; yetiTyped changes).
+// the normal screens (the day), the jazz bar, Christmas and Halloween; typed during a show, it
+// ends it first (leaveShows, epic.js), but a show that comes later still wins, and the calm night
+// comes back after it. This override is the last one, so it would win over the yeti, boo and
+// armstrong eggs: it gives way when one of them is typed after it (the bar's jazzEgg, cleared
+// when peace is typed, is set again; yetiTyped changes; boo clears the peace egg).
 // Typed again on the calm night, it goes back to the normal screen of that moment: it drops its
 // own egg, or leaves a forced ?screen=calm; on the calm night of the clock, it does nothing.
 OVERRIDES.push(phase => {
