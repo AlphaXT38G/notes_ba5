@@ -16,8 +16,9 @@
 // a crunch, the screen shakes, the box flashes red. The fight lands with a quake: a run of jolts
 // and thuds as the dark falls, and again when the attacks begin. HP at 0: the heart breaks, game over. The fight
 // ends with the song, with Escape, at game over, or with Christmas.
-// He rises for it: he grows and floats, his bottom sinking past the bottom of the window, and he
-// shakes with the quakes.
+// He rises for it: he grows and floats, his bottom sinking past the bottom of the window, blue
+// flames burning behind him (a canvas of glowing sprites, inside him so it floats and shakes with
+// him), and he shakes with the quakes.
 // His left eye glows blue and a flame rises from it: a WebGL shader ray-marching a volume of noise
 // (rising from the top of the eye, leaning back, flickering), on a small canvas over his face that
 // follows his gaze.
@@ -26,7 +27,7 @@ const SF_HP = 40;
 const SF = { on: false, raf: null, phase: "", t: 0, fight: 0, hp: SF_HP, hitAt: 0, shake: 0, quakes: [], objs: [], active: [], nextAt: 0, n: 0, last: 0, keys: {}, typing: null, over: false, useMouse: true, scene: null };
 const SF_SCENE_S = 22;  // seconds of each diorama
 let sfUi = null, sfCv = null, sfCtx = null, sfDark = null, sfFlame = null, sfBox = null, sfBg = null, sfBgCtx = null;
-let sfSoul = [0, 0], sfMoved = 0;
+let sfSoul = [0, 0], sfMoved = 0, sfAura = null;
 // The quakes the fight lands with: [seconds after the start of the run, strength] (a strength
 // above 1 shakes harder than any hit). As the dark falls: a heavy blow, then aftershocks dying out
 // with a last big one; when the attacks begin: a shorter run, as he strikes.
@@ -413,6 +414,7 @@ const sfFrame = now => {
     if (!SF.shake) sfUi.style.transform = sfBg.style.transform = "";
   }
   sfRise();
+  sfAuraDraw(dt);
   // the flame follows his gaze (snowman.js moves his eyes; in his own pixels, as he is scaled)
   if (sfFlame) { const k = snowman.offsetWidth / 300; sfFlame.cv.style.transform = `translate(${f1(smLookOff[0] * k)}px,${f1(smLookOff[1] * k)}px)`; }
   if (SF.phase === "fight" && SF.t - SF.scene.at > SF_SCENE_S) sfSceneNext();
@@ -662,6 +664,64 @@ const sfRiseEnd = () => {
   setTimeout(() => { if (!SF.on) snowman.style.transition = ""; smBox = null; }, 950);
 };
 
+// ── The blue fire behind him: tongues of flame rising from the edges of his three balls, each a
+// glowing sprite added up ("lighter"), bright cyan when young, deep blue as it dies; a pulsing
+// glow under them. On a 2D canvas behind his drawing, in his own pixels (inside him, so it grows,
+// floats and shakes with him).
+const SF_BALLS = [[150, 412, 100, 86, .45], [156, 264, 70, 64, .35], [164, 152, 50, 47, .2]];  // cx, cy, rx, ry (in his 300 x 520), share of the flames
+const SF_AURA_X = .45, SF_AURA_Y = .3;  // the canvas reaches that far beyond him (of his size)
+const sfAuraStart = () => {
+  const cv = document.createElement("canvas");
+  cv.className = "bluefire";
+  cv.width = Math.round(snowman.offsetWidth * (1 + 2 * SF_AURA_X));
+  cv.height = Math.round(snowman.offsetHeight * (1 + 2 * SF_AURA_Y));
+  snowman.insertBefore(cv, snowman.firstChild);
+  return { cv, ctx: cv.getContext("2d"), parts: [], due: 0, sprites: [blob(200, 240, 255, 1), blob(60, 140, 255, 1), blob(30, 50, 220, 1)], glow: blob(40, 110, 255, .55) };
+};
+const sfAuraDraw = dt => {
+  const A = sfAura;
+  if (!A) return;
+  const c = A.ctx, W = A.cv.width, H = A.cv.height, k = W / (1 + 2 * SF_AURA_X) / 300, ox = W * SF_AURA_X / (1 + 2 * SF_AURA_X), oy = H * SF_AURA_Y / (1 + 2 * SF_AURA_Y);
+  const on = Math.min(1, SF.t / SF_RISE_S);  // the fire catches as he rises
+  // new tongues, about 170 a second once it burns (capped)
+  A.due += dt * 170 * on;
+  while (A.due >= 1 && A.parts.length < 340) {
+    A.due--;
+    const r = Math.random();
+    const [cx, cy, rx, ry] = r < SF_BALLS[0][4] ? SF_BALLS[0] : r < SF_BALLS[0][4] + SF_BALLS[1][4] ? SF_BALLS[1] : SF_BALLS[2];
+    const a = Math.PI + Math.random() * Math.PI * 1.2 - .1 * Math.PI, e = .8 + Math.random() * .2;  // mostly on the upper side
+    A.parts.push({ x: ox + (cx + Math.cos(a) * rx * e) * k, y: oy + (cy + Math.sin(a) * ry * e) * k, vx: Math.cos(a) * 25 * k, vy: -(70 + Math.random() * 90) * k, t: 0, life: .55 + Math.random() * .6, r: (16 + Math.random() * 20) * k, ph: Math.random() * 6.3 });
+  }
+  A.due = Math.min(A.due, 1);
+  c.clearRect(0, 0, W, H);
+  c.globalCompositeOperation = "lighter";
+  // the glow behind him, breathing
+  const g = A.glow, pulse = .75 + .25 * Math.sin(SF.t * 3.1);
+  c.globalAlpha = on * pulse;
+  c.drawImage(g, ox + 10 * k, oy + 60 * k, 280 * k, 470 * k);
+  A.parts = A.parts.filter(p => {
+    p.t += dt;
+    if (p.t > p.life) return false;
+    const u = p.t / p.life;
+    p.x += (p.vx + Math.sin(SF.t * 7 + p.ph) * 30 * k) * dt;
+    p.y += p.vy * dt;
+    p.vx *= .96;
+    const s = p.r * (u < .2 ? .6 + 2 * u : 1.2 - u * .9);  // swells, then thins out as it rises
+    c.globalAlpha = (u < .15 ? u / .15 : 1 - (u - .15) / .85) * .8;
+    c.drawImage(A.sprites[u < .3 ? 0 : u < .65 ? 1 : 2], p.x - s, p.y - s * 1.4, 2 * s, 2.8 * s);  // taller than wide
+    return true;
+  });
+  c.globalAlpha = 1;
+  c.globalCompositeOperation = "source-over";
+};
+const sfAuraStop = () => {
+  if (!sfAura) return;
+  const cv = sfAura.cv;
+  sfAura = null;
+  cv.classList.add("leaving");
+  setTimeout(() => cv.remove(), 700);
+};
+
 // ── Start and end
 const sfKey = e => {
   if (!SF.on) return;
@@ -702,6 +762,7 @@ const sfStart = () => {
   addEventListener("keydown", sfKey, true);
   addEventListener("keyup", sfKey, true);
   sfFlame = sfFlameStart();
+  sfAura = sfAuraStart();
   snowman.style.transition = "";
   const I = sfInside();
   sfSoul = [(I.x0 + I.x1) / 2, (I.y0 + I.y1) / 2];
@@ -726,6 +787,7 @@ const sfEnd = () => {
   removeEventListener("pointermove", sfPointer);
   SF.scene = null;
   sfFlameStop();
+  sfAuraStop();
   sfRiseEnd();
   snowman.classList.remove("hold");
   document.body.classList.remove("sansfight");
