@@ -179,3 +179,6 @@ body[data-phase=halloween-night] #hwwitch :is(.stick,.tail){stroke:#08030e}
 [data-vt=halloween]::view-transition-new(root){animation:vt-hw-in 1.6s ease-out both}
 @keyframes vt-hw-out{to{opacity:0;filter:brightness(.2) sepia(1) hue-rotate(-20deg)}}
 @keyframes vt-hw-in{from{opacity:0;filter:brightness(.3) sepia(.8) saturate(2)}}
+/* Phones: a smaller title (clear of the header buttons), room under the last card for the
+   music player */
+@media(max-width:640px){body.halloween h1{font-size:2rem}body.halloween .wrap{padding-bottom:9.5rem}}
