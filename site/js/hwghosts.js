@@ -192,3 +192,16 @@ fxLayers.push({
     g.restore();
   },
 });
+// A click: it turns to us and rushes at us, dissolving
+hwGhostHit.addEventListener("click", e => {
+  if (!hwGh || hwGh.rush) return;
+  e.stopPropagation();
+  hwGh.rush = true;
+  hwGh.target = [hwGh.pos[0], hwGh.pos[1] + 40, 1.6];
+  hwNoise(1.4, 600, "bandpass", .14);  // a breath
+});
+everySecond.push(() => { if (hwOn && --hwGhIn <= 0) { hwGhostGo(); hwGhIn = 25 + Math.random() * 25; } });
+hwPart({
+  on() { hwGhIn = 6 + Math.random() * 10; },
+  off() { hwGhostEnd(); },
+});
