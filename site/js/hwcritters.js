@@ -64,3 +64,33 @@ const hwBatBurst = (x, y, n) => {
   }
 };
 
+// One bat, its wings at beat (radians): a furry body, ears, and two wings whose tips rise and fall,
+// their trailing edge cut in scallops between the fingers
+const hwDrawBat = (g, b, night) => {
+  const s = 14 * b.k, f = Math.sin(b.beat), lift = f * s * .9;
+  g.save();
+  g.translate(b.x, b.y);
+  g.rotate(Math.max(-.4, Math.min(.4, b.vx / 900)));
+  g.beginPath();
+  for (const side of [-1, 1]) {
+    g.moveTo(0, -s * .1);
+    g.quadraticCurveTo(side * s * .9, -s * .2 - lift * .6, side * s * 1.8, -lift);
+    g.quadraticCurveTo(side * s * 1.45, s * .05 - lift * .4, side * s * 1.2, s * .2 - lift * .3);
+    g.quadraticCurveTo(side * s * .95, s * .02 - lift * .2, side * s * .7, s * .28 - lift * .15);
+    g.quadraticCurveTo(side * s * .45, s * .1, side * s * .2, s * .3);
+    g.lineTo(0, s * .2);
+  }
+  g.fill();
+  g.beginPath();
+  g.ellipse(0, s * .05, s * .22, s * .36, 0, 0, Math.PI * 2);
+  g.moveTo(-s * .16, -s * .22); g.lineTo(-s * .2, -s * .5); g.lineTo(-s * .04, -s * .3);
+  g.moveTo(s * .16, -s * .22); g.lineTo(s * .2, -s * .5); g.lineTo(s * .04, -s * .3);
+  g.fill();
+  if (night) {
+    g.fillStyle = "#ff3a2a";
+    g.fillRect(-s * .1 - 1, -s * .14, 2, 2);
+    g.fillRect(s * .1 - 1, -s * .14, 2, 2);
+  }
+  g.restore();
+};
+
