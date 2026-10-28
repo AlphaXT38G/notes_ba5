@@ -1,0 +1,13 @@
+/* Halloween music (js/hwmusic.js): the pumpkin cocotte in the bottom left corner
+   (js/hwcocotte.js), its label, and the next track's small green cocotte
+   beside it (#hwnext, only with several tracks). Everything that moves while the music plays is
+   under .playing, transforms and opacity only. */
+#hwmusic{position:fixed;left:1rem;bottom:.6rem;z-index:40;display:flex;align-items:flex-end;gap:.5rem;padding:0;border:0;background:none;color:var(--fg);font:600 .78rem system-ui,sans-serif;cursor:pointer;text-align:left}
+#hwmusic .pot{position:relative;display:block;width:8rem;filter:drop-shadow(0 8px 14px rgba(0,0,0,.55))}
+#hwmusic svg{display:block;width:100%;height:auto;overflow:visible}
+#hwmusic .label{max-width:13rem;margin-bottom:.8rem;padding:.3rem .6rem;border-radius:.5rem;background:var(--card);border:1px solid var(--line)}
+#hwmusic .note{position:absolute;left:45%;top:10%;color:#ffb347;font-size:1.1rem;opacity:0;pointer-events:none}
+#hwmusic.playing .note{animation:hwm-note 3s ease-out infinite}
+#hwmusic.playing .note+.note{animation-delay:1.5s;left:60%}
+@keyframes hwm-note{0%{opacity:0;transform:translate(0,0)}20%{opacity:1}100%{opacity:0;transform:translate(1.6rem,-3.2rem) rotate(15deg)}}
+
