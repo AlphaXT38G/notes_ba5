@@ -34,7 +34,7 @@ snowman.append(smSay);
 const SM_FREEZE_MS = 12000;  // how long the window stays frozen, before it melts (2.5 s)
 let smMad = 0, smMadAt = 0, smBusy = false, smHatUp = false, smGen = 0, smSayEnd = null;
 let smMouse = null;  // the pointer: his eyes follow it
-let smAnims = [], smExtras = [], smLoop = null, smBox = null, smLookRaf = null;
+let smAnims = [], smExtras = [], smStuck = null, smBox = null, smLookRaf = null;
 
 const smStill = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const smWait = ms => new Promise(done => setTimeout(done, smStill() ? 0 : ms));
