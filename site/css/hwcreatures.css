@@ -3,3 +3,17 @@
    the pumpkin pile, the spider's web and its spit, the scene's secrets, the ghosts, the
    screamer. */
 
+/* The candles on the right end of the search bar (placed by js) and the one alone on Previews,
+   their wax run over the bar's edge and the Previews button's, their flames layered and
+   flickering, their warm light breathing on the page around */
+body.halloween .searchrow,body.halloween .view{position:relative}
+.hwcandles{position:absolute;display:flex;align-items:flex-end;pointer-events:none;z-index:2}
+.hwcandles.solo{right:1.3rem;bottom:calc(100% - 9px)}
+.hwcandles.solo::before{left:-3rem;right:-3rem;top:-4rem;bottom:-3rem}
+.hwcandles::before{content:"";position:absolute;left:-7rem;right:-5rem;top:-6rem;bottom:-5rem;pointer-events:none;background:radial-gradient(closest-side,rgba(255,170,70,.28),rgba(255,120,40,.1) 55%,transparent);animation:hw-light 2.3s ease-in-out infinite;transition:opacity .6s}
+.hwcandles:not(:has(.lit))::before{opacity:0}
+@keyframes hw-light{0%,100%{opacity:1}30%{opacity:.8}55%{opacity:.95}75%{opacity:.75}}
+.hwcandles .candle{position:relative;display:block;margin:0 -9px;padding:0;min-height:0;border:0;background:none;cursor:pointer;pointer-events:auto;line-height:0}
+.hwcandles svg{display:block;overflow:visible;filter:drop-shadow(0 3px 4px rgba(0,0,0,.45))}
+.hwcandles .glow{opacity:0;transition:opacity .5s}
+.hwcandles .lit .glow{opacity:1;animation:hw-light 1.9s ease-in-out var(--d) infinite}
