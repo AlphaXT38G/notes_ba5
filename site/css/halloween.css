@@ -10,3 +10,8 @@ body.halloween .wrap{position:relative;z-index:1}
 body.halloween[data-phase=halloween-night]{--bg:#0a0612;--fg:#efe6f6;--card:rgba(18,10,28,.9);--line:rgba(170,120,255,.16);--mut:#a99bc2;--acc:#ff9a2e;--acc-bg:rgba(255,154,46,.12);--new:#1a0c04;--new-bg:#ff9a2e}
 body.halloween[data-phase=halloween-night]::before{background:radial-gradient(70% 40% at 50% 100%,rgba(255,100,20,.22),transparent 70%),radial-gradient(40% 30% at 84% 20%,rgba(255,200,120,.16),transparent 70%),linear-gradient(#040209,#120824 45%,#2a0f33 80%,#3a1426)}
 
+/* Title: a carved serif in pumpkin orange, glowing, with a little jack-o'-lantern */
+body.halloween h1{font:700 2.5rem Georgia,"Palatino Linotype",serif;letter-spacing:.03em;color:#ff8c1f;text-shadow:0 0 8px rgba(255,120,20,.5),0 2px 0 #3a1404}
+body.halloween h1::after{content:"";display:inline-block;width:1.1em;height:1em;margin-left:.3em;vertical-align:-.08em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 36'%3E%3Cpath d='M20 7c2-5 5-6 7-5-3 1-5 3-6 6z' fill='%23557a2a'/%3E%3Cellipse cx='12' cy='22' rx='10' ry='12' fill='%23e86a10'/%3E%3Cellipse cx='28' cy='22' rx='10' ry='12' fill='%23e86a10'/%3E%3Cellipse cx='20' cy='22' rx='10' ry='13' fill='%23ff8c1f'/%3E%3Cpath d='M11 18l4-4 2 5zM29 18l-4-4-2 5zM10 25q10 9 20 0l-3 2-2-2-2 3-3-3-3 3-2-3-2 2z' fill='%23ffe08a'/%3E%3C/svg%3E") center/contain no-repeat}
+body.halloween .sub{font:italic 1.05rem Georgia,serif;color:var(--mut)}
+body.halloween footer::after{content:" · Happy Halloween, and beware of the exams."}
