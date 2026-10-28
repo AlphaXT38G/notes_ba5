@@ -29,3 +29,17 @@ const hwHood = (x, y, w, h) => {
   const ys = y - h + w * .866;
   return `M${f1(x)},${f1(ys + 4)}V${f1(ys)}A${f1(w)},${f1(w)} 0 0 1 ${f1(x + w / 2)},${f1(y - h)}A${f1(w)},${f1(w)} 0 0 1 ${f1(x + w)},${f1(ys)}v4`;
 };
+// A gargoyle leaning out of a wall at (x, y), to the right (dir 1) or the left (-1): a crouching
+// beast with a bat's wing and an open jaw
+const hwGargoyle = (x, y, dir) => `<path class="tw" transform="translate(${f1(x)},${f1(y)}) scale(${dir * 1.3},1.3)" ` +
+  `d="M0,0L6,-3 10,-2 14,-5 16,-3 20,-4 23,-1 18,1 22,3 16,3 12,6 8,4 4,6 0,4ZM5,-2L8,-10 12,-3Z"/>`;
+// Crockets along a roof's edge from (x0, y0) up to (x1, y1): little hooks of stone pointing out
+const hwCrockets = (x0, y0, x1, y1, out) => {
+  let d = "";
+  const n = Math.floor(Math.hypot(x1 - x0, y1 - y0) / 10);
+  for (let i = 1; i < n; i++) {
+    const t = i / n, x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t;
+    d += `M${f1(x)},${f1(y)}l${out * 4},-1 ${-out * 1.5},-3Z`;
+  }
+  return `<path class="tw" d="${d}"/>`;
+};
