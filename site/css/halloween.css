@@ -56,3 +56,19 @@ body[data-phase=halloween-night] .hwsky .stars{display:inline}
 .hwsky .path{fill:none;stroke:#3a2216;stroke-width:5;stroke-linecap:round}
 .hwsky .win{fill:#0c0606}
 .hwsky .win.lit{fill:#4a1a08}
+.hwsky .h0{fill:#160b0a}
+.hwsky .h1{fill:#120909}
+.hwsky .st1{stop-color:#3a2a28}
+.hwsky .st2{stop-color:#1e1414}
+.hwsky .stone{fill:url(#hw-stone-g)}
+.hwsky .engr{stroke:#120a0a;stroke-width:1.4;fill:none}
+.hwsky .fence{fill:none;stroke:#0a0505;stroke-width:2.2}
+.hwsky .grass{fill:none;stroke:#1e1410;stroke-width:1.4;stroke-linecap:round}
+.hwsky .deadtree path{fill:none;stroke:#0e0707;stroke-linecap:round}
+.hwsky .br0{stroke-width:22}.hwsky .br1{stroke-width:14}.hwsky .br2{stroke-width:9}.hwsky .br3{stroke-width:5.5}.hwsky .br4{stroke-width:3}.hwsky .br5{stroke-width:1.6}
+.hwsky .dracsil{fill:#080306;transform:translateX(-46px);animation:hw-pass 26s ease-in-out infinite}
+.hwsky .draceye{fill:#5a0a0a}
+body[data-phase=halloween-night] .hwsky .draceye{fill:#ff2a1a}
+@keyframes hw-pass{0%,58%{transform:translateX(-46px)}70%,84%{transform:translateX(0)}96%,100%{transform:translateX(48px)}}
+body[data-phase=halloween-night] .hwsky .r0{fill:#1d0f30}
+body[data-phase=halloween-night] .hwsky .r1{fill:#150a24}
