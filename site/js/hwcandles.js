@@ -107,3 +107,18 @@ hwCandleEls.forEach((b, i) => b.addEventListener("click", e => {
   else { if (hwCandleH[i] < .2) { hwCandleH[i] = 1; hwCandlePaint(i); } b.classList.add("lit"); }
   b.title = b.classList.contains("lit") ? "Blow out the candle" : "Light the candle";
 }));
+// Burning down, once a second; saved every 10 seconds
+let hwSaveIn = 10;
+everySecond.push(() => {
+  if (!hwCandles.isConnected) return;
+  hwCandleEls.forEach((b, i) => {
+    if (!b.classList.contains("lit")) return;
+    hwCandleH[i] = Math.max(.12, hwCandleH[i] - HW_BURN);
+    if (hwCandleH[i] <= .12) { b.classList.remove("lit"); hwSmoke(b); }  // burnt down: it goes out
+    hwCandlePaint(i);
+  });
+  if (--hwSaveIn <= 0) {
+    hwSaveIn = 10;
+    try { localStorage.setItem("hw-candles", JSON.stringify(hwCandleH.map(h => +h.toFixed(4)))); } catch (e) {}
+  }
+});
