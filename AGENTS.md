@@ -12,7 +12,8 @@ runs the build and publishes `dist/` at <https://alphaxt38g.github.io/notes_ba5/
 
 The index page has grown a lot of personality: a flame mode, a jazz bar at night (closed by a
 life-size Gigachad bartender at 00:45), a metal show at 01:00, an epic finale (with a knight playing the lute by a campfire), a calm night with
-crickets until 05:30, Christmas screens in December, a vintage cassette deck by day, easter eggs. Most of the code is there, in `site/`.
+crickets until 05:30, Christmas screens in December, Halloween at the end of October, a vintage
+cassette deck by day, easter eggs. Most of the code is there, in `site/`.
 
 ## Repository layout
 
