@@ -379,7 +379,7 @@ document.addEventListener("calm", e => setCrickets(e.detail));
 // own egg, or leaves a forced ?screen=calm; on the calm night of the clock, it does nothing.
 OVERRIDES.push(phase => {
   if (peaceEgg && (jazzEgg || yetiTyped !== peaceYeti)) peaceEgg = false;
-  if (!peaceEgg || !isNormal(phase) && screenClass(phase) !== "night" && screenClass(phase) !== "christmas") return phase;
+  if (!peaceEgg || !isNormal(phase) && !["night", "christmas", "halloween"].includes(screenClass(phase))) return phase;
   return "calm";
 });
 onCode("peace", () => {
