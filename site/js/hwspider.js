@@ -154,3 +154,18 @@ const hwWebFrame = now => {
   if (energy > .4 || hwSpiderAt !== hwSpiderGoal || hwWebPointer || hwSpiderRear) hwWebRaf = requestAnimationFrame(hwWebFrame);
   else hwWebNap = setTimeout(hwWebWake, 3000 + Math.random() * 5000);  // still: until the next breeze
 };
+const hwWebWake = () => {
+  if (hwWebRaf || !hwWeb.isConnected || hwStill()) return;
+  clearTimeout(hwWebNap);
+  hwWebLast = 0;
+  hwWebRaf = requestAnimationFrame(hwWebFrame);
+};
+const hwWebSize = () => {
+  hwWebW = Math.round(Math.min(440, innerWidth * (innerWidth < 700 ? .62 : .32)));
+  hwWebH = Math.round(hwWebW * .82);
+  hwWeb.width = hwWebW;
+  hwWeb.height = hwWebH;
+  hwWebBuild();
+  for (let i = 0; i < 60; i++) hwWebStep(.016);  // let it settle into its sag
+  hwWebDraw();
+};
