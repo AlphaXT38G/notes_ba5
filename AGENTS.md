@@ -322,6 +322,8 @@ it only rewrites the normal screens (no screen, the calm night: `isNormal()` in 
 the jazz screens, and `christmas.js` is loaded before `metal.js`,
 so the metal show (01:00 or easter egg) and the epic finale still take over. A forced `?screen=`
 turns it off, except `?screen=christmas` / `?screen=christmas-night` themselves and the `yeti` easter egg.
+Halloween works the same way (its override in `halloween.js`, after Christmas', before
+`armstrong.js`); its parts each live in a file of their own and register with `hwPart()`.
 
 ### Adding a new screen, step by step
 
