@@ -997,7 +997,7 @@ const smReset = () => {
   smAnims = [];
   smExtras.forEach(el => el.remove());
   smExtras = [];
-  if (smLoop) cancelAnimationFrame(smLoop);
+  smUnfreeze();
   if (smMeltRaf) cancelAnimationFrame(smMeltRaf);
   smLoop = smMeltRaf = null;
   clearTimeout(smPress);
