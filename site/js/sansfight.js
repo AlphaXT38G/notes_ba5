@@ -17,8 +17,8 @@
 // and thuds as the dark falls, and again when the attacks begin. HP at 0: the heart breaks, game over. The fight
 // ends with the song, with Escape, at game over, or with Christmas.
 // He rises for it: he grows and floats, his bottom sinking past the bottom of the window, blue
-// flames burning behind him (a canvas of glowing sprites, inside him so it floats and shakes with
-// him), and he shakes with the quakes.
+// flames burning behind him (a fire shader in WebGL, on a canvas inside him so it floats and
+// shakes with him, flaring with the quakes), and he shakes with the quakes.
 // His left eye glows blue and a flame rises from it: a WebGL shader ray-marching a volume of noise
 // (rising from the top of the eye, leaning back, flickering), on a small canvas over his face that
 // follows his gaze.
@@ -664,25 +664,116 @@ const sfRiseEnd = () => {
   setTimeout(() => { if (!SF.on) snowman.style.transition = ""; smBox = null; }, 950);
 };
 
-// ── The blue fire behind him: tongues of flame rising from the edges of his three balls, each a
-// glowing sprite added up ("lighter"), bright cyan when young, deep blue as it dies; a pulsing
-// glow under them. On a 2D canvas behind his drawing, in his own pixels (inside him, so it grows,
-// floats and shakes with him).
-const SF_BALLS = [[150, 412, 100, 86, .45], [156, 264, 70, 64, .35], [164, 152, 50, 47, .2]];  // cx, cy, rx, ry (in his 300 x 520), share of the flames
+// ── The blue fire behind him, on a canvas inside him (so it grows, floats and shakes with him),
+// behind his drawing. With WebGL: a fire shader. Each pixel measures how far the fire has come
+// from his outline (three balls and the hat, as distances), rising being cheap and sideways dear,
+// so the fire burns far above him and close on his sides; a rising, warped noise bites into that
+// heat, leaving tongues of flame; white-cyan at the hottest, deep blue as they thin out; a halo
+// around him, embers rising.
+// They flare with the quakes and the hits (K, the shake). Rendered at 0.6x (fire is soft).
+// Without WebGL: glowing sprites rising from the same outline, added up on a 2D canvas.
+const SF_BALLS = [[150, 412, 100, 86, .45], [156, 264, 70, 64, .35], [164, 152, 50, 47, .2]];  // cx, cy, rx, ry (in his 300 x 520), share of the sprites
 const SF_AURA_X = .45, SF_AURA_Y = .3;  // the canvas reaches that far beyond him (of his size)
+const SF_FIRE_FS = `precision mediump float;
+uniform vec2 R;
+uniform float T, O, K;
+float hs(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float ns(vec2 p) {
+  vec2 i = floor(p), f = fract(p);
+  f = f * f * (3. - 2. * f);
+  return mix(mix(hs(i), hs(i + vec2(1., 0.)), f.x), mix(hs(i + vec2(0., 1.)), hs(i + vec2(1., 1.)), f.x), f.y);
+}
+float fbm(vec2 p) {
+  float s = 0., a = .5;
+  for (int i = 0; i < 5; i++) { s += a * ns(p); p = p * 2.03 + vec2(1.7, 9.2); a *= .5; }
+  return s;
+}
+float el(vec2 p, vec4 e) { return (length((p - e.xy) / e.zw) - 1.) * min(e.z, e.w); }
+float bx(vec2 p, vec4 b) { vec2 d = abs(p - b.xy) - b.zw; return length(max(d, 0.)) + min(max(d.x, d.y), 0.); }
+float body(vec2 p) {
+  float d = min(min(el(p, vec4(150., 412., 100., 86.)), el(p, vec4(156., 264., 70., 64.))), el(p, vec4(164., 152., 50., 47.)));
+  return min(d, min(bx(p, vec4(164., 70., 38., 38.)), el(p, vec4(164., 105., 62., 14.))));
+}
+void main() {
+  vec2 uv = gl_FragCoord.xy / R;
+  vec2 p = vec2(${(-300 * SF_AURA_X).toFixed(1)} + uv.x * ${(300 * (1 + 2 * SF_AURA_X)).toFixed(1)}, ${(520 * (1 + SF_AURA_Y)).toFixed(1)} - uv.y * ${(520 * (1 + 2 * SF_AURA_Y)).toFixed(1)});  // in his units, y down
+  float d = body(p), D = max(d, 0.);
+  // the noise of the flames: stretched upwards, warped by a slower one, rising
+  vec2 q = p / vec2(55., 95.);
+  vec2 w = vec2(fbm(q + vec2(0., T * 1.3)), fbm(q + vec2(4.3, T * 1.6)));
+  float n = fbm(q * 1.7 + (w - .5) * 1.6 + vec2(0., T * 2.8)) * .65 + fbm(q * 3.6 + (w - .5) * 2.2 + vec2(0., T * 4.2)) * .35;
+  // how far the fire has come from him, going straight up costing less than sideways: the
+  // distance to him from a point some way below, plus a part of that way (the tongues sway)
+  float far = D;
+  for (int i = 1; i < 11; i++) {
+    float s = float(i) * 17.;
+    far = min(far, max(body(p + vec2((w.x - .5) * .6 * s, s)), 0.) + s * .22);
+  }
+  // the heat: full at his edge, nothing at the reach; the noise bites into it, so tongues
+  float reach = 60. * (1. + .5 * K) * O;
+  float x = clamp((1. - far / max(reach, 1.)) * 1.75 - n * 1.5 + .08, 0., 1.);
+  float halo = exp(-D / (40. + 30. * K)) * O;
+  // embers: rare cells of a grid rising faster than the fire, each a dot drifting in its cell
+  vec2 g = vec2(p.x / 16., (p.y + T * 150.) / 16.), id = floor(g), c = fract(g) - .5;
+  float r = hs(id), e = 0.;
+  if (r > .93) e = smoothstep(.16, 0., length(c - vec2(sin(T * 3. + r * 40.) * .25, (r - .965) * 8.))) * exp(-D / 110.) * step(0., d) * O;
+  // deep blue where it thins out, blue, cyan, and a white heart only at the hottest
+  vec3 col = mix(vec3(.05, .04, .5), vec3(.12, .38, 1.), smoothstep(.05, .35, x));
+  col = mix(col, vec3(.45, .8, 1.), smoothstep(.45, .75, x));
+  col = mix(col, vec3(.92, .97, 1.), smoothstep(.88, 1., x));
+  float a = smoothstep(0., .2, x);
+  col = col * a + vec3(.05, .18, .85) * halo * .5 + vec3(.7, .9, 1.) * e;
+  a = max(a, max(halo * .4, e));
+  gl_FragColor = vec4(col, a);
+}`;
 const sfAuraStart = () => {
-  const cv = document.createElement("canvas");
-  cv.className = "bluefire";
-  cv.width = Math.round(snowman.offsetWidth * (1 + 2 * SF_AURA_X));
-  cv.height = Math.round(snowman.offsetHeight * (1 + 2 * SF_AURA_Y));
-  snowman.insertBefore(cv, snowman.firstChild);
-  return { cv, ctx: cv.getContext("2d"), parts: [], due: 0, sprites: [blob(200, 240, 255, 1), blob(60, 140, 255, 1), blob(30, 50, 220, 1)], glow: blob(40, 110, 255, .55) };
+  const W = snowman.offsetWidth * (1 + 2 * SF_AURA_X), H = snowman.offsetHeight * (1 + 2 * SF_AURA_Y);
+  const fire = () => {
+    const cv = document.createElement("canvas"), gl = cv.getContext("webgl", { premultipliedAlpha: true, antialias: false, depth: false });
+    if (!gl) return null;
+    cv.width = Math.round(W * .6);
+    cv.height = Math.round(H * .6);
+    const sh = (type, src) => { const x = gl.createShader(type); gl.shaderSource(x, src); gl.compileShader(x); return x; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, "attribute vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }"));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, SF_FIRE_FS));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null;
+    gl.useProgram(prog);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0);
+    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    const u = n => gl.getUniformLocation(prog, n);
+    return { cv, gl, uR: u("R"), uT: u("T"), uO: u("O"), uK: u("K") };
+  };
+  // no WebGL (or the shader failed): the sprites
+  const sprites = () => {
+    const cv = document.createElement("canvas");
+    cv.width = Math.round(W);
+    cv.height = Math.round(H);
+    return { cv, ctx: cv.getContext("2d"), parts: [], due: 0, sprites: [blob(200, 240, 255, 1), blob(60, 140, 255, 1), blob(30, 50, 220, 1)], glow: blob(40, 110, 255, .55) };
+  };
+  const A = fire() || sprites();
+  A.cv.className = "bluefire";
+  snowman.insertBefore(A.cv, snowman.firstChild);
+  return A;
 };
 const sfAuraDraw = dt => {
   const A = sfAura;
   if (!A) return;
-  const c = A.ctx, W = A.cv.width, H = A.cv.height, k = W / (1 + 2 * SF_AURA_X) / 300, ox = W * SF_AURA_X / (1 + 2 * SF_AURA_X), oy = H * SF_AURA_Y / (1 + 2 * SF_AURA_Y);
   const on = Math.min(1, SF.t / SF_RISE_S);  // the fire catches as he rises
+  if (A.gl) {
+    const gl = A.gl;
+    gl.viewport(0, 0, A.cv.width, A.cv.height);
+    gl.uniform2f(A.uR, A.cv.width, A.cv.height);
+    gl.uniform1f(A.uT, SF.t);
+    gl.uniform1f(A.uO, on);
+    gl.uniform1f(A.uK, Math.min(1.5, SF.shake));
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    return;
+  }
+  const c = A.ctx, W = A.cv.width, H = A.cv.height, k = W / (1 + 2 * SF_AURA_X) / 300, ox = W * SF_AURA_X / (1 + 2 * SF_AURA_X), oy = H * SF_AURA_Y / (1 + 2 * SF_AURA_Y);
   // new tongues, about 170 a second once it burns (capped)
   A.due += dt * 170 * on;
   while (A.due >= 1 && A.parts.length < 340) {
@@ -696,9 +787,8 @@ const sfAuraDraw = dt => {
   c.clearRect(0, 0, W, H);
   c.globalCompositeOperation = "lighter";
   // the glow behind him, breathing
-  const g = A.glow, pulse = .75 + .25 * Math.sin(SF.t * 3.1);
-  c.globalAlpha = on * pulse;
-  c.drawImage(g, ox + 10 * k, oy + 60 * k, 280 * k, 470 * k);
+  c.globalAlpha = on * (.75 + .25 * Math.sin(SF.t * 3.1));
+  c.drawImage(A.glow, ox + 10 * k, oy + 60 * k, 280 * k, 470 * k);
   A.parts = A.parts.filter(p => {
     p.t += dt;
     if (p.t > p.life) return false;
@@ -716,10 +806,14 @@ const sfAuraDraw = dt => {
 };
 const sfAuraStop = () => {
   if (!sfAura) return;
-  const cv = sfAura.cv;
+  const A = sfAura;
   sfAura = null;
-  cv.classList.add("leaving");
-  setTimeout(() => cv.remove(), 700);
+  A.cv.classList.add("leaving");
+  setTimeout(() => {
+    const x = A.gl && A.gl.getExtension("WEBGL_lose_context");
+    if (x) x.loseContext();  // free the GPU now
+    A.cv.remove();
+  }, 700);
 };
 
 // ── Start and end
