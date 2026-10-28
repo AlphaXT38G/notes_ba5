@@ -16,6 +16,8 @@
 // a crunch, the screen shakes, the box flashes red. The fight lands with a quake: a run of jolts
 // and thuds as the dark falls, and again when the attacks begin. HP at 0: the heart breaks, game over. The fight
 // ends with the song, with Escape, at game over, or with Christmas.
+// He rises for it: he grows and floats, his bottom sinking past the bottom of the window, and he
+// shakes with the quakes.
 // His left eye glows blue and a flame rises from it: a WebGL shader ray-marching a volume of noise
 // (rising from the top of the eye, leaning back, flickering), on a small canvas over his face that
 // follows his gaze.
@@ -410,8 +412,9 @@ const sfFrame = now => {
     SF.shake = Math.max(0, SF.shake - dt * 4);
     if (!SF.shake) sfUi.style.transform = sfBg.style.transform = "";
   }
-  // the flame follows his gaze (snowman.js moves his eyes)
-  if (sfFlame) { const k = smK(); sfFlame.cv.style.transform = `translate(${f1(smLookOff[0] * k)}px,${f1(smLookOff[1] * k)}px)`; }
+  sfRise();
+  // the flame follows his gaze (snowman.js moves his eyes; in his own pixels, as he is scaled)
+  if (sfFlame) { const k = snowman.offsetWidth / 300; sfFlame.cv.style.transform = `translate(${f1(smLookOff[0] * k)}px,${f1(smLookOff[1] * k)}px)`; }
   if (SF.phase === "fight" && SF.t - SF.scene.at > SF_SCENE_S) sfSceneNext();
   sfBackground(dt);
   sfDraw(now);
@@ -644,6 +647,21 @@ const sfFlameStop = () => {
   sfFlame = null;
 };
 
+// ── He rises: grown (from a point high on him, so his bottom sinks out of the window), floating
+// up and down, shaken by the quakes and the hits like the box
+const SF_RISE = .35, SF_RISE_S = 1.4;  // how much he grows, in how many seconds
+const sfRise = () => {
+  const u = Math.min(1, SF.t / SF_RISE_S), g = u * u * (3 - 2 * u), a = 6 * SF.shake * SF.shake;
+  const x = (Math.random() - .5) * 2 * a, y = (Math.random() - .5) * 2 * a - g * (6 + 6 * Math.sin(SF.t * 1.7));
+  snowman.style.transform = `translate(${f1(x)}px,${f1(y)}px) scale(${(1 + SF_RISE * g).toFixed(3)})`;
+  smBox = null;  // his box changes all the time: his eyes measure it again (snowman.js)
+};
+const sfRiseEnd = () => {
+  snowman.style.transition = "transform .9s ease-in-out";
+  snowman.style.transform = "";
+  setTimeout(() => { if (!SF.on) snowman.style.transition = ""; smBox = null; }, 950);
+};
+
 // ── Start and end
 const sfKey = e => {
   if (!SF.on) return;
@@ -684,6 +702,7 @@ const sfStart = () => {
   addEventListener("keydown", sfKey, true);
   addEventListener("keyup", sfKey, true);
   sfFlame = sfFlameStart();
+  snowman.style.transition = "";
   const I = sfInside();
   sfSoul = [(I.x0 + I.x1) / 2, (I.y0 + I.y1) / 2];
   sfQuake(SF_QUAKE_IN);  // the fight lands on us
@@ -707,6 +726,7 @@ const sfEnd = () => {
   removeEventListener("pointermove", sfPointer);
   SF.scene = null;
   sfFlameStop();
+  sfRiseEnd();
   snowman.classList.remove("hold");
   document.body.classList.remove("sansfight");
   const ui = sfUi, dark = sfDark;
