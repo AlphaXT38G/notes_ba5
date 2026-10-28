@@ -74,3 +74,40 @@ const hwWebMess = () => {
   for (let i = 0; i < 160; i++) { g.beginPath(); g.arc(rnd() * W, rnd() * H, .8 + rnd() * 1.6, 0, Math.PI * 2); g.fill(); }
   return c;
 };
+// The stuck pointer: an arrow wrapped in threads
+const HW_WEB_CURSOR = '<svg viewBox="0 0 30 36" width="30" height="36"><path d="M2,2V27L8.5,21 13,31.5 17.5,29.5 13,19.5H22Z" fill="#f4f2ff" stroke="#6a5a8a" stroke-width="1.5" stroke-linejoin="round"/>' +
+  '<path d="M0,6 24,14M1,18 20,8M3,25 18,24M6,31 15,18M10,4 12,30" stroke="#fff" stroke-width=".7" opacity=".85"/><circle cx="12" cy="13" r="1.2" fill="#fff"/></svg>';
+let hwShotFly = null, hwShotWebs = [], hwShotStuck = null, hwShotTimers = [];
+const hwWebShot = (x, y) => {
+  hwWebShotEnd();
+  const W = innerWidth, H = innerHeight, size = Math.min(1400, Math.max(W, H) * 1.1);
+  const fly = hwOrbWeb(1024, 7), mess = hwWebMess();
+  fly.className = "hwshot";
+  mess.className = "hwshot-mess";
+  fly.style.cssText = `width:${size}px;height:${size}px;left:${f1(W / 2 - size / 2)}px;top:${f1(H / 2 - size / 2)}px`;
+  document.body.append(mess, fly);
+  hwShotWebs = [fly, mess];
+  hwNoise(.35, 1800, "highpass", .2);  // the spit
+  // flying at us: from the spider, small, spinning, faster and faster as it grows
+  const from = `translate(${f1(x - W / 2)}px,${f1(y - H / 2)}px) scale(.02) rotate(-40deg)`;
+  hwShotFly = fly.animate([
+    { transform: from },
+    { transform: `translate(${f1((x - W / 2) * .5)}px,${f1((y - H / 2) * .5)}px) scale(.18) rotate(-15deg)`, offset: .6 },
+    { transform: "translate(0,0) scale(1.5) rotate(0deg)" },
+  ], { duration: 850, easing: "cubic-bezier(.6,0,.9,.6)", fill: "forwards" });
+  hwShotFly.onfinish = () => {
+    // on our face: a wet slap, it clings and quivers, then sags and thins away; webs everywhere
+    hwNoise(.5, 260, "lowpass", .5);
+    hwNoise(.25, 2400, "bandpass", .25);
+    mess.animate([{ opacity: 0 }, { opacity: 1, offset: .04 }, { opacity: 1, offset: .75 }, { opacity: 0 }], { duration: HW_SHOT_MS + 2500, fill: "forwards" });
+    hwShotFly = fly.animate([
+      { transform: "scale(1.5)", opacity: 1 },
+      { transform: "scale(1.47,1.53)", opacity: 1, offset: .04 },
+      { transform: "scale(1.5)", opacity: 1, offset: .1 },
+      { transform: "translateY(8vh) scale(1.5,1.62)", opacity: .7, offset: .5 },
+      { transform: "translateY(30vh) scale(1.45,1.8)", opacity: 0 },
+    ], { duration: 9000, easing: "ease-in", fill: "forwards" });
+    hwShotStuck = stuckPointer({ id: "hwwebcursor", cursor: HW_WEB_CURSOR, ms: HW_SHOT_MS, from: [W / 2, H / 2] });
+    hwShotTimers.push(setTimeout(hwWebShotEnd, HW_SHOT_MS + 2600));
+  };
+};
