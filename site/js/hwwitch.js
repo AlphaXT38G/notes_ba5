@@ -84,3 +84,15 @@ const hwWitchFrame = now => {
   g.globalCompositeOperation = "source-over";
   if (f && f.end && !hwSparks.length) hwWitchStop();
 };
+const hwWitchStop = () => {
+  cancelAnimationFrame(hwWitchRaf);
+  hwWitchRaf = hwWitchFlight = null;
+  hwSparks.length = 0;
+  hwWitch.remove();
+  hwTrailCv.remove();
+};
+everySecond.push(() => { if (hwOn && --hwWitchIn <= 0) { hwWitchGo(); hwWitchIn = 60 + Math.random() * 120; } });
+hwPart({
+  on() { hwWitchIn = 20 + Math.random() * 25; },
+  off() { hwWitchStop(); },
+});
