@@ -120,3 +120,14 @@ const hwGargoyles = () => HW_GARGOYLES.map(([x, y, h, dir]) => {
     `${dir < 0 ? ` transform="translate(${2 * x},0) scale(-1,1)"` : ""}/>` +
     `<circle class="geye-glow" cx="${f1(ex)}" cy="${f1(ey)}" r="2.6"/><circle class="geye" cx="${f1(ex)}" cy="${f1(ey)}" r=".7"/></g>`;
 }).join("");
+// Two windows with shutters (they open now and then, hwsecrets.js) and someone inside, in
+// silhouette against the light: a knight in armour, his sword raised (the way to the epic finale),
+// and a man playing the saxophone, swaying (the way to the jazz bar). The figures stand on x, y
+// (the middle of the window's sill); the shutters fold open towards the sides.
+const HW_KNIGHT = (x, y) => `<g class="figure knight"><path d="M${x - 7},${y}L${x - 6},${y - 16}L${x - 9},${y - 20}L${x - 8},${y - 27}H${x + 8}L${x + 9},${y - 20}L${x + 6},${y - 16}L${x + 7},${y}Z` +
+  `M${x - 3.5},${y - 27}V${y - 33}Q${x},${y - 37} ${x + 3.5},${y - 33}V${y - 27}ZM${x},${y - 36}Q${x - 2},${y - 42} ${x - 6},${y - 41}Q${x - 2},${y - 39} ${x},${y - 35}Z"/>` +
+  `<g class="sword"><path d="M${x + 6},${y - 22}L${x + 8},${y - 29}H${x + 10}L${x + 9},${y - 22}Z` +
+  `M${x + 5},${y - 30}H${x + 12}V${y - 31.5}H${x + 5}ZM${x + 8},${y - 31.5}L${x + 8.6},${y - 48}L${x + 9.4},${y - 48}L${x + 10},${y - 31.5}Z"/></g></g>`;
+const HW_SAXMAN = (x, y) => `<g class="figure saxman"><path d="M${x - 6},${y}L${x - 5},${y - 18}Q${x - 6},${y - 26} ${x},${y - 27}Q${x + 6},${y - 26} ${x + 5},${y - 18}L${x + 6},${y}Z` +
+  `M${x},${y - 28}a3.6,4 0 1 1 .1,0ZM${x - 6},${y - 34}H${x + 6}V${y - 35}H${x + 4}V${y - 39}H${x - 4}V${y - 35}H${x - 6}Z` +
+  `M${x + 2},${y - 29}L${x + 5},${y - 26}Q${x + 6},${y - 14} ${x + 9},${y - 11}Q${x + 13},${y - 9} ${x + 12},${y - 14}L${x + 10},${y - 15}Q${x + 10},${y - 12} ${x + 8},${y - 13}Q${x + 7},${y - 20} ${x + 5},${y - 28}Z"/></g>`;
