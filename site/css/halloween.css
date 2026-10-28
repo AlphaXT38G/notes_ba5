@@ -26,3 +26,13 @@ body.halloween .bar{background:rgba(255,255,255,.08)}
 body.halloween .bar span{background:repeating-linear-gradient(-45deg,#ff8c1f 0 5px,#1a0c06 5px 9px)}
 body.halloween #search,body.halloween .view,body.halloween .tools button{box-shadow:0 2px 10px rgba(0,0,0,.4)}
 
+/* The scene (#hwscene), a fixed layer behind the page; #hwfront, above it, for what is clicked */
+#hwscene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#hwfront{position:fixed;inset:0;z-index:30;pointer-events:none}
+#hwfront>*{pointer-events:auto}
+.hwsky{position:absolute;inset:0}
+.hwsky svg{width:100%;height:100%;display:block}
+.hwsky .stars{display:none}
+body[data-phase=halloween-night] .hwsky .stars{display:inline}
+.hwsky .twinkle circle{animation:hw-twinkle 4s ease-in-out var(--d) infinite}
+@keyframes hw-twinkle{50%{opacity:.25}}
