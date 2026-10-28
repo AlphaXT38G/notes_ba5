@@ -35,3 +35,12 @@ hwJar.innerHTML = `<i class="light"></i><svg viewBox="0 0 40 56" aria-hidden="tr
   `<rect x="11" y="3" width="18" height="7" rx="2" fill="#8a5a32"/><rect x="11" y="3" width="18" height="2" rx="1" fill="#a87448"/>` +
   `<path d="M10,11Q20,14 30,11" stroke="#c8a46a" stroke-width="1.2" fill="none"/></g>` +
   `<path d="M0,56C2,44 10,40 20,41C30,40 38,44 40,56Z" fill="url(#hwjar-earth)"/><path d="M6,46l2,-1M30,45l3,1M15,43l1,-1" stroke="#3a2a20"/></svg>`;
+// The jack-o'-lantern that brings Halloween back
+const hwBackBtn = document.createElement("button");
+hwBackBtn.id = "hwback";
+hwBackBtn.type = "button";
+hwBackBtn.title = "Back to Halloween";
+hwBackBtn.setAttribute("aria-label", "Back to Halloween");
+hwBackBtn.innerHTML = `<svg viewBox="0 0 40 36" aria-hidden="true"><path d="M20 7c2-5 5-6 7-5-3 1-5 3-6 6z" fill="#557a2a"/>` +
+  `<ellipse cx="12" cy="22" rx="10" ry="12" fill="#e86a10"/><ellipse cx="28" cy="22" rx="10" ry="12" fill="#e86a10"/><ellipse cx="20" cy="22" rx="10" ry="13" fill="#ff8c1f"/>` +
+  `<path d="M11 18l4-4 2 5zM29 18l-4-4-2 5zM10 25q10 9 20 0l-3 2-2-2-2 3-3-3-3 3-2-3-2 2z" fill="#ffe08a"/></svg>`;
