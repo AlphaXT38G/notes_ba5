@@ -986,9 +986,8 @@ const smSlowPointer = (x, y, ms) => { smStuck = stuckPointer({ id: "xcursor", cu
 
 // The frozen pointer, gone at once (the fight needs the real one)
 const smUnfreeze = () => {
-  if (smLoop) cancelAnimationFrame(smLoop);
-  smLoop = null;
-  smExtras.filter(el => el.id === "xfreeze" || el.id === "xcursor").forEach(smDrop);
+  if (smStuck) smStuck.stop();
+  smStuck = null;
 };
 
 // Christmas over: every game stops, he is himself again
