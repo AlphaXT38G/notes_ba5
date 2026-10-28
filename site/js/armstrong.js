@@ -1,10 +1,11 @@
 // ── Armstrong code (easter egg: the jazz bar at any time) ─────────────────────────────────────
 // Typing a r m s t r o n g (outside the search field, or in it then Enter: onCode, ui.js) opens
 // the jazz bar ("evening" screen) at any time of the day or the year, for the rest of the visit,
-// over every screen. It runs after the Christmas override (this file is loaded after
-// christmas.js) so it wins over Christmas, and before the metal and epic ones, so the shows that
-// come later still take over (the metal show at 01:00 too: only the day, the calm night and
-// Christmas are replaced); typed during a show, it ends it first (leaveShows, epic.js).
+// over every screen. It runs after the Christmas and Halloween overrides (this file is loaded
+// after christmas.js and halloween.js) so it wins over them, and before the metal and epic ones,
+// so the shows that come later still take over (the metal show at 01:00 too: only the day, the
+// calm night, Christmas and Halloween are replaced); typed during a show, it ends it first
+// (leaveShows, epic.js).
 // Typed again in the jazz bar, it goes back to the normal screen of that moment: what the clock
 // gives without any easter egg nor forced screen. So it drops the jazz egg, the yeti egg, the
 // Christmas sax and a forced ?screen=..., and shows the day (or the calm night after the metal
