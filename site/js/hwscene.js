@@ -81,3 +81,27 @@ const HW_TREE = (() => {
   return `<g class="deadtree">${strokes.map((d, i) => `<path class="br${i}" d="${d.join("")}"/>`).join("")}</g>`;
 })();
 
+// The stars of the night sky: small dots of a few sizes and warmths, a few of them twinkling
+const HW_STARS = (() => {
+  const rnd = seeded(99);
+  let dots = "", twinkle = "";
+  for (let i = 0; i < 160; i++) {
+    const x = rnd() * HW_W, y = rnd() * 430, r = rnd() < .9 ? .6 + rnd() * .7 : 1.3 + rnd() * .8;
+    const c = `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}"`;
+    if (i < 10) twinkle += `${c} style="--d:${f1(-rnd() * 4)}s"/>`;
+    else dots += `${c}/>`;
+  }
+  return `<g class="stars"><g fill="#fff4e0">${dots}</g><g class="twinkle" fill="#fff">${twinkle}</g></g>`;
+})();
+
+const hwSky = document.createElement("div");
+hwSky.className = "hwsky";
+const hwMoon = document.createElement("div");
+hwMoon.id = "hwmoon";
+hwMoon.innerHTML = MOON;  // the full moon of christmas.js: on Halloween it is full, of course
+hwSky.innerHTML = `<svg viewBox="0 0 ${HW_W} ${HW_H}" preserveAspectRatio="xMidYMax slice">` +
+  `<defs><linearGradient id="hw-stone-g" x1="0" x2="1"><stop offset="0" class="st1"/><stop offset="1" class="st2"/></linearGradient></defs>` +
+  `${HW_STARS}<path class="ridge r0" d="${hwOutline(hwHill(430, [[30, .003, 0], [14, .009, 2]]), 0, HW_W, 20)}"/>` +
+  `<path class="ridge r1" d="${hwOutline(HW_FAR, 0, HW_W, 20)}"/><g class="castle" transform="translate(1270,700) scale(.74) translate(-1215,-700)">${HW_CASTLE}</g>` +
+  `<path class="hill h0" d="${hwOutline(HW_RIGHT, 860, HW_W)}"/><path class="hill h1" d="${hwOutline(HW_LEFT, 0, 900)}"/>` +
+  `<g class="graves">${HW_GRAVES}</g>${HW_TREE}</svg>`;
