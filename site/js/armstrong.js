@@ -27,7 +27,7 @@ OVERRIDES.push(phase => {
 // Leaving the bar: drop the easter eggs that kept it open or that would replace it (the yeti
 // egg's Christmas), so the screen goes back to what the clock gives
 const backToClock = () => {
-  jazzEgg = xmasEgg = xmasJazz = false;
+  jazzEgg = xmasEgg = xmasJazz = hwEgg = false;
   if (forced) forcedDismissed = true;  // also leaves a forced ?screen=... (the bar, Christmas...)
 };
 const armstrong = () => {
