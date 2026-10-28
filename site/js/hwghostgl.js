@@ -99,3 +99,34 @@ void main(){
   float edges=smoothstep(0.,.08,min(min(q.x,1.-q.x),min(q.y,1.-q.y)));
   gl_FragColor=vec4(col,a)*uAlpha*edges;
 }`;
+let hwSpGl = null, hwSpProg = null, hwSpUni = {}, hwSpReady = false;
+const hwSpectreInit = canvas => {
+  if (hwSpGl) return true;
+  const gl = canvas.getContext("webgl", { premultipliedAlpha: true, antialias: false });
+  if (!gl) return false;
+  const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+  hwSpProg = gl.createProgram();
+  gl.attachShader(hwSpProg, sh(gl.VERTEX_SHADER, "attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}"));
+  gl.attachShader(hwSpProg, sh(gl.FRAGMENT_SHADER, HW_SPECTRE_FRAG));
+  gl.linkProgram(hwSpProg);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  hwSpGl = gl;
+  return true;
+};
+const hwSpectreReady = () => {
+  if (hwSpReady) return true;
+  const gl = hwSpGl, ext = gl && gl.getExtension("KHR_parallel_shader_compile");
+  if (!gl || ext && !gl.getProgramParameter(hwSpProg, ext.COMPLETION_STATUS_KHR)) return false;
+  if (!gl.getProgramParameter(hwSpProg, gl.LINK_STATUS)) {
+    console.warn("Halloween ghosts:", ...gl.getAttachedShaders(hwSpProg).map(s => gl.getShaderInfoLog(s)));
+    hwSpGl = null;
+    return false;
+  }
+  gl.useProgram(hwSpProg);
+  const loc = gl.getAttribLocation(hwSpProg, "p");
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  ["uRes", "uJ", "uTime", "uKind", "uReveal", "uAlpha", "uNight", "uLamp"].forEach(u => { hwSpUni[u] = gl.getUniformLocation(hwSpProg, u); });
+  return hwSpReady = true;
+};
