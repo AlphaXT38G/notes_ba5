@@ -105,3 +105,17 @@ hwSky.innerHTML = `<svg viewBox="0 0 ${HW_W} ${HW_H}" preserveAspectRatio="xMidY
   `<path class="ridge r1" d="${hwOutline(HW_FAR, 0, HW_W, 20)}"/><g class="castle" transform="translate(1270,700) scale(.74) translate(-1215,-700)">${HW_CASTLE}</g>` +
   `<path class="hill h0" d="${hwOutline(HW_RIGHT, 860, HW_W)}"/><path class="hill h1" d="${hwOutline(HW_LEFT, 0, 900)}"/>` +
   `<g class="graves">${HW_GRAVES}</g>${HW_TREE}</svg>`;
+// Where the crest of the far ridge is on the screen, at screen x (the werewolf walks on it): the
+// ridge's outline through the transform that fits the scene's box to the window
+const hwRidgeY = sx => {
+  const m = hwSky.firstChild.getScreenCTM();
+  return m ? HW_FAR((sx - m.e) / m.a) * m.d + m.f : innerHeight * .7;
+};
+const hwMist = document.createElement("div");
+hwMist.className = "hwmist";
+hwMist.innerHTML = "<i></i><i></i>";
+
+hwPart({
+  on() { hwBack.append(hwMoon, hwSky, hwMist); },
+  off() { [hwMoon, hwSky, hwMist].forEach(el => el.remove()); },
+});
