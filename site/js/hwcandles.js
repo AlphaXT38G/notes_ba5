@@ -87,3 +87,23 @@ const hwCandleEls = HW_CANDLES.map((c, i) => {
   (c.alone ? hwCandleSolo : hwCandles).append(b);
   return b;
 });
+// Draw a candle at its height (again when it has melted by a pixel or more)
+const hwCandleDrawn = HW_CANDLES.map(() => 0);
+const hwCandlePaint = i => {
+  const px = Math.round(HW_CANDLES[i].h * hwCandleH[i]);
+  if (px === hwCandleDrawn[i]) return;
+  hwCandleDrawn[i] = px;
+  hwCandleEls[i].innerHTML = HW_FLAME + hwCandleSvg(HW_CANDLES[i], px, i);
+};
+const hwSmoke = b => {
+  const puff = document.createElement("span");
+  puff.className = "hwsmoke";
+  b.append(puff);
+  setTimeout(() => puff.remove(), 2600);
+};
+hwCandleEls.forEach((b, i) => b.addEventListener("click", e => {
+  e.stopPropagation();
+  if (b.classList.contains("lit")) { b.classList.remove("lit"); hwSmoke(b); hwNoise(.25, 900, "bandpass", .12); }
+  else { if (hwCandleH[i] < .2) { hwCandleH[i] = 1; hwCandlePaint(i); } b.classList.add("lit"); }
+  b.title = b.classList.contains("lit") ? "Blow out the candle" : "Light the candle";
+}));
