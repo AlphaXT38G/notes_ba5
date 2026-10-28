@@ -141,3 +141,9 @@ body[data-phase=halloween-night] .hwmist i{background:radial-gradient(30% 50% at
 #hwwolf .leg-r{transform-origin:70% 77%;animation:hw-wolf-stride 1.1s ease-in-out -1.1s infinite alternate}
 @keyframes hw-wolf-bob{to{transform:translateY(3%)}}
 @keyframes hw-wolf-stride{from{transform:rotate(-14deg)}to{transform:rotate(12deg)}}
+@keyframes hw-wolf-swing{from{transform:rotate(12deg)}to{transform:rotate(-10deg)}}
+@keyframes hw-wolf-tail{from{transform:rotate(-8deg)}to{transform:rotate(8deg)}}
+#hwwolf:is(.howl,.still) :is(.fig,img){animation-play-state:paused}
+#hwwolf.howl .fig{rotate:0deg}
+#hwwolf.howl .head{rotate:4deg}
+#hwwolf.still .head{rotate:-22deg}
