@@ -49,3 +49,10 @@ body.halloween .searchrow,body.halloween .view{position:relative}
 #hwpatch .carved .face{opacity:1;animation:hw-carve .9s ease-out both}
 @keyframes hw-carve{from{fill-opacity:0;stroke-dashoffset:400}60%{fill-opacity:0;stroke-dashoffset:0}to{fill-opacity:1;stroke-dashoffset:0}}
 #hwpatch .face-lit,#hwpatch .pool{opacity:0;transition:opacity .6s}
+#hwpatch .pool{fill:rgba(255,150,40,.35)}
+#hwpatch .lit .face-lit{opacity:1;animation:hw-glow 1.6s ease-in-out infinite}
+#hwpatch .lit .pool{opacity:1}
+@keyframes hw-glow{0%,100%{opacity:1}30%{opacity:.75}55%{opacity:.95}75%{opacity:.8}}
+#hwpatch .laugh svg{animation:hw-laugh .7s ease-in-out;transform-origin:50% 90%}
+@keyframes hw-laugh{20%{transform:rotate(-6deg) scale(1.04)}40%{transform:rotate(5deg)}60%{transform:rotate(-4deg) scale(1.03)}80%{transform:rotate(2deg)}}
+#hwscene.awake .hwsky .win{fill:#ffcf5a;animation:hw-window .6s ease-in-out infinite}
