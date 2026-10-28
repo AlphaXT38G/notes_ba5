@@ -55,3 +55,12 @@ const hwNewLeaf = top => ({
   sway: Math.random() * 6, spin: (Math.random() - .5) * 2, a: Math.random() * 6, turn: Math.random() * 6,
   img: HW_LEAVES[(Math.random() * HW_LEAVES.length) | 0], k: .6 + Math.random() * .6,
 });
+// A swarm leaving from (x, y): the extra bats fly out of the window, then are dropped
+const hwBatBurst = (x, y, n) => {
+  for (let i = 0; i < n && hwBats.length < 60; i++) {
+    const b = hwNewBat(x, y, true), a = Math.random() * Math.PI * 2, v = 180 + Math.random() * 260;
+    b.vx = Math.cos(a) * v; b.vy = Math.sin(a) * v - 80;
+    hwBats.push(b);
+  }
+};
+
