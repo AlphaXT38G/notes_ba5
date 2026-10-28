@@ -22,3 +22,11 @@ const HW_CANDLES = [  // width, height when new (px), drips: [x as a part of the
   { w: 20, h: 36, drips: [[.25, 12, 1], [.8, 18, 1]], alone: true },  // on Previews, under the header buttons
 ];
 const HW_BURN = 1 / (25 * 60);  // the part of a new candle burnt per second
+const hwCandleH = (() => {
+  try {
+    const saved = JSON.parse(localStorage.getItem("hw-candles"));
+    if (Array.isArray(saved) && saved.length === HW_CANDLES.length && saved.every(h => h > .1 && h <= 1)) return saved;
+  } catch (e) {}
+  return HW_CANDLES.map(() => 1);
+})();  // heights, as a part of a new candle's
+
