@@ -95,3 +95,28 @@ const hwAudioCtx = () => {
   if (hwAudio && hwAudio.state === "suspended") hwAudio.resume().catch(() => {});
   return hwAudio;
 };
+// A burst of noise through a filter: thunder (low), a squeak (high), a hiss (the spider)
+const hwNoise = (secs, freq, type = "lowpass", gain = .5, delay = 0) => {
+  const ac = hwAudioCtx();
+  if (!ac || !screenGesture()) return;
+  const n = Math.round(ac.sampleRate * secs), buf = ac.createBuffer(1, n, ac.sampleRate), data = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2);
+  const src = ac.createBufferSource(), filter = ac.createBiquadFilter(), g = ac.createGain();
+  src.buffer = buf;
+  filter.type = type;
+  filter.frequency.value = freq;
+  g.gain.value = gain;
+  src.connect(filter).connect(g).connect(ac.destination);
+  src.start(ac.currentTime + delay);
+};
+const hwBolt = () => {
+  hwFlash.classList.remove("on");
+  void hwFlash.offsetWidth;  // restart the animation
+  hwFlash.classList.add("on");
+  hwNoise(3.5, 140, "lowpass", .6, .8 + Math.random());
+};
+everySecond.push(() => {
+  if (!hwNight() || hwStill() || document.hidden) return;
+  if (--hwBoltIn <= 0) { hwBolt(); hwBoltIn = 25 + Math.random() * 95; }
+});
+
