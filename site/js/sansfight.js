@@ -13,17 +13,24 @@
 // bones erupting from the floor where red warnings flashed, rings of bones closing on the heart,
 // skull blasters charging then firing a beam across the screen, alone or four crossing. The bones
 // are outlined and shaded, the blue ones glow, the fast and turning ones leave a trail. Each hit:
-// a crunch, the screen shakes, the box flashes red. HP at 0: the heart breaks, game over. The fight
+// a crunch, the screen shakes, the box flashes red. The fight lands with a quake: a run of jolts
+// and thuds as the dark falls, and again when the attacks begin. HP at 0: the heart breaks, game over. The fight
 // ends with the song, with Escape, at game over, or with Christmas.
 // His left eye glows blue and a flame rises from it: a WebGL shader ray-marching a volume of noise
 // (rising from the top of the eye, leaning back, flickering), on a small canvas over his face that
 // follows his gaze.
 // Everything here is made when the fight starts and removed when it ends.
 const SF_HP = 40;
-const SF = { on: false, raf: null, phase: "", t: 0, fight: 0, hp: SF_HP, hitAt: 0, shake: 0, objs: [], active: [], nextAt: 0, n: 0, last: 0, keys: {}, typing: null, over: false, useMouse: true, scene: null };
+const SF = { on: false, raf: null, phase: "", t: 0, fight: 0, hp: SF_HP, hitAt: 0, shake: 0, quakes: [], objs: [], active: [], nextAt: 0, n: 0, last: 0, keys: {}, typing: null, over: false, useMouse: true, scene: null };
 const SF_SCENE_S = 22;  // seconds of each diorama
 let sfUi = null, sfCv = null, sfCtx = null, sfDark = null, sfFlame = null, sfBox = null, sfBg = null, sfBgCtx = null;
 let sfSoul = [0, 0], sfMoved = 0;
+// The quakes the fight lands with: [seconds after the start of the run, strength] (a strength
+// above 1 shakes harder than any hit). As the dark falls: a heavy blow, then aftershocks dying out
+// with a last big one; when the attacks begin: a shorter run, as he strikes.
+const SF_QUAKE_IN = [[.05, 1.7], [.4, 1], [.7, 1.3], [1, .8], [1.3, 1.1], [1.65, .7], [2, .9], [2.4, .5], [2.9, 1.4]];
+const SF_QUAKE_GO = [[0, 1.6], [.3, 1], [.55, 1.2], [.85, .7], [1.2, .5]];
+const sfQuake = run => { SF.quakes = SF.quakes.concat(run.map(([dt, s]) => [SF.t + dt, s])); };
 
 // The red heart, in pixels (11 x 10), and its two halves when it breaks
 const SF_HEART = ["..XX...XX..", ".XXXX.XXXX.", "XXXXXXXXXXX", "XXXXXXXXXXX", "XXXXXXXXXXX", ".XXXXXXXXX.", "..XXXXXXX..", "...XXXXX...", "....XXX....", ".....X....."];
@@ -258,6 +265,7 @@ const sfFightStart = () => {
   SF.n = 0;
   sfUi.classList.add("attacking");
   sfUi.querySelector(".text").textContent = "";
+  sfQuake(SF_QUAKE_GO);
   const I = sfInside();
   sfSoul = [(I.x0 + I.x1) / 2, (I.y0 + I.y1) / 2];
 };
@@ -291,7 +299,7 @@ const sfHurt = () => {
     smNoise(130, 1600, 300, .45);
     smTone(160, 140, { vol: .07, to: 60 });
   } else smTone(120, 50, { vol: .035 });
-  SF.shake = Math.min(1, SF.shake + (first ? .8 : .25));
+  SF.shake = Math.max(SF.shake, Math.min(1, SF.shake + (first ? .8 : .25)));  // never cuts a quake short
   sfUi.classList.remove("hurt");
   void sfUi.offsetWidth;
   sfUi.classList.add("hurt");
@@ -387,12 +395,19 @@ const sfFrame = now => {
     }
     return o.t < o.charge + o.fire + .35;
   });
-  // the shake, dying away
+  // the quakes due: each a jolt and a low thud
+  while (SF.quakes.length && SF.t >= SF.quakes[0][0]) {
+    const s = SF.quakes.shift()[1];
+    SF.shake = Math.max(SF.shake, s);
+    smNoise(260 + 120 * s, 260, 40, .25 * Math.min(1, s));
+    smTone(70 + 20 * s, 220 + 100 * s, { vol: .06 * Math.min(1, s), type: "sine", to: 32 });
+  }
+  // the shake, dying away: the box and the diorama behind it (the strongest also tilt a little)
   if (SF.shake > 0) {
-    const a = 10 * SF.shake * SF.shake;
-    sfUi.style.transform = `translate(${f1((Math.random() - .5) * 2 * a)}px,${f1((Math.random() - .5) * 2 * a)}px)`;
+    const a = 10 * SF.shake * SF.shake, r = SF.shake > 1 ? (Math.random() - .5) * 1.6 * (SF.shake - 1) : 0;
+    sfUi.style.transform = sfBg.style.transform = `translate(${f1((Math.random() - .5) * 2 * a)}px,${f1((Math.random() - .5) * 2 * a)}px) rotate(${f1(r)}deg)`;
     SF.shake = Math.max(0, SF.shake - dt * 4);
-    if (!SF.shake) sfUi.style.transform = "";
+    if (!SF.shake) sfUi.style.transform = sfBg.style.transform = "";
   }
   // the flame follows his gaze (snowman.js moves his eyes)
   if (sfFlame) { const k = smK(); sfFlame.cv.style.transform = `translate(${f1(smLookOff[0] * k)}px,${f1(smLookOff[1] * k)}px)`; }
@@ -641,7 +656,7 @@ const sfKey = e => {
 const sfPointer = () => { SF.useMouse = true; };
 const sfStart = () => {
   if (SF.on || smStill()) return;
-  Object.assign(SF, { on: true, phase: "talk", t: 0, fight: 0, hp: SF_HP, hitAt: 0, shake: 0, objs: [], active: [], nextAt: 0, n: 0, keys: {}, over: false, useMouse: true });
+  Object.assign(SF, { on: true, phase: "talk", t: 0, fight: 0, hp: SF_HP, hitAt: 0, shake: 0, quakes: [], objs: [], active: [], nextAt: 0, n: 0, keys: {}, over: false, useMouse: true });
   smUnfreeze();  // no slow, frozen pointer from a snowball during the fight
   smBusy = true;
   snowman.classList.add("hold");
@@ -670,6 +685,7 @@ const sfStart = () => {
   sfFlame = sfFlameStart();
   const I = sfInside();
   sfSoul = [(I.x0 + I.x1) / 2, (I.y0 + I.y1) / 2];
+  sfQuake(SF_QUAKE_IN);  // the fight lands on us
   SF.last = performance.now();
   SF.raf = requestAnimationFrame(sfFrame);
   // the dark falls, the one line, then the fight, which never stops
