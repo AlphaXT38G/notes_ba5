@@ -169,3 +169,28 @@ const hwWebSize = () => {
   for (let i = 0; i < 60; i++) hwWebStep(.016);  // let it settle into its sag
   hwWebDraw();
 };
+// The pointer near the web pushes it; a click on the spider sends it into the corner
+const hwWebMove = e => {
+  if (e.clientX > hwWebW + 30 || e.clientY > hwWebH + 30) { hwWebPointer = null; return; }
+  hwWebPointer = { x: e.clientX, y: e.clientY, vx: e.movementX || 0, vy: e.movementY || 0 };
+  hwWebWake();
+};
+// Poked three times within 20 s, it is angry: it comes back to the hub at once, puffs itself up,
+// shaking, and spits its web in our face (hwwebshot.js); then it leaves us alone for half a minute
+let hwSpiderPokes = [], hwSpiderMad = false, hwSpiderRear = 0;
+const hwSpiderAngry = () => {
+  hwSpiderMad = true;
+  hwSpiderPokes = [];
+  clearTimeout(hwSpiderBack);
+  hwSpiderGoal = 0;
+  hwNoise(.6, 2600, "highpass", .2);  // a hiss
+  hwWebWake();
+  setTimeout(() => { hwSpiderRear = 1; hwWebWake(); }, 700);
+  setTimeout(() => {
+    hwSpiderRear = 0;
+    if (!hwWeb.isConnected) return;
+    const [x, y] = hwSpiderPos();
+    hwWebShot(x, y);
+  }, 1500);
+  setTimeout(() => { hwSpiderMad = false; }, 30000);
+};
