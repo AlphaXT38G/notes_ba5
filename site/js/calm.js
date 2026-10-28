@@ -7,8 +7,8 @@
 //   - the sounds of the night: a recording of a forest at night (audio/calm.mp3), a little
 //     quieter than the other music, and the first birds at dawn (Web Audio); a firefly jar in the
 //     bottom left corner pauses / resumes them.
-// It is a "normal" screen (screens.js): the usual look of those hours, which Christmas and the
-// armstrong code replace like the day. The metal show and the epic finale come before it.
+// It is a "normal" screen (screens.js): the usual look of those hours, which Christmas, Halloween
+// and the armstrong code replace like the day. The metal show and the epic finale come before it.
 // Typing p e a c e brings it at any time (the peace code, at the end of this file).
 
 let peaceEgg = false,   // the peace code was typed: the calm night stays (end of this file)
