@@ -26,3 +26,13 @@
 #hwmusic .steam:nth-of-type(3){left:72%;animation-delay:-1.6s!important}
 @keyframes hwm-steam{0%{opacity:0;transform:translateY(0) scale(.5)}25%{opacity:.9}100%{opacity:0;transform:translateY(-3.4rem) scale(2.2)}}
 
+/* The next track: a small green cocotte leaning behind the player; a click swaps them (the
+   player bounces, the prop dips) */
+#hwnext{position:fixed;left:6.8rem;bottom:.5rem;z-index:39;width:3.6rem;padding:0;border:0;background:none;cursor:pointer;transform:rotate(6deg);filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}
+#hwnext .pot{display:block}
+#hwnext svg{display:block;width:100%;height:auto}
+#hwnext .tag{position:absolute;left:50%;bottom:110%;transform:translateX(-50%);padding:.1rem .35rem;border-radius:.3rem;background:#f6ecd8;color:#2a1404;font:700 .6rem system-ui,sans-serif}
+#hwnext.swap{animation:hwm-dip .9s ease-in-out}
+#hwmusic.swap .pot{animation:hwm-bounce .9s ease-in-out}
+@keyframes hwm-dip{40%{transform:rotate(14deg) translateY(.8rem)}}
+@keyframes hwm-bounce{30%{transform:translateY(-.6rem) scale(1.04)}60%{transform:none}}
