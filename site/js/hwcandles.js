@@ -122,3 +122,29 @@ everySecond.push(() => {
     try { localStorage.setItem("hw-candles", JSON.stringify(hwCandleH.map(h => +h.toFixed(4)))); } catch (e) {}
   }
 });
+// Placing the candles and the wax on the bar's right end, from where it is laid out (the switch
+// beside it, or below it on phones)
+const hwCandlePlace = () => {
+  const row = document.querySelector(".searchrow"), bar = document.getElementById("search");
+  if (!row || !bar || !hwCandles.isConnected) return;
+  const right = row.clientWidth - bar.offsetLeft - bar.offsetWidth, top = bar.offsetTop;
+  hwCandles.style.right = `${right + 10}px`;
+  hwCandles.style.bottom = `${row.clientHeight - top - 9}px`;
+  hwWaxBar.style.right = `${right + 2}px`;
+  hwWaxBar.style.top = `${top - 1}px`;
+};
+hwPart({
+  on() {
+    const row = document.querySelector(".searchrow"), view = document.querySelector(".view");
+    if (!row || !view) return;
+    HW_CANDLES.forEach((c, i) => hwCandlePaint(i));
+    row.append(hwWaxBar, hwCandles);
+    view.append(hwWaxView, hwCandleSolo);
+    hwCandlePlace();
+    addEventListener("resize", hwCandlePlace);
+  },
+  off() {
+    [hwCandles, hwCandleSolo, hwWaxBar, hwWaxView].forEach(el => el.remove());
+    removeEventListener("resize", hwCandlePlace);
+  },
+});
