@@ -13,12 +13,12 @@
 // bones erupting from the floor where red warnings flashed, rings of bones closing on the heart,
 // skull blasters charging then firing a beam across the screen, alone or four crossing. The bones
 // are outlined and shaded, the blue ones glow, the fast and turning ones leave a trail. Each hit:
-// a crunch, the screen shakes, the box flashes red. The fight lands with a quake: a run of jolts
-// and thuds as the dark falls, and again when the attacks begin. HP at 0: the heart breaks, game over. The fight
+// a crunch, the screen shakes, the box flashes red. HP at 0: the heart breaks, game over. The fight
 // ends with the song, with Escape, at game over, or with Christmas.
-// He rises for it: he grows and floats, his bottom sinking past the bottom of the window, blue
-// flames burning behind him (a fire shader in WebGL, on a canvas inside him so it floats and
-// shakes with him, flaring with the quakes), and he shakes with the quakes.
+// The fight lands with a quake: a run of jolts and thuds as the dark falls, another when the
+// attacks begin. He rises for it: he grows and floats, his bottom sinking out of the window, and
+// shakes with the quakes, blue fire burning behind him (a WebGL shader, on a canvas inside him so
+// it floats and shakes with him, flaring with the quakes).
 // His left eye glows blue and a flame rises from it: a WebGL shader ray-marching a volume of noise
 // (rising from the top of the eye, leaning back, flickering), on a small canvas over his face that
 // follows his gaze.
@@ -609,17 +609,15 @@ void main(){
   col += vec3(.2, .6, 1.) * g * .5;
   gl_FragColor = vec4(col, clamp(1. - tr + g * .2, 0., 1.));
 }`;
-const sfFlameStart = () => {
-  const k = smK(), cv = document.createElement("canvas");
-  cv.className = "eyefire";
-  cv.width = Math.round(90 * k);
-  cv.height = Math.round(140 * k);
+// A canvas painted by a fragment shader over one triangle covering it (the eye's flame, the fire
+// behind him): its WebGL context and a getter of uniforms, or null (no WebGL, or the shader failed)
+const sfShader = (cv, fs) => {
   const gl = cv.getContext("webgl", { premultipliedAlpha: true, antialias: false, depth: false });
   if (!gl) return null;
   const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
   const prog = gl.createProgram();
   gl.attachShader(prog, sh(gl.VERTEX_SHADER, "attribute vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }"));
-  gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, SF_FLAME_FS));
+  gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, fs));
   gl.linkProgram(prog);
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null;
   gl.useProgram(prog);
@@ -627,7 +625,20 @@ const sfFlameStart = () => {
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(0);
   gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-  const uR = gl.getUniformLocation(prog, "R"), uT = gl.getUniformLocation(prog, "T");
+  return { gl, u: n => gl.getUniformLocation(prog, n) };
+};
+const sfShaderFree = gl => {
+  const x = gl.getExtension("WEBGL_lose_context");
+  if (x) x.loseContext();  // free the GPU now
+};
+const sfFlameStart = () => {
+  const k = smK(), cv = document.createElement("canvas");
+  cv.className = "eyefire";
+  cv.width = Math.round(90 * k);
+  cv.height = Math.round(140 * k);
+  const S = sfShader(cv, SF_FLAME_FS);
+  if (!S) return null;
+  const gl = S.gl, uR = S.u("R"), uT = S.u("T");
   snowman.append(cv);
   const F = { cv, gl, raf: null, t0: performance.now() };
   const frame = now => {
@@ -643,8 +654,7 @@ const sfFlameStart = () => {
 const sfFlameStop = () => {
   if (!sfFlame) return;
   cancelAnimationFrame(sfFlame.raf);
-  const x = sfFlame.gl.getExtension("WEBGL_lose_context");
-  if (x) x.loseContext();  // free the GPU now
+  sfShaderFree(sfFlame.gl);
   sfFlame.cv.remove();
   sfFlame = null;
 };
@@ -669,11 +679,15 @@ const sfRiseEnd = () => {
 // from his outline (three balls and the hat, as distances), rising being cheap and sideways dear,
 // so the fire burns far above him and close on his sides; a rising, warped noise bites into that
 // heat, leaving tongues of flame; white-cyan at the hottest, deep blue as they thin out; a halo
-// around him, embers rising.
-// They flare with the quakes and the hits (K, the shake). Rendered at 0.6x (fire is soft).
+// around him, embers rising. They flare with the quakes and the hits (K, the shake). Rendered at
+// 0.6x (fire is soft).
 // Without WebGL: glowing sprites rising from the same outline, added up on a 2D canvas.
-const SF_BALLS = [[150, 412, 100, 86, .45], [156, 264, 70, 64, .35], [164, 152, 50, 47, .2]];  // cx, cy, rx, ry (in his 300 x 520), share of the sprites
+// His outline, in his 300 x 520 (christmas.js draws him): the balls (cx, cy, rx, ry, and their
+// share of the sprites), the hat's crown (a box: cx, cy, half width, half height) and brim
+const SF_BALLS = [[150, 412, 100, 86, .45], [156, 264, 70, 64, .35], [164, 152, 50, 47, .2]];
+const SF_HAT = [164, 70, 38, 38], SF_BRIM = [164, 105, 62, 14];
 const SF_AURA_X = .45, SF_AURA_Y = .3;  // the canvas reaches that far beyond him (of his size)
+const sfVec = a => `vec${a.length}(${a.map(v => v.toFixed(1)).join(", ")})`;  // GLSL floats
 const SF_FIRE_FS = `precision mediump float;
 uniform vec2 R;
 uniform float T, O, K;
@@ -691,12 +705,13 @@ float fbm(vec2 p) {
 float el(vec2 p, vec4 e) { return (length((p - e.xy) / e.zw) - 1.) * min(e.z, e.w); }
 float bx(vec2 p, vec4 b) { vec2 d = abs(p - b.xy) - b.zw; return length(max(d, 0.)) + min(max(d.x, d.y), 0.); }
 float body(vec2 p) {
-  float d = min(min(el(p, vec4(150., 412., 100., 86.)), el(p, vec4(156., 264., 70., 64.))), el(p, vec4(164., 152., 50., 47.)));
-  return min(d, min(bx(p, vec4(164., 70., 38., 38.)), el(p, vec4(164., 105., 62., 14.))));
+  float d = min(min(el(p, ${sfVec(SF_BALLS[0].slice(0, 4))}), el(p, ${sfVec(SF_BALLS[1].slice(0, 4))})), el(p, ${sfVec(SF_BALLS[2].slice(0, 4))}));
+  return min(d, min(bx(p, ${sfVec(SF_HAT)}), el(p, ${sfVec(SF_BRIM)})));
 }
 void main() {
   vec2 uv = gl_FragCoord.xy / R;
-  vec2 p = vec2(${(-300 * SF_AURA_X).toFixed(1)} + uv.x * ${(300 * (1 + 2 * SF_AURA_X)).toFixed(1)}, ${(520 * (1 + SF_AURA_Y)).toFixed(1)} - uv.y * ${(520 * (1 + 2 * SF_AURA_Y)).toFixed(1)});  // in his units, y down
+  // in his units, y down
+  vec2 p = ${sfVec([-300 * SF_AURA_X, 520 * (1 + SF_AURA_Y)])} + uv * ${sfVec([300 * (1 + 2 * SF_AURA_X), -520 * (1 + 2 * SF_AURA_Y)])};
   float d = body(p), D = max(d, 0.);
   // the noise of the flames: stretched upwards, warped by a slower one, rising
   vec2 q = p / vec2(55., 95.);
@@ -715,7 +730,7 @@ void main() {
   // one column behind him, a little wider than his body, narrowing above his head (the fire of
   // his shoulders would spread into a T beside his head), its edges swaying with the noise
   float hw = 86. + 46. * smoothstep(140., 340., p.y);
-  x *= smoothstep(hw + 18., hw - 22., abs(p.x - 157. + (w.y - .5) * 40.));
+  x *= smoothstep(hw + 18., hw - 22., abs(p.x - ${SF_BALLS[1][0].toFixed(1)} + (w.y - .5) * 40.));
   float halo = exp(-D / (40. + 30. * K)) * O;
   // embers: rare cells of a grid rising faster than the fire, each a dot drifting in its cell
   vec2 g = vec2(p.x / 16., (p.y + T * 150.) / 16.), id = floor(g), c = fract(g) - .5;
@@ -733,23 +748,11 @@ void main() {
 const sfAuraStart = () => {
   const W = snowman.offsetWidth * (1 + 2 * SF_AURA_X), H = snowman.offsetHeight * (1 + 2 * SF_AURA_Y);
   const fire = () => {
-    const cv = document.createElement("canvas"), gl = cv.getContext("webgl", { premultipliedAlpha: true, antialias: false, depth: false });
-    if (!gl) return null;
+    const cv = document.createElement("canvas");
     cv.width = Math.round(W * .6);
     cv.height = Math.round(H * .6);
-    const sh = (type, src) => { const x = gl.createShader(type); gl.shaderSource(x, src); gl.compileShader(x); return x; };
-    const prog = gl.createProgram();
-    gl.attachShader(prog, sh(gl.VERTEX_SHADER, "attribute vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }"));
-    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, SF_FIRE_FS));
-    gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null;
-    gl.useProgram(prog);
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(0);
-    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-    const u = n => gl.getUniformLocation(prog, n);
-    return { cv, gl, uR: u("R"), uT: u("T"), uO: u("O"), uK: u("K") };
+    const S = sfShader(cv, SF_FIRE_FS);
+    return S && { cv, gl: S.gl, uR: S.u("R"), uT: S.u("T"), uO: S.u("O"), uK: S.u("K") };
   };
   // no WebGL (or the shader failed): the sprites
   const sprites = () => {
@@ -814,8 +817,7 @@ const sfAuraStop = () => {
   sfAura = null;
   A.cv.classList.add("leaving");
   setTimeout(() => {
-    const x = A.gl && A.gl.getExtension("WEBGL_lose_context");
-    if (x) x.loseContext();  // free the GPU now
+    if (A.gl) sfShaderFree(A.gl);
     A.cv.remove();
   }, 700);
 };
