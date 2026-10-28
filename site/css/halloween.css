@@ -36,3 +36,7 @@ body.halloween #search,body.halloween .view,body.halloween .tools button{box-sha
 body[data-phase=halloween-night] .hwsky .stars{display:inline}
 .hwsky .twinkle circle{animation:hw-twinkle 4s ease-in-out var(--d) infinite}
 @keyframes hw-twinkle{50%{opacity:.25}}
+/* By day everything is a silhouette in the haze, warmer and lighter far away; at night deep
+   purple, the moonlit sides of the towers picked out */
+.hwsky .r0{fill:#3a1d14}
+.hwsky .r1{fill:#2c160f}
