@@ -999,7 +999,7 @@ const smReset = () => {
   smExtras = [];
   smUnfreeze();
   if (smMeltRaf) cancelAnimationFrame(smMeltRaf);
-  smLoop = smMeltRaf = null;
+  smMeltRaf = null;
   clearTimeout(smPress);
   smPress = null;
   smMad = smMelt = 0;
