@@ -23,3 +23,43 @@ const hwOutline = (f, x0, x1, step = 16) => {
   return `${d}L${x1},${HW_H}Z`;
 };
 
+// Tombstones on the hills: rounded, cross, gothic arch, obelisk, leaning a little; their stone is
+// shaded across (#hw-stone-g), the side towards the moon lighter
+const hwStone = (x, y, kind, h, lean) => {
+  const w = h * .62;
+  const shapes = [
+    `M${f1(-w / 2)},0V${f1(-h + w / 2)}A${f1(w / 2)},${f1(w / 2)} 0 0 1 ${f1(w / 2)},${f1(-h + w / 2)}V0Z`,
+    `M-3,0V${f1(-h * .7)}H${f1(-w / 2)}V${f1(-h * .86)}H-3V${f1(-h)}H3V${f1(-h * .86)}H${f1(w / 2)}V${f1(-h * .7)}H3V0Z`,
+    `M${f1(-w / 2)},0V${f1(-h * .6)}L0,${f1(-h)}L${f1(w / 2)},${f1(-h * .6)}V0Z`,
+    `M${f1(-w * .3)},0L${f1(-w * .18)},${f1(-h * 1.3)}L0,${f1(-h * 1.45)}L${f1(w * .18)},${f1(-h * 1.3)}L${f1(w * .3)},0Z`,
+  ];
+  const mark = kind === 0 ? `<path class="engr" d="M${f1(-w * .25)},${f1(-h * .55)}h${f1(w * .5)}M${f1(-w * .2)},${f1(-h * .42)}h${f1(w * .4)}M-1,${f1(-h * .8)}v${f1(h * .14)}M${f1(-w * .1)},${f1(-h * .74)}h${f1(w * .2)}"/>` : "";
+  return `<g transform="translate(${f1(x)},${f1(y + 3)}) rotate(${f1(lean)})"><path class="stone" d="${shapes[kind]}"/>` +
+    `${mark}</g>`;
+};
+const HW_GRAVES = (() => {
+  const rnd = seeded(77);
+  let s = "", grass = "";
+  const field = (f, x0, x1, n) => {
+    for (let i = 0; i < n; i++) {
+      const x = x0 + (i + .2 + rnd() * .6) * (x1 - x0) / n;
+      s += hwStone(x, f(x), (rnd() * 4) | 0, 26 + rnd() * 26, (rnd() - .5) * 16);
+    }
+    for (let x = x0; x < x1; x += 9 + rnd() * 14) {
+      const y = f(x) + 2;
+      grass += `M${f1(x)},${f1(y)}l${f1(-3 + rnd() * 2)},${f1(-6 - rnd() * 8)}M${f1(x + 2)},${f1(y)}l${f1(1 + rnd() * 3)},${f1(-5 - rnd() * 9)}`;
+    }
+  };
+  field(HW_LEFT, 20, 560, 8);
+  field(HW_RIGHT, 1040, 1590, 7);
+  // an iron fence along the left hill: bars with spear tips, two rails
+  let fence = "";
+  for (let x = 380; x < 720; x += 13) {
+    const y = HW_LEFT(x) + 10;
+    fence += `M${x},${f1(y)}V${f1(y - 44)}l-3,6M${x},${f1(y - 44)}l3,6`;
+  }
+  fence += `M380,${f1(HW_LEFT(380) - 24)}${Array.from({ length: 27 }, (_, i) => `L${380 + i * 13},${f1(HW_LEFT(380 + i * 13) - 24)}`).join("")}`;
+  fence += `M380,${f1(HW_LEFT(380) - 4)}${Array.from({ length: 27 }, (_, i) => `L${380 + i * 13},${f1(HW_LEFT(380 + i * 13) - 4)}`).join("")}`;
+  return `<path class="fence" d="${fence}"/>${s}<path class="grass" d="${grass}"/>`;
+})();
+
