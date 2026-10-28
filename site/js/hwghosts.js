@@ -97,3 +97,33 @@ const hwGhostStep = dt => {
   else if (Math.random() < dt * .07) g.flicker = .06 + Math.random() * .14;
   hwGhostPose(g, [vx, -g.vel[1], vz]);
 };
+// The skeleton of the moment, in the ghost's space: the pose, alive, leaning, trailing, turned
+const hwGhostPose = (g, v) => {
+  const pose = HW_POSES[g.kind], t = g.t;
+  const local = hwRotY([v[0] / 120, v[1] / 120, v[2] / 120], -g.yaw);  // its motion as it feels it
+  const bob = Math.sin(t * 1.15) * .035, breath = Math.sin(t * 2) * .008;
+  pose.joints.forEach((j0, i) => {
+    let [x, y, z] = j0;
+    if (i === 13) {  // the face's direction: the head's own turn
+      [x, y, z] = hwRotY([x, y, z], g.head);
+    } else {
+      const above = Math.max(0, y);  // leaning into its motion, more at the top
+      x += local[0] * .12 * above; z += local[2] * .12 * above;
+      y += bob + (y > .2 ? breath : 0);
+      if (i === 10) { x -= local[0] * .45; z -= local[2] * .45; x += Math.sin(t * .8) * .06; }  // the hem trails and sways
+      if (i === 11) { x -= local[0] * .3; z -= local[2] * .3; y -= Math.abs(local[0]) * .1; x += Math.sin(t * 1.3) * .04; }  // hair, hood
+      if (pose.name === "lady" && (i === 6 || i === 9)) { y += Math.sin(t * .9) * .02; x += Math.sin(t * .6) * .015; }
+      if (pose.name === "shroud" && (i === 5 || i === 6 || i === 8 || i === 9)) {  // groping
+        const side = i < 7 ? 0 : 1.7, k = i === 6 || i === 9 ? 1 : .5;
+        y += Math.sin(t * .8 + side) * .07 * k; z += Math.sin(t * .5 + side) * .06 * k;
+      }
+      if (i === 12 && pose.lamp) {  // the lantern on its chain, from the hand
+        const [hx, hy, hz] = pose.joints[9];
+        x = hx + Math.sin(g.swing) * .22; y = hy + bob - Math.cos(g.swing) * .22; z = hz;
+      }
+      if (i === 0) { const f = hwRotY([0, 0, .03], g.head); x += f[0]; z += f[2] - .03; }  // the head turning
+    }
+    const [rx, ry, rz] = hwRotY([x, y, z], g.yaw);
+    g.joints[i * 3] = rx; g.joints[i * 3 + 1] = ry; g.joints[i * 3 + 2] = rz;
+  });
+};
