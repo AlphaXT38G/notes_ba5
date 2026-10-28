@@ -35,3 +35,27 @@ const HW_PUMPKINS = [
   [19.6, -2, 8, 2, "deep", 9, -6], [-3.6, -2.6, 10.6, 2, "orange", -8, 2], [4, -3, 11.4, 0, "orange", 5, -10],
   [12.2, -3.2, 10.4, 1, "deep", -6, 6],
 ].map(([r, b, w, shape, skin, tilt, stem], i) => ({ r, b, w, lobes: HW_SHAPES[shape], skin: HW_SKINS[skin], tilt, stem, face: i % 3 }));
+// The faces: eyes, nose and mouth to cut, in the pumpkin's 120 x 100 box
+const HW_FACES = [
+  "M36,44L48,32L54,48ZM84,44L72,32L66,48ZM56,56L60,50L64,56ZM30,64Q60,90 90,64L82,70L76,64L70,72L64,66L56,72L50,66L44,72L38,64Z",
+  "M38,46a8,8 0 1 1 16,0a8,8 0 1 1-16,0ZM66,46a8,8 0 1 1 16,0a8,8 0 1 1-16,0ZM36,66H84L78,78H42Z",
+  "M34,40L52,46L36,52ZM86,40L68,46L84,52ZM57,58H63L60,52ZM30,62Q46,76 60,66Q74,76 90,62Q78,86 60,80Q42,86 30,62Z",
+];
+const hwPumpkinSvg = ({ lobes, face, stem, skin }, i) => {
+  const id = `hwp${i}`;
+  const lobe = ([x, rx], k) => `<ellipse cx="${x}" cy="62" rx="${rx}" ry="${k ? 33 : 36}" fill="url(#${id}${k > 2 ? "f" : "l"})"/>`;
+  const groove = ([x, rx]) => x === 60 ? "" : `<path class="groove" d="M${x + (x < 60 ? rx * .55 : -rx * .55)},31Q${x < 60 ? x + rx * .3 : x - rx * .3},62 ${x + (x < 60 ? rx * .55 : -rx * .55)},94"/>`;
+  return `<svg viewBox="0 0 120 108" aria-hidden="true"><defs>` +
+    `<radialGradient id="${id}l" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="${skin[0][0]}"/><stop offset=".55" stop-color="${skin[0][1]}"/><stop offset="1" stop-color="${skin[0][2]}"/></radialGradient>` +
+    `<radialGradient id="${id}f" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="${skin[1][0]}"/><stop offset=".6" stop-color="${skin[1][1]}"/><stop offset="1" stop-color="${skin[1][2]}"/></radialGradient>` +
+    `<radialGradient id="${id}g" cx=".5" cy=".55" r=".6"><stop offset="0" stop-color="#fff6c0"/><stop offset=".5" stop-color="#ffc23a"/><stop offset="1" stop-color="#e2600c"/></radialGradient>` +
+    `<linearGradient id="${id}s" x2="1"><stop offset="0" stop-color="#6f8a32"/><stop offset="1" stop-color="#2f4214"/></linearGradient></defs>` +
+    `<ellipse class="pool" cx="60" cy="98" rx="62" ry="10"/><ellipse cx="60" cy="96" rx="48" ry="6" fill="rgba(0,0,0,.45)"/>` +
+    [3, 4, 1, 2, 0].map(k => lobe(lobes[k], k)).join("") + lobes.map(groove).join("") +
+    `<path d="M58,28C${58 + stem / 2},18 ${56 + stem},12 ${62 + stem},4L${68 + stem},7C${62 + stem},14 ${64 + stem / 2},20 64,28Z" fill="url(#${id}s)"/>` +
+    `<path class="leaf" d="M64,28C76,14 96,16 100,26C90,24 84,30 72,30Z"/><path class="tendril" d="M64,30C40,22 30,34 40,38S44,26 34,24"/>` +
+    `<path class="face" d="${HW_FACES[face]}"/><path class="face-lit" d="${HW_FACES[face]}" fill="url(#${id}g)"/>` +
+    `<path class="shine" d="M40,40Q44,32 52,30"/></svg>`;
+};
+const hwPatch = document.createElement("div");
+hwPatch.id = "hwpatch";
