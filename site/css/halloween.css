@@ -170,3 +170,7 @@ body[data-phase=halloween-night] #hwwitch :is(.stick,.tail){stroke:#08030e}
 .hwflash{position:absolute;inset:0;background:#dfe6ff;opacity:0;mix-blend-mode:screen}
 .hwflash.on{animation:hw-flash 1.1s ease-out}
 @keyframes hw-flash{0%{opacity:0}4%{opacity:.55}10%{opacity:.05}16%{opacity:.75}40%{opacity:.1}100%{opacity:0}}
+/* What the creatures say: a small speech bubble above them */
+.hwsay{position:absolute;left:50%;bottom:100%;transform:translate(-50%,-.4rem);padding:.35rem .6rem;border-radius:.7rem;background:#f6ecd8;color:#2a1404;font:italic 600 .85rem Georgia,serif;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.4);pointer-events:none;animation:hw-say .25s ease-out}
+.hwsay::after{content:"";position:absolute;left:50%;top:100%;margin-left:-5px;border:5px solid transparent;border-top-color:#f6ecd8}
+@keyframes hw-say{from{opacity:0;transform:translate(-50%,.2rem)}}
