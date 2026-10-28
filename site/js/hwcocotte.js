@@ -78,3 +78,9 @@ const hwCocotteSvg = (id, colors) => {
     `<path d="M100,44C97,32 100,22 108,16C114,11 123,13 123,20C123,25 117,26 116,22" stroke="url(#${id}g)" stroke-width="7" fill="none" stroke-linecap="round"/>` +
     `<path d="M99,38C97,30 100,22 107,17" stroke="#fff6c8" stroke-opacity=".8" stroke-width="1.5" fill="none" stroke-linecap="round"/></g></svg>`;
 };
+// The player's drawing (steam and notes over it), and the next track's prop, with its name
+const HW_COCOTTE = {
+  html: () => `<span class="pot">${hwCocotteSvg("hwco", HW_ENAMEL.orange)}<i class="steam"></i><i class="steam"></i><i class="steam"></i>` +
+    `<b class="note">♪</b><b class="note">♫</b></span>`,
+  next: track => `<span class="pot">${hwCocotteSvg("hwcn", HW_ENAMEL.green)}</span><span class="tag">${track.short}</span>`,
+};
