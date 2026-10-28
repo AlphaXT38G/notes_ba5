@@ -71,3 +71,13 @@ const HW_PARTS = [];
 const hwPart = part => HW_PARTS.push(part);
 const hwNight = () => document.body.dataset.phase === "halloween-night";
 const hwStill = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+// A short line said by someone of the scene (a laughing pumpkin): a speech bubble over the
+// element, gone after a few seconds
+const hwSay = (el, text, ms = 2600) => {
+  const bubble = document.createElement("span");
+  bubble.className = "hwsay";
+  bubble.textContent = text;
+  el.append(bubble);
+  setTimeout(() => bubble.remove(), ms);
+};
+
