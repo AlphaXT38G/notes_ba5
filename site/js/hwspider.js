@@ -118,3 +118,39 @@ const hwDrawSpider = (g, x, y, a, walk, night, rear = 0) => {
   for (const [ex, ey] of [[7, -2.4], [7, 2.4], [5, -4], [5, 4]]) { g.beginPath(); g.arc(ex, ey, 1.2, 0, Math.PI * 2); g.fill(); }
   g.restore();
 };
+const hwWebDraw = () => {
+  const g = hwWebCtx, night = hwNight();
+  g.clearRect(0, 0, hwWebW, hwWebH);
+  g.strokeStyle = night ? "rgba(225,225,245,.5)" : "rgba(235,220,200,.38)";
+  g.lineWidth = .9;
+  g.beginPath();
+  for (const [a, b] of hwWebLinks) { g.moveTo(a.x, a.y); g.lineTo(b.x, b.y); }
+  g.stroke();
+  // broken strands hanging loose where the spiral is torn, and dew drops
+  g.beginPath();
+  const r = hwWeb.radials;
+  g.moveTo(r[3][7].x, r[3][7].y); g.quadraticCurveTo(r[3][7].x + 6, r[3][7].y + 20, r[3][7].x + 2, r[3][7].y + 34);
+  g.moveTo(r[4][8].x, r[4][8].y); g.quadraticCurveTo(r[4][8].x - 4, r[4][8].y + 14, r[4][8].x - 10, r[4][8].y + 22);
+  g.stroke();
+  g.fillStyle = night ? "rgba(220,230,255,.85)" : "rgba(255,230,190,.7)";
+  for (let i = 0; i < r.length; i += 2) for (let k = 2; k < HW_RINGS; k += 3) { const p = r[i][k]; g.beginPath(); g.arc(p.x, p.y + 1, 1.3, 0, Math.PI * 2); g.fill(); }
+  const [sx, sy] = hwSpiderPos(), hub = hwWebPts[0];
+  const a = hwSpiderAt > .02 ? Math.atan2(hub.y - sy, hub.x - sx) + Math.PI : Math.PI / 2;
+  hwDrawSpider(g, sx, sy, a, hwSpiderAt !== hwSpiderGoal || hwSpiderRear ? hwWebT * 30 : 0, night, hwSpiderRear);
+};
+const hwWebFrame = now => {
+  hwWebRaf = null;
+  const dt = Math.min(.033, (now - (hwWebLast || now)) / 1000) || .016;
+  hwWebLast = now;
+  hwWebT += dt;
+  if (hwSpiderAt !== hwSpiderGoal) {  // running along its thread
+    const step = dt * (hwSpiderGoal > hwSpiderAt || hwSpiderMad ? 1.6 : .5);
+    hwSpiderAt = Math.abs(hwSpiderGoal - hwSpiderAt) < step ? hwSpiderGoal : hwSpiderAt + Math.sign(hwSpiderGoal - hwSpiderAt) * step;
+    const p = hwWeb.path[Math.round(hwSpiderAt * (hwWeb.path.length - 1))];
+    if (!p.pinned) p.x += (Math.random() - .5) * 1.5;  // its steps shake the web
+  }
+  const energy = hwWebStep(dt);
+  hwWebDraw();
+  if (energy > .4 || hwSpiderAt !== hwSpiderGoal || hwWebPointer || hwSpiderRear) hwWebRaf = requestAnimationFrame(hwWebFrame);
+  else hwWebNap = setTimeout(hwWebWake, 3000 + Math.random() * 5000);  // still: until the next breeze
+};
