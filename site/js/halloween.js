@@ -24,3 +24,13 @@
 // the page itself, on the search bar.
 const isHwDate = (d = new Date()) => d.getMonth() === 9 && d.getDate() >= 25 || d.getMonth() === 10 && d.getDate() === 1;
 const isHwDaytime = () => { const t = clockSeconds(); return t >= 7 * 3600 && t < 18 * 3600; };
+const hwSubtitle = () => {
+  const d = new Date(), m = d.getMonth(), day = d.getDate();
+  if (m === 9 && day < 31) return `${31 - day} nights until Halloween. Revise before the dark comes.`;
+  if (m === 9) return "Happy Halloween! The notes do not bite. Mostly.";
+  if (m === 10 && day === 1) return "All Saints' Day. The ghosts are revising too.";
+  return "Something wicked this way comes. Revise anyway.";
+};
+SCREENS.halloween = { className: "halloween", subtitle: hwSubtitle, transition: "halloween" };
+SCREENS["halloween-night"] = { className: "halloween", subtitle: hwSubtitle, transition: "halloween" };
+
