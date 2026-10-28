@@ -712,9 +712,9 @@ void main() {
   // the heat: full at his edge, nothing at the reach; the noise bites into it, so tongues
   float reach = 60. * (1. + .5 * K) * O;
   float x = clamp((1. - far / max(reach, 1.)) * 1.75 - n * 1.5 + .08, 0., 1.);
-  // one column behind him, no wider than his body and narrowing above his head (the fire of his
-  // shoulders would spread into a T beside his head), its edges swaying with the noise
-  float hw = 72. + 38. * smoothstep(140., 340., p.y);
+  // one column behind him, a little wider than his body, narrowing above his head (the fire of
+  // his shoulders would spread into a T beside his head), its edges swaying with the noise
+  float hw = 86. + 46. * smoothstep(140., 340., p.y);
   x *= smoothstep(hw + 18., hw - 22., abs(p.x - 157. + (w.y - .5) * 40.));
   float halo = exp(-D / (40. + 30. * K)) * O;
   // embers: rare cells of a grid rising faster than the fire, each a dot drifting in its cell
