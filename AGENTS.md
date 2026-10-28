@@ -102,6 +102,7 @@ The night screens follow the clock. Force one with the URL (`?night=`, the old n
 | `?screen=epic` | epic finale (until a code leaves it, e.g. `kamelot` again) |
 | `?screen=calm` | calm night (no dawn when forced outside 04:45 – 05:30) |
 | `?screen=christmas` / `?screen=christmas-night` | Christmas day / Christmas night |
+| `?screen=halloween` / `?screen=halloween-night` | Halloween day / Halloween night |
 
 Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑↑↓↓←→←→BA, the word
 codes (below), a random surprise banner on some visits, and on both Christmas screens (day and night) a small golden sax hidden among the tree ornaments that
