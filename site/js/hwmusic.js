@@ -59,3 +59,17 @@ const hwPause = () => {
   try { localStorage.setItem("hw-music", "off"); } catch (e) {}
   hwPaint();
 };
+const hwSound = () => {
+  if (!hwMuted) return;
+  if (hwAudioEl) hwAudioEl.muted = false; else if (hwYtOn) ytSound(hwTrack().id, HW_YT, true);
+  hwMuted = false;
+  hwSoundAt = performance.now();
+  hwPaint();
+};
+hwMusic.addEventListener("click", e => {
+  e.stopPropagation();
+  if (performance.now() - hwSoundAt < 600) return;  // this same click just turned the sound on
+  if (hwMuted) hwSound();
+  else if (hwPlaying) hwPause();
+  else hwPlay();
+});
