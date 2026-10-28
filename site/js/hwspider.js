@@ -194,3 +194,40 @@ const hwSpiderAngry = () => {
   }, 1500);
   setTimeout(() => { hwSpiderMad = false; }, 30000);
 };
+const hwWebPoke = e => {
+  const [sx, sy] = hwSpiderPos();
+  if (hwSpiderMad || Math.hypot(e.clientX - sx, e.clientY - sy) > 45) return;
+  const now = performance.now();
+  hwSpiderPokes = hwSpiderPokes.filter(t => now - t < 20000);
+  hwSpiderPokes.push(now);
+  if (hwSpiderPokes.length >= 3 && !hwStill()) { hwSpiderAngry(); return; }
+  if (hwSpiderGoal === 1) return;
+  hwSpiderGoal = 1;
+  clearTimeout(hwSpiderBack);
+  hwSpiderBack = setTimeout(() => { hwSpiderGoal = 0; hwWebWake(); }, 7000);
+  hwWebWake();
+};
+let hwWebResize = null;
+const hwWebOnResize = () => { clearTimeout(hwWebResize); hwWebResize = setTimeout(hwWebSize, 200); };
+hwPart({
+  on() {
+    hwFront.append(hwWeb);
+    hwSpiderAt = hwSpiderGoal = hwSpiderRear = 0;
+    hwWebSize();
+    addEventListener("resize", hwWebOnResize);
+    addEventListener("pointermove", hwWebMove, { passive: true });
+    document.addEventListener("pointerdown", hwWebPoke);
+    hwWebWake();
+  },
+  off() {
+    cancelAnimationFrame(hwWebRaf);
+    clearTimeout(hwWebNap);
+    clearTimeout(hwSpiderBack);
+    hwWebRaf = null;
+    hwWeb.remove();
+    removeEventListener("resize", hwWebOnResize);
+    removeEventListener("pointermove", hwWebMove);
+    document.removeEventListener("pointerdown", hwWebPoke);
+  },
+  night() { if (!hwWebRaf) hwWebDraw(); },
+});
