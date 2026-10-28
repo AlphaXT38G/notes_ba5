@@ -88,3 +88,5 @@ body[data-phase=halloween-night] .hwsky .flick{animation:hw-window 5s ease-in-ou
 @keyframes hw-window{0%,100%{opacity:1}35%{opacity:.5}50%{opacity:.9}70%{opacity:.6}}
 body[data-phase=halloween-night] .hwsky .h0{fill:#0b0614}
 body[data-phase=halloween-night] .hwsky .h1{fill:#080410}
+body[data-phase=halloween-night] .hwsky .st1{stop-color:#4a4466}
+body[data-phase=halloween-night] .hwsky .st2{stop-color:#1a1428}
