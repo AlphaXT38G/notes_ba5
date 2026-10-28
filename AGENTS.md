@@ -314,6 +314,8 @@ Current screens:
 | `calm` | `calm` | 01:01:51 – 05:30, unless the epic finale runs (a `normal` screen), or the `peace` code, or the Christmas jar | `calm.js`, `calm.css` |
 | `christmas` | `christmas` | Dec 1 – Jan 3, 06:00 – 18:00 (replaces the day) | `christmas.js`, `christmas.css` |
 | `christmas-night` | `christmas` | Dec 1 – Jan 3, 18:00 – 06:00 (replaces the day, the jazz bar and the calm night) | `christmas.js`, `christmas.css` |
+| `halloween` | `halloween` | Oct 25 – Nov 1, 07:00 – 18:00 (replaces the day, the jazz bar and the calm night), or the `boo` code | `halloween.js`, `hw*.js`, `halloween.css`, `hwcreatures.css`, `hwmusic.css` |
+| `halloween-night` | `halloween` | Oct 25 – Nov 1, 18:00 – 07:00 | the same |
 
 The Christmas screens depend on the date, so they are an override rather than a `SCHEDULE` slot:
 it only rewrites the normal screens (no screen, the calm night: `isNormal()` in `screens.js`) and
