@@ -5,6 +5,10 @@
 /* The YouTube players of the music (js/youtube.js: the cassettes, the Christmas radio): there,
    playing, but out of sight and out of the way. Kept in the page once made, even paused */
 .ytplayer{position:fixed;left:0;bottom:0;width:200px;height:113px;opacity:0;pointer-events:none;z-index:-1;border:0}
+/* A stuck pointer (js/stuckpointer.js: the snowman's snowball, the spider's web): the sheet that
+   hides the real one and catches the clicks, and the stuck one over it */
+.stuck-sheet{position:fixed;inset:0;z-index:80;cursor:none}
+.stuck-cursor{position:fixed;left:0;top:0;z-index:81;pointer-events:none}
 /* Style changes (View Transitions, see applyScreen in js/screens.js): ::view-transition-old is a snapshot of
    the page before, ::view-transition-new the page after, html[data-vt] says where we are going */
 [data-vt=night]::view-transition-old(root){animation:vt-dim-out 1.6s ease-in both}
