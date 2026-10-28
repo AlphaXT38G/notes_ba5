@@ -44,3 +44,29 @@ hwBackBtn.setAttribute("aria-label", "Back to Halloween");
 hwBackBtn.innerHTML = `<svg viewBox="0 0 40 36" aria-hidden="true"><path d="M20 7c2-5 5-6 7-5-3 1-5 3-6 6z" fill="#557a2a"/>` +
   `<ellipse cx="12" cy="22" rx="10" ry="12" fill="#e86a10"/><ellipse cx="28" cy="22" rx="10" ry="12" fill="#e86a10"/><ellipse cx="20" cy="22" rx="10" ry="13" fill="#ff8c1f"/>` +
   `<path d="M11 18l4-4 2 5zM29 18l-4-4-2 5zM10 25q10 9 20 0l-3 2-2-2-2 3-3-3-3 3-2-3-2 2z" fill="#ffe08a"/></svg>`;
+// The code that took us from Halloween to another screen, to undo it, and the class of that screen
+// (left any other way, by another code or by the clock, the way back is forgotten)
+let hwVisit = null, hwVisitClass = null;
+
+// The portals: opening, closing, and where they lead
+const HW_PORTAL_TO = { knight: "kamelot", sax: "armstrong" };
+const hwPortalEl = name => hwBack.querySelector(`.portal[data-portal="${name}"]`);
+const hwPortalOpen = (name, secs) => {
+  const el = hwPortalEl(name);
+  if (!el) return;
+  el.classList.add("open");
+  clearTimeout(el.shut);
+  el.shut = setTimeout(() => el.classList.remove("open"), secs * 1000);
+};
+const hwGo = code => {
+  hwVisit = code;
+  hwVisitClass = null;
+  CODES[code]();
+};
+let hwPortalIn = 15;
+everySecond.push(() => {
+  if (!hwOn || hwStill() || --hwPortalIn > 0) return;
+  hwPortalIn = 20 + Math.random() * 30;
+  hwPortalOpen(Math.random() < .5 ? "knight" : "sax", 14);
+});
+
