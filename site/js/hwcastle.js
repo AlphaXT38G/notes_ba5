@@ -107,3 +107,16 @@ const hwCastleTower = ([x, w, top, kind], rnd, index) => {
   return s;
 };
 
+// Gargoyle statues on their pedestals (img/gargoyle.png, cut by tools/gargoyle/cut.py), standing
+// on the walls and towers, tiny: x, y of their feet, height, facing right (1) or left (-1). Their
+// eye (HW_GARG_EYE, as parts of the image) lights red when they are clicked (hwsecrets.js);
+// HW_GARG_RATIO is the image's width over its height (140 x 153 px).
+const HW_GARGOYLES = [[1012, 366, 20, -1], [1088, 366, 18, 1], [1036, 217, 16, -1], [1064, 217, 16, 1],
+  [1108, 150, 17, -1], [1182, 150, 17, 1], [1293, 259, 18, -1], [1331, 259, 18, 1]];
+const HW_GARG_EYE = [.896, .428], HW_GARG_RATIO = 140 / 153;
+const hwGargoyles = () => HW_GARGOYLES.map(([x, y, h, dir]) => {
+  const w = h * HW_GARG_RATIO, ex = x + dir * (HW_GARG_EYE[0] - .5) * w, ey = y - h + HW_GARG_EYE[1] * h;
+  return `<g class="statue"><image href="img/gargoyle.png" x="${f1(x - w / 2)}" y="${y - h}" width="${f1(w)}" height="${h}"` +
+    `${dir < 0 ? ` transform="translate(${2 * x},0) scale(-1,1)"` : ""}/>` +
+    `<circle class="geye-glow" cx="${f1(ex)}" cy="${f1(ey)}" r="2.6"/><circle class="geye" cx="${f1(ex)}" cy="${f1(ey)}" r=".7"/></g>`;
+}).join("");
