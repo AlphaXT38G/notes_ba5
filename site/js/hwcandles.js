@@ -56,3 +56,34 @@ const hwCandleSvg = ({ w, drips }, h, i) => {
     `<ellipse cx="${mid}" cy="${top + 4}" rx="${f1(w * .34)}" ry="2.2" fill="#e9b070"/><ellipse class="glow" cx="${mid}" cy="${top + 4}" rx="${f1(w * .3)}" ry="1.6" fill="#ffd27a"/>` +
     `<path d="M${mid},${top + 4}q.5,-3 1.5,-5" stroke="#2a1a10" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>`;
 };
+// The flame of a candle: halo, orange body, white heart, blue root
+const HW_FLAME = '<span class="flame"><i class="halo"></i><i class="body"></i><i class="heart"></i><i class="root"></i></span>';
+
+const hwCandles = document.createElement("div"), hwCandleSolo = document.createElement("div");
+hwCandles.className = hwCandleSolo.className = "hwcandles";
+hwCandleSolo.classList.add("solo");
+// Wax run over an edge: drips hanging from it, each a finger ending in a drop (d: its path, in a
+// 200 x 30 box)
+const hwWaxRun = (id, d) => {
+  const el = document.createElement("div");
+  el.className = "hwwax";
+  el.setAttribute("aria-hidden", "true");
+  el.innerHTML = `<svg viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="${id}" x2="1">` +
+    `<stop offset="0" stop-color="#e2a46c"/><stop offset=".45" stop-color="#fff2d6"/><stop offset="1" stop-color="#d08a54"/></linearGradient></defs>` +
+    `<path fill="url(#${id})" d="${d}"/></svg>`;
+  return el;
+};
+const hwWaxBar = hwWaxRun("hwwax-a", "M0,0H200V3C192,3 190,4 188,6V16A3,3 0 0 1 182,16V6C176,4 170,4 160,4V10A3,3 0 0 1 154,10V4C140,4 130,5 126,6" +
+  "V24A3.5,3.5 0 0 1 119,24V6C104,4 92,4 80,5V12A3,3 0 0 1 74,12V5C50,4 30,3 0,3Z");
+const hwWaxView = hwWaxRun("hwwax-b", "M0,0H200V3C186,3 176,4 170,6V20A3.5,3.5 0 0 1 163,20V6C140,4 120,4 104,5V11A3,3 0 0 1 98,11V5C60,4 30,3 0,3Z");
+hwWaxView.classList.add("view-run");
+const hwCandleEls = HW_CANDLES.map((c, i) => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "candle lit";
+  b.style.setProperty("--d", `${(-i * .37).toFixed(2)}s`);
+  b.title = "Blow out the candle";
+  b.setAttribute("aria-label", "Candle");
+  (c.alone ? hwCandleSolo : hwCandles).append(b);
+  return b;
+});
