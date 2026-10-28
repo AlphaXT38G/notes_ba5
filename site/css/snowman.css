@@ -89,7 +89,6 @@
   background:url(img/frost.png) center/100% 100% no-repeat,radial-gradient(ellipse at center,rgba(200,235,255,0) 45%,rgba(170,220,250,.45) 100%)}
 /* Frozen: the real pointer is hidden under a sheet that passes clicks on, and an icy pointer
    follows it slowly, shivering */
-#xfreeze{position:fixed;top:0;right:0;bottom:0;left:0;z-index:80;cursor:none}
-#xcursor{position:fixed;left:0;top:0;z-index:81;width:26px;height:34px;pointer-events:none;filter:drop-shadow(0 0 4px rgba(150,220,255,.9))}
+#xcursor{filter:drop-shadow(0 0 4px rgba(150,220,255,.9))}
 /* Reduced motion: nothing floats nor bubbles (snowman.js skips the flights) */
 @media(prefers-reduced-motion:reduce){#xsnowman.mad2 .steam circle,#xsnowman.sweaty .sweat,#xsnowman.badtime .sans{animation:none}#xsnowman .say{transition:none}#xsnowman .note,#xsnowman .drip,#xsnowman .flake{display:none}}
