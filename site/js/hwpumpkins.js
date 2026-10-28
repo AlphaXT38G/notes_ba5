@@ -59,3 +59,36 @@ const hwPumpkinSvg = ({ lobes, face, stem, skin }, i) => {
 };
 const hwPatch = document.createElement("div");
 hwPatch.id = "hwpatch";
+const hwPumpkins = HW_PUMPKINS.map((p, i) => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "pumpkin";
+  b.style.cssText = `--w:${p.w}rem;right:${p.r}rem;bottom:${p.b}rem;transform:rotate(${p.tilt}deg)`;
+  b.innerHTML = hwPumpkinSvg(p, i);
+  b.title = "Carve the pumpkin";
+  b.setAttribute("aria-label", "Pumpkin");
+  hwPatch.append(b);
+  return b;
+});
+const HW_LAUGHS = ["Mwahaha!", "Hehehe...", "Boo!", "Trick or treat!", "Happy Halloween!"];
+let hwPumpkinsDone = false;
+hwPumpkins.forEach(b => b.addEventListener("click", e => {
+  e.stopPropagation();
+  if (!b.classList.contains("carved")) {
+    b.classList.add("carved");
+    b.title = "Light the pumpkin";
+    hwNoise(.35, 1800, "highpass", .15);  // the knife
+  } else if (!b.classList.contains("lit")) {
+    b.classList.add("lit");
+    b.title = "Make it laugh";
+    hwNoise(.2, 2600, "bandpass", .2);  // the match
+    const lit = hwPumpkins.filter(p => p.classList.contains("lit")).length;
+    if (!hwPumpkinsDone && lit === hwPumpkins.length) hwCastleAwakes();
+    else hwSay(b, `${lit} / ${hwPumpkins.length}`, 1200);
+  } else {
+    b.classList.remove("laugh");
+    void b.offsetWidth;
+    b.classList.add("laugh");
+    hwSay(b, HW_LAUGHS[(Math.random() * HW_LAUGHS.length) | 0], 1800);
+  }
+}));
