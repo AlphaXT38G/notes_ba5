@@ -81,3 +81,17 @@ const hwSay = (el, text, ms = 2600) => {
   setTimeout(() => bubble.remove(), ms);
 };
 
+// Lightning at night: now and then (every 25 s to 2 min) the sky flashes twice, the castle shows
+// in its light (a white sheet over the scene, opacity only), and a low rumble follows if sound
+// is allowed (Web Audio noise, filtered low).
+const hwFlash = document.createElement("div");
+hwFlash.className = "hwflash";
+let hwBoltIn = 30;
+let hwAudio = null;
+// One Web Audio context for the screen's sounds (thunder, the screamer, the werewolf, the
+// pumpkins, the candles...), made at the first sound and resumed if the page had no gesture yet
+const hwAudioCtx = () => {
+  if (!hwAudio && window.AudioContext) hwAudio = new AudioContext();
+  if (hwAudio && hwAudio.state === "suspended") hwAudio.resume().catch(() => {});
+  return hwAudio;
+};
