@@ -130,3 +130,22 @@ const hwSpectreReady = () => {
   ["uRes", "uJ", "uTime", "uKind", "uReveal", "uAlpha", "uNight", "uLamp"].forEach(u => { hwSpUni[u] = gl.getUniformLocation(hwSpProg, u); });
   return hwSpReady = true;
 };
+const hwSpectreDraw = g => {
+  const gl = hwSpGl, c = gl.canvas;
+  gl.viewport(0, 0, c.width, c.height);
+  gl.clearColor(0, 0, 0, 0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.uniform2f(hwSpUni.uRes, c.width, c.height);
+  gl.uniform3fv(hwSpUni.uJ, g.joints);
+  gl.uniform1f(hwSpUni.uTime, g.time);
+  gl.uniform1f(hwSpUni.uKind, g.kind);
+  gl.uniform1f(hwSpUni.uReveal, g.reveal);
+  gl.uniform1f(hwSpUni.uAlpha, g.alpha);
+  gl.uniform1f(hwSpUni.uNight, g.night);
+  gl.uniform1f(hwSpUni.uLamp, g.lamp);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+};
+const hwSpectreProject = ([x, y, z]) => {
+  const s = (HW_SPECTRE_CAM.z - z) * HW_SPECTRE_CAM.k;
+  return [x / s, (y - HW_SPECTRE_CAM.y) / s];
+};
