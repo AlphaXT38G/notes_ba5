@@ -64,3 +64,34 @@ const hwHowl = () => {
     hwHowlVoice(ac, buf, 2.2, .9, .12, 1.2);  // the answer, far away
   }, () => {});
 };
+// A walk: in from the left edge of the window to the edge of the courses, along the far hill; a
+// pause there (at night it rears up and howls to the moon, by day it sniffs the air), then it
+// turns round and walks back out. Not when there is no margin beside the courses to walk in.
+// Its feet stay on the crest: a keyframe every 24 px puts them where the ridge is (hwRidgeY).
+const hwWolfStep = (from, to, then) => {
+  const w = hwWolf.offsetWidth, h = hwWolf.offsetHeight, n = Math.max(2, Math.ceil(Math.abs(to - from) / 24));
+  const frames = Array.from({ length: n + 1 }, (_, i) => {
+    const x = from + (to - from) * i / n;
+    return { transform: `translate(${f1(x)}px,${f1(hwRidgeY(x + w / 2) - h * .97)}px)` };
+  });
+  hwWolfWalk = hwWolf.animate(frames, { duration: Math.abs(to - from) / 30 * 1000, easing: "linear", fill: "forwards" });
+  hwWolfWalk.onfinish = then;
+};
+const hwWolfGo = () => {
+  if (hwWolfWalk || hwStill() || document.hidden) return;
+  hwWolf.classList.remove("back", "howl", "still");
+  hwBack.append(hwWolf);
+  const course = document.querySelector(".grid"), w = hwWolf.offsetWidth;
+  const stop = (course ? course.getBoundingClientRect().left : 0) - w - 30;
+  if (stop < 40) { hwWolf.remove(); return; }
+  hwWolfStep(-w - 10, stop, () => {
+    const night = hwNight();
+    hwWolf.classList.add(night ? "howl" : "still");
+    if (night) hwWolfTimers.push(setTimeout(hwHowl, 700));
+    hwWolfTimers.push(setTimeout(() => {
+      hwWolf.classList.remove("howl", "still");
+      hwWolf.classList.add("back");
+      hwWolfStep(stop, -w - 10, () => { hwWolf.remove(); hwWolfWalk = null; });
+    }, night ? 5600 : 2500));
+  });
+};
