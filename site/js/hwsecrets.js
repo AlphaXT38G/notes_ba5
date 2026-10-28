@@ -17,3 +17,21 @@
 // brings Halloween back (the same code again), as the fir does for Christmas.
 const hwHits = document.createElement("div");
 hwHits.id = "hwhits";
+// The jar, drawn in volume: a glass jar tilted in the earth, its cork and twine, the mound of
+// earth hiding its foot, the firefly and its light
+const hwJar = document.createElement("button");
+hwJar.id = "hwjar";
+hwJar.type = "button";
+hwJar.title = "A firefly jar";
+hwJar.setAttribute("aria-label", "Firefly jar");
+hwJar.innerHTML = `<i class="light"></i><svg viewBox="0 0 40 56" aria-hidden="true"><defs>` +
+  `<linearGradient id="hwjar-glass" x2="1"><stop offset="0" stop-color="#cfe3ea" stop-opacity=".55"/><stop offset=".3" stop-color="#fff" stop-opacity=".18"/>` +
+  `<stop offset=".7" stop-color="#9fb6c0" stop-opacity=".12"/><stop offset="1" stop-color="#6d8792" stop-opacity=".5"/></linearGradient>` +
+  `<radialGradient id="hwjar-fly"><stop offset="0" stop-color="#fff2c0"/><stop offset=".35" stop-color="#ff8a2a"/><stop offset="1" stop-color="#ff3a10" stop-opacity="0"/></radialGradient>` +
+  `<linearGradient id="hwjar-earth" x2="0" y2="1"><stop offset="0" stop-color="#2a1a14"/><stop offset="1" stop-color="#0c0606"/></linearGradient></defs>` +
+  `<g transform="rotate(-14 20 44)"><rect x="9" y="8" width="22" height="40" rx="5" fill="url(#hwjar-glass)" stroke="#a9c2cc" stroke-opacity=".6"/>` +
+  `<g class="fly"><circle cx="20" cy="30" r="7" fill="url(#hwjar-fly)"/><circle cx="20" cy="30" r="1.4" fill="#fff6d8"/></g>` +
+  `<path d="M12,12V40" stroke="#fff" stroke-opacity=".5" stroke-width="1.6" stroke-linecap="round"/>` +
+  `<rect x="11" y="3" width="18" height="7" rx="2" fill="#8a5a32"/><rect x="11" y="3" width="18" height="2" rx="1" fill="#a87448"/>` +
+  `<path d="M10,11Q20,14 30,11" stroke="#c8a46a" stroke-width="1.2" fill="none"/></g>` +
+  `<path d="M0,56C2,44 10,40 20,41C30,40 38,44 40,56Z" fill="url(#hwjar-earth)"/><path d="M6,46l2,-1M30,45l3,1M15,43l1,-1" stroke="#3a2a20"/></svg>`;
