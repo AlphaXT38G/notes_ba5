@@ -28,3 +28,31 @@ const hwHillsVerb = ac => {
   hwWolfHills.connect(ac.destination);
   return hwWolfHills;
 };
+// The howl: a recorded wolf (audio/wolf.mp3), its second howl, the whole one (from 7.6 s, 5 s
+// long: it rises, holds its note and falls away), faded in and out, heard close and through the
+// hills; the same howl, a little lower and far away, answers it. The file is decoded once, the
+// first time it is needed.
+const HW_HOWL = { at: 7.6, length: 5 };
+let hwHowlBuf = null;
+const hwHowlLoad = ac => {
+  if (hwHowlBuf) return hwHowlBuf;
+  hwHowlBuf = fetch("audio/wolf.mp3").then(r => r.arrayBuffer())
+    .then(data => new Promise((ok, no) => ac.decodeAudioData(data, ok, no)));
+  hwHowlBuf.catch(() => { hwHowlBuf = null; });
+  return hwHowlBuf;
+};
+const hwHowlVoice = (ac, buf, at, rate, loud, wetness) => {
+  const t = ac.currentTime + at, src = ac.createBufferSource(), env = ac.createGain(), wet = ac.createGain();
+  const len = HW_HOWL.length / rate;
+  src.buffer = buf;
+  src.playbackRate.value = rate;
+  env.gain.setValueAtTime(.0001, t);
+  env.gain.exponentialRampToValueAtTime(loud, t + .15);
+  env.gain.setValueAtTime(loud, t + len - .6);
+  env.gain.exponentialRampToValueAtTime(.0001, t + len);
+  wet.gain.value = wetness;
+  src.connect(env);
+  env.connect(ac.destination);
+  env.connect(wet).connect(hwHillsVerb(ac));
+  src.start(t, HW_HOWL.at, HW_HOWL.length);
+};
