@@ -16,7 +16,7 @@ OVERRIDES.push(phase => {
   return dayEgg ? null : phase;
 });
 const startDay = () => {
-  jazzEgg = xmasEgg = xmasJazz = peaceEgg = xmasPeace = epicQueued = false;
+  jazzEgg = xmasEgg = xmasJazz = peaceEgg = xmasPeace = epicQueued = hwEgg = false;
   metalEggAt = epicAt = 0;
   if (forced) forcedDismissed = true;
   dayEgg = true;
