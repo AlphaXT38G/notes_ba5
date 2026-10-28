@@ -92,3 +92,16 @@ hwPumpkins.forEach(b => b.addEventListener("click", e => {
     hwSay(b, HW_LAUGHS[(Math.random() * HW_LAUGHS.length) | 0], 1800);
   }
 }));
+// All lit: the castle's windows blaze and its bats burst out, the subtitle says so for a moment
+const hwCastleAwakes = () => {
+  hwPumpkinsDone = true;
+  hwBack.classList.add("awake");
+  setTimeout(() => hwBack.classList.remove("awake"), 9000);
+  hwBatBurst(innerWidth * .8, innerHeight * .45, 30);
+  sub.textContent = "The pumpkins are lit. The castle awakes...";
+  setTimeout(() => { if (hwOn) sub.textContent = hwSubtitle(); }, 6000);
+};
+hwPart({
+  on() { hwFront.append(hwPatch); },
+  off() { hwPatch.remove(); },
+});
