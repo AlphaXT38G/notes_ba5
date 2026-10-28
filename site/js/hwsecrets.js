@@ -109,3 +109,14 @@ const hwSecretsPlace = () => {
     hwJar.hidden = covered({ left: x - w / 2, right: x + w / 2, top: y - w * 1.4, bottom: y });
   }
 };
+hwJar.addEventListener("click", e => { e.stopPropagation(); hwGo("peace"); });
+const hwForget = () => {
+  hwVisit = hwVisitClass = null;
+  hwBackBtn.remove();
+};
+hwBackBtn.addEventListener("click", e => {
+  e.stopPropagation();
+  const code = hwVisit;
+  hwForget();
+  if (code) CODES[code]();
+});
