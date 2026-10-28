@@ -14,3 +14,17 @@ const hwWolf = document.createElement("div");
 hwWolf.id = "hwwolf";
 hwWolf.innerHTML = `<div class="fig">${HW_WOLF_PARTS.map(p => `<img class="${p}" alt="" src="img/werewolf/${p}.png">`).join("")}</div>`;
 let hwWolfWalk = null, hwWolfIn = 40, hwWolfTimers = [];
+// A space the size of a hillside: a long tail of noise fading away, the hills sending the howl back
+let hwWolfHills = null;
+const hwHillsVerb = ac => {
+  if (hwWolfHills) return hwWolfHills;
+  const n = Math.round(ac.sampleRate * 3), ir = ac.createBuffer(2, n, ac.sampleRate);
+  for (let c = 0; c < 2; c++) {
+    const d = ir.getChannelData(c);
+    for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 3);
+  }
+  hwWolfHills = ac.createConvolver();
+  hwWolfHills.buffer = ir;
+  hwWolfHills.connect(ac.destination);
+  return hwWolfHills;
+};
