@@ -155,7 +155,8 @@ something that happens when you type the Konami code (↑↑↓↓←→←→BA
 takeover at any time of day if you click the flame button 20 times within a minute,
 Christmas at any time of the year if you type `yeti` (outside the Christmas
 period, type it again on a Christmas screen to leave; in the jazz bar, it brings
-Christmas back), and the jazz bar at any time
+Christmas back), Halloween at any time of the year if you type `boo` (type it again to
+leave), and the jazz bar at any time
 if you type `armstrong` (type it again in the bar to go back to the screen of the
 moment: the day, the calm night, the bar at bar time, or Christmas in December), and the
 calm night at any time if you type `peace` (type it again to leave), and the epic finale
