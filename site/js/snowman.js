@@ -977,7 +977,7 @@ const smFreeze = (x, y, gen) => {
     smAnimate(blur, [{ opacity: 1 }, { opacity: 1, offset: .2 }, { opacity: 0, offset: .55 }, { opacity: 0 }], { duration: melt, fill: "forwards" });
   }
   setTimeout(() => { if (gen === smGen) { smDrop(frost); smDrop(blur); } }, melt);
-  if (!smStill() && matchMedia("(pointer: fine)").matches) smSlowPointer(x, y, melt, gen);
+  if (!smStill()) smSlowPointer(x, y, melt);
 };
 const smSlowPointer = (x, y, ms, gen) => {
   const sheet = smExtra("div", "xfreeze"), icy = smExtra("div", "xcursor");
