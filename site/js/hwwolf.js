@@ -56,3 +56,11 @@ const hwHowlVoice = (ac, buf, at, rate, loud, wetness) => {
   env.connect(wet).connect(hwHillsVerb(ac));
   src.start(t, HW_HOWL.at, HW_HOWL.length);
 };
+const hwHowl = () => {
+  const ac = hwAudioCtx();
+  if (!ac || !screenGesture()) return;
+  hwHowlLoad(ac).then(buf => {
+    hwHowlVoice(ac, buf, 0, 1, .9, .45);
+    hwHowlVoice(ac, buf, 2.2, .9, .12, 1.2);  // the answer, far away
+  }, () => {});
+};
