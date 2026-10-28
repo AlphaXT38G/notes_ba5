@@ -120,3 +120,28 @@ hwBackBtn.addEventListener("click", e => {
   hwForget();
   if (code) CODES[code]();
 });
+// Shown on the screen a portal or the jar took us to (the jazz bar may turn from evening to
+// closing, the same class); gone when that screen is left, whichever way
+document.addEventListener("phase", e => {
+  const cls = screenClass(e.detail);
+  if (!hwVisit || cls === "halloween") return hwForget();
+  if (!hwVisitClass) hwVisitClass = cls;
+  if (cls === hwVisitClass) document.body.append(hwBackBtn);
+  else hwForget();
+});
+let hwSecretsResize = null;
+const hwSecretsOnResize = () => { clearTimeout(hwSecretsResize); hwSecretsResize = setTimeout(hwSecretsPlace, 150); };
+hwPart({
+  on() {
+    hwFront.append(hwHits, hwJar);
+    requestAnimationFrame(hwSecretsPlace);  // once the scene is laid out
+    addEventListener("resize", hwSecretsOnResize);
+    addEventListener("scroll", hwSecretsOnResize, { passive: true });  // the cards move over the scene
+  },
+  off() {
+    hwHits.remove();
+    hwJar.remove();
+    removeEventListener("resize", hwSecretsOnResize);
+    removeEventListener("scroll", hwSecretsOnResize);
+  },
+});
