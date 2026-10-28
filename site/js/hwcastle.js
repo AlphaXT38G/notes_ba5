@@ -131,3 +131,58 @@ const HW_KNIGHT = (x, y) => `<g class="figure knight"><path d="M${x - 7},${y}L${
 const HW_SAXMAN = (x, y) => `<g class="figure saxman"><path d="M${x - 6},${y}L${x - 5},${y - 18}Q${x - 6},${y - 26} ${x},${y - 27}Q${x + 6},${y - 26} ${x + 5},${y - 18}L${x + 6},${y}Z` +
   `M${x},${y - 28}a3.6,4 0 1 1 .1,0ZM${x - 6},${y - 34}H${x + 6}V${y - 35}H${x + 4}V${y - 39}H${x - 4}V${y - 35}H${x - 6}Z` +
   `M${x + 2},${y - 29}L${x + 5},${y - 26}Q${x + 6},${y - 14} ${x + 9},${y - 11}Q${x + 13},${y - 9} ${x + 12},${y - 14}L${x + 10},${y - 15}Q${x + 10},${y - 12} ${x + 8},${y - 13}Q${x + 7},${y - 20} ${x + 5},${y - 28}Z"/></g>`;
+// Each takes the place of a row of windows on a tower (tower and row in HW_TOWERS' order, w its
+// width), between two string courses, framed in stone, on a little balcony held by corbels, its
+// two shutters of planks.
+const HW_PORTALS = { sax: { tower: 3, row: 2, w: 22, who: HW_SAXMAN }, knight: { tower: 4, row: 1, w: 30, who: HW_KNIGHT } };
+const hwPortal = (name, x, y, w, h) => {
+  const { who } = HW_PORTALS[name], l = x - w / 2, shape = hwLancet(l, y, w, h), id = `hw-portal-${name}`;
+  let planks = "";
+  for (let k = 1; k < 4; k++) planks += `M${f1(l + w * k / 8)},${f1(y - h)}V${y}M${f1(x + w * k / 8)},${f1(y - h)}V${y}`;
+  const corbels = [-.35, 0, .35].map(u => `<path class="tw" d="M${f1(x + u * w - 2.5)},${y + 3}h5l-1.2,5h-2.6Z"/>`).join("");
+  return `<g class="portal" data-portal="${name}"><clipPath id="${id}"><path d="${shape}"/></clipPath>` +
+    `<path class="frame" d="${hwLancet(l - 2.5, y, w + 5, h + 2.5)}"/><path class="hood" d="${hwHood(l - 4, y - 2, w + 8, h + 5)}"/>` +
+    `<path class="win lit" d="${shape}"/><g clip-path="url(#${id})"><g transform="translate(${x},${y}) scale(.82) translate(${-x},${-y})">${who(x, y)}</g>` +
+    `<rect class="shutter left" x="${f1(l)}" y="${f1(y - h)}" width="${f1(w / 2)}" height="${h}"/><rect class="shutter right" x="${x}" y="${f1(y - h)}" width="${f1(w / 2)}" height="${h}"/>` +
+    `<path class="planks" d="${planks}"/></g>` +
+    `<rect class="mold" x="${f1(l - 6)}" y="${y}" width="${w + 12}" height="3"/><rect class="mshade" x="${f1(l - 5)}" y="${y + 3}" width="${w + 10}" height="2"/>${corbels}</g>`;
+};
+
+const HW_CASTLE = (() => {
+  const rnd = seeded(31);
+  // the crag: jagged rock falling from the castle to the hills, darker ledges
+  const crag = "M880,700L905,560L930,520L962,505L990,470L1470,470L1500,498L1525,560L1560,700Z";
+  let ledges = "";
+  for (let i = 0; i < 12; i++) {
+    const x = 920 + rnd() * 560, y = 495 + rnd() * 160;
+    ledges += `M${f1(x)},${f1(y)}l${f1(30 + rnd() * 50)},${f1(-4 + rnd() * 8)}l-8,6Z`;
+  }
+  // the curtain wall: machicolations, battlements with iron spikes, the gate and its portcullis
+  let walls = `<rect class="tw" x="996" y="380" width="438" height="${HW_BASE - 380}"/><rect class="mold" x="992" y="378" width="446" height="2.4"/>`;
+  for (let k = 998; k < 1432; k += 8) walls += `<path class="tw" d="M${k},380h5l-1,7h-3Z"/>`;
+  walls += `<rect class="mshade" x="996" y="388" width="438" height="4"/>`;
+  for (let k = 994; k < 1436; k += 12) walls += `<rect class="tw" x="${k}" y="366" width="7" height="13"/><path class="spike" d="M${k + 3.5},366v-8"/>`;
+  for (let y = 410; y < HW_BASE; y += 30) walls += `<rect class="mold" x="996" y="${y}" width="438" height="1.6"/><rect class="mshade" x="996" y="${y + 1.6}" width="438" height="2.4"/>`;
+  walls += `<path class="hood" d="${hwHood(1192, HW_BASE - 2, 46, 70)}"/><path class="gate" d="${hwLancet(1195, HW_BASE, 40, 66)}"/>` +
+    `<path class="trac" d="M1201,${HW_BASE}V418M1208,${HW_BASE}V408M1215,${HW_BASE}V404M1222,${HW_BASE}V408M1229,${HW_BASE}V418M1195,430H1235M1195,446H1235"/>`;
+  // flying buttresses: arches from pinnacled piers up to the keep's walls
+  const [kx, kw, kt] = HW_TOWERS[2];
+  let flying = "";
+  for (const [px, dir] of [[1082, 1], [1208, -1]]) {
+    const wx = dir > 0 ? kx - kw / 2 : kx + kw / 2;
+    flying += `<rect class="tw" x="${px - 6}" y="300" width="12" height="${HW_BASE - 300}"/>${hwPinnacle(px, 301, 30, 10)}` +
+      `<path class="fly" d="M${px},318Q${(px + wx) / 2},${kt + 150} ${wx},${kt + 140}"/><path class="fly" d="M${px},346Q${(px + wx) / 2},${kt + 196} ${wx},${kt + 186}"/>`;
+  }
+  const towers = HW_TOWERS.map((t, i) => hwCastleTower(t, rnd, i));
+  // the keep: its rose window, and its great window, where the vampire passes
+  const ry = kt + 46, gw = 22, gy = kt + 180;
+  const spokes = Array.from({ length: 8 }, (_, i) => `M${kx},${ry}l${f1(Math.cos(i * Math.PI / 4) * 12.5)},${f1(Math.sin(i * Math.PI / 4) * 12.5)}`).join("");
+  const keep = `<circle class="hood" cx="${kx}" cy="${ry}" r="16"/><circle class="win lit rose" cx="${kx}" cy="${ry}" r="13.5"/>` +
+    `<path class="trac" d="${spokes}"/><circle class="trac" cx="${kx}" cy="${ry}" r="5"/><circle class="trac" cx="${kx}" cy="${ry}" r="9"/>` +
+    `<clipPath id="hw-great"><path d="${hwLancet(kx - gw / 2, gy, gw, 60)}"/></clipPath><path class="hood" d="${hwHood(kx - gw / 2 - 3, gy - 3, gw + 6, 66)}"/>` +
+    `<path class="win lit great" d="${hwLancet(kx - gw / 2, gy, gw, 60)}"/>` +
+    `<g clip-path="url(#hw-great)"><g class="dracsil">${hwVampire(kx, gy)}</g></g>`;
+  const path = `<path class="path" d="M1215,${HW_BASE}C1230,520 1120,540 1150,580S1260,640 1230,700"/>`;
+  return `<path class="crag" d="${crag}"/><path class="ledges" d="${ledges}"/>${towers.slice(0, 2).join("")}${walls}${flying}` +
+    `${towers[2]}${keep}${towers.slice(3).join("")}${hwGargoyles()}${path}`;
+})();
