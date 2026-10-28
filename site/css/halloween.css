@@ -174,3 +174,8 @@ body[data-phase=halloween-night] #hwwitch :is(.stick,.tail){stroke:#08030e}
 .hwsay{position:absolute;left:50%;bottom:100%;transform:translate(-50%,-.4rem);padding:.35rem .6rem;border-radius:.7rem;background:#f6ecd8;color:#2a1404;font:italic 600 .85rem Georgia,serif;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.4);pointer-events:none;animation:hw-say .25s ease-out}
 .hwsay::after{content:"";position:absolute;left:50%;top:100%;margin-left:-5px;border:5px solid transparent;border-top-color:#f6ecd8}
 @keyframes hw-say{from{opacity:0;transform:translate(-50%,.2rem)}}
+/* Entering Halloween: the page goes dark, then comes out of the dark with an orange glow */
+[data-vt=halloween]::view-transition-old(root){animation:vt-hw-out 1.2s ease-in both}
+[data-vt=halloween]::view-transition-new(root){animation:vt-hw-in 1.6s ease-out both}
+@keyframes vt-hw-out{to{opacity:0;filter:brightness(.2) sepia(1) hue-rotate(-20deg)}}
+@keyframes vt-hw-in{from{opacity:0;filter:brightness(.3) sepia(.8) saturate(2)}}
