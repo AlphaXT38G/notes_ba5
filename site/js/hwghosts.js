@@ -63,3 +63,37 @@ const hwGhostGo = () => {
   hwGhLast = 0;
   hwGhRaf = requestAnimationFrame(hwGhostFrame);
 };
+// One step of its life (dt in seconds)
+const hwGhostStep = dt => {
+  const g = hwGh;
+  g.t += dt;
+  // moving: a damped spring to the place it goes, slow to leave, soft to arrive
+  const [tx, ty, tz] = g.target, k = g.rush ? 6 : 1.1, c = 2 * Math.sqrt(k);
+  const acc = [k * (tx - g.pos[0]) - c * g.vel[0], k * (ty - g.pos[1]) - c * g.vel[1], k * 300 * (tz - g.pos[2]) - c * g.vel[2] * 1];
+  for (let i = 0; i < 3; i++) g.vel[i] += acc[i] * dt;
+  const sp = Math.hypot(g.vel[0], g.vel[1]), max = g.rush ? 400 : 75;
+  if (sp > max) { g.vel[0] *= max / sp; g.vel[1] *= max / sp; }
+  g.pos[0] += g.vel[0] * dt;
+  g.pos[1] += g.vel[1] * dt;
+  g.pos[2] = Math.max(0, Math.min(g.rush ? 1.6 : 1, g.pos[2] + g.vel[2] / 300 * dt));
+  const arrived = Math.hypot(tx - g.pos[0], ty - g.pos[1]) < 18 && Math.abs(tz - g.pos[2]) < .08;
+  if (arrived && !g.leaving) {
+    if ((g.linger -= dt) <= 0) {
+      if (--g.stops <= 0) g.leaving = true;
+      else { hwGhostTarget(g); g.linger = 2.5 + Math.random() * 3; }
+    }
+  }
+  // turning: to where it goes (in profile across, from the front coming nearer); at rest, to us
+  const vx = g.vel[0], vz = g.vel[2], moving = Math.hypot(vx, vz) > 12;
+  const want = g.rush ? 0 : moving ? Math.atan2(vx, vz * .8) : 0;
+  g.yaw += hwAngle(want - g.yaw) * Math.min(1, dt * (moving ? 1.6 : .9));
+  g.head += (hwAngle((moving ? 0 : -g.yaw * .8)) - g.head) * Math.min(1, dt * 2.5);  // the head turns first
+  // the lantern, a pendulum on its chain, pushed by his moves
+  g.swingV += (-9 * Math.sin(g.swing) - 1.2 * g.swingV - acc[0] * .004) * dt;
+  g.swing += g.swingV * dt;
+  // there, then gone: materialising, a flicker now and then, dissolving
+  g.reveal = Math.max(0, Math.min(1, g.reveal + (g.leaving || g.rush ? -dt / (g.rush ? 1 : 3) : dt / 3.5)));
+  if (g.flicker > 0) g.flicker -= dt;
+  else if (Math.random() < dt * .07) g.flicker = .06 + Math.random() * .14;
+  hwGhostPose(g, [vx, -g.vel[1], vz]);
+};
