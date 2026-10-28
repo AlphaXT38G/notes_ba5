@@ -34,3 +34,29 @@ const hwSubtitle = () => {
 SCREENS.halloween = { className: "halloween", subtitle: hwSubtitle, transition: "halloween" };
 SCREENS["halloween-night"] = { className: "halloween", subtitle: hwSubtitle, transition: "halloween" };
 
+// Halloween replaces the day, the calm night and the jazz bar, as Christmas does (the two periods
+// never meet). This file is loaded after christmas.js and before armstrong.js and calm.js, so the
+// yeti code (Christmas) and the shows still win, and the armstrong and peace codes too.
+// Easter egg: typing b o o brings Halloween at any time of the year, day or night by the clock,
+// over Christmas too; outside the period, typed again on Halloween it goes back to the normal
+// screen. It drops the eggs whose overrides come after this one (armstrong, peace: their files are
+// loaded later, as these lines run on a key press), and the yeti egg; yeti typed after it wins
+// (hwEggYeti, as the armstrong code does).
+let hwEgg = false, hwEggYeti = 0;
+OVERRIDES.push(phase => {
+  if (hwEgg && yetiTyped !== hwEggYeti) hwEgg = false;
+  const replaced = isNormal(phase) || screenClass(phase) === "night" || hwEgg && screenClass(phase) === "christmas";
+  if (!replaced || !(hwEgg || (!forced || forcedDismissed) && isHwDate())) return phase;
+  return isHwDaytime() ? "halloween" : "halloween-night";
+});
+onCode("boo", () => {
+  leaveShows();  // typed during a show, it ends it first (epic.js)
+  const onHw = document.body.classList.contains("halloween");
+  if (onHw && isHwDate()) return;  // it is Halloween anyway
+  hwEgg = !onHw;
+  hwEggYeti = yetiTyped;
+  jazzEgg = peaceEgg = xmasEgg = xmasJazz = false;
+  if (onHw && forced && forced.startsWith("halloween")) forcedDismissed = true;
+  applyScreen();
+});
+
