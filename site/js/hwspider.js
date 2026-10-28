@@ -52,3 +52,40 @@ const hwWebBuild = () => {
   // the spider's path: from the hub along the radial into the corner
   hwWeb.path = [hub, ...radials[5]];
 };
+// Where the spider is, along its path (between two points of the web)
+const hwSpiderPos = () => {
+  const path = hwWeb.path, f = hwSpiderAt * (path.length - 1), i = Math.min(path.length - 2, Math.floor(f)), t = f - i;
+  return [path[i].x + (path[i + 1].x - path[i].x) * t, path[i].y + (path[i + 1].y - path[i].y) * t, i];
+};
+
+// One step of the simulation: gravity, the breeze, the pointer, the spider's weight, then the
+// threads pulled back to their length a few times over
+const hwWebStep = dt => {
+  const gust = Math.sin(hwWebT * .7) * Math.sin(hwWebT * 1.9) * 6;
+  const [sx, sy, si] = hwSpiderPos();
+  for (const p of hwWebPts) {
+    if (p.pinned) continue;
+    const vx = (p.x - p.px) * .96, vy = (p.y - p.py) * .96;
+    p.px = p.x; p.py = p.y;
+    p.x += vx + gust * dt * dt * 20;
+    p.y += vy + 30 * dt * dt;
+    if (hwWebPointer) {
+      const dx = p.x - hwWebPointer.x, dy = p.y - hwWebPointer.y, d = Math.hypot(dx, dy);
+      if (d < 36) { p.x += hwWebPointer.vx * .25 * (1 - d / 36); p.y += hwWebPointer.vy * .25 * (1 - d / 36); }
+    }
+  }
+  const under = hwWeb.path[si];
+  if (!under.pinned) under.y += 90 * dt * dt;  // the spider's weight
+  for (let n = 0; n < 4; n++) {
+    for (const [a, b, len] of hwWebLinks) {
+      const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1;
+      if (d <= len) continue;  // a thread pulls, it never pushes
+      const f = (d - len) / d * .5;
+      if (!a.pinned) { a.x += dx * f; a.y += dy * f; }
+      if (!b.pinned) { b.x -= dx * f; b.y -= dy * f; }
+    }
+  }
+  if (hwWebPointer) hwWebPointer.vx = hwWebPointer.vy = 0;
+  return hwWebPts.reduce((e, p) => e + Math.abs(p.x - p.px) + Math.abs(p.y - p.py), 0);
+};
+
