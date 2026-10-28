@@ -79,3 +79,13 @@ everySecond.push(() => {
   if (document.activeElement && document.activeElement.matches("input")) return;
   if (Math.random() < 1 / 900) hwScream();  // about once in 15 minutes
 });
+// Typing s c r e a m (or in the search field then Enter: onCode, ui.js) brings it at once, on the
+// Halloween screens only
+onCode("scream", () => { if (hwOn) hwScream(); });
+hwPart({
+  on() {
+    hwScreenSince = Date.now();
+    if (!hwStill()) hwZombie.src = "img/screamer.webp";  // loaded ahead, so it jumps at once
+  },
+  off() { hwScreamer.remove(); },
+});
