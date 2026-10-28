@@ -120,3 +120,26 @@ everySecond.push(() => {
   if (--hwBoltIn <= 0) { hwBolt(); hwBoltIn = 25 + Math.random() * 95; }
 });
 
+// Turning the screen on and off, and from day to night
+let hwOn = false, hwWasNight = null;
+const setHalloween = on => {
+  if (on === hwOn) return;
+  hwOn = on;
+  if (on) {
+    hwBack.append(hwFlash);
+    document.body.prepend(hwBack);
+    document.body.append(hwFront);
+    HW_PARTS.forEach(p => p.on && p.on());
+    hwWasNight = null;
+  } else {
+    HW_PARTS.forEach(p => p.off && p.off());
+    hwBack.remove();
+    hwFront.remove();
+  }
+};
+document.addEventListener("halloween", e => setHalloween(e.detail));
+document.addEventListener("phase", () => {
+  if (!hwOn || hwNight() === hwWasNight) return;
+  hwWasNight = hwNight();
+  HW_PARTS.forEach(p => p.night && p.night(hwWasNight));
+});
