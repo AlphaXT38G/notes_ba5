@@ -41,3 +41,25 @@ const hwWisps = [];
 
 const hwRotY = ([x, y, z], a) => [x * Math.cos(a) + z * Math.sin(a), y, -x * Math.sin(a) + z * Math.cos(a)];
 const hwAngle = a => Math.atan2(Math.sin(a), Math.cos(a));  // in -pi..pi
+// A place to go: across the window, at some depth (0 far, 1 near)
+const hwGhostTarget = g => {
+  g.target = [innerWidth * (.12 + Math.random() * .76), innerHeight * (.42 + Math.random() * .2), .15 + Math.random() * .75];
+};
+const hwGhostGo = () => {
+  if (hwGh || hwStill() || document.hidden) return;
+  if (!hwSpectreInit(hwGhostCv)) return;
+  const kind = hwGhNext;
+  hwGhNext = (hwGhNext + 1) % HW_POSES.length;
+  hwGh = {
+    kind, t: Math.random() * 20, pos: [innerWidth * (.15 + Math.random() * .7), innerHeight * (.42 + Math.random() * .2), .2 + Math.random() * .5],
+    vel: [0, 0, 0], yaw: (Math.random() - .5) * 2, head: 0, linger: 3, stops: 3 + Math.floor(Math.random() * 3),
+    reveal: 0, leaving: false, rush: false, flicker: 0, swing: 0, swingV: 0, joints: new Float32Array(42),
+  };
+  hwGhostTarget(hwGh);
+  hwFront.append(hwGhostEl);
+  const r = innerWidth < 700 ? .55 : .7;  // under 1x: it is mist
+  hwGhostCv.width = Math.round(hwGhostEl.offsetWidth * r);
+  hwGhostCv.height = Math.round(hwGhostEl.offsetHeight * r);
+  hwGhLast = 0;
+  hwGhRaf = requestAnimationFrame(hwGhostFrame);
+};
