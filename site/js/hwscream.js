@@ -64,3 +64,18 @@ const hwScreech = () => {
   breath.connect(rasp).connect(g).connect(bus);
   breath.start(t);
 };
+let hwScreamAt = 0, hwScreenSince = 0;
+const hwScream = () => {
+  hwScreamAt = Date.now();
+  if (!hwZombie.src) hwZombie.src = "img/screamer.webp";
+  document.body.append(hwScreamer);
+  hwScreech();
+  setTimeout(() => hwScreamer.remove(), 1100);
+};
+everySecond.push(() => {
+  if (!hwOn) return;
+  const now = Date.now();
+  if (hwStill() || document.hidden || now - hwScreenSince < 180000 || now - hwScreamAt < 720000) return;
+  if (document.activeElement && document.activeElement.matches("input")) return;
+  if (Math.random() < 1 / 900) hwScream();  // about once in 15 minutes
+});
