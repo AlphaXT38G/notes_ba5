@@ -89,3 +89,32 @@ const hwWebStep = dt => {
   return hwWebPts.reduce((e, p) => e + Math.abs(p.x - p.px) + Math.abs(p.y - p.py), 0);
 };
 
+// The spider at (x, y), facing the hub (angle a), its legs moving while it runs (walk: phase)
+const hwDrawSpider = (g, x, y, a, walk, night, rear = 0) => {
+  g.save();
+  g.translate(x + (Math.random() - .5) * 3 * rear, y + (Math.random() - .5) * 3 * rear);  // angry: shaking
+  g.rotate(a);
+  g.scale(1.6 + .35 * rear, 1.6 + .35 * rear);  // a big one, puffed up when angry
+  g.strokeStyle = "#140a10";
+  g.lineCap = "round";
+  for (const side of [-1, 1]) {
+    for (let k = 0; k < 4; k++) {
+      const swing = Math.sin(walk + k * 1.6 + (side > 0 ? Math.PI : 0)) * .25, base = (-.9 + k * .55 + swing) * side;
+      const kx = Math.cos(base) * 15, ky = Math.sin(base) * 15 - 3, fx = Math.cos(base + side * .5) * 28, fy = Math.sin(base + side * .5) * 28 + 6;
+      g.lineWidth = 2.6;
+      g.beginPath(); g.moveTo(0, 0); g.lineTo(kx, ky - 6); g.lineTo(fx, fy); g.stroke();
+    }
+  }
+  // abdomen with its hourglass, then the head with its eyes
+  g.fillStyle = "#1c1016";
+  g.beginPath(); g.ellipse(-14, 0, 13, 10.5, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#2c1a24";
+  g.beginPath(); g.ellipse(-16, -3, 6, 4, 0, 0, Math.PI * 2); g.fill();  // its sheen
+  g.fillStyle = "#c01020";
+  g.beginPath(); g.moveTo(-20, -4); g.lineTo(-14, 0); g.lineTo(-20, 4); g.lineTo(-8, 4); g.lineTo(-14, 0); g.lineTo(-8, -4); g.fill();
+  g.fillStyle = "#1c1016";
+  g.beginPath(); g.ellipse(2, 0, 7, 6, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = night ? "#ff3a2a" : "#a01818";
+  for (const [ex, ey] of [[7, -2.4], [7, 2.4], [5, -4], [5, 4]]) { g.beginPath(); g.arc(ex, ey, 1.2, 0, Math.PI * 2); g.fill(); }
+  g.restore();
+};
