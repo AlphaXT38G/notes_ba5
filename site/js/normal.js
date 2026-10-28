@@ -12,7 +12,7 @@
 let dayEgg = false,  // the code was typed: the day stays
     dayEggYeti = 0;  // how many times yeti had been typed then (yetiTyped, christmas.js)
 OVERRIDES.push(phase => {
-  if (dayEgg && (jazzEgg || peaceEgg || metalEggAt || epicAt || yetiTyped !== dayEggYeti)) dayEgg = false;
+  if (dayEgg && (jazzEgg || peaceEgg || hwEgg || metalEggAt || epicAt || yetiTyped !== dayEggYeti)) dayEgg = false;
   return dayEgg ? null : phase;
 });
 const startDay = () => {
