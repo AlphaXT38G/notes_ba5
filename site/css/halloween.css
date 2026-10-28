@@ -90,3 +90,9 @@ body[data-phase=halloween-night] .hwsky .h0{fill:#0b0614}
 body[data-phase=halloween-night] .hwsky .h1{fill:#080410}
 body[data-phase=halloween-night] .hwsky .st1{stop-color:#4a4466}
 body[data-phase=halloween-night] .hwsky .st2{stop-color:#1a1428}
+/* The castle's tiny gargoyle statues: a red glint in their eyes once clicked (js/hwsecrets.js) */
+.hwsky .statue .geye{fill:#200808}
+.hwsky .statue .geye-glow{fill:#ff2a10;opacity:0;transition:opacity .4s}
+.hwsky .statue.lit .geye{fill:#ff5a3a}
+.hwsky .statue.lit .geye-glow{opacity:.45;animation:hw-glint 2.4s ease-in-out infinite}
+@keyframes hw-glint{50%{opacity:.2}}
