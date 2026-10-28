@@ -7,8 +7,8 @@
 // calm night, Christmas and Halloween are replaced); typed during a show, it ends it first
 // (leaveShows, epic.js).
 // Typed again in the jazz bar, it goes back to the normal screen of that moment: what the clock
-// gives without any easter egg nor forced screen. So it drops the jazz egg, the yeti egg, the
-// Christmas sax and a forced ?screen=..., and shows the day (or the calm night after the metal
+// gives without any easter egg nor forced screen. So it drops the jazz egg, the yeti and boo eggs,
+// the Christmas sax and a forced ?screen=..., and shows the day (or the calm night after the metal
 // show), the jazz bar at bar time (it then stays), or Christmas during the Christmas period.
 // Typing yeti in the bar (Christmas egg) closes it too, so that Christmas actually shows up, even
 // when the bar was opened over Christmas (jazzEggYeti).
