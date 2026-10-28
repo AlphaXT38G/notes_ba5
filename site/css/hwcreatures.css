@@ -28,3 +28,8 @@ body.halloween .searchrow,body.halloween .view{position:relative}
 @keyframes hw-flame{0%,100%{transform:scale(1,1) skewX(0)}20%{transform:scale(.95,1.07) skewX(3deg)}45%{transform:scale(1.04,.94) skewX(-2deg)}70%{transform:scale(.97,1.1) skewX(2deg)}}
 .hwsmoke{position:absolute;left:50%;top:-.4rem;width:10px;height:10px;margin:-5px;border-radius:50%;background:rgba(200,195,210,.55);filter:blur(3px);pointer-events:none;animation:hw-smoke 2.6s ease-out forwards}
 @keyframes hw-smoke{to{transform:translate(12px,-80px) scale(3.5);opacity:0}}
+/* The wax run over the bar's and the switch's top edges, never in the way of a click */
+.hwwax{position:absolute;top:-1px;width:9rem;height:1.5rem;pointer-events:none;z-index:1}
+.hwwax.view-run{right:.3rem;width:5.5rem}
+.hwwax svg{width:100%;height:100%;display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+@media(max-width:520px){.hwcandles{transform:scale(.75);transform-origin:100% 100%}}
