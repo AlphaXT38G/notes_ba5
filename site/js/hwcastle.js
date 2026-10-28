@@ -19,3 +19,13 @@ const HW_BASE = 468;  // where the castle stands on the crag
 // x centre, width, top, kind ("spire" or "flat"), from the back to the front
 const HW_TOWERS = [[985, 40, 300, "spire"], [1050, 60, 238, "flat"], [1145, 100, 150, "spire"], [1240, 56, 218, "spire"],
   [1312, 82, 280, "flat"], [1385, 44, 250, "spire"], [1440, 34, 330, "spire"]];
+// An equilateral pointed arch standing on (x, y), w wide, h high (a lancet window, a gate)
+const hwLancet = (x, y, w, h) => {
+  const ys = y - h + w * .866;
+  return `M${f1(x)},${f1(y)}V${f1(ys)}A${f1(w)},${f1(w)} 0 0 1 ${f1(x + w / 2)},${f1(y - h)}A${f1(w)},${f1(w)} 0 0 1 ${f1(x + w)},${f1(ys)}V${f1(y)}Z`;
+};
+// The hood moulding over an arch: only its pointed top, from one springing point to the other
+const hwHood = (x, y, w, h) => {
+  const ys = y - h + w * .866;
+  return `M${f1(x)},${f1(ys + 4)}V${f1(ys)}A${f1(w)},${f1(w)} 0 0 1 ${f1(x + w / 2)},${f1(y - h)}A${f1(w)},${f1(w)} 0 0 1 ${f1(x + w)},${f1(ys)}v4`;
+};
