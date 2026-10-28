@@ -39,7 +39,8 @@ site/                 the index page (HTML, CSS, JS inlined into one dist/index.
                         werewolf/ the layers of its werewolf, gargoyle.png its castle's statues
   audio/                the screens' music, mp3 files copied to dist/audio/: jazz, metal, epic
                         and dragonborn (the epic finale's two songs), calm (the night's forest)
-                        and jingle-bell-rock (Christmas); the day's
+                        and jingle-bell-rock (Christmas), wolf (Halloween's werewolf, its
+                        second howl, from 7.6 s, is the one played); the day's
                         cassette deck plays them too; megalovania is the Christmas snowman's
                         (his fifth button)
 tools/bartender/      remakes the bartender's layers from source.webp (open it through a local
