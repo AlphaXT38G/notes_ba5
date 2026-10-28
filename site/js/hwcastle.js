@@ -43,3 +43,14 @@ const hwCrockets = (x0, y0, x1, y1, out) => {
   }
   return `<path class="tw" d="${d}"/>`;
 };
+// A pinnacle: a thin spike with a knob, standing on (x, y), h high
+const hwPinnacle = (x, y, h, w = 5) => `<path class="roof" d="M${f1(x - w / 2)},${f1(y)}L${f1(x)},${f1(y - h)}L${f1(x + w / 2)},${f1(y)}Z"/>` +
+  `<circle class="roof" cx="${f1(x)}" cy="${f1(y - h)}" r="1.4"/>`;
+// A lancet window under its hood moulding; lit ones show their tracery
+const hwWindow = (x, y, w, h, cls, rnd) => {
+  const flick = cls.includes("flick") ? ` style="--d:${f1(-rnd() * 5)}s"` : "";
+  let s = `<path class="hood" d="${hwHood(x - 2, y - 2, w + 4, h + 4)}"/><path class="${cls}" d="${hwLancet(x, y, w, h)}"${flick}/>`;
+  if (cls.includes("lit") && w > 8) s += `<path class="trac" d="M${f1(x + w / 2)},${f1(y)}V${f1(y - h + w)}"/><circle class="trac" cx="${f1(x + w / 2)}" cy="${f1(y - h + w * .62)}" r="${f1(w * .2)}"/>`;
+  return s;
+};
+
