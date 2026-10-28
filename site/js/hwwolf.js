@@ -95,3 +95,13 @@ const hwWolfGo = () => {
     }, night ? 5600 : 2500));
   });
 };
+everySecond.push(() => { if (hwOn && --hwWolfIn <= 0) { hwWolfGo(); hwWolfIn = 70 + Math.random() * 120; } });
+hwPart({
+  on() { hwWolfIn = 20 + Math.random() * 30; },
+  off() {
+    if (hwWolfWalk) { hwWolfWalk.cancel(); hwWolfWalk = null; }
+    hwWolfTimers.forEach(clearTimeout);
+    hwWolfTimers = [];
+    hwWolf.remove();
+  },
+});
