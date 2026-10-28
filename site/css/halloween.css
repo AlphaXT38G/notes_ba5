@@ -40,3 +40,19 @@ body[data-phase=halloween-night] .hwsky .stars{display:inline}
    purple, the moonlit sides of the towers picked out */
 .hwsky .r0{fill:#3a1d14}
 .hwsky .r1{fill:#2c160f}
+/* the castle (js/hwcastle.js): its stone, the lit edges of its mouldings and the shadows they
+   cast, its hoods, tracery, spikes and flying buttresses; by day a dark silhouette in the haze */
+.hwsky .crag,.hwsky .tw,.hwsky .roof{fill:#110807}
+.hwsky .ledges{fill:#0a0504}
+.hwsky .rim,.hwsky .roof-rim{fill:#26130d}
+.hwsky .mold{fill:#2a150e}
+.hwsky .mshade{fill:#050202}
+.hwsky .hood{fill:none;stroke:#2a150e;stroke-width:1.6}
+.hwsky .trac{fill:none;stroke:#110807;stroke-width:1.4}
+.hwsky .spire,.hwsky .spike{stroke:#110807;stroke-width:2;fill:none}
+.hwsky .spike{stroke-width:1.3}
+.hwsky .fly{fill:none;stroke:#110807;stroke-width:7}
+.hwsky .gate{fill:#050202}
+.hwsky .path{fill:none;stroke:#3a2216;stroke-width:5;stroke-linecap:round}
+.hwsky .win{fill:#0c0606}
+.hwsky .win.lit{fill:#4a1a08}
