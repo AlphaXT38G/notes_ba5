@@ -112,3 +112,5 @@ body[data-phase=halloween-night] .hwsky .portal .shutter{fill:#120a1a;stroke:#33
 .hwsky .figure{fill:#0a0405}
 .hwsky .portal.open .sword{transform-box:view-box;animation:hw-sword 2.6s ease-in-out infinite}
 .hwsky .portal.open .saxman{transform-box:fill-box;transform-origin:50% 100%;animation:hw-sway 1.4s ease-in-out infinite alternate}
+@keyframes hw-sword{0%,100%{transform:none}50%{transform:translateY(-2px)}}
+@keyframes hw-sway{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
