@@ -397,7 +397,7 @@ const startPeace = (fromXmas = false) => {
   leaveShows();
   peaceEgg = true;
   peaceYeti = yetiTyped;
-  jazzEgg = xmasJazz = false;
+  jazzEgg = xmasJazz = hwEgg = false;
   if (!fromXmas) xmasEgg = false;
   xmasPeace = fromXmas;
   applyScreen();
