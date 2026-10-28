@@ -148,6 +148,9 @@ later still wins over their egg.
 - `yeti`: Christmas day or night by the clock, any time of the year. Outside the Christmas
   period, typed on a Christmas screen it goes back to the normal one; typed in a jazz bar opened
   over Christmas, it brings Christmas back.
+- `boo`: Halloween day or night by the clock, any time of the year, over Christmas too. Outside
+  the Halloween period, typed on a Halloween screen it goes back to the normal one. It drops the
+  armstrong, peace and yeti eggs; `yeti` typed after it wins.
 - `armstrong`: the jazz bar at any time (over Christmas and the calm night too). Typed again in
   the bar it goes back to the normal screen of that moment, by the clock alone: it drops the
   `armstrong` and `yeti` eggs, the sax and a forced `?screen=`, so it shows the day (or the calm
