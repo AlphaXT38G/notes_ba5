@@ -147,3 +147,19 @@ body[data-phase=halloween-night] .hwmist i{background:radial-gradient(30% 50% at
 #hwwolf.howl .fig{rotate:0deg}
 #hwwolf.howl .head{rotate:4deg}
 #hwwolf.still .head{rotate:-22deg}
+/* The witch on her broom crossing the sky (js/hwwitch.js), a silhouette outlined by the light
+   behind her (the haze by day, the moon at night), her cape and hair fluttering, her cat's tail
+   swaying; her trail of sparkles on its own canvas below her */
+#hwwitch{position:absolute;left:0;top:0;pointer-events:none}
+#hwwitch svg{display:block;width:100%;overflow:visible;filter:drop-shadow(0 0 1.5px rgba(255,160,70,.9)) drop-shadow(0 0 6px rgba(255,120,40,.45))}
+body[data-phase=halloween-night] #hwwitch svg{filter:drop-shadow(0 0 1.5px rgba(200,170,255,.95)) drop-shadow(0 0 7px rgba(160,110,255,.5))}
+#hwwitch.ltr svg{transform:scaleX(-1)}
+#hwwitch .body,#hwwitch .cape,#hwwitch .hair,#hwwitch .bristles{fill:#0d0607}
+#hwwitch .stick,#hwwitch .tail{stroke:#0d0607;fill:none}
+#hwwitch .straw{stroke:#2a1608;stroke-width:.8;fill:none}
+#hwwitch .band{fill:#3a1a0a}
+#hwwitch .eye{fill:#ffc23a}
+#hwwitch .cape{transform-box:fill-box;transform-origin:0 50%;animation:hw-cape .32s ease-in-out infinite alternate}
+#hwwitch .hair{transform-box:fill-box;transform-origin:0 50%;animation:hw-cape .26s ease-in-out -.1s infinite alternate}
+#hwwitch .tail{transform-box:fill-box;transform-origin:0 100%;animation:hw-wolf-tail 1.2s ease-in-out infinite alternate}
+@keyframes hw-cape{from{transform:scale(1,.9) skewY(-4deg)}to{transform:scale(1.04,1.1) skewY(5deg)}}
