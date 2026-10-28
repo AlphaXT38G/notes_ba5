@@ -157,3 +157,38 @@ const hwGhostFrame = now => {
   }
   if (g.reveal <= 0 && (g.leaving || g.rush)) hwGhostEnd();
 };
+const hwGhostEnd = () => {
+  cancelAnimationFrame(hwGhRaf);
+  hwGhRaf = null;
+  hwGh = null;
+  hwGhostEl.remove();
+};
+// The wisps, on the effects canvas: soft glows rising, curling, swelling and fading
+const HW_WISP = [blob(180, 205, 255, .55), blob(180, 205, 255, .55), blob(160, 255, 215, .55)];
+fxLayers.push({
+  mode: "halloween",
+  reset() { hwWisps.length = 0; },
+  update(dt) {
+    for (let i = hwWisps.length - 1; i >= 0; i--) {
+      const w = hwWisps[i];
+      w.age += dt;
+      if (w.age > w.life) { hwWisps.splice(i, 1); continue; }
+      w.vx += Math.sin(w.age * 2.3 + w.seed) * 30 * dt;  // curling
+      w.vx *= .98;
+      w.x += w.vx * dt;
+      w.y += w.vy * dt;
+      w.size += 10 * dt;
+    }
+  },
+  draw(g) {
+    if (!hwWisps.length) return;
+    g.save();
+    g.globalCompositeOperation = "lighter";
+    for (const w of hwWisps) {
+      const k = w.age / w.life;
+      g.globalAlpha = .45 * Math.sin(Math.PI * k);
+      g.drawImage(HW_WISP[w.kind], w.x - w.size, w.y - w.size, w.size * 2, w.size * 2);
+    }
+    g.restore();
+  },
+});
