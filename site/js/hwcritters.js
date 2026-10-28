@@ -42,3 +42,16 @@ const hwLeafSprite = (kind, color) => {
   g.stroke();
   return c;
 };
+const HW_LEAVES = HW_LEAF_COLORS.map((col, i) => hwLeafSprite(i % 3, col));
+
+const hwBats = [], hwLeaves = [], hwPuffs = [];
+let hwBatsCaught = 0, hwCritW = 0, hwCritH = 0;
+const hwNewBat = (x, y, swarm = false) => ({
+  x, y, vx: (Math.random() - .5) * 120, vy: (Math.random() - .5) * 60, k: .55 + Math.random() * .7,
+  beat: Math.random() * 6, tx: Math.random() * hwCritW, ty: 30 + Math.random() * hwCritH * .45, swarm,
+});
+const hwNewLeaf = top => ({
+  x: Math.random() * hwCritW, y: top ? -20 - Math.random() * hwCritH : -20, vy: 22 + Math.random() * 28,
+  sway: Math.random() * 6, spin: (Math.random() - .5) * 2, a: Math.random() * 6, turn: Math.random() * 6,
+  img: HW_LEAVES[(Math.random() * HW_LEAVES.length) | 0], k: .6 + Math.random() * .6,
+});
