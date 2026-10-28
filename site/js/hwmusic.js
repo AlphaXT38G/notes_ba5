@@ -86,3 +86,37 @@ hwNext.addEventListener("click", e => {
   clearTimeout(hwSwapEnd);
   hwSwapEnd = setTimeout(() => { hwMusic.classList.remove("swap"); hwNext.classList.remove("swap"); }, 900);
 });
+// The YouTube tracks made ahead, through their ads, once the player is reached for
+const hwWarm = () => HW_TRACKS.forEach(t => { if (t.id) ytWarm(t.id); });
+["pointerenter", "touchstart", "focusin"].forEach(type => {
+  hwMusic.addEventListener(type, hwWarm, { passive: true });
+  hwNext.addEventListener(type, hwWarm, { passive: true });
+});
+
+hwPart({
+  on() {
+    hwMusic.innerHTML = `${HW_COCOTTE.html()}<span class="label"></span>`;
+    hwFront.append(hwMusic);
+    if (HW_TRACKS.length > 1) {  // a single track: no "next" to show
+      hwNext.innerHTML = HW_COCOTTE.next(HW_TRACKS[(hwTrackAt + 1) % HW_TRACKS.length]);
+      hwFront.prepend(hwNext);
+    }
+    if (!hwMusicOff()) {
+      const canSound = screenGesture();
+      hwPlay(!canSound);
+      if (!canSound) {
+        document.addEventListener("pointerdown", hwSound, { once: true });
+        document.addEventListener("keydown", hwSound, { once: true });
+      }
+    }
+    hwPaint();
+  },
+  off() {
+    document.removeEventListener("pointerdown", hwSound);
+    document.removeEventListener("keydown", hwSound);
+    hwStop();
+    hwPlaying = hwMuted = false;
+    hwMusic.remove();
+    hwNext.remove();
+  },
+});
