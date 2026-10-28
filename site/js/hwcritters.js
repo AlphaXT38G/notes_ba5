@@ -166,3 +166,22 @@ fxLayers.push({
   },
 });
 
+// The bat hunt: a click near a bat catches it (not a click meant for a link, a button, a field...)
+const hwCatch = e => {
+  if (e.target.closest("a,button,input,summary,label")) return;
+  let best = null, bestD = 1e9;
+  for (const b of hwBats) {
+    const d = Math.hypot(b.x - e.clientX, b.y - e.clientY);
+    if (d < 30 * b.k + 8 && d < bestD) { best = b; bestD = d; }
+  }
+  if (!best) return;
+  hwBats.splice(hwBats.indexOf(best), 1);
+  hwBatsCaught++;
+  hwPuffs.push({ x: best.x, y: best.y, t: 0, n: hwBatsCaught });
+  hwNoise(.12, 3200, "bandpass", .25);  // a squeak
+  if (!best.swarm) setTimeout(() => { if (hwOn) hwBats.push(hwNewBat(Math.random() < .5 ? -30 : hwCritW + 30, 40 + Math.random() * hwCritH * .3)); }, 3000);
+};
+hwPart({
+  on() { document.addEventListener("pointerdown", hwCatch); },
+  off() { document.removeEventListener("pointerdown", hwCatch); },
+});
