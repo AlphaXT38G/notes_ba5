@@ -166,3 +166,7 @@ body[data-phase=halloween-night] #hwwitch svg{filter:drop-shadow(0 0 1.5px rgba(
 body[data-phase=halloween-night] #hwwitch :is(.body,.cape,.hair,.bristles){fill:#08030e}
 body[data-phase=halloween-night] #hwwitch :is(.stick,.tail){stroke:#08030e}
 #hwtrail{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+/* Lightning: a white sheet flashing twice over the scene */
+.hwflash{position:absolute;inset:0;background:#dfe6ff;opacity:0;mix-blend-mode:screen}
+.hwflash.on{animation:hw-flash 1.1s ease-out}
+@keyframes hw-flash{0%{opacity:0}4%{opacity:.55}10%{opacity:.05}16%{opacity:.75}40%{opacity:.1}100%{opacity:0}}
