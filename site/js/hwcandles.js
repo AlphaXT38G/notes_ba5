@@ -30,3 +30,29 @@ const hwCandleH = (() => {
   return HW_CANDLES.map(() => 1);
 })();  // heights, as a part of a new candle's
 
+// One candle, h pixels high (the lip, the drips and the pool around it): the SVG is drawn in
+// pixels, its foot at the bottom of its box, the pool spilling out on both sides
+const hwCandleSvg = ({ w, drips }, h, i) => {
+  const W = w + 28, H = h + 10, x0 = 14, x1 = 14 + w, top = 6, mid = x0 + w / 2, id = `hwk${i}`;
+  const lip = `M${x0 - 2},${top + 5}C${x0 - 3},${top - 1} ${f1(x0 + w * .2)},${top - 2} ${f1(x0 + w * .35)},${top + 1}C${f1(x0 + w * .5)},${top + 3} ${f1(x0 + w * .6)},${top - 2} ${f1(x0 + w * .8)},${top}` +
+    `C${x1 + 2},${top} ${x1 + 3},${top + 3} ${x1 + 2},${top + 7}L${x1},${top + 9}H${x0}Z`;
+  const runs = drips.map(([u, len, drop]) => {
+    const x = x0 + u * w, l = Math.max(4, Math.min(len * (.6 + .4 * h / 60), h - 14)), r = 2.4;
+    return `M${f1(x - r)},${top + 6}V${f1(top + 6 + l)}a${r},${r} 0 0 0 ${2 * r},0V${top + 6}Z` +
+      (drop ? `M${f1(x - r - .6)},${f1(top + 6 + l)}a${r + .6},${r + 1.2} 0 1 0 ${f1(2 * r + 1.2)},0Z` : "");
+  }).join("");
+  const pool = `M${x0 - 12},${H - 1}C${x0 - 14},${H - 6} ${x0 - 4},${H - 7} ${x0},${H - 6}H${x1}C${x1 + 6},${H - 8} ${x1 + 14},${H - 5} ${x1 + 12},${H - 1}C${x1 + 8},${H + 1} ${x0 - 6},${H + 1} ${x0 - 12},${H - 1}Z`;
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true"><defs>` +
+    `<linearGradient id="${id}b" x2="0" y2="1"><stop offset="0" stop-color="#fdf3d8"/><stop offset=".35" stop-color="#f6d3a0"/><stop offset="1" stop-color="#d98a5a"/></linearGradient>` +
+    `<linearGradient id="${id}r"><stop offset="0" stop-color="#5a1a08" stop-opacity=".45"/><stop offset=".3" stop-color="#fff" stop-opacity="0"/>` +
+    `<stop offset=".45" stop-color="#fff" stop-opacity=".18"/><stop offset=".75" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#5a1a08" stop-opacity=".55"/></linearGradient>` +
+    `<radialGradient id="${id}g" cx=".5" cy="0" r=".9"><stop offset="0" stop-color="#ffd27a" stop-opacity=".95"/><stop offset=".5" stop-color="#ff9a3a" stop-opacity=".35"/><stop offset="1" stop-color="#ff7a20" stop-opacity="0"/></radialGradient>` +
+    `<linearGradient id="${id}d" x2="1"><stop offset="0" stop-color="#e8b47c"/><stop offset=".45" stop-color="#fff4dc"/><stop offset="1" stop-color="#d9965e"/></linearGradient></defs>` +
+    `<path d="${pool}" fill="url(#${id}d)"/><path d="M${x0 - 6},${H - 3}Q${mid},${H - 5} ${x1 + 6},${H - 3}" stroke="#fff6e0" stroke-opacity=".6" fill="none"/>` +
+    `<rect x="${x0}" y="${top + 4}" width="${w}" height="${H - top - 9}" fill="url(#${id}b)"/>` +
+    `<rect class="glow" x="${x0}" y="${top + 4}" width="${w}" height="${Math.min(46, H - top - 9)}" fill="url(#${id}g)"/>` +
+    `<rect x="${x0}" y="${top + 4}" width="${w}" height="${H - top - 9}" fill="url(#${id}r)"/>` +
+    `<path d="${runs}" fill="url(#${id}d)"/><path d="${lip}" fill="#fdf1d2"/>` +
+    `<ellipse cx="${mid}" cy="${top + 4}" rx="${f1(w * .34)}" ry="2.2" fill="#e9b070"/><ellipse class="glow" cx="${mid}" cy="${top + 4}" rx="${f1(w * .3)}" ry="1.6" fill="#ffd27a"/>` +
+    `<path d="M${mid},${top + 4}q.5,-3 1.5,-5" stroke="#2a1a10" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>`;
+};
