@@ -22,3 +22,12 @@ hwNext.type = "button";
 const hwTrack = () => HW_TRACKS[hwTrackAt];
 const hwMusicOff = () => { try { return localStorage.getItem("hw-music") === "off"; } catch (e) { return false; } };
 
+const hwPaint = () => {
+  hwMusic.classList.toggle("playing", hwPlaying);
+  hwMusic.querySelector(".label").textContent = !hwPlaying ? "♪ Click for music"
+    : hwMuted ? "🔇 Click anywhere for sound" : `♪ ${hwTrack().name} — click to pause`;
+  hwMusic.title = !hwPlaying ? "Play the music" : hwMuted ? "Turn the sound on" : "Pause the music";
+  const next = HW_TRACKS[(hwTrackAt + 1) % HW_TRACKS.length];
+  hwNext.title = `Put on ${next.name}`;
+  hwNext.setAttribute("aria-label", hwNext.title);
+};
