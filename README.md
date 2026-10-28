@@ -146,8 +146,9 @@ and beware: something may jump at you, rarely (or right away, if you type `screa
 pumpkin cocotte that simmers while it plays.
 
 Add `?screen=evening`, `?screen=closing`, `?screen=metal`, `?screen=epic`, `?screen=calm`,
-`?screen=christmas` or `?screen=christmas-night` (or `1` / `0`) to the URL to force a
-screen (or the day) at any time.
+`?screen=christmas`, `?screen=christmas-night`, `?screen=halloween` or
+`?screen=halloween-night` (or `1` / `0`) to the URL to force a screen (or the day) at any
+time.
 
 It hides eight easter eggs: a surprise banner that shows up on some visits,
 something that happens when you type the Konami code (↑↑↓↓←→←→BA), the metal
