@@ -63,3 +63,21 @@ const HW_GRAVES = (() => {
   return `<path class="fence" d="${fence}"/>${s}<path class="grass" d="${grass}"/>`;
 })();
 
+// The dead tree on the left: a twisted trunk and branches splitting in two again and again,
+// thinner each time (seeded), drawn as tapering strokes
+const HW_TREE = (() => {
+  const rnd = seeded(13);
+  const strokes = [[], [], [], [], [], []];  // by thickness
+  const grow = (x, y, a, len, depth) => {
+    const x2 = x + Math.cos(a) * len, y2 = y + Math.sin(a) * len;
+    const bend = (rnd() - .5) * len * .5;
+    strokes[Math.min(5, depth)].push(`M${f1(x)},${f1(y)}Q${f1((x + x2) / 2 + bend)},${f1((y + y2) / 2 - bend * .3)} ${f1(x2)},${f1(y2)}`);
+    if (depth >= 5) return;
+    const spread = .35 + rnd() * .35;
+    grow(x2, y2, a - spread + (rnd() - .5) * .3, len * (.62 + rnd() * .15), depth + 1);
+    grow(x2, y2, a + spread + (rnd() - .5) * .3, len * (.62 + rnd() * .15), depth + 1);
+  };
+  grow(170, HW_LEFT(170) + 6, -Math.PI / 2 - .08, 150, 0);
+  return `<g class="deadtree">${strokes.map((d, i) => `<path class="br${i}" d="${d.join("")}"/>`).join("")}</g>`;
+})();
+
