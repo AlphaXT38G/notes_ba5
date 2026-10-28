@@ -72,3 +72,19 @@ body[data-phase=halloween-night] .hwsky .draceye{fill:#ff2a1a}
 @keyframes hw-pass{0%,58%{transform:translateX(-46px)}70%,84%{transform:translateX(0)}96%,100%{transform:translateX(48px)}}
 body[data-phase=halloween-night] .hwsky .r0{fill:#1d0f30}
 body[data-phase=halloween-night] .hwsky .r1{fill:#150a24}
+body[data-phase=halloween-night] .hwsky :is(.crag,.tw,.roof){fill:#0c0614}
+body[data-phase=halloween-night] .hwsky .ledges{fill:#06030b}
+body[data-phase=halloween-night] .hwsky :is(.rim,.roof-rim){fill:#3a2c5a}
+body[data-phase=halloween-night] .hwsky .mold{fill:#33284e}
+body[data-phase=halloween-night] .hwsky .mshade{fill:#030106}
+body[data-phase=halloween-night] .hwsky .hood{stroke:#33284e}
+body[data-phase=halloween-night] .hwsky :is(.trac,.spire,.spike,.fly){stroke:#0c0614}
+body[data-phase=halloween-night] .hwsky .rose{fill:#d04a6a}
+body[data-phase=halloween-night] .hwsky .path{stroke:#1a1024}
+body[data-phase=halloween-night] .hwsky .win{fill:#120a1c}
+body[data-phase=halloween-night] .hwsky .win.lit{fill:#ffb347}
+body[data-phase=halloween-night] .hwsky .win.great{fill:#ffcf6a}
+body[data-phase=halloween-night] .hwsky .flick{animation:hw-window 5s ease-in-out var(--d) infinite}
+@keyframes hw-window{0%,100%{opacity:1}35%{opacity:.5}50%{opacity:.9}70%{opacity:.6}}
+body[data-phase=halloween-night] .hwsky .h0{fill:#0b0614}
+body[data-phase=halloween-night] .hwsky .h1{fill:#080410}
