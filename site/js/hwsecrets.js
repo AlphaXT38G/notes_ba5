@@ -70,3 +70,42 @@ everySecond.push(() => {
   hwPortalOpen(Math.random() < .5 ? "knight" : "sax", 14);
 });
 
+// The invisible buttons over the scene, placed from where it shows; none under a course card
+const hwSecretsPlace = () => {
+  if (!hwHits.isConnected) return;
+  hwHits.textContent = "";
+  const grid = document.querySelector(".grid"), head = document.querySelector("header");
+  const covered = r => [grid, head].some(el => {
+    if (!el) return false;
+    const c = el.getBoundingClientRect();
+    return r.right > c.left - 8 && r.left < c.right + 8 && r.bottom > c.top - 8 && r.top < c.bottom + 8;
+  });
+  const hit = (target, title, act) => {
+    const r = target.getBoundingClientRect();
+    if (!r.width || covered(r)) return;
+    const b = document.createElement("button"), w = Math.max(26, r.width), h = Math.max(26, r.height);
+    b.type = "button";
+    b.title = title;
+    b.setAttribute("aria-label", title);
+    b.style.cssText = `left:${f1(r.left + r.width / 2 - w / 2)}px;top:${f1(r.top + r.height / 2 - h / 2)}px;width:${f1(w)}px;height:${f1(h)}px`;
+    b.addEventListener("click", e => { e.stopPropagation(); act(); });
+    hwHits.append(b);
+  };
+  hwBack.querySelectorAll(".portal").forEach(el => {
+    const name = el.dataset.portal;
+    hit(el.querySelector(".win"), name === "knight" ? "A knight in the window" : "Someone playing the saxophone",
+      () => el.classList.contains("open") ? hwGo(HW_PORTAL_TO[name]) : hwPortalOpen(name, 14));
+  });
+  hwBack.querySelectorAll(".statue").forEach(el => hit(el.querySelector("image"), "A gargoyle", () => {
+    el.classList.toggle("lit");
+    if (el.classList.contains("lit")) hwNoise(.7, 160, "lowpass", .3);
+  }));
+  // the jar, half buried on the near hill, a little right of the dead tree
+  const m = hwSky.firstChild.getScreenCTM();
+  if (m) {
+    const bx = 330, x = bx * m.a + m.e, y = HW_LEFT(bx) * m.d + m.f, w = hwJar.offsetWidth || 34;
+    hwJar.style.left = `${f1(x - w / 2)}px`;
+    hwJar.style.top = `${f1(y - w * 1.25)}px`;
+    hwJar.hidden = covered({ left: x - w / 2, right: x + w / 2, top: y - w * 1.4, bottom: y });
+  }
+};
