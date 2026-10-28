@@ -31,3 +31,31 @@ const hwPaint = () => {
   hwNext.title = `Put on ${next.name}`;
   hwNext.setAttribute("aria-label", hwNext.title);
 };
+// Putting the track on, and taking it off: an <audio>, or the YouTube player (kept in the page
+// once made, paused: coming back to it plays on with no new ad)
+const hwStart = muted => {
+  const t = hwTrack();
+  if (t.file) hwAudioEl = screenTrack(t.file, { muted });
+  else { ytPlay(t.id, HW_YT, !muted); hwYtOn = true; }
+  hwMuted = muted;
+};
+const hwStop = () => {
+  dropTrack(hwAudioEl);
+  if (hwYtOn) ytPause(hwTrack().id, HW_YT);
+  hwAudioEl = null;
+  hwYtOn = false;
+};
+const hwPlay = (muted = false) => {
+  if (hwAudioEl) hwAudioEl.play().catch(() => {});
+  else if (hwYtOn) ytPlay(hwTrack().id, HW_YT, !hwMuted);
+  else hwStart(muted);
+  hwPlaying = true;
+  try { localStorage.removeItem("hw-music"); } catch (e) {}
+  hwPaint();
+};
+const hwPause = () => {
+  if (hwAudioEl) hwAudioEl.pause(); else if (hwYtOn) ytPause(hwTrack().id, HW_YT);
+  hwPlaying = false;
+  try { localStorage.setItem("hw-music", "off"); } catch (e) {}
+  hwPaint();
+};
