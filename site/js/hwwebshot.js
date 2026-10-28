@@ -41,3 +41,36 @@ const hwOrbWeb = (size, seed) => {
   }
   return c;
 };
+// Webs everywhere, over the whole window: fans in the corners, strands across, dew
+const hwWebMess = () => {
+  const c = document.createElement("canvas"), g = c.getContext("2d"), W = innerWidth, H = innerHeight, rnd = seeded(91);
+  c.width = W; c.height = H;
+  g.strokeStyle = "rgba(235,238,255,.6)";
+  g.lineCap = "round";
+  for (const [cx, cy, dir] of [[0, 0, 0], [W, 0, 1], [W, H, 2], [0, H, 3]]) {  // a fan in each corner
+    const R = Math.min(W, H) * (.35 + rnd() * .15), a0 = dir * Math.PI / 2;
+    g.lineWidth = 1.1;
+    for (let k = 0; k <= 7; k++) {
+      const a = a0 + k / 7 * Math.PI / 2;
+      g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R); g.stroke();
+    }
+    g.lineWidth = .8;
+    for (let r = R * .12; r < R; r += R * (.08 + rnd() * .05)) {
+      g.beginPath();
+      for (let k = 0; k <= 7; k++) {
+        const a = a0 + k / 7 * Math.PI / 2, m = a0 + (k - .5) / 7 * Math.PI / 2, x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
+        if (k === 0) g.moveTo(x, y);
+        else g.quadraticCurveTo(cx + Math.cos(m) * r * .9, cy + Math.sin(m) * r * .9, x, y);
+      }
+      g.stroke();
+    }
+  }
+  for (let i = 0; i < 14; i++) {  // strands across the window, sagging
+    const x0 = rnd() * W, y0 = rnd() * H * .4, x1 = rnd() * W, y1 = H * (.3 + rnd() * .7);
+    g.lineWidth = .6 + rnd();
+    g.beginPath(); g.moveTo(x0, y0); g.quadraticCurveTo((x0 + x1) / 2, Math.max(y0, y1) + rnd() * 80, x1, y1); g.stroke();
+  }
+  g.fillStyle = "rgba(255,255,255,.8)";
+  for (let i = 0; i < 160; i++) { g.beginPath(); g.arc(rnd() * W, rnd() * H, .8 + rnd() * 1.6, 0, Math.PI * 2); g.fill(); }
+  return c;
+};
