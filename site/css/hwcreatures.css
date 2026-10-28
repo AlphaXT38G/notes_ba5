@@ -56,3 +56,10 @@ body.halloween .searchrow,body.halloween .view{position:relative}
 #hwpatch .laugh svg{animation:hw-laugh .7s ease-in-out;transform-origin:50% 90%}
 @keyframes hw-laugh{20%{transform:rotate(-6deg) scale(1.04)}40%{transform:rotate(5deg)}60%{transform:rotate(-4deg) scale(1.03)}80%{transform:rotate(2deg)}}
 #hwscene.awake .hwsky .win{fill:#ffcf5a;animation:hw-window .6s ease-in-out infinite}
+/* The spider's web in the top left corner (js/hwspider.js), a canvas drawn at 1x, click-through */
+#hwweb{position:fixed;left:0;top:0;pointer-events:none;z-index:1}
+/* The spider's web in our face (js/hwwebshot.js): the flying web, the webs left everywhere, the
+   pointer caught in them (stuckpointer.js) */
+.hwshot{position:fixed;z-index:85;pointer-events:none}
+.hwshot-mess{position:fixed;left:0;top:0;width:100%;height:100%;z-index:84;pointer-events:none;opacity:0}
+#hwwebcursor{filter:drop-shadow(0 0 3px rgba(230,225,255,.8))}
