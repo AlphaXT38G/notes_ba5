@@ -45,6 +45,9 @@ site/                 the index page (HTML, CSS, JS inlined into one dist/index.
                         (his fifth button)
 tools/bartender/      remakes the bartender's layers from source.webp (open it through a local
                       server, see below): cut-out, joints, bar counter and desk bell
+tools/werewolf/       cut.py remakes Halloween's werewolf layers from source.png (Pillow):
+                      `python tools/werewolf/cut.py`
+tools/gargoyle/       cut.py cuts the castle's gargoyle out of source.png (Pillow)
 subjects.json         subjects: id, display name, exam rules, optional "weeks", "week_pdfs" and "color"
 <subject>/            course.tex, cheatsheet.tex, week/NN.tex (chapters), extra PDFs...
 _shared/              course.sty and cheatsheet.sty, shared by every course / cheat sheet
