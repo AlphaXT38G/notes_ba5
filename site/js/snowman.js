@@ -979,38 +979,10 @@ const smFreeze = (x, y, gen) => {
   setTimeout(() => { if (gen === smGen) { smDrop(frost); smDrop(blur); } }, melt);
   if (!smStill()) smSlowPointer(x, y, melt);
 };
-const smSlowPointer = (x, y, ms, gen) => {
-  const sheet = smExtra("div", "xfreeze"), icy = smExtra("div", "xcursor");
-  icy.innerHTML = '<svg viewBox="0 0 26 34" width="26" height="34"><path d="M2,2V27L8.5,21 13,31.5 17.5,29.5 13,19.5H22Z" fill="#e3f6ff" stroke="#3d8fc4" stroke-width="1.6" stroke-linejoin="round"/>' +
-    '<path d="M5,9 8,12M5,15 9,17M10,21 11,25" stroke="#9fd4f2" stroke-width="1.2" stroke-linecap="round"/><path d="M2,27v4M8.5,21l1,4" stroke="#bfe6fb" stroke-width="1.6" stroke-linecap="round"/></svg>';
-  const pos = (smMouse || [x, y]).slice(), t0 = performance.now();
-  let last = t0;
-  const frame = now => {
-    if (gen !== smGen) return;
-    const dt = Math.min(.1, (now - last) / 1000), left = ms - (now - t0);
-    last = now;
-    // slow at first (a time constant of 0.7 s), quicker as the ice melts in the last 2.5 s
-    const speed = left > 2500 ? 1.4 : 1.4 + (2500 - left) / 2500 * 20;
-    const k = 1 - Math.exp(-speed * dt), [mx, my] = smMouse || pos;
-    pos[0] += (mx - pos[0]) * k;
-    pos[1] += (my - pos[1]) * k;
-    const shiver = left > 2500 ? 1.2 : .4;
-    icy.style.transform = `translate(${f1(pos[0] + (Math.random() - .5) * shiver)}px,${f1(pos[1] + (Math.random() - .5) * shiver)}px)`;
-    if (left > 0) smLoop = requestAnimationFrame(frame);
-    else { smDrop(sheet); smDrop(icy); smLoop = null; }
-  };
-  smLoop = requestAnimationFrame(frame);
-  // a click goes to what is under the icy pointer
-  sheet.addEventListener("click", e => {
-    e.stopPropagation();
-    sheet.style.pointerEvents = icy.style.display = "none";
-    const el = document.elementFromPoint(pos[0], pos[1]);
-    sheet.style.pointerEvents = icy.style.display = "";
-    if (!el) return;
-    if (el.matches("input, textarea, select")) el.focus();
-    el.click();
-  });
-};
+// The frozen pointer: an icy one, following the real one slowly (stuckpointer.js)
+const SM_ICY = '<svg viewBox="0 0 26 34" width="26" height="34"><path d="M2,2V27L8.5,21 13,31.5 17.5,29.5 13,19.5H22Z" fill="#e3f6ff" stroke="#3d8fc4" stroke-width="1.6" stroke-linejoin="round"/>' +
+  '<path d="M5,9 8,12M5,15 9,17M10,21 11,25" stroke="#9fd4f2" stroke-width="1.2" stroke-linecap="round"/><path d="M2,27v4M8.5,21l1,4" stroke="#bfe6fb" stroke-width="1.6" stroke-linecap="round"/></svg>';
+const smSlowPointer = (x, y, ms) => { smStuck = stuckPointer({ id: "xcursor", cursor: SM_ICY, ms, from: smMouse || [x, y] }); };
 
 // The frozen pointer, gone at once (the fight needs the real one)
 const smUnfreeze = () => {
