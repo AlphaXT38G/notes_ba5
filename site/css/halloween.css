@@ -20,3 +20,9 @@ body.halloween section{position:relative;background:var(--card);border-radius:.4
 body.halloween section::after{content:"";position:absolute;right:0;top:0;width:4.2rem;height:4.2rem;pointer-events:none;opacity:.35;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60' fill='none' stroke='%23e8dccc' stroke-width='.7'%3E%3Cpath d='M60 0L8 0M60 0L20 34M60 0L42 52M60 0L60 60M60 14Q50 12 46 4M60 26Q44 22 38 6M60 40Q38 34 29 8M60 52Q32 46 18 10M52 0Q51 8 56 14M41 0Q40 14 51 22M30 0Q29 18 45 30M20 0Q20 22 38 42'/%3E%3C/svg%3E") right top/contain no-repeat}
 body.halloween .links{border-top-color:var(--line)}
 body.halloween .links a:hover,body.halloween .links a:focus-visible{background:var(--acc-bg)}
+/* "New" badge like a candy corn; progress bars striped orange and black */
+body.halloween .new{background:linear-gradient(90deg,#ffd23a 0 30%,#ff8c1f 30% 70%,#f4ecd8 70%);color:#2a1404}
+body.halloween .bar{background:rgba(255,255,255,.08)}
+body.halloween .bar span{background:repeating-linear-gradient(-45deg,#ff8c1f 0 5px,#1a0c06 5px 9px)}
+body.halloween #search,body.halloween .view,body.halloween .tools button{box-shadow:0 2px 10px rgba(0,0,0,.4)}
+
