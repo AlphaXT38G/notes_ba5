@@ -36,3 +36,7 @@
 #hwmusic.swap .pot{animation:hwm-bounce .9s ease-in-out}
 @keyframes hwm-dip{40%{transform:rotate(14deg) translateY(.8rem)}}
 @keyframes hwm-bounce{30%{transform:translateY(-.6rem) scale(1.04)}60%{transform:none}}
+/* Phones: smaller, the label too */
+@media(max-width:640px){#hwmusic .pot{width:5.6rem}#hwmusic .label{font-size:.7rem;max-width:10rem}#hwnext{left:5rem;width:2.6rem}}
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){#hwmusic *,#hwnext{animation:none!important}}
