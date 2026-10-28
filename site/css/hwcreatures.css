@@ -63,3 +63,16 @@ body.halloween .searchrow,body.halloween .view{position:relative}
 .hwshot{position:fixed;z-index:85;pointer-events:none}
 .hwshot-mess{position:fixed;left:0;top:0;width:100%;height:100%;z-index:84;pointer-events:none;opacity:0}
 #hwwebcursor{filter:drop-shadow(0 0 3px rgba(230,225,255,.8))}
+/* The invisible buttons over the scene's secrets (js/hwsecrets.js), the firefly jar half buried on
+   the near hill (its firefly wandering, its light breathing), and the jack-o'-lantern that brings
+   Halloween back from the screen they lead to */
+#hwhits button{position:fixed;padding:0;border:0;background:none;cursor:pointer;border-radius:30%}
+#hwhits button:focus-visible{outline:2px solid #ff9a2e}
+#hwjar{position:fixed;width:2.2rem;aspect-ratio:40/56;padding:0;border:0;background:none;cursor:pointer;z-index:0}
+#hwjar svg{position:relative;width:100%;height:100%;display:block;overflow:visible}
+#hwjar .fly{animation:hw-fly 7s ease-in-out infinite}
+@keyframes hw-fly{0%,100%{transform:translate(0,0)}20%{transform:translate(3px,-9px)}45%{transform:translate(-4px,-3px)}70%{transform:translate(2px,-14px)}85%{transform:translate(-3px,-8px)}}
+#hwjar .light{position:absolute;left:-120%;right:-120%;top:-60%;bottom:-40%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,120,40,.32),rgba(255,80,20,.1) 55%,transparent);animation:hw-light 2.2s ease-in-out infinite;pointer-events:none}
+#hwback{position:fixed;right:1.1rem;bottom:1.1rem;z-index:40;width:2.8rem;height:2.6rem;padding:0;background:none;border:0;cursor:pointer;opacity:.8;transition:opacity .2s,transform .2s}
+#hwback:hover,#hwback:focus-visible{opacity:1;transform:scale(1.12)}
+#hwback svg{width:100%;height:100%;filter:drop-shadow(0 0 6px rgba(255,140,40,.6))}
