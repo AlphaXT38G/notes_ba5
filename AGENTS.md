@@ -126,7 +126,17 @@ and the pointer becomes a red heart (exactly where the pointer is, never slowed;
 arrow keys) dodging bones and skull blasters, non-stop, faster and faster, before dioramas of cut
 paper that change during the fight; a hit shakes the screen. Escape, game over or the end of the
 song end it.
-The word codes (`yeti`, `armstrong`, `peace`, `kamelot`, `normal`) work on every screen, the shows
+Halloween can be played with too: the candles on the search bar (a click blows one out or lights
+it), the pumpkin pile (a click carves one, the next lights it, the next makes it laugh;
+all of them lit and the castle answers), the bats (a click catches one), the spider (its web gives
+under the pointer; a click sends it into the corner; three in a row and it spits its web in our face,
+webs everywhere and the pointer stuck in them) and the ghosts (a click and one rushes at us, dissolving); two
+castle windows open now and then on a knight and a saxophonist (clicked open, they lead to the epic
+finale and the jazz bar), the castle's tiny gargoyles light red eyes when clicked, and a firefly
+jar half buried by the dead tree opens the calm night (a jack-o'-lantern brings Halloween back); a werewolf walks the far hill
+on the left and howls at the moon at night, a witch crosses the sky on her broom, a vampire passes behind the castle's great window, and a zombie
+screamer jumps out of the top left corner, rarely (typing `scream` on Halloween shows it at once).
+The word codes (`yeti`, `boo`, `armstrong`, `peace`, `kamelot`, `normal`) work on every screen, the shows
 included. Each one is typed anywhere but the search field, letter by letter, or typed in the
 search field then Enter or the phone keyboard's search key (`onCode()` in `ui.js`, on the form's
 submit, since that key often sends no "Enter" keydown; the field is emptied and the keyboard
