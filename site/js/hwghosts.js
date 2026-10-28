@@ -127,3 +127,33 @@ const hwGhostPose = (g, v) => {
     g.joints[i * 3] = rx; g.joints[i * 3 + 1] = ry; g.joints[i * 3 + 2] = rz;
   });
 };
+// Where a point of the ghost shows in the window (for the wisps)
+const hwGhostScreen = (g, i, jitter) => {
+  const j = [g.joints[i * 3] + (Math.random() - .5) * jitter, g.joints[i * 3 + 1], g.joints[i * 3 + 2] + (Math.random() - .5) * jitter];
+  const [u, w] = hwSpectreProject(j), h = hwGhostEl.offsetHeight * g.scale / 2;
+  return [g.pos[0] + u * h, g.pos[1] - w * h];
+};
+const hwGhostFrame = now => {
+  hwGhRaf = requestAnimationFrame(hwGhostFrame);
+  const dt = Math.min(.05, (now - (hwGhLast || now)) / 1000) || .016;
+  hwGhLast = now;
+  if (!hwSpectreReady()) { if (!hwSpGl) hwGhostEnd(); return; }
+  hwGhostStep(dt);
+  const g = hwGh, pose = HW_POSES[g.kind];
+  g.scale = .55 + .55 * g.pos[2];  // near: larger
+  const w = hwGhostEl.offsetWidth, h = hwGhostEl.offsetHeight;
+  hwGhostEl.style.transform = `translate(${f1(g.pos[0] - w / 2)}px,${f1(g.pos[1] - h / 2)}px) scale(${g.scale.toFixed(3)})`;
+  // far away it wanders behind the courses, in the scene; near, in front of them
+  if (g.pos[2] < .42 && hwGhostEl.parentNode !== hwBack) hwBack.append(hwGhostEl);
+  else if (g.pos[2] > .55 && hwGhostEl.parentNode !== hwFront) hwFront.append(hwGhostEl);
+  hwSpectreDraw({
+    joints: g.joints, kind: g.kind, time: g.t, reveal: g.reveal, night: hwNight() ? 1 : 0, lamp: pose.lamp ? 1 : 0,
+    alpha: (g.flicker > 0 ? .5 : 1) * (.7 + .3 * Math.min(1, g.pos[2])),
+  });
+  // ectoplasm escaping it, from the hem and the hands
+  if (g.reveal > .3 && Math.random() < dt * 30) {
+    const from = [10, 10, 10, 6, 9][(Math.random() * 5) | 0], [x, y] = hwGhostScreen(g, from, from === 10 ? .7 : .1);
+    if (hwWisps.length < 140) hwWisps.push({ x, y, vx: g.vel[0] * .3 + (Math.random() - .5) * 20, vy: -15 - Math.random() * 25, age: 0, life: 1.6 + Math.random() * 1.6, size: (6 + Math.random() * 8) * g.scale, kind: g.kind, seed: Math.random() * 9 });
+  }
+  if (g.reveal <= 0 && (g.leaving || g.rush)) hwGhostEnd();
+};
