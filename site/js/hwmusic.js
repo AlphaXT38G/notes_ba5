@@ -73,3 +73,16 @@ hwMusic.addEventListener("click", e => {
   else if (hwPlaying) hwPause();
   else hwPlay();
 });
+// The next track: the player shows the swap (class "swap" for a moment), the new one plays
+let hwSwapEnd = null;
+hwNext.addEventListener("click", e => {
+  e.stopPropagation();
+  hwStop();
+  hwTrackAt = (hwTrackAt + 1) % HW_TRACKS.length;
+  try { localStorage.setItem("hw-track", hwTrackAt); } catch (e) {}
+  hwNext.innerHTML = HW_COCOTTE.next(HW_TRACKS[(hwTrackAt + 1) % HW_TRACKS.length]);
+  hwPlay();
+  for (const el of [hwMusic, hwNext]) { el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap"); }
+  clearTimeout(hwSwapEnd);
+  hwSwapEnd = setTimeout(() => { hwMusic.classList.remove("swap"); hwNext.classList.remove("swap"); }, 900);
+});
