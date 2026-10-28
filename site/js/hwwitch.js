@@ -42,3 +42,45 @@ const hwWitchGo = () => {
   hwWitchLast = 0;
   hwWitchRaf = requestAnimationFrame(hwWitchFrame);
 };
+const hwWitchFrame = now => {
+  hwWitchRaf = requestAnimationFrame(hwWitchFrame);
+  const dt = Math.min(.05, (now - (hwWitchLast || now)) / 1000) || .016, f = hwWitchFlight, W = innerWidth;
+  hwWitchLast = now;
+  if (f && !f.end) {
+    f.t += dt;
+    f.x += (f.ltr ? 1 : -1) * f.speed * dt;
+    const u = f.ltr ? (f.x + f.w) / (W + f.w * 2) : 1 - (f.x + f.w) / (W + f.w * 2);  // 0 to 1 across
+    const y = f.y0 + Math.sin(u * Math.PI) * f.dip + Math.sin(f.t * 2.1) * 9;
+    const slope = Math.cos(f.t * 2.1) * 9 * 2.1 / f.speed + Math.cos(u * Math.PI) * Math.PI * f.dip / (W + f.w * 2);
+    const tilt = Math.atan(slope) * 180 / Math.PI * (f.ltr ? 1 : -1);
+    hwWitch.style.transform = `translate(${f1(f.x)}px,${f1(y)}px) rotate(${f1(f.ltr ? tilt : -tilt)}deg)`;
+    // sparkles from behind the bristles
+    const tailX = f.ltr ? f.x + f.w * .02 : f.x + f.w * .98, tailY = y + f.h * .6;
+    for (let k = 0; k < 2; k++) {
+      if (hwSparks.length < 220 && Math.random() < dt * 30) {
+        hwSparks.push({ x: tailX + (Math.random() - .5) * 8, y: tailY + (Math.random() - .5) * 10, vx: (f.ltr ? -1 : 1) * (20 + Math.random() * 40), vy: 5 + Math.random() * 20,
+          age: 0, life: 1.2 + Math.random() * 1.4, size: 1.5 + Math.random() * 2.5, color: HW_SPARK_COLORS[(Math.random() * HW_SPARK_COLORS.length) | 0], phase: Math.random() * 6 });
+      }
+    }
+    if (f.ltr ? f.x > W + 40 : f.x < -f.w - 40) { f.end = true; hwWitch.remove(); }
+  }
+  // the trail: twinkling crosses with a glow, drifting down, slowing, fading
+  const g = hwTrailG;
+  g.clearRect(0, 0, hwTrailCv.width, hwTrailCv.height);
+  g.globalCompositeOperation = "lighter";
+  for (let i = hwSparks.length - 1; i >= 0; i--) {
+    const s = hwSparks[i];
+    s.age += dt;
+    if (s.age > s.life) { hwSparks.splice(i, 1); continue; }
+    s.vx *= .97; s.vy += 12 * dt;
+    s.x += s.vx * dt; s.y += s.vy * dt;
+    const a = (1 - s.age / s.life) * (.6 + .4 * Math.sin(s.age * 14 + s.phase)), r = s.size * (1 + s.age * .4);
+    g.fillStyle = `rgba(${s.color},${(a * .25).toFixed(3)})`;
+    g.beginPath(); g.arc(s.x, s.y, r * 3, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = `rgba(${s.color},${a.toFixed(3)})`;
+    g.lineWidth = 1;
+    g.beginPath(); g.moveTo(s.x - r * 2, s.y); g.lineTo(s.x + r * 2, s.y); g.moveTo(s.x, s.y - r * 2); g.lineTo(s.x, s.y + r * 2); g.stroke();
+  }
+  g.globalCompositeOperation = "source-over";
+  if (f && f.end && !hwSparks.length) hwWitchStop();
+};
