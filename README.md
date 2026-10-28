@@ -129,6 +129,22 @@ snowman: his hat, his carrot nose, tickle him, warm him up, play his buttons (an
 the lowest one, if you want a bad time)... but not too much, he throws snowballs. The
 metal show at 01:00 and the easter eggs still happen.
 
+From **October 25 to November 1** Halloween takes over, day and night alike, darker at
+night: Dracula's gothic castle on its crag behind the courses (spires, gargoyles, flying
+buttresses, its windows lit at night, a vampire passing behind the great one), a
+graveyard with a dead tree, drifting mist, falling leaves and bats; by day an
+orange haze, at night a purple sky full of stars, the full moon and some lightning, and a
+werewolf walking the far hill now and then to howl at the moon, and a witch on her broom
+crossing the sky with a trail of magic. Four candles burn on the
+search bar and the Previews button, their wax running over them, and really melt (their height is
+remembered from one visit to the next): blow them out and light them again. Carve and light
+the whole pile of pumpkins in the corner, hunt the bats, poke the big spider in its web (not too often: it spits),
+watch the ghosts wandering (a lady in white, a monk with his lantern, a shrouded one), wake the
+gargoyles of the castle, watch its windows (someone appears in them, and leads elsewhere),
+find the firefly jar...
+and beware: something may jump at you, rarely (or right away, if you type `scream`). The music (a cozy autumn lofi) plays on a
+pumpkin cocotte that simmers while it plays.
+
 Add `?screen=evening`, `?screen=closing`, `?screen=metal`, `?screen=epic`, `?screen=calm`,
 `?screen=christmas` or `?screen=christmas-night` (or `1` / `0`) to the URL to force a
 screen (or the day) at any time.
