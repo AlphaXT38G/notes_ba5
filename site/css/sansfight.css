@@ -1,7 +1,8 @@
 /* The snowman's bad time (js/sansfight.js): a fight in the style of the old pixel RPG duels. The
    winter scene rises over the page and goes black around the snowman (#xdark, under him); over
    it, where the courses were, the battle box and the stats (#xfight, which also hides the pointer:
-   the heart is drawn on its canvas, and the whole of it shakes when the heart is hit). A flame
+   the heart is drawn on its canvas, and the whole of it shakes, with the diorama, when
+   the fight lands and when the heart is hit). A flame
    rises from his glowing left eye (.eyefire, WebGL). */
 body.sansfight #xscene{z-index:86}
 #xdark{position:absolute;top:0;right:0;bottom:0;left:0;background:#000;animation:sf-in .9s ease-out both}
