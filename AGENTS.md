@@ -35,7 +35,8 @@ site/                 the index page (HTML, CSS, JS inlined into one dist/index.
                         holds the closing bartender's layers (the Gigachad meme photo, dressed as a
                         bartender by an image generator, used as an illustration in this
                         non-commercial project); frost.png is the frost the snowman's
-                        snowball leaves on the window
+                        snowball leaves on the window; screamer.webp is Halloween's zombie,
+                        werewolf/ the layers of its werewolf, gargoyle.png its castle's statues
   audio/                the screens' music, mp3 files copied to dist/audio/: jazz, metal, epic
                         and dragonborn (the epic finale's two songs), calm (the night's forest)
                         and jingle-bell-rock (Christmas); the day's
