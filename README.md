@@ -134,9 +134,13 @@ From **October 25 to November 1** Halloween takes over, day and night alike, dar
 night: Dracula's gothic castle on its crag behind the courses (spires, gargoyles, flying
 buttresses, its windows lit at night, a vampire passing behind the great one), a
 graveyard with a dead tree, drifting mist, falling leaves and bats; by day an
-orange haze and a giant pale moon risen behind the hills, at night a purple sky full of stars, the full moon and some lightning, and a
+orange haze and a giant pale moon risen behind the hills, at night a purple sky full of stars, the full moon, shooting stars and some lightning, and a
 werewolf walking the far hill now and then to howl at the moon, and a witch on her broom
-crossing the sky with a trail of magic. Four candles burn on the
+crossing the sky with a trail of magic. The scene has depth: its planes slide as the pointer moves
+and the page scrolls. The wind blows in gusts (the tree bends, the leaves fly across), banners
+ripple on the towers, smoke rises from a chimney, crows circle the keep and, at night, a light
+walks from window to window. On the hills, a scarecrow with a pumpkin head, a swinging lantern, an
+open grave, a crypt glowing green, will-o'-wisps, and a hand that rises from the earth now and then. Four candles burn on the
 search bar and the Previews button, their wax running over them, and really melt (their height is
 remembered from one visit to the next): blow them out and light them again. Carve and light
 the whole pile of pumpkins in the corner, hunt the bats, poke the big spider in its web (not too often: it spits),
