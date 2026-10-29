@@ -7,6 +7,10 @@
 body.halloween{--bg:#1c120e;--fg:#f6e7d4;--card:rgba(36,22,16,.9);--line:rgba(255,140,40,.2);--mut:#c9a78a;--acc:#ff8c1f;--acc-bg:rgba(255,140,31,.14);--new:#1a0c04;--new-bg:#ff8c1f;background:var(--bg)}
 body.halloween::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(90% 55% at 50% 105%,rgba(255,110,20,.55),transparent 70%),radial-gradient(60% 40% at 85% 80%,rgba(200,60,10,.35),transparent 70%),linear-gradient(#120a0a,#22130e 45%,#3a1c0e)}
 body.halloween .wrap{position:relative;z-index:1}
+/* The candles' warm light (hwcandles.js) reaches past the search bar's end: where the page is as
+   wide as the window (phones, tablets) it is cut at its edge, never a sideways scroll for it (clip,
+   not hidden: no scroll box, and the light still spills up and down) */
+@media(max-width:1040px){body.halloween .wrap{overflow-x:clip}}
 body.halloween[data-phase=halloween-night]{--bg:#0a0612;--fg:#efe6f6;--card:rgba(18,10,28,.9);--line:rgba(170,120,255,.16);--mut:#a99bc2;--acc:#ff9a2e;--acc-bg:rgba(255,154,46,.12);--new:#1a0c04;--new-bg:#ff9a2e}
 body.halloween[data-phase=halloween-night]::before{background:radial-gradient(70% 40% at 50% 100%,rgba(255,100,20,.22),transparent 70%),radial-gradient(40% 30% at 84% 20%,rgba(255,200,120,.16),transparent 70%),linear-gradient(#040209,#120824 45%,#2a0f33 80%,#3a1426)}
 
