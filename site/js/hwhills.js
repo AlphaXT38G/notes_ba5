@@ -42,7 +42,7 @@ const hwHillLife = () => {
     `<g transform="translate(30,-88)"><path class="crow" d="M-6,0Q-6,-8 0,-9L4,-11 5,-9 3,-8Q4,-3 0,0Z"/><path class="crow" d="M-5,-2L-11,1-5,1Z"/></g>` +
     `</g></g></g>`;
   // the signpost, leaning: two boards, the exams towards the castle
-  const sign = `<g transform="${at(918, HW_RIGHT)} rotate(-5)"><rect class="wood" x="-2.5" y="-74" width="5" height="74"/>` +
+  const sign = `<g transform="${at(1000, HW_RIGHT)} rotate(-5)"><rect class="wood" x="-2.5" y="-74" width="5" height="74"/>` +
     `<path class="board" d="M-6,-70H40L48,-63 40,-56H-6Z"/><text class="sign-t" x="2" y="-60">EXAMS</text>` +
     `<path class="board" d="M6,-50H-36L-44,-43-36,-36H6Z" transform="rotate(4 0 -43)"/><text class="sign-t" x="-34" y="-40" transform="rotate(4 0 -43)">LIBRARY</text></g>`;
   // the crypt: steps, two columns, a pediment with a cross, its door ajar on a glow
