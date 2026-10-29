@@ -49,6 +49,7 @@
     "js/hwpumpkins.js",
     "js/hwspider.js",
     "js/hwwebshot.js",
+    "js/hwwebleft.js",
     "js/hwwolf.js",
     "js/hwwitch.js",
     "js/hwghostgl.js",
