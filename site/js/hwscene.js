@@ -100,12 +100,13 @@ const HW_STARS = (() => {
 // its dome shows behind the hills and the castle, in a halo, reddened and faded by the haze (a
 // warm veil over it, then the haze thickening towards the horizon); hidden at night (CSS)
 const HW_DAYMOON = (() => {
-  const cx = 1150, cy = 500, r = 430;
+  const cx = 800, cy = 500, r = 430;
   return `<g class="daymoon"><defs>` +
-    `<radialGradient id="hw-daymoon-halo"><stop offset=".62" stop-color="#ff9a40" stop-opacity=".28"/><stop offset="1" stop-color="#ff7a20" stop-opacity="0"/></radialGradient>` +
-    `<linearGradient id="hw-daymoon-haze" x1="0" x2="0" y1="0" y2="1"><stop offset=".25" stop-color="#2a140c" stop-opacity="0"/><stop offset=".5" stop-color="#2a140c" stop-opacity=".75"/></linearGradient></defs>` +
+    `<radialGradient id="hw-daymoon-halo"><stop offset=".62" stop-color="#fff0d0" stop-opacity=".18"/><stop offset="1" stop-color="#ffe0b0" stop-opacity="0"/></radialGradient>` +
+    `<linearGradient id="hw-daymoon-haze" x1="0" x2="0" y1="0" y2="1"><stop offset=".4" stop-color="#2a140c" stop-opacity="0"/><stop offset=".6" stop-color="#2a140c" stop-opacity=".6"/></linearGradient></defs>` +
     `<circle cx="${cx}" cy="${cy}" r="${r * 1.6}" fill="url(#hw-daymoon-halo)"/>` +
-    MOON.replace("<svg ", `<svg x="${cx - r * 1.02}" y="${cy - r * 1.02}" width="${r * 2.04}" height="${r * 2.04}" `) +
+    // its own ids: the moon's gradient is also in the night's #hwmoon, not painted while hidden
+    MOON.replace(/moon-(disc|clip|soft)/g, "hw-daymoon-$1").replace("<svg ", `<svg x="${cx - r * 1.02}" y="${cy - r * 1.02}" width="${r * 2.04}" height="${r * 2.04}" `) +
     `<circle class="veil" cx="${cx}" cy="${cy}" r="${r}"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#hw-daymoon-haze)"/></g>`;
 })();
 
