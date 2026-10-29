@@ -7,8 +7,11 @@
 // take over, as over Christmas.
 //
 // The screen is made of parts, each in its own file, registered here with hwPart():
-//   hwscene.js     the scene behind the page: sky, moon, the castle (hwcastle.js), hills,
-//                  graveyard, dead tree, mist
+//   hwscene.js     the scene behind the page, in four planes: sky, moon, the castle (hwcastle.js,
+//                  hwcastlelife.js: banners, smoke, crows), hills (hwhills.js: a scarecrow, a
+//                  crypt, a lantern...), graveyard, dead tree, mist
+//   hwmotion.js    the scene alive: parallax, gusts of wind, shooting stars, a light walking
+//                  in the castle, bats from the keep, a hand rising from the earth
 //   hwsecrets.js   the castle's windows (a knight, a saxophonist) and gargoyles, the firefly jar
 //   hwcandles.js   the melting candles on the search bar, their wax run over it and Previews
 //   hwcritters.js  the bats (and the bat hunt) and the autumn leaves, on the effects canvas
@@ -71,6 +74,7 @@ const HW_PARTS = [];
 const hwPart = part => HW_PARTS.push(part);
 const hwNight = () => document.body.dataset.phase === "halloween-night";
 const hwStill = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+let hwWind = 0;  // the wind blowing through the scene, 0 (calm) to 1 (a gust): hwmotion.js
 // A short line said by someone of the scene (a laughing pumpkin): a speech bubble over the
 // element, gone after a few seconds
 const hwSay = (el, text, ms = 2600) => {
