@@ -2,17 +2,19 @@
 // The backdrop of the Halloween screens (halloween.js), in #hwscene, behind the courses:
 //   - at night only: a deep purple sky, a field of stars (a few twinkle) and the full moon (the
 //     moon of christmas.js, warmed up by CSS) rising behind the castle;
-//   - by day only: a giant moon in the haze, its top risen behind the far ridges like one more
-//     hill, the castle black against it (HW_DAYMOON);
+//   - by day only: a giant pale moon in the haze, its top risen behind the far ridges like one
+//     more hill, the castle black against it (HW_DAYMOON);
 //   - Dracula's castle on its crag, on the right (HW_CASTLE, hwcastle.js): its windows are dark
-//     by day and lit at night (some flicker like candles);
-//   - far ridges, then the graveyard hills in front: tombstones of several shapes, crosses, an
-//     obelisk, an iron fence, grass tufts; a dead tree on the left;
+//     by day and lit at night (some flicker like candles); its banners, smoke and crows
+//     (HW_CASTLE_LIFE, hwcastlelife.js);
+//   - far ridges, a haze, then the graveyard hills in front: tombstones of several shapes,
+//     crosses, an obelisk, an iron fence, grass tufts, and what stands on the hills (hwHillLife(),
+//     hwhills.js); a dead tree on the left;
 //   - two bands of mist drifting slowly at the bottom (CSS, transform only).
-// All of it is SVG built once from code, in four planes (far, mid, near, tree: see hwPlane below) (seeded random, christmas.js, so it looks the same on
+// All of it is SVG built once from code (seeded random, christmas.js, so it looks the same on
 // every visit), in a 1600 x 700 box covering the window from the bottom (the castle drawn bigger,
-// then scaled down on its crag). Nothing in it is animated but the flickering windows, the
-// vampire passing behind one, the shutters and a few stars.
+// then scaled down on its crag: hwCastleAt), in four planes (hwPlane below). What moves in it is
+// animated by CSS (transform and opacity) or by hwmotion.js (the planes, the wind, the meteors).
 const HW_W = 1600, HW_H = 700;
 // The outline of a hill: y at x, from a few waves (so tombstones can stand on it)
 const hwHill = (base, waves) => x => base + waves.reduce((y, [a, f, p]) => y + a * Math.sin(x * f + p), 0);
@@ -21,6 +23,10 @@ const HW_LEFT = hwHill(612, [[26, .0045, 2.2], [8, .017, .4]]);
 const HW_RIGHT = hwHill(640, [[18, .005, 4.1], [7, .02, 1.3]]);
 // The left hill's outline as drawn: from x 820 it slopes down in front of the right hill to the
 // bottom of the box at x 1000, instead of stopping on a cliff
+// The castle is drawn in a box of its own, larger, then put on its crag: scaled .74 about (1215, 700)
+// and moved to x 1270. hwCastleAt says where a point of its box is in the scene's
+const HW_CASTLE_FIT = { x: 1270, ox: 1215, oy: 700, k: .74 };
+const hwCastleAt = (x, y) => [HW_CASTLE_FIT.x + (x - HW_CASTLE_FIT.ox) * HW_CASTLE_FIT.k, HW_CASTLE_FIT.oy + (y - HW_CASTLE_FIT.oy) * HW_CASTLE_FIT.k];
 const HW_LEFT_END = x => x <= 820 ? HW_LEFT(x) : HW_LEFT(x) + Math.pow((x - 820) / 180, 2) * (HW_H - HW_LEFT(x));
 const hwOutline = (f, x0, x1, step = 16) => {
   let d = `M${x0},${HW_H}`;
@@ -100,8 +106,8 @@ const HW_STARS = (() => {
 })();
 
 // The giant moon of the day: the moon of christmas.js, huge, its centre on the far ridge so only
-// its dome shows behind the hills and the castle, in a halo, reddened and faded by the haze (a
-// warm veil over it, then the haze thickening towards the horizon); hidden at night (CSS)
+// its dome shows behind the hills and the castle, in a pale halo, barely warmed by a veil, the
+// haze thickening towards the horizon; hidden at night (CSS)
 const HW_DAYMOON = (() => {
   const cx = 800, cy = 500, r = 430;
   return `<g class="daymoon"><defs>` +
@@ -134,7 +140,7 @@ const hwLayers = {
   far: hwPlane("far", `${HW_STARS}<defs><linearGradient id="hw-meteor-g" gradientUnits="userSpaceOnUse" x1="0" x2="-160" y1="0" y2="0">` +
     `<stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".2" stop-color="#fff2d8" stop-opacity=".6"/><stop offset="1" stop-color="#ffd9a0" stop-opacity="0"/></linearGradient></defs>` +
     `<g class="meteors"></g>${HW_DAYMOON}<path class="ridge r0" d="${hwOutline(hwHill(430, [[30, .003, 0], [14, .009, 2]]), 0, HW_W, 20)}"/>`),
-  mid: hwPlane("mid", `<path class="ridge r1" d="${hwOutline(HW_FAR, 0, HW_W, 20)}"/><g class="castle" transform="translate(1270,700) scale(.74) translate(-1215,-700)">${HW_CASTLE}${HW_CASTLE_LIFE}</g>`),
+  mid: hwPlane("mid", `<path class="ridge r1" d="${hwOutline(HW_FAR, 0, HW_W, 20)}"/><g class="castle" transform="translate(${HW_CASTLE_FIT.x},${HW_CASTLE_FIT.oy}) scale(${HW_CASTLE_FIT.k}) translate(${-HW_CASTLE_FIT.ox},${-HW_CASTLE_FIT.oy})">${HW_CASTLE}${HW_CASTLE_LIFE}</g>`),
   near: hwPlane("near", `<rect class="haze" x="0" y="380" width="${HW_W}" height="${HW_H - 380}" fill="url(#hw-haze-g)"/>` +
     `<path class="hill h0" d="${hwOutline(HW_RIGHT, 860, HW_W)}"/><path class="hill h1" d="${hwOutline(HW_LEFT_END, 0, 1000, 10)}"/><g class="graves">${HW_GRAVES}</g>${hwHillLife()}`,
     `<defs><linearGradient id="hw-stone-g" x1="0" x2="1"><stop offset="0" class="st1"/><stop offset="1" class="st2"/></linearGradient>` +

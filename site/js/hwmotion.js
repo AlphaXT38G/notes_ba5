@@ -95,11 +95,11 @@ const hwWalkLight = () => {
   });
 };
 
-// Bats bursting from the top of the keep (its spire, in the castle's box: hwscene.js scales it .74
-// about (1215, 700) and puts it at x 1270), on the effects canvas
+// Bats bursting from the top of the keep (its spire, at (1145, 40) in the castle's box), on the
+// effects canvas
 let hwSwarmIn = 50;
 const hwSwarm = () => {
-  const m = hwFit(), x = 1270 + (1145 - 1215) * .74, y = 700 + (40 - 700) * .74;
+  const m = hwFit(), [x, y] = hwCastleAt(1145, 40);
   hwBatBurst(x * m.s + m.x + hwDepth.mid[0], y * m.s + m.y + hwDepth.mid[1], 9);
 };
 
@@ -108,7 +108,7 @@ let hwHandIn = 30;
 const hwHandRise = () => {
   const hand = hwLayers.near.querySelector(".hand");
   hand.classList.remove("rise");
-  void hand.getBBox();
+  void hand.getBBox();  // the class taken off is seen, so putting it back starts the rise again
   hand.classList.add("rise");
 };
 
