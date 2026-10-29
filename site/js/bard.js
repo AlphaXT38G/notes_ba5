@@ -487,6 +487,7 @@ bardStage.addEventListener("pointermove", e => {
   if (where !== bardHover) { bardHover = where; paintBard(); }
 });
 bardStage.addEventListener("pointerleave", () => { bardHover = null; paintBard(); });
+musicButtons.push(bardToggleBtn);  // the space bar too (screens.js)
 bardToggleBtn.addEventListener("click", e => { e.stopPropagation(); bardAudioReady(); bardToggle(); });
 bardNextBtn.addEventListener("click", e => { e.stopPropagation(); bardAudioReady(); bardChange(); });
 
