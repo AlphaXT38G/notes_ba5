@@ -395,6 +395,7 @@ const riffSound = () => {  // unmute a song that autoplayed muted
   soundAt = performance.now();
   paintAmp();
 };
+musicButtons.push(amp);  // the space bar too (screens.js)
 amp.addEventListener("click", e => {
   e.stopPropagation();
   if (performance.now() - soundAt < 600) return;  // this same click just turned the sound on
