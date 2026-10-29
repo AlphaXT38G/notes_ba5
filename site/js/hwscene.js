@@ -2,6 +2,8 @@
 // The backdrop of the Halloween screens (halloween.js), in #hwscene, behind the courses:
 //   - at night only: a deep purple sky, a field of stars (a few twinkle) and the full moon (the
 //     moon of christmas.js, warmed up by CSS) rising behind the castle;
+//   - by day only: a giant moon in the haze, its top risen behind the far ridges like one more
+//     hill, the castle black against it (HW_DAYMOON);
 //   - Dracula's castle on its crag, on the right (HW_CASTLE, hwcastle.js): its windows are dark
 //     by day and lit at night (some flicker like candles);
 //   - far ridges, then the graveyard hills in front: tombstones of several shapes, crosses, an
@@ -94,6 +96,19 @@ const HW_STARS = (() => {
   return `<g class="stars"><g fill="#fff4e0">${dots}</g><g class="twinkle" fill="#fff">${twinkle}</g></g>`;
 })();
 
+// The giant moon of the day: the moon of christmas.js, huge, its centre on the far ridge so only
+// its dome shows behind the hills and the castle, in a halo, reddened and faded by the haze (a
+// warm veil over it, then the haze thickening towards the horizon); hidden at night (CSS)
+const HW_DAYMOON = (() => {
+  const cx = 1150, cy = 500, r = 430;
+  return `<g class="daymoon"><defs>` +
+    `<radialGradient id="hw-daymoon-halo"><stop offset=".62" stop-color="#ff9a40" stop-opacity=".28"/><stop offset="1" stop-color="#ff7a20" stop-opacity="0"/></radialGradient>` +
+    `<linearGradient id="hw-daymoon-haze" x1="0" x2="0" y1="0" y2="1"><stop offset=".25" stop-color="#2a140c" stop-opacity="0"/><stop offset=".5" stop-color="#2a140c" stop-opacity=".75"/></linearGradient></defs>` +
+    `<circle cx="${cx}" cy="${cy}" r="${r * 1.6}" fill="url(#hw-daymoon-halo)"/>` +
+    MOON.replace("<svg ", `<svg x="${cx - r * 1.02}" y="${cy - r * 1.02}" width="${r * 2.04}" height="${r * 2.04}" `) +
+    `<circle class="veil" cx="${cx}" cy="${cy}" r="${r}"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#hw-daymoon-haze)"/></g>`;
+})();
+
 const hwSky = document.createElement("div");
 hwSky.className = "hwsky";
 const hwMoon = document.createElement("div");
@@ -101,7 +116,7 @@ hwMoon.id = "hwmoon";
 hwMoon.innerHTML = MOON;  // the full moon of christmas.js: on Halloween it is full, of course
 hwSky.innerHTML = `<svg viewBox="0 0 ${HW_W} ${HW_H}" preserveAspectRatio="xMidYMax slice">` +
   `<defs><linearGradient id="hw-stone-g" x1="0" x2="1"><stop offset="0" class="st1"/><stop offset="1" class="st2"/></linearGradient></defs>` +
-  `${HW_STARS}<path class="ridge r0" d="${hwOutline(hwHill(430, [[30, .003, 0], [14, .009, 2]]), 0, HW_W, 20)}"/>` +
+  `${HW_STARS}${HW_DAYMOON}<path class="ridge r0" d="${hwOutline(hwHill(430, [[30, .003, 0], [14, .009, 2]]), 0, HW_W, 20)}"/>` +
   `<path class="ridge r1" d="${hwOutline(HW_FAR, 0, HW_W, 20)}"/><g class="castle" transform="translate(1270,700) scale(.74) translate(-1215,-700)">${HW_CASTLE}</g>` +
   `<path class="hill h0" d="${hwOutline(HW_RIGHT, 860, HW_W)}"/><path class="hill h1" d="${hwOutline(HW_LEFT, 0, 900)}"/>` +
   `<g class="graves">${HW_GRAVES}</g>${HW_TREE}</svg>`;
