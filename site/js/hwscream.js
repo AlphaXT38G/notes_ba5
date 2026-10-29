@@ -5,7 +5,7 @@
 // only once the page has had a gesture: a thump, a roar, a trembling shriek and rasping breath,
 // driven into saturation). Not in the first 3 minutes of the screen, then about one minute in
 // fifteen, never twice within 12 minutes, never while the search field is used or the tab is
-// hidden, never with reduced motion. Typing scream (or hwScream() in the console) shows it at once.
+// hidden, never with reduced motion. Typing candy (or hwScream() in the console) shows it at once.
 // The photo is loaded with the screen, so it is there, decoded, the moment it jumps; only its
 // transform is animated.
 const hwScreamer = document.createElement("div"), hwZombie = new Image();
@@ -81,7 +81,7 @@ everySecond.push(() => {
 });
 // Typing s c r e a m (or in the search field then Enter: onCode, ui.js) brings it at once, on the
 // Halloween screens only
-onCode("scream", () => { if (hwOn) hwScream(); });
+onCode("candy", () => { if (hwOn) hwScream(); });
 hwPart({
   on() {
     hwScreenSince = Date.now();
