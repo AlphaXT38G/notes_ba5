@@ -73,7 +73,8 @@ floating notes) and plays background jazz ("Just One More Drink", jazz noir). Th
 music of every screen is an mp3 served with the page (`site/audio/`). It starts by
 itself; browsers only allow sound after a click, so until the page has had one it
 plays muted and the sound comes on at the first click or key press. The turntable in
-the bottom left corner plays / pauses it.
+the bottom left corner plays / pauses it, and so does the space bar, on every screen
+(anywhere but in the search field).
 
 Jazz plays until 00:45, then the bar closes until 01:00 (darker light, the neon goes
 out letter by letter, then the bartender, a Gigachad, comes over the whole screen, life-size
@@ -133,7 +134,7 @@ From **October 25 to November 1** Halloween takes over, day and night alike, dar
 night: Dracula's gothic castle on its crag behind the courses (spires, gargoyles, flying
 buttresses, its windows lit at night, a vampire passing behind the great one), a
 graveyard with a dead tree, drifting mist, falling leaves and bats; by day an
-orange haze, at night a purple sky full of stars, the full moon and some lightning, and a
+orange haze and a giant blood-orange moon risen behind the hills and the castle, at night a purple sky full of stars, the full moon and some lightning, and a
 werewolf walking the far hill now and then to howl at the moon, and a witch on her broom
 crossing the sky with a trail of magic. Four candles burn on the
 search bar and the Previews button, their wax running over them, and really melt (their height is
