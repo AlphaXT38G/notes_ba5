@@ -19,6 +19,9 @@ const hwHill = (base, waves) => x => base + waves.reduce((y, [a, f, p]) => y + a
 const HW_FAR = hwHill(470, [[22, .004, 1], [12, .011, 3]]);
 const HW_LEFT = hwHill(612, [[26, .0045, 2.2], [8, .017, .4]]);
 const HW_RIGHT = hwHill(640, [[18, .005, 4.1], [7, .02, 1.3]]);
+// The left hill's outline as drawn: from x 820 it slopes down in front of the right hill to the
+// bottom of the box at x 1000, instead of stopping on a cliff
+const HW_LEFT_END = x => x <= 820 ? HW_LEFT(x) : HW_LEFT(x) + Math.pow((x - 820) / 180, 2) * (HW_H - HW_LEFT(x));
 const hwOutline = (f, x0, x1, step = 16) => {
   let d = `M${x0},${HW_H}`;
   for (let x = x0; x <= x1; x += step) d += `L${x},${f1(f(x))}`;
@@ -133,7 +136,7 @@ const hwLayers = {
     `<g class="meteors"></g>${HW_DAYMOON}<path class="ridge r0" d="${hwOutline(hwHill(430, [[30, .003, 0], [14, .009, 2]]), 0, HW_W, 20)}"/>`),
   mid: hwPlane("mid", `<path class="ridge r1" d="${hwOutline(HW_FAR, 0, HW_W, 20)}"/><g class="castle" transform="translate(1270,700) scale(.74) translate(-1215,-700)">${HW_CASTLE}${HW_CASTLE_LIFE}</g>`),
   near: hwPlane("near", `<rect class="haze" x="0" y="380" width="${HW_W}" height="${HW_H - 380}" fill="url(#hw-haze-g)"/>` +
-    `<path class="hill h0" d="${hwOutline(HW_RIGHT, 860, HW_W)}"/><path class="hill h1" d="${hwOutline(HW_LEFT, 0, 900)}"/><g class="graves">${HW_GRAVES}</g>${hwHillLife()}`,
+    `<path class="hill h0" d="${hwOutline(HW_RIGHT, 860, HW_W)}"/><path class="hill h1" d="${hwOutline(HW_LEFT_END, 0, 1000, 10)}"/><g class="graves">${HW_GRAVES}</g>${hwHillLife()}`,
     `<defs><linearGradient id="hw-stone-g" x1="0" x2="1"><stop offset="0" class="st1"/><stop offset="1" class="st2"/></linearGradient>` +
     `<linearGradient id="hw-haze-g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" class="hz" stop-opacity="0"/><stop offset=".35" class="hz" stop-opacity=".5"/><stop offset="1" class="hz" stop-opacity=".15"/></linearGradient></defs>`),
   tree: hwPlane("tree", `<g class="treesway">${HW_TREE}</g>`),
