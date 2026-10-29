@@ -130,12 +130,12 @@ Halloween can be played with too: the candles on the search bar (a click blows o
 it), the pumpkin pile (a click carves one, the next lights it, the next makes it laugh;
 all of them lit and the castle answers), the bats (a click catches one), the spider (its web gives
 under the pointer; a click sends it into the corner; three in a row and it spits its web in our face,
-webs everywhere and the pointer stuck in them) and the ghosts (a click and one rushes at us, dissolving); two
+webs everywhere and the pointer stuck in them; the top right web and the strands across stay, letting clicks through, until the page is reloaded or they are cut by dragging across them) and the ghosts (a click and one rushes at us, dissolving); two
 castle windows open now and then on a knight and a saxophonist (clicked open, they lead to the epic
 finale and the jazz bar), the castle's tiny gargoyles light red eyes when clicked, and a firefly
 jar half buried by the dead tree opens the calm night (a jack-o'-lantern brings Halloween back); a werewolf walks the far hill
 on the left and howls at the moon at night, a witch crosses the sky on her broom, a vampire passes behind the castle's great window, and a zombie
-screamer jumps out of the top left corner, rarely (typing `scream` on Halloween shows it at once).
+screamer jumps out of the top left corner, rarely (typing `candy` on Halloween shows it at once).
 The word codes (`yeti`, `boo`, `armstrong`, `peace`, `kamelot`, `normal`) work on every screen, the shows
 included. Each one is typed anywhere but the search field, letter by letter, or typed in the
 search field then Enter or the phone keyboard's search key (`onCode()` in `ui.js`, on the form's
@@ -253,12 +253,13 @@ The search field finds subjects and documents by name (`ui.js`) and by what the 
 | `hwcritters.js` | on the effects canvas: the bats (wandering, fleeing the pointer), the autumn leaves, the bat hunt, `hwBatBurst()` |
 | `hwpumpkins.js` | the pumpkin pile spilling out of the bottom right corner, and its game: carve, light, laugh; all lit wakes the castle |
 | `hwspider.js` | the cobweb filling the top left corner (a mesh of points and threads, Verlet: it sags, breathes, gives under the pointer) and its big spider, sent into the corner by a click; poked three times within 20 s, it puffs up, shaking, and spits its web (`hwWebShot()`) |
-| `hwwebshot.js` | the spider's web in our face: an orb web (a bitmap drawn once) flying at us, growing until it covers the window, a wet slap, clinging, then sagging and thinning away; webs left everywhere (corners, strands, dew); the pointer caught in them (`stuckPointer()`) for 12 s |
+| `hwwebshot.js` | the spider's web in our face: an orb web (a bitmap drawn once) flying at us, growing until it covers the window, a wet slap, clinging, then sagging and thinning away; webs left everywhere (corners, strands, dew: `hwMessShape()`, `hwWebMess()`); the pointer caught in them (`stuckPointer()`) for 12 s |
+| `hwwebleft.js` | the webs the spit leaves for good: the top right fan and the strands across, on a click-through canvas drawn only when they change, until the page is reloaded; pressed and dragged across (a finger on a phone), a strand snaps and its halves swing down and fade, the fan tears off and falls (`hwWebsLeave()`, `hwWebsGone()`) |
 | `hwwolf.js` | the werewolf walking the far hill on the left now and then, never behind the courses (a photo cut into layers at its joints, `img/werewolf/`, by `tools/werewolf/cut.py`; walk cycle in CSS), straightening up to howl at the moon at night (Web Audio howl through the hills, a second wolf answering) |
 | `hwwitch.js` | a witch on her broom crossing the sky now and then, day and night, behind the courses (a silhouette outlined by the light, cape and hair fluttering, her cat on the broom), riding the wind, a trail of twinkling sparkles behind her on a canvas of their own |
 | `hwghostgl.js` | the ghosts' rendering: a body built as a distance field on a 14-point skeleton (tapered limbs, a robe falling to a ragged, rippling, folded hem, hair or hood), ray-marched in WebGL as glowing mist (3D noise, brighter at its edges and from above, a halo, dark eye and mouth hollows, the monk's lantern as a warm light), materialising in patches; `hwSpectreDraw()`, `hwSpectreProject()` |
 | `hwghosts.js` | the ghosts, one every 25 to 50 s, in turn: a lady in white, a monk with a lantern, a shrouded one (`HW_POSES`). They move in 3D, across and in depth (behind the courses when far, in front when near), drawn by damped springs from place to place, lingering; the body turns in 3D towards where it goes and, at rest, to look at us (the head first); the skeleton breathes, floats, leans into the motion, its hem and hair trail, the lantern swings as a pendulum; ectoplasm wisps rise from them on the effects canvas; a click and it rushes at us, dissolving |
-| `hwscream.js` | the rare zombie screamer (`img/screamer.webp`, a Web Audio zombie scream, `hwScream()`, the `scream` code) |
+| `hwscream.js` | the rare zombie screamer (`img/screamer.webp`, a Web Audio zombie scream, `hwScream()`, the `candy` code) |
 | `hwmusic.js` | Halloween music: `HW_TRACKS`, play / pause / sound / next |
 | `hwcocotte.js` | the player: the enamelled pumpkin cocotte (and the small green one holding the next track) |
 | `hwmotion.js` | the scene alive: the planes slid by the pointer and the scroll (parallax, in the effects canvas' loop; the moon, the werewolf, the castle's buttons and the jar follow their plane), gusts of wind (`#hwscene.gust`, `hwWind`: the tree bends, the leaves blow across), shooting stars, a light walking from window to window, bats bursting from the keep, the hand rising from the earth |
