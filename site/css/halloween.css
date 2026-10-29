@@ -119,11 +119,13 @@ body[data-phase=halloween-night] .hwsky .portal .shutter{fill:#120a1a;stroke:#33
 #hwmoon svg{width:100%;height:100%}
 body[data-phase=halloween-night] #hwmoon{display:block}
 @media(max-width:700px){#hwmoon{width:4.5rem;height:4.5rem;right:8vw;top:13vh}}
-/* The giant moon of the day, risen behind the far ridges like a hill: dim in the haze, under a
-   blood-orange veil; gone at night, when the real full moon is up */
-.hwsky .daymoon{opacity:.8}
-.hwsky .daymoon .veil{fill:#d2501a;opacity:.5;mix-blend-mode:multiply}
-.hwsky .daymoon svg g[stroke]{stroke:none}  /* the small craters, huge here: no rim, or they look like rings */
+/* The giant moon of the day, risen behind the far ridges like a hill: pale, its seas and craters
+   shown a little stronger than on the small moons, barely warmed by the haze; gone at night,
+   when the real full moon is up */
+.hwsky .daymoon{opacity:.85}
+.hwsky .daymoon .veil{fill:#ffb070;opacity:.12;mix-blend-mode:multiply}
+.hwsky .daymoon svg g[opacity]{opacity:.85}
+.hwsky .daymoon svg g[stroke]{stroke-width:.25}  /* the small craters, huge here: thin rims, or they look like rings */
 body[data-phase=halloween-night] .hwsky .daymoon{display:none}
 /* Mist at the bottom: two wide bands of soft fog drifting in opposite directions */
 .hwmist{position:absolute;left:0;right:0;bottom:-4vh;height:34vh;overflow:hidden}
