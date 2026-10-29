@@ -143,11 +143,11 @@ walks from window to window. On the hills, a scarecrow with a pumpkin head, a sw
 open grave, a crypt glowing green, will-o'-wisps, and a hand that rises from the earth now and then. Four candles burn on the
 search bar and the Previews button, their wax running over them, and really melt (their height is
 remembered from one visit to the next): blow them out and light them again. Carve and light
-the whole pile of pumpkins in the corner, hunt the bats, poke the big spider in its web (not too often: it spits),
+the whole pile of pumpkins in the corner, hunt the bats, poke the big spider in its web (not too often: it spits, and some of its webs stay on your screen until you cut them with a swipe),
 watch the ghosts wandering (a lady in white, a monk with his lantern, a shrouded one), wake the
 gargoyles of the castle, watch its windows (someone appears in them, and leads elsewhere),
 find the firefly jar...
-and beware: something may jump at you, rarely (or right away, if you type `scream`). The music (a cozy autumn lofi) plays on a
+and beware: something may jump at you, rarely (or right away, if you type `candy`). The music (a cozy autumn lofi) plays on a
 pumpkin cocotte that simmers while it plays.
 
 Add `?screen=evening`, `?screen=closing`, `?screen=metal`, `?screen=epic`, `?screen=calm`,
