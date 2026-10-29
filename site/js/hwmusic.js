@@ -66,6 +66,7 @@ const hwSound = () => {
   hwSoundAt = performance.now();
   hwPaint();
 };
+musicButtons.push(hwMusic);  // the space bar too (screens.js)
 hwMusic.addEventListener("click", e => {
   e.stopPropagation();
   if (performance.now() - hwSoundAt < 600) return;  // this same click just turned the sound on
