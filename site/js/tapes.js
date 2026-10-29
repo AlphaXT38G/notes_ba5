@@ -213,6 +213,7 @@ const TAPE_ACTIONS = {
   play: () => (tapePlaying ? tapePause() : tapePlay()), ff: () => tapeWind(30),
   band: () => swapTape((tapeBand + 1) % TAPE_BANDS.length, 0),
 };
+musicButtons.push(tapeKey("play"));  // the space bar too (screens.js)
 TAPE_KEYS.forEach(([k]) => tapeKey(k).addEventListener("click", () => {
   if (tapeSwapping) return;
   TAPE_ACTIONS[k]();

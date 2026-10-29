@@ -5,6 +5,8 @@
 //     is far larger than the window: it lands on our face with a wet slap;
 //   - it clings over the whole view, quivering, then sags slowly under its own weight and thins
 //     away; webs are left everywhere: in every corner, strands across the window, dew on them;
+//     they thin away too, but for the fan in the top right corner and the strands, which stay
+//     until the page is reloaded or they are cut (hwwebleft.js);
 //   - the pointer is caught in it: a sticky pointer, wrapped in threads, drags behind the real one
 //     for twelve seconds (stuckpointer.js) before it tears free.
 // The webs are bitmaps drawn once on canvases (the flying one at a large size), so growing them,
@@ -41,37 +43,51 @@ const hwOrbWeb = (size, seed) => {
   }
   return c;
 };
-// Webs everywhere, over the whole window: fans in the corners, strands across, dew
-const hwWebMess = () => {
-  const c = document.createElement("canvas"), g = c.getContext("2d"), W = innerWidth, H = innerHeight, rnd = seeded(91);
-  c.width = W; c.height = H;
-  g.strokeStyle = "rgba(235,238,255,.6)";
-  g.lineCap = "round";
-  for (const [cx, cy, dir] of [[0, 0, 0], [W, 0, 1], [W, H, 2], [0, H, 3]]) {  // a fan in each corner
-    const R = Math.min(W, H) * (.35 + rnd() * .15), a0 = dir * Math.PI / 2;
-    g.lineWidth = 1.1;
+// Webs everywhere, over the whole window: a fan in each corner, strands across, dew. Their shape
+// first (hwMessShape, in pixels of a W x H window), then drawn (hwWebMess): the top right fan and
+// the strands stay once the rest has thinned away, so they are left out of the drawing and kept by
+// hwwebleft.js, which draws them on its own canvas
+const hwMessShape = (W, H) => {
+  const rnd = seeded(91), fans = [], strands = [], dew = [];
+  for (const [cx, cy, dir] of [[0, 0, 0], [W, 0, 1], [W, H, 2], [0, H, 3]]) {
+    const R = Math.min(W, H) * (.35 + rnd() * .15), rings = [];
+    for (let r = R * .12; r < R; r += R * (.08 + rnd() * .05)) rings.push(r);
+    fans.push({ cx, cy, a0: dir * Math.PI / 2, R, rings });
+  }
+  for (let i = 0; i < 14; i++) {  // sagging between two points
+    const x0 = rnd() * W, y0 = rnd() * H * .4, x1 = rnd() * W, y1 = H * (.3 + rnd() * .7), w = .6 + rnd();
+    strands.push({ x0, y0, cx: (x0 + x1) / 2, cy: Math.max(y0, y1) + rnd() * 80, x1, y1, w });
+  }
+  for (let i = 0; i < 160; i++) dew.push([rnd() * W, rnd() * H, .8 + rnd() * 1.6]);
+  return { W, H, fans, strands, dew };
+};
+// One fan: spokes from its corner, rings sagging between them
+const hwDrawFan = (g, f) => {
+  g.lineWidth = 1.1;
+  for (let k = 0; k <= 7; k++) {
+    const a = f.a0 + k / 7 * Math.PI / 2;
+    g.beginPath(); g.moveTo(f.cx, f.cy); g.lineTo(f.cx + Math.cos(a) * f.R, f.cy + Math.sin(a) * f.R); g.stroke();
+  }
+  g.lineWidth = .8;
+  for (const r of f.rings) {
+    g.beginPath();
     for (let k = 0; k <= 7; k++) {
-      const a = a0 + k / 7 * Math.PI / 2;
-      g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R); g.stroke();
+      const a = f.a0 + k / 7 * Math.PI / 2, m = f.a0 + (k - .5) / 7 * Math.PI / 2, x = f.cx + Math.cos(a) * r, y = f.cy + Math.sin(a) * r;
+      if (k === 0) g.moveTo(x, y);
+      else g.quadraticCurveTo(f.cx + Math.cos(m) * r * .9, f.cy + Math.sin(m) * r * .9, x, y);
     }
-    g.lineWidth = .8;
-    for (let r = R * .12; r < R; r += R * (.08 + rnd() * .05)) {
-      g.beginPath();
-      for (let k = 0; k <= 7; k++) {
-        const a = a0 + k / 7 * Math.PI / 2, m = a0 + (k - .5) / 7 * Math.PI / 2, x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
-        if (k === 0) g.moveTo(x, y);
-        else g.quadraticCurveTo(cx + Math.cos(m) * r * .9, cy + Math.sin(m) * r * .9, x, y);
-      }
-      g.stroke();
-    }
+    g.stroke();
   }
-  for (let i = 0; i < 14; i++) {  // strands across the window, sagging
-    const x0 = rnd() * W, y0 = rnd() * H * .4, x1 = rnd() * W, y1 = H * (.3 + rnd() * .7);
-    g.lineWidth = .6 + rnd();
-    g.beginPath(); g.moveTo(x0, y0); g.quadraticCurveTo((x0 + x1) / 2, Math.max(y0, y1) + rnd() * 80, x1, y1); g.stroke();
-  }
+};
+const HW_WEB_INK = "rgba(235,238,255,.6)";
+const hwWebMess = shape => {
+  const c = document.createElement("canvas"), g = c.getContext("2d");
+  c.width = shape.W; c.height = shape.H;
+  g.strokeStyle = HW_WEB_INK;
+  g.lineCap = "round";
+  shape.fans.forEach((f, i) => { if (i !== 1) hwDrawFan(g, f); });  // the top right one stays (hwwebleft.js)
   g.fillStyle = "rgba(255,255,255,.8)";
-  for (let i = 0; i < 160; i++) { g.beginPath(); g.arc(rnd() * W, rnd() * H, .8 + rnd() * 1.6, 0, Math.PI * 2); g.fill(); }
+  for (const [x, y, r] of shape.dew) { g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); }
   return c;
 };
 // The stuck pointer: an arrow wrapped in threads
@@ -80,8 +96,9 @@ const HW_WEB_CURSOR = '<svg viewBox="0 0 30 36" width="30" height="36"><path d="
 let hwShotFly = null, hwShotWebs = [], hwShotStuck = null, hwShotTimers = [];
 const hwWebShot = (x, y) => {
   hwWebShotEnd();
+  hwWebsGone();  // the webs a former spit left (hwwebleft.js): this one leaves its own
   const W = innerWidth, H = innerHeight, size = Math.min(1400, Math.max(W, H) * 1.1);
-  const fly = hwOrbWeb(1024, 7), mess = hwWebMess();
+  const shape = hwMessShape(W, H), fly = hwOrbWeb(1024, 7), mess = hwWebMess(shape);
   fly.className = "hwshot";
   mess.className = "hwshot-mess";
   fly.style.cssText = `width:${size}px;height:${size}px;left:${f1(W / 2 - size / 2)}px;top:${f1(H / 2 - size / 2)}px`;
@@ -100,6 +117,7 @@ const hwWebShot = (x, y) => {
     hwNoise(.5, 260, "lowpass", .5);
     hwNoise(.25, 2400, "bandpass", .25);
     mess.animate([{ opacity: 0 }, { opacity: 1, offset: .04 }, { opacity: 1, offset: .75 }, { opacity: 0 }], { duration: HW_SHOT_MS + 2500, fill: "forwards" });
+    hwWebsLeave(shape);  // the top right fan and the strands: they stay
     hwShotFly = fly.animate([
       { transform: "scale(1.5)", opacity: 1 },
       { transform: "scale(1.47,1.53)", opacity: 1, offset: .04 },

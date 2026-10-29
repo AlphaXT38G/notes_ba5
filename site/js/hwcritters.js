@@ -4,7 +4,8 @@
 //     picks now and then, beating its wings at its own pace (faster when it climbs), swerving away
 //     from the pointer (pointerAt, stuckpointer.js); their eyes glint red at night;
 //   - autumn leaves (maple, oak and birch, in orange, red, ochre and brown) drifting down,
-//     swaying and tumbling (their width shrinks and flips as they turn over);
+//     swaying and tumbling (their width shrinks and flips as they turn over), blown across the
+//     window by the gusts of wind (hwWind, hwmotion.js);
 //   - the bat hunt: a click on a bat (anywhere but on a link or a button) catches it: it bursts in
 //     a puff of purple smoke with a squeak, "+1" rises from where it was, and another one comes
 //     back from the edge of the window a few seconds later, the tally shown with the "+1".
@@ -128,10 +129,10 @@ fxLayers.push({
     for (const l of hwLeaves) {
       l.y += l.vy * dt * l.k;
       l.sway += dt * 1.2;
-      l.x += Math.sin(l.sway) * 30 * dt;
-      l.a += l.spin * dt;
-      l.turn += dt * 2;
-      if (l.y > hwCritH + 30) Object.assign(l, hwNewLeaf(false));
+      l.x += (Math.sin(l.sway) * 30 + hwWind * 260 * l.k) * dt;  // a gust blows them across (hwmotion.js)
+      l.a += l.spin * dt * (1 + hwWind * 3);
+      l.turn += dt * (2 + hwWind * 4);
+      if (l.y > hwCritH + 30 || l.x > hwCritW + 40) Object.assign(l, hwNewLeaf(false));
     }
     for (let i = hwPuffs.length - 1; i >= 0; i--) if ((hwPuffs[i].t += dt) > 1) hwPuffs.splice(i, 1);
   },

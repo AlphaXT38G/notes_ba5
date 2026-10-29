@@ -130,12 +130,12 @@ Halloween can be played with too: the candles on the search bar (a click blows o
 it), the pumpkin pile (a click carves one, the next lights it, the next makes it laugh;
 all of them lit and the castle answers), the bats (a click catches one), the spider (its web gives
 under the pointer; a click sends it into the corner; three in a row and it spits its web in our face,
-webs everywhere and the pointer stuck in them) and the ghosts (a click and one rushes at us, dissolving); two
+webs everywhere and the pointer stuck in them; the top right web and the strands across stay, letting clicks through, until the page is reloaded or they are cut by dragging across them) and the ghosts (a click and one rushes at us, dissolving); two
 castle windows open now and then on a knight and a saxophonist (clicked open, they lead to the epic
 finale and the jazz bar), the castle's tiny gargoyles light red eyes when clicked, and a firefly
 jar half buried by the dead tree opens the calm night (a jack-o'-lantern brings Halloween back); a werewolf walks the far hill
 on the left and howls at the moon at night, a witch crosses the sky on her broom, a vampire passes behind the castle's great window, and a zombie
-screamer jumps out of the top left corner, rarely (typing `scream` on Halloween shows it at once).
+screamer jumps out of the top left corner, rarely (typing `candy` on Halloween shows it at once).
 The word codes (`yeti`, `boo`, `armstrong`, `peace`, `kamelot`, `normal`) work on every screen, the shows
 included. Each one is typed anywhere but the search field, letter by letter, or typed in the
 search field then Enter or the phone keyboard's search key (`onCode()` in `ui.js`, on the form's
@@ -233,7 +233,7 @@ The search field finds subjects and documents by name (`ui.js`) and by what the 
 | `blackhole.js` | `createBlackHole()`: the Konami black hole, ray-traced in WebGL (light bent by gravity, disk with Doppler beaming, lensed stars), on two canvases so the page falls between its sky and its disk |
 | `supernova.js` | `createSupernova()`: the multi-stage supernova that ends the Konami black hole (flash, shock wave, ejecta, nebula, pulsar), one WebGL canvas over the page |
 | `konami.js` | Konami code: black hole (CSS drawing as a fallback without WebGL) swallowing the page letter by letter, then its boxes and the music player (the Christmas garland, jar, sax and guitar fade out, `konami.css`; they stay hidden during the party theme), until it overheats, implodes and explodes in a supernova; confetti, party theme |
-| `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()`; `screenTrack()` / `preloadTrack()` / `dropTrack()` for the screens' music |
+| `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()`; `screenTrack()` / `preloadTrack()` / `dropTrack()` for the screens' music; `musicButtons`, the play / pause buttons the space bar clicks |
 | `youtube.js` | the YouTube players of the music (the day's cassettes, the Christmas radio): `ytPlay()` / `ytPause()` / `ytSound()` / `ytSeek()` / `ytWarm()`. One hidden `<iframe>` per video, kept once made (coming back to a video plays on, with no new ad), muted while YouTube plays an ad (the video's own time stands still), and made ahead by `ytWarm()` to go through its ads muted |
 | `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable playing `audio/jazz.mp3`, neon sign going out |
 | `closing.js` | closing time: the life-size bartender behind his bar (photo layers from `img/bartender/`: head nodding, forearm tapping the desk bell, chest breathing), swinging lamp, desk bell "ding" (Web Audio), typed speech, chalkboard with countdown, "Good night" |
@@ -245,20 +245,24 @@ The search field finds subjects and documents by name (`ui.js`) and by what the 
 | `sansfight.js` | the fight that comes with the snowman's Megalovania (`sfStart()` / `sfEnd()`, called by `snowman.js`): the scene over the page and black around him (`#xdark`), the battle box and stats (`#xfight`), one opening line then attacks without end (bones, blue bones, bone waves, bone rain, sine waves of bones, a turning propeller of bones, bouncing bone snowflakes, eruptions after red warnings, closing rings, skull blasters, crossing blasters, on a full-window canvas; bones turn, are outlined, glow when blue, leave trails; faster and more overlapping as it goes), the dioramas behind it (`sansscenes.js`, one every 22 s), the quakes it lands with (`SF_QUAKE_IN` as the dark falls, `SF_QUAKE_GO` when the attacks begin: jolts of the box, the diorama and him, with low thuds), the snowman rising (`sfRise()`: grown from high on him so his bottom leaves the window, floating) before a column of blue fire (`sfAura`, a WebGL fire shader on a canvas inside him, behind his drawing, flaring with the quakes; glowing sprites without WebGL; `sfShader()` sets up both shaders, this one and the eye's), hits (a crunch, the screen shaking, the box flashing red), the pixel heart exactly at the pointer (or moved by the arrow keys, then left there until the mouse moves), the flame rising from his eye (WebGL, a volume of noise ray-marched, following his gaze); reduced motion: no fight |
 | `halloween.js` | Halloween screens: date override and `boo` code, the two layers (`#hwscene` behind the page, `#hwfront` above it), the parts registry (`hwPart()`: each file below adds `{on, off, night}`), lightning, the shared Web Audio sounds (`hwAudioCtx()`, `hwNoise()`), `hwSay()` speech bubbles |
 | `hwcastle.js` | Dracula's castle, SVG built once (`HW_CASTLE`), with its gargoyle statues (`HW_GARGOYLES`, `img/gargoyle.png`) and its two shuttered windows (`HW_PORTALS`): spires with crockets and pinnacles, flat towers with machicolations and bartizans, string courses and their shadows, gargoyles, lancet windows with hoods and tracery, the rose window and the great window (a vampire passing), flying buttresses, the curtain wall with its spikes and portcullis |
-| `hwscene.js` | Halloween backdrop, SVG built once: stars and the full moon (night), ridges, the castle on its crag, graveyard hills, tombstones, iron fence, dead tree, mist |
+| `hwcastlelife.js` | what lives on the castle (`HW_CASTLE_LIFE`, drawn with it): two banners rippling on poles, a chimney's smoke in puffs, three crows circling the keep's spire (CSS) |
+| `hwhills.js` | what stands on the hills (`hwHillLife()`, in the near plane): a hand rising from the earth, a scarecrow with a pumpkin head and a crow, an open grave and its shovel, a swinging lantern, a signpost, a crypt glowing green, will-o'-wisps (night) |
+| `hwscene.js` | Halloween backdrop, SVG built once in four planes (`hwLayers`: far, mid, near, tree; `hwDepth`, where each one is slid; `hwFit()`, where a point of the scene is on the screen; `hwCastleAt()`, where a point of the castle is in the scene): stars and the full moon (night), a giant moon risen behind the ridges (day, `HW_DAYMOON`), ridges, the castle on its crag, a haze, graveyard hills, tombstones, iron fence, dead tree, mist |
 | `hwsecrets.js` | what can be clicked in the scene, through invisible buttons laid over it where no card covers it: two castle windows whose shutters open now and then on a knight (to the epic finale) and a saxophonist (to the jazz bar), the tiny gargoyle statues (red eyes), the firefly jar half buried by the tree (to the calm night); a jack-o'-lantern brings Halloween back from those screens |
 | `hwcandles.js` | four candles in SVG, three on the right end of the search bar and one on Previews, their wax run over them: layered flickering flames, light through the wax, a warm light on the page; they melt for real (height remembered, `hw-candles`), blown out / lit by a click |
 | `hwcritters.js` | on the effects canvas: the bats (wandering, fleeing the pointer), the autumn leaves, the bat hunt, `hwBatBurst()` |
 | `hwpumpkins.js` | the pumpkin pile spilling out of the bottom right corner, and its game: carve, light, laugh; all lit wakes the castle |
 | `hwspider.js` | the cobweb filling the top left corner (a mesh of points and threads, Verlet: it sags, breathes, gives under the pointer) and its big spider, sent into the corner by a click; poked three times within 20 s, it puffs up, shaking, and spits its web (`hwWebShot()`) |
-| `hwwebshot.js` | the spider's web in our face: an orb web (a bitmap drawn once) flying at us, growing until it covers the window, a wet slap, clinging, then sagging and thinning away; webs left everywhere (corners, strands, dew); the pointer caught in them (`stuckPointer()`) for 12 s |
+| `hwwebshot.js` | the spider's web in our face: an orb web (a bitmap drawn once) flying at us, growing until it covers the window, a wet slap, clinging, then sagging and thinning away; webs left everywhere (corners, strands, dew: `hwMessShape()`, `hwWebMess()`); the pointer caught in them (`stuckPointer()`) for 12 s |
+| `hwwebleft.js` | the webs the spit leaves for good: the top right fan and the strands across, on a click-through canvas drawn only when they change, until the page is reloaded; pressed and dragged across (a finger on a phone), a strand snaps and its halves swing down and fade, the fan tears off and falls (`hwWebsLeave()`, `hwWebsGone()`) |
 | `hwwolf.js` | the werewolf walking the far hill on the left now and then, never behind the courses (a photo cut into layers at its joints, `img/werewolf/`, by `tools/werewolf/cut.py`; walk cycle in CSS), straightening up to howl at the moon at night (Web Audio howl through the hills, a second wolf answering) |
 | `hwwitch.js` | a witch on her broom crossing the sky now and then, day and night, behind the courses (a silhouette outlined by the light, cape and hair fluttering, her cat on the broom), riding the wind, a trail of twinkling sparkles behind her on a canvas of their own |
 | `hwghostgl.js` | the ghosts' rendering: a body built as a distance field on a 14-point skeleton (tapered limbs, a robe falling to a ragged, rippling, folded hem, hair or hood), ray-marched in WebGL as glowing mist (3D noise, brighter at its edges and from above, a halo, dark eye and mouth hollows, the monk's lantern as a warm light), materialising in patches; `hwSpectreDraw()`, `hwSpectreProject()` |
 | `hwghosts.js` | the ghosts, one every 25 to 50 s, in turn: a lady in white, a monk with a lantern, a shrouded one (`HW_POSES`). They move in 3D, across and in depth (behind the courses when far, in front when near), drawn by damped springs from place to place, lingering; the body turns in 3D towards where it goes and, at rest, to look at us (the head first); the skeleton breathes, floats, leans into the motion, its hem and hair trail, the lantern swings as a pendulum; ectoplasm wisps rise from them on the effects canvas; a click and it rushes at us, dissolving |
-| `hwscream.js` | the rare zombie screamer (`img/screamer.webp`, a Web Audio zombie scream, `hwScream()`, the `scream` code) |
+| `hwscream.js` | the rare zombie screamer (`img/screamer.webp`, a Web Audio zombie scream, `hwScream()`, the `candy` code) |
 | `hwmusic.js` | Halloween music: `HW_TRACKS`, play / pause / sound / next |
 | `hwcocotte.js` | the player: the enamelled pumpkin cocotte (and the small green one holding the next track) |
+| `hwmotion.js` | the scene alive: the planes slid by the pointer and the scroll (parallax, in the effects canvas' loop; the moon, the werewolf, the castle's buttons and the jar follow their plane), gusts of wind (`#hwscene.gust`, `hwWind`: the tree bends, the leaves blow across), shooting stars, a light walking from window to window, bats bursting from the keep, the hand rising from the earth |
 | `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
 | `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
 | `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), `leaveEpic()`, `leaveShows()` (a code typed during a show ends it), the `kamelot` code (the finale at any time) |
@@ -272,7 +276,7 @@ The search field finds subjects and documents by name (`ui.js`) and by what the 
 ### CSS files, in cascade order
 
 `base.css` (layout, cards, search, previews) → `flames.css` → `surprise.css` → `jazz.css` → `closing.css` →
-`metal.css` → `epic.css` → `bard.css` → `christmas.css` → `snowman.css` → `sansfight.css` → `halloween.css` → `hwcreatures.css` → `hwmusic.css` → `calm.css` → `tapes.css` → `screens.css` (effects canvas, view transitions) → `konami.css`.
+`metal.css` → `epic.css` → `bard.css` → `christmas.css` → `snowman.css` → `sansfight.css` → `halloween.css` → `hwlife.css` → `hwcreatures.css` → `hwmusic.css` → `calm.css` → `tapes.css` → `screens.css` (effects canvas, view transitions) → `konami.css`.
 The Konami file is last on purpose: during its animation `body.rift .wrap` must win over every
 theme's `.wrap` rule.
 
@@ -314,7 +318,7 @@ Current screens:
 | `calm` | `calm` | 01:01:51 – 05:30, unless the epic finale runs (a `normal` screen), or the `peace` code, or the Christmas jar | `calm.js`, `calm.css` |
 | `christmas` | `christmas` | Dec 1 – Jan 3, 06:00 – 18:00 (replaces the day) | `christmas.js`, `christmas.css` |
 | `christmas-night` | `christmas` | Dec 1 – Jan 3, 18:00 – 06:00 (replaces the day, the jazz bar and the calm night) | `christmas.js`, `christmas.css` |
-| `halloween` | `halloween` | Oct 25 – Nov 1, 07:00 – 18:00 (replaces the day, the jazz bar and the calm night), or the `boo` code | `halloween.js`, `hw*.js`, `halloween.css`, `hwcreatures.css`, `hwmusic.css` |
+| `halloween` | `halloween` | Oct 25 – Nov 1, 07:00 – 18:00 (replaces the day, the jazz bar and the calm night), or the `boo` code | `halloween.js`, `hw*.js`, `halloween.css`, `hwlife.css`, `hwcreatures.css`, `hwmusic.css` |
 | `halloween-night` | `halloween` | Oct 25 – Nov 1, 18:00 – 07:00 | the same |
 
 The Christmas screens depend on the date, so they are an override rather than a `SCHEDULE` slot:
@@ -406,6 +410,8 @@ Example: a calm "dawn" screen from 06:00 to 07:00.
   YouTube players left (the Christmas radio, the day's cassettes in `tapes.js`) go through
   `youtube.js`: hidden `<iframe>`s driven by `postMessage` commands, never removed, muted during
   ads. Never make a YouTube `<iframe>` of your own: it would play the ads aloud.
+- **A new music player** puts its play / pause button in `musicButtons` (`screens.js`): the
+  space bar clicks it, on every screen, so the key does whatever a click on it does.
 
 ### Phones and older browsers
 

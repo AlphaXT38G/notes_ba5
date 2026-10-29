@@ -328,6 +328,7 @@ const calmSound = () => {  // the first gesture: let the night be heard
   calmSoundAt = performance.now();
   paintCalmJar();
 };
+musicButtons.push(calmJar);  // the space bar too (screens.js)
 calmJar.addEventListener("click", e => {
   e.stopPropagation();
   if (performance.now() - calmSoundAt < 600) return;  // this same click just turned the sound on

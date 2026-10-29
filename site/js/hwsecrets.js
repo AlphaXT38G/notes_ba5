@@ -80,8 +80,10 @@ const hwSecretsPlace = () => {
     const c = el.getBoundingClientRect();
     return r.right > c.left - 8 && r.left < c.right + 8 && r.bottom > c.top - 8 && r.top < c.bottom + 8;
   });
+  const [ox, oy] = hwDepth.mid;  // the castle's plane is slid by the parallax: placed as if it were not
   const hit = (target, title, act) => {
-    const r = target.getBoundingClientRect();
+    const r0 = target.getBoundingClientRect();
+    const r = { left: r0.left - ox, right: r0.right - ox, top: r0.top - oy, bottom: r0.bottom - oy, width: r0.width, height: r0.height };
     if (!r.width || covered(r)) return;
     const b = document.createElement("button"), w = Math.max(26, r.width), h = Math.max(26, r.height);
     b.type = "button";
@@ -100,14 +102,12 @@ const hwSecretsPlace = () => {
     el.classList.toggle("lit");
     if (el.classList.contains("lit")) hwNoise(.7, 160, "lowpass", .3);
   }));
-  // the jar, half buried on the near hill, a little right of the dead tree
-  const m = hwSky.firstChild.getScreenCTM();
-  if (m) {
-    const bx = 330, x = bx * m.a + m.e, y = HW_LEFT(bx) * m.d + m.f, w = hwJar.offsetWidth || 34;
-    hwJar.style.left = `${f1(x - w / 2)}px`;
-    hwJar.style.top = `${f1(y - w * 1.25)}px`;
-    hwJar.hidden = covered({ left: x - w / 2, right: x + w / 2, top: y - w * 1.4, bottom: y });
-  }
+  // the jar, half buried on the near hill, a little right of the dead tree (where the hill is,
+  // the planes not slid: hwmotion.js slides it with the near plane)
+  const m = hwFit(), bx = 330, x = bx * m.s + m.x, y = HW_LEFT(bx) * m.s + m.y, w = hwJar.offsetWidth || 34;
+  hwJar.style.left = `${f1(x - w / 2)}px`;
+  hwJar.style.top = `${f1(y - w * 1.25)}px`;
+  hwJar.hidden = covered({ left: x - w / 2, right: x + w / 2, top: y - w * 1.4, bottom: y });
 };
 hwJar.addEventListener("click", e => { e.stopPropagation(); hwGo("peace"); });
 const hwForget = () => {

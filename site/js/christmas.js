@@ -1109,6 +1109,7 @@ const carolsSound = () => {
   carolsSoundAt = performance.now();
   paintDeck();
 };
+musicButtons.push(xmasDeck);  // the space bar too (screens.js)
 xmasDeck.addEventListener("click", e => {
   e.stopPropagation();
   if (performance.now() - carolsSoundAt < 600) return;  // this same click just turned the sound on
