@@ -9,7 +9,10 @@
 // remembered; without a user gesture yet it starts muted and the sound comes at the first click
 // or key press.
 const HW_TRACKS = [
-  { id: "_jH2oTNRe7g", name: "Cozy autumn lofi", short: "Autumn", color: "#d9622b" },
+  { id: "FEKpdb4Kkp4", name: "Lofi Girl - Halloween 2025", short: "2025", color: "#d9622b" },
+  { id: "0sfDth4lMLc", name: "Spooky lofi radio", short: "Spooky", color: "#6a3d9a" },
+  { id: "D6TSIHxNzfU", name: "Lofi Girl - Halloween 2024", short: "2024", color: "#b8460e" },
+  { id: "vuPhCSunt5U", name: "Autumn village ambience", short: "Cozy", color: "#7a5a2a" },
 ];
 const HW_YT = {};  // the Halloween player, as the owner of a YouTube player (youtube.js)
 let hwTrackAt = (() => { try { return Math.min(HW_TRACKS.length - 1, +localStorage.getItem("hw-track") || 0); } catch (e) { return 0; } })();
