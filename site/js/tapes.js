@@ -3,9 +3,9 @@
 // (brushed aluminium, smoked cassette door, two backlit VU meters, a red tape counter and a row of
 // piano keys). The music comes in bands, the deck's "stations": the Lofi Girl mixes from YouTube,
 // then the music of the screens (jazz bar, late night, metal show, epic finale, Christmas,
-// Halloween), then Radio Impuls live. A tape is a YouTube video (`id`, a hidden <iframe> driven by postMessage
-// commands, like the Christmas radio: youtube.js, muted during ads), an mp3 of site/audio (`file`) or a live stream (`stream`),
-// both played by an <audio>.
+// Halloween), then Radio Impuls live. A tape is a YouTube video (`id`, a hidden <iframe> driven by
+// postMessage commands, like the Christmas radio: youtube.js, muted during ads), an mp3 of
+// site/audio (`file`) or a live stream (`stream`), both played by an <audio>.
 // The keys: ⏏ puts in the next tape of the band, ◀◀ / ▶▶ wind 30 s back / forward, ▶❚❚ plays or
 // pauses, and the station key goes to the next band (its name shows on the counter a moment).
 // As the Christmas turntable's sleeve, the next tape of the band waits in its case leaning behind
@@ -39,12 +39,8 @@ const TAPE_BANDS = [
     { file: "jingle-bell-rock.mp3", icon: "🔔", short: "Rock", name: "Jingle Bell Rock", color: "#c8102e" },
     { id: "XSXEaikz0Bc", icon: "🎄", short: "Xmas", name: "Christmas radio", color: "#1f7a3e", live: true },
   ] },
-  { name: "Halloween", short: "SPOOKY", tapes: [
-    { id: "FEKpdb4Kkp4", icon: "🎃", short: "2025", name: "Lofi Girl - Halloween 2025", color: "#d9622b" },
-    { id: "0sfDth4lMLc", icon: "👻", short: "Spooky", name: "Spooky lofi radio", color: "#6a3d9a", live: true },
-    { id: "D6TSIHxNzfU", icon: "🦇", short: "2024", name: "Lofi Girl - Halloween 2024", color: "#b8460e" },
-    { id: "vuPhCSunt5U", icon: "🏚️", short: "Cozy", name: "Autumn village ambience", color: "#7a5a2a" },
-  ] },
+  // the Halloween screens' tracks (hwmusic.js), the label in their tape colour
+  { name: "Halloween", short: "SPOOKY", tapes: HW_TRACKS.map(t => Object.assign({}, t, { color: t.tape })) },
   { name: "Radio Impuls", short: "IMPULS", tapes: [
     { stream: "https://stream.sepia.sk:8000/impuls128.mp3", icon: "📡", short: "Impuls", name: "Radio Impuls (live)", color: "#e30613", live: true },
   ] },

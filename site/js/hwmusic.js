@@ -3,7 +3,9 @@
 // enamelled cast-iron pot on a wooden board, drawn in hwcocotte.js): while the music plays its lid
 // lifts and bobs as if simmering, and steam escapes.
 // The tracks are HW_TRACKS: a YouTube video (id, played through youtube.js, its ads muted) or an
-// mp3 of site/audio (file, screenTrack); its colour is the soup's while it plays. As the
+// mp3 of site/audio (file, screenTrack); its colour is the soup's while it plays. The day's
+// cassette deck plays them too (tapes.js: icon, live, and tape, its label's colour, dark enough
+// for white letters). As the
 // Christmas turntable: a click on the player plays / pauses; the choice and the pause are
 // remembered; without a user gesture yet it starts muted and the sound comes at the first click
 // or key press.
@@ -15,10 +17,10 @@
 // hwcocotte.js), and that track plays; then the flask comes back to its place on the plank,
 // refilled with the track that was playing. Cooking the next music, in short.
 const HW_TRACKS = [
-  { id: "FEKpdb4Kkp4", name: "Lofi Girl - Halloween 2025", short: "2025", color: "#ff8a2a" },
-  { id: "0sfDth4lMLc", name: "Spooky lofi radio", short: "Spooky", color: "#a66bff" },
-  { id: "D6TSIHxNzfU", name: "Lofi Girl - Halloween 2024", short: "2024", color: "#62d03e" },
-  { id: "vuPhCSunt5U", name: "Autumn village ambience", short: "Cozy", color: "#e8443a" },
+  { id: "FEKpdb4Kkp4", name: "Lofi Girl - Halloween 2025", short: "2025", icon: "🎃", color: "#ff8a2a", tape: "#c4561c" },
+  { id: "0sfDth4lMLc", name: "Spooky lofi radio", short: "Spooky", icon: "👻", color: "#a66bff", tape: "#6a3d9a", live: true },
+  { id: "D6TSIHxNzfU", name: "Lofi Girl - Halloween 2024", short: "2024", icon: "🦇", color: "#62d03e", tape: "#3d7a24" },
+  { id: "vuPhCSunt5U", name: "Autumn village ambience", short: "Cozy", icon: "🏚️", color: "#e8443a", tape: "#a8302a" },
 ];
 const HW_YT = {};  // the Halloween player, as the owner of a YouTube player (youtube.js)
 let hwTrackAt = (() => { try { return Math.min(HW_TRACKS.length - 1, +localStorage.getItem("hw-track") || 0); } catch (e) { return 0; } })();
