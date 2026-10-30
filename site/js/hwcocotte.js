@@ -7,12 +7,11 @@
 // an embossed seam and a curly golden stem for a knob; two loop handles on the sides. Under the
 // lid, a soup of orange bubbles.
 // While the music plays (CSS, css/hwmusic.css), the lid lifts and bobs as if the pot simmered,
-// steam escapes from under it, the soup bubbles and notes rise. The next track (when there are
-// several) waits in a small green cocotte of the same make, beside it.
-const HW_ENAMEL = {
-  orange: ["#ffa64a", "#f26a1b", "#c9260f", "#5e1004"],
-  green: ["#6f9a86", "#3f6a5a", "#24463b", "#0c1c17"],
-};
+// steam escapes from under it, the soup bubbles and notes rise. The soup is the colour of the
+// track playing (--soup, --bubble, set by hwmusic.js).
+// The other tracks are potions in glass flasks on a plank beside it (hwFlaskSvg): three shapes
+// of flask, the potion in the track's colour, a cork, a gleam on the glass.
+const HW_ENAMEL = ["#ffa64a", "#f26a1b", "#c9260f", "#5e1004"];  // the pot's orange enamel, light to dark
 // The pot's ribs: the visible ones, at these angles from the front
 const HW_RIBS = [-1.3, -.9, -.48, 0, .48, .9, 1.3];
 const hwCocotteSvg = (id, colors) => {
@@ -64,8 +63,8 @@ const hwCocotteSvg = (id, colors) => {
     `<path d="M62,100Q58,124 66,146M86,100Q84,120 88,148" stroke="#fff" stroke-opacity=".35" stroke-width="5" fill="none" stroke-linecap="round"/>` +
     `<path d="M64,104Q61,116 63,126" stroke="#fff" stroke-opacity=".8" stroke-width="1.6" fill="none" stroke-linecap="round"/>` +
     // inside, under the lid: the dark pot and the soup, bubbling
-    `<ellipse cx="100" cy="90" rx="74" ry="12" fill="${shade}"/><ellipse class="soup" cx="100" cy="92" rx="66" ry="9" fill="#ff8a2a"/>` +
-    `<g class="bubbles" fill="#ffc06a"><circle cx="76" cy="92" r="3"/><circle cx="104" cy="94" r="2.4"/><circle cx="126" cy="91" r="2.8"/></g>` +
+    `<ellipse cx="100" cy="90" rx="74" ry="12" fill="${shade}"/><ellipse class="soup" cx="100" cy="92" rx="66" ry="9"/>` +
+    `<g class="bubbles"><circle cx="76" cy="92" r="3"/><circle cx="104" cy="94" r="2.4"/><circle cx="126" cy="91" r="2.8"/></g>` +
     // the lid: rim, ribbed dome, seam of beads, gleams, golden stem
     `<g class="lid"><ellipse cx="100" cy="89" rx="80" ry="14" fill="${mid}"/><ellipse cx="100" cy="90" rx="80" ry="13" fill="#000" fill-opacity=".18"/>` +
     `<path d="M20,88C22,58 58,40 100,38C142,40 178,58 180,88A80,14 0 0 1 20,88Z" fill="url(#${id}d)"/>` +
@@ -78,9 +77,28 @@ const hwCocotteSvg = (id, colors) => {
     `<path d="M100,44C97,32 100,22 108,16C114,11 123,13 123,20C123,25 117,26 116,22" stroke="url(#${id}g)" stroke-width="7" fill="none" stroke-linecap="round"/>` +
     `<path d="M99,38C97,30 100,22 107,17" stroke="#fff6c8" stroke-opacity=".8" stroke-width="1.5" fill="none" stroke-linecap="round"/></g></svg>`;
 };
-// The player's drawing (steam and notes over it), and the next track's prop, with its name
+// A flask of potion, in a viewBox of 40 x 60: the glass (its outline also clips the potion), the
+// level of the potion, where its bubbles rise. Three shapes, taken in turn along the plank.
+const HW_FLASKS = [
+  { glass: "M16,8H24V23A17,17 0 1 1 16,23Z", level: 34 },  // round flask
+  { glass: "M15,8H25V16Q34,19 34,27V55Q34,58 31,58H9Q6,58 6,55V27Q6,19 15,16Z", level: 28 },  // square bottle
+  { glass: "M16,8H24V22L35,51Q37,58 30,58H10Q3,58 5,51L16,22Z", level: 36 },  // conical flask
+];
+const hwFlaskSvg = (id, shape, color, light) => {
+  const { glass, level } = HW_FLASKS[shape];
+  return `<svg viewBox="0 0 40 60" aria-hidden="true"><defs><clipPath id="${id}c"><path d="${glass}"/></clipPath>` +
+    `<radialGradient id="${id}g" cx=".4" cy=".35"><stop offset="0" stop-color="${light}"/><stop offset="1" stop-color="${color}"/></radialGradient></defs>` +
+    `<g clip-path="url(#${id}c)"><g class="potion"><rect x="0" y="${level}" width="40" height="${60 - level}" fill="url(#${id}g)"/>` +
+    `<rect x="0" y="${level}" width="40" height="1.6" fill="${light}" opacity=".8"/></g>` +
+    `<g class="fizz" fill="${light}"><circle cx="17" cy="54" r="1.3"/><circle cx="24" cy="56" r="1"/></g></g>` +
+    `<path d="${glass}" fill="rgba(220,236,245,.14)" stroke="rgba(235,245,250,.7)" stroke-width="1.3"/>` +
+    `<path d="M11,${level + 4}Q9,${level + 12} 11,${level + 18}" stroke="#fff" stroke-opacity=".6" stroke-width="1.6" fill="none" stroke-linecap="round"/>` +
+    `<g class="cork"><rect x="14.5" y="2" width="11" height="8" rx="2" fill="#8a5a32"/><rect x="14.5" y="2" width="11" height="2.2" rx="1" fill="#b07a4a"/></g></svg>`;
+};
+// The player's drawing (steam, notes and the stream of a potion poured into it, over it), and a
+// flask with its paper label
 const HW_COCOTTE = {
-  html: () => `<span class="pot">${hwCocotteSvg("hwco", HW_ENAMEL.orange)}<i class="steam"></i><i class="steam"></i><i class="steam"></i>` +
-    `<b class="note">♪</b><b class="note">♫</b></span>`,
-  next: track => `<span class="pot">${hwCocotteSvg("hwcn", HW_ENAMEL.green)}</span><span class="tag">${track.short}</span>`,
+  html: () => `<span class="pot">${hwCocotteSvg("hwco", HW_ENAMEL)}<i class="steam"></i><i class="steam"></i><i class="steam"></i>` +
+    `<b class="note">♪</b><b class="note">♫</b><i class="stream"></i></span>`,
+  flask: (slot, track, light) => `${hwFlaskSvg(`hwfl${slot}`, slot % HW_FLASKS.length, track.color, light)}<span class="tag">${track.short}</span>`,
 };

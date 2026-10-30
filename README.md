@@ -148,8 +148,9 @@ watch the ghosts wandering (a lady in white, a monk with his lantern, a shrouded
 gargoyles of the castle, watch its windows (someone appears in them, and leads elsewhere),
 find the firefly jar...
 and beware: something may jump at you, rarely (or right away, if you type `candy`). The music (Lofi Girl's Halloween mixes, a spooky
-lofi radio and an autumn village ambience; the next one waits in the small green pot beside it)
-plays on a pumpkin cocotte that simmers while it plays.
+lofi radio and an autumn village ambience) plays on a pumpkin cocotte that simmers while it
+plays; the other tracks wait beside it as potions in flasks: pour one into the pot to cook the
+next music.
 
 Add `?screen=evening`, `?screen=closing`, `?screen=metal`, `?screen=epic`, `?screen=calm`,
 `?screen=christmas`, `?screen=christmas-night`, `?screen=halloween` or
