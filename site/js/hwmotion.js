@@ -3,7 +3,7 @@
 //   - depth: its four planes (far, mid, near, tree) slide by different amounts as the pointer
 //     moves and as the page scrolls, the nearest the most (parallax), and drift a little by
 //     themselves when nothing moves (phones); what is laid over a plane from outside follows it
-//     (the night moon, the werewolf, the castle's buttons, the jar). Done in the effects canvas'
+//     (the werewolf, the castle's buttons, the jar). Done in the effects canvas'
 //     frame loop (fx.js, mode "halloween"), translate only;
 //   - the wind: a gust every 25 s to 1 min 10, for 7 s (#hwscene.gust: the tree bends, the
 //     scarecrow and the lantern sway, the banners flap, css/hwlife.css), hwWind rising and falling
@@ -41,7 +41,6 @@ fxLayers.push({
       hwLayers[n].style.translate = `${f1(d[0])}px ${f1(d[1])}px`;
     }
     const at = n => `${f1(hwDepth[n][0])}px ${f1(hwDepth[n][1])}px`;
-    hwMoon.style.translate = at("far");
     hwWolf.style.translate = hwHits.style.translate = at("mid");
     hwJar.style.translate = at("near");
   },
