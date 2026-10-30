@@ -150,7 +150,8 @@ find the firefly jar...
 and beware: something may jump at you, rarely (or right away, if you type `candy`). The music (Lofi Girl's Halloween mixes, a spooky
 lofi radio and an autumn village ambience) plays on a pumpkin cocotte that simmers while it
 plays; the other tracks wait beside it as potions in flasks: pour one into the pot to cook the
-next music.
+next music (shaken, poured, the empty flask thrown in after it, and the smoke that rises takes a
+spooky shape).
 
 Add `?screen=evening`, `?screen=closing`, `?screen=metal`, `?screen=epic`, `?screen=calm`,
 `?screen=christmas`, `?screen=christmas-night`, `?screen=halloween` or

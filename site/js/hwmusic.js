@@ -8,10 +8,12 @@
 // remembered; without a user gesture yet it starts muted and the sound comes at the first click
 // or key press.
 // The other tracks wait beside the cocotte as potions in flasks, on a little plank (#hwshelf):
-// a click on one pours it into the pot. The flask flies over it and tips, the lid lifts, the
-// potion runs in, the soup takes its colour in a puff of steam of that colour, and that track
-// plays; then the flask comes back to its place on the plank, refilled with the track that was
-// playing. Cooking the next music, in short.
+// a click on one pours it into the pot. The flask flies over it and is shaken, its cork pops,
+// the lid lifts, it tips and the potion runs in, then the empty flask is thrown in too; the lid
+// falls back, the soup takes the potion's colour in a puff of steam of that colour, a cloud of
+// smoke shaped like a skull, a bat, a jack-o'-lantern or a ghost rises from the pot (HW_SMOKES,
+// hwcocotte.js), and that track plays; then the flask comes back to its place on the plank,
+// refilled with the track that was playing. Cooking the next music, in short.
 const HW_TRACKS = [
   { id: "FEKpdb4Kkp4", name: "Lofi Girl - Halloween 2025", short: "2025", color: "#ff8a2a" },
   { id: "0sfDth4lMLc", name: "Spooky lofi radio", short: "Spooky", color: "#a66bff" },
@@ -116,6 +118,20 @@ const hwSwitch = slot => {
   hwSoup();
   hwPlay();
 };
+// The cloud of smoke over the pot: a shape other than the last one, frayed its own way
+// (HW_SMOKES is drawn in hwcocotte.js, loaded after this file: only read on a pour)
+let hwPotSmokeLast = -1;
+const hwPotSmoke = color => {
+  const smoke = new Image(), n = HW_SMOKES.length;
+  hwPotSmokeLast = hwPotSmokeLast < 0 ? Math.floor(Math.random() * n) : (hwPotSmokeLast + 1 + Math.floor(Math.random() * (n - 1))) % n;
+  smoke.className = "smoke";
+  smoke.alt = "";
+  smoke.src = hwSmokeSrc(hwPotSmokeLast, color, Math.floor(Math.random() * 1000));
+  hwMusic.append(smoke);
+  setTimeout(() => smoke.remove(), 2800);  // its rise is over (css/hwmusic.css)
+};
+// The pour, timed with css/hwmusic.css (hwm-pour: 2.2 s): flying over the pot until 0.45 s,
+// shaken until 0.9 s, uncorked, tipped at 1.1 s, poured until 1.6 s, thrown in at 2.1 s
 const hwPour = (slot, flask) => {
   if (hwPouring) return;
   if (hwStill()) {  // reduced motion: no flight, the flask simply changes
@@ -124,28 +140,33 @@ const hwPour = (slot, flask) => {
     return;
   }
   hwPouring = true;
-  // where the flask flies: tipped (rotate(-115deg), css/hwmusic.css), its neck is 0.45 of its
-  // height to the left of its centre and 0.21 below it; that neck goes over the middle of the pot
+  // where the flask flies: tipped (rotate(-115deg)), its neck is 0.45 of its height to the left
+  // of its centre and 0.21 below it; that neck goes over the middle of the pot (--dx, --dy). Then
+  // it falls into the soup, in the middle of the pot (--tx, --ty)
   const pot = hwMusic.querySelector(".pot").getBoundingClientRect(), f = flask.getBoundingClientRect();
-  const neckX = pot.left + pot.width / 2, neckY = pot.top + pot.height * .1;
-  flask.style.setProperty("--dx", `${f1(neckX + .45 * f.height - (f.left + f.width / 2))}px`);
-  flask.style.setProperty("--dy", `${f1(neckY - .21 * f.height - (f.top + f.height / 2))}px`);
+  const potX = pot.left + pot.width / 2, fx = f.left + f.width / 2, fy = f.top + f.height / 2;
+  flask.style.setProperty("--dx", `${f1(potX + .45 * f.height - fx)}px`);
+  flask.style.setProperty("--dy", `${f1(pot.top + pot.height * .1 - .21 * f.height - fy)}px`);
+  flask.style.setProperty("--tx", `${f1(potX - fx)}px`);
+  flask.style.setProperty("--ty", `${f1(pot.top + pot.height * .5 - fy)}px`);
   hwMusic.style.setProperty("--pour", HW_TRACKS[hwShelf[slot]].color);
   flask.classList.add("pour");
   hwMusic.classList.remove("puff");
   hwMusic.classList.add("pouring");
   hwPourTimers = [
-    setTimeout(() => {  // the potion is in: the new soup, its steam, its music
+    setTimeout(() => {  // the flask is in: the new soup, its steam and smoke, its music
       hwSwitch(slot);
-      hwMusic.style.setProperty("--puff", hwTint(hwTrack().color, .3));
+      const puff = hwTint(hwTrack().color, .3);
+      hwMusic.style.setProperty("--puff", puff);
       hwMusic.classList.add("puff");
-    }, 1000),
-    setTimeout(() => {  // the flask back on the plank, refilled
+      hwPotSmoke(puff);
+    }, 2100),
+    setTimeout(() => {  // a new flask on the plank, filled with the track that was playing
       hwMusic.classList.remove("pouring");
       hwShelfEl.replaceChild(hwFlask(slot, true), flask);
       hwPouring = false;
-    }, 1550),
-    setTimeout(() => hwMusic.classList.remove("puff"), 2400),  // its steam gone: the simmering one again
+    }, 2500),
+    setTimeout(() => hwMusic.classList.remove("puff"), 3500),  // its steam gone: the simmering one again
   ];
 };
 // The YouTube tracks made ahead, through their ads, once the player is reached for
