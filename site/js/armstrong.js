@@ -7,8 +7,9 @@
 // calm night, Christmas and Halloween are replaced); typed during a show, it ends it first
 // (leaveShows, epic.js).
 // Typed again in the jazz bar, it goes back to the normal screen of that moment: what the clock
-// gives without any easter egg nor forced screen. So it drops the jazz egg, the yeti and boo eggs,
-// the Christmas sax and a forced ?screen=..., and shows the day (or the calm night after the metal
+// gives without any easter egg nor forced screen. So it drops the jazz egg (the Christmas sax and
+// Halloween's saxophonist open the bar the same way), the yeti and boo eggs and a forced
+// ?screen=..., and shows the day (or the calm night after the metal
 // show), the jazz bar at bar time (it then stays), or Christmas during the Christmas period.
 // Typing yeti in the bar (Christmas egg) closes it too, so that Christmas actually shows up, even
 // when the bar was opened over Christmas (jazzEggYeti).
@@ -24,10 +25,11 @@ OVERRIDES.push(phase => {
   const clock = scheduledPhase();
   return inBar(phase) ? phase : inBar(clock) ? clock : "evening";
 });
-// Leaving the bar: drop the easter eggs that kept it open or that would replace it (the yeti
-// egg's Christmas), so the screen goes back to what the clock gives
+// Leaving the bar (or the epic finale: the kamelot code, epic.js): drop the easter eggs that kept
+// it open or that would replace it (the yeti egg's Christmas), so the screen goes back to what the
+// clock gives
 const backToClock = () => {
-  jazzEgg = xmasEgg = xmasJazz = hwEgg = false;
+  jazzEgg = xmasEgg = hwEgg = false;
   if (forced) forcedDismissed = true;  // also leaves a forced ?screen=... (the bar, Christmas...)
 };
 const armstrong = () => {

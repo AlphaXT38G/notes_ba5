@@ -307,9 +307,16 @@ const leaveShows = () => {
 // Typing k a m e l o t (outside the search field, or in it then Enter: onCode, ui.js) opens the
 // epic finale at once, whatever the time and the screen (its override comes after the metal one,
 // so it wins over the shows too). It lasts like the finale after a metal show; typed again in it,
-// it leaves it. Typing is a gesture, so its music plays with sound at once.
+// it leaves it for the normal screen of that moment, by the clock alone: the eggs the finale was
+// opened over (boo, yeti, armstrong, peace: Halloween's knight opens it the same way) are dropped
+// too, as typing armstrong again in the bar does (backToClock, armstrong.js). Typing is a gesture,
+// so its music plays with sound at once.
 onCode("kamelot", () => {
-  if (epicAt || document.body.dataset.phase === "epic") return leaveEpic();  // even mid-transition
+  if (epicAt || document.body.dataset.phase === "epic") {  // even mid-transition
+    backToClock();
+    peaceEgg = false;
+    return leaveEpic();
+  }
   epicQueued = false;
   epicAt = Date.now();
   applyScreen();

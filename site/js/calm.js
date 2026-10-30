@@ -391,15 +391,12 @@ onCode("peace", () => {
     applyScreen();
   } else startPeace();
 });
-// Bringing the calm night: the code, or the firefly jar under the Christmas garland (christmas.js,
-// fromXmas). The other eggs give way, so that leaving the calm night later goes back to the
-// clock; the jar keeps the yeti egg, so that leaving it goes back to Christmas.
-const startPeace = (fromXmas = false) => {
+// Bringing the calm night (the code, typed or clicked through the firefly jars of Christmas and
+// Halloween): the other eggs give way, so that leaving the calm night later goes back to the clock
+const startPeace = () => {
   leaveShows();
   peaceEgg = true;
   peaceYeti = yetiTyped;
-  jazzEgg = xmasJazz = hwEgg = false;
-  if (!fromXmas) xmasEgg = false;
-  xmasPeace = fromXmas;
+  jazzEgg = xmasEgg = hwEgg = false;
   applyScreen();
 };

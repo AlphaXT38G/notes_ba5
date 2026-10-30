@@ -106,10 +106,9 @@ The night screens follow the clock. Force one with the URL (`?night=`, the old n
 
 Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑↑↓↓←→←→BA, the word
 codes (below), a random surprise banner on some visits, and on both Christmas screens (day and night) a small golden sax hidden among the tree ornaments that
-opens the jazz bar; a little fir in the bar's bottom right corner brings Christmas back. A red
-guitar standing behind the green gift under the tree starts the metal show (then Christmas comes
-back), and a firefly jar swinging under the garland opens the calm night (like `peace`, but the
-fir shows there too and brings Christmas back). The Christmas snowman can be teased: his eyes
+opens the jazz bar (exactly as `armstrong` does). A red guitar standing behind the green gift
+under the tree starts the metal show (then Christmas comes back), and a firefly jar swinging under
+the garland opens the calm night (exactly as `peace` does). The Christmas snowman can be teased: his eyes
 follow the pointer; a click knocks his hat off; his carrot nose can be dragged away (put back on
 him he plants it again, dropped elsewhere he casts a fishing rod and reels it back); a click on
 his body tickles him (it calms him down), a press held on it melts him into a puddle; his coal
@@ -132,8 +131,8 @@ all of them lit and the castle answers), the bats (a click catches one), the spi
 under the pointer; a click sends it into the corner; three in a row and it spits its web in our face,
 webs everywhere and the pointer stuck in them; the top right web and the strands across stay, letting clicks through, until the page is reloaded or they are cut by dragging across them) and the ghosts (a click and one rushes at us, dissolving); two
 castle windows open now and then on a knight and a saxophonist (clicked open, they lead to the epic
-finale and the jazz bar), the castle's tiny gargoyles light red eyes when clicked, and a firefly
-jar half buried by the dead tree opens the calm night (a jack-o'-lantern brings Halloween back); a werewolf walks the far hill
+finale and the jazz bar, as `kamelot` and `armstrong` do), the castle's tiny gargoyles light red eyes when clicked, and a firefly
+jar half buried by the dead tree opens the calm night (as `peace` does); a werewolf walks the far hill
 on the left and howls at the moon at night, a witch crosses the sky on her broom, a vampire passes behind the castle's great window, and a zombie
 screamer jumps out of the top left corner, rarely (typing `candy` on Halloween shows it at once).
 The word codes (`yeti`, `boo`, `armstrong`, `peace`, `kamelot`, `normal`) work on every screen, the shows
@@ -144,6 +143,10 @@ closes; autocorrect is off in it, or kamelot becomes Camelot). Typed during the 
 epic finale, `yeti`, `armstrong` and `peace` end it first (`leaveShows()` in `epic.js`; the metal
 show of the clock gives way until 01:01:51, `skipSlot()` in `screens.js`), while a show that comes
 later still wins over their egg.
+The shortcuts clicked in the scenes (the Christmas sax and jar, Halloween's knight, saxophonist and
+jar) call the codes themselves (`CODES.armstrong()`, `CODES.kamelot()`, `CODES.peace()`), so there
+is no button to come back: the code typed again leaves the screen they opened for the normal screen
+of the moment (e.g. on a normal day, `boo`, the saxophonist, then `armstrong` shows the day).
 
 - `yeti`: Christmas day or night by the clock, any time of the year. Outside the Christmas
   period, typed on a Christmas screen it goes back to the normal one; typed in a jazz bar opened
@@ -153,14 +156,16 @@ later still wins over their egg.
   armstrong, peace and yeti eggs; `yeti` typed after it wins.
 - `armstrong`: the jazz bar at any time (over Christmas and the calm night too). Typed again in
   the bar it goes back to the normal screen of that moment, by the clock alone: it drops the
-  `armstrong` and `yeti` eggs, the sax and a forced `?screen=`, so it shows the day (or the calm
-  night), the bar itself at bar time (21:30 – 01:00), or Christmas during the Christmas period.
+  `armstrong`, `yeti` and `boo` eggs and a forced `?screen=`, so it shows the day (or the calm
+  night), the bar itself at bar time (21:30 – 01:00), or Christmas / Halloween during their
+  periods (`backToClock()` in `armstrong.js`).
 - `peace`: the calm night at any time, over the day, the jazz bar and Christmas (a later show
   wins, and the calm night comes back after it); `yeti` or `armstrong` typed after it wins. Typed
   again on the calm night it goes back to the normal screen of that moment (on the calm night of
   the clock, it does nothing).
 - `kamelot`: the epic finale at any time, over every screen. Typed again in it, it leaves it for
-  the screen of the clock (the finale has no button for that).
+  the normal screen of that moment, by the clock alone, as `armstrong` does from the bar (it also
+  drops the `peace` egg); the finale has no button for that.
 - `normal`: the day at any time, over every screen. It drops every other egg and a forced
   `?screen=`, and keeps the day even when the clock brings a screen; an egg typed or clicked
   after it wins, and typed again it lets the clock decide.
@@ -238,7 +243,7 @@ The search field finds subjects and documents by name (`ui.js`) and by what the 
 | `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable playing `audio/jazz.mp3`, neon sign going out |
 | `closing.js` | closing time: the life-size bartender behind his bar (photo layers from `img/bartender/`: head nodding, forearm tapping the desk bell, chest breathing), swinging lamp, desk bell "ding" (Web Audio), typed speech, chalkboard with countdown, "Good night" |
 | `fx.js` | the effects canvas of every screen: `fxLayers` (by `<body>` class), `blob()`, the animation loop |
-| `christmas.js` | Christmas screens: date override and `yeti` code, garland, winter scene (mountains and chalets, moon, tree and gifts drawn in volume with a shared `bow3d` and `giftTag`, snowman), night lights canvases (tree, garland halos), snow, sleigh, music (Jingle Bell Rock or the YouTube Christmas radio, swapped with the sleeve behind the turntable, or paused), hidden sax and guitar (the guitar draws the gifts in front of it again over itself, to stand behind them while staying clickable), firefly jar swinging under the garland (a pendulum pushed by the wind, the mouse and scrolling, asleep once settled) |
+| `christmas.js` | Christmas screens: date override and `yeti` code, garland, winter scene (mountains and chalets, moon, tree and gifts drawn in volume with a shared `bow3d` and `giftTag`, snowman), night lights canvases (tree, garland halos), snow, sleigh, music (Jingle Bell Rock or the YouTube Christmas radio, swapped with the sleeve behind the turntable, or paused), hidden sax (the `armstrong` code) and guitar (the guitar draws the gifts in front of it again over itself, to stand behind them while staying clickable), firefly jar swinging under the garland (the `peace` code; a pendulum pushed by the wind, the mouse and scrolling, asleep once settled) |
 | `stuckpointer.js` | `stuckPointer()`: after something in the face (the snowman's snowball, the spider's web), a stuck pointer drags slowly behind the real one for a while, and a sheet passes the clicks to what is under it |
 | `snowman.js` | the Christmas snowman's games (drawn in `christmas.js`, with his hat, nose, eyes, buttons, brows, steam, sweat, puddle, belly hollow, blue eye and two halves bending at the waist as parts of their own): eyes following the pointer, hat knocked off, nose dragged away and put back by him (by hand, or with a fishing rod drawn over the page: back cast, line and float, ripple, reel), tickling, melting, the buttons' xylophone and dances, the fifth button's Megalovania (Web Audio notes, then `audio/megalovania.mp3` at the 22nd click, with the fight of `sansfight.js` for as long as it plays, the Christmas turntable hushed meanwhile), his temper, the snowball scooped from his belly (his top half bends at the waist), packed and thrown at our eyes (canvas bitmaps growing to fill the window), the splash and its spray, lumps of snow, blinks, the blurred view, the frost (`img/frost.png`) and the frozen, slow pointer (`stuckPointer()`, an icy one); its Web Audio sounds (`smTone()`, `smNoise()`, also used by the fight); all reset when Christmas ends |
 | `sansscenes.js` | the fight's backgrounds: dioramas (`SF_SCENES`: snowy forest, golden hall, ice cavern, aurora), layers of cut paper drawn once on canvases (shadow, lit edge), slid by the heart's place (parallax), with a few living things (snow, light shafts, sparks, the aurora); `sfSceneDraw()` |
@@ -248,7 +253,7 @@ The search field finds subjects and documents by name (`ui.js`) and by what the 
 | `hwcastlelife.js` | what lives on the castle (`HW_CASTLE_LIFE`, drawn with it): two banners rippling on poles, a chimney's smoke in puffs, three crows circling the keep's spire (CSS) |
 | `hwhills.js` | what stands on the hills (`hwHillLife()`, in the near plane): a hand rising from the earth, a scarecrow with a pumpkin head and a crow, an open grave and its shovel, a swinging lantern, a signpost, a crypt glowing green, will-o'-wisps (night) |
 | `hwscene.js` | Halloween backdrop, SVG built once in four planes (`hwLayers`: far, mid, near, tree; `hwDepth`, where each one is slid; `hwFit()`, where a point of the scene is on the screen; `hwCastleAt()`, where a point of the castle is in the scene): stars and the full moon (night), a giant moon risen behind the ridges (day, `HW_DAYMOON`), ridges, the castle on its crag, a haze, graveyard hills, tombstones, iron fence, dead tree, mist |
-| `hwsecrets.js` | what can be clicked in the scene, through invisible buttons laid over it where no card covers it: two castle windows whose shutters open now and then on a knight (to the epic finale) and a saxophonist (to the jazz bar), the tiny gargoyle statues (red eyes), the firefly jar half buried by the tree (to the calm night); a jack-o'-lantern brings Halloween back from those screens |
+| `hwsecrets.js` | what can be clicked in the scene, through invisible buttons laid over it where no card covers it: two castle windows whose shutters open now and then on a knight (the `kamelot` code) and a saxophonist (`armstrong`), the tiny gargoyle statues (red eyes), the firefly jar half buried by the tree (`peace`) |
 | `hwcandles.js` | four candles in SVG, three on the right end of the search bar and one on Previews, their wax run over them: layered flickering flames, light through the wax, a warm light on the page; they melt for real (height remembered, `hw-candles`), blown out / lit by a click |
 | `hwcritters.js` | on the effects canvas: the bats (wandering, fleeing the pointer), the autumn leaves, the bat hunt, `hwBatBurst()` |
 | `hwpumpkins.js` | the pumpkin pile spilling out of the bottom right corner, and its game: carve, light, laugh; all lit wakes the castle |
@@ -268,7 +273,7 @@ The search field finds subjects and documents by name (`ui.js`) and by what the 
 | `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), `leaveEpic()`, `leaveShows()` (a code typed during a show ends it), the `kamelot` code (the finale at any time) |
 | `bardscene.js` | `createBardScene()`: the epic finale's bard, a pixel art painting ray-marched in WebGL (distance fields): a knight in armour and a blue surcoat playing the lute against a mossy boulder (gauntlets with fingers, sabatons), a campfire lighting him (traced soft shadows), mirror steel (a second ray), ambient occlusion, flames and sparks, a sky with the moon and firs; two moods (`uMood`: blue arcane fire, or Dragonborn's red fire, starry night and Milky Way, and dragon); `bardProject()` says where a point of the scene shows in the painting; posterised with Bayer dithering at a low resolution; compiled in the background (`ready()`), every ray in one loop so the scene is written out once |
 | `bard.js` | the epic finale's music player (`BARD_SONGS`: the Two Steps From Hell mix `audio/epic.mp3`, then Dragonborn `audio/dragonborn.mp3`, the next when one ends, the choice remembered): the painting of `bardscene.js` in a frame, the title lettered over it in a hand-drawn pixel font (bottom right), the next song's name (a larger 5 x 7 pixel font, solid ink) on an aged parchment drawn in pixels, standing behind the painting's top right corner like the next tape's case behind the cassette deck (a click on it changes the song); a click on the knight plays / pauses (he strums at the song's pace, nods, dozes when paused), on the fire changes the song with a show (he looks at the fire, a flourish plucked in Web Audio, the fire drawn in then bursting in the new colour with a shock wave, the title dissolving pixel by pixel); `preloadEpic()` for the "More epicness ?" click |
-| `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, night forest sounds (`audio/calm.mp3`, quieter), dawn birds made with Web Audio, firefly jar; the `peace` code (the last override: the calm night at any time; `startPeace()`, also called by the Christmas jar) |
+| `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, night forest sounds (`audio/calm.mp3`, quieter), dawn birds made with Web Audio, firefly jar; the `peace` code (the last override: the calm night at any time; `startPeace()`; the Christmas and Halloween jars call it) |
 | `normal.js` | `normal` code: the day at any time, over every screen (the very last override, after `calm.js`); typed again, back to the clock's screen |
 | `tapes.js` | the day's cassette deck (no screen only): an early-80s hi-fi deck (VU meters, LED counter, piano keys ⏏ ◀◀ ▶❚❚ ▶▶ and the station key) whose music comes in bands (`TAPE_BANDS`): Lofi Girl mixes, then the screens' music (jazz, late night, metal, epic, Christmas, Halloween), then Radio Impuls live. A tape is a YouTube video (a `youtube.js` player; every YouTube tape is warmed up, ads included, once the deck is first reached for), an mp3 of `site/audio/` or a live stream (`<audio>`). The station key goes to the next band, ⏏ or the next tape's case behind the deck to the next tape of the band (door opens, tape out, new one in, door closes); never plays by itself, the tape is remembered |
 | `start.js` | **last**: first `applyScreen()`, then the every-second clock check |
@@ -315,7 +320,7 @@ Current screens:
 | `closing` | `night` | 00:45 – 01:00 | `jazz.js`, `jazz.css`, `closing.js`, `closing.css` |
 | `metal` | `metal` | 01:00:00 – 01:01:51 (the song 3 times), or 20 flame clicks, or the Christmas guitar | `metal.js`, `metal.css` |
 | `epic` | `epic` | after a metal show, if "More epicness ?" was clicked, or the `kamelot` code, until a code leaves it | `epic.js`, `epic.css`, `bardscene.js`, `bard.js`, `bard.css` |
-| `calm` | `calm` | 01:01:51 – 05:30, unless the epic finale runs (a `normal` screen), or the `peace` code, or the Christmas jar | `calm.js`, `calm.css` |
+| `calm` | `calm` | 01:01:51 – 05:30, unless the epic finale runs (a `normal` screen), or the `peace` code (the Christmas and Halloween jars too) | `calm.js`, `calm.css` |
 | `christmas` | `christmas` | Dec 1 – Jan 3, 06:00 – 18:00 (replaces the day) | `christmas.js`, `christmas.css` |
 | `christmas-night` | `christmas` | Dec 1 – Jan 3, 18:00 – 06:00 (replaces the day, the jazz bar and the calm night) | `christmas.js`, `christmas.css` |
 | `halloween` | `halloween` | Oct 25 – Nov 1, 07:00 – 18:00 (replaces the day, the jazz bar and the calm night), or the `boo` code | `halloween.js`, `hw*.js`, `halloween.css`, `hwlife.css`, `hwcreatures.css`, `hwmusic.css` |
