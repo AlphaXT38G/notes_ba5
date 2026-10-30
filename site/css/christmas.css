@@ -3,7 +3,7 @@
    Night (christmas-night): a very deep navy sky with stars and the moon, gold accents, the
    garland, the tree and the chalets lit up. Every colour token is set: the visitor may be in
    light or dark mode. In order: colours and sky, title, cards, garland, winter scene (mountains,
-   moon, chalets, tree, sax, guitar, snowman), sleigh, turntable, fir back from the jazz bar, transition. */
+   moon, chalets, tree, sax, guitar, snowman), sleigh, turntable, transition. */
 body.christmas{--bg:#eaf2fa;--fg:#1d2433;--card:rgba(255,255,255,.93);--line:#d5e1ee;--mut:#5b6a80;--acc:#b3122e;--acc-bg:#fde7eb;--new:#fff;--new-bg:#c8102e;background:var(--bg)}
 body.christmas::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(#c9def2,#eaf2fa 55%,#f5f9fd)}
 body.christmas .wrap{position:relative;z-index:1;padding-top:9.8rem}
