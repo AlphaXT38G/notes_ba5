@@ -58,7 +58,7 @@ onCode("boo", () => {
   if (onHw && isHwDate()) return;  // it is Halloween anyway
   hwEgg = !onHw;
   hwEggYeti = yetiTyped;
-  jazzEgg = peaceEgg = xmasEgg = xmasJazz = false;
+  jazzEgg = peaceEgg = xmasEgg = false;
   if (onHw && forced && forced.startsWith("halloween")) forcedDismissed = true;
   applyScreen();
 });

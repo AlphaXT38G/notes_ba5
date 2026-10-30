@@ -1,17 +1,21 @@
 /* Halloween music (js/hwmusic.js): the pumpkin cocotte in the bottom left corner
-   (js/hwcocotte.js), its label, and the next track's small green cocotte
-   beside it (#hwnext, only with several tracks). Everything that moves while the music plays is
-   under .playing, transforms and opacity only. */
+   (js/hwcocotte.js), its label, and the other tracks' potion flasks on a plank beside it
+   (#hwshelf, only with several tracks; the label then stands above them). Everything that moves
+   while the music plays is under .playing, transforms and opacity only. */
 #hwmusic{position:fixed;left:1rem;bottom:.6rem;z-index:40;display:flex;align-items:flex-end;gap:.5rem;padding:0;border:0;background:none;color:var(--fg);font:600 .78rem system-ui,sans-serif;cursor:pointer;text-align:left}
 #hwmusic .pot{position:relative;display:block;width:8rem;filter:drop-shadow(0 8px 14px rgba(0,0,0,.55))}
 #hwmusic svg{display:block;width:100%;height:auto;overflow:visible}
 #hwmusic .label{max-width:13rem;margin-bottom:.8rem;padding:.3rem .6rem;border-radius:.5rem;background:var(--card);border:1px solid var(--line)}
+#hwmusic.shelved .label{margin-bottom:4.9rem}  /* above the plank */
 #hwmusic .note{position:absolute;left:45%;top:10%;color:#ffb347;font-size:1.1rem;opacity:0;pointer-events:none}
 #hwmusic.playing .note{animation:hwm-note 3s ease-out infinite}
 #hwmusic.playing .note+.note{animation-delay:1.5s;left:60%}
 @keyframes hwm-note{0%{opacity:0;transform:translate(0,0)}20%{opacity:1}100%{opacity:0;transform:translate(1.6rem,-3.2rem) rotate(15deg)}}
 
-/* The cocotte: the lid lifts and bobs as it simmers, steam escapes, the soup bubbles */
+/* The cocotte: the lid lifts and bobs as it simmers, steam escapes, the soup bubbles (the colour
+   of the track playing) */
+#hwmusic .soup{fill:var(--soup,#ff8a2a);transition:fill .6s}
+#hwmusic .bubbles{fill:var(--bubble,#ffc06a);transition:fill .6s}
 #hwmusic .lid{transform-box:view-box;transform-origin:30% 50%;transition:transform .5s}
 #hwmusic.playing .lid{animation:hwm-simmer 1.5s ease-in-out infinite}
 @keyframes hwm-simmer{0%,100%{transform:translateY(-3px) rotate(-1deg)}30%{transform:translateY(-11px) rotate(-5deg)}45%{transform:translateY(-6px) rotate(-3deg)}62%{transform:translateY(-12px) rotate(-6deg)}}
@@ -26,17 +30,65 @@
 #hwmusic .steam:nth-of-type(3){left:72%;animation-delay:-1.6s!important}
 @keyframes hwm-steam{0%{opacity:0;transform:translateY(0) scale(.5)}25%{opacity:.9}100%{opacity:0;transform:translateY(-3.4rem) scale(2.2)}}
 
-/* The next track: a small green cocotte leaning behind the player; a click swaps them (the
-   player bounces, the prop dips) */
-#hwnext{position:fixed;left:6.8rem;bottom:.5rem;z-index:39;width:3.6rem;padding:0;border:0;background:none;cursor:pointer;transform:rotate(6deg);filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}
-#hwnext .pot{display:block}
-#hwnext svg{display:block;width:100%;height:auto}
-#hwnext .tag{position:absolute;left:50%;bottom:110%;transform:translateX(-50%);padding:.1rem .35rem;border-radius:.3rem;background:#f6ecd8;color:#2a1404;font:700 .6rem system-ui,sans-serif}
-#hwnext.swap{animation:hwm-dip .9s ease-in-out}
-#hwmusic.swap .pot{animation:hwm-bounce .9s ease-in-out}
-@keyframes hwm-dip{40%{transform:rotate(14deg) translateY(.8rem)}}
-@keyframes hwm-bounce{30%{transform:translateY(-.6rem) scale(1.04)}60%{transform:none}}
+/* The other tracks: potion flasks on a wooden plank, each glowing faintly in its colour, a
+   paper label on it; one lifts under the pointer */
+#hwshelf{position:fixed;left:9.5rem;bottom:.75rem;z-index:41;display:flex;align-items:flex-end;gap:.3rem;padding:0 .4rem .35rem}
+#hwshelf::before{content:"";position:absolute;left:0;right:0;bottom:0;height:.45rem;border-radius:.2rem;background:linear-gradient(#9a6236,#4a2a12);box-shadow:0 5px 10px rgba(0,0,0,.55),inset 0 1px rgba(255,220,170,.35)}
+#hwshelf .flask{position:relative;width:2.2rem;padding:0;border:0;background:none;cursor:pointer;transition:transform .25s;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))}
+#hwshelf .flask::before{content:"";position:absolute;left:-40%;right:-40%;top:15%;bottom:-15%;border-radius:50%;background:radial-gradient(closest-side,var(--glow),transparent);opacity:.25;transition:opacity .25s;pointer-events:none}
+#hwshelf .flask:hover,#hwshelf .flask:focus-visible{transform:translateY(-.3rem) rotate(-4deg)}
+#hwshelf .flask:hover::before,#hwshelf .flask:focus-visible::before{opacity:.55}
+#hwshelf svg{position:relative;display:block;width:100%;height:auto;overflow:visible}
+#hwshelf .tag{position:absolute;left:50%;bottom:22%;transform:translateX(-50%) rotate(-5deg);padding:.05rem .25rem;border-radius:.15rem;background:#f1e2c2;color:#2a1404;font:800 .5rem/1.2 system-ui,sans-serif;letter-spacing:.02em;box-shadow:0 1px 2px rgba(0,0,0,.4);pointer-events:none}
+#hwshelf .flask:nth-child(2n) .tag{transform:translateX(-50%) rotate(4deg)}
+#hwshelf .fizz circle{transform-box:fill-box;animation:hwm-fizz 2.6s ease-in infinite}
+#hwshelf .fizz circle+circle{animation-delay:-1.3s}
+@keyframes hwm-fizz{0%{opacity:0;transform:translateY(0)}20%{opacity:.9}100%{opacity:0;transform:translateY(-1.1rem)}}
+/* Poured (2.2 s, timed with hwPour in js/hwmusic.js): the flask flies over the pot (--dx, --dy:
+   js) and is shaken, its potion sloshing; its cork pops, it tips its neck into the pot and
+   empties; then it is tossed up, tumbles and falls into the soup (--tx, --ty), sinking out of
+   sight. Meanwhile the lid lifts aside, a stream of the potion runs in, and the lid falls back */
+#hwshelf .flask.pour{z-index:1;animation:hwm-pour 2.2s ease-in-out forwards;pointer-events:none}
+@keyframes hwm-pour{
+  20.5%{transform:translate(var(--dx),var(--dy)) rotate(-6deg)}
+  23%{transform:translate(var(--dx),var(--dy)) translateX(-3px) rotate(-14deg)}
+  26%{transform:translate(var(--dx),var(--dy)) translateX(3px) rotate(10deg)}
+  29%{transform:translate(var(--dx),var(--dy)) translateX(-3px) rotate(-14deg)}
+  32%{transform:translate(var(--dx),var(--dy)) translateX(3px) rotate(10deg)}
+  35%{transform:translate(var(--dx),var(--dy)) translateX(-2px) rotate(-12deg)}
+  38%{transform:translate(var(--dx),var(--dy)) translateX(2px) rotate(8deg)}
+  41%{transform:translate(var(--dx),var(--dy)) rotate(-4deg)}
+  50%,72.7%{transform:translate(var(--dx),var(--dy)) rotate(-115deg);animation-timing-function:ease-out}
+  82%{transform:translate(var(--dx),var(--dy)) translateY(-1.4rem) rotate(-250deg);animation-timing-function:ease-in}
+  92%{opacity:1}
+  95.5%,100%{transform:translate(var(--tx),var(--ty)) rotate(-430deg) scale(.55);opacity:0}}
+#hwshelf .pour .cork{transform-box:fill-box;transform-origin:50% 100%;animation:hwm-uncork .4s .85s ease-out forwards}
+@keyframes hwm-uncork{60%{opacity:1}to{opacity:0;transform:translate(3px,-14px) rotate(35deg)}}
+#hwshelf .pour .potion{transform-box:fill-box;transform-origin:50% 100%;animation:hwm-slosh .45s .45s ease-in-out,hwm-empty .45s 1.1s ease-in forwards}
+@keyframes hwm-slosh{20%,60%{transform:rotate(9deg) translateY(-1px)}40%,80%{transform:rotate(-9deg) translateY(-1px)}}
+@keyframes hwm-empty{to{transform:scaleY(.15)}}
+#hwshelf .pour .fizz circle{animation-duration:.6s}
+#hwshelf .fresh{animation:hwm-refill .7s ease-out}
+#hwshelf .fresh .potion{transform-box:fill-box;transform-origin:50% 100%;animation:hwm-fill 1s .2s ease-out backwards}
+@keyframes hwm-refill{0%{opacity:0;transform:translateY(.5rem) scale(.7)}60%{opacity:1;transform:translateY(-.15rem) scale(1.04)}}
+@keyframes hwm-fill{from{transform:scaleY(0)}}
+#hwmusic .stream{position:absolute;left:calc(50% - 2px);top:10%;width:4px;height:42%;border-radius:2px;background:linear-gradient(var(--pour),var(--pour) 80%,transparent);opacity:0;transform-origin:50% 0;pointer-events:none}
+#hwmusic.pouring .stream{animation:hwm-stream .5s 1.1s ease-in}
+@keyframes hwm-stream{0%{opacity:1;transform:scaleY(0)}30%{opacity:1;transform:scaleY(1)}80%{opacity:1;transform:scaleY(1) translateY(10%)}100%{opacity:0;transform:scaleY(.4) translateY(140%)}}
+#hwmusic.pouring .lid{animation:hwm-lift 2.4s ease-in-out}
+@keyframes hwm-lift{15%,80%{transform:translate(-46px,-34px) rotate(-26deg)}87%{transform:translateY(2px)}92%{transform:translateY(-6px) rotate(-2deg)}}
+/* The flask in: a puff of steam of the potion's colour, the pot jumps, and a cloud of smoke of
+   that colour rises in a shape (an <img> drawn once, js/hwcocotte.js), swelling and fading */
+#hwmusic.puff .steam{background:radial-gradient(var(--puff),transparent 70%);animation:hwm-steam 1.1s ease-out!important}
+#hwmusic.puff .steam:nth-of-type(2){animation-delay:.12s!important}
+#hwmusic.puff .steam:nth-of-type(3){animation-delay:.24s!important}
+#hwmusic.puff .pot{animation:hwm-bounce .7s ease-in-out}
+@keyframes hwm-bounce{30%{transform:translateY(-.4rem) scale(1.04)}60%{transform:none}}
+#hwmusic .smoke{position:absolute;left:.5rem;bottom:4rem;width:7rem;opacity:0;pointer-events:none;transform-origin:50% 90%;animation:hwm-smoke 2.7s ease-out forwards}
+@keyframes hwm-smoke{0%{opacity:0;transform:translateY(1.2rem) scale(.25)}18%{opacity:.95}40%{transform:translateY(-1.2rem) scale(1) rotate(-3deg)}
+  70%{opacity:.85;transform:translateY(-2.6rem) scale(1.12) rotate(2deg)}100%{opacity:0;transform:translateY(-4.2rem) scale(1.3)}}
 /* Phones: smaller, the label too */
-@media(max-width:640px){#hwmusic .pot{width:5.6rem}#hwmusic .label{font-size:.7rem;max-width:10rem}#hwnext{left:5rem;width:2.6rem}}
+@media(max-width:640px){#hwmusic .pot{width:5.6rem}#hwmusic .label{font-size:.7rem;max-width:10rem}#hwmusic.shelved .label{margin-bottom:3.8rem}#hwmusic .smoke{left:.3rem;bottom:2.9rem;width:5rem}
+  #hwshelf{left:7rem;bottom:.6rem;gap:.15rem;padding:0 .25rem .3rem}#hwshelf .flask{width:1.65rem}#hwshelf .tag{font-size:.42rem}}
 /* Reduced motion */
-@media(prefers-reduced-motion:reduce){#hwmusic *,#hwnext{animation:none!important}}
+@media(prefers-reduced-motion:reduce){#hwmusic *,#hwshelf *{animation:none!important}}

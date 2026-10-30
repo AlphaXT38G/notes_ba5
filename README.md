@@ -62,7 +62,7 @@ searches the names only.
 In the bottom left corner, a vintage cassette deck 📼 plays music while you read, with
 VU meters, a tape counter and real keys (▶❚❚, ◀◀ / ▶▶ wind 30 s). Its station key
 goes through the bands: Lofi Girl mixes from YouTube, the music of the screens (jazz
-bar, late night, metal show, epic finale, Christmas) and Radio Impuls live. ⏏, or the
+bar, late night, metal show, epic finale, Christmas, Halloween) and Radio Impuls live. ⏏, or the
 next tape leaning behind the deck, puts in the next tape of the band. It never starts
 by itself, and only shows during the day.
 YouTube ads stay silent: only the music is heard, and a tape you come back to plays on
@@ -134,7 +134,7 @@ From **October 25 to November 1** Halloween takes over, day and night alike, dar
 night: Dracula's gothic castle on its crag behind the courses (spires, gargoyles, flying
 buttresses, its windows lit at night, a vampire passing behind the great one), a
 graveyard with a dead tree, drifting mist, falling leaves and bats; by day an
-orange haze and a giant pale moon risen behind the hills, at night a purple sky full of stars, the full moon, shooting stars and some lightning, and a
+orange haze and a giant pale moon risen behind the hills, at night the same giant moon, full, warm and golden, under a purple sky full of stars, with shooting stars and some lightning, and a
 werewolf walking the far hill now and then to howl at the moon, and a witch on her broom
 crossing the sky with a trail of magic. The scene has depth: its planes slide as the pointer moves
 and the page scrolls. The wind blows in gusts (the tree bends, the leaves fly across), banners
@@ -147,8 +147,11 @@ the whole pile of pumpkins in the corner, hunt the bats, poke the big spider in 
 watch the ghosts wandering (a lady in white, a monk with his lantern, a shrouded one), wake the
 gargoyles of the castle, watch its windows (someone appears in them, and leads elsewhere),
 find the firefly jar...
-and beware: something may jump at you, rarely (or right away, if you type `candy`). The music (a cozy autumn lofi) plays on a
-pumpkin cocotte that simmers while it plays.
+and beware: something may jump at you, rarely (or right away, if you type `candy`). The music (Lofi Girl's Halloween mixes, a spooky
+lofi radio and an autumn village ambience) plays on a pumpkin cocotte that simmers while it
+plays; the other tracks wait beside it as potions in flasks: pour one into the pot to cook the
+next music (shaken, poured, the empty flask thrown in after it, and the smoke that rises takes a
+spooky shape).
 
 Add `?screen=evening`, `?screen=closing`, `?screen=metal`, `?screen=epic`, `?screen=calm`,
 `?screen=christmas`, `?screen=christmas-night`, `?screen=halloween` or

@@ -1,9 +1,8 @@
 // ── Halloween scene (behind the page) ─────────────────────────────────────────────────────────
 // The backdrop of the Halloween screens (halloween.js), in #hwscene, behind the courses:
-//   - at night only: a deep purple sky, a field of stars (a few twinkle) and the full moon (the
-//     moon of christmas.js, warmed up by CSS) rising behind the castle;
-//   - by day only: a giant pale moon in the haze, its top risen behind the far ridges like one
-//     more hill, the castle black against it (HW_DAYMOON);
+//   - a giant moon, its top risen behind the far ridges like one more hill, the castle black
+//     against it (HW_BIGMOON): by day pale in the haze, at night the warm full moon;
+//   - at night only: a deep purple sky and a field of stars (a few twinkle);
 //   - Dracula's castle on its crag, on the right (HW_CASTLE, hwcastle.js): its windows are dark
 //     by day and lit at night (some flicker like candles); its banners, smoke and crows
 //     (HW_CASTLE_LIFE, hwcastlelife.js);
@@ -105,23 +104,28 @@ const HW_STARS = (() => {
   return `<g class="stars"><g fill="#fff4e0">${dots}</g><g class="twinkle" fill="#fff">${twinkle}</g></g>`;
 })();
 
-// The giant moon of the day: the moon of christmas.js, huge, its centre on the far ridge so only
-// its dome shows behind the hills and the castle, in a pale halo, barely warmed by a veil, the
-// haze thickening towards the horizon; hidden at night (CSS)
-const HW_DAYMOON = (() => {
+// The giant moon: the moon of christmas.js, huge, its centre on the far ridge so only its dome
+// shows behind the hills and the castle, in a halo, the haze thickening towards the horizon. By
+// day pale, barely warmed by a veil; at night (CSS) warm and slightly orange, the tint of a full
+// moon low in the sky (#hw-bigmoon-night: sepia(.45) saturate(1.6) hue-rotate(-12deg) as one SVG
+// filter, the CSS functions not being sure to work on an element inside an <svg>), in a warm
+// halo, a purple dusk at its foot (the gradients' stops recoloured by CSS)
+const HW_BIGMOON = (() => {
   const cx = 800, cy = 500, r = 430;
-  return `<g class="daymoon"><defs>` +
-    `<radialGradient id="hw-daymoon-halo"><stop offset=".62" stop-color="#fff0d0" stop-opacity=".18"/><stop offset="1" stop-color="#ffe0b0" stop-opacity="0"/></radialGradient>` +
-    `<linearGradient id="hw-daymoon-haze" x1="0" x2="0" y1="0" y2="1"><stop offset=".4" stop-color="#2a140c" stop-opacity="0"/><stop offset=".6" stop-color="#2a140c" stop-opacity=".6"/></linearGradient></defs>` +
-    `<circle cx="${cx}" cy="${cy}" r="${r * 1.6}" fill="url(#hw-daymoon-halo)"/>` +
-    // its own ids: the moon's gradient is also in the night's #hwmoon, not painted while hidden
-    MOON.replace(/moon-(disc|clip|soft)/g, "hw-daymoon-$1").replace("<svg ", `<svg x="${cx - r * 1.02}" y="${cy - r * 1.02}" width="${r * 2.04}" height="${r * 2.04}" `) +
-    `<circle class="veil" cx="${cx}" cy="${cy}" r="${r}"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#hw-daymoon-haze)"/></g>`;
+  return `<g class="bigmoon"><defs>` +
+    `<radialGradient id="hw-bigmoon-halo"><stop class="hl" offset=".62" stop-color="#fff0d0" stop-opacity=".18"/><stop class="hl2" offset="1" stop-color="#ffe0b0" stop-opacity="0"/></radialGradient>` +
+    `<linearGradient id="hw-bigmoon-haze" x1="0" x2="0" y1="0" y2="1"><stop class="hz" offset=".4" stop-color="#2a140c" stop-opacity="0"/><stop class="hz" offset=".6" stop-color="#2a140c" stop-opacity=".6"/></linearGradient>` +
+    `<filter id="hw-bigmoon-night" color-interpolation-filters="sRGB"><feColorMatrix values=".727 .346 .085 0 0 .157 .859 .076 0 0 .122 .24 .609 0 0 0 0 0 1 0"/>` +
+    `<feColorMatrix type="saturate" values="1.6"/><feColorMatrix type="hueRotate" values="-12"/></filter></defs>` +
+    `<circle cx="${cx}" cy="${cy}" r="${r * 1.6}" fill="url(#hw-bigmoon-halo)"/>` +
+    // its own ids: the moon's gradients are also in the Christmas scene's moon
+    MOON.replace(/moon-(disc|clip|soft)/g, "hw-bigmoon-$1").replace("<svg ", `<svg x="${cx - r * 1.02}" y="${cy - r * 1.02}" width="${r * 2.04}" height="${r * 2.04}" `) +
+    `<circle class="veil" cx="${cx}" cy="${cy}" r="${r}"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#hw-bigmoon-haze)"/></g>`;
 })();
 
 // The scene is cut into four planes, one above the other, each an <svg> of the same box laid the
 // same way over the window (a little wider than it, so a plane slid aside never shows its edge):
-//   far    the stars and the shooting stars, the giant moon of the day, the farthest ridge
+//   far    the stars and the shooting stars, the giant moon, the farthest ridge
 //   mid    the far ridge (where the werewolf walks) and the castle on its crag
 //   near   a haze between the castle and the hills, the hills, the graveyard and what stands
 //          on the hills (hwhills.js)
@@ -139,7 +143,7 @@ const HW_PLANES = ["far", "mid", "near", "tree"];
 const hwLayers = {
   far: hwPlane("far", `${HW_STARS}<defs><linearGradient id="hw-meteor-g" gradientUnits="userSpaceOnUse" x1="0" x2="-160" y1="0" y2="0">` +
     `<stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".2" stop-color="#fff2d8" stop-opacity=".6"/><stop offset="1" stop-color="#ffd9a0" stop-opacity="0"/></linearGradient></defs>` +
-    `<g class="meteors"></g>${HW_DAYMOON}<path class="ridge r0" d="${hwOutline(hwHill(430, [[30, .003, 0], [14, .009, 2]]), 0, HW_W, 20)}"/>`),
+    `<g class="meteors"></g>${HW_BIGMOON}<path class="ridge r0" d="${hwOutline(hwHill(430, [[30, .003, 0], [14, .009, 2]]), 0, HW_W, 20)}"/>`),
   mid: hwPlane("mid", `<path class="ridge r1" d="${hwOutline(HW_FAR, 0, HW_W, 20)}"/><g class="castle" transform="translate(${HW_CASTLE_FIT.x},${HW_CASTLE_FIT.oy}) scale(${HW_CASTLE_FIT.k}) translate(${-HW_CASTLE_FIT.ox},${-HW_CASTLE_FIT.oy})">${HW_CASTLE}${HW_CASTLE_LIFE}</g>`),
   near: hwPlane("near", `<rect class="haze" x="0" y="380" width="${HW_W}" height="${HW_H - 380}" fill="url(#hw-haze-g)"/>` +
     `<path class="hill h0" d="${hwOutline(HW_RIGHT, 860, HW_W)}"/><path class="hill h1" d="${hwOutline(HW_LEFT_END, 0, 1000, 10)}"/><g class="graves">${HW_GRAVES}</g>${hwHillLife()}`,
@@ -148,9 +152,6 @@ const hwLayers = {
   tree: hwPlane("tree", `<g class="treesway">${HW_TREE}</g>`),
 };
 const hwDepth = { far: [0, 0], mid: [0, 0], near: [0, 0], tree: [0, 0] };
-const hwMoon = document.createElement("div");
-hwMoon.id = "hwmoon";
-hwMoon.innerHTML = MOON;  // the full moon of christmas.js: on Halloween it is full, of course
 // Where a point of the scene's box is on the screen, the planes not slid: the box fitted to a
 // plane's box (xMidYMax slice), from its layout alone, whatever the parallax
 const hwFit = () => {
@@ -167,6 +168,6 @@ hwMist.className = "hwmist";
 hwMist.innerHTML = "<i></i><i></i>";
 
 hwPart({
-  on() { hwBack.append(hwMoon, ...HW_PLANES.map(n => hwLayers[n]), hwMist); },
-  off() { [hwMoon, ...HW_PLANES.map(n => hwLayers[n]), hwMist].forEach(el => el.remove()); },
+  on() { hwBack.append(...HW_PLANES.map(n => hwLayers[n]), hwMist); },
+  off() { [...HW_PLANES.map(n => hwLayers[n]), hwMist].forEach(el => el.remove()); },
 });

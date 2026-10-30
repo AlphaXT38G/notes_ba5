@@ -6,15 +6,13 @@
 //   - two windows of the castle (HW_PORTALS, hwcastle.js) open their shutters now and then, and
 //     close them a while later: a knight in armour stands in one, his sword raised; a man plays the
 //     saxophone in the other, swaying. Clicked while closed, a window opens; clicked open, it takes
-//     us there: the knight to the epic finale, the saxophonist to the jazz bar (the kamelot and
-//     armstrong codes);
+//     us there: the knight to the epic finale, the saxophonist to the jazz bar, doing what the
+//     kamelot and armstrong codes do (typed again there, the code goes back to the normal screen);
 //   - the tiny gargoyle statues (HW_GARGOYLES): a click lights a red glint in their eyes, with a
 //     low growl, another puts it out;
 //   - a firefly jar half buried like a grave on the near hill, by the dead tree (not where the
 //     werewolf walks): an orange-red firefly wanders inside, its glow breathing on the ground; a
-//     click opens the calm night (the peace code).
-// Taken to one of those screens from here, a little jack-o'-lantern in the bottom right corner
-// brings Halloween back (the same code again), as the fir does for Christmas.
+//     click opens the calm night (what the peace code does).
 const hwHits = document.createElement("div");
 hwHits.id = "hwhits";
 // The jar, drawn in volume: a glass jar tilted in the earth, its cork and twine, the mound of
@@ -35,18 +33,6 @@ hwJar.innerHTML = `<i class="light"></i><svg viewBox="0 0 40 56" aria-hidden="tr
   `<rect x="11" y="3" width="18" height="7" rx="2" fill="#8a5a32"/><rect x="11" y="3" width="18" height="2" rx="1" fill="#a87448"/>` +
   `<path d="M10,11Q20,14 30,11" stroke="#c8a46a" stroke-width="1.2" fill="none"/></g>` +
   `<path d="M0,56C2,44 10,40 20,41C30,40 38,44 40,56Z" fill="url(#hwjar-earth)"/><path d="M6,46l2,-1M30,45l3,1M15,43l1,-1" stroke="#3a2a20"/></svg>`;
-// The jack-o'-lantern that brings Halloween back
-const hwBackBtn = document.createElement("button");
-hwBackBtn.id = "hwback";
-hwBackBtn.type = "button";
-hwBackBtn.title = "Back to Halloween";
-hwBackBtn.setAttribute("aria-label", "Back to Halloween");
-hwBackBtn.innerHTML = `<svg viewBox="0 0 40 36" aria-hidden="true"><path d="M20 7c2-5 5-6 7-5-3 1-5 3-6 6z" fill="#557a2a"/>` +
-  `<ellipse cx="12" cy="22" rx="10" ry="12" fill="#e86a10"/><ellipse cx="28" cy="22" rx="10" ry="12" fill="#e86a10"/><ellipse cx="20" cy="22" rx="10" ry="13" fill="#ff8c1f"/>` +
-  `<path d="M11 18l4-4 2 5zM29 18l-4-4-2 5zM10 25q10 9 20 0l-3 2-2-2-2 3-3-3-3 3-2-3-2 2z" fill="#ffe08a"/></svg>`;
-// The code that took us from Halloween to another screen, to undo it, and the class of that screen
-// (left any other way, by another code or by the clock, the way back is forgotten)
-let hwVisit = null, hwVisitClass = null;
 
 // The portals: opening, closing, and where they lead
 const HW_PORTAL_TO = { knight: "kamelot", sax: "armstrong" };
@@ -57,11 +43,6 @@ const hwPortalOpen = (name, secs) => {
   el.classList.add("open");
   clearTimeout(el.shut);
   el.shut = setTimeout(() => el.classList.remove("open"), secs * 1000);
-};
-const hwGo = code => {
-  hwVisit = code;
-  hwVisitClass = null;
-  CODES[code]();
 };
 let hwPortalIn = 15;
 everySecond.push(() => {
@@ -96,7 +77,7 @@ const hwSecretsPlace = () => {
   hwBack.querySelectorAll(".portal").forEach(el => {
     const name = el.dataset.portal;
     hit(el.querySelector(".win"), name === "knight" ? "A knight in the window" : "Someone playing the saxophone",
-      () => el.classList.contains("open") ? hwGo(HW_PORTAL_TO[name]) : hwPortalOpen(name, 14));
+      () => el.classList.contains("open") ? CODES[HW_PORTAL_TO[name]]() : hwPortalOpen(name, 14));
   });
   hwBack.querySelectorAll(".statue").forEach(el => hit(el.querySelector("image"), "A gargoyle", () => {
     el.classList.toggle("lit");
@@ -109,26 +90,7 @@ const hwSecretsPlace = () => {
   hwJar.style.top = `${f1(y - w * 1.25)}px`;
   hwJar.hidden = covered({ left: x - w / 2, right: x + w / 2, top: y - w * 1.4, bottom: y });
 };
-hwJar.addEventListener("click", e => { e.stopPropagation(); hwGo("peace"); });
-const hwForget = () => {
-  hwVisit = hwVisitClass = null;
-  hwBackBtn.remove();
-};
-hwBackBtn.addEventListener("click", e => {
-  e.stopPropagation();
-  const code = hwVisit;
-  hwForget();
-  if (code) CODES[code]();
-});
-// Shown on the screen a portal or the jar took us to (the jazz bar may turn from evening to
-// closing, the same class); gone when that screen is left, whichever way
-document.addEventListener("phase", e => {
-  const cls = screenClass(e.detail);
-  if (!hwVisit || cls === "halloween") return hwForget();
-  if (!hwVisitClass) hwVisitClass = cls;
-  if (cls === hwVisitClass) document.body.append(hwBackBtn);
-  else hwForget();
-});
+hwJar.addEventListener("click", e => { e.stopPropagation(); CODES.peace(); });
 let hwSecretsResize = null;
 const hwSecretsOnResize = () => { clearTimeout(hwSecretsResize); hwSecretsResize = setTimeout(hwSecretsPlace, 150); };
 hwPart({

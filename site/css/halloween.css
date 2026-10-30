@@ -118,19 +118,19 @@ body[data-phase=halloween-night] .hwsky .portal .shutter{fill:#120a1a;stroke:#33
 .hwsky .portal.open .saxman{transform-box:fill-box;transform-origin:50% 100%;animation:hw-sway 1.4s ease-in-out infinite alternate}
 @keyframes hw-sword{0%,100%{transform:none}50%{transform:translateY(-2px)}}
 @keyframes hw-sway{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
-/* The full moon behind the castle, warm and slightly orange, in a halo; night only */
-#hwmoon{position:absolute;right:13vw;top:9vh;width:7.5rem;height:7.5rem;display:none;filter:sepia(.45) saturate(1.6) hue-rotate(-12deg);border-radius:50%;box-shadow:0 0 50px 18px rgba(255,200,120,.22),0 0 140px 60px rgba(255,150,70,.12)}
-#hwmoon svg{width:100%;height:100%}
-body[data-phase=halloween-night] #hwmoon{display:block}
-@media(max-width:700px){#hwmoon{width:4.5rem;height:4.5rem;right:8vw;top:13vh}}
-/* The giant moon of the day, risen behind the far ridges like a hill: pale, its seas and craters
-   shown a little stronger than on the small moons, barely warmed by the haze; gone at night,
-   when the real full moon is up */
-.hwsky .daymoon{opacity:.85}
-.hwsky .daymoon .veil{fill:#ffb070;opacity:.12;mix-blend-mode:multiply}
-.hwsky .daymoon svg g[opacity]{opacity:.85}
-.hwsky .daymoon svg g[stroke]{stroke-width:.25}  /* the small craters, huge here: thin rims, or they look like rings */
-body[data-phase=halloween-night] .hwsky .daymoon{display:none}
+/* The giant moon, risen behind the far ridges like a hill, its seas and craters shown a little
+   stronger than on the small moons. By day pale, barely warmed by the haze; at night the full
+   moon, bright, warm and slightly orange, in a warm halo, a purple dusk at its foot */
+.hwsky .bigmoon{opacity:.85}
+.hwsky .bigmoon .veil{fill:#ffb070;opacity:.12;mix-blend-mode:multiply}
+.hwsky .bigmoon svg g[opacity]{opacity:.85}
+.hwsky .bigmoon svg g[stroke]{stroke-width:.25}  /* the small craters, huge here: thin rims, or they look like rings */
+body[data-phase=halloween-night] .hwsky .bigmoon{opacity:1}
+body[data-phase=halloween-night] .hwsky .bigmoon svg{filter:url(#hw-bigmoon-night)}
+body[data-phase=halloween-night] .hwsky .bigmoon .veil{display:none}
+body[data-phase=halloween-night] .hwsky .bigmoon .hl{stop-color:#ffc878;stop-opacity:.22}
+body[data-phase=halloween-night] .hwsky .bigmoon .hl2{stop-color:#ff9646}
+body[data-phase=halloween-night] .hwsky .bigmoon .hz{stop-color:#140a22}
 /* Mist at the bottom: two wide bands of soft fog drifting in opposite directions */
 .hwmist{position:absolute;left:0;right:0;bottom:-4vh;height:34vh;overflow:hidden}
 .hwmist i{position:absolute;left:0;bottom:0;width:200%;height:100%;opacity:.5;background:radial-gradient(30% 50% at 15% 70%,rgba(255,190,150,.32),transparent 70%),radial-gradient(25% 40% at 45% 80%,rgba(255,190,150,.26),transparent 70%),radial-gradient(30% 45% at 70% 75%,rgba(255,190,150,.3),transparent 70%),radial-gradient(25% 40% at 95% 80%,rgba(255,190,150,.28),transparent 70%);animation:hw-mist 70s linear infinite}

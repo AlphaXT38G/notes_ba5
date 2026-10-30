@@ -7,18 +7,16 @@
 //   - a winter scene behind the page: big discreet mountains, a decorated tree on the right with
 //     gifts, a snowman companion on the left (and at night the moon and chalet lights),
 //   - a Christmas turntable playing Jingle Bell Rock or a live of Christmas music,
-//   - a small golden sax hidden among the tree's ornaments, which opens the jazz bar (a little
-//     fir in the bar brings Christmas back), a red guitar standing behind the gifts, which
-//     starts the metal show, and a firefly jar swinging under the garland, which opens the calm
-//     night (the same fir brings Christmas back).
+//   - a small golden sax hidden among the tree's ornaments, which opens the jazz bar (as the
+//     armstrong code), a red guitar standing behind the gifts, which starts the metal show, and a
+//     firefly jar swinging under the garland, which opens the calm night (as the peace code).
 // At night the tree lights play changing patterns and Santa's sleigh crosses the sky now and then.
 // The metal show at 1:00 and the other easter eggs still take over.
 //
 // In this file, in order: screens and override, the yeti code, shared helpers, the garland, the
 // bow, the tag and the gifts, the tree and its sax ornament, the guitar, the jar, the mountains, the
 // moon, the snowman, the sax, guitar and jar buttons, the tree lights canvas, the snow, the sleigh,
-// the music, the fir back from the jazz bar or the calm night, the jar's pendulum, and turning it
-// all on and off.
+// the music, the jar's pendulum, and turning it all on and off.
 // Every drawing is SVG built once from code (seeded random, so it looks the same on every visit).
 const xmasSubtitle = () => {
   const d = new Date(), m = d.getMonth(), day = d.getDate();
@@ -37,10 +35,6 @@ SCREENS["christmas-night"] = { className: "christmas", subtitle: xmasSubtitle, t
 // it runs before the metal and epic ones (this file is loaded before metal.js), so those still
 // win. A forced ?screen=... is left alone (?screen=christmas and ?screen=christmas-night force these
 // screens), unless the yeti code was typed (xmasEgg).
-// xmasJazz: the hidden sax was clicked on that Christmas screen ("christmas" or "christmas-night"):
-// the jazz bar replaces it until the fir is clicked or the other one comes (18:00 or 6:00).
-// xmasPeace: the calm night was opened with the firefly jar (the peace egg of calm.js, which keeps
-// the yeti egg then), so the fir shows there too and brings Christmas back.
 const isXmasDate = (d = new Date()) => d.getMonth() === 11 || (d.getMonth() === 0 && d.getDate() <= 3);  // all December, and Jan 1 - 3
 const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && t < 18 * 3600; };
 // Easter egg: typing y e t i (outside the search field, or in it then Enter: onCode, ui.js) brings
@@ -51,15 +45,12 @@ const isXmasDaytime = () => { const t = clockSeconds(); return t >= 6 * 3600 && 
 // screen shown, not the egg: typed in a jazz bar opened over Christmas (armstrong code, sax), it
 // brings Christmas back. It overrides a forced ?screen=.
 // yetiTyped: how many times it was typed, so that the armstrong code's bar gives way (armstrong.js)
-let xmasJazz = false, xmasEgg = false, xmasPeace = false, yetiTyped = 0;
+let xmasEgg = false, yetiTyped = 0;
 OVERRIDES.push(phase => {
-  let p = phase;
-  if ((xmasEgg || (!forced || forcedDismissed) && isXmasDate()) && (isNormal(p) || screenClass(p) === "night")) {
-    p = isXmasDaytime() ? "christmas" : "christmas-night";
+  if ((xmasEgg || (!forced || forcedDismissed) && isXmasDate()) && (isNormal(phase) || screenClass(phase) === "night")) {
+    return isXmasDaytime() ? "christmas" : "christmas-night";
   }
-  if (xmasJazz && xmasJazz !== p && (p === "christmas" || p === "christmas-night")) xmasJazz = false;
-  if (xmasJazz && p === xmasJazz) return phase === "closing" ? "closing" : "evening";
-  return p;
+  return phase;
 });
 
 onCode("yeti", () => {
@@ -67,7 +58,6 @@ onCode("yeti", () => {
   const onXmas = document.body.classList.contains("christmas");
   if (onXmas && isXmasDate()) return;
   yetiTyped++;
-  xmasJazz = false;  // a bar opened with the sax gives way too
   if (!isXmasDate()) xmasEgg = !onXmas;
   if (onXmas && forced && forced.startsWith("christmas")) forcedDismissed = true;  // also leaves a forced Christmas
   applyScreen();
@@ -760,10 +750,11 @@ saxBtn.innerHTML = SAX_SVG;
 // the page, so it stays clickable there, over the cards
 saxBtn.style.cssText = `left:${SAX.x / TREE_W * 100}%;top:${SAX.y / TREE_H * 100}%;width:${SAX.w / TREE_W * 100}%;height:${SAX.h / TREE_H * 100}%`;
 treeFront.append(saxBtn);
+// It does what the armstrong code does (armstrong.js, loaded after this file): typing armstrong
+// in the bar then goes back to the normal screen of that moment
 saxBtn.addEventListener("click", e => {
   e.stopPropagation();
-  xmasJazz = document.body.dataset.phase;  // the Christmas screen it replaces
-  applyScreen();
+  CODES.armstrong();
 });
 // The guitar, in the same layer: the metal show takes over for one song (metal.js, loaded after
 // this file, so startMetalEgg exists by the time it is clicked), then Christmas comes back
@@ -779,9 +770,8 @@ guitarBtn.addEventListener("click", e => {
   e.stopPropagation();
   startMetalEgg("Santa brought a guitar.");
 });
-// The firefly jar, hanging under the garland (placed by placeJar, below): it opens the calm night,
-// as the peace code does (startPeace, calm.js, loaded after this file); the fir there, or typing
-// peace, brings Christmas back
+// The firefly jar, hanging under the garland (placed by placeJar, below): it does what the peace
+// code does (calm.js, loaded after this file): the calm night, until peace is typed again
 const jarBtn = document.createElement("button");
 jarBtn.id = "xjar";
 jarBtn.type = "button";
@@ -790,7 +780,7 @@ jarBtn.setAttribute("aria-label", "Go to the calm night");
 jarBtn.innerHTML = JAR_SVG;
 jarBtn.addEventListener("click", e => {
   e.stopPropagation();
-  startPeace(true);
+  CODES.peace();
 });
 
 // Tree lights at night, on a canvas over the tree (behind the page, unlike the effects canvas):
@@ -1152,26 +1142,8 @@ const setCarols = on => {
   paintDeck();
 };
 
-// Back to Christmas from the jazz bar or the calm night: a small fir with a star in the bottom
-// right corner, only when the bar was opened with the sax, or the calm night with the firefly jar
-const firBtn = document.createElement("button");
-firBtn.id = "xback";
-firBtn.type = "button";
-firBtn.title = "Back to Christmas";
-firBtn.setAttribute("aria-label", "Back to Christmas");
-firBtn.innerHTML = '<svg viewBox="0 0 30 40" aria-hidden="true"><path d="M15,4 25,17H20L28,28H21L29,36H1L9,28H2L10,17H5Z" fill="#1f7a3e"/>' +
-  '<rect x="13" y="36" width="4" height="4" fill="#6b3d1c"/><circle cx="11" cy="22" r="1.6" fill="#ff5a6e"/><circle cx="19" cy="27" r="1.6" fill="#ffd86a"/>' +
-  '<circle cx="14" cy="32" r="1.6" fill="#7cc0ff"/><path d="M15,0 16.2,3H19L16.8,4.8 17.6,7.6 15,6 12.4,7.6 13.2,4.8 11,3H13.8Z" fill="#ffd86a"/></svg>';
-firBtn.addEventListener("click", e => {
-  e.stopPropagation();
-  xmasJazz = false;
-  if (xmasPeace) peaceEgg = xmasPeace = false;
-  applyScreen();
-});
+// The tree lights, lit on the Christmas night only
 document.addEventListener("phase", e => {
-  // (the peace egg ends when the calm night is left another way: typing peace, yeti or armstrong)
-  if (xmasJazz && screenClass(e.detail) === "night" || xmasPeace && peaceEgg && e.detail === "calm") document.body.append(firBtn);
-  else firBtn.remove();
   if (e.detail === "christmas" || e.detail === "christmas-night") setTreeLights(e.detail === "christmas-night");
 });
 
