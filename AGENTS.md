@@ -164,8 +164,8 @@ of the moment (e.g. on a normal day, `boo`, the saxophonist, then `armstrong` sh
   again on the calm night it goes back to the normal screen of that moment (on the calm night of
   the clock, it does nothing).
 - `kamelot`: the epic finale at any time, over every screen. Typed again in it, it leaves it for
-  the normal screen of that moment, by the clock alone, as `armstrong` does from the bar (it also
-  drops the `peace` egg); the finale has no button for that.
+  the normal screen of that moment, by the clock alone, as `armstrong` does from the bar
+  (`backToClock()`); the finale has no button for that.
 - `normal`: the day at any time, over every screen. It drops every other egg and a forced
   `?screen=`, and keeps the day even when the clock brings a screen; an egg typed or clicked
   after it wins, and typed again it lets the clock decide.

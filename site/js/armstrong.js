@@ -25,11 +25,12 @@ OVERRIDES.push(phase => {
   const clock = scheduledPhase();
   return inBar(phase) ? phase : inBar(clock) ? clock : "evening";
 });
-// Leaving the bar (or the epic finale: the kamelot code, epic.js): drop the easter eggs that kept
-// it open or that would replace it (the yeti egg's Christmas), so the screen goes back to what the
-// clock gives
+// Leaving the bar (or the epic finale: the kamelot code, epic.js; normal.js too): drop the easter
+// eggs that kept it open or that would replace it (the yeti egg's Christmas, boo's Halloween, the
+// peace egg's calm night: calm.js, loaded later, as this runs on a key press), so the screen goes
+// back to what the clock gives
 const backToClock = () => {
-  jazzEgg = xmasEgg = hwEgg = false;
+  jazzEgg = xmasEgg = hwEgg = peaceEgg = false;
   if (forced) forcedDismissed = true;  // also leaves a forced ?screen=... (the bar, Christmas...)
 };
 const armstrong = () => {

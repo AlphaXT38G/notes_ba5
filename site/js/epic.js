@@ -314,7 +314,6 @@ const leaveShows = () => {
 onCode("kamelot", () => {
   if (epicAt || document.body.dataset.phase === "epic") {  // even mid-transition
     backToClock();
-    peaceEgg = false;
     return leaveEpic();
   }
   epicQueued = false;
