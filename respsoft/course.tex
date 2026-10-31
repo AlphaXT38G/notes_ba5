@@ -803,4 +803,9 @@ The first word (True/False) says if the prediction is right; the second (Positiv
 where $P = TP+FN$ (actual positives) and $N = TN+FP$ (actual negatives).
 \end{propbox}
 
+\begin{exbox}[title={Offensive text detector}]
+Pairs (system, human): $(+,-), (+,+), (-,-), (+,+), (-,+), (-,+), (-,-)$ give FP, TP, TN, TP,
+FN, FN, TN, so $TP=2, FN=2, FP=1, TN=2$. Accuracy $=4/7$, FNR $=2/4=0.5$, FPR $=1/3$.
+\end{exbox}
+
 \end{document}
