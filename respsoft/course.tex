@@ -2203,4 +2203,51 @@ Pick one row of the spreadsheet and imagine the real goat behind it: its life, w
 that way, what the score will do to it. Numbers stop looking neutral very quickly.
 \end{goatbox}
 
+
+\begin{recapbox}[title={Exam-ready recap --- Fairness 2}]
+\textbf{ML and its biases}
+\begin{itemize}
+  \item ML = infer patterns from data, generalize to unseen data. Algorithm = process, model =
+        result (function + parameters). Supervised (regression, classification; labels often
+        human) vs.\ unsupervised (clustering, dimensionality reduction).
+  \item Life cycle: problem definition $\to$ data collection $\to$ preparation $\to$
+        development $\to$ evaluation $\to$ deployment.
+  \item \textbf{Optimization choices} (accuracy only), \textbf{aggregation bias} (different
+        groups merged; Simpson), \textbf{evaluation bias} (unrepresentative benchmark; Gender
+        Shades, intersectional), \textbf{deployment bias} (used differently than intended).
+\end{itemize}
+\textbf{Fairness metrics} (compare the confusion matrix of two groups)
+\begin{itemize}
+  \item Actual values (\textbf{defendant}, ProPublica): $\text{FNR}=\frac{FN}{TP+FN}$,
+        $\text{FPR}=\frac{FP}{TN+FP}$ $\Rightarrow$ \textbf{error rate balance} (FNR only:
+        equal opportunity).
+  \item Predicted values (\textbf{decision-maker}, NorthPointe): $\text{FDR}=\frac{FP}{TP+FP}$,
+        $\text{FOR}=\frac{FN}{TN+FN}$ $\Rightarrow$ \textbf{conditional use accuracy equality}
+        (PPV only: predictive parity).
+  \item \textbf{Equal accuracy}. All three = \textbf{error parity} (outcome quality).
+  \item \textbf{Demographic parity} = equal acceptance rate $\frac{TP+FP}{\text{all}}$
+        (statistical parity; disparate impact ratio) (outcome distribution).
+  \item \textbf{Impossibility}: different base rates + imperfect classifier $\Rightarrow$ not all
+        criteria at once $\Rightarrow$ a moral choice.
+\end{itemize}
+\textbf{Beyond and fixes}: intersectional (combined groups, small samples), individual
+(similar $\to$ similar, similarity measure), causal (causal graphs, expert knowledge).
+Pre-processing (data; unawareness fails because of proxies), in-processing (training),
+post-processing (outputs; differential treatment). Dilemmas: \textbf{leveling down},
+\textbf{fairness--accuracy}, \textbf{fairness--privacy}.
+
+\textbf{Strategies}
+\begin{itemize}
+  \item \textbf{Datasheets}: motivation, composition, collection, preprocessing, uses,
+        distribution, maintenance. Spot safety (consent, re-identification, offensive content)
+        and fairness (population, subgroups, biased processing) issues; earlier and more often.
+        Model cards for models.
+  \item \textbf{People behind the data}: documentation $\to$ questionnaire and variables $\to$
+        a few participants and their story $\to$ ethical conclusions. Empathy, storytelling.
+\end{itemize}
+\textbf{Mid-term reminders}: 2 Nov 15:15, 1h30, 12 pages, one A4 sheet, no electronic device, dark
+pen, SCIPER on top; single-choice + short answers (1 point $\approx$ 1--2 sentences); answers in
+French allowed.
+\end{recapbox}
+
 \end{document}
