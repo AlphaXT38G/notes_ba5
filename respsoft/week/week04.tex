@@ -454,6 +454,23 @@ miss jokes; the humans who help get hurt.
 
 Rows = \textbf{actual}, columns = \textbf{predicted}:
 
+\begin{center}
+\begin{tabular}{l|c|c}
+ & pred. + & pred. $-$ \\ \hline
+actual + & TP & FN \\ \hline
+actual $-$ & FP & TN \\
+\end{tabular}
+\end{center}
+
+\[
+\text{Acc} = \frac{TP+TN}{\text{all}}
+\]
+\[
+\text{FNR} = \frac{FN}{TP+FN} \qquad \text{FPR} = \frac{FP}{TN+FP}
+\]
+
+\end{formula}
+
 
 \end{multicols}
 
