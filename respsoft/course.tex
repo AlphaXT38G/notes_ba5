@@ -560,5 +560,19 @@ people; the confusion matrix comes back in Fairness 2.
 \section{Safety and security}
 
 \begin{defnbox}[title={Security vs.\ safety (Leveson, 1986)}]
+\begin{center}
+\begin{tabularx}{\linewidth}{X|X}
+\textbf{Security} & \textbf{Safety} \\ \hline
+Preventing the \textbf{environment} from affecting negatively the \textbf{system} &
+Preventing the \textbf{system} from affecting negatively the \textbf{environment} \\
+\textbf{Threats}: \textbf{intentional} & \textbf{Hazards}: \textbf{accidental} \\
+e.g.\ an e-shop attacked by hackers & e.g.\ X-ray analysis software that misses a disease \\
+Methods: vulnerability scanning, ethical hacking, security audits, code review &
+Methods: verification and testing, failure modes analysis, redundancy
+\end{tabularx}
+\end{center}
+Both are about \textbf{risks} = the probability that something bad happens. Both are needed:
+an attack on an e-shop (security) can harm its customers (safety).
+\end{defnbox}
 
 \end{document}
