@@ -47,6 +47,14 @@
     \textit{Substitution cipher:} if $M$ = ``THE QUICK BROWN FOX'' is known, Eve recovers many letter mappings at once, no frequency analysis needed.
 \end{defn}
 
+\begin{defn}[title=Active model 2: Chosen Plaintext Attack (CPA)]
+    \begin{itemize}
+        \item \textbf{Scenario:} Eve can convince Alice (or the system) to encrypt arbitrary messages \textit{chosen by Eve} with the secret key.
+        \item \textbf{More abstractly:} for any chosen plaintext $m$, Eve can get $E_K(m)$.
+    \end{itemize}
+    Eve is assumed to have access to an \textbf{encryption oracle}.
+\end{defn}
+
 \iffalse
 \section{Lecture 5 - Network \& File Syscalls}
 
