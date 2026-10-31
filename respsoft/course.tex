@@ -1887,5 +1887,27 @@ this content hate? yes'', image tags), which brings human biases and stereotypes
 \begin{defnbox}[title={Bias in the ML life cycle (Suresh \& Guttag, 2021)}]
 ``Not all problems should be blamed on the data. The ML pipeline involves a series of choices
 and practices \ldots\ Each stage involves decisions that can lead to undesirable effects.''
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week08_02.png}
+\end{center}
+\begin{itemize}
+  \item \textbf{Model development}:
+    \begin{itemize}
+      \item \textbf{Optimization choices} (type of model, objective function, hyper-parameter
+            tuning): optimizing for \textbf{accuracy only} may lead to unfairness.
+      \item \textbf{Aggregation bias}: groups with \textbf{different patterns are combined}, so
+            the model performs well for no group (or only for the majority). Example: Simpson's
+            paradox in the training data (the pattern of the full sample is opposed to the
+            patterns of the subgroups).
+    \end{itemize}
+  \item \textbf{Model evaluation} --- \textbf{evaluation bias}: the \textbf{benchmark} does not
+        represent the population the model will serve. Gender Shades (Buolamwini \& Gebru,
+        2018): face classifiers much worse for darker-skinned women: \textbf{intersectional}
+        bias.
+  \item \textbf{Model deployment} --- \textbf{deployment bias}: the problem the model is
+        \textbf{intended} to solve differs from how it is \textbf{actually used}
+        (socio-technical effects).
+\end{itemize}
+\end{defnbox}
 
 \end{document}
