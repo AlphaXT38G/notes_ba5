@@ -64,6 +64,20 @@
     \textit{Realistic:} you own a device (phone, smart card, chip) holding another party's keys (bank, Google) that should stay unreadable to you.
 \end{defn}
 
+\begin{thm}[title=Perfect secrecy]
+    $\forall m, c,\ \PR(M = m \mid E_K(M) = c) = \PR(M = m)$
+\end{thm}
+
+\begin{defn}[title=One-time pad (OTP)]
+    $K$: \textbf{random} bits, \textbf{as long as} $m$, pre-shared.
+    \[ \mathrm{Enc}(k, m) = m \oplus k \qquad \mathrm{Dec}(k, c) = c \oplus k \]
+    \textbf{Perfectly secret}: $K$ and $m$ are independant.
+\end{defn}
+
+\begin{warn}[title=The key problem of OTP]
+    The key must be \textbf{truly random}, \textbf{message-length} and \textbf{used only once}.
+\end{warn}
+
 \iffalse
 \section{Lecture 5 - Network \& File Syscalls}
 
