@@ -791,4 +791,16 @@ The first word (True/False) says if the prediction is right; the second (Positiv
 \textbf{what was predicted}.
 \end{defnbox}
 
+\begin{propbox}[title={Basic metrics}]
+\[
+\text{Accuracy} = \frac{TP+TN}{TP+TN+FP+FN}
+\]
+\[
+\text{FNR} = \frac{FN}{P} = \frac{FN}{TP+FN}
+\qquad
+\text{FPR} = \frac{FP}{N} = \frac{FP}{TN+FP}
+\]
+where $P = TP+FN$ (actual positives) and $N = TN+FP$ (actual negatives).
+\end{propbox}
+
 \end{document}
