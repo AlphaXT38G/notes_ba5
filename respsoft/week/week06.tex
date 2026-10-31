@@ -1,0 +1,567 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Responsible Software}}
+\fancyhead[C]{\small Fairness 1: Data, Bias and Inclusion}
+\fancyhead[R]{\small Week 06 --- 12-18/10/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+% DEFINITION - blue
+\newtcolorbox{definition}{
+enhanced,
+unbreakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+% IMPORTANT - pink
+\newtcolorbox{important}{
+enhanced,
+unbreakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+% FORMULAS - green
+\newtcolorbox{formula}{
+enhanced,
+unbreakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+% WARNING - orange
+\newtcolorbox{warning}{
+enhanced,
+unbreakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+% EXAMPLE - purple
+\newtcolorbox{example}{
+enhanced,
+unbreakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+% SUMMARY - orange
+\newtcolorbox{summary}{
+enhanced,
+unbreakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+
+% GOAT - brown: the idea told as simply as possible
+\definecolor{Goat}{HTML}{F7EEDF}
+\definecolor{GoatTitle}{HTML}{8A5A1F}
+\newtcolorbox{goat}{
+enhanced,
+unbreakable,
+colback=Goat,
+colframe=GoatTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Explained to a goat},
+fonttitle=\bfseries
+}
+
+
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+%\footnotesize   --> To reduce the size of the text
+
+\thispagestyle{fancy}
+
+
+
+\begin{multicols}{2}
+
+
+%=========================================================
+\section{Data and People}
+
+
+\begin{definition}
+
+\textbf{SENSITIVE ATTRIBUTE}: data about people with \textbf{legal} or \textbf{ethical}
+implications (privacy, non-discrimination).
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Legally sensitive}
+
+\begin{itemize}
+
+\item \textbf{GDPR}: personal data (identity, directly or indirectly); \textbf{special
+categories banned by default} (ethnicity, politics, religion, health).
+
+\item \textbf{Non-discrimination law}: direct and \textbf{indirect} discrimination
+(apparently neutral practice, disadvantage for a \textbf{protected group}).
+
+\end{itemize}
+
+\textbf{Ethically sensitive}: not in the law but can lead to discrimination (height).
+
+\end{formula}
+
+
+\begin{definition}
+
+\textbf{PROXY ATTRIBUTE}: correlates with a sensitive attribute $\Rightarrow$ indirect
+discrimination, \textbf{harder to detect} (SAT score $\sim$ race).
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{Observed} vs. \textbf{latent} variables: arrests for crime, clicks for interest.
+
+\textbf{Data $\neq$ objectivity}: an imperfect representation, built from choices with a goal.
+
+\end{important}
+
+
+\begin{example}
+
+Hair colour: not legally sensitive, \textbf{observed}, \textbf{subjective} (red vs.
+auburn).
+
+\end{example}
+
+
+\begin{goat}
+
+Some facts about you are protected by law, some are not but can still be used against you, and
+innocent facts can secretly reveal protected ones.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Sources of Unfairness}
+
+
+\begin{definition}
+
+\textbf{FAIRNESS}: equality of \textbf{what} (resources, opportunities), \textbf{how}
+(same treatment vs. equity), for \textbf{whom}?
+
+\textbf{BIAS}: systematic deviation from a standard; relative, not always bad; leads to
+\textbf{unfairness} (discrimination, errors, stereotyping). In \textbf{algorithms},
+\textbf{data}, \textbf{people}.
+
+\end{definition}
+
+
+\begin{center}
+
+\includegraphics[
+width=\linewidth
+]{../images/week06_01.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\textbf{Bias in data} (Suresh \& Guttag)
+
+\begin{itemize}
+
+\item \textbf{Pre-existing}: the world is unfair and the data records it (systemic).
+
+\item \textbf{Representation}: some people missing or under-represented (sampling,
+population).
+
+\item \textbf{Measurement}: inaccurate values, worse for some groups.
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{example}
+
+Pothole app $\rightarrow$ \textbf{representation}. Same calorie formula for walking and
+running $\rightarrow$ \textbf{measurement}.
+
+\end{example}
+
+
+\begin{goat}
+
+Unfair world (pre-existing), uncounted goats (representation), a scale wrong for some goats
+(measurement).
+
+\end{goat}
+
+
+
+%=========================================================
+\section{People and Bias}
+
+
+\begin{definition}
+
+\textbf{COGNITIVE BIASES}: systematic deviations from rationality from System 1 shortcuts;
+inherent, unconscious, unrelated to intelligence. Affect users and designers.
+
+\end{definition}
+
+
+\begin{formula}
+
+\begin{itemize}
+
+\item \textbf{Implicit stereotypes}: ``default user'', harmful stereotypes.
+
+\item \textbf{Confirmation bias}: keep evidence that fits your belief; design fixation.
+
+\item \textbf{Group effects}: homogeneous groups, \textbf{groupthink}.
+
+\item \textbf{Sunk cost fallacy}: continue because of past investment; ethical debt.
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{important}
+
+Improve: \textbf{know} your biases (IAT), \textbf{resist} (slow down, structure),
+\textbf{involve} diverse people.
+
+\end{important}
+
+
+\begin{example}
+
+Five similar engineers keep only the feedback supporting their idea: \textbf{confirmation
+bias}.
+
+\end{example}
+
+
+\begin{goat}
+
+The brain imagines a ``normal'' user, believes itself, agrees with similar friends and hates
+dropping a paid-for plan.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Strategy: Inclusive Design}
+
+
+\begin{definition}
+
+\textbf{INCLUSIVE DESIGN}: considers the \textbf{full range of human diversity} (ability,
+language, culture, gender, age...). \textbf{Disability = mismatch} between system and needs.
+
+\end{definition}
+
+
+\begin{formula}
+
+\begin{enumerate}
+
+\item[01] \textbf{Capabilities} needed for the app \textbf{and the task} (table: perceive,
+think, act).
+
+\item[02] \textbf{Non-average users} for each capability.
+
+\item[03] \textbf{Expand}: other users, non-users, minorities (not from the table).
+
+\item[04] \textbf{Solutions} for each NAU.
+
+\end{enumerate}
+
+\end{formula}
+
+
+\begin{center}
+
+\includegraphics[
+width=\linewidth
+]{../images/week06_02.png}
+
+\end{center}
+
+
+\begin{example}
+
+Colour blindness $\rightarrow$ ``EVEN''/``ODD'' text; deafness $\rightarrow$ visual
+feedback; ADHD $\rightarrow$ no animated goalkeepers; dyslexia $\rightarrow$ special font;
+plaster hand $\rightarrow$ larger hitboxes; low digital experience $\rightarrow$ tutorial.
+
+\end{example}
+
+
+\begin{goat}
+
+What does the app ask of eyes, ears, mind and hands? Who cannot? Change the design so they can.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Strategy: Value Analysis}
+
+
+\begin{definition}
+
+\textbf{VALUES} (Schwartz): transsituational goals guiding a person's life. 19 values in 4
+groups: \textbf{self-enhancement} (power, achievement, face), \textbf{openness to change}
+(hedonism, stimulation, self-direction action / thought), \textbf{self-transcendence}
+(universalism, benevolence, humility), \textbf{conservation} (tradition, conformity, security).
+
+\end{definition}
+
+
+\begin{center}
+
+\includegraphics[
+width=0.7\linewidth
+]{../images/week06_05.png}
+
+\end{center}
+
+
+\begin{formula}
+
+\textbf{Step 01}: table stakeholder / key value / manifested / \textbf{benefit} /
+\textbf{harm}.
+
+\textbf{Step 02}: \textbf{tension map}: values, stakeholders $+$ / $-$, lines between a benefit
+and a harm (between or within stakeholders, same or different values).
+
+\end{formula}
+
+
+\begin{example}
+
+Smart diaper: parents \textbf{+} self-direction action (decide feeding time) vs. parents
+\textbf{$-$} self-direction thought (lose parenting skills).
+
+\end{example}
+
+
+\begin{important}
+
+Products are \textbf{not neutral}: they embed values. Seeing tensions is the first step.
+
+\end{important}
+
+
+\begin{goat}
+
+Your app helps some things people care about and hurts others; draw who wins and who loses.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Weekly Summary}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item Sensitive (legal / ethical) and proxy attributes; data $\neq$ objectivity.
+
+\item Fairness: what, how, whom. Bias $\rightarrow$ unfairness.
+
+\item Data bias: pre-existing, representation, measurement.
+
+\item Human biases: stereotypes, confirmation, group effects, sunk cost.
+
+\item Inclusive design: 4 stages. Value analysis: table + tension map.
+
+\end{itemize}
+
+\end{summary}
+
+
+\end{multicols}
+
+
+\end{document}

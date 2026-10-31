@@ -1,0 +1,579 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Responsible Software}}
+\fancyhead[C]{\small Introduction: Ethics and Stakeholders}
+\fancyhead[R]{\small Week 02 --- 14-20/09/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+% DEFINITION - blue
+\newtcolorbox{definition}{
+enhanced,
+unbreakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+% IMPORTANT - pink
+\newtcolorbox{important}{
+enhanced,
+unbreakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+% FORMULAS - green
+\newtcolorbox{formula}{
+enhanced,
+unbreakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+% WARNING - orange
+\newtcolorbox{warning}{
+enhanced,
+unbreakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+% EXAMPLE - purple
+\newtcolorbox{example}{
+enhanced,
+unbreakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+% SUMMARY - orange
+\newtcolorbox{summary}{
+enhanced,
+unbreakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+
+% GOAT - brown: the idea told as simply as possible
+\definecolor{Goat}{HTML}{F7EEDF}
+\definecolor{GoatTitle}{HTML}{8A5A1F}
+\newtcolorbox{goat}{
+enhanced,
+unbreakable,
+colback=Goat,
+colframe=GoatTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Explained to a goat},
+fonttitle=\bfseries
+}
+
+
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+%\footnotesize   --> To reduce the size of the text
+
+\thispagestyle{fancy}
+
+
+
+\begin{multicols}{2}
+
+
+%=========================================================
+\section{Responsible Software}
+
+
+\begin{definition}
+
+\textbf{RESPONSIBLE SOFTWARE} (van de Poel, 2011)
+
+Software \textbf{engineered in a responsible way}: about the \textbf{process}, with a focus on
+\textbf{human}, \textbf{active} (forward-looking) responsibility.
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{RESPONSIBLE ENGINEERING}
+
+Making design \textbf{decisions} responsibly: (1) goal to \textbf{do good}; (2)
+\textbf{prevent avoidable negative impacts}; (3) take into account people, other systems,
+social structures and the planet.
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{ETHICS}
+
+Principles and standards that guide human behaviour.
+
+\begin{itemize}
+
+\item \textbf{Metaethics}: what does ``right'' mean?
+
+\item \textbf{Normative}: how should people act in general?
+
+\item \textbf{Applied}: how to act ethically in a real situation? $\leftarrow$ \textbf{course}
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{important}
+
+Responsibility in engineering: norms and standards (ISO, SIA), obligations (certifications),
+codes of conduct (ACM), \textbf{+ responsible design methodologies}.
+
+\textbf{Ethics goes beyond the law}: a car meeting all regulations may still need a recall.
+
+\end{important}
+
+
+\begin{goat}
+
+Responsible software = making your building decisions so that the software helps and does not
+hurt, even where the law says nothing.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Ethics in Technical Decisions}
+
+
+\begin{example}
+
+A form with one first name, one last name, no apostrophe, names that never change:
+technical choices that \textbf{exclude people}.
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{ETHICAL ISSUE}: a situation that may compromise at least one \textbf{ethical value or
+principle}.
+
+\textbf{ETHICAL AGENCY}: capacity to decide and act in line with ethical values.
+
+\end{definition}
+
+
+\begin{formula}
+
+Ethical decision-making (Rest 1986, Schwartz 2016):
+
+\[
+\textbf{Recognize} \rightarrow \textbf{Evaluate} \rightarrow \textbf{Act}
+\]
+
+\textbf{Ethical sensitivity} = recognize issues (awareness) + identify their impact (who,
+what). Grows with knowledge, experience, habits.
+
+\end{formula}
+
+
+\textbf{Lenses}: desirability (customer), viability (business), feasibility (technology)
+\textbf{+ ethicality} (people and environment).
+
+
+\begin{goat}
+
+Even a name field can be unfair. Step 1 is to notice it; then think; then act.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Ethical Dilemmas}
+
+
+\begin{definition}
+
+\textbf{ETHICAL DILEMMA}
+
+A choice between alternatives that \textbf{all} conflict with ethical values, none overriding
+the others: a \textbf{wrong-wrong choice} (trolley problem).
+
+\end{definition}
+
+
+\begin{warning}
+
+\begin{itemize}
+
+\item \textbf{Technical issue}: no value at stake.
+
+\item \textbf{Ethical issue}: one value compromised.
+
+\item \textbf{Dilemma}: values in conflict whatever you choose.
+
+\end{itemize}
+
+\end{warning}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item Brain-to-speech must not capture private thoughts: \textbf{ethical issue} (privacy).
+
+\item ML for medicines also finds chemical weapons: \textbf{dilemma} (\textbf{dual use}).
+
+\item Chatbot conversations sent to teachers to catch hallucinations: \textbf{dilemma}
+(learning safety vs. privacy / power).
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{DUAL USE}: technologies usable for beneficial and harmful purposes. Develop (benefits,
+risk of harm) or not (no harm, lost benefits)? GenAI is dual use.
+
+\end{definition}
+
+
+\textbf{EVIL heuristic} (Lennerfors 2021): \textbf{E}xit, \textbf{V}oice,
+\textbf{L}oyalty + \textbf{I}nsubordination.
+
+
+\begin{definition}
+
+\textbf{JUDGMENT} (Evaluate step): cognitive (reason) + affective (emotion, intuition).
+
+\textbf{MORAL EMOTIONS} = risk indicators. Self: guilt, shame / pride. Other: anger,
+contempt, disgust / gratitude, elevation.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Normative theories}
+
+\begin{itemize}
+
+\item \textbf{Utilitarianism}: consequences, greatest good for the greatest number.
+
+\item \textbf{Deontology}: the action, universal principles (``never lie'').
+
+\item \textbf{Virtue}: the person (``a courageous, trustworthy person would report it'').
+
+\item \textbf{Care}: relationships, mutual responsibility.
+
+\end{itemize}
+
+\end{formula}
+
+
+\textbf{Markkula framework}: 1 identify issues, 2 get facts, 3 evaluate options with
+\textbf{several} theories, 4 choose and test, 5 implement and reflect.
+
+
+\begin{goat}
+
+A dilemma: every door hurts someone. Pick the least bad one with good reasons (consequences,
+rules, good character, relationships), and listen to your gut alarms.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Strategy: Stakeholder Analysis}
+
+
+\begin{definition}
+
+\textbf{STAKEHOLDER} (Value Sensitive Design)
+
+``Individuals, groups, organizations, institutions, and societies that might reasonably be
+affected by the technology'': positive or negative, direct or indirect, possibly
+\textbf{non-human}.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{Question}: who is impacted by my software? \textbf{When}: early.
+
+\begin{enumerate}
+
+\item \textbf{Brainstorm}: daily users, geographically / socially close, activities created or
+replaced, maintenance, services needed to run, funding, communities of the domain.
+
+\item \textbf{Direct} (in contact with the software) vs. \textbf{indirect} (impacted without
+interacting) to classify and find more.
+
+\end{enumerate}
+
+\end{formula}
+
+
+\begin{example}
+
+``\textbf{Paper supplier (indirect)}: the software replaces paper records, so the hospital's
+orders drop: affected without ever using it.''
+
+\end{example}
+
+
+\begin{warning}
+
+Graded: explain \textbf{how} it interacts / is impacted, \textbf{specific} to the scenario.
+Unclear case: state your hypothesis or argue both ways.
+
+\end{warning}
+
+
+\begin{goat}
+
+List everyone your app touches: those who use it, and those who never touch it but still feel
+it.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Strategy: Ethical Speculation}
+
+
+\begin{formula}
+
+\textbf{Escape the mirror} (Black Mirror writers' room)
+
+\textbf{Part I, dark}: a character hurt by the software, a pitch, a catchy title.
+
+\textbf{Part II, positive}: 1-2 ethical issues, immediate and future consequences, a happy
+ending.
+
+\end{formula}
+
+
+\begin{warning}
+
+Not just ``there should be a law'': what can \textbf{the designers} do?
+
+\end{warning}
+
+
+\textbf{4 lenses}: \textbf{Safety} (harm), \textbf{Fairness} (groups treated differently),
+\textbf{Sustainability} (planet), \textbf{Empowerment} (control given or removed).
+
+
+\begin{goat}
+
+Write the horror episode about your app, then the version where its makers fixed it.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Weekly Summary}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item Responsible software = a process of responsible decisions; applied ethics; beyond law.
+
+\item Issue (one value) vs. \textbf{dilemma} (wrong-wrong); dual use; EVIL.
+
+\item Recognize $\rightarrow$ Evaluate $\rightarrow$ Act; moral emotions.
+
+\item Utilitarianism, deontology, virtue, care.
+
+\item \textbf{Stakeholder analysis}: brainstorm + direct / indirect, justified.
+
+\item \textbf{Ethical speculation}: dark story + happy ending.
+
+\end{itemize}
+
+\end{summary}
+
+
+\end{multicols}
+
+
+\end{document}

@@ -1,0 +1,662 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Responsible Software}}
+\fancyhead[C]{\small Safety 1: Harms and Threats}
+\fancyhead[R]{\small Week 04 --- 28/09-04/10/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+% DEFINITION - blue
+\newtcolorbox{definition}{
+enhanced,
+unbreakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+% IMPORTANT - pink
+\newtcolorbox{important}{
+enhanced,
+unbreakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+% FORMULAS - green
+\newtcolorbox{formula}{
+enhanced,
+unbreakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+% WARNING - orange
+\newtcolorbox{warning}{
+enhanced,
+unbreakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+% EXAMPLE - purple
+\newtcolorbox{example}{
+enhanced,
+unbreakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+% SUMMARY - orange
+\newtcolorbox{summary}{
+enhanced,
+unbreakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+
+% GOAT - brown: the idea told as simply as possible
+\definecolor{Goat}{HTML}{F7EEDF}
+\definecolor{GoatTitle}{HTML}{8A5A1F}
+\newtcolorbox{goat}{
+enhanced,
+unbreakable,
+colback=Goat,
+colframe=GoatTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Explained to a goat},
+fonttitle=\bfseries
+}
+
+
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+%\footnotesize   --> To reduce the size of the text
+
+\thispagestyle{fancy}
+
+
+
+\begin{multicols}{2}
+
+
+%=========================================================
+\section{Safety and Security}
+
+
+\begin{definition}
+
+\textbf{SECURITY vs. SAFETY} (Leveson, 1986)
+
+\begin{itemize}
+
+\item \textbf{Security}: protect the \textbf{system} from the \textbf{environment};
+\textbf{threats}, \textbf{intentional}. Methods: vulnerability scans, ethical hacking, audits,
+code review.
+
+\item \textbf{Safety}: protect the \textbf{environment} from the \textbf{system};
+\textbf{hazards}, \textbf{accidental}. Methods: testing, failure mode analysis, redundancy.
+
+\end{itemize}
+
+Both are about \textbf{risks} (probability of something bad).
+
+\end{definition}
+
+
+\begin{example}
+
+\begin{itemize}
+
+\item Car misreads 10\% of signs: \textbf{safety hazard}.
+
+\item Stickers make a stop sign read as a speed limit: \textbf{security threat} +
+\textbf{safety hazard}.
+
+\end{itemize}
+
+\end{example}
+
+
+\textbf{Socio-technical system}: social and technical systems affect each other (social media,
+autonomous cars): hidden loops, emergence, non-determinism.
+
+
+\begin{goat}
+
+Security: stop the wolf breaking the fence (on purpose). Safety: stop the fence falling on the
+goats (by accident).
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Four Scenarios of Harm}
+
+
+\begin{definition}
+
+\textbf{WHEN SOFTWARE CAUSES HARM} (Parasuraman \& Riley)
+
+\begin{itemize}
+
+\item \textbf{Malfunction}: does not work as specified, unintentional bug (Therac-25,
+CrowdStrike 2024).
+
+\item \textbf{Abuse}: malicious use by bad actors (ransomware on hospitals).
+
+\item \textbf{Misuse}: unintended / unsupported use, careless (Samsung code in ChatGPT).
+
+\item \textbf{Intended use}: used as planned and still harms (infinite scroll, elections);
+the hardest to anticipate.
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{warning}
+
+Misuse vs. abuse: the difference is \textbf{intent}. Viral travel trends ruining ecosystems:
+\textbf{intended use}.
+
+\end{warning}
+
+
+\begin{goat}
+
+It breaks, a villain uses it, someone uses it wrong, or it works perfectly and still hurts.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{User-Generated Content}
+
+
+\begin{definition}
+
+\textbf{UGC}: content (text, images, video) posted publicly by users on platforms.
+
+\textbf{Harms} (Banko 2020): hate \& harassment, self-inflicted harm, ideological harm,
+exploitation. \textbf{Toxic content}: harmful or offensive material.
+
+\end{definition}
+
+
+\begin{definition}
+
+\textbf{HATE SPEECH} (UN 2019): discriminatory or pejorative + about identity factors
+(religion, ethnicity, gender...) + any form of expression.
+
+\end{definition}
+
+
+\begin{example}
+
+\textbf{Facebook and the Rohingya} (Myanmar 2017): hate and military disinformation, weak and
+slow moderation.
+
+\end{example}
+
+
+\begin{important}
+
+\textbf{Free speech} (UDHR art. 19) is not absolute. Filtering errors:
+
+\begin{itemize}
+
+\item \textbf{FN}: toxic content escapes (people harmed);
+
+\item \textbf{FP}: harmless content censored (free speech harmed).
+
+\end{itemize}
+
+Who decides? States, platforms, people.
+
+\end{important}
+
+
+\begin{goat}
+
+Delete too little and people get hurt; delete too much and innocent voices are silenced.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Content Moderation}
+
+
+\begin{definition}
+
+\textbf{CONTENT MODERATION} (Grimmelmann 2015): governance mechanisms structuring participation
+to facilitate cooperation and prevent abuse = \textbf{identification} + \textbf{action}.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{When}: pre-publication; post-publication (systematic, sampling, \textbf{reactive} on
+reports).
+
+\textbf{How}:
+
+\begin{itemize}
+
+\item \textbf{Classification}: keyword screening, sentiment analysis, ML classifiers, computer
+vision.
+
+\item \textbf{Matching}: hashing vs. database; \textbf{perceptual hashing} robust to small
+changes (Christchurch video: 80\% of re-uploads blocked).
+
+\end{itemize}
+
+\textbf{Actions}: \textbf{exclude} (ban, timeout) $>$ \textbf{organize} (delete, annotate,
+reduce visibility) $>$ \textbf{set norms} (warn).
+
+\end{formula}
+
+
+\begin{warning}
+
+Automation misses context and nuance; users evade filters $\Rightarrow$ \textbf{hybrid}. Human
+moderators face severe mental health risks: a \textbf{dilemma} (some exposed to protect
+others).
+
+\end{warning}
+
+
+\begin{goat}
+
+Find bad posts (by type or by matching known ones), then ban, delete, hide or warn. Machines
+miss jokes; the humans who help get hurt.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{The Confusion Matrix}
+
+
+\begin{formula}
+
+Rows = \textbf{actual}, columns = \textbf{predicted}:
+
+\begin{center}
+\begin{tabular}{l|c|c}
+ & pred. + & pred. $-$ \\ \hline
+actual + & TP & FN \\ \hline
+actual $-$ & FP & TN \\
+\end{tabular}
+\end{center}
+
+\[
+\text{Acc} = \frac{TP+TN}{\text{all}}
+\]
+\[
+\text{FNR} = \frac{FN}{TP+FN} \qquad \text{FPR} = \frac{FP}{TN+FP}
+\]
+
+\end{formula}
+
+
+\begin{example}
+
+\textbf{Fissures} (positive = fissure): TP 60, FN 15, FP 20, TN 100.
+
+FNR $= 15/75 = 20\%$. For safety, watch \textbf{FN} (missed fissures).
+
+\end{example}
+
+
+\begin{warning}
+
+Check what \textbf{positive} means. COVID test: FN dangerous. Quality control with positive =
+``good'': FP dangerous.
+
+\end{warning}
+
+
+\begin{goat}
+
+False alarm (FP) or missed wolf (FN): which is worse depends on the story.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Strategy: Bad Actors}
+
+
+\begin{definition}
+
+\textbf{BAD ACTOR}: person or group with \textbf{malicious intent} exploiting a system; often
+external, also insiders.
+
+\end{definition}
+
+
+\begin{formula}
+
+\textbf{5 motivations} (they overlap):
+
+\begin{itemize}
+
+\item \textbf{Money}: scammers, hackers, competitors (ransomware, data theft).
+
+\item \textbf{Politics}: nation states, agencies (disinformation, infrastructure attacks).
+
+\item \textbf{Entertainment}: trolls, thrill seekers.
+
+\item \textbf{Ideas}: hacktivists, extremists, conspiracy theorists (DoS, leaks, defacement).
+
+\item \textbf{Self-interest}: revenge, obsession, insiders (harassment, tracking, grade
+changing).
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{warning}
+
+Graded: \textbf{intent} explicit + \textbf{motivation} explicit + chain \textbf{action
+$\rightarrow$ impact on stakeholders}, specific and diverse.
+
+\end{warning}
+
+
+\begin{goat}
+
+Imagine the villains, why they come, what they do, who gets hurt.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Strategy: STRIDE}
+
+
+\begin{formula}
+
+\begin{itemize}
+
+\item \textbf{S}poofing (pretend to be another) $\rightarrow$ authenticity
+
+\item \textbf{T}ampering (covert modification) $\rightarrow$ integrity
+
+\item \textbf{R}epudiation (deny, no proof) $\rightarrow$ accountability
+
+\item \textbf{I}nformation disclosure $\rightarrow$ confidentiality
+
+\item \textbf{D}enial of service (overload) $\rightarrow$ availability
+
+\item \textbf{E}levation of privilege $\rightarrow$ authorization
+
+\end{itemize}
+
+\end{formula}
+
+
+\begin{goat}
+
+Six burglar tricks: disguise, secret changes, ``wasn't me'', peeking, blocking the door,
+stealing the master key.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Strategy: Harm Modeling}
+
+
+\begin{formula}
+
+\textbf{1. Category of use} (malfunction, abuse, misuse, intended use). \textbf{2. Type of
+harm}. \textbf{3. Magnitude}: severity, scale, probability, frequency. Iterative, every
+stage.
+
+\end{formula}
+
+
+\begin{definition}
+
+\textbf{TAXONOMY} (what is harmed)
+
+\begin{itemize}
+
+\item \textbf{Humans}: physical injury; emotional / psychological injury.
+
+\item \textbf{Allocation of resources}: opportunity loss; economic loss.
+
+\item \textbf{Human rights}: dignity, liberty, privacy loss; environmental impact.
+
+\item \textbf{Social systems}: manipulation; social detriment.
+
+\end{itemize}
+
+\end{definition}
+
+
+\begin{example}
+
+Post unfairly censored: \textbf{liberty}. GPS leak: \textbf{privacy}. Recruitment
+discriminates on names: \textbf{opportunity}. ``Nurse'' shows only women: \textbf{social
+detriment}.
+
+\end{example}
+
+
+\begin{goat}
+
+Go through ``bodies, minds, money and chances, rights, society'' and ask: can my app hurt this,
+how badly, how widely, how often?
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Weekly Summary}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item Security (threats, intentional) vs. safety (hazards, accidental).
+
+\item Malfunction, abuse, misuse, intended use.
+
+\item UGC harms, hate speech; FN vs. FP dilemma with free speech.
+
+\item Moderation: when, classification vs. matching, exclude / organize / set norms.
+
+\item Confusion matrix, accuracy, FNR, FPR.
+
+\item Bad actors (5 motivations), STRIDE, harm modeling (10 types).
+
+\end{itemize}
+
+\end{summary}
+
+
+\end{multicols}
+
+
+\end{document}

@@ -1,0 +1,433 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{tikz}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Responsible Software}}
+\fancyhead[C]{\small Getting Started}
+\fancyhead[R]{\small Week 01 --- 07-13/09/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+% separator
+
+\newcommand{\separator}{
+\vspace{2pt}
+\hrule
+\vspace{3pt}
+}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+% DEFINITION - blue
+\newtcolorbox{definition}{
+enhanced,
+unbreakable,
+colback=Blue,
+colframe=BlueTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Definition},
+fonttitle=\bfseries
+}
+
+% IMPORTANT - pink
+\newtcolorbox{important}{
+enhanced,
+unbreakable,
+colback=Pink,
+colframe=PinkTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key idea},
+fonttitle=\bfseries
+}
+
+% FORMULAS - green
+\newtcolorbox{formula}{
+enhanced,
+unbreakable,
+colback=Green,
+colframe=GreenTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Key formulas},
+fonttitle=\bfseries
+}
+
+% WARNING - orange
+\newtcolorbox{warning}{
+enhanced,
+unbreakable,
+colback=Orange,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Warning},
+fonttitle=\bfseries
+}
+
+% EXAMPLE - purple
+\newtcolorbox{example}{
+enhanced,
+unbreakable,
+colback=Purple,
+colframe=PurpleTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Example},
+fonttitle=\bfseries
+}
+
+% SUMMARY - orange
+\newtcolorbox{summary}{
+enhanced,
+unbreakable,
+colback=Yellow,
+colframe=OrangeTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Summary},
+fonttitle=\bfseries
+}
+
+
+
+% GOAT - brown: the idea told as simply as possible
+\definecolor{Goat}{HTML}{F7EEDF}
+\definecolor{GoatTitle}{HTML}{8A5A1F}
+\newtcolorbox{goat}{
+enhanced,
+unbreakable,
+colback=Goat,
+colframe=GoatTitle,
+boxrule=0.7pt,
+arc=0mm,
+title=\textbf{Explained to a goat},
+fonttitle=\bfseries
+}
+
+
+
+%=========================================================
+% FIGURE BOX
+%=========================================================
+
+\newtcolorbox{figurebox}{
+enhanced,
+colback=white,
+colframe=gray,
+boxrule=0.5pt,
+arc=0mm,
+center
+}
+
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+%\footnotesize   --> To reduce the size of the text
+
+\thispagestyle{fancy}
+
+
+
+\begin{multicols}{2}
+
+
+%=========================================================
+\section{Course Essentials}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item CS-290, C\'ecile Hardebolle. \textbf{Flipped class}: theory at home (videos + quizzes,
+about 5 videos/week), practice in class.
+
+\item \textbf{Tuesday 10:15-12:00}: programming exercise (Jupyter notebook on Noto).
+
+\item \textbf{Monday 15:15-17:00}: review questions (ttpoll) + case studies.
+
+\item Solutions are provided for notebooks and case studies.
+
+\end{itemize}
+
+\end{summary}
+
+
+\textbf{Contents of the course}
+
+\begin{itemize}
+
+\item \textbf{Safety}: harmful impacts, safety \& security, micro/meso/macro.
+
+\item \textbf{Fairness}: sources and impacts of biases, fairness measures.
+
+\item \textbf{Sustainability}: environmental impact, life cycle assessment.
+
+\item \textbf{Empowerment}: user agency, transparency, explainability.
+
+\item \textbf{Privacy}: data traces, data protection, re-identification, surveillance.
+
+\item \textbf{Strategies}: stakeholder analysis, impact anticipation, values elicitation, risk
+assessment, decision-making.
+
+\end{itemize}
+
+
+\begin{goat}
+
+You watch the videos at home and you practise in class, with help. The course is about the
+ways software hurts people, and about methods to see it coming.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Evaluation}
+
+
+\begin{important}
+
+\begin{itemize}
+
+\item \textbf{Mini-project 5\%}: groups of 2, 4 deliverables (2-3 pages), no programming,
+one in four graded. \textbf{Questions on it at the final exam.}
+
+\item \textbf{Mid-term 25\%}: 2 November, 15:15, 1h30, pen and paper, individual,
+\textbf{one A4 sheet} (both sides, free format). Chapters Introduction, Safety 1-2, Fairness
+1-2. Single-choice + short open questions; notebooks (code reading, output, reflection) and
+theory.
+
+\item \textbf{Final 70\%}: winter session, same rules, whole course.
+
+\end{itemize}
+
+\end{important}
+
+
+\begin{warning}
+
+\textbf{GenAI is prohibited for all graded work.} Answers can be in French. Arguments must be
+understandable: 1 point $\approx$ 1-2 complete sentences.
+
+\end{warning}
+
+
+\textbf{Learning loop}: \textbf{Experience} (problem to solve with programming) +
+\textbf{Knowledge} (theory + strategies) + \textbf{Habits} (strategies applied to cases).
+
+
+\begin{goat}
+
+Three grades: a tiny project, a mid-term and a big final, always with one cheat sheet and no
+ChatGPT.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{AI Incidents and Ethical Debt}
+
+
+\begin{example}
+
+\textbf{OECD AI Incidents and Hazards Monitor (AIM)}
+
+\begin{itemize}
+
+\item Collects AI incidents (harm happened) and hazards (harm could happen) reported in the
+press.
+
+\item The \textbf{number} of incidents and hazards is \textbf{increasing}; their
+\textbf{proportion} among AI events is rather stable.
+
+\item Limits: depends on what the press reports (countries, languages, spectacular cases).
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{definition}
+
+\textbf{ETHICAL DEBT} (Petrozzino, 2021)
+
+The \textbf{price paid by people and the environment} because of systems
+\textbf{released with ethical flaws}.
+
+\end{definition}
+
+
+\begin{important}
+
+\textbf{Causes of ethical debt}: engineers care about ethics, but
+
+\begin{itemize}
+
+\item competition, time pressure, organisational incentives;
+
+\item inherited practices and culture, decision-making power;
+
+\item beliefs about tool neutrality, lack of ethical knowledge;
+
+\item not seeing the ethical implications of technical decisions = \textbf{``veiled''
+ethical agency} (Herkert 2020, Widder 2023).
+
+\end{itemize}
+
+\textbf{This is what the course is about.}
+
+\end{important}
+
+
+\begin{goat}
+
+Ship fast with ethical holes, and someone else pays later. It happens mostly because engineers
+do not \emph{see} that their technical choices are also ethical choices.
+
+\end{goat}
+
+
+
+%=========================================================
+\section{Weekly Summary}
+
+
+\begin{summary}
+
+\begin{itemize}
+
+\item Flipped class: videos at home, notebooks on Tuesday, cases on Monday.
+
+\item Grades: project 5\%, mid-term 25\% (2 Nov), final 70\%; one A4 sheet.
+
+\item \textbf{Ethical debt} = price paid by people and environment for systems released with
+ethical flaws.
+
+\item Main cause: \textbf{veiled ethical agency}.
+
+\end{itemize}
+
+\end{summary}
+
+
+\end{multicols}
+
+
+\end{document}
