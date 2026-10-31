@@ -31,6 +31,14 @@
     \textbf{Security requirement:} these functions must also be \textbf{hard to invert} \textit{without} knowing the key $K$.
 \end{thm}
 
+\begin{defn}[title=Types of adversaries]
+    Security is always measured relative to the power of the \textbf{adversary (Eve)}.
+    \begin{itemize}
+        \item \textbf{Passive eavesdropper:} Eve can only \textit{read} the ciphertext.
+        \item \textbf{More active attacker:} Eve can influence the system, e.g. convince Alice to send Bob specific messages, observe the precise time Bob takes to run his algorithm\ldots{} anything beyond just observing communication.
+    \end{itemize}
+\end{defn}
+
 \iffalse
 \section{Lecture 5 - Network \& File Syscalls}
 
