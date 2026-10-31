@@ -2033,4 +2033,26 @@ how often each colour gets a ``yes''. If the colours really behave differently a
 not perfect, you cannot make all these equal at once: you must choose.
 \end{goatbox}
 
+
+\section{Fairness returns: limits and improvements}
+
+\begin{propbox}[title={Limits of group fairness and alternative approaches}]
+\begin{itemize}
+  \item \textbf{Intersectional group fairness} (Ghosh et al., 2021): group criteria may miss
+        unfairness against people at the \textbf{intersection} of several groups (e.g.\ Black
+        women) $\to$ criteria for combined groups. Issues: number of combined groups, small
+        sample sizes.
+  \item \textbf{Individual fairness} (Dwork et al., 2012): group criteria ignore individual
+        differences inside groups. ``\textbf{Similar individuals should be given similar
+        decisions}.'' Issue: defining the similarity measure.
+  \item \textbf{Causal analysis of fairness} (Pearl \& Mackenzie, 2018): focus on the
+        \textbf{causes} of unfairness ($\neq$ correlation); analyze causal pathways from
+        sensitive attributes to outcomes (including proxies) with causal graphs (gender $\to$
+        department $\to$ admission, gender $\to$ admission); metrics such as counterfactual
+        fairness. Issue: needs expert knowledge.
+\end{itemize}
+Most binary classification metrics generalize to multi-class; other criteria exist for
+regression, unsupervised learning, recommender systems, NLP.
+\end{propbox}
+
 \end{document}
