@@ -2056,5 +2056,20 @@ regression, unsupervised learning, recommender systems, NLP.
 \end{propbox}
 
 \begin{defnbox}[title={How to improve fairness? ``It depends!'' (Caton \& Haas, 2024; Pessach \& Shmueli, 2022)}]
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week08_08.png}
+\end{center}
+\begin{itemize}
+  \item \textbf{Pre-processing} (acting upon the \textbf{data}): \textbf{fairness through
+        unawareness} = removing sensitive attributes (issue: \textbf{proxies}; reduces
+        accuracy), reweighting, resampling, transformation\ldots\ Question: train on
+        \textbf{real} (imperfect) or \textbf{idealized} representations of the world?
+  \item \textbf{In-processing} (acting upon the \textbf{model} at training time): balance
+        several objectives (fairness and good performance). Issue: coupled with the training
+        procedure.
+  \item \textbf{Post-processing} (acting on the \textbf{output}): transform the outputs (e.g.\
+        thresholds per group). Independent of the model; issue: \textbf{differential treatment}.
+\end{itemize}
+\end{defnbox}
 
 \end{document}
