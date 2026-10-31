@@ -1003,4 +1003,48 @@ Go through a list of ``things that can get hurt'' (bodies, minds, money and chan
 society) and ask for each: can my app hurt this? How badly, how many, how likely, how often?
 \end{goatbox}
 
+
+\begin{recapbox}[title={Exam-ready recap --- Safety 1}]
+\textbf{Safety vs.\ security}
+\begin{itemize}
+  \item \textbf{Security}: environment $\to$ system, \textbf{threats}, \textbf{intentional}.
+        \textbf{Safety}: system $\to$ environment, \textbf{hazards}, \textbf{accidental}. Risk =
+        probability of something bad. One event can be both (stickers on a stop sign).
+  \item Software is a \textbf{socio-technical system}: hidden loops, emergence.
+\end{itemize}
+\textbf{Four scenarios of harm}: \textbf{malfunction} (bug), \textbf{abuse} (malicious intent),
+\textbf{misuse} (unintended use, no malice), \textbf{intended use} (works as planned, still
+harms: the hardest).
+
+\textbf{UGC and moderation}
+\begin{itemize}
+  \item Harms of UGC: hate \& harassment, self-inflicted harm, ideological harm, exploitation.
+        Hate speech: discriminatory + identity factor + any form of expression.
+  \item Free speech (UDHR art.\ 19) is not absolute. Dilemma: \textbf{FN} = toxic content
+        escapes vs.\ \textbf{FP} = harmless content censored.
+  \item Moderation = identification (\emph{pre} / \emph{post}-publication, reactive on reports;
+        \textbf{classification}: keywords, sentiment, ML, vision; \textbf{matching}: hashing,
+        \textbf{perceptual hashing} for modified copies) + action (\textbf{exclude} $>$
+        \textbf{organize} $>$ \textbf{set norms}).
+  \item Automation misses context $\Rightarrow$ hybrid; human moderators bear severe risks
+        (a dilemma).
+\end{itemize}
+\textbf{Confusion matrix} (rows actual, columns predicted): $\text{Acc}=\frac{TP+TN}{\text{all}}$,
+$\text{FNR}=\frac{FN}{TP+FN}$, $\text{FPR}=\frac{FP}{TN+FP}$. Always check what
+\emph{positive} means; which error is dangerous depends on the context.
+
+\textbf{Strategies}
+\begin{itemize}
+  \item \textbf{Bad actors}: 5 motivations \textbf{Money, Politics, Entertainment, Ideas,
+        Self-interest}. Describe: intent + motivation + action $\to$ impact on stakeholders.
+  \item \textbf{STRIDE}: Spoofing/authenticity, Tampering/integrity,
+        Repudiation/accountability, Information disclosure/confidentiality, Denial of
+        service/availability, Elevation of privilege/authorization.
+  \item \textbf{Harm modeling}: category of use + type of harm + magnitude (severity, scale,
+        probability, frequency). 4 categories / 10 types: Humans (physical, emotional),
+        Allocation (opportunity, economic), Human rights (dignity, liberty, privacy,
+        environment), Social systems (manipulation, social detriment).
+\end{itemize}
+\end{recapbox}
+
 \end{document}
