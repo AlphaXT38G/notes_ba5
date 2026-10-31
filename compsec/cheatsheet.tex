@@ -55,6 +55,15 @@
     Eve is assumed to have access to an \textbf{encryption oracle}.
 \end{defn}
 
+\begin{defn}[title=Practical threat model: Side-channel attacks]
+    \begin{itemize}
+        \item \textbf{Scenario:} Eve can access an ideal oracle, but also measure physical characteristics of the actual implementation while it is encrypting/decrypting.
+        \item \textbf{Timing attack:} Eve measures \textbf{how long} it takes to encrypt and decrypt.
+        \item \textbf{Power analysis:} Eve observes the \textbf{energy consumed} by the device (e.g., a credit card) doing the crypto.
+    \end{itemize}
+    \textit{Realistic:} you own a device (phone, smart card, chip) holding another party's keys (bank, Google) that should stay unreadable to you.
+\end{defn}
+
 \iffalse
 \section{Lecture 5 - Network \& File Syscalls}
 
