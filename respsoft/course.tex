@@ -808,4 +808,16 @@ Pairs (system, human): $(+,-), (+,+), (-,-), (+,+), (-,+), (-,+), (-,-)$ give FP
 FN, FN, TN, so $TP=2, FN=2, FP=1, TN=2$. Accuracy $=4/7$, FNR $=2/4=0.5$, FPR $=1/3$.
 \end{exbox}
 
+\begin{warnbox}[title={Which error matters depends on the context}]
+\begin{itemize}
+  \item \textbf{Filtering toxic content} (positive = toxic): FP = harmless post censored; FN =
+        toxic post escapes.
+  \item \textbf{COVID test} (positive = infected): FP $\to$ the patient stays home for nothing;
+        FN $\to$ the patient meets others: \textbf{dangerous}.
+  \item \textbf{Quality control} where positive = ``good quality'': FP $\to$ a defective part is
+        used: \textbf{dangerous}; FN $\to$ more checks. Always check \textbf{what ``positive''
+        means}!
+\end{itemize}
+\end{warnbox}
+
 \end{document}
