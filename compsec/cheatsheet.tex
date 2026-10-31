@@ -92,6 +92,11 @@
     Initialization vector \textit{IV:} \textbf{public}, fresh per message, so the same $K$ never repeats $S$.
 \end{defn}
 
+\begin{warn}[title=Cryptanalysis: the problem with periodicity]
+    \textbf{Finite state} $\Rightarrow$ eventually \textbf{periodic}: if the message is longer than the period, the stream \textit{repeats}.\\
+    \textbf{Attack:} period found and too small $\Rightarrow$ whole key stream known.
+\end{warn}
+
 \iffalse
 \section{Lecture 5 - Network \& File Syscalls}
 
