@@ -106,6 +106,19 @@
     \[ K = B^a = A^b = g^{ab} \pmod p \]
 \end{thm}
 
+\begin{warn}[title=DH: man-in-the-middle (MITM)]
+    Eve intercepts $A$ and $B$ and sends her own value to each side: Alice gets the key $K_{AE}$ with Eve, Bob gets $K_{BE}$ with Eve.\\
+    Eve can \textbf{read, modify and relay} everything. DH gives key \textbf{agreement}, not \textbf{authentication}: secure against a \textit{passive} Eve only.
+\end{warn}
+
+\begin{defn}[title=The need for trust (authentication)]
+    DH solves \textbf{key distribution}, but creates the \textbf{identity verification problem}.
+    \begin{itemize}
+        \item \textbf{Solution:} pair DH with a mechanism like \textbf{digital signatures} to verify identity (next week).
+        \item \textbf{Setup:} parties still need to trust a third party (a \textbf{Certificate Authority}) for public key ownership.
+    \end{itemize}
+\end{defn}
+
 \iffalse
 \section{Lecture 5 - Network \& File Syscalls}
 
