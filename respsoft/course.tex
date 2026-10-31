@@ -2010,4 +2010,19 @@ impossibility results aren't some kind of artifact of statistical decision makin
 reveal moral dilemmas'' (Barocas et al., 2023).
 \end{thmbox}
 
+\begin{exbox}[title={Exam-type questions}]
+\begin{itemize}
+  \item Which metrics can assess fairness? \textbf{All of them} (accuracy, FPR, FNR, FDR, FOR,
+        PPV, NPV, acceptance rate) \textbf{as long as we compare two groups} with it.
+  \item SuperCrack's fissure detector: plain concrete metric $=4/8$, reinforced $=3/9$, where
+        the metric is (positive predictions)/(all samples): \textbf{demographic parity}. The two
+        rates differ (DIR far from 1), so by this metric the model is \textbf{not fair} (one can
+        question whether ``fairness'' makes sense for concrete).
+  \item Why do metrics contradict each other? They encode \textbf{different notions of
+        fairness}; the \textbf{prevalence (base rate) differs per group}; the data reflects
+        \textbf{historical inequalities} (impossibility theorem, with an imperfect model). Using
+        a sensitive attribute is not by itself the reason.
+\end{itemize}
+\end{exbox}
+
 \end{document}
