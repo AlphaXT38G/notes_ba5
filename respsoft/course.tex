@@ -774,5 +774,21 @@ Machines miss context, so humans help, and those humans get hurt by what they se
 \begin{defnbox}[title={Confusion matrix}]
 Compares the output of a system with another source (the ``truth'', e.g.\ human judgement), for
 a binary classifier. Rows: \textbf{actual} value; columns: \textbf{predicted} value.
+\begin{center}
+\begin{tabular}{l|c|c|}
+\multicolumn{1}{c}{} & \multicolumn{2}{c}{\textbf{Predicted}} \\
+\multicolumn{1}{c}{} & \multicolumn{1}{c}{Positive} & \multicolumn{1}{c}{Negative} \\ \cline{2-3}
+\textbf{Actual} Positive & \textcolor{greenColor}{\textbf{TP}} & \textcolor{redColor}{\textbf{FN}} \\ \cline{2-3}
+\textbf{Actual} Negative & \textcolor{redColor}{\textbf{FP}} & \textcolor{greenColor}{\textbf{TN}} \\ \cline{2-3}
+\end{tabular}
+\end{center}
+\begin{itemize}
+  \item \textbf{TP}: predicts positive, correct. \textbf{TN}: predicts negative, correct.
+  \item \textbf{FP}: predicts positive, \emph{wrong} (``false alarm'').
+        \textbf{FN}: predicts negative, \emph{wrong} (``miss'').
+\end{itemize}
+The first word (True/False) says if the prediction is right; the second (Positive/Negative) says
+\textbf{what was predicted}.
+\end{defnbox}
 
 \end{document}
