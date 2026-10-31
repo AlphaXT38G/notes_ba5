@@ -8,8 +8,77 @@
 \begin{document}
 \begin{multicols*}{4}
 
-\cheattitle{Computer Systems}{}{BA4}
+\cheattitle{Computer Security and privacy}{}{BA5}
 
+\section{Lecture 5 - Applied Cryptography I}
+
+\begin{warn}[title=Why cryptography matters]
+    \begin{itemize}
+        \item \textbf{Data in transit:} securing communication
+        \item \textbf{Data at rest:} securing stored information
+    \end{itemize}
+\end{warn}
+
+\begin{defn}[title=Confidentiality]
+    Infos cannot be accessed by \textbf{unauthorized parties}.
+\end{defn}
+
+\centering\includegraphics[width=\linewidth,keepaspectratio]{images/lecture05/encryption-flow.png}
+
+\begin{thm}[title=Core requirement: Invertibility]
+    \[ \forall K, M,\ D_K(E_K(M)) = M \]
+    If not, Bob cannot recover the original message $M$.\\
+    \textbf{Security requirement:} these functions must also be \textbf{hard to invert} \textit{without} knowing the key $K$.
+\end{thm}
+
+\begin{defn}[title=Types of adversaries]
+    Security is always measured relative to the power of the \textbf{adversary (Eve)}.
+    \begin{itemize}
+        \item \textbf{Passive eavesdropper:} Eve can only \textit{read} the ciphertext.
+        \item \textbf{More active attacker:} Eve can influence the system, e.g. convince Alice to send Bob specific messages, observe the precise time Bob takes to run his algorithm\ldots{} anything beyond just observing communication.
+    \end{itemize}
+\end{defn}
+
+\begin{defn}[title=Active model 1: Known Plaintext Attack (KPA)]
+    \begin{itemize}
+        \item \textbf{Scenario:} Eve has access to multiple pairs $(M, C)$ of messages and their ciphertexts, all encrypted with the secret key $K$.
+        \item \textbf{Goal:} from these pairs, guess the key $K$ to decrypt other messages.
+    \end{itemize}
+    \textit{Substitution cipher:} if $M$ = ``THE QUICK BROWN FOX'' is known, Eve recovers many letter mappings at once, no frequency analysis needed.
+\end{defn}
+
+\begin{defn}[title=Active model 2: Chosen Plaintext Attack (CPA)]
+    \begin{itemize}
+        \item \textbf{Scenario:} Eve can convince Alice (or the system) to encrypt arbitrary messages \textit{chosen by Eve} with the secret key.
+        \item \textbf{More abstractly:} for any chosen plaintext $m$, Eve can get $E_K(m)$.
+    \end{itemize}
+    Eve is assumed to have access to an \textbf{encryption oracle}.
+\end{defn}
+
+\begin{defn}[title=Practical threat model: Side-channel attacks]
+    \begin{itemize}
+        \item \textbf{Scenario:} Eve can access an ideal oracle, but also measure physical characteristics of the actual implementation while it is encrypting/decrypting.
+        \item \textbf{Timing attack:} Eve measures \textbf{how long} it takes to encrypt and decrypt.
+        \item \textbf{Power analysis:} Eve observes the \textbf{energy consumed} by the device (e.g., a credit card) doing the crypto.
+    \end{itemize}
+    \textit{Realistic:} you own a device (phone, smart card, chip) holding another party's keys (bank, Google) that should stay unreadable to you.
+\end{defn}
+
+\begin{thm}[title=Perfect secrecy]
+    $\forall m, c,\ \PR(M = m \mid E_K(M) = c) = \PR(M = m)$
+\end{thm}
+
+\begin{defn}[title=One-time pad (OTP)]
+    $K$: \textbf{random} bits, \textbf{as long as} $m$, pre-shared.
+    \[ \mathrm{Enc}(k, m) = m \oplus k \qquad \mathrm{Dec}(k, c) = c \oplus k \]
+    \textbf{Perfectly secret}: $K$ and $m$ are independant.
+\end{defn}
+
+\begin{warn}[title=The key problem of OTP]
+    The key must be \textbf{truly random}, \textbf{message-length} and \textbf{used only once}.
+\end{warn}
+
+\iffalse
 \section{Lecture 5 - Network \& File Syscalls}
 
 \begin{defn}[title=Permission bits]
@@ -363,6 +432,7 @@ We don't expect you to reason about bitmap accesses. We do expect you to reason 
 \noindent\textbf{Scheduling}\\
 If a thread terminates or blocks after running for a fraction of a time tick (e.g., after 0.99 time ticks), assume that ``nothing'' happens during the rest of the current time tick. Differently said: Assume that the OS scheduler can only run at integer time-tick values, e.g., time tick 0, time tick 1, etc.
 \end{small}
-\end{multicols*}
+\fi
 
+\end{multicols*}
 \end{document}
