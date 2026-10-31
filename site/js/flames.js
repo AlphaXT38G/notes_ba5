@@ -32,11 +32,11 @@ const setFire = on => {
 };
 // 20 clicks on the flame button within a minute start the metal takeover (easter egg, see
 // startMetalEgg in metal.js); the clicks counted are the ones of the last 60 s.
-// In the jazz bar and at Christmas the button is still there but lights no flames (too heavy on top
-// of the screen): it only gives a little puff and counts towards the 20 clicks.
+// In the jazz bar, at Christmas and at Halloween the button is still there but lights no flames
+// (too heavy on top of the screen): it only gives a little puff and counts towards the 20 clicks.
 const fireClicks = [];
 fireBtn.addEventListener("click", () => {
-  if (document.body.classList.contains("night") || document.body.classList.contains("christmas")) {
+  if (["night", "christmas", "halloween"].some(c => document.body.classList.contains(c))) {
     fireBtn.animate([{ transform: "scale(1)" }, { transform: "scale(1.25) rotate(-8deg)" }, { transform: "scale(1)" }], { duration: 200 });
   } else setFire(!document.body.classList.contains("fire"));
   const now = Date.now();

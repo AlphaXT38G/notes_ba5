@@ -1,0 +1,91 @@
+/* Halloween's creatures and things to click (js/hwcandles.js, hwpumpkins.js, hwspider.js,
+   hwwebshot.js, hwsecrets.js, hwghosts.js, hwscream.js), above the page. In order: the candles,
+   the pumpkin pile, the spider's web and its spit, the scene's secrets, the ghosts, the
+   screamer. */
+
+/* The candles on the right end of the search bar (placed by js) and the one alone on Previews,
+   their wax run over the bar's edge and the Previews button's, their flames layered and
+   flickering, their warm light breathing on the page around */
+body.halloween .searchrow,body.halloween .view{position:relative}
+.hwcandles{position:absolute;display:flex;align-items:flex-end;pointer-events:none;z-index:2}
+.hwcandles.solo{right:1.3rem;bottom:calc(100% - 9px)}
+.hwcandles.solo::before{left:-3rem;right:-3rem;top:-4rem;bottom:-3rem}
+.hwcandles::before{content:"";position:absolute;left:-7rem;right:-5rem;top:-6rem;bottom:-5rem;pointer-events:none;background:radial-gradient(closest-side,rgba(255,170,70,.28),rgba(255,120,40,.1) 55%,transparent);animation:hw-light 2.3s ease-in-out infinite;transition:opacity .6s}
+.hwcandles:not(:has(.lit))::before{opacity:0}
+@keyframes hw-light{0%,100%{opacity:1}30%{opacity:.8}55%{opacity:.95}75%{opacity:.75}}
+.hwcandles .candle{position:relative;display:block;margin:0 -9px;padding:0;min-height:0;border:0;background:none;cursor:pointer;pointer-events:auto;line-height:0}
+.hwcandles svg{display:block;overflow:visible;filter:drop-shadow(0 3px 4px rgba(0,0,0,.45))}
+.hwcandles .glow{opacity:0;transition:opacity .5s}
+.hwcandles .lit .glow{opacity:1;animation:hw-light 1.9s ease-in-out var(--d) infinite}
+/* The flame, its foot at the wick: a halo, an orange body, a bright heart, a blue root */
+.hwcandles .flame{position:absolute;left:50%;top:-1.15rem;width:.7rem;height:1.5rem;margin-left:-.3rem;transform-origin:50% 100%;opacity:0;transition:opacity .4s;pointer-events:none;animation:hw-flame 1.3s ease-in-out var(--d) infinite}
+.hwcandles .lit .flame{opacity:1}
+.hwcandles .flame i{position:absolute;left:0;right:0;bottom:0;border-radius:50% 50% 45% 45% / 65% 65% 35% 35%}
+.hwcandles .halo{left:-1.6rem!important;right:-1.6rem!important;bottom:-1.2rem!important;height:3.6rem;border-radius:50%!important;background:radial-gradient(closest-side,rgba(255,200,110,.55),rgba(255,140,40,.18) 50%,transparent);animation:hw-light 1.6s ease-in-out var(--d) infinite}
+.hwcandles .body{height:100%;background:radial-gradient(60% 70% at 50% 75%,#ffe9a8,#ffb03a 55%,rgba(255,110,20,.6) 80%,transparent)}
+.hwcandles .heart{left:22%!important;right:22%!important;bottom:12%!important;height:45%;background:radial-gradient(closest-side,#fffdf0,#fff3c0 60%,transparent)}
+.hwcandles .root{left:20%!important;right:20%!important;bottom:-2%!important;height:24%;background:radial-gradient(closest-side,rgba(110,140,255,.7),transparent)}
+@keyframes hw-flame{0%,100%{transform:scale(1,1) skewX(0)}20%{transform:scale(.95,1.07) skewX(3deg)}45%{transform:scale(1.04,.94) skewX(-2deg)}70%{transform:scale(.97,1.1) skewX(2deg)}}
+.hwsmoke{position:absolute;left:50%;top:-.4rem;width:10px;height:10px;margin:-5px;border-radius:50%;background:rgba(200,195,210,.55);filter:blur(3px);pointer-events:none;animation:hw-smoke 2.6s ease-out forwards}
+@keyframes hw-smoke{to{transform:translate(12px,-80px) scale(3.5);opacity:0}}
+/* The wax run over the bar's and the switch's top edges, never in the way of a click */
+.hwwax{position:absolute;top:-1px;width:9rem;height:1.5rem;pointer-events:none;z-index:1}
+.hwwax.view-run{right:.3rem;width:5.5rem}
+.hwwax svg{width:100%;height:100%;display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+@media(max-width:520px){.hwcandles{transform:scale(.75);transform-origin:100% 100%}}
+/* The pumpkin pile in the bottom right corner, spilling out of the window (placed by js):
+   carved (the face cut stroke by stroke), lit (the face glows and flickers, light on the
+   ground), laughing (it shakes) */
+#hwpatch{position:fixed;right:0;bottom:0;width:0;height:0;pointer-events:none}
+#hwpatch .pumpkin{position:absolute;width:var(--w);aspect-ratio:120/108;padding:0;border:0;background:none;cursor:pointer;pointer-events:auto;transform-origin:50% 90%}
+@media(max-width:1200px){#hwpatch{transform:scale(.7);transform-origin:100% 100%}}
+@media(max-width:700px){#hwpatch{transform:scale(.42)}}
+#hwpatch svg{width:100%;height:100%;display:block;overflow:visible}
+#hwpatch .groove{fill:none;stroke:rgba(70,20,0,.45);stroke-width:1.6}
+#hwpatch .leaf{fill:#3f5a1c}
+#hwpatch .tendril{fill:none;stroke:#4d6a22;stroke-width:1.4}
+#hwpatch .shine{fill:none;stroke:rgba(255,235,190,.5);stroke-width:2.5;stroke-linecap:round}
+#hwpatch .face{fill:#2a0c02;stroke-dasharray:400;stroke-dashoffset:400;stroke:#2a0c02;stroke-width:1;opacity:0}
+#hwpatch .carved .face{opacity:1;animation:hw-carve .9s ease-out both}
+@keyframes hw-carve{from{fill-opacity:0;stroke-dashoffset:400}60%{fill-opacity:0;stroke-dashoffset:0}to{fill-opacity:1;stroke-dashoffset:0}}
+#hwpatch .face-lit,#hwpatch .pool{opacity:0;transition:opacity .6s}
+#hwpatch .pool{fill:rgba(255,150,40,.35)}
+#hwpatch .lit .face-lit{opacity:1;animation:hw-glow 1.6s ease-in-out infinite}
+#hwpatch .lit .pool{opacity:1}
+@keyframes hw-glow{0%,100%{opacity:1}30%{opacity:.75}55%{opacity:.95}75%{opacity:.8}}
+#hwpatch .laugh svg{animation:hw-laugh .7s ease-in-out;transform-origin:50% 90%}
+@keyframes hw-laugh{20%{transform:rotate(-6deg) scale(1.04)}40%{transform:rotate(5deg)}60%{transform:rotate(-4deg) scale(1.03)}80%{transform:rotate(2deg)}}
+#hwscene.awake .hwsky .win{fill:#ffcf5a;animation:hw-window .6s ease-in-out infinite}
+/* The spider's web in the top left corner (js/hwspider.js), a canvas drawn at 1x, click-through */
+#hwweb{position:fixed;left:0;top:0;pointer-events:none;z-index:1}
+/* The spider's web in our face (js/hwwebshot.js): the flying web, the webs left everywhere, the
+   pointer caught in them (stuckpointer.js) */
+.hwshot{position:fixed;z-index:85;pointer-events:none}
+.hwshot-mess{position:fixed;left:0;top:0;width:100%;height:100%;z-index:84;pointer-events:none;opacity:0}
+/* the webs the spit leaves (js/hwwebleft.js): over the page, every click going through */
+.hwwebleft{position:fixed;left:0;top:0;width:100%;height:100%;z-index:84;pointer-events:none}
+#hwwebcursor{filter:drop-shadow(0 0 3px rgba(230,225,255,.8))}
+/* The invisible buttons over the scene's secrets (js/hwsecrets.js), and the firefly jar half
+   buried on the near hill (its firefly wandering, its light breathing) */
+#hwhits button{position:fixed;padding:0;border:0;background:none;cursor:pointer;border-radius:30%}
+#hwhits button:focus-visible{outline:2px solid #ff9a2e}
+#hwjar{position:fixed;width:2.2rem;aspect-ratio:40/56;padding:0;border:0;background:none;cursor:pointer;z-index:0}
+#hwjar svg{position:relative;width:100%;height:100%;display:block;overflow:visible}
+#hwjar .fly{animation:hw-fly 7s ease-in-out infinite}
+@keyframes hw-fly{0%,100%{transform:translate(0,0)}20%{transform:translate(3px,-9px)}45%{transform:translate(-4px,-3px)}70%{transform:translate(2px,-14px)}85%{transform:translate(-3px,-8px)}}
+#hwjar .light{position:absolute;left:-120%;right:-120%;top:-60%;bottom:-40%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,120,40,.32),rgba(255,80,20,.1) 55%,transparent);animation:hw-light 2.2s ease-in-out infinite;pointer-events:none}
+/* The ghosts (js/hwghosts.js, rendered by hwghostgl.js): the canvas of the one out follows it
+   (transform set by js), behind the courses when far, in front when near; click-through but for
+   the heart of its figure */
+#hwghost{position:fixed;left:0;top:0;width:13rem;aspect-ratio:2/3;pointer-events:none!important;transform-origin:50% 50%}
+#hwghost canvas{position:absolute;left:0;top:0;width:100%;height:100%}
+#hwfront #hwghost .hit{position:absolute;left:35%;right:35%;top:12%;bottom:40%;pointer-events:auto;cursor:pointer}
+@media(max-width:700px){#hwghost{width:9rem}}
+/* The screamer: the zombie bursts out of the top left corner and lunges until it fills the
+   window, shaking, then is gone */
+#hwscream{position:fixed;inset:0;z-index:1000;background:#000;pointer-events:none;overflow:hidden;animation:hw-black 1.1s steps(1) forwards}
+#hwscream img{position:absolute;left:calc(50vw - 50vmax);top:calc(50vh - 38vmax);width:100vmax;height:100vmax;object-fit:cover;animation:hw-lunge 1.1s cubic-bezier(.2,.9,.3,1) forwards}
+@keyframes hw-black{0%{background:transparent}8%,100%{background:#000}}
+@keyframes hw-lunge{0%{transform:translate(calc(-50vw + 4vmax),calc(-50vh + 2vmax)) scale(.1) rotate(-14deg)}14%{transform:translate(-1.5vmax,1vmax) scale(.98) rotate(-3deg)}24%{transform:translate(1.5vmax,-1vmax) scale(1.06) rotate(2deg)}34%{transform:translate(-1vmax,-1.5vmax) scale(1.1) rotate(-2deg)}46%{transform:translate(1.2vmax,1vmax) scale(1.14) rotate(1.5deg)}60%{transform:translate(-.8vmax,.6vmax) scale(1.18) rotate(-1deg)}86%{transform:scale(1.24);opacity:1}100%{transform:scale(1.26);opacity:0}}
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){#hwjar .fly,#hwjar .light{animation:none}.hwsmoke{animation:none;display:none}.hwcandles::before,.hwcandles .flame,.hwcandles .halo,.hwcandles .lit .glow{animation:none}#hwpatch .lit .face-lit,#hwpatch .laugh svg,#hwscene.awake .hwsky .win{animation:none}#hwpatch .carved .face{animation:none;fill-opacity:1}}

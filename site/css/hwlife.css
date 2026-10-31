@@ -1,0 +1,144 @@
+/* The Halloween scene alive (js/hwmotion.js, js/hwcastlelife.js, js/hwhills.js): its planes slid
+   for depth, the haze between the castle and the hills, the castle's banners, smoke and crows, the
+   shooting stars, the light walking in the windows, the wind (#hwscene.gust), and what stands on
+   the hills: an open grave, a lantern, a hand from the earth, a scarecrow, a signpost, a crypt,
+   will-o'-wisps. By day everything is a silhouette in the haze, at night it is lit by the moon
+   and its own lights. Transform and opacity only. */
+
+/* The planes: a little wider than the window, so sliding one aside never shows its edge */
+#hwscene .hwsky{left:-24px;right:-24px;will-change:translate}
+.hwsky .hz{stop-color:#5a2a14}
+body[data-phase=halloween-night] .hwsky .hz{stop-color:#2a1a48}
+
+/* Banners rippling on their poles, flapping hard in a gust */
+.hwsky .banner .pole{stroke:#0a0504;stroke-width:2;fill:none}
+.hwsky .banner .pole-top{fill:#2a150e}
+.hwsky .banner .cloth{fill:#3a0e0a;transform-box:fill-box;transform-origin:0 50%;animation:hw-banner 1.7s ease-in-out var(--d) infinite alternate}
+.hwsky .banner .fold{fill:#1e0705;animation-duration:1.3s}
+#hwscene.gust .hwsky .banner .cloth{animation-duration:.32s}
+@keyframes hw-banner{from{transform:skewY(7deg) scaleX(.92)}to{transform:skewY(-6deg) scaleX(1.05)}}
+body[data-phase=halloween-night] .hwsky .banner .cloth{fill:#7a1420}
+body[data-phase=halloween-night] .hwsky .banner .fold{fill:#3e0a14}
+body[data-phase=halloween-night] .hwsky .banner .pole-top{fill:#3a2c5a}
+
+/* The chimney's smoke: puffs rising, growing, carried off to the right, fading */
+.hwsky .smoke{stop-color:#5a4038}
+body[data-phase=halloween-night] .hwsky .smoke{stop-color:#7a7090}
+.hwsky .puff{fill:url(#hw-puff-g);opacity:0;transform-box:fill-box;transform-origin:center;animation:hw-puff 6.9s linear var(--d) infinite}
+@keyframes hw-puff{0%{opacity:0;transform:translate(0,0) scale(.5)}12%{opacity:.8}100%{opacity:0;transform:translate(46px,-120px) scale(3)}}
+
+/* The crows round the keep's spire: there and back across (ease in and out at the ends), up and
+   down a quarter turn later (an ellipse), turned back at each end, wings beating */
+.hwsky .crow{fill:#0a0405}
+body[data-phase=halloween-night] .hwsky .crow{fill:#05020a}
+.hwsky .crow-x{animation:hw-crow-x var(--t) ease-in-out var(--p) infinite alternate}
+.hwsky .crow-y{animation:hw-crow-y var(--t) ease-in-out calc(var(--p) - var(--t) / 2) infinite alternate}
+.hwsky .crow-turn{animation:hw-crow-turn calc(var(--t) * 2) step-end var(--p) infinite}
+.hwsky .wing{transform-box:fill-box;transform-origin:50% 100%;animation:hw-wing .36s ease-in-out infinite alternate}
+.hwsky .wing.far{animation-delay:-.1s}
+@keyframes hw-crow-x{from{transform:translateX(calc(var(--rx) * -1))}to{transform:translateX(var(--rx))}}
+@keyframes hw-crow-y{from{transform:translateY(calc(var(--ry) * -1))}to{transform:translateY(var(--ry))}}
+@keyframes hw-crow-turn{0%{transform:none}50%{transform:scaleX(-1)}}
+@keyframes hw-wing{to{transform:scaleY(-.5)}}
+
+/* A light carried along a floor at night */
+body[data-phase=halloween-night] .hwsky .win.pass{fill:#ffc25a;transition:fill .5s}
+.hwsky .win{transition:fill 1s}
+
+/* Shooting stars: a streak fading towards its tail, rushing along its line, then gone */
+.hwsky .meteor{animation:hw-meteor 1s cubic-bezier(.3,0,.8,1) forwards}
+.hwsky .meteor path{fill:none;stroke:url(#hw-meteor-g);stroke-width:1.8;stroke-linecap:round}
+.hwsky .meteor circle{fill:#fff}
+.hwsky .meteor.big{animation-duration:2s}
+.hwsky .meteor.big path{stroke-width:2.4}
+@keyframes hw-meteor{0%{opacity:0;transform:translateX(0)}12%{opacity:1}70%{opacity:.9}100%{opacity:0;transform:translateX(340px)}}
+
+/* The wind: the tree sways a little always, and bends in a gust (about the foot of its trunk) */
+.hwsky .treesway,.hwsky .deadtree{transform-box:view-box}
+.hwsky .treesway{animation:hw-tree-idle 9s ease-in-out infinite alternate}
+#hwscene.gust .hwsky .deadtree{animation:hw-tree-gust 7s ease-in-out}
+@keyframes hw-tree-idle{from{transform:skewX(.4deg)}to{transform:skewX(-.5deg)}}
+@keyframes hw-tree-gust{15%{transform:skewX(-2deg) rotate(.5deg)}28%{transform:skewX(-1deg)}45%{transform:skewX(-2.8deg) rotate(.8deg)}58%{transform:skewX(-1.2deg)}74%{transform:skewX(-2.2deg) rotate(.4deg)}88%{transform:skewX(-.4deg)}}
+
+/* On the hills: by day dark shapes, a little warmer than the hills; at night, moonlit purple */
+.hwsky .earth{fill:#1e100c}
+.hwsky .hole{fill:#050202}
+.hwsky .wood{fill:#24130c}
+.hwsky .wood-s{fill:none;stroke:#1a0d09;stroke-width:5;stroke-linecap:round}
+.hwsky .wood-s.thin{stroke-width:3}
+.hwsky .iron{fill:#0c0606}
+.hwsky .iron-s{fill:none;stroke:#0c0606;stroke-width:1.2}
+body[data-phase=halloween-night] .hwsky :is(.earth,.wood){fill:#140c22}
+body[data-phase=halloween-night] .hwsky .wood-s{stroke:#120a1e}
+body[data-phase=halloween-night] .hwsky :is(.iron,.hole){fill:#05030a}
+body[data-phase=halloween-night] .hwsky .iron-s{stroke:#05030a}
+/* the lantern: swinging from its hook, lit at night (the glow breathing) */
+.hwsky .lantern{transform-box:fill-box;transform-origin:50% 0;animation:hw-swing 3.2s ease-in-out infinite alternate}
+#hwscene.gust .hwsky .lantern{animation:hw-swing-gust .9s ease-in-out infinite alternate}
+@keyframes hw-swing{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+@keyframes hw-swing-gust{from{transform:rotate(4deg)}to{transform:rotate(17deg)}}
+.hwsky .lamp{fill:#3a1a0a}
+.hwsky .lamp-glow{fill:url(#hw-lamp-g);opacity:0}
+body[data-phase=halloween-night] .hwsky .lamp{fill:#ffcf6a}
+body[data-phase=halloween-night] .hwsky .lamp-glow{opacity:.8;animation:hw-flicker 2.3s ease-in-out infinite}
+@keyframes hw-flicker{0%,100%{opacity:.8}30%{opacity:.55}45%{opacity:.85}70%{opacity:.6}}
+/* the hand from the earth: hidden under it, rising, clawing, sinking back (class "rise") */
+.hwsky .hand{transform:translateY(46px)}
+.hwsky .hand.rise{animation:hw-hand 8s ease-in-out forwards}
+.hwsky .hand .skin{fill:#3a3a2a}
+.hwsky .hand .rag{fill:#24180e}
+body[data-phase=halloween-night] .hwsky .hand .skin{fill:#5a6a52}
+body[data-phase=halloween-night] .hwsky .hand .rag{fill:#1c1428}
+.hwsky .hand .fingers{transform-box:fill-box;transform-origin:50% 100%}
+.hwsky .hand.rise .fingers{animation:hw-claw .5s ease-in-out 1.8s 8 alternate}
+@keyframes hw-hand{0%{transform:translateY(46px)}18%{transform:translateY(4px)}24%{transform:translateY(8px)}30%,78%{transform:translateY(0)}100%{transform:translateY(46px)}}
+@keyframes hw-claw{to{transform:scale(.92,.82) skewX(-6deg)}}
+/* the scarecrow: swaying a little, much more in a gust; its pumpkin face lit at night */
+.hwsky .scarecrow,.hwsky .sc-gust{transform-box:fill-box;transform-origin:50% 100%}
+.hwsky .scarecrow{animation:hw-sway-sc 5s ease-in-out infinite alternate}
+#hwscene.gust .hwsky .sc-gust{animation:hw-sc-gust 7s ease-in-out}
+@keyframes hw-sway-sc{from{transform:rotate(-1deg)}to{transform:rotate(1.2deg)}}
+@keyframes hw-sc-gust{15%{transform:rotate(3deg)}28%{transform:rotate(1deg)}45%{transform:rotate(4.5deg)}60%{transform:rotate(1.5deg)}75%{transform:rotate(3deg)}}
+.hwsky .coat{fill:#1e0f0b}
+.hwsky .patch{fill:#2e1a10}
+.hwsky .straw{fill:none;stroke:#3a2410;stroke-width:1.6;stroke-linecap:round}
+.hwsky .pumpkin{fill:#3a1a08}
+.hwsky .pumpkin-rib{fill:none;stroke:#1e0c04;stroke-width:1.2}
+.hwsky .face{fill:#120804}
+.hwsky .hat{fill:#120907}
+body[data-phase=halloween-night] .hwsky :is(.coat,.hat){fill:#0e0818}
+body[data-phase=halloween-night] .hwsky .patch{fill:#1c1430}
+body[data-phase=halloween-night] .hwsky .straw{stroke:#4a3a2a}
+body[data-phase=halloween-night] .hwsky .pumpkin{fill:#a8460c}
+body[data-phase=halloween-night] .hwsky .pumpkin-rib{stroke:#6a2a06}
+body[data-phase=halloween-night] .hwsky .face{fill:#ffd23a;animation:hw-flicker 1.9s ease-in-out infinite}
+/* the signpost */
+.hwsky .board{fill:#2a170e}
+.hwsky .sign-t{font:700 9px Georgia,serif;fill:#6a4a34;letter-spacing:.06em}
+body[data-phase=halloween-night] .hwsky .board{fill:#1a1230}
+body[data-phase=halloween-night] .hwsky .sign-t{fill:#8a7ca8}
+/* the crypt: its door ajar on a green glow at night */
+.hwsky .crypt{fill:#1c0f0c}
+.hwsky .crypt-lit{fill:#2e1a12}
+.hwsky .crypt-col{fill:none;stroke:#2a1610;stroke-width:4}
+.hwsky .crypt-door{fill:#0a0504}
+.hwsky .crypt-crack{fill:#1a0c08}
+.hwsky .crypt-glow{fill:#4affb0;opacity:0}
+body[data-phase=halloween-night] .hwsky .crypt{fill:#141024}
+body[data-phase=halloween-night] .hwsky .crypt-lit{fill:#3a3058}
+body[data-phase=halloween-night] .hwsky .crypt-col{stroke:#2a2244}
+body[data-phase=halloween-night] .hwsky .crypt-door{fill:#06040c}
+body[data-phase=halloween-night] .hwsky .crypt-crack{fill:#9affd0}
+body[data-phase=halloween-night] .hwsky .crypt-glow{opacity:.1;animation:hw-crypt 4s ease-in-out infinite}
+@keyframes hw-crypt{50%{opacity:.2}}
+/* the will-o'-wisps: night only, drifting on two slow paths, breathing */
+.hwsky .wisps{display:none}
+body[data-phase=halloween-night] .hwsky .wisps{display:inline}
+.hwsky .wisp-x{animation:hw-wisp-x 11s ease-in-out var(--d) infinite alternate}
+.hwsky .wisp-y{animation:hw-wisp-y 4.6s ease-in-out var(--d) infinite alternate}
+.hwsky .wisp-core{fill:#effff8}
+@keyframes hw-wisp-x{from{transform:translateX(-40px)}to{transform:translateX(50px)}}
+@keyframes hw-wisp-y{0%{transform:translateY(0);opacity:.9}50%{opacity:.35}100%{transform:translateY(-26px);opacity:.85}}
+
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){.hwsky :is(.banner .cloth,.puff,.crow-x,.crow-y,.crow-turn,.wing,.treesway,.deadtree,.lantern,.lamp-glow,.hand,.fingers,.scarecrow,.sc-gust,.face,.crypt-glow,.wisp-x,.wisp-y){animation:none}.hwsky .puff{opacity:.3}}

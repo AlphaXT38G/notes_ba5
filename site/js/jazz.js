@@ -87,6 +87,7 @@ const jazzSound = () => {  // unmute a jazz that autoplayed muted
   jazzSoundAt = performance.now();
   paintVinyl();
 };
+musicButtons.push(vinyl);  // the space bar too (screens.js)
 vinyl.addEventListener("click", e => {
   e.stopPropagation();
   if (performance.now() - jazzSoundAt < 600) return;  // this same click just turned the sound on

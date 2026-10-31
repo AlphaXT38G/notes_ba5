@@ -62,7 +62,7 @@ searches the names only.
 In the bottom left corner, a vintage cassette deck 📼 plays music while you read, with
 VU meters, a tape counter and real keys (▶❚❚, ◀◀ / ▶▶ wind 30 s). Its station key
 goes through the bands: Lofi Girl mixes from YouTube, the music of the screens (jazz
-bar, late night, metal show, epic finale, Christmas) and Radio Impuls live. ⏏, or the
+bar, late night, metal show, epic finale, Christmas, Halloween) and Radio Impuls live. ⏏, or the
 next tape leaning behind the deck, puts in the next tape of the band. It never starts
 by itself, and only shows during the day.
 YouTube ads stay silent: only the music is heard, and a tape you come back to plays on
@@ -73,7 +73,8 @@ floating notes) and plays background jazz ("Just One More Drink", jazz noir). Th
 music of every screen is an mp3 served with the page (`site/audio/`). It starts by
 itself; browsers only allow sound after a click, so until the page has had one it
 plays muted and the sound comes on at the first click or key press. The turntable in
-the bottom left corner plays / pauses it.
+the bottom left corner plays / pauses it, and so does the space bar, on every screen
+(anywhere but in the search field).
 
 Jazz plays until 00:45, then the bar closes until 01:00 (darker light, the neon goes
 out letter by letter, then the bartender, a Gigachad, comes over the whole screen, life-size
@@ -129,18 +130,44 @@ snowman: his hat, his carrot nose, tickle him, warm him up, play his buttons (an
 the lowest one, if you want a bad time)... but not too much, he throws snowballs. The
 metal show at 01:00 and the easter eggs still happen.
 
-Add `?screen=evening`, `?screen=closing`, `?screen=metal`, `?screen=epic`, `?screen=calm`,
-`?screen=christmas` or `?screen=christmas-night` (or `1` / `0`) to the URL to force a
-screen (or the day) at any time.
+From **October 25 to November 1** Halloween takes over, day and night alike, darker at
+night: Dracula's gothic castle on its crag behind the courses (spires, gargoyles, flying
+buttresses, its windows lit at night, a vampire passing behind the great one), a
+graveyard with a dead tree, drifting mist, falling leaves and bats; by day an
+orange haze and a giant pale moon risen behind the hills, at night the same giant moon, full, warm and golden, under a purple sky full of stars, with shooting stars and some lightning, and a
+werewolf walking the far hill now and then to howl at the moon, and a witch on her broom
+crossing the sky with a trail of magic. The scene has depth: its planes slide as the pointer moves
+and the page scrolls. The wind blows in gusts (the tree bends, the leaves fly across), banners
+ripple on the towers, smoke rises from a chimney, crows circle the keep and, at night, a light
+walks from window to window. On the hills, a scarecrow with a pumpkin head, a swinging lantern, an
+open grave, a crypt glowing green, will-o'-wisps, and a hand that rises from the earth now and then. Four candles burn on the
+search bar and the Previews button, their wax running over them, and really melt (their height is
+remembered from one visit to the next): blow them out and light them again. Carve and light
+the whole pile of pumpkins in the corner, hunt the bats, poke the big spider in its web (not too often: it spits, and some of its webs stay on your screen until you cut them with a swipe),
+watch the ghosts wandering (a lady in white, a monk with his lantern, a shrouded one), wake the
+gargoyles of the castle, watch its windows (someone appears in them, and leads elsewhere),
+find the firefly jar...
+and beware: something may jump at you, rarely (or right away, if you type `candy`). The music (Lofi Girl's Halloween mixes, a spooky
+lofi radio and an autumn village ambience) plays on a pumpkin cocotte that simmers while it
+plays; the other tracks wait beside it as potions in flasks: pour one into the pot to cook the
+next music (shaken, poured, the empty flask thrown in after it, and the smoke that rises takes a
+spooky shape).
 
-It hides eight easter eggs: a surprise banner that shows up on some visits,
+Add `?screen=evening`, `?screen=closing`, `?screen=metal`, `?screen=epic`, `?screen=calm`,
+`?screen=christmas`, `?screen=christmas-night`, `?screen=halloween` or
+`?screen=halloween-night` (or `1` / `0`) to the URL to force a screen (or the day) at any
+time.
+
+It hides nine easter eggs: a surprise banner that shows up on some visits,
 something that happens when you type the Konami code (↑↑↓↓←→←→BA), the metal
 takeover at any time of day if you click the flame button 20 times within a minute,
 Christmas at any time of the year if you type `yeti` (outside the Christmas
 period, type it again on a Christmas screen to leave; in the jazz bar, it brings
-Christmas back), and the jazz bar at any time
+Christmas back), Halloween at any time of the year if you type `boo` (type it again to
+leave), and the jazz bar at any time
 if you type `armstrong` (type it again in the bar to go back to the screen of the
-moment: the day, the calm night, the bar at bar time, or Christmas in December), and the
+moment: the day, the calm night, the bar at bar time, Christmas in December or Halloween
+at the end of October), and the
 calm night at any time if you type `peace` (type it again to leave), and the epic finale
 at any time if you type `kamelot` (type it again to leave). And if it all gets
 too much, type `normal`: the plain page comes back, whatever is on (type it again to

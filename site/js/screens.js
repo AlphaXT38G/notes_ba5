@@ -133,3 +133,22 @@ const dropTrack = track => {
   track.removeAttribute("src");
   track.load();
 };
+// The space bar plays / pauses the music of every screen: each player puts its play / pause
+// button in musicButtons (musicButtons.push(button)), and the key clicks the first one in the
+// page, so it does exactly what a click does (turn a muted track's sound on, pause, play). Not in
+// the search field, where a space is a space; on a focused button too (which space would click
+// otherwise): the music wins, and the page does not scroll.
+const musicButtons = [];
+let musicKeyDown = false;
+document.addEventListener("keydown", e => {
+  if (e.key !== " " || e.ctrlKey || e.altKey || e.metaKey || e.target.matches("input, textarea, select, [contenteditable]")) return;
+  const button = musicButtons.find(b => b.isConnected);
+  if (!button) return;
+  e.preventDefault();
+  if (!e.repeat) button.click();
+  musicKeyDown = true;
+});
+// the space's keyup would click a focused button: kept for the music
+document.addEventListener("keyup", e => {
+  if (e.key === " " && musicKeyDown) { e.preventDefault(); musicKeyDown = false; }
+});
