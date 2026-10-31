@@ -78,6 +78,20 @@
     The key must be \textbf{truly random}, \textbf{message-length} and \textbf{used only once}.
 \end{warn}
 
+\begin{defn}[title=Two main types of symmetric schemes]
+    Encryption and decryption use \textbf{the same key}.
+    \begin{itemize}
+        \item \textbf{Block ciphers:} operate on fixed-size blocks (e.g., 128 bits).
+        \item \textbf{Stream ciphers:} operate one bit/byte at a time.
+    \end{itemize}
+\end{defn}
+
+\begin{defn}[title=Stream ciphers: the pseudo-OTP]
+    Like the OTP, but the random pad is replaced by a \textbf{pseudo-random} stream generated from a short key.
+    \par\vspace{1pt}{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/lecture05/stream-cipher.png}\par}\vspace{1pt}
+    Initialization vector \textit{IV:} \textbf{public}, fresh per message, so the same $K$ never repeats $S$.
+\end{defn}
+
 \iffalse
 \section{Lecture 5 - Network \& File Syscalls}
 
