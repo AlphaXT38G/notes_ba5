@@ -126,9 +126,12 @@
 \end{defn}
 
 \begin{defn}[title={Authentication (digital signature)}]
-    \textbf{Bob:} signs with his own \textbf{Secret Signing Key}.\\
-    \textbf{Alice:} (1) decrypts with her own \textbf{Secret Encryption Key}, (2) verifies the signature with \textbf{Bob's Verification Public Key}.
-    \par{\centering $\checkmark$ $\Rightarrow$ authenticity, integrity, non-repudiation.\par}
+    \begin{itemize}
+        \item Bob signs with his \textbf{Secret Signing Key}.
+        \item Alice decrypts with her \textbf{Secret Encryption Key}, then verifies the signature with Bob's \textbf{\mbox{Verification} Public Key}.
+        \item \textit{Asymmetric:} different keys sign and verify.
+    \end{itemize}
+    $\checkmark$ $\Rightarrow$ authenticity, integrity, non-repudiation.
 \end{defn}
 
 {\centering\includegraphics[width=\linewidth,keepaspectratio]{images/lecture06/all-together.png}\par}
