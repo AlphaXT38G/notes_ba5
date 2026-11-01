@@ -154,6 +154,20 @@
     \end{itemize}
 \end{warn}
 
+\begin{defn}[title=Message Authentication Code (MAC)]
+    Encryption alone gives no integrity: Eve changes $C$ and Bob decrypts a different $M$. Symmetric fix:
+    \par{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/lecture06/mac.png}\par}
+    \textbf{CBC-MAC:} $C_0 = 0$, $C_i = E_K(M_i \oplus C_{i-1})$, MAC $= $ last block. Deterministic, secure only if the length of $M$ is known.
+\end{defn}
+
+\begin{defn}[title=Confidentiality + integrity (symmetric)]
+    \begin{itemize}
+        \item \textbf{Encrypt-and-MAC:} no integrity on $C$, integrity on $M$, leaks.
+        \item \textbf{MAC-then-encrypt:} no integrity on $C$, integrity on $M$, no leaks.
+        \item \textbf{Encrypt-then-MAC (use this one):} integrity on $C$, integrity on $M$, no leaks.
+    \end{itemize}
+\end{defn}
+
 \iffalse
 \section{Lecture 5 - Network \& File Syscalls}
 
