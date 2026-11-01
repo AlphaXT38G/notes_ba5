@@ -119,6 +119,55 @@
     \end{itemize}
 \end{defn}
 
+\section{Lecture 6 - Applied Cryptography II}
+
+\begin{defn}[title=Integrity]
+    Infos cannot be modified by \textbf{unauthorized parties}.
+\end{defn}
+
+\begin{defn}[title={Authentication (digital signature)}]
+    \begin{itemize}
+        \item Bob signs with his \textbf{Secret Signing Key}.
+        \item Alice decrypts with her \textbf{Secret Encryption Key}, then verifies the signature with Bob's \textbf{\mbox{Verification} Public Key}.
+        \item \textit{Asymmetric:} different keys sign and verify.
+    \end{itemize}
+    $\checkmark$ $\Rightarrow$ authenticity, integrity, non-repudiation.
+\end{defn}
+
+{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/lecture06/all-together.png}\par}
+
+\begin{defn}[title=Block cipher modes of operation]
+    Blocks are the size of the key (128/256 bits) but messages are longer: iterate.
+    \begin{itemize}
+        \item \textbf{ECB (Electronic Code Book):} $C_i = E_K(M_i)$. $M_i = M_j \Rightarrow C_i = C_j$: leaks information.
+        \item \textbf{CBC (Cipher Block Chaining):} $C_0 = IV$, $C_i = E_K(M_i \oplus C_{i-1})$. Random-looking, but errors propagate and no single-block decryption.
+        \item \textbf{CTR (Counter):} $C_i = M_i \oplus E_K(\mathrm{Nonce} + i)$. Blocks independent: parallel, and no $D_K$ needed.
+    \end{itemize}
+\end{defn}
+
+\begin{warn}[title=Block ciphers: strengths and weaknesses]
+    \begin{itemize}
+        \item[$+$] \textbf{High diffusion:} one symbol spreads into several.
+        \item[$+$] \textbf{Immunity to tampering:} hard to insert symbols undetected.
+        \item[$-$] \textbf{Potentially slow:} a whole block is needed first.
+        \item[$-$] \textbf{Error propagation} in some modes.
+    \end{itemize}
+\end{warn}
+
+\begin{defn}[title=Message Authentication Code (MAC)]
+    Encryption alone gives no integrity: Eve changes $C$ and Bob decrypts a different $M$. Symmetric fix:
+    \par{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/lecture06/mac.png}\par}
+    \textbf{CBC-MAC:} $C_0 = 0$, $C_i = E_K(M_i \oplus C_{i-1})$, MAC $= $ last block. Deterministic, secure only if the length of $M$ is known.
+\end{defn}
+
+\begin{defn}[title=Confidentiality + integrity (symmetric)]
+    \begin{itemize}
+        \item \textbf{Encrypt-and-MAC:} no integrity on $C$, integrity on $M$, leaks.
+        \item \textbf{MAC-then-encrypt:} no integrity on $C$, integrity on $M$, no leaks.
+        \item \textbf{Encrypt-then-MAC (use this one):} integrity on $C$, integrity on $M$, no leaks.
+    \end{itemize}
+\end{defn}
+
 \iffalse
 \section{Lecture 5 - Network \& File Syscalls}
 
