@@ -119,6 +119,20 @@
     \end{itemize}
 \end{defn}
 
+\section{Lecture 6 - Applied Cryptography II}
+
+\begin{defn}[title=Integrity]
+    Infos cannot be modified by \textbf{unauthorized parties}.
+\end{defn}
+
+\begin{defn}[title={Authentication (digital signature)}]
+    \textbf{Bob:} signs with his own \textbf{Secret Signing Key}.\\
+    \textbf{Alice:} (1) decrypts with her own \textbf{Secret Encryption Key}, (2) verifies the signature with \textbf{Bob's Verification Public Key}.
+    \par{\centering $\checkmark$ $\Rightarrow$ authenticity, integrity, non-repudiation.\par}
+\end{defn}
+
+{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/lecture06/all-together.png}\par}
+
 \iffalse
 \section{Lecture 5 - Network \& File Syscalls}
 
