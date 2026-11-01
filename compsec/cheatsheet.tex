@@ -10,6 +10,67 @@
 
 \cheattitle{Computer Security and privacy}{}{BA5}
 
+\section{Lecture 1 - Basics}
+
+\begin{defn}[title=CIA triad (must hold)]
+    Against a \textbf{resourced, strategic adversary}.
+    \begin{itemize}
+        \item \textbf{Confidentiality:} no unauthorized \textit{disclosure}.
+        \item \textbf{Integrity:} no unauthorized \textit{modification}.
+        \item \textbf{Availability:} no unauthorized \textit{denial of service}.
+    \end{itemize}
+\end{defn}
+
+\begin{thm}[title=Security policy]
+    The properties that must hold for \textbf{assets} (objects) and \textbf{principals} (subjects, never the adversary).\\
+    \textbf{Example}: \textit{ensure messages cannot be read by anyone but the sender and the receiver}
+\end{thm}
+
+\begin{defn}[title=Threat model]
+    The adversary's \textbf{resources} and \textbf{capabilities} (observe, influence, corrupt\ldots). The adversary is \textbf{strategic}: it always picks the optimal way.
+\end{defn}
+
+\begin{prop}[title={Vulnerability, threat, harm}]
+    \begin{itemize}
+        \item \textbf{Vulnerability:} a weakness that can be exploited.
+        \item \textbf{Threat:} the adversary's goal.
+        \item \textbf{Harm:} what happens if the threat materializes.
+    \end{itemize}
+\end{prop}
+
+\begin{thm}[title=Security mechanism]
+    Technical means (software, hardware, crypto, procedures) keeping the policy from being violated \textbf{within the threat model}.\\
+    \textbf{Example}: \textit{encrypt the message before sending}
+\end{thm}
+
+\begin{prop}[title=Composing mechanisms]
+    \begin{itemize}
+        \item \textbf{Defence in depth (AND)}
+        \item \textbf{Weakest link (OR)}
+    \end{itemize}
+    \textbf{Humans} (phishing, weak passwords): weakest link.
+\end{prop}
+
+\begin{defn}[title=Secure]
+    An adversary limited by a specific threat model cannot violate the policy.
+\end{defn}
+
+\begin{thm}[title=Security argument]
+    A rigorous argument that the mechanisms maintain the policy, \textit{subject to the threat model's assumptions}.
+\end{thm}
+
+\begin{warn}[title=Attacker vs.\ defender]
+    The attacker needs one way in, the defender must cover all. Composing mechanisms is hard to argue.
+\end{warn}
+
+\begin{prop}[title=Security engineering process]
+    \begin{enumerate}
+        \item \textbf{Specification:} architecture, policy, threat model.
+        \item \textbf{Design:} choose mechanisms, state the security argument.
+        \item \textbf{Implementat°:} build, check conformance, test.
+    \end{enumerate}
+\end{prop}
+
 \section{Lecture 2 - Principles of computer security}
 
 \begin{defn}[title={1 - Economy of mechanism (KISS)}]
