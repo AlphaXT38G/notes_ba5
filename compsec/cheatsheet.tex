@@ -27,7 +27,9 @@
 \end{thm}
 
 \begin{defn}[title=Threat model]
-    The adversary's \textbf{resources} and \textbf{capabilities} (observe, influence, corrupt\ldots). The adversary is \textbf{strategic}: it always picks the optimal way.
+    What the adversary \textbf{has} and \textbf{can do}.\\
+    It is \textbf{strategic}: always picks its best attack.\\
+    \textbf{Example}: \textit{reads traffic, corrupts one employee}
 \end{defn}
 
 \begin{prop}[title={Vulnerability, threat, harm}]
@@ -39,7 +41,7 @@
 \end{prop}
 
 \begin{thm}[title=Security mechanism]
-    Technical means (software, hardware, crypto, procedures) keeping the policy from being violated \textbf{within the threat model}.\\
+    Technical means (software, crypto) keeping the policy from being violated \textbf{within the threat model}.\\
     \textbf{Example}: \textit{encrypt the message before sending}
 \end{thm}
 
@@ -52,11 +54,11 @@
 \end{prop}
 
 \begin{defn}[title=Secure]
-    An adversary limited by a specific threat model cannot violate the policy.
+    A system \textbf{keeps the policy} against every adversary \textbf{within the threat model}.
 \end{defn}
 
 \begin{thm}[title=Security argument]
-    A rigorous argument that the mechanisms maintain the policy, \textit{subject to the threat model's assumptions}.
+    \textbf{The proof} that the system is secure: why the mechanisms keep the policy, \textit{assuming the threat model holds}.
 \end{thm}
 
 \begin{warn}[title=Attacker vs.\ defender]
