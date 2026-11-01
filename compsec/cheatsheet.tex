@@ -10,6 +10,52 @@
 
 \cheattitle{Computer Security and privacy}{}{BA5}
 
+\section{Lecture 2 - Principles of computer security}
+
+\begin{defn}[title={1 - Economy of mechanism (KISS)}]
+    Keep the implementation \textbf{simple and small}, so it is easy to audit.\\
+    \textbf{TCB} (Trusted Computing Base): every component the policy relies on. Keep it small.
+\end{defn}
+
+\begin{defn}[title={2 - Fail-safe defaults}]
+    Base decisions on \textbf{permission} (whitelist).\\
+    On failure, stay as secure as if nothing failed.
+\end{defn}
+
+\begin{defn}[title={3 - Complete mediation}]
+    \textbf{Every} access to \textbf{every} object is checked against the policy, every time, not only the first.\\
+    \textbf{Reference monitor:} sees all accesses, takes the request and the policy, decides, writes an audit log.\\
+    \textbf{Hard:} \$ performance, permission changing between check and use, distributed systems (a server can only check the requests that pass through it).
+\end{defn}
+
+\begin{defn}[title={4 - Open design}]
+    The design is \textbf{public}, only the key (password, noise) is secret. Secrecy of the design is unrealistic.
+\end{defn}
+
+\begin{defn}[title={5 - Separation of privilege}]
+    Require \textbf{several conditions}: no single breach is enough (two keys, 2FA).\\
+    Costs: availability, responsibility, complexity.
+\end{defn}
+
+\begin{defn}[title={6 - Least privilege}]
+    Only the \textbf{least set of privileges} needed, added when needed and discarded after use (need-to-know, data minimization).
+\end{defn}
+
+\begin{defn}[title={7 - Least common mechanism}]
+    Don't \textbf{share resources between users} (e.g.\ one \texttt{/tmp}): every shared resource can leak data between them.\end{defn}
+
+\begin{defn}[title={8 - Psychological acceptability}]
+    Easy to use correctly: hide the complexity, and the users' mental model matches the policy.
+\end{defn}
+
+\begin{warn}[title={9 - Work factor}]
+    Compare the effort an attacker needs to get around the protection with what the attacker can afford (time, money). Hard to put a number on.
+\end{warn}
+
+\begin{warn}[title={10 - Compromise recording}]
+    Don't only try to block every attack: keep a trustworthy record that a break-in happened (logs that show if someone changed them).
+\end{warn}
+
 \section{Lecture 5 - Applied Cryptography I}
 
 \begin{warn}[title=Why cryptography matters]
