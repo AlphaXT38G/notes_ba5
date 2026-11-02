@@ -179,6 +179,96 @@
     Each process has an \textbf{access token} (user, groups, privileges), compared with the DACL.
 \end{defn}
 
+\section{Lecture 4 - Mandatory Access Control}
+
+\begin{thm}[title=Mandatory Access Control (MAC)]
+    A \textbf{central policy} sets the permissions, and not even the owner can change them (military, hospital, bank).
+\end{thm}
+
+\begin{defn}[title=Security model]
+    A design pattern for a security property. It leaves open who the subjects and objects are, and which mechanisms to use.
+\end{defn}
+
+\begin{defn}[title=Security level (used for BLP and BIBA)]
+    Object $\rightarrow$ \textbf{level} = (classification$^1$, categories$^2$)
+    \begin{itemize}
+        \item[$^1$] \textbf{Ordered labels:} Unclassified $<$ Confidential $<$ Secret $<$ Top Secret.
+        \item[$^2$] \textbf{A set of topics:} Nuclear, Crypto.
+    \end{itemize}
+\end{defn}
+
+\begin{thm}[title=Dominance]
+    $(l_1, c_1)$ \textbf{dominates} $(l_2, c_2)$ iff $l_1 \geq l_2$ and $c_2 \subseteq c_1$.\\
+    \textbf{Incomparable:} $(S, \{\text{Crypto}\})$ and $(S, \{\text{Nuclear}\})$.
+\end{thm}
+
+\begin{defn}[title=Clearance (subjects)]
+    \textbf{Clearance:} maximum level of a subject: $\text{level}(S_i)$.\\
+    \textbf{Current level:} can be lower: $\text{current-level}(S_i)$.
+    \par{\centering $\text{level}(S_i)$ \textbf{must} $\succeq$ $\text{current-level}(S_i)$. \par}
+\end{defn}
+
+\begin{prop}[title=Model 1 - Bell-La Padula (BLP): confidentiality]
+    Rights: \textbf{execute}, \textbf{read}, \textbf{append} (alter only), \textbf{write} (observe and alter).
+\end{prop}
+
+\begin{thm}[title=BLP properties]
+    \begin{itemize}
+        \item \textbf{ss-property (no read up):}
+            \par{\centering $\text{read} \Rightarrow \text{level}(subject) \succeq \text{level}(object)$ \par}
+        \item \textbf{*-property (no write down):}
+            \par{\centering $\text{observe}(O_1) \wedge \text{alter}(O_2)$ $\Rightarrow \text{level}(O_2) \succeq \text{level}(O_1)$ \par}
+        \item \textbf{ds-property (need-to-know):} a level is coarse (all Secret staff would read all Secret files), so the matrix must also list the access.
+    \end{itemize}
+\end{thm}
+
+\begin{defn}[title=Basic Security Theorem]
+    If the initial state is secure and every transition preserves the three properties, every later state is secure, whatever the inputs.
+\end{defn}
+
+\begin{defn}[title=Covert channel]
+    A signal that slips past the policy because it uses a \textbf{side effect}, not a read or a write.\\
+    \textbf{Example}: \textit{the officer may not write down to the soldier, but he lights a lamp: lit = attack, dark = wait. The soldier learns 1 bit.}\\
+    \textbf{Kinds:} storage (shared counter, file metadata) or timing (CPU load, cache).\\
+    \textbf{Mitigation ($\approx$ fix):} isolate, or add noise. Slow leak: acceptable for documents, never for keys.
+\end{defn}
+
+\begin{warn}[title=Declassification and BLP limits]
+    \textbf{Declassification} is necessary but cannot be made safe: it is manual, and hidden data stays\\
+    BLP covers only confidentiality, and its three properties do not stop covert channels when levels change.
+\end{warn}
+
+\begin{prop}[title=Model 2 - BIBA: integrity]
+    The dual of BLP, on integrity levels (same dominance): high = trusted, low = untrusted (OS data vs.\ network data). Rights: \textbf{read}, \textbf{write}.
+\end{prop}
+
+\begin{thm}[title=BIBA properties]
+    \begin{itemize}
+        \item \textbf{Simple integrity (no read down):} do not read less trusted data, it would corrupt you.
+        \item \textbf{*-integrity (no write up):} do not write more trusted data, you would corrupt it.
+    \end{itemize}
+    \textbf{Example}: \textit{employees read the director's rules but cannot rewrite them.}
+\end{thm}
+
+\begin{prop}[title=BIBA variants]
+    \begin{itemize}
+        \item \textbf{Low-water-mark:} after reading low data, a subject's level drops (label creep). Or a written object takes the lowest level (detection only).
+        \item \textbf{Invocation:} simple (invoke only what you dominate) or controlled (only what dominates you).
+    \end{itemize}
+    \textbf{Rotation of duties:} limited time in a role, so an insider can tamper less.
+\end{prop}
+
+\begin{defn}[title=Sanitization]
+    Lifting low-integrity data to high integrity, e.g.\ checking user input. Skipping this check causes many bugs (SQL injection).\\
+    \textbf{Rule} (fail-safe): refuse by default, check whitelist.
+\end{defn}
+
+\begin{prop}[title=Model 3 - Chinese Wall: conflicts of interest]
+    Each object is labelled with its \textbf{origin} (Pepsi, Coca-Cola). \textbf{Conflict sets} group rivals. Each subject keeps a \textbf{history} of the labels it accessed.\\
+    \textbf{Rule:} deny an access that could let information flow between two labels of the same conflict set.\\
+    \textbf{Example}: \textit{Alice reads Pepsi, then Microsoft: allowed. Then Coca-Cola: denied. Alice (Pepsi) writing to IBM, which Bob (Coca-Cola) reads: denied.}
+\end{prop}
+
 \section{Lecture 5 - Applied Cryptography I}
 
 \begin{warn}[title=Why cryptography matters]
