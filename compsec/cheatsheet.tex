@@ -218,7 +218,7 @@
             \par{\centering $\text{read} \Rightarrow \text{level}(subject) \succeq \text{level}(object)$ \par}
         \item \textbf{*-property (no write down):}
             \par{\centering $\text{observe}(O_1) \wedge \text{alter}(O_2)$ $\Rightarrow \text{level}(O_2) \succeq \text{level}(O_1)$ \par}
-        \item \textbf{ds-property:} every access must be in the access control matrix (need-to-know).
+        \item \textbf{ds-property (need-to-know):} a level is coarse (all Secret staff would read all Secret files), so the matrix must also list the access.
     \end{itemize}
     Why the *-property: a Trojan in a Secret process reads Secret data (allowed) and writes it into an Unclassified file that anyone can read.\\
     \textbf{Example}: \textit{a soldier reports to an officer: allowed (write up). The officer orders ``Attack!'' to the soldier: denied (write down).}
