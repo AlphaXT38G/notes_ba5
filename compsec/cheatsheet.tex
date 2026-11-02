@@ -120,6 +120,65 @@
     Don't only try to block every attack: keep a trustworthy record that a break-in happened (logs that show if someone changed them).
 \end{warn}
 
+\section{Lecture 3 - Access Control}
+
+\begin{defn}[title=Access control (AC)]
+    Every access by a \textbf{principal} to an object must be \textbf{within the policy}. Both steps are in the TCB:
+    \begin{itemize}
+        \item \textbf{Authentication:} binds the actor to a principal.
+        \item \textbf{Authorization:} decides if it is allowed (AC).
+    \end{itemize}
+    Checks call one central \textbf{reference monitor}, never in-line (\textit{checks soup}).
+\end{defn}
+
+\begin{thm}[title=Discretionary AC (DAC)]
+    \textbf{Owner} sets permissions (Linux, Windows).
+\end{thm}
+
+\begin{defn}[title=Access control matrix]
+    Abstract table of the permitted \textbf{(subject, object, right)}. Too big and mostly empty, so we store only its non-empty entries, either by column or by row:
+    \begin{itemize}
+        \item \textbf{AC List}: Associate permissions per \textbf{object}.
+        \item \textbf{Capability}: per \textbf{subject}, its row.
+    \end{itemize}
+    \begin{center}
+    \begin{tabular}{l|c|c}
+                             & ACL  & Capability \\ \hline
+        Who accesses $o$?    & easy & hard       \\
+        What can $s$ access? & hard & easy       \\
+        Revoke on $o$        & easy & hard       \\
+        Delegate             & hard & simple     \\
+    \end{tabular}
+    \end{center}
+\end{defn}
+
+\begin{prop}[title=Roles and groups]
+    \begin{itemize}
+        \item \textbf{RBAC} (Role Based AC): permissions go to \textbf{roles}, roles to subjects, one \textbf{active role} at a time.\\Problems: \textit{role explosion}, and separation of duty (two \textit{distinct} doctors) is hard.
+        \item \textbf{Groups:} a subject gets the \textbf{union} of all its groups. \textbf{Negative permissions} (explicit denials) are checked \textbf{first}: deny overrides allow.
+    \end{itemize}
+\end{prop}
+
+\begin{thm}[title={Ambient authority, confused deputy}]
+    \textbf{Ambient authority:} an action names only the operation and the object, the subject is implicit (\texttt{open("f")}: the process owner).\\
+    \textbf{Confused deputy:} a privileged program is tricked into misusing its authority.\\
+    \textbf{Example}: \textit{Alice cannot write the file \texttt{bill}, but asks the compiler to write its errors into \texttt{bill}: it can, with its own rights.}\\
+    \textbf{Fix}: capabilities. Alice must hand over a capability for the output file, and she has none for \texttt{bill}.
+\end{thm}
+
+\begin{defn}[title=UNIX permissions]
+    \begin{itemize}
+        \item \textbf{suid/sgid:} runs with its \textbf{owner/group} rights. Danger: (confused deputy), keep them few/small.
+        \item \textbf{Sticky} (dir.): only owners delete/rename files.
+    \end{itemize}
+    \textbf{Directory}: \texttt{r} = ls, \texttt{x} = cd. \quad \texttt{root} is never denied.
+\end{defn}
+
+\begin{defn}[title=Windows]
+    Each object has a \textbf{DACL} (Discretionary AC List) of \textbf{ACEs} (AC Entries): allow or deny, a principal, permissions. \textbf{Deny entries come first.}\\
+    Each process has an \textbf{access token} (user, groups, privileges), compared with the DACL.
+\end{defn}
+
 \section{Lecture 5 - Applied Cryptography I}
 
 \begin{warn}[title=Why cryptography matters]
