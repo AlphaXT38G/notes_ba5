@@ -8,6 +8,7 @@
 *.out
 *.toc
 course.pdf
+course2.pdf
 cheatsheet.pdf
 # ...except the official exam formulary of modstoc, a PDF given by the professor (no .tex)
 !modstoc/cheatsheet.pdf

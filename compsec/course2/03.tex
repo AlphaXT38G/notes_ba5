@@ -1,0 +1,780 @@
+% =========================================================
+\chapter{Lecture 3 : Access control basics and DAC}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} \textbf{Access control} answers one question:
+``is \emph{this} user allowed to do \emph{this} action on \emph{this} file?''. In
+\textbf{DAC}, the \textbf{owner} of a file decides who can use it (like on your laptop or
+on Facebook). We see how to store these permissions (matrix, ACLs, capabilities, roles,
+groups), a classic trap (the \emph{confused deputy}), and how Linux and Windows do it in
+practice. \\
+\textbf{Why is it useful?} Access control is the \textbf{first line of defense} and is
+everywhere: apps, databases, operating systems, hardware. Understanding it lets you read
+and set file permissions correctly (\texttt{ls -l}, \texttt{chmod}, \texttt{sudo}) and
+spot programs that can be tricked into using their rights for an attacker.
+\end{rembox}
+
+\section{What is access control?}
+
+\begin{rembox}[title=Access control in the physical world]
+We already know it: keys for homes and cars, the CAMIPRO card for EPFL rooms (a physical door
+with digital support). Computers need the same thing for files, sockets, database rows, memory.
+\end{rembox}
+
+\begin{defnbox}[title=Access control]
+Security mechanism that ensures that ``all accesses and actions on objects by principals
+are \textbf{within} the security policy''.
+\end{defnbox}
+
+\begin{exbox}[title=Questions an access control system answers]
+Can Alice read file \texttt{/users/Bob/readme.txt}? Can Bob open a TCP socket to
+\texttt{http://www.abc.com/}? Can Charlie write to row 15 of the table GRADES? \\
+The answer is either \textbf{authorized} (``has permission'') or
+\textbf{unauthorized} (``access denied''): only events within the security policy may
+happen.
+\end{exbox}
+
+\begin{rembox}[title=Why is access control so important?]
+Access control is the \textbf{first line of defense}, thus \textbf{it is used
+everywhere}:
+\begin{itemize}
+  \item \textbf{Applications} --- online social networks, email servers, cloud storage;
+  \item \textbf{Middleware} --- database management systems (DBMS);
+  \item \textbf{Operating system} --- access to files, directories, ports, \ldots;
+  \item \textbf{Hardware} --- memory, registers, privileges.
+\end{itemize}
+\end{rembox}
+
+\begin{defnbox}[title=Authentication vs.\ authorization]
+\begin{itemize}
+  \item \textbf{Authentication} --- the system needs to \textbf{bind the actor to a
+        principal} before authorization. A \textbf{principal} is an abstract entity
+        that is authorized to act (users, connections, processes).
+  \item \textbf{Authorization} --- the system needs to decide whether the
+        \textbf{principal is authorized}: this is \textbf{access control}.
+\end{itemize}
+\end{defnbox}
+
+\begin{warnbox}[title=Trusted Computing Base (TCB)]
+It contains the mechanisms that do authentication and authorization: if either of them fails,
+the security policy is breached, so both must be in the TCB (Lecture 2).
+\end{warnbox}
+
+\begin{rembox}[title={Origin of protection mechanisms (Lampson, 1971)}]
+The original motivation was to keep \textbf{one user's malice or error from harming other
+users}: by destroying/modifying another user's data, by reading/copying it without
+permission, or by degrading the service another user gets (the extreme case being a
+crash of the system). All these reasons are just as strong if ``user'' is replaced by
+``\textbf{program}''.
+\end{rembox}
+
+\begin{goatbox}
+Access control is the guard at the barn door. For every request ``this goat wants to do this
+thing to this bucket'', the guard says yes or no, by looking at the rules. Before that, someone
+must check that the goat really is that goat (authentication: ``show me your ear tag''); then the
+guard decides (authorization: ``this goat may drink from this bucket'').
+\end{goatbox}
+
+\section{Implementing access control}
+
+\begin{propbox}[title={``Checks soup'' vs.\ reference monitor}]
+\begin{itemize}
+  \item \textbf{What NOT to do: ``checks soup''} --- add checks all over the program,
+        implementing the decision \textbf{in-line} based on the policy
+        (\texttt{if user == Alice or user == Bob: open(\ldots)}). It is \textbf{error-prone}
+        (a missed check? how to verify or debug?) and \textbf{hard to change} (a policy change
+        means finding every check in thousands of lines).
+  \item \textbf{What you SHOULD do: systematic calls to a ``reference monitor''} ---
+        all over the program add checks that \textbf{call the monitor}: they state the
+        authorization required and provide evidence about principals and objects; a
+        \textbf{``central'' subsystem} establishes whether the checks pass or not
+        (e.g.\ Apache Shiro: \texttt{subject.isPermitted("user:delete:jsmith")}).
+\end{itemize}
+\end{propbox}
+
+\begin{rembox}[title=Least common mechanism? A tradeoff between principles]
+The lecture's view: a central reference monitor \textbf{violates least common mechanism} (it is
+shared by everybody; if it fails or is compromised, the policy can be breached), but it
+\textbf{fulfils economy of mechanism} (access control in one place, easy to check) and
+\textbf{complete mediation} (it can check every action). Not all principles can be followed at
+once: here the one that is better for security wins. (One can also note that least common
+mechanism is mostly about the isolation of \emph{data}, and a single well-tested monitor shares
+code, not data.)
+\end{rembox}
+
+\begin{goatbox}
+Do not give every farmhand a scribbled list of rules to check in their own way (``checks soup''):
+someone will forget one. Put \emph{one} guard at the barn door who knows the rule book; everyone
+asks the guard. If the rule changes, you tell one guard, not fifty farmhands.
+\end{goatbox}
+
+\section{Discretionary Access Control (DAC)}
+
+\begin{defnbox}[title=Discretionary Access Control (DAC)]
+\textbf{Object owners} decide how their resources are shared: the owner assigns the
+permissions on what they own (e.g.\ Linux \texttt{chmod}, Windows, macOS, social
+networks). DAC policies are often conceptualized as an \textbf{access control matrix}.
+\end{defnbox}
+
+\begin{rembox}[title=DAC in practice]
+There is no central authority: objects are owned by different users. Since systems have huge
+numbers of objects, owners usually choose among a \textbf{predefined set of options} rather than
+fine-grained rules (``public / friends / only me''). Examples: operating systems, social networks
+(Facebook, Instagram: the owner decides who sees a post), cloud file sharing (Google Drive,
+Dropbox).
+\end{rembox}
+
+\subsection{The access control matrix}
+
+\begin{defnbox}[title=Access control matrix]
+An \textbf{abstract} representation of all \textbf{permitted} triplets
+\textbf{(subject, object, access right)} within a system. DAC policies are often
+conceptualized as an access control matrix (Lampson).
+\begin{itemize}
+  \item \textbf{Subjects (principals)} --- entities within an IT system (a user, a
+        process, a service).
+  \item \textbf{Objects (assets)} --- resources that (some) subject may access or use
+        (a file, a folder, a row in a database, the system's memory, a machine in the
+        network, a printer, a page in a website).
+  \item \textbf{Operations} --- in abstract, subjects can \textbf{observe} and/or
+        \textbf{alter} objects (read, write, append, execute).
+\end{itemize}
+\end{defnbox}
+
+\begin{exbox}[title=Access control matrix]
+$S = \{\text{Alice}, \text{Bob}\}$, $O = \{\text{file1}, \text{file2},
+\text{file3}\}$, $A = \{\text{read}, \text{write}\}$.
+\begin{center}
+\begin{tabular}{l|c|c|c}
+      & file1      & file2      & file3      \\ \hline
+Alice & read, write &            & read       \\
+Bob   &            & read, write & read, write
+\end{tabular}
+\end{center}
+Can Alice read file1? \textbf{Yes.} Can Bob write file1? \textbf{No} (Bob has nothing on
+file1). Can file3 be written by Alice? \textbf{No} (only read). \\
+The matrix is more general than users and files (Lampson's original example was already richer):
+an entry can be any operation (read, write, execute, replace, delete, \ldots).
+\end{exbox}
+
+\begin{warnbox}[title=The matrix is an abstract concept]
+Not for direct implementation: size $O(f \cdot u)$ ($f$ files, $u$ users), which is huge
+with thousands of files or hundreds of users. Moreover it is:
+\begin{itemize}
+  \item \textbf{usually very sparse} --- wasteful;
+  \item \textbf{inefficient to access} --- need to keep the matrix in fast memory?
+  \item \textbf{not extensible} --- add a file? add a user?
+\end{itemize}
+\end{warnbox}
+
+\begin{goatbox}
+Imagine a giant table: one row per goat, one column per bucket, and in each box what that goat
+may do with that bucket. It answers every question, but with a million goats and a million
+buckets it is a trillion boxes, almost all empty. So nobody stores the table: you either cut it
+into columns (each bucket keeps its own list: ACL) or into rows (each goat keeps its own list:
+capabilities).
+\end{goatbox}
+
+\subsection{Access Control Lists (ACLs)}
+
+\begin{defnbox}[title=Access Control List (ACL)]
+Associate permissions to \textbf{objects}: each object stores the \textbf{column} of the
+matrix, i.e.\ the list of (subject, rights) pairs. \textbf{Blanks are not stored}.
+\begin{center}
+\texttt{file3: \{(Alice, read), (Bob, read/write)\}}
+\end{center}
+\end{defnbox}
+
+\begin{propbox}[title=ACLs: pros and cons]
+\textbf{Pros}: can be stored close to / with the resource; easy to determine who can
+access a resource; easy to revoke rights by resource. \\
+\textbf{Cons}: difficult to check at runtime (it is often unclear \emph{who} the subject
+accessing is: see the confused deputy); difficult to audit all rights of a user (go file by file:
+linear in the number of files); difficult to remove all permissions from a user (error-prone:
+better remove their authentication credentials!); difficult delegation (hard to tell whether a
+user may delegate, and to remove a temporary permission later).
+\end{propbox}
+
+\begin{goatbox}
+ACL = a list stuck on each bucket: ``Alice may drink, Bob may drink and refill''. To know who
+uses this bucket: read its list. To know everything Alice may do: walk to every bucket in the
+farm.
+\end{goatbox}
+
+\subsection{Role Based Access Control (RBAC)}
+
+\begin{defnbox}[title=Role Based Access Control (RBAC)]
+Systems have too many subjects that come and go (large dynamic ACLs), but subjects are
+similar to each other and need the same rights (a doctor has the same privileges as
+another doctor).
+\begin{enumerate}
+  \item assign permissions to \textbf{roles};
+  \item assign \textbf{roles} to subjects;
+  \item subjects select an \textbf{active role} --- they have the permissions of the
+        active role.
+\end{enumerate}
+Example: Alice the surgeon has both the Doctor and the Nurse roles. Acting as Nurse, she can read
+a patient's treatment but not write it; switching to Doctor, she can do both. Acting in one role
+at a time prevents misuse of privileges (\textbf{least privilege}).
+\end{defnbox}
+
+\begin{warnbox}[title=RBAC problems]
+\begin{enumerate}
+  \item \textbf{Role explosion} --- temptation to create fine-grained roles, denying the
+        benefits of RBAC.
+  \item \textbf{Limited expressiveness} of simple RBAC --- problems implementing least
+        privilege; some roles are relative (``Alice's doctor'' vs.\ ``any doctor'').
+  \item \textbf{Separation of duty is difficult} --- ``two doctors are needed to
+        authorize a procedure'': the mechanism needs to ensure they are distinct!
+\end{enumerate}
+With too many roles (almost one per user) the system is as complex as an ACL; with few roles it
+cannot express nuances (a doctor should only see \emph{their own} patients); and since all
+subjects of a role look the same to the system, it cannot tell one doctor from two.
+\end{warnbox}
+
+\begin{goatbox}
+Instead of listing goats one by one, give hats: ``milker hat'', ``shepherd hat''. The rules say
+what each hat may do, and each goat gets some hats. A goat wears one hat at a time and has only
+that hat's rights. Trouble starts when you invent a new hat for every goat (no gain), or when a
+rule needs ``two \emph{different} shepherds'' (two shepherd hats look the same).
+\end{goatbox}
+
+\subsection{Group Based Access Control}
+
+\begin{defnbox}[title=Group Based Access Control]
+Observation: some permissions are always needed together (e.g.\ access to sockets and
+network interface).
+\begin{enumerate}
+  \item assign permissions to access objects to \textbf{groups};
+  \item assign subjects to \textbf{groups};
+  \item subjects have the permissions of \textbf{all} their groups.
+\end{enumerate}
+\textbf{Negative permissions} (explicit denials for a subject) can be added to implement
+fine-grained policies. Example: group1 gives access to file1, file2, file3; Alice needs file2 and
+file3, so group1 makes sense for her, but the policy forbids her file1. Instead of a new group
+(or breaching the policy), add a negative permission ``Alice: no read/write on file1''.
+\end{defnbox}
+
+\begin{propbox}[title=Negative permissions are checked first]
+If group permissions were checked first, a group would grant the access and the
+negative permission would never be applied. Checking \textbf{negative permissions first}
+is the fail-safe choice (deny overrides allow).
+\end{propbox}
+
+\begin{rembox}[title=RBAC vs.\ groups]
+With \textbf{roles}, a subject has the permissions of the \emph{one active} role; with
+\textbf{groups}, a subject has the union of the permissions of \emph{all} its groups.
+\end{rembox}
+
+\begin{goatbox}
+Groups are clubs: the ``water club'' always gets the bucket \emph{and} the tap together. A goat in
+three clubs has everything of the three clubs at once. If one club member must not touch one
+bucket, write a red ``NO'' card for her, and the guard reads red cards first.
+\end{goatbox}
+
+\subsection{Capabilities}
+
+\begin{defnbox}[title=Capabilities]
+Associate permissions to \textbf{subjects}: each subject stores the \textbf{row} of the
+matrix, i.e.\ the list of (object, rights) pairs. \textbf{Blanks are not stored}.
+\begin{center}
+\texttt{Alice: \{(file1, read/write), (file3, read)\}}
+\end{center}
+\end{defnbox}
+
+\begin{propbox}[title=Capabilities: pros and cons]
+\textbf{Pros}: can be stored with the subject (portable!); easy to audit all subject
+permissions; delegating is ``simple''. \\
+\textbf{Cons}: revoking just one permission is hard (if the objects are unstructured, finding the permission
+is linear in the number of objects of the user); transferability --- once the capability is given, how can we
+prevent sharing? (if Alice gives Bob her right to read file1, which is not in the matrix, the
+policy is broken); authenticity --- how to check it? (like checking a concert ticket is not
+fake). \\
+Portability is a real advantage in \textbf{distributed systems}: the subject shows its credential
+to any node, wherever the object is. The paper ``Capability myths demolished'' argues that the
+cons are addressable.
+\end{propbox}
+
+\begin{keybox}[title=ACL vs.\ capabilities]
+\begin{center}
+\begin{tabular}{l|l|l}
+                       & \textbf{ACL}           & \textbf{Capabilities} \\ \hline
+Stored with            & the object (column)    & the subject (row)     \\
+Who can access $o$?    & easy                   & hard                  \\
+What can $s$ access?   & hard                   & easy                  \\
+Revocation             & easy per object        & hard per object       \\
+Delegation             & difficult              & ``simple''
+\end{tabular}
+\end{center}
+\end{keybox}
+
+\begin{rembox}[title=History of capability-based security]
+Introduced by Dennis \& Van Horn (1966); used in the Plessey System 250 (1972), CAP
+computer (1976), Intel iAPX 432 (1981). The industry then adopted UNIX and its ACLs
+(1982, Linux 1991). Revival: seL4 formally verified microkernel (2009), CHERI (2015),
+Google Fuchsia (2016), WASI (2019), ARM Morello (2022), Scala capabilities at EPFL.
+\end{rembox}
+
+\begin{goatbox}
+Capabilities = each goat carries its own keyring: ``key to bucket 1 (drink, refill), key to
+bucket 3 (drink)''. Everything Alice may do is on her keyring; she can lend a key easily. But to
+take back every key of bucket 3, you must find every goat; and a goat can copy or fake a key unless
+keys are hard to forge.
+\end{goatbox}
+
+\subsection{Ambient authority and the confused deputy}
+
+\begin{defnbox}[title=Ambient authority]
+\textbf{Ambient authority} is used by a subject if, for an action to succeed, it
+\textbf{only} needs to specify the \textbf{operation} and the \textbf{names} of the
+involved object(s). The \textbf{subject} (with authority) is \textbf{implicit}:
+in \texttt{open("file1", "rw")} the subject is missing, it is understood to be the
+process owner.
+\end{defnbox}
+
+\begin{propbox}[title=Ambient authority: pros and cons]
+\textbf{Pro}: no need to repeat the subject all the time (usability). \\
+\textbf{Cons}: the program cannot check permissions for whom it acts; least privilege
+becomes harder to enforce; \textbf{confused deputy problem}!
+\end{propbox}
+
+\begin{rembox}[title={ACLs, capabilities and ambient authority}]
+ACL systems generally use ambient authority: permissions are checked for the user \emph{running}
+the program. With capabilities, the capability itself carries the right (and who holds it):
+there is \textbf{no ambient authority}.
+\end{rembox}
+
+\begin{defnbox}[title=Confused deputy problem]
+Problem with ambient authority: a \textbf{privileged program} can be \textbf{tricked to
+misuse its authority}. A confused deputy is a privileged principal used by a less privileged
+principal to increase her access to the system.
+\end{defnbox}
+
+\begin{exbox}[title=The CAMIPRO story]
+Students want to enter a classroom their CAMIPRO cards do not open. Breaking the lock or EPFL's
+central services is hard. Easier: ask a new professor, who does not know well who may enter
+where, to open the door with his very privileged badge. The professor is the confused deputy.
+\end{exbox}
+
+\begin{exbox}[title=Pay-per-use compiler]
+The compiler receives \texttt{(input, output)}, compiles \texttt{input}, writes usage
+into \texttt{bill} and errors into \texttt{output}.
+\begin{center}
+\begin{tabular}{l|c|c|c}
+         & input & output      & bill        \\ \hline
+Alice    & write & read        & read        \\
+Compiler & read  & read, write & read, write
+\end{tabular}
+\end{center}
+Alice cannot write \texttt{bill}, but she calls the compiler with
+\texttt{(input, bill)}: the compiler writes the errors into \texttt{output = bill}
+\textbf{with its own authority} $\Rightarrow$ \texttt{bill} is corrupted. The compiler
+is the \textbf{confused deputy}. (Same idea: a student with a card asks someone
+authorized to badge them into a room.)
+\end{exbox}
+
+\begin{algbox}[title=How to avoid confused deputies]
+Ambient authority is used for convenience in many real systems (OS services, web
+servers, \ldots). Solutions:
+\begin{enumerate}
+  \item re-implement access control in the privileged process (removes the ambient authority,
+        but expensive and cumbersome, thus error-prone);
+  \item let the privileged process check authorization for Alice (the ambient authority stays,
+        but it checks that the user invoking it has the same permissions);
+  \item \textbf{capabilities can help}! The compiler holds a capability for
+        \texttt{bill}; to compile, Alice must give a capability for the
+        \texttt{output} file --- she cannot give a capability for writing
+        \texttt{bill}, so she cannot confuse anyone.
+\end{enumerate}
+\end{algbox}
+
+\begin{goatbox}
+The sheepdog may enter every pen. A sly goat says ``dog, please push the gate of \emph{that}
+pen'', and the dog, who only asks ``may \emph{I} push it?'', obeys: the goat used the dog's
+rights, not her own. That is the confused deputy. The cure: the dog asks ``may \emph{you}?'', or
+the goat must hand the dog a key to the pen --- a key she does not have.
+\end{goatbox}
+
+\section{DAC in practice: UNIX}
+
+\subsection{Principals and architecture}
+
+\begin{defnbox}[title=UNIX principals and groups]
+\begin{itemize}
+  \item \textbf{User Identities (UIDs)} and \textbf{Group Identities (GIDs)}:
+        originally 16-bit (now 32-bit) numbers. Special UIDs: $-2$, $0$, $1$, \ldots
+  \item Each user has its own directory \texttt{/home/username}; user accounts are in
+        \texttt{/etc/passwd} (\texttt{username:password:UID:GID:info:home:shell}: \texttt{info}
+        is a comment, \texttt{home} the directory where the user lands at login, \texttt{shell}
+        the default shell).
+  \item Users belong to one or more groups: primary group (\texttt{/etc/passwd}),
+        other groups (\texttt{/etc/group}).
+\end{itemize}
+\end{defnbox}
+
+\begin{propbox}[title=UNIX security architecture]
+\begin{itemize}
+  \item \textbf{Everything is a file}; each user ``owns'' a set of files.
+  \item Each file has a simple \textbf{ACL} expressing its access control policy. The
+        owner can \textbf{modify the permissions of the file} (but cannot give away
+        ownership). System files are owned by special users that can make system
+        operations.
+  \item All processes run by a user run \textbf{with that user's privileges}
+        $\Rightarrow$ \textbf{ambient authority}!
+\end{itemize}
+\end{propbox}
+
+\subsection{File permissions}
+
+\begin{defnbox}[title=UNIX file ACLs]
+Each file is assigned an \textbf{owner UID} and a \textbf{GID}, and has \textbf{9
+permission bits}: 3 actions (\textbf{r}ead, \textbf{w}rite, e\textbf{x}ecute) $\times$ 3
+subjects (\textbf{owner}, \textbf{group}, \textbf{other}). Plus 3 attributes:
+\texttt{suid}, \texttt{sgid} and \texttt{sticky}. \\
+Different semantics for \textbf{directories}: Read $\to$ list files, Write $\to$ add
+files (create, move or rename a file in it), Exec $\to$ traverse the directory (\texttt{cd}).
+In practice one cannot read or write the files of a directory without \texttt{x} on it. \\
+\textbf{other} = anyone who is neither the owner nor in the file's group.
+\end{defnbox}
+
+\begin{exbox}[title=Reading \texttt{ls -l}]
+\texttt{drwxrwxr-x 1 catronco catronco 4096 Sep 16 14:23 exampledir} \\
+First char: \texttt{d} = directory, \texttt{-} = file; then \texttt{rwx} for owner,
+\texttt{rwx} for group, \texttt{r-x} for others; then number of links, owner, group,
+size, last modified, filename. \\
+Other lines of the slide: \texttt{-rwxrwxrw- \ldots hello} (a file, owner and group may run it,
+others read and write), \texttt{-rw-rw--w- \ldots test1.txt} (others may write but not
+read). \\
+The owner changes permissions with \texttt{chmod}: \texttt{+r}, \texttt{-w},
+octal \texttt{666}, \texttt{662}, sticky \texttt{+t} or \texttt{1666}, suid
+\texttt{+s} or \texttt{4666}.
+\end{exbox}
+
+\begin{algbox}[title=UNIX access control in action]
+Compare the \texttt{UID}/\texttt{GID} of the \textbf{process} trying to perform the
+action with the state of the file (owner, group, mode bits). \textbf{Order matters}:
+\begin{enumerate}
+  \item if the \texttt{UID} says you are the owner: check the bits for \textbf{owner};
+  \item if not owner, but your group is the file's group: check the bits for
+        \textbf{group};
+  \item otherwise check the bits for \textbf{other}.
+\end{enumerate}
+The \texttt{root} user is \textbf{never denied access}.
+\end{algbox}
+
+\begin{warnbox}[title=Order matters]
+Only \emph{one} class of bits is checked: an owner with \texttt{---} for owner but
+\texttt{rwx} for group is denied, even if they are in the group.
+\end{warnbox}
+
+\begin{goatbox}
+Every UNIX file has a tiny label with three boxes: what its owner may do, what its group may do,
+what everybody else may do (each box: read, write, run). The guard looks at the goat: owner? use
+the first box. Not owner but in the group? the second. Otherwise the third. Only one box is ever
+read. And root, the farmer, walks through every door.
+\end{goatbox}
+
+\subsection{Special users and bits}
+
+\begin{defnbox}[title=Super user (\texttt{root})]
+Special user account with \textbf{User ID 0}: accesses system files and special
+operations, can access anything ((almost) all security checks disabled).
+\textbf{\texttt{root} is in the TCB!} \\
+\textbf{Never login as root} (some distributions give root no password): use
+\texttt{sudo} (run \emph{one} command as root) or \texttt{su} (switch to another user, root by
+default --- dangerous, since nothing you do afterwards is checked). \texttt{sudo su catronco}:
+use your sudo rights to become user \texttt{catronco} without knowing their password. Normal users
+still need system services that run with system privileges: hence \texttt{suid}.
+\end{defnbox}
+
+\begin{defnbox}[title=\texttt{suid} / \texttt{sgid}]
+Setuid and setgid bits indicate that a file is \textbf{not run with the privileges of
+the launcher}, but \textbf{with the privileges of the owner} user/group. Useful for
+normal users to access system services that need system privileges, respecting least
+privilege, e.g.\ changing a password:
+\texttt{-rwsr-xr-x 1 root root \ldots /bin/passwd}. When the program ends, the privileges go back
+to normal.
+\end{defnbox}
+
+\begin{warnbox}[title=Setuid root programs are dangerous]
+They are in the TCB: how do you know that a \texttt{suid} program does what it is meant
+to do, and \emph{only} what it is meant to do? (e.g.\ a setuid-root \texttt{python}
+gives root to anyone.)
+\end{warnbox}
+
+\begin{exbox}[title=Why a setuid-root program is dangerous]
+\begin{itemize}
+  \item It runs as \textbf{root whoever launches it}, and the launcher controls its
+        inputs (arguments, environment, file names). A single bug (buffer overflow, path
+        trick, command injection) gives the attacker \textbf{root}: a
+        \textbf{confused deputy}.
+  \item A \textbf{general-purpose} program must never be setuid root: with
+        \texttt{-rwsr-xr-x root python}, anyone can run
+        \texttt{python -c 'import os; os.setuid(0); os.system("/bin/sh")'} and get a
+        root shell. (The \texttt{python2.7} of the slide is \texttt{-rwxr-xr-x}, no
+        \texttt{s}: it is \emph{not} setuid, it shows what to avoid.)
+  \item It breaks \textbf{least privilege}: full root power for one small action.
+\end{itemize}
+\textbf{Mitigation}: few setuid-root programs, small and audited (economy of mechanism,
+like \texttt{/bin/passwd}); drop privileges once the privileged step is done; prefer
+finer-grained rights (Linux capabilities, \texttt{sudo} limited to one command); never
+make an interpreter or an editor setuid.
+\end{exbox}
+
+\begin{defnbox}[title=Sticky bit]
+``Restricted deletion bit'' (\texttt{chmod +t}).
+\begin{itemize}
+  \item \textbf{Directories}: prevents unprivileged users from removing or renaming a
+        file in the directory \textbf{unless they own the file} (e.g.\ \texttt{/tmp}:
+        users can only edit their own files).
+  \item \textbf{Files}: historically prevented a program from being moved from swap
+        for fast load; Linux currently ignores the bit.
+\end{itemize}
+On \texttt{/tmp} (shared by all users, e.g.\ for downloads) the sticky bit ensures that only a
+file's owner (or root) can delete or rename it.
+\end{defnbox}
+
+\begin{defnbox}[title=Nobody]
+Special user (\textbf{User ID $-2$}) that owns no files and belongs to no user. Safer
+user to execute code you do not know (particularly obfuscated code): limits damages if it
+misbehaves / gets compromised. It is a way to \textbf{sandbox} programs: even if the program is
+malicious and takes control of its user, it gains no privileges. (Further reading: ``Setuid
+demystified'', 2002; ``Jails: confining the omnipotent root'', 2000.)
+\end{defnbox}
+
+\begin{goatbox}
+\texttt{suid}: a program that wears its owner's hat while it runs, whoever starts it. The
+password-change program wears root's hat so that any goat can change \emph{its own} password in
+the farmer's book. Dangerous if the program can be tricked into writing anything else in the
+book. Sticky bit: in the shared shed (\texttt{/tmp}), you may only throw away your own things.
+Nobody: a goat with no name and no belongings, to run strangers' programs safely.
+\end{goatbox}
+
+\subsection{Exercise}
+
+\begin{exbox}[title={Exercise --- ACL in Linux}]
+\texttt{drwxr-x--- 2 manager\_A core\_devs 4096 Sep 24 11:35 /project\_beta} \\
+\textbf{manager\_A} is the directory owner, a member of \texttt{core\_devs}, and is
+sudo; \textbf{developer\_B} is a member of \texttt{core\_devs}; \textbf{intern\_C} is
+\textbf{not} a member of \texttt{core\_devs}. \\
+For each user, determine which of \texttt{cd /project\_beta}, \texttt{ls /project\_beta}
+and \texttt{touch /project\_beta/<file>} succeed or fail, and explain why based on the DAC
+rules. \\[4pt]
+Same state, with a new subdirectory and a file inside it: \\
+\texttt{drwxr-xr-x 2 developer\_B core\_devs 4096 Sep 24 12:00 /project\_beta/Foo} \\
+\texttt{-rw-r--r-- 1 developer\_B core\_devs 512 Sep 24 12:05 \ldots/Foo/intern\_project.txt}
+\begin{enumerate}[label=Q\arabic*:]
+  \item \texttt{/project\_beta} is owned by manager\_A, but \texttt{Foo} is owned by
+        developer\_B. Find a scenario (sequence of commands) that would have led to this
+        situation.
+  \item intern\_C runs \texttt{cd /project\_beta/Foo} then
+        \texttt{cat intern\_project.txt}. Do they work?
+  \item intern\_C runs \texttt{cat /project\_beta/Foo/intern\_project.txt} from their
+        home directory. Does it work?
+  \item Who do they need to contact to fix the problem?
+\end{enumerate}
+\end{exbox}
+
+\begin{algbox}[title={Solution --- ACL in Linux}]
+\texttt{/project\_beta} is \texttt{drwxr-x---}, i.e.\ owner \texttt{rwx}, group
+\texttt{r-x}, other \texttt{---}. Only \emph{one} class is
+checked (owner, else group, else other). On a directory: \texttt{r} = list (\texttt{ls}),
+\texttt{w} = create/delete files (\texttt{touch} of a new file), \texttt{x} = traverse
+(\texttt{cd}).
+\begin{center}
+\begin{tabular}{l|l|c|c|c}
+ & class used & \texttt{cd} (\texttt{x}) & \texttt{ls} (\texttt{r}) & \texttt{touch} (\texttt{w}) \\ \hline
+manager\_A   & owner: \texttt{rwx}   & OK     & OK     & OK     \\
+developer\_B & group: \texttt{r-x}   & OK     & OK     & denied \\
+intern\_C    & other: \texttt{---}   & denied & denied & denied
+\end{tabular}
+\end{center}
+\begin{itemize}
+  \item \textbf{manager\_A} is the owner: the owner bits apply (being sudo is not
+        needed).
+  \item \textbf{developer\_B} is not the owner but is in \texttt{core\_devs}: the group
+        bits apply; no \texttt{w} $\Rightarrow$ cannot create \texttt{notes.txt}.
+  \item \textbf{intern\_C} falls in ``other'' (\texttt{---}): everything is denied.
+\end{itemize}
+\textbf{Q1:} developer\_B cannot create files in \texttt{/project\_beta} (group has no
+\texttt{w}). The lecture's answer: a normal, deliberate situation created by a superuser (root,
+or manager\_A with sudo), who created the directory and transferred its ownership:
+\texttt{sudo mkdir /project\_beta/Foo; sudo chown developer\_B /project\_beta/Foo} --- delegating
+part of the project without giving away the parent directory. (Another scenario: manager\_A runs
+\texttt{chmod g+w /project\_beta}, developer\_B runs \texttt{mkdir Foo} and creates the file, then
+manager\_A runs \texttt{chmod g-w /project\_beta}.) \\
+\textbf{Q2:} no. \texttt{cd /project\_beta/Foo} fails: intern\_C has no \texttt{x} on
+\texttt{/project\_beta} (``other'' is \texttt{---}). \texttt{Foo} being \texttt{r-x} for
+others does not help: \textbf{every directory on the path} must be traversable. The
+\texttt{cat} then runs from the unchanged working directory and does not find the file. \\
+\textbf{Q3:} no, same reason: \texttt{Permission denied} on \texttt{/project\_beta}, even
+though the file itself is world-readable (\texttt{r--}). \\
+\textbf{Q4:} \textbf{manager\_A}, the owner of \texttt{/project\_beta} (and sudo):
+developer\_B owns \texttt{Foo} but not the parent directory. manager\_A can add intern\_C
+to \texttt{core\_devs} (least-privilege-wise better than \texttt{chmod o+x}, which would
+open the directory to everybody).
+\end{algbox}
+
+\begin{rembox}[title={Open question of the slides: what about links? (answer not in the slides)}]
+A \textbf{symbolic link} is only a path: following it, the system checks the permissions of the
+target \emph{and} \texttt{x} on every directory of the target's path, so a symlink placed in
+intern\_C's home does not help. A \textbf{hard link} is another name for the same file (same
+inode, same permission bits): if one existed in a directory intern\_C can traverse, intern\_C
+could read the world-readable file without crossing \texttt{/project\_beta}. That is why modern
+Linux only lets you create a hard link to a file you own or can read and write
+(\texttt{protected\_hardlinks}).
+\end{rembox}
+
+\section{DAC in practice: Windows}
+
+\begin{defnbox}[title=Windows access control]
+Principals = users, machines, groups, \ldots; objects = files, registry keys, printers,
+\ldots
+\begin{itemize}
+  \item Each object has a \textbf{Discretionary Access Control List (DACL)}.
+  \item Each process (or thread) has an \textbf{access token} with: the login user
+        account (the process ``runs as'' this user), all groups of which the user is a
+        member (recursively!), all privileges assigned to these groups.
+\end{itemize}
+The DACL is compared with the process' access token \textbf{when creating a handle to the
+object}: if there is no permission, no handle is given.
+\end{defnbox}
+
+\begin{defnbox}[title=DACL]
+A list of \textbf{Access Control Entries (ACEs)}, each with a \textbf{type}
+(negative/positive, i.e.\ access denied/allowed), a \textbf{principal}, and
+\textbf{permissions} (more fine-grained than UNIX), plus flags and others. Negative
+entries come \textbf{first} so that a denial cannot be bypassed by an earlier allow.
+\end{defnbox}
+
+\begin{exbox}[title=DACL evaluation]
+ACE1: \textit{deny} Andrew read/write/execute; ACE2: \textit{allow} Group A write; ACE3:
+\textit{allow} Everyone read/execute. Thread A (Andrew, groups A, B, C) is denied by ACE1.
+Thread B (Jane, group A) is granted write (ACE2) and read/execute (ACE3).
+\end{exbox}
+
+\begin{rembox}[title=Least privilege by default]
+Windows runs with least privilege by default; elevated rights require
+``Run as administrator''.
+\end{rembox}
+
+\begin{goatbox}
+Windows does the same as UNIX with longer labels: each object has a list of lines ``allow / deny,
+who, what'' (deny lines first, so a ``no'' is never skipped), and each running program carries a
+badge with its user, all its groups and their privileges. The guard compares badge and list once,
+when the program asks to open the object.
+\end{goatbox}
+
+\section{Mandatory Access Control (MAC)}
+
+\begin{defnbox}[title=Mandatory Access Control (MAC)]
+A \textbf{central security policy} assigns the permissions, and \textbf{users cannot
+override it}, even for what they created. Used by organizations with a need for central
+controls.
+\end{defnbox}
+
+\begin{exbox}[title=Where is MAC used?]
+\begin{itemize}
+  \item \textbf{Military} --- focus on \textbf{confidentiality} (classification levels:
+        a document is readable only by users with a high enough clearance, whatever its
+        owner wants).
+  \item \textbf{Hospital} --- focus on \textbf{confidentiality and integrity} (records
+        unchanged, and seen only by those who need them to treat the patient). The
+        hospital owns the patient records and limits their sharing; regulatory
+        requirements (e.g.\ \textbf{HIPAA} for health information) may limit it further.
+  \item \textbf{Banking} --- focus on \textbf{integrity} (e.g.\ whoever enters a transfer
+        cannot approve it).
+\end{itemize}
+In the military, integrity matters too but less: better that battle plans be corrupted or
+deleted than leaked to the enemy. In a bank, leaking someone's earnings is bad press, but
+modifying the records to move money is critical. \textbf{Modern access control systems are a
+hybrid of DAC and MAC.}
+\end{exbox}
+
+\section{DAC vs.\ MAC}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l X X@{}}
+\toprule
+ & \textbf{DAC} & \textbf{MAC} \\
+\midrule
+Who sets the permissions & The \textbf{owner} of the object & A \textbf{central authority} (the policy) \\
+Can a user change them?  & Yes, for what they own         & No, even for what they created \\
+Typical use & Windows, Linux, macOS, social networks & Military, hospitals, banking \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\begin{rembox}[title=It is not a question of scale]
+What separates them is \textbf{who has the authority to decide}, not the size of the
+system: a huge system can be DAC (a social network), a small one MAC. Test: if Alice
+creates a file, can she decide by herself who may read it? Yes $\Rightarrow$ DAC; no,
+the policy decides $\Rightarrow$ MAC.
+\end{rembox}
+
+\begin{goatbox}
+DAC: each goat decides who may use \emph{its} things. MAC: the farm has one rule book, and no goat
+can change it, not even for things it made itself.
+\end{goatbox}
+
+\section{Summary}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item \textbf{Discretionary Access Control}: owners establish permissions (in
+        \textbf{MAC}, a central policy does).
+  \item Conceptualized as an \textbf{access control matrix}.
+  \item Implemented in two flavors: \textbf{access control lists} (permissions
+        associated to objects) and \textbf{capabilities} (permissions associated to
+        subjects).
+  \item When relying on access control, always think about \textbf{confused deputies}.
+\end{itemize}
+\end{keybox}
+
+\begin{recapbox}[title={Exam-ready recap --- Lecture 3: Access control basics and DAC}]
+\textbf{Access control} = the mechanism ensuring every (principal, object, action) is within the
+policy; answer: authorized / denied. First line of defence, everywhere (apps, DBMS, OS,
+hardware). \textbf{Authentication} binds the actor to a principal, \textbf{authorization} (access
+control) decides; both in the TCB.
+\begin{itemize}
+  \item \textbf{Implementation}: no ``checks soup''; calls to a central \textbf{reference monitor}
+        (economy of mechanism + complete mediation, at the cost of least common mechanism).
+  \item \textbf{DAC}: the \textbf{owner} decides. \textbf{MAC}: a \textbf{central policy}
+        decides, users cannot override (military: C; hospital: C+I; bank: I). Test: can the
+        creator decide alone who reads? Not a question of scale. Real systems: hybrids.
+  \item \textbf{Access control matrix} (Lampson): subjects $\times$ objects $\to$ rights.
+        Abstract only: $O(f \cdot u)$, sparse, slow, not extensible.
+  \item \textbf{ACL} = column, stored with the object: easy ``who can access $o$'', easy revoke
+        per object; hard ``what can $s$ do'', hard to remove a user, hard delegation.
+        \textbf{Capabilities} = row, stored with the subject: portable, easy audit and
+        delegation; hard revocation, transferability, authenticity.
+  \item \textbf{Groups}: subject gets the \emph{union} of all its groups;
+        \textbf{negative permissions checked first} (fail-safe). \textbf{RBAC}: permissions
+        $\to$ roles $\to$ subjects, \emph{one active role} (least privilege); problems: role
+        explosion, limited expressiveness, separation of duty.
+  \item \textbf{Ambient authority}: the subject is implicit (\texttt{open("f","rw")} runs as the
+        process owner) $\Rightarrow$ \textbf{confused deputy}: a privileged program tricked into
+        using its rights for someone else (pay-per-use compiler writing errors into
+        \texttt{bill}; professor's badge). Fixes: AC inside the deputy, deputy checks the
+        caller, \textbf{capabilities} (no ambient authority).
+  \item \textbf{UNIX}: UIDs/GIDs, \texttt{/etc/passwd}, everything is a file, owner sets
+        permissions (\texttt{chmod}) but cannot give ownership; 9 bits rwx $\times$
+        owner/group/other; on directories r = \texttt{ls}, w = create, x = \texttt{cd} (needed
+        on \emph{every} directory of the path). \textbf{Only one class checked}: owner, else
+        group, else other; root (UID 0, in the TCB) never denied. \texttt{suid/sgid}: run with
+        the \emph{owner's} privileges (\texttt{passwd}; dangerous, in the TCB); sticky bit: only
+        the owner deletes/renames in the directory (\texttt{/tmp}); nobody (UID $-2$): sandbox.
+  \item \textbf{Windows}: DACL of ACEs (deny first) per object, access token per process (user,
+        groups recursively, privileges), checked when creating a handle; least privilege by
+        default.
+\end{itemize}
+\textbf{How it builds on what came before}: access control is the first \emph{mechanism} (Lecture
+1) that enforces a \emph{policy} on principals and assets, and it is the principles of Lecture 2
+in action: the reference monitor is \textbf{complete mediation} (with a small TCB:
+\textbf{economy of mechanism}), negative permissions first and whitelists are \textbf{fail-safe
+defaults}, active roles and need-to-know are \textbf{least privilege}, two distinct doctors is
+\textbf{separation of privilege}, setuid programs and the confused deputy show what happens when
+a privileged component is in the TCB. Next lecture: MAC, where the policy itself is designed with
+models.
+\end{recapbox}

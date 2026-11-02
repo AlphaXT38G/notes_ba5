@@ -1,0 +1,60 @@
+\documentclass[11pt,a4paper,openany]{book}
+
+\makeatletter\def\input@path{{../_shared/}}\makeatother
+\usepackage{course}
+\usepackage[edges]{forest}
+
+% Two boxes of this document only (course.tex does not change), as in respsoft/course.tex:
+% goatbox, the idea of a section told as simply as possible, and recapbox, the big
+% end-of-chapter recap to read the night before the exam (breakable: it is long).
+\definecolor{goatColor}{HTML}{8A5A1F}
+\definecolor{recapColor}{HTML}{5B3A8E}
+\newtcolorbox{goatbox}[1][]{
+  enhanced, colback=goatColor!6, colframe=goatColor,
+  boxrule=0.5pt, arc=3pt, left=5pt, right=5pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries\small, coltitle=white,
+  colbacktitle=goatColor,
+  attach boxed title to top left={yshift=-3pt, xshift=6pt},
+  boxed title style={size=small, colback=goatColor, boxrule=0pt, arc=2pt},
+  title=Explained to a goat, #1
+}
+\newtcolorbox{recapbox}[1][]{
+  enhanced, breakable, colback=recapColor!5, colframe=recapColor,
+  boxrule=1.2pt, arc=4pt, left=8pt, right=8pt, top=8pt, bottom=8pt,
+  fonttitle=\bfseries\large, coltitle=white,
+  colbacktitle=recapColor,
+  title=Exam-ready recap, #1
+}
+
+\begin{document}
+\raggedbottom
+
+\coursetitle{Computer Security and Privacy --- explained}{BA5}{2026--2027}
+
+\tableofcontents
+\clearpage
+
+These notes are the course notes of COM-301 \emph{Computer Security and Privacy} (EPFL, Fall
+2026), with three additions on top of every chapter:
+\begin{itemize}
+  \item what the slides and the speaker notes say that the short notes left out (stories,
+        answers to the in-class questions, details of the exercises);
+  \item \textbf{brown boxes, ``Explained to a goat''}: the idea of a section in the simplest
+        possible words, to read first when a definition does not click;
+  \item \textbf{a big purple box at the end of each chapter, the ``Exam-ready recap''}: everything
+        to know for the exam, short enough to be reread the night before, complete enough to be
+        understood alone. Each recap ends with \textbf{how the chapter builds on the previous
+        ones}, so that the course reads as one story.
+\end{itemize}
+After the MAC chapter, a \textbf{tree of every access control seen} shows which one is a special
+case of which, and what each one adds.
+
+\input{course2/00}
+\input{course2/01}
+\input{course2/02}
+\input{course2/03}
+\input{course2/04}
+\input{course2/05}
+\input{course2/06}
+
+\end{document}

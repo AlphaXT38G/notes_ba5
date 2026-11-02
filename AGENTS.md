@@ -490,6 +490,12 @@ Android WebViews). One syntax they do not know makes the browser reject a whole 
   or `weekNN` (`weekly()` in `builder/config.py`), with a progress bar (`"weeks"` in
   `subjects.json` sets its length, 14 by default). compsec's weekly notes are the standalone
   documents of `compsec/notes/` (`weekNN.tex`, each with its own `\documentclass`).
+- `compsec/course2.tex` is the explained copy of the compsec course: its chapters are in
+  `compsec/course2/` (`00.tex` preliminaries, then a copy of each `week/NN.tex`), completed from
+  the slides, with "Explained to a goat" boxes, an exam-ready recap per chapter (saying how it
+  builds on the earlier ones) and, in `04.tex`, a `forest` tree of every access control seen.
+  `course.tex` and `week/` stay as they are. It shows on the card as "Course notes, explained"
+  (`KINDS` in `builder/config.py`), among the other documents.
 - Courses and cheat sheets load `_shared/course.sty` / `_shared/cheatsheet.sty` (layout, boxes,
   footer with the repository link). Change the look of all of them there.
 - A PDF without a matching `.tex` (e.g. `respsoft/cheatsheets/*.pdf`) is copied as is.
