@@ -181,24 +181,31 @@
 
 \section{Lecture 4 - Mandatory Access Control}
 
-\begin{defn}[title=Mandatory Access Control (MAC)]
-    A \textbf{central policy} sets the permissions and nobody can override it: the owner may not exist, or has no power against the policy.\\
-    \textbf{Security model}: a design pattern for a security property. It leaves open who the subjects and objects are, and which mechanisms to use.
+\begin{thm}[title=Mandatory Access Control (MAC)]
+    A \textbf{central policy} sets the permissions, and not even the owner can change them (military, hospital, bank).
+\end{thm}
+
+\begin{defn}[title=Security model]
+    A design pattern for a security property. It leaves open who the subjects and objects are, and which mechanisms to use.
 \end{defn}
 
-\begin{defn}[title=Bell-La Padula (BLP): confidentiality]
-    Subjects and objects have a \textbf{security level} = (classification, set of categories).
+\begin{defn}[title=Security level]
+    Subjects and objects have a \textbf{level} = (classification, set of categories). Used for confidentiality (BLP) or integrity (BIBA).
     \begin{itemize}
         \item \textbf{Classification:} ordered labels (Unclassified $<$ Confidential $<$ Secret $<$ Top Secret).
         \item \textbf{Categories:} topics (Nuclear, Crypto).
     \end{itemize}
-    Rights: \textbf{execute}, \textbf{read}, \textbf{append} (alter only), \textbf{write} (observe and alter).
 \end{defn}
 
 \begin{thm}[title=Dominance]
     $(l_1, c_1)$ \textbf{dominates} $(l_2, c_2)$ iff $l_1 \geq l_2$ and $c_2 \subseteq c_1$.\\
-    Only a partial order: $(S, \{\text{Crypto}\})$ and $(S, \{\text{Nuclear}\})$ are incomparable. A subject's clearance must dominate its current level.
+    \textbf{Incomparable:} $(S, \{\text{Crypto}\})$ and $(S, \{\text{Nuclear}\})$.
 \end{thm}
+
+\begin{prop}[title=Model 1 - Bell-La Padula (BLP): confidentiality]
+    Rights: \textbf{execute}, \textbf{read}, \textbf{append} (alter only), \textbf{write} (observe and alter).\\
+    A subject's \textbf{clearance} (its maximum level) must dominate its current level.
+\end{prop}
 
 \begin{thm}[title=BLP properties]
     \begin{itemize}
@@ -214,37 +221,37 @@
     If the initial state is secure and every transition preserves the three properties, every later state is secure, whatever the inputs.
 \end{defn}
 
-\begin{prop}[title=Covert channel]
+\begin{defn}[title=Covert channel]
     Any flow of information against the policy: \textbf{storage} (counters, metadata) or \textbf{timing} (CPU, cache).\\
     \textit{Whether an access succeeds or fails can leak 1 bit from High to Low.}\\
     The more resources are shared, the harder to remove (least common mechanism). Mitigation: isolation or noise. Fine for documents, not for cryptographic keys.
-\end{prop}
+\end{defn}
 
 \begin{warn}[title=Declassification and BLP limits]
     \textbf{Declassification} (removing a label) is necessary but cannot be made safe: it is manual, and hidden data stays (Word revision history, PDF black rectangles).\\
     BLP covers only confidentiality, and its three properties do not stop covert channels when levels change.
 \end{warn}
 
-\begin{defn}[title=BIBA: integrity]
-    The dual of BLP, with integrity levels: \textbf{no read down}, \textbf{no write up}.\\
+\begin{prop}[title=Model 2 - BIBA: integrity]
+    The dual of BLP, on integrity levels (same dominance): \textbf{no read down}, \textbf{no write up}.\\
     \textbf{Example}: \textit{employees read the director's rules but cannot rewrite them.}
     \begin{itemize}
         \item \textbf{Low-water-mark:} after reading low data, a subject's level drops (label creep). Or a written object takes the lowest level (detection only).
         \item \textbf{Invocation:} simple (invoke only what you dominate) or controlled (only what dominates you).
     \end{itemize}
     \textbf{Rotation of duties:} limited time in a role, so an insider can tamper less.
-\end{defn}
-
-\begin{prop}[title=Sanitization]
-    Lifting low-integrity data to high integrity. Root of many bugs: user input into a SQL query (\textbf{SQL injection}) or into a short buffer of a suid program (\textbf{buffer overflow}).\\
-    \textbf{Rule} (fail-safe defaults): positively verify the input is in a valid set (\textbf{whitelist}), do not just look for bad things.
 \end{prop}
 
-\begin{defn}[title=Chinese Wall: conflicts of interest]
+\begin{defn}[title=Sanitization]
+    Lifting low-integrity data to high integrity. Root of many bugs: user input into a SQL query (\textbf{SQL injection}) or into a short buffer of a suid program (\textbf{buffer overflow}).\\
+    \textbf{Rule} (fail-safe defaults): positively verify the input is in a valid set (\textbf{whitelist}), do not just look for bad things.
+\end{defn}
+
+\begin{prop}[title=Model 3 - Chinese Wall: conflicts of interest]
     Each object is labelled with its \textbf{origin} (Pepsi, Coca-Cola). \textbf{Conflict sets} group rivals. Each subject keeps a \textbf{history} of the labels it accessed.\\
     \textbf{Rule:} deny an access that could let information flow between two labels of the same conflict set.\\
     \textbf{Example}: \textit{Alice reads Pepsi, then Microsoft: allowed. Then Coca-Cola: denied. Alice (Pepsi) writing to IBM, which Bob (Coca-Cola) reads: denied.}
-\end{defn}
+\end{prop}
 
 \section{Lecture 5 - Applied Cryptography I}
 
