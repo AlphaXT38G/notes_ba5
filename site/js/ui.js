@@ -22,6 +22,23 @@ const setView = v => {
 viewBtns.forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
 viewBtns.forEach(b => b.setAttribute("aria-pressed", b.dataset.view === (root.dataset.view || "names")));
 
+// Dates: a document changed today or yesterday (the visitor's own days) says "Today" /
+// "Yesterday" instead of its date, in the line and in the tooltip. The build only writes the date
+// (the page is rebuilt once a day), so this is done here.
+(() => {
+  const day = d => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const now = new Date();
+  document.querySelectorAll("time[data-ts]").forEach(t => {
+    const d = new Date(+t.dataset.ts * 1000);
+    const ago = Math.round((day(now) - day(d)) / 864e5);
+    if (ago !== 0 && ago !== 1) return;
+    const word = ago ? "Yesterday" : "Today", old = t.textContent;
+    t.textContent = word;
+    const a = t.closest("a");
+    if (a && a.title) a.title = a.title.replace(old, word);
+  });
+})();
+
 // Search: keep subjects and documents whose text matches, open the sections holding a match.
 // Every word typed must appear (in any order, case-insensitive). If the subject itself matches
 // (name or code), the whole card stays as usual; otherwise only the matching documents are kept:

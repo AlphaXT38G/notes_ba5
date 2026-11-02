@@ -108,6 +108,9 @@ def link(subject, p, root, when, shot=None, text=None, solo=False):
     badge = '<span class="new">New</span>' if is_new(when) else ""
     count = f"{len(text)} page{'s' if len(text) > 1 else ''} · " if text else ""  # text: its pages (search.py)
     meta = f"{count}{p.stat().st_size / 1e6:.1f} MB · {when:%d %b %Y}"
+    # The date is a <time> that ui.js turns into "Today" / "Yesterday" in the visitor's own
+    # day: the page is only rebuilt once a day, so the build cannot know what "today" is.
+    shown = meta.replace(f"{when:%d %b %Y}", f'<time data-ts="{int(when.timestamp())}">{when:%d %b %Y}</time>')
     cls = ' class="solo"' if solo else ""
     thumb = (
         f'<img class="thumb" src="{subject}/{html.escape(shot.relative_to(root).as_posix())}" alt="" loading="lazy">'
@@ -115,7 +118,7 @@ def link(subject, p, root, when, shot=None, text=None, solo=False):
     )
     return (
         f'<li{cls}><a class="doc" href="{subject}/{html.escape(rel)}" target="_blank" rel="noopener" title="{meta}">{thumb}<span>{html.escape(label(p, root))}{badge}</span>'
-        f'<small>{meta}</small></a></li>'
+        f'<small>{shown}</small></a></li>'
     )
 
 def fold(subject, pdfs, root, when, shots, texts, noun, grouped=True, extra=""):
