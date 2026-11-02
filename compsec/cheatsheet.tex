@@ -189,11 +189,11 @@
     A design pattern for a security property. It leaves open who the subjects and objects are, and which mechanisms to use.
 \end{defn}
 
-\begin{defn}[title=Security level]
-    Subjects and objects have a \textbf{level} = (classification, set of categories). Used for confidentiality (BLP) or integrity (BIBA).
+\begin{defn}[title=Security level (used for BLP and BIBA)]
+    Object $\rightarrow$ \textbf{level} = (classification$^1$, categories$^2$)
     \begin{itemize}
-        \item \textbf{Classification:} ordered labels (Unclassified $<$ Confidential $<$ Secret $<$ Top Secret).
-        \item \textbf{Categories:} topics (Nuclear, Crypto).
+        \item[$^1$] \textbf{Ordered labels:} Unclassified $<$ Confidential $<$ Secret $<$ Top Secret.
+        \item[$^2$] \textbf{A set of topics:} Nuclear, Crypto.
     \end{itemize}
 \end{defn}
 
@@ -202,14 +202,20 @@
     \textbf{Incomparable:} $(S, \{\text{Crypto}\})$ and $(S, \{\text{Nuclear}\})$.
 \end{thm}
 
+\begin{defn}[title=Clearance (subjects)]
+    \textbf{Clearance:} maximum level of a subject: $\text{level}(S_i)$.\\
+    \textbf{Current level:} can be lower: $\text{current-level}(S_i)$.
+    \par{\centering $\text{level}(S_i)$ \textbf{must} $\succeq$ $\text{current-level}(S_i)$. \par}
+\end{defn}
+
 \begin{prop}[title=Model 1 - Bell-La Padula (BLP): confidentiality]
-    Rights: \textbf{execute}, \textbf{read}, \textbf{append} (alter only), \textbf{write} (observe and alter).\\
-    A subject's \textbf{clearance} (its maximum level) must dominate its current level.
+    Rights: \textbf{execute}, \textbf{read}, \textbf{append} (alter only), \textbf{write} (observe and alter).
 \end{prop}
 
 \begin{thm}[title=BLP properties]
     \begin{itemize}
-        \item \textbf{ss-property (no read up):} read only if the subject's level dominates the object's.
+        \item \textbf{ss-property (no read up):}
+            \par{\centering $\text{read} \Rightarrow \text{level}(subject) \succeq \text{level}(object)$ \par}
         \item \textbf{*-property (no write down):} if a subject observes $O_1$ and alters $O_2$, then $O_2$ dominates $O_1$.
         \item \textbf{ds-property:} every access must be in the access control matrix (need-to-know).
     \end{itemize}
