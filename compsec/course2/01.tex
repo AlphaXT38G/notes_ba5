@@ -1,0 +1,323 @@
+% =========================================================
+\chapter{Lecture 1 : Basics}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} The vocabulary of security: what we want to protect
+(\emph{assets}), against whom (the \emph{adversary}), what ``secure'' means (the
+\emph{security policy}) and with what tools (\emph{mechanisms}). \\
+\textbf{Why is it useful?} Every later lecture reuses these words. Before building or
+attacking anything, you must be able to say clearly \emph{what} must hold and
+\emph{against which attacker} --- otherwise ``secure'' means nothing.
+\end{rembox}
+
+\begin{rembox}[title=Why a course on security?]
+Ordinary engineering asks for \textbf{correctness}, \textbf{safety} and
+\textbf{robustness} against accidental errors. Security additionally requires that
+properties hold in the presence of a \textbf{deliberate, strategic adversary}.
+\end{rembox}
+
+\begin{defnbox}[title={Correctness, safety, robustness (what we usually ask)}]
+\begin{itemize}
+  \item \textbf{Correctness} --- for a given input, provide the expected output.
+  \item \textbf{Safety} --- well-formed programs cannot have bad (even dangerous) outputs (an
+        elevator program that fails must not make the elevator fall).
+  \item \textbf{Robustness} --- cope with errors (in the input and in the execution) without
+        crashing, and stay correct and safe.
+\end{itemize}
+These cover \emph{expected} events and errors that happen \textbf{at random} (a programmer's
+mistake, a sensor out of range, the Y2K bug). In security, the bad events are \textbf{provoked on
+purpose} by the adversary, who makes the worst case happen whenever it pays: a low-probability
+event cannot be discarded, because if it is possible the adversary will make it happen.
+\end{defnbox}
+
+\begin{goatbox}
+A farmer builds a fence against wind and storms: those come at random, so a fence that resists
+the usual weather is fine. Security is a fence against a fox: the fox \emph{looks} for the one
+loose plank, and comes back every night. You must think about the worst plank, not the average
+one.
+\end{goatbox}
+
+\section{Security properties}
+
+\textbf{Properties} of a computer system must hold in the presence of a \textbf{resourced strategic adversary}.
+
+\begin{defnbox}[title=CIA triad]
+\begin{itemize}
+  \item \textbf{Confidentiality} — prevention of unauthorized \emph{disclosure} of information.
+  \item \textbf{Integrity} — prevention of unauthorized \emph{modification} of information.
+  \item \textbf{Availability} — prevention of unauthorized \emph{denial of service}.
+\end{itemize}
+\end{defnbox}
+
+\begin{exbox}[title=CIA on a bank account]
+The adversary should not be able to \textit{read} my statement (confidentiality),
+\textit{change} my balance (integrity), or \textit{block} my access to the account
+(availability).
+\end{exbox}
+
+\begin{rembox}[title=Beyond the CIA triad]
+Modern systems also care about \textbf{authenticity}, \textbf{anonymity},
+\textbf{isolation}, and more.
+\end{rembox}
+
+\begin{defnbox}[title={Not-so-traditional (but important) properties}]
+\begin{itemize}
+  \item \textbf{Authenticity} --- entities are who they say they are (e.g.\ to grant access to
+        a building).
+  \item \textbf{Anonymity} --- use a digital system without revealing one's identity (e.g.\
+        read political content without fear under an oppressive regime).
+  \item \textbf{Non-repudiation} --- an entity cannot deny having done an action (e.g.\ paying
+        for goods online; digital signatures, Lecture 6).
+\end{itemize}
+More advanced properties exist; experts define them precisely with \textbf{security games}.
+\end{defnbox}
+
+\begin{goatbox}
+Confidentiality: nobody reads the goat's diary. Integrity: nobody scribbles in it. Availability:
+nobody hides it so the goat cannot write in it any more. The other properties are about people:
+is this really the goat (authenticity)? can the goat stay unknown (anonymity)? can the goat say
+``I never wrote that'' (non-repudiation forbids it)?
+\end{goatbox}
+
+\section{Security policy}
+
+\begin{defnbox}[title=Security policy]
+A high-level description of the \textbf{security properties} that must hold, in
+relation to \textbf{assets} and \textbf{principals}.
+\begin{itemize}
+  \item \textbf{Assets (objects)} — anything of value that needs protection (data, files, memory, \ldots).
+  \item \textbf{Principals (subjects)} — people, programs, services, \ldots (never the adversary).
+\end{itemize}
+\end{defnbox}
+
+\begin{propbox}[title=Properties in terms of principals and assets]
+\begin{itemize}
+  \item \textbf{Confidentiality} — authorized \textbf{users} may read a \textbf{file}.
+  \item \textbf{Integrity} — authorized \textbf{programs} may write a \textbf{file}.
+  \item \textbf{Availability} — authorized \textbf{services} can access a \textbf{file}.
+\end{itemize}
+\end{propbox}
+
+\begin{warnbox}[title=Why can the principals not contain the adversary?]
+The adversary may not be a user of the system, may be outside it, or may have been
+\textbf{overlooked} when the policy was written. Bad adversarial modelling is one of the main
+sources of problems.
+\end{warnbox}
+
+\begin{goatbox}
+The security policy is the list of house rules: what is precious in the house (assets: the hay,
+the milk), who lives there (principals: the farmer, the dog) and what must stay true (only the
+farmer opens the hay barn). The fox is not in the list of who lives there: the rules are written
+\emph{against} it.
+\end{goatbox}
+
+\section{The adversary}
+
+\begin{defnbox}[title=Threat model]
+Describes the \textbf{resources} available to the adversary and its \textbf{capabilities}
+(observe, influence, corrupt, \ldots).
+\end{defnbox}
+
+\begin{exbox}[title=Capabilities and resources]
+\textbf{Capabilities}: observe a part of the system (``the adversary can observe my
+connection''), influence it, corrupt entities to extract secrets or make them act for the
+adversary (``the adversary can corrupt my machine'', ``the adversary controls a bank
+employee''). \\
+\textbf{Resources}: computing power, time available for the attack (real time or a week),
+storage (some observations, or the whole history of the system). \\
+Security policies are written \textbf{within} a threat model and give no guarantee outside it.
+Threat modelling is a very hard task.
+\end{exbox}
+
+\begin{defnbox}[title=Adversary]
+A malicious entity aiming to breach the security policy. The adversary is
+\textbf{strategic}: it always picks the \textbf{optimal} way to use its resources to
+violate a security property.
+\end{defnbox}
+
+\begin{rembox}[title=Key vocabulary]
+\begin{itemize}
+  \item \textbf{Vulnerability} — a specific weakness an adversary could exploit (\textit{e.g.\ a password shown in plaintext}).
+  \item \textbf{Threat} — the feared event, i.e.\ the adversary's goal: who might attack which assets, using what resources, with what goal, how, and with what probability (\textit{e.g.\ a hacker wants to steal money from the bank; a student wants to learn my password by looking over my shoulder}). A vulnerability may be exploited by adversaries interested in many different assets.
+  \item \textbf{Harm} — what actually happens if the threat materializes (\textit{e.g.\ the adversary steals the money}).
+\end{itemize}
+If the properties hold within the threat model, no vulnerability can be exploited to
+realize a threat, so no harm occurs.
+\end{rembox}
+
+\begin{goatbox}
+The threat model is the description of the fox: how strong it is, how long it can dig, whether
+it can climb. A vulnerability is a hole in the fence. A threat is ``the fox wants the chickens''.
+The harm is the chickens actually eaten. If the fence holds against \emph{this} fox, the fox finds
+no usable hole, and no chicken is eaten.
+\end{goatbox}
+
+\section{Security mechanisms}
+
+\begin{defnbox}[title=Security mechanism]
+A technical mechanism (software, hardware, cryptography, procedures, \ldots) used to
+ensure that the security policy is not violated by an adversary
+\underline{within the threat model}.
+\end{defnbox}
+
+\begin{exbox}[title=Examples]
+\textbf{Policy}: ensure the log of transactions is not tampered with by a single employee \\
+\textbf{Mechanism}: keep a copy of the log on multiple computers, such that no single employee
+has access to all of them \\[3pt]
+\textbf{Policy}: ensure messages cannot be read by anyone but the sender and the receiver \\
+\textbf{Mechanism}: encrypt the message before sending \\[3pt]
+Mechanisms can be software (an antivirus), hardware (a smart card), maths (cryptography),
+architecture (distribute data over several systems), people or organisational procedures:
+\textbf{security mechanisms can be engineered}.
+\end{exbox}
+
+\begin{propbox}[title=Composing mechanisms]
+Security does \textbf{not} increase linearly with the number of mechanisms.
+\begin{itemize}
+  \item \textbf{Defence in depth} (AND) — secure as long as \emph{one} mechanism holds.
+  \item \textbf{Weakest link} (OR) — insecure as soon as \emph{any one} mechanism fails.
+\end{itemize}
+\end{propbox}
+
+\begin{exbox}[title=One example of each]
+\textbf{Defence in depth}: two-factor authentication --- as long as one factor stays secure, the
+system resists (the strongest mechanism sets the strength). \\
+\textbf{Weakest link}: password recovery with a security question --- if \emph{either} the
+password \emph{or} the answer to the question is known to the adversary, the account is broken
+(the weakest mechanism sets the strength).
+\end{exbox}
+
+\begin{warnbox}[title=Humans are part of the system]
+Social engineering, phishing, and weak/reused/written-down passwords are frequently the
+weakest link — but that is no excuse to neglect the rest of the system.
+\end{warnbox}
+
+\begin{goatbox}
+A mechanism is a tool that makes a rule hold: a lock, a code, a guard. Two locks can help or
+hurt. Two locks on the \emph{same} door (open only if both are broken) is defence in depth. Two
+\emph{different} doors into the same barn (one broken door is enough) is the weakest link: adding
+a door made the barn weaker. And the farmer who leaves the key under the mat is part of the
+system too.
+\end{goatbox}
+
+\section{Showing a system is secure}
+
+\begin{rembox}[title=Attacker vs.\ defender]
+\textbf{Attacker}: one way to violate one property is enough (within the threat model). \\
+\textbf{Defender}: must show \textbf{no} adversary strategy violates the policy —
+security is always relative to \textbf{a specific threat model}.
+\end{rembox}
+
+\begin{rembox}[title={``Script kiddies''}]
+No need for a savvy adversary: people download open-source attack tools, point them at a target
+and press ``Go''. The only requirement is to find the tool that works.
+\end{rembox}
+
+\begin{defnbox}[title=Secure]
+A system is \textbf{secure} if an adversary constrained by a specific threat model
+cannot violate the security policy.
+\end{defnbox}
+
+\begin{warnbox}[title={``This system is secure'' means nothing}]
+The sentence alone is void of content. One can only say ``this system is secure \textbf{under
+this threat model}''.
+\end{warnbox}
+
+\begin{defnbox}[title=Security argument]
+A rigorous argument (verbal or mathematical) that the security mechanisms in place are
+effective in maintaining the security policy — \textbf{subject to the assumptions of
+the threat model}.
+\end{defnbox}
+
+\begin{warnbox}[title=Composition is hard]
+A useful threat model must constrain the adversary, otherwise no security argument is
+possible. Security arguments for the \textbf{composition} of mechanisms are notoriously
+hard to get right.
+\end{warnbox}
+
+\begin{defnbox}[title={How secure? Worst case vs.\ average case}]
+How to measure the degree of protection is an open question; two ways of reasoning:
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}l X X@{}}
+\toprule
+ & \textbf{Worst case} & \textbf{Average case} \\
+\midrule
+Against   & worst user input, worst adversary & typical users, worst adversary \\
+Users     & no assumption on their behaviour & need to define a typical user and which actions matter \\
+Guarantee & strong, but pessimistic: low performance & more fragile (risk-based), better utility \\
+Example   & cryptographic primitives & data anonymization \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\end{defnbox}
+
+\begin{goatbox}
+The fox attacks, the farmer defends. The fox needs \emph{one} hole; the farmer must show there
+is \emph{no} hole the fox can use --- and only for the fox he described. ``My farm is safe'' means
+nothing; ``my farm is safe against a fox that cannot climb'' is a real statement, and the reasons
+why (the security argument) must be written down.
+\end{goatbox}
+
+\section{Security engineering process}
+
+\begin{algbox}[title=Three-stage process]
+\begin{enumerate}
+  \item \textbf{High-level specification} — architecture, security policy (principals, assets, properties), threat model.
+  \item \textbf{Security design} — select/design mechanisms; state the security argument (which mechanism maintains which property).
+  \item \textbf{Secure implementation} — implement the mechanisms, ensure conformance to the design, perform security testing.
+\end{enumerate}
+\end{algbox}
+
+\begin{rembox}[title=Why the threat model comes first]
+Without a threat model there is no security argument: you cannot argue that mechanisms hold
+against an adversary you never described.
+\end{rembox}
+
+\begin{goatbox}
+Building a secure barn is three steps: first draw the barn and write who may do what and which
+fox you fear; then choose the locks and explain why they stop that fox; then build them exactly as
+drawn and try to break in yourself.
+\end{goatbox}
+
+\begin{keybox}[title=Summary]
+\begin{itemize}
+  \item Security problems always involve an \textbf{adversary}, who is \textbf{strategic}.
+  \item The adversary's capabilities define a \textbf{threat model}.
+  \item \textbf{Security mechanisms} aim at fulfilling a \textbf{security policy within a threat model}.
+  \item Showing security means providing a \textbf{security argument}.
+\end{itemize}
+\end{keybox}
+
+\begin{recapbox}[title={Exam-ready recap --- Lecture 1: Basics}]
+\textbf{Computer security} = properties of a system must hold \textbf{in the presence of a
+resourced, strategic adversary} (not random errors: correctness / safety / robustness are not
+enough).
+\begin{itemize}
+  \item \textbf{CIA}: confidentiality (no unauthorized \emph{disclosure}), integrity (no
+        unauthorized \emph{modification}), availability (no unauthorized \emph{denial of
+        service}). Also: authenticity, anonymity, non-repudiation.
+  \item \textbf{Security policy}: which \textbf{properties} must hold on which \textbf{assets}
+        (objects) for which \textbf{principals} (subjects, never the adversary).
+  \item \textbf{Threat model}: the adversary's \textbf{capabilities} (observe, influence,
+        corrupt) and \textbf{resources} (compute, time, storage). The adversary is
+        \textbf{strategic}: always the best attack.
+  \item \textbf{Vocabulary}: vulnerability (weakness) $\to$ exploited to realise a threat (feared
+        event / goal) $\to$ harm (what actually happens).
+  \item \textbf{Security mechanism}: anything (software, hardware, crypto, people, procedures)
+        that keeps the policy within the threat model.
+  \item \textbf{Composition}: defence in depth = secure while \emph{one} holds (2FA); weakest
+        link = broken when \emph{any} fails (password recovery question). Humans are part of the
+        system (phishing, social engineering).
+  \item \textbf{Secure} = an adversary \emph{within the threat model} cannot violate the
+        policy; shown by a \textbf{security argument} (verbal or mathematical). Attacker needs
+        one way, defender must exclude all. Worst-case (strong, slow: crypto) vs.\ average-case
+        (risk-based: anonymization) security.
+  \item \textbf{Process}: (1) specification: architecture, policy, threat model; (2) design:
+        mechanisms + security argument; (3) implementation, conformance, testing.
+\end{itemize}
+\textbf{How it builds on what came before}: Lecture 0 showed a disaster (Log4Shell); this
+lecture gives the words to describe it: an asset (the server), a threat model (anyone who can send
+a chat message), a vulnerability (JNDI lookups in logs), a harm (remote code execution). Every
+later chapter is a set of \emph{mechanisms} for a \emph{policy} under a \emph{threat model}.
+\end{recapbox}
