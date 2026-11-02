@@ -216,7 +216,8 @@
     \begin{itemize}
         \item \textbf{ss-property (no read up):}
             \par{\centering $\text{read} \Rightarrow \text{level}(subject) \succeq \text{level}(object)$ \par}
-        \item \textbf{*-property (no write down):} if a subject observes $O_1$ and alters $O_2$, then $O_2$ dominates $O_1$.
+        \item \textbf{*-property (no write down):}
+            \par{\centering $\text{observe}(O_1) \wedge \text{alter}(O_2)$ $\Rightarrow \text{level}(O_2) \succeq \text{level}(O_1)$ \par}
         \item \textbf{ds-property:} every access must be in the access control matrix (need-to-know).
     \end{itemize}
     Why the *-property: a Trojan in a Secret process reads Secret data (allowed) and writes it into an Unclassified file that anyone can read.\\
