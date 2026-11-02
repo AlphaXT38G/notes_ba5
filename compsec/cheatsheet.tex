@@ -228,13 +228,14 @@
 \end{defn}
 
 \begin{defn}[title=Covert channel]
-    Any flow of information against the policy: \textbf{storage} (counters, metadata) or \textbf{timing} (CPU, cache).\\
-    \textit{Whether an access succeeds or fails can leak 1 bit from High to Low.}\\
-    The more resources are shared, the harder to remove (least common mechanism). Mitigation: isolation or noise. Fine for documents, not for cryptographic keys.
+    A signal that slips past the policy because it uses a \textbf{side effect}, not a read or a write.\\
+    \textbf{Example}: \textit{the officer may not write down to the soldier, but he lights a lamp: lit = attack, dark = wait. The soldier learns 1 bit.}\\
+    \textbf{Kinds:} storage (shared counter, file metadata) or timing (CPU load, cache).\\
+    \textbf{Mitigation ($\approx$ fix):} isolate, or add noise. Slow leak: acceptable for documents, never for keys.
 \end{defn}
 
 \begin{warn}[title=Declassification and BLP limits]
-    \textbf{Declassification} (removing a label) is necessary but cannot be made safe: it is manual, and hidden data stays (Word revision history, PDF black rectangles).\\
+    \textbf{Declassification} is necessary but cannot be made safe: it is manual, and hidden data stays\\
     BLP covers only confidentiality, and its three properties do not stop covert channels when levels change.
 \end{warn}
 
