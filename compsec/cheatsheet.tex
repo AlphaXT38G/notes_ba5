@@ -239,15 +239,13 @@
 \end{warn}
 
 \begin{prop}[title=Model 2 - BIBA: integrity]
-    The dual of BLP, on integrity levels (same dominance). Rights: \textbf{read}, \textbf{write}.
+    The dual of BLP, on integrity levels (same dominance): high = trusted, low = untrusted (OS data vs.\ network data). Rights: \textbf{read}, \textbf{write}.
 \end{prop}
 
 \begin{thm}[title=BIBA properties]
     \begin{itemize}
-        \item \textbf{Simple integrity (no read down):}
-            \par{\centering $\text{read} \Rightarrow \text{level}(object) \succeq \text{level}(subject)$ \par}
-        \item \textbf{*-integrity (no write up):}
-            \par{\centering $\text{write} \Rightarrow \text{level}(subject) \succeq \text{level}(object)$ \par}
+        \item \textbf{Simple integrity (no read down):} do not read less trusted data, it would corrupt you.
+        \item \textbf{*-integrity (no write up):} do not write more trusted data, you would corrupt it.
     \end{itemize}
     \textbf{Example}: \textit{employees read the director's rules but cannot rewrite them.}
 \end{thm}
@@ -261,8 +259,8 @@
 \end{prop}
 
 \begin{defn}[title=Sanitization]
-    Lifting low-integrity data to high integrity. Root of many bugs: user input into a SQL query (\textbf{SQL injection}) or into a short buffer of a suid program (\textbf{buffer overflow}).\\
-    \textbf{Rule} (fail-safe defaults): positively verify the input is in a valid set (\textbf{whitelist}), do not just look for bad things.
+    Lifting low-integrity data to high integrity, e.g.\ checking user input. Skipping this check causes many bugs (SQL injection).\\
+    \textbf{Rule} (fail-safe): refuse by default, check whitelist.
 \end{defn}
 
 \begin{prop}[title=Model 3 - Chinese Wall: conflicts of interest]
