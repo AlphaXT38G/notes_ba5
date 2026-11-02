@@ -31,7 +31,9 @@ as is. A course can be split into one file per lecture: `course.tex` then `\inpu
 chapters with no `\documentclass` (compsec's `week/01.tex`, `02.tex`, ...; swent's
 `weeks/week1a.tex`, ...). For some subjects the build also turns each week into its own PDF
 (`week/NN.pdf`, from a generated `_weekNN.tex`, git-ignored); compsec opts out
-(`"week_pdfs": false`), since those PDFs would repeat the course notes.
+(`"week_pdfs": false`), since those PDFs would repeat the course notes. compsec also has
+`course2.tex` ("Course notes, explained"): the same course with simple explanations, an exam
+recap per chapter and a tree of the access control models.
 
 On the page, the course notes come first, then two collapsible sections: weekly notes (PDFs named `weekNN` in a `notes/` folder, or the per-week PDFs above, with a semester progress bar) and every other
 PDF, grouped by folder. Dates come from the last commit touching each document,
