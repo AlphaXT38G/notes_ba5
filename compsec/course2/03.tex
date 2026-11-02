@@ -286,8 +286,8 @@ matrix, i.e.\ the list of (object, rights) pairs. \textbf{Blanks are not stored}
 \begin{propbox}[title=Capabilities: pros and cons]
 \textbf{Pros}: can be stored with the subject (portable!); easy to audit all subject
 permissions; delegating is ``simple''. \\
-\textbf{Cons}: revoking permission on one object is hard (search every subject's list: linear
-in the number of subjects/objects); transferability --- once the capability is given, how can we
+\textbf{Cons}: revoking just one permission is hard (if the objects are unstructured, finding the permission
+is linear in the number of objects of the user); transferability --- once the capability is given, how can we
 prevent sharing? (if Alice gives Bob her right to read file1, which is not in the matrix, the
 policy is broken); authenticity --- how to check it? (like checking a concert ticket is not
 fake). \\
@@ -616,7 +616,7 @@ to \texttt{core\_devs} (least-privilege-wise better than \texttt{chmod o+x}, whi
 open the directory to everybody).
 \end{algbox}
 
-\begin{rembox}[title={Open question of the slides: what about links?}]
+\begin{rembox}[title={Open question of the slides: what about links? (answer not in the slides)}]
 A \textbf{symbolic link} is only a path: following it, the system checks the permissions of the
 target \emph{and} \texttt{x} on every directory of the target's path, so a symlink placed in
 intern\_C's home does not help. A \textbf{hard link} is another name for the same file (same
