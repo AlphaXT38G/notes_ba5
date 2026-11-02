@@ -220,7 +220,6 @@
             \par{\centering $\text{observe}(O_1) \wedge \text{alter}(O_2)$ $\Rightarrow \text{level}(O_2) \succeq \text{level}(O_1)$ \par}
         \item \textbf{ds-property (need-to-know):} a level is coarse (all Secret staff would read all Secret files), so the matrix must also list the access.
     \end{itemize}
-    \textbf{Example}: \textit{a soldier reports to an officer: allowed (write up). The officer orders ``Attack!'': denied (write down).}
 \end{thm}
 
 \begin{defn}[title=Basic Security Theorem]
@@ -240,8 +239,20 @@
 \end{warn}
 
 \begin{prop}[title=Model 2 - BIBA: integrity]
-    The dual of BLP, on integrity levels (same dominance): \textbf{no read down}, \textbf{no write up}.\\
+    The dual of BLP, on integrity levels (same dominance). Rights: \textbf{read}, \textbf{write}.
+\end{prop}
+
+\begin{thm}[title=BIBA properties]
+    \begin{itemize}
+        \item \textbf{Simple integrity (no read down):}
+            \par{\centering $\text{read} \Rightarrow \text{level}(object) \succeq \text{level}(subject)$ \par}
+        \item \textbf{*-integrity (no write up):}
+            \par{\centering $\text{write} \Rightarrow \text{level}(subject) \succeq \text{level}(object)$ \par}
+    \end{itemize}
     \textbf{Example}: \textit{employees read the director's rules but cannot rewrite them.}
+\end{thm}
+
+\begin{prop}[title=BIBA variants]
     \begin{itemize}
         \item \textbf{Low-water-mark:} after reading low data, a subject's level drops (label creep). Or a written object takes the lowest level (detection only).
         \item \textbf{Invocation:} simple (invoke only what you dominate) or controlled (only what dominates you).
