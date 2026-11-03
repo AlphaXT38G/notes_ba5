@@ -58,11 +58,15 @@
 % ============================================================
 
 % ---------- Color palette -----------------------------------
-\definecolor{blueColor}{HTML}{1F4E79}      % deep blue
-\definecolor{greenColor}{HTML}{0B6E4F}     % green
-\definecolor{redColor}{HTML}{B83227}     % red/warning
-\definecolor{soft}{HTML}{F2F2F2}        % light gray bg
-\definecolor{darkgray}{HTML}{3b3b3b}        % dark gray
+% Muted modern palette: soft, desaturated tones, dark enough for white titles.
+\definecolor{blueColor}{HTML}{3F5F8A}      % dusty blue: models, properties
+\definecolor{greenColor}{HTML}{3E7C6A}     % sage green: definitions
+\definecolor{redColor}{HTML}{A94B53}       % brick rose: key rules and formulas
+\definecolor{orangeColor}{HTML}{B5683C}    % terracotta: attacks and leaks
+\definecolor{soft}{HTML}{F3F4F6}           % light grey bg
+\definecolor{darkgray}{HTML}{475569}       % slate: caveats, section bars
+\definecolor{slateBorder}{HTML}{9CA3AF}    % grey: example frame
+\definecolor{slateTitle}{HTML}{E5E7EB}     % light grey: example title bar
 % ---------- Section headers ---------------------------------
 % Bypass titlesec for \section (nested colorbox+parbox+#1 trips it).
 \newcounter{cheatsec}
@@ -142,11 +146,20 @@
   title=!,#1
 }
 \newtcolorbox{ex}[1][]{
-  enhanced jigsaw,colback=white,colframe=black!50,
+  enhanced jigsaw,colback=white,colframe=slateBorder,
   boxrule=0.3pt,arc=1pt,left=2pt,right=2pt,top=1pt,bottom=1pt,
-  fonttitle=\bfseries\footnotesize,coltitle=black,
-  colbacktitle=black!10,titlerule=0pt,
+  fonttitle=\bfseries\footnotesize,coltitle=darkgray,
+  colbacktitle=slateTitle,titlerule=0pt,
   title=Ex,#1
+}
+% Attacks and leaks (orange), apart from definitions (green), key rules (red),
+% properties (blue) and caveats (grey).
+\newtcolorbox{atk}[1][]{
+  enhanced jigsaw,colback=orangeColor!10,colframe=orangeColor,
+  boxrule=0.4pt,arc=1pt,left=2pt,right=2pt,top=1pt,bottom=1pt,
+  fonttitle=\bfseries\footnotesize,coltitle=white,
+  colbacktitle=orangeColor,titlerule=0pt,
+  title=Attack,#1
 }
 
 % ---------- Math shortcuts ----------------------------------
