@@ -386,7 +386,7 @@
     Infos cannot be modified by \textbf{unauthorized parties}.
 \end{defn}
 
-\begin{defn}[title={Authentication (digital signature)}]
+\begin{defn}[title={Asymmetric: digital signature (authentication)}]
     \begin{itemize}
         \item Bob signs with his \textbf{Secret Signing Key}.
         \item Alice decrypts with her \textbf{Secret Encryption Key}, then verifies the signature with Bob's \textbf{\mbox{Verification} Public Key}.
@@ -397,7 +397,7 @@
 
 {\centering\includegraphics[width=\linewidth,keepaspectratio]{images/lecture06/all-together.png}\par}
 
-\begin{defn}[title=Block cipher modes of operation]
+\begin{defn}[title=Symmetric (confidentiality): block cipher modes]
     Block of 128/256 bits, longer message: iterate.
     \begin{itemize}
         \item \textbf{ECB (Electronic Code Book):} $C_i = E_K(M_i)$. $M_i = M_j \Rightarrow C_i = C_j$: leaks information.
@@ -415,7 +415,7 @@
     \end{itemize}
 \end{warn}
 
-\begin{defn}[title=Message Authentication Code (MAC)]
+\begin{defn}[title=Symmetric (integrity): Message Auth. Code (MAC)]
     Encryption alone gives no integrity: Eve changes $C$ and Bob decrypts a different $M$. Symmetric fix:
     \par{\centering\includegraphics[width=\linewidth,keepaspectratio]{images/lecture06/mac.png}\par}
     \textbf{CBC-MAC:} $C_0 = 0$, $C_i = E_K(M_i \oplus C_{i-1})$, MAC $= $ last block. Deterministic, secure only if the length of $M$ is known.
