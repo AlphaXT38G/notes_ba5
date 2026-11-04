@@ -7,18 +7,19 @@ LaTeX notes for the BA5 IN semester at EPFL.
 ## Build
 
 ```bash
-python build.py                 # compile everything -> dist/ + dist/index.html
-python build.py compsec nummet  # only some subjects
-python build.py --index-only    # regenerate dist/index.html without compiling
+pip install -r requirements.txt  # once: the notes engine
+notes-engine                    # compile everything -> dist/ + dist/index.html
+notes-engine compsec nummet  # only some subjects
+notes-engine --index-only    # regenerate dist/index.html without compiling
 python -m http.server 8765 --directory dist   # preview at http://localhost:8765/
 ```
 
-`dist/` is generated, never edit it by hand. The build itself lives in `builder/`, and
-the index page (HTML, CSS, JS) in `site/`.
+`dist/` is generated, never edit it by hand. The build and the index page
+are the [notes engine](https://github.com/AlphaXT38G/notes-engine), shared with the other semesters.
 
 **Contributing** (humans and AI agents alike): read [`AGENTS.md`](AGENTS.md) first. It
-explains how the build and the page are organised, how to add a new screen to the page,
-and the conventions to follow.
+explains this repository's layout and the LaTeX conventions; how the page is built, how to add a
+screen to it and the code conventions are in the engine's `AGENTS.md`.
 
 ## Adding / editing a subject
 
@@ -72,7 +73,7 @@ where it was, without a new ad.
 
 From **21:30 to 01:00** the page turns into a jazz bar 🎷 (neon title, smoke,
 floating notes) and plays background jazz ("Just One More Drink", jazz noir). The
-music of every screen is an mp3 served with the page (`site/audio/`). It starts by
+music of every screen is an mp3 served with the page (the engine's `site/audio/`). It starts by
 itself; browsers only allow sound after a click, so until the page has had one it
 plays muted and the sound comes on at the first click or key press. The turntable in
 the bottom left corner plays / pauses it, and so does the space bar, on every screen

@@ -1,0 +1,3 @@
+# The notes engine (builds the PDFs and the index page): see https://github.com/AlphaXT38G/notes-engine
+# The same tag is pinned in .github/workflows/pages.yml
+notes-engine @ git+https://github.com/AlphaXT38G/notes-engine@v0.1.0
