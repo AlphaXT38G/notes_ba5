@@ -9,13 +9,15 @@ LaTeX notes for the BA5 IN semester at EPFL.
 ```bash
 pip install -r requirements.txt  # once: the notes engine
 notes-engine                    # compile everything -> dist/ + dist/index.html
-notes-engine compsec nummet  # only some subjects
-notes-engine --index-only    # regenerate dist/index.html without compiling
+notes-engine compsec nummet     # only some subjects
+notes-engine --index-only       # regenerate dist/index.html without compiling
 python -m http.server 8765 --directory dist   # preview at http://localhost:8765/
 ```
 
-`dist/` is generated, never edit it by hand. The build and the index page
-are the [notes engine](https://github.com/AlphaXT38G/notes-engine), shared with the other semesters.
+`dist/` is generated, never edit it by hand. The build and the index page are the
+[notes engine](https://github.com/AlphaXT38G/notes-engine), shared with the other semesters. This
+repository pins its version (`requirements.txt` and `.github/workflows/pages.yml`); the title,
+subtitle and other settings of the site are in `site.json`.
 
 **Contributing** (humans and AI agents alike): read [`AGENTS.md`](AGENTS.md) first. It
 explains this repository's layout and the LaTeX conventions; how the page is built, how to add a
