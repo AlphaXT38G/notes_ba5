@@ -13,7 +13,7 @@ from pathlib import Path
 from PIL import Image
 
 HERE = Path(__file__).parent
-OUT = HERE.parent.parent / "site" / "img" / "gargoyle.png"
+OUT = HERE.parent.parent / "notes_engine" / "site" / "img" / "gargoyle.png"
 CROP = (0, 0, 280, 306)  # the left gargoyle and its pedestal, in source pixels
 WIDTH = 140              # twice its largest size on the castle, for sharp high-density screens
 

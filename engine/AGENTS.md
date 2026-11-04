@@ -1,0 +1,494 @@
+# AGENTS.md of the notes engine
+
+Guide for anyone working on the engine, human or AI agent (Claude Code reads it through
+`CLAUDE.md`). Read it before changing the build or the index page.
+
+## What this repository is
+
+The engine behind a notes site: it compiles the LaTeX subjects of a **notes repository** (such as
+`notes_ba5`) to PDF and writes `dist/index.html`, an index page of all the PDFs, with its
+search, its previews and its screens (a flame mode, a jazz bar at night, a metal show, an epic
+finale, a calm night, Christmas, Halloween, a cassette deck by day, easter eggs...).
+
+The engine knows nothing about any particular set of notes. Everything specific comes from the
+notes repository, in its root: `subjects.json` (the subjects) and `site.json` (title, subtitle,
+short name, GitHub repository, kinds of documents... see `notes_engine/config.py` for the list
+and defaults). A notes repository is built with:
+
+```bash
+notes-engine --root path/to/notes          # or from inside it: notes-engine
+python -m notes_engine --root path/to/notes  # without installing
+```
+
+## Repository layout
+
+```
+notes_engine/         the Python behind the CLI
+  cli.py                the command line (arguments, summary)
+  config.py             the notes repository (subjects.json, site.json) and the engine's paths
+  latex.py              compiling a subject's LaTeX into dist/<subject>/
+  previews.py           first-page thumbnails of the PDFs (poppler)
+  search.py             the text of the PDFs, page by page, for the search: dist/search.json (poppler)
+  page.py               dist/index.html: cards from dist/, assembled with site/
+  log.py                coloured console output
+notes_engine/site/    the index page (HTML, CSS, JS inlined into one dist/index.html, images)
+  template.html         the HTML skeleton, with {{placeholders}}
+  manifest.json         which CSS / JS files go in the page, IN ORDER
+  css/  js/             one file per theme / screen / feature
+  img/  audio/          images and music, copied as files to dist/img/ and dist/audio/ (too heavy to
+                        inline); img/bartender/ holds the closing bartender's layers (the Gigachad
+                        meme photo, dressed as a bartender by an image generator, used as an
+                        illustration in this non-commercial project); frost.png is the frost the
+                        snowman's snowball leaves on the window; screamer.webp is Halloween's zombie,
+                        werewolf/ the layers of its werewolf, gargoyle.png its castle's statues
+notes_engine/shared/  course.sty and cheatsheet.sty, the LaTeX styles of every course / cheat sheet
+tools/                scripts that remake the images: bartender/ (open it through a local server),
+                      werewolf/cut.py and gargoyle/cut.py (Pillow)
+```
+
+The notes repository provides, at its root:
+
+```
+subjects.json         subjects: id, display name, exam rules, optional "weeks", "week_pdfs" and "color"
+site.json             optional settings of the site (merged over the defaults of config.py)
+<subject>/            course.tex, cheatsheet.tex, week/NN.tex (chapters), extra PDFs...
+dist/                 build output (git-ignored): PDFs, previews, index.html, search.json
+```
+
+In the rest of this guide, `site/` and `shared/` are `notes_engine/site/` and `notes_engine/shared/`.
+
+### How the engine and a notes repository fit
+
+- **LaTeX styles**: `latexmk` runs with `TEXINPUTS` set to `notes_engine/shared/` and to `dist/.tex/`, so
+  `\usepackage{course}` / `\usepackage{cheatsheet}` work in any subject without a path. The
+  footer's repository link comes from `site.json` -> `repo`: the build writes
+  `dist/.tex/notes-site.tex` (`\notesrepourl`, `\notesrepolabel`), which the styles read; no
+  `repo`, no link.
+- **Page texts**: `{{title}}`, `{{subtitle}}` and `{{short}}` in `template.html` come from
+  `site.json`; scripts read the short name from `<html data-short>` (the amp's logo, `metal.js`).
+- **Versioning**: a notes repository pins a tag of the engine. Change the contract (a new setting, a
+  renamed file) in a new tag, never silently.
+
+## Build and preview locally
+
+```bash
+python -m notes_engine --root ../notes_ba5                 # compile everything, then the index page
+python -m notes_engine --root ../notes_ba5 compsec swent   # only some subjects (then the index page)
+python -m notes_engine --root ../notes_ba5 --index-only    # only the index page, from the PDFs already in dist/
+python -m http.server 8765 --directory dist   # then open http://localhost:8765/
+```
+
+- **Windows**: prefix the build with `PYTHONIOENCODING=utf-8`, or the console cannot print ✔ / →.
+- **Optional tools**: `pdftoppm` and `pdftotext` (poppler) make the thumbnails; without them the
+  page shows names only. `pdftotext` also extracts the text of every PDF (cached next to it,
+  `<name>.pdf.txt`) into `dist/search.json`, so the search field finds words inside the
+  documents; without it the search looks at the names only. `node` checks the page's JavaScript
+  syntax at every build and points to the faulty `site/js` file and line. Every build also warns
+  about JavaScript too new for older phone browsers (see "Phones and older browsers" below), node
+  or not.
+- **Never edit `dist/`**: it is regenerated by every build.
+
+### Remaking the closing bartender
+
+His layers in `site/img/bartender/` come from `tools/bartender/source.webp`. To remake them (new
+photo, new cut, new props), serve the repository root and open the tool:
+
+```bash
+python -m http.server 8777
+```
+
+then `http://localhost:8777/tools/bartender/`: it shows the layers stacked on red (any leftover
+background shows) with a link to save each one into `site/img/bartender/`. The outlines of the cut
+(head, forearm, protected skin) are in `cut.js`, in photo pixels; the counter and the bell, drawn
+for the WebGL relief renderer (`relief.js`) and lit like the photo, are in `props.js`.
+
+### Trying the screens at any time
+
+The night screens follow the clock. Force one with the URL (`?night=`, the old name, still works):
+
+| URL | Screen |
+|---|---|
+| `?screen=0` | the day, whatever the time |
+| `?screen=1` | the first scheduled screen (the jazz bar) |
+| `?screen=evening` / `?screen=closing` | jazz bar / bar closing (the bartender comes ~9 s in, once the sign is dark) |
+| `?screen=metal` | metal show (does not end by itself when forced: the song plays on and on) |
+| `?screen=epic` | epic finale (until a code leaves it, e.g. `kamelot` again) |
+| `?screen=calm` | calm night (no dawn when forced outside 04:45 – 05:30) |
+| `?screen=christmas` / `?screen=christmas-night` | Christmas day / Christmas night |
+| `?screen=halloween` / `?screen=halloween-night` | Halloween day / Halloween night |
+
+Easter eggs: 20 clicks on 🔥 within a minute (metal show), the Konami code ↑↑↓↓←→←→BA, the word
+codes (below), a random surprise banner on some visits, and on both Christmas screens (day and night) a small golden sax hidden among the tree ornaments that
+opens the jazz bar (exactly as `armstrong` does). A red guitar standing behind the green gift
+under the tree starts the metal show (then Christmas comes back), and a firefly jar swinging under
+the garland opens the calm night (exactly as `peace` does). The Christmas snowman can be teased: his eyes
+follow the pointer; a click knocks his hat off; his carrot nose can be dragged away (put back on
+him he plants it again, dropped elsewhere he casts a fishing rod and reels it back); a click on
+his body tickles him (it calms him down), a press held on it melts him into a puddle; his coal
+buttons are a xylophone (eight notes and he dances, the start of Jingle Bells and he sings on).
+The third tease (hat, nose, melting him flat) makes him bend down, scoop snow from his belly, pack
+a snowball and throw it in our face: it grows until it fills the window and splashes, then lumps
+of snow, blinks, frost and a slow pointer (about 15 s). His fifth, lowest button plays
+Megalovania, one note per click (his eye glows blue); the 22nd click plays the whole song
+(`audio/megalovania.mp3`) and starts a fight in the style of the old pixel RPG duels: the page
+goes black around him and the fight lands with a quake (a run of jolts and thuds, another when the
+attacks begin); he rises, bigger, floating, his bottom out of the window, before a column of blue
+fire, and a blue flame rises from his glowing eye; the battle box takes the place of the courses
+and the pointer becomes a red heart (exactly where the pointer is, never slowed; or moved by the
+arrow keys) dodging bones and skull blasters, non-stop, faster and faster, before dioramas of cut
+paper that change during the fight; a hit shakes the screen. Escape, game over or the end of the
+song end it.
+Halloween can be played with too: the candles on the search bar (a click blows one out or lights
+it), the pumpkin pile (a click carves one, the next lights it, the next makes it laugh;
+all of them lit and the castle answers), the bats (a click catches one), the spider (its web gives
+under the pointer; a click sends it into the corner; three in a row and it spits its web in our face,
+webs everywhere and the pointer stuck in them; the top right web and the strands across stay, letting clicks through, until the page is reloaded or they are cut by dragging across them) and the ghosts (a click and one rushes at us, dissolving); two
+castle windows open now and then on a knight and a saxophonist (clicked open, they lead to the epic
+finale and the jazz bar, as `kamelot` and `armstrong` do), the castle's tiny gargoyles light red eyes when clicked, and a firefly
+jar half buried by the dead tree opens the calm night (as `peace` does); a werewolf walks the far hill
+on the left and howls at the moon at night, a witch crosses the sky on her broom, a vampire passes behind the castle's great window, and a zombie
+screamer jumps out of the top left corner, rarely (typing `candy` on Halloween shows it at once).
+The word codes (`yeti`, `boo`, `armstrong`, `peace`, `kamelot`, `normal`) work on every screen, the shows
+included. Each one is typed anywhere but the search field, letter by letter, or typed in the
+search field then Enter or the phone keyboard's search key (`onCode()` in `ui.js`, on the form's
+submit, since that key often sends no "Enter" keydown; the field is emptied and the keyboard
+closes; autocorrect is off in it, or kamelot becomes Camelot). Typed during the metal show or the
+epic finale, `yeti`, `armstrong` and `peace` end it first (`leaveShows()` in `epic.js`; the metal
+show of the clock gives way until 01:01:51, `skipSlot()` in `screens.js`), while a show that comes
+later still wins over their egg.
+The shortcuts clicked in the scenes (the Christmas sax and jar, Halloween's knight, saxophonist and
+jar) call the codes themselves (`CODES.armstrong()`, `CODES.kamelot()`, `CODES.peace()`), so there
+is no button to come back: the code typed again leaves the screen they opened for the normal screen
+of the moment (e.g. on a normal day, `boo`, the saxophonist, then `armstrong` shows the day).
+
+- `yeti`: Christmas day or night by the clock, any time of the year. Outside the Christmas
+  period, typed on a Christmas screen it goes back to the normal one; typed in a jazz bar opened
+  over Christmas, it brings Christmas back.
+- `boo`: Halloween day or night by the clock, any time of the year, over Christmas too. Outside
+  the Halloween period, typed on a Halloween screen it goes back to the normal one. It drops the
+  armstrong, peace and yeti eggs; `yeti` typed after it wins.
+- `armstrong`: the jazz bar at any time (over Christmas and the calm night too). Typed again in
+  the bar it goes back to the normal screen of that moment, by the clock alone: it drops the
+  `armstrong`, `yeti` and `boo` eggs and a forced `?screen=`, so it shows the day (or the calm
+  night), the bar itself at bar time (21:30 – 01:00), or Christmas / Halloween during their
+  periods (`backToClock()` in `armstrong.js`).
+- `peace`: the calm night at any time, over the day, the jazz bar and Christmas (a later show
+  wins, and the calm night comes back after it); `yeti` or `armstrong` typed after it wins. Typed
+  again on the calm night it goes back to the normal screen of that moment (on the calm night of
+  the clock, it does nothing).
+- `kamelot`: the epic finale at any time, over every screen. Typed again in it, it leaves it for
+  the normal screen of that moment, by the clock alone, as `armstrong` does from the bar
+  (`backToClock()`); the finale has no button for that.
+- `normal`: the day at any time, over every screen. It drops every other egg and a forced
+  `?screen=`, and keeps the day even when the clock brings a screen; an egg typed or clicked
+  after it wins, and typed again it lets the clock decide.
+
+## How the index page is built
+
+`notes_engine/page.py` makes one card per subject from the PDFs in `dist/`, then fills
+`site/template.html`:
+
+- `{{css}}`: every file of `manifest.json` → `"css"`, concatenated **in that order**. Later files
+  win over earlier ones for rules of the same weight, so the order is part of the design (see
+  below). The build writes `inset:` as `top` / `right` / `bottom` / `left` (older browsers).
+- `{{js}}`: every file of `manifest.json` → `"js"`, **in that order**, each in **its own**
+  `<script>` at the end of `<body>`. They share one scope: a file can use what an earlier file
+  defines (`const`, `let`, functions). Code that runs at load can only use what is defined above
+  it; code in event handlers runs later and can use anything. A file that fails (a syntax or an
+  API the browser lacks) stops alone, with what uses it; `ui.js`, first, always keeps the
+  search, the theme and the view switch working.
+- `{{head_js}}`: `site/js/head.js`, in `<head>`, applies the saved light/dark theme and view
+  before the first paint.
+
+The result is a single self-contained `dist/index.html`: no request for CSS or JS. Only images
+(`site/img/`, e.g. the bartender's head) are separate files, copied to `dist/img/`, with the music
+(`dist/audio/`) and `dist/search.json`, the text of the PDFs (`notes_engine/search.py`), fetched by
+`search.js` the first time the search field is used.
+
+In the Previews view, a document alone in its list (the course notes, the only document of a
+section: `li.solo`, set by `page.py`) or with extracts found inside it (`li.found`) takes a whole
+row, its thumbnail beside its name, pages, size and date.
+
+### The search
+
+The search field finds subjects and documents by name (`ui.js`) and by what the documents say
+(`search.js`). How it is built, and why:
+
+- **The text is extracted at build time** (`notes_engine/search.py`, `pdftotext`), not in the browser:
+  reading PDFs in the page would need a PDF library and download every PDF. Each PDF's text is
+  cached next to it (`<name>.pdf.txt`, remade when the PDF is newer), like the previews, so
+  `--index-only` stays fast. It is cleaned once there: ligatures become letters (NFKC), words cut
+  at line ends are joined, spaces collapse (a phrase is found across lines), and the dot leaders
+  of a table of contents become one "…".
+- **`dist/search.json` is a file of its own**, not inlined in `index.html` (about 0.5 MB, 150 kB
+  gzipped): it is fetched only the first time the field is focused or typed in, so a visit without
+  a search costs nothing more. Its keys are the documents' links (`<subject>/<path>.pdf`), the
+  `href` of each `a.doc`, so the page needs no other id. Pages are kept apart: an extract can say
+  its page and link to it (`#page=N`, followed by the browsers' PDF viewers).
+- **`ui.js` keeps the search by name** and calls the text search through one hook,
+  `searchInside` (null until `search.js` has its text): `ui.js` is the file that always runs, so
+  if `search.js` fails, or `search.json` is missing (no `pdftotext`, offline), the search by name
+  still works. The text search is only asked about documents whose name does not match.
+- **Matching** (`search.js`): words match from the start of a word of the text, ignoring accents
+  and case, except that a word typed with a capital keeps its case (smart case: `MAC` is the
+  acronym, `mac` also finds "machine"); `"quoted words"` are one phrase; one-letter words are left
+  out. The text is folded once when loaded (accents removed character by character, so a position
+  in the folded text is a position in the original, which the extracts show), and the query is
+  parsed once per change, not once per document: a search over all the PDFs takes a few
+  milliseconds, even on a slow phone.
+- **Extracts** are built as DOM nodes (never `innerHTML`: the text comes from the PDFs), three per
+  document (the pages holding every word, then the most matches, shown in page order), and the
+  other pages only when their button is clicked.
+
+### JS files, in load order
+
+| File | What it does |
+|---|---|
+| `ui.js` | light/dark toggle (`root` = `<html>`), Names / Previews switch, search by name (`runSearch()`, with the `searchInside` hook of `search.js`), `onCode()` (the easter egg words, typed on the page or in the search field then Enter) |
+| `search.js` | search inside the documents (see "The search" above): `search.json` fetched on the first use of the field, `searchFind()` (the `searchInside` hook of `ui.js`), the extracts under each document found, each a link to its page, and the button for the other pages |
+| `flames.js` | 🔥 flame mode, `setFire`, `crowded()` (anti pile-up helper), the 20-click easter egg |
+| `surprise.js` | random surprise banner |
+| `blackhole.js` | `createBlackHole()`: the Konami black hole, ray-traced in WebGL (light bent by gravity, disk with Doppler beaming, lensed stars), on two canvases so the page falls between its sky and its disk |
+| `supernova.js` | `createSupernova()`: the multi-stage supernova that ends the Konami black hole (flash, shock wave, ejecta, nebula, pulsar), one WebGL canvas over the page |
+| `konami.js` | Konami code: black hole (CSS drawing as a fallback without WebGL) swallowing the page letter by letter, then its boxes and the music player (the Christmas garland, jar, sax and guitar fade out, `konami.css`; they stay hidden during the party theme), until it overheats, implodes and explodes in a supernova; confetti, party theme |
+| `screens.js` | **the screen engine**: `SCREENS`, `SCHEDULE`, `OVERRIDES`, `everySecond`, `applyScreen()`; `screenTrack()` / `preloadTrack()` / `dropTrack()` for the screens' music; `musicButtons`, the play / pause buttons the space bar clicks |
+| `youtube.js` | the YouTube players of the music (the day's cassettes, the Christmas radio): `ytPlay()` / `ytPause()` / `ytSound()` / `ytSeek()` / `ytWarm()`. One hidden `<iframe>` per video, kept once made (coming back to a video plays on, with no new ad), muted while YouTube plays an ad (the video's own time stands still), and made ahead by `ytWarm()` to go through its ads muted |
+| `jazz.js` | jazz bar screens (`evening`, `closing`): smoke, notes, turntable playing `audio/jazz.mp3`, neon sign going out |
+| `closing.js` | closing time: the life-size bartender behind his bar (photo layers from `img/bartender/`: head nodding, forearm tapping the desk bell, chest breathing), swinging lamp, desk bell "ding" (Web Audio), typed speech, chalkboard with countdown, "Good night" |
+| `fx.js` | the effects canvas of every screen: `fxLayers` (by `<body>` class), `blob()`, the animation loop |
+| `christmas.js` | Christmas screens: date override and `yeti` code, garland, winter scene (mountains and chalets, moon, tree and gifts drawn in volume with a shared `bow3d` and `giftTag`, snowman), night lights canvases (tree, garland halos), snow, sleigh, music (Jingle Bell Rock or the YouTube Christmas radio, swapped with the sleeve behind the turntable, or paused), hidden sax (the `armstrong` code) and guitar (the guitar draws the gifts in front of it again over itself, to stand behind them while staying clickable), firefly jar swinging under the garland (the `peace` code; a pendulum pushed by the wind, the mouse and scrolling, asleep once settled) |
+| `stuckpointer.js` | `stuckPointer()`: after something in the face (the snowman's snowball, the spider's web), a stuck pointer drags slowly behind the real one for a while, and a sheet passes the clicks to what is under it |
+| `snowman.js` | the Christmas snowman's games (drawn in `christmas.js`, with his hat, nose, eyes, buttons, brows, steam, sweat, puddle, belly hollow, blue eye and two halves bending at the waist as parts of their own): eyes following the pointer, hat knocked off, nose dragged away and put back by him (by hand, or with a fishing rod drawn over the page: back cast, line and float, ripple, reel), tickling, melting, the buttons' xylophone and dances, the fifth button's Megalovania (Web Audio notes, then `audio/megalovania.mp3` at the 22nd click, with the fight of `sansfight.js` for as long as it plays, the Christmas turntable hushed meanwhile), his temper, the snowball scooped from his belly (his top half bends at the waist), packed and thrown at our eyes (canvas bitmaps growing to fill the window), the splash and its spray, lumps of snow, blinks, the blurred view, the frost (`img/frost.png`) and the frozen, slow pointer (`stuckPointer()`, an icy one); its Web Audio sounds (`smTone()`, `smNoise()`, also used by the fight); all reset when Christmas ends |
+| `sansscenes.js` | the fight's backgrounds: dioramas (`SF_SCENES`: snowy forest, golden hall, ice cavern, aurora), layers of cut paper drawn once on canvases (shadow, lit edge), slid by the heart's place (parallax), with a few living things (snow, light shafts, sparks, the aurora); `sfSceneDraw()` |
+| `sansfight.js` | the fight that comes with the snowman's Megalovania (`sfStart()` / `sfEnd()`, called by `snowman.js`): the scene over the page and black around him (`#xdark`), the battle box and stats (`#xfight`), one opening line then attacks without end (bones, blue bones, bone waves, bone rain, sine waves of bones, a turning propeller of bones, bouncing bone snowflakes, eruptions after red warnings, closing rings, skull blasters, crossing blasters, on a full-window canvas; bones turn, are outlined, glow when blue, leave trails; faster and more overlapping as it goes), the dioramas behind it (`sansscenes.js`, one every 22 s), the quakes it lands with (`SF_QUAKE_IN` as the dark falls, `SF_QUAKE_GO` when the attacks begin: jolts of the box, the diorama and him, with low thuds), the snowman rising (`sfRise()`: grown from high on him so his bottom leaves the window, floating) before a column of blue fire (`sfAura`, a WebGL fire shader on a canvas inside him, behind his drawing, flaring with the quakes; glowing sprites without WebGL; `sfShader()` sets up both shaders, this one and the eye's), hits (a crunch, the screen shaking, the box flashing red), the pixel heart exactly at the pointer (or moved by the arrow keys, then left there until the mouse moves), the flame rising from his eye (WebGL, a volume of noise ray-marched, following his gaze); reduced motion: no fight |
+| `halloween.js` | Halloween screens: date override and `boo` code, the two layers (`#hwscene` behind the page, `#hwfront` above it), the parts registry (`hwPart()`: each file below adds `{on, off, night}`), lightning, the shared Web Audio sounds (`hwAudioCtx()`, `hwNoise()`), `hwSay()` speech bubbles |
+| `hwcastle.js` | Dracula's castle, SVG built once (`HW_CASTLE`), with its gargoyle statues (`HW_GARGOYLES`, `img/gargoyle.png`) and its two shuttered windows (`HW_PORTALS`): spires with crockets and pinnacles, flat towers with machicolations and bartizans, string courses and their shadows, gargoyles, lancet windows with hoods and tracery, the rose window and the great window (a vampire passing), flying buttresses, the curtain wall with its spikes and portcullis |
+| `hwcastlelife.js` | what lives on the castle (`HW_CASTLE_LIFE`, drawn with it): two banners rippling on poles, a chimney's smoke in puffs, three crows circling the keep's spire (CSS) |
+| `hwhills.js` | what stands on the hills (`hwHillLife()`, in the near plane): a hand rising from the earth, a scarecrow with a pumpkin head and a crow, an open grave and its shovel, a swinging lantern, a signpost, a crypt glowing green, will-o'-wisps (night) |
+| `hwscene.js` | Halloween backdrop, SVG built once in four planes (`hwLayers`: far, mid, near, tree; `hwDepth`, where each one is slid; `hwFit()`, where a point of the scene is on the screen; `hwCastleAt()`, where a point of the castle is in the scene): stars (night), a giant moon risen behind the ridges (`HW_BIGMOON`: pale by day, the warm full moon at night), ridges, the castle on its crag, a haze, graveyard hills, tombstones, iron fence, dead tree, mist |
+| `hwsecrets.js` | what can be clicked in the scene, through invisible buttons laid over it where no card covers it: two castle windows whose shutters open now and then on a knight (the `kamelot` code) and a saxophonist (`armstrong`), the tiny gargoyle statues (red eyes), the firefly jar half buried by the tree (`peace`) |
+| `hwcandles.js` | four candles in SVG, three on the right end of the search bar and one on Previews, their wax run over them: layered flickering flames, light through the wax, a warm light on the page; they melt for real (height remembered, `hw-candles`), blown out / lit by a click |
+| `hwcritters.js` | on the effects canvas: the bats (wandering, fleeing the pointer), the autumn leaves, the bat hunt, `hwBatBurst()` |
+| `hwpumpkins.js` | the pumpkin pile spilling out of the bottom right corner, and its game: carve, light, laugh; all lit wakes the castle |
+| `hwspider.js` | the cobweb filling the top left corner (a mesh of points and threads, Verlet: it sags, breathes, gives under the pointer) and its big spider, sent into the corner by a click; poked three times within 20 s, it puffs up, shaking, and spits its web (`hwWebShot()`) |
+| `hwwebshot.js` | the spider's web in our face: an orb web (a bitmap drawn once) flying at us, growing until it covers the window, a wet slap, clinging, then sagging and thinning away; webs left everywhere (corners, strands, dew: `hwMessShape()`, `hwWebMess()`); the pointer caught in them (`stuckPointer()`) for 12 s |
+| `hwwebleft.js` | the webs the spit leaves for good: the top right fan and the strands across, on a click-through canvas drawn only when they change, until the page is reloaded; pressed and dragged across (a finger on a phone), a strand snaps and its halves swing down and fade, the fan tears off and falls (`hwWebsLeave()`, `hwWebsGone()`) |
+| `hwwolf.js` | the werewolf walking the far hill on the left now and then, never behind the courses (a photo cut into layers at its joints, `img/werewolf/`, by `tools/werewolf/cut.py`; walk cycle in CSS), straightening up to howl at the moon at night (Web Audio howl through the hills, a second wolf answering) |
+| `hwwitch.js` | a witch on her broom crossing the sky now and then, day and night, behind the courses (a silhouette outlined by the light, cape and hair fluttering, her cat on the broom), riding the wind, a trail of twinkling sparkles behind her on a canvas of their own |
+| `hwghostgl.js` | the ghosts' rendering: a body built as a distance field on a 14-point skeleton (tapered limbs, a robe falling to a ragged, rippling, folded hem, hair or hood), ray-marched in WebGL as glowing mist (3D noise, brighter at its edges and from above, a halo, dark eye and mouth hollows, the monk's lantern as a warm light), materialising in patches; `hwSpectreDraw()`, `hwSpectreProject()` |
+| `hwghosts.js` | the ghosts, one every 25 to 50 s, in turn: a lady in white, a monk with a lantern, a shrouded one (`HW_POSES`). They move in 3D, across and in depth (behind the courses when far, in front when near), drawn by damped springs from place to place, lingering; the body turns in 3D towards where it goes and, at rest, to look at us (the head first); the skeleton breathes, floats, leans into the motion, its hem and hair trail, the lantern swings as a pendulum; ectoplasm wisps rise from them on the effects canvas; a click and it rushes at us, dissolving |
+| `hwscream.js` | the rare zombie screamer (`img/screamer.webp`, a Web Audio zombie scream, `hwScream()`, the `candy` code) |
+| `hwmusic.js` | Halloween music: `HW_TRACKS` (each with the colour of its soup, and its icon and label colour for the day's cassette deck, which plays them too), play / pause / sound; the other tracks as potion flasks on a plank beside the cocotte (`hwShelf`), a click pours one in (the flask flies over the pot and is shaken, uncorks and tips, the lid lifts, the potion runs in, the empty flask is thrown in too, the soup takes its colour in a puff of steam and a cloud of smoke of that colour rises shaped like a skull, a bat, a jack-o'-lantern or a ghost, that track plays, the flask comes back refilled with the one that was playing) |
+| `hwcocotte.js` | the player: the enamelled pumpkin cocotte, its soup the colour of the track (`HW_COCOTTE`), the potion flasks (`hwFlaskSvg`, three shapes in turn) and the smoke clouds (`HW_SMOKES`, `hwSmokeSrc()`: an `<img>` whose fraying filters are rendered once) |
+| `hwmotion.js` | the scene alive: the planes slid by the pointer and the scroll (parallax, in the effects canvas' loop; the werewolf, the castle's buttons and the jar follow their plane), gusts of wind (`#hwscene.gust`, `hwWind`: the tree bends, the leaves blow across), shooting stars, a light walking from window to window, bats bursting from the keep, the hand rising from the earth |
+| `armstrong.js` | `armstrong` code: the jazz bar at any time (after `christmas.js` to win over it, before `metal.js` so the shows still win); typed again, back to the clock's screen |
+| `metal.js` | metal show: lightning, chains, fire, silhouettes, guitar amp and song (played 3 times) |
+| `epic.js` | epic finale: blue fire, motes, rune circle, the "More epicness ?" medallion and the summoning before the finale (overlay, flash timed to the end of the show, Web Audio whoosh and boom), `leaveEpic()`, `leaveShows()` (a code typed during a show ends it), the `kamelot` code (the finale at any time) |
+| `bardscene.js` | `createBardScene()`: the epic finale's bard, a pixel art painting ray-marched in WebGL (distance fields): a knight in armour and a blue surcoat playing the lute against a mossy boulder (gauntlets with fingers, sabatons), a campfire lighting him (traced soft shadows), mirror steel (a second ray), ambient occlusion, flames and sparks, a sky with the moon and firs; two moods (`uMood`: blue arcane fire, or Dragonborn's red fire, starry night and Milky Way, and dragon); `bardProject()` says where a point of the scene shows in the painting; posterised with Bayer dithering at a low resolution; compiled in the background (`ready()`), every ray in one loop so the scene is written out once |
+| `bard.js` | the epic finale's music player (`BARD_SONGS`: the Two Steps From Hell mix `audio/epic.mp3`, then Dragonborn `audio/dragonborn.mp3`, the next when one ends, the choice remembered): the painting of `bardscene.js` in a frame, the title lettered over it in a hand-drawn pixel font (bottom right), the next song's name (a larger 5 x 7 pixel font, solid ink) on an aged parchment drawn in pixels, standing behind the painting's top right corner like the next tape's case behind the cassette deck (a click on it changes the song); a click on the knight plays / pauses (he strums at the song's pace, nods, dozes when paused), on the fire changes the song with a show (he looks at the fire, a flourish plucked in Web Audio, the fire drawn in then bursting in the new colour with a shock wave, the title dissolving pixel by pixel); `preloadEpic()` for the "More epicness ?" click |
+| `calm.js` | calm night after the metal show: moon of tonight, hills, mist, dawn, stars, shooting stars, fireflies, night forest sounds (`audio/calm.mp3`, quieter), dawn birds made with Web Audio, firefly jar; the `peace` code (the last override: the calm night at any time; `startPeace()`; the Christmas and Halloween jars call it) |
+| `normal.js` | `normal` code: the day at any time, over every screen (the very last override, after `calm.js`); typed again, back to the clock's screen |
+| `tapes.js` | the day's cassette deck (no screen only): an early-80s hi-fi deck (VU meters, LED counter, piano keys ⏏ ◀◀ ▶❚❚ ▶▶ and the station key) whose music comes in bands (`TAPE_BANDS`): Lofi Girl mixes, then the screens' music (jazz, late night, metal, epic, Christmas, Halloween: the latter is `HW_TRACKS` of `hwmusic.js`, loaded before), then Radio Impuls live. A tape is a YouTube video (a `youtube.js` player; every YouTube tape is warmed up, ads included, once the deck is first reached for), an mp3 of `site/audio/` or a live stream (`<audio>`). The station key goes to the next band, ⏏ or the next tape's case behind the deck to the next tape of the band (door opens, tape out, new one in, door closes); never plays by itself, the tape is remembered |
+| `start.js` | **last**: first `applyScreen()`, then the every-second clock check |
+
+### CSS files, in cascade order
+
+`base.css` (layout, cards, search, previews) → `flames.css` → `surprise.css` → `jazz.css` → `closing.css` →
+`metal.css` → `epic.css` → `bard.css` → `christmas.css` → `snowman.css` → `sansfight.css` → `halloween.css` → `hwlife.css` → `hwcreatures.css` → `hwmusic.css` → `calm.css` → `tapes.css` → `screens.css` (effects canvas, view transitions) → `konami.css`.
+The Konami file is last on purpose: during its animation `body.rift .wrap` must win over every
+theme's `.wrap` rule.
+
+## Screens
+
+A **screen** is a special look the whole page takes for a while. The engine is in
+`site/js/screens.js`; each screen registers itself from its own file:
+
+```js
+SCREENS.name = {
+  className: "...",   // class put on <body> while it runs (screens may share one)
+  subtitle: "...",    // replaces the subtitle: string, function returning one, or null
+  transition: "...",  // view transition used to enter it: CSS [data-vt=...]
+  normal: true,       // optional: the usual look of its hours, replaced like the day (calm night)
+};
+SCHEDULE.push([from, to, "name"]);   // clock slot in seconds since midnight (to < from wraps)
+OVERRIDES.push(phase => phase);      // event-driven screens (easter eggs), applied in order
+everySecond.push(() => { ... });     // work to do every second
+```
+
+What happens when the screen changes (`applyScreen()`, called every second by `start.js`):
+
+1. `body[data-phase]` becomes the screen's name (removed during the day).
+2. The subtitle changes, and the flame mode is turned off (too heavy on top of a screen).
+3. `<body>` classes are toggled: those that end first, then those that start. For each one a
+   `CustomEvent` named after the class is sent on `document` (`detail: true / false`).
+4. A `phase` event is sent (`detail`: the screen's name, or `null`).
+5. All of this happens inside a View Transition (`html[data-vt]` = the screen's `transition`, or
+   `day`), except on first load, with reduced motion, or in browsers without the API.
+
+Current screens:
+
+| Screen | Class | When | Files |
+|---|---|---|---|
+| `evening` | `night` | 21:30 – 00:45, or the `armstrong` code | `jazz.js`, `jazz.css`, `armstrong.js` |
+| `closing` | `night` | 00:45 – 01:00 | `jazz.js`, `jazz.css`, `closing.js`, `closing.css` |
+| `metal` | `metal` | 01:00:00 – 01:01:51 (the song 3 times), or 20 flame clicks, or the Christmas guitar | `metal.js`, `metal.css` |
+| `epic` | `epic` | after a metal show, if "More epicness ?" was clicked, or the `kamelot` code, until a code leaves it | `epic.js`, `epic.css`, `bardscene.js`, `bard.js`, `bard.css` |
+| `calm` | `calm` | 01:01:51 – 05:30, unless the epic finale runs (a `normal` screen), or the `peace` code (the Christmas and Halloween jars too) | `calm.js`, `calm.css` |
+| `christmas` | `christmas` | Dec 1 – Jan 3, 06:00 – 18:00 (replaces the day) | `christmas.js`, `christmas.css` |
+| `christmas-night` | `christmas` | Dec 1 – Jan 3, 18:00 – 06:00 (replaces the day, the jazz bar and the calm night) | `christmas.js`, `christmas.css` |
+| `halloween` | `halloween` | Oct 25 – Nov 1, 07:00 – 18:00 (replaces the day, the jazz bar and the calm night), or the `boo` code | `halloween.js`, `hw*.js`, `halloween.css`, `hwlife.css`, `hwcreatures.css`, `hwmusic.css` |
+| `halloween-night` | `halloween` | Oct 25 – Nov 1, 18:00 – 07:00 | the same |
+
+The Christmas screens depend on the date, so they are an override rather than a `SCHEDULE` slot:
+it only rewrites the normal screens (no screen, the calm night: `isNormal()` in `screens.js`) and
+the jazz screens, and `christmas.js` is loaded before `metal.js`,
+so the metal show (01:00 or easter egg) and the epic finale still take over. A forced `?screen=`
+turns it off, except `?screen=christmas` / `?screen=christmas-night` themselves and the `yeti` easter egg.
+Halloween works the same way (its override in `halloween.js`, after Christmas', before
+`armstrong.js`); its parts each live in a file of their own and register with `hwPart()`.
+
+### Adding a new screen, step by step
+
+Example: a calm "dawn" screen from 06:00 to 07:00.
+
+1. **`site/js/dawn.js`**: register it, then react to its class event.
+
+   ```js
+   // ── Dawn (screen "dawn", body.dawn) ──
+   SCREENS.dawn = { className: "dawn", subtitle: "Good morning. Coffee first.", transition: "day" };
+   SCHEDULE.push([6 * 3600, 7 * 3600, "dawn"]);
+
+   // Extras that exist only during the screen: create them on, remove them off.
+   const sun = document.createElement("div");
+   sun.id = "sun";
+   const setDawn = on => on ? document.body.append(sun) : sun.remove();
+   document.addEventListener("dawn", e => setDawn(e.detail));
+   ```
+
+2. **`site/css/dawn.css`**: everything scoped under `body.dawn`, plus its own reduced-motion block.
+
+   ```css
+   /* Dawn (body.dawn, 06:00 - 07:00): soft pink sky, sun rising behind the page.
+      Every colour token is set: the visitor may be in light or dark mode. */
+   body.dawn{--bg:#fff4ee;--fg:#3a2414;--card:#fff;--line:#f0d6c8;--mut:#8a6a5a;--acc:#d9622b;--acc-bg:#ffe6da;--new:#1d7a46;--new-bg:#dcf3e5}
+   body.dawn::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(#ffd9c7,transparent 60%)}
+   body.dawn .wrap{position:relative;z-index:1}
+   #sun{position:fixed;left:50%;bottom:-6rem;width:12rem;height:12rem;border-radius:50%;background:#ffcf70;animation:rise-sun 20s ease-out forwards}
+   @keyframes rise-sun{to{transform:translateY(-40vh)}}
+   /* Reduced motion */
+   @media(prefers-reduced-motion:reduce){#sun{animation:none}}
+   ```
+
+   For a new view transition, add `[data-vt=dawn]::view-transition-old(root)` / `-new(root)`
+   rules and use `transition: "dawn"`.
+
+3. **`site/manifest.json`**: add `js/dawn.js` after `screens.js` and **before** `js/start.js`
+   (after `js/fx.js` too if it draws on the effects canvas, step 4: it needs `fxLayers` at load,
+   like `calm.js`), and `css/dawn.css` before `css/screens.css`.
+
+4. **Canvas effects** (optional): push layers with `mode` = the screen's class; `fx.js` starts
+   the canvas while that class is on. The canvas (`#metalfx`) is over the page; for a sky behind
+   the courses, put it behind (`body.dawn #metalfx{z-index:0}`, see `calm.css`).
+
+   ```js
+   fxLayers.push({ mode: "dawn", update(dt) {}, draw(ctx) {}, reset() {}, resize() {} });
+   ```
+
+5. **Event-driven screens** (optional): instead of `SCHEDULE`, push an override that returns the
+   screen's name while it must run (see `metal.js` for an easter egg, `epic.js` for a screen
+   queued by a button), then call `applyScreen()` to switch at once.
+
+6. **Normal screens** (optional): a screen that is simply the usual look of its hours, like the
+   calm night after the metal show, says `normal: true`. Christmas and the `armstrong` code then
+   replace it as they replace the day (`isNormal()` in `screens.js`).
+
+7. Build, open `http://localhost:8765/?screen=dawn`, check the console has no errors, and check
+   the switch from and to the day with a mocked clock if the screen is scheduled.
+
+## Good practices
+
+### Code
+
+- **Comment the why**, like the rest of the code: what a block does, why it is done that way.
+  Every file starts with a header saying what it is about.
+- **Keep files focused**: one theme or screen per CSS file, one feature or screen per JS file.
+  Put shared helpers where every user is below them in the manifest.
+- **Scope screen CSS under `body.<class>`**, and give each file its own
+  `@media(prefers-reduced-motion:reduce)` block for its animations.
+- **A screen sets every colour token** (`--bg --fg --card --line --mut --acc --acc-bg --new
+  --new-bg`, see `base.css`): the visitor may be in light or dark mode, and a token left out
+  keeps that mode's value (e.g. light text on a light background).
+- **localStorage can throw** (private mode): always `try { ... } catch (e) {}`.
+- **Sound needs a user gesture**: players start muted when there was none, and unmute on the
+  first click (see `jazz.js`, `metal.js`); a Web Audio context waits suspended and is resumed
+  on the first click (see the dawn birds in `calm.js`). Music is an mp3 in `site/audio/`,
+  played with `screenTrack()` (`screens.js`, or loaded ahead with `preloadTrack()` when a show
+  is coming), never put in the page, and stopped with `dropTrack()` when its screen ends (the
+  day's cassette deck also plays a radio's live stream, `tapes.js`, the same way). The
+  YouTube players left (the Christmas radio, the day's cassettes in `tapes.js`) go through
+  `youtube.js`: hidden `<iframe>`s driven by `postMessage` commands, never removed, muted during
+  ads. Never make a YouTube `<iframe>` of your own: it would play the ads aloud.
+- **A new music player** puts its play / pause button in `musicButtons` (`screens.js`): the
+  space bar clicks it, on every screen, so the key does whatever a click on it does.
+
+### Phones and older browsers
+
+Phones often run browsers built on an older Chromium (Samsung Internet, makers' browsers, old
+Android WebViews). One syntax they do not know makes the browser reject a whole `<script>`: a
+`||=` in `ui.js` once left a phone with no search, no theme and no view switch.
+
+- **Write JavaScript for Chromium 73 / Safari 12.1** (2019): no `?.`, `??`, `||=` / `&&=` / `??=`,
+  `.at()`, `replaceChildren`, `roundRect`, `replaceAll`, `structuredClone`, private fields...
+  Use `a && a.b`, `x = x || y`, `arr[arr.length - 1]`, `el.textContent = ""`. The build lists
+  any of them (`TOO_NEW` in `notes_engine/page.py`); add a pattern there for any new API you avoid.
+- **Guard optional APIs** (`navigator.userActivation`, `AudioContext`, `startViewTransition`,
+  WebGL): test them before use, as the code already does.
+- **Touch**: controls are at least 44 px high on touch screens (`pointer:coarse` in `base.css`),
+  with no tap delay. Nothing may cover the header controls; fixed widgets go in the corners, and
+  phones get room under the last card for them (`screens.css`).
+- **Check a phone-sized window** (375 px wide) after a page change: the search, the theme and
+  the Names / Previews switch must work on every screen (`?screen=...`).
+
+### Performance (the page runs heavy effects; keep scrolling smooth)
+
+- Animate **only `transform` and `opacity`**. To animate a glow, put it on a pseudo-element and
+  animate its opacity, not `box-shadow`.
+- Never use `background-attachment: fixed`: use a `position: fixed` pseudo-element instead
+  (`body.<class>::before`).
+- Anything spawned on a timer must be capped and must not pile up in background tabs: use
+  `crowded(layer, max)` from `flames.js`.
+- Draw many moving things on the **effects canvas** (`fx.js`) rather than as DOM elements. The
+  canvas is 1x even on high-density screens; pre-render expensive shapes once (see the rune
+  circle in `epic.js`) and avoid `shadowBlur` in per-frame drawing.
+- Heavy SVG filters (textures, blurs, grain) are fine in an SVG shown as an `<img>`: it is rendered
+  once into a bitmap, and animating the `<img>` never re-runs them.
+- Inside an inline `<svg>`, an animated element is restyled and redrawn on the main thread on
+  every frame, with what lies under it (and any filter on it). A few are fine; dozens (lights
+  that twinkle each at its own pace) are not: draw them on a canvas, as the Christmas garland's
+  halos (`paintGarlandGlow` in `christmas.js`), and keep blur filters off what animates.
+- A photo that moves (the closing bartender) is cut into layers at its joints, all at the photo's
+  size so they stack exactly, and only `transform` / `translate` / `scale` animate them. Each moving
+  layer reaches under the one that hides its joint (the forearm goes up under the rolled sleeve),
+  and the layer behind loses that part, so a move never opens a gap nor shows a ghost.
+- **WebGL shaders compile slowly on Windows**: Chrome goes through Direct3D, whose compiler copies
+  a function at every call and unrolls loops. A ray-marched scene called from a dozen places (march,
+  normal, shadows, reflection...) took 110 s to compile, freezing the page. Call the scene's
+  distance function from one loop only (`bardscene.js` traces every ray in one loop), start loops
+  at a uniform zero (WebGL 2), share noises instead of calling `noise()` in every branch, compile
+  with `KHR_parallel_shader_compile` and draw only once it is ready, and compile once per visit.
+- All scripts share one scope: prefix new top-level names if they could clash with another file's.
+- Remove a screen's extras (elements, timers, players) when its class turns off.
+
+#
+
+## Workflow
+
+- **Branch** from an up-to-date `main` (`feat/...`, `fix/...`, `refactor/...`), open a PR.
+- **Commits**: [Conventional Commits](https://www.conventionalcommits.org/) in English, one
+  commit per change, `type(scope): summary`. Types used here: `feat`, `fix`, `style`, `perf`,
+  `refactor`, `docs`, `build`, `ci`, `chore`. Scopes: `index` / `site` (the page), `build`,
+  or a subject and document (`compsec-week05`, `respsoft-cheatsheet`).
+- **Before committing a page change**: `python build.py --index-only` (the JS syntax check must
+  say OK), open the page, try the screens concerned with `?screen=...`, check the browser console
+  has no errors, and check a phone-sized window.
+- Keep `README.md` (for readers) and this file (for contributors) up to date with what changes.

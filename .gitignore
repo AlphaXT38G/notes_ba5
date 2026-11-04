@@ -34,3 +34,7 @@ desktop.ini
 .env/
 # Python bytecode (builder/)
 __pycache__/
+
+# Python packaging (engine/)
+*.egg-info/
+build/

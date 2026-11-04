@@ -1,11 +1,12 @@
 """Compile the LaTeX of a subject and copy its PDFs to dist/<subject>/."""
 
+import os
 import re
 import shutil
 import subprocess
 from pathlib import Path
 
-from .config import CONFIG, DIST, ROOT
+from . import config
 from .log import BOLD, RESET, err, info, ok
 
 # ── Weekly notes written as chapters ─────────────────────────────────────────
@@ -41,7 +42,7 @@ def week_documents(subject_dir):
     Same preamble as course.tex, then that week's chapters. The chapter counter starts where
     it is in the full course, so "Week2 : Part A" stays chapter 3 like in course.pdf.
     """
-    subject = next((s for s in CONFIG if s["id"] == subject_dir.name), {})
+    subject = next((s for s in config.P.subjects if s["id"] == subject_dir.name), {})
     if not subject.get("week_pdfs", True):  # the weeks stay chapters of course.pdf, no duplicate PDFs
         return []
     parts = course_weeks(subject_dir)
@@ -60,13 +61,33 @@ def week_documents(subject_dir):
         before += len(inputs)
     return docs
 
+# ── Environment of the LaTeX runs ────────────────────────────────────────────
+def tex_env():
+    """Environment for latexmk: TEXINPUTS finds the engine's styles and the site's settings.
+
+    shared/ holds course.sty and cheatsheet.sty (loaded by \\usepackage{course}); the file
+    dist/.tex/notes-site.tex, written here from site.json, tells them the repository to link in
+    the footer. The trailing separator keeps TeX's own search path.
+    """
+    repo = config.P.settings["repo"]
+    site_dir = config.P.dist / ".tex"
+    site_dir.mkdir(parents=True, exist_ok=True)
+    text = ""
+    if repo:
+        label = f"github.com/{repo}".replace("_", "\\_")
+        text = ("\\def\\notesrepourl{https://github.com/" + repo + "}\n"
+                "\\def\\notesrepolabel{" + label + "}\n")
+    (site_dir / "notes-site.tex").write_text(text, encoding="utf-8")
+    dirs = [config.SHARED, site_dir]
+    return {**os.environ, "TEXINPUTS": os.pathsep.join(map(str, dirs)) + os.pathsep}
+
 # ── Compiling a subject ──────────────────────────────────────────────────────
 def build_subject(subject, results):
     """Compile every document of a subject into dist/<subject>/, recording each in results.
 
     results maps "subject/file" to "ok" or "error".
     """
-    subject_dir = ROOT / subject
+    subject_dir = config.P.root / subject
     if not subject_dir.is_dir():
         print(f"\n{BOLD}{subject}{RESET}: folder not found, skipping.")
         return
@@ -86,8 +107,9 @@ def build_subject(subject, results):
 
     print(f"\n{BOLD}{subject}{RESET}")
 
-    out_dir = DIST / subject
+    out_dir = config.P.dist / subject
     out_dir.mkdir(parents=True, exist_ok=True)
+    env = tex_env()
 
     # Copy them as is, keeping their subfolder (cheatsheets/x.pdf -> dist/<subject>/cheatsheets/x.pdf)
     for pdf in extra_pdfs:
@@ -113,7 +135,7 @@ def build_subject(subject, results):
         # errors="replace": TeX writes raw bytes ("Missing character: There is no \xb0") and cuts
         # long lines in the middle of a UTF-8 character; decoding them strictly raised in CI and
         # stopped the whole build before dist/index.html was written
-        proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
+        proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", env=env)
 
         pdf = tex.with_suffix(".pdf")
         if proc.returncode == 0 and pdf.exists():

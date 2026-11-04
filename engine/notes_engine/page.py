@@ -11,7 +11,8 @@ import shutil
 import subprocess
 from datetime import datetime
 
-from .config import CONFIG, DIST, KINDS, NEW_DAYS, ORDER, PALETTE, ROOT, SEMESTER_WEEKS, SITE, weekly
+from . import config
+from .config import SITE
 from .latex import course_weeks
 from .log import err, ok
 from .previews import preview
@@ -55,9 +56,9 @@ def site_scripts():
 
 def label(p, root):
     """Display name of a PDF: "Course notes", "Week 03", or the file name with spaces."""
-    if p.relative_to(root).as_posix() in KINDS:
-        return KINDS[p.relative_to(root).as_posix()]
-    m = weekly(p)
+    if p.relative_to(root).as_posix() in config.P.kinds:
+        return config.P.kinds[p.relative_to(root).as_posix()]
+    m = config.P.weekly(p)
     if m:
         return f"Week {m[1]}{m[2]}"
     return p.stem.replace("_", " ")
@@ -69,12 +70,12 @@ def sources(subject, p, root):
     simple regex on \\input{...} / \\include{...} (one level, enough for swent/course.tex).
     A week built from chapters of course.tex (swent) comes from those chapters.
     """
-    src = ROOT / subject / p.relative_to(root)
+    src = config.P.root / subject / p.relative_to(root)
     tex = src.with_suffix(".tex")
     if not tex.exists():
-        m = weekly(p)
-        parts = course_weeks(ROOT / subject).get(int(m[1]), []) if m else []
-        return [(ROOT / subject / i).with_suffix(".tex") for i in parts] or [src]
+        m = config.P.weekly(p)
+        parts = course_weeks(config.P.root / subject).get(int(m[1]), []) if m else []
+        return [(config.P.root / subject / i).with_suffix(".tex") for i in parts] or [src]
     inputs = re.findall(r"\\(?:input|include)\{([^}]+)\}", tex.read_text(encoding="utf-8", errors="replace"))
     return [tex] + [(tex.parent / i).with_suffix(".tex") for i in inputs]
 
@@ -87,13 +88,13 @@ def updated(subject, p, root):
     files = [f for f in sources(subject, p, root) if f.exists()]
     out = subprocess.run(
         ["git", "log", "-1", "--format=%ct", "--", *map(str, files)],
-        cwd=ROOT, capture_output=True, text=True,
+        cwd=config.P.root, capture_output=True, text=True,
     ).stdout.strip()
     return datetime.fromtimestamp(int(out)) if out else datetime.fromtimestamp(p.stat().st_mtime)
 
 def is_new(when):
-    """True for documents changed less than NEW_DAYS ago (they get the "New" badge)."""
-    return (datetime.now() - when).days < NEW_DAYS
+    """True for documents changed less than settings["new_days"] days ago (they get the "New" badge)."""
+    return (datetime.now() - when).days < config.P.settings["new_days"]
 
 def link(subject, p, root, when, shot=None, text=None, solo=False):
     """One <li> line: document name (+ "New" badge) on the left, pages, size and date on the right.
@@ -154,8 +155,8 @@ def progress(weeks, subject):
     """
     if not weeks:
         return ""
-    total = subject.get("weeks", SEMESTER_WEEKS)
-    last = max(int(weekly(p)[1]) for p in weeks)
+    total = subject.get("weeks", config.P.settings["semester_weeks"])
+    last = max(int(config.P.weekly(p)[1]) for p in weeks)
     pct = min(100, round(100 * last / total))
     return (
         f'<span class="progress" title="Week {last} of {total}">'
@@ -169,8 +170,9 @@ def natural(p):
 def build_index():
     """Write dist/index.html from whatever PDFs are in dist/ (subjects without any are hidden)."""
     cards, search = [], {}
-    for i, s in enumerate(CONFIG):
-        root = DIST / s["id"]
+    palette = config.P.settings["palette"]
+    for i, s in enumerate(config.P.subjects):
+        root = config.P.dist / s["id"]
         pdfs = list(root.rglob("*.pdf")) if root.is_dir() else []
         if not pdfs:
             continue
@@ -185,12 +187,12 @@ def build_index():
             (p for p in pdfs if p not in main),
             key=lambda p: (
                 len(p.relative_to(root).parts) > 1,          # top-level files first
-                ORDER.index(p.name) if p.parent == root and p.name in ORDER else len(ORDER),
+                config.P.order.index(p.name) if p.parent == root and p.name in config.P.order else len(config.P.order),
                 natural(p.relative_to(root)),
             ),
         )
         # Weekly notes are recognised by their name (files in a week/ folder)
-        weeks = [p for p in rest if weekly(p)]
+        weeks = [p for p in rest if config.P.weekly(p)]
         others = [p for p in rest if p not in weeks]
         links = "".join(link(s["id"], p, root, when[p], shots[p], texts[p], solo=True) for p in main)
         links += fold(s["id"], weeks, root, when, shots, texts, "weekly note", grouped=False, extra=progress(weeks, s))
@@ -199,7 +201,7 @@ def build_index():
         # --c = accent colour of the card, from subjects.json or the palette (in file order);
         # order = position among the cards, used when the two columns collapse into one (CSS .grid)
         cards.append(
-            f'<section style="--c:{s.get("color", PALETTE[i % len(PALETTE)])};order:{len(cards)}"><span class="code">{s["id"]}</span>'
+            f'<section style="--c:{s.get("color", palette[i % len(palette)])};order:{len(cards)}"><span class="code">{s["id"]}</span>'
             f'<h2>{html.escape(s["name"])}</h2>{exam}<ul class="links">{links}</ul></section>'
         )
     page = (SITE / "template.html").read_text(encoding="utf-8").rstrip("\n")
@@ -209,16 +211,20 @@ def build_index():
         "cards_left": "".join(cards[0::2]),
         "cards_right": "".join(cards[1::2]),
         "generated": f"{datetime.now():%Y-%m-%d %H:%M}",
+        "title": html.escape(config.P.settings["title"]),
+        "short": html.escape(config.P.settings["short"]),
+        "subtitle": html.escape(config.P.settings["subtitle"]),
         "js": site_scripts(),                    # site/js/*, at the end of <body>, once every element exists
     }.items():
         page = page.replace("{{" + key + "}}", value)
-    DIST.mkdir(exist_ok=True)
+    dist = config.P.dist
+    dist.mkdir(exist_ok=True)
     # Images (site/img/) and the screens' music (site/audio/) are the only files the page loads
     # besides itself: too heavy to inline
     for folder in ("img", "audio"):
         if (SITE / folder).is_dir():
-            shutil.copytree(SITE / folder, DIST / folder, dirs_exist_ok=True)
-    (DIST / "index.html").write_text(page, encoding="utf-8")
+            shutil.copytree(SITE / folder, dist / folder, dirs_exist_ok=True)
+    (dist / "index.html").write_text(page, encoding="utf-8")
     ok("dist/index.html")
     write_search(search)
     check_script()
@@ -272,7 +278,7 @@ def check_script():
         return
     files = json.loads((SITE / "manifest.json").read_text(encoding="utf-8"))["js"]
     texts = [(rel, (SITE / rel).read_text(encoding="utf-8")) for rel in files]
-    bundle = DIST / ".page-check.js"
+    bundle = config.P.dist / ".page-check.js"
     bundle.write_text("".join(text for _, text in texts), encoding="utf-8")
     proc = subprocess.run([node, "--check", str(bundle)], capture_output=True, text=True)
     bundle.unlink()

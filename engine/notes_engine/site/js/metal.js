@@ -336,8 +336,10 @@ let riff = null, rocking = false, soundAt = 0;
 const amp = document.createElement("button");
 amp.id = "amp";
 amp.type = "button";
-amp.innerHTML = '<span class="cab"><span class="panel"><span class="logo">BA5</span><span class="knobs">' +
+amp.innerHTML = '<span class="cab"><span class="panel"><span class="logo"></span><span class="knobs">' +
   "<i></i>".repeat(5) + '</span></span><span class="grille"><span class="cone"></span><span class="cone"></span></span></span><span class="label"></span>';
+// the logo is the site's short name (site.json), set as text: it is not markup
+amp.querySelector(".logo").textContent = document.documentElement.dataset.short || "";
 const riffMuted = () => !!riff && riff.muted;
 const paintAmp = () => {
   amp.classList.toggle("playing", rocking);

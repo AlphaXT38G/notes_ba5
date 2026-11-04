@@ -15,7 +15,7 @@ from pathlib import Path
 from PIL import Image, ImageChops, ImageDraw
 
 HERE = Path(__file__).parent
-OUT = HERE.parent.parent / "site" / "img" / "werewolf"
+OUT = HERE.parent.parent / "notes_engine" / "site" / "img" / "werewolf"
 # Each part's outline, and how far its joint reaches under the body (dx, dy)
 PARTS = {
     "head": ([(40, 0), (300, 0), (300, 100), (215, 128), (120, 118), (70, 60)], (0, 8)),

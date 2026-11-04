@@ -3,7 +3,7 @@
 import re
 import subprocess
 
-from .config import PDFTOPPM, PDFTOTEXT, PREVIEW_PX
+from . import config
 
 TOC_TITLES = {"contents", "table of contents", "table des matières", "sommaire"}
 # A table of contents line ends with a page number, often after dot leaders: "1.2 Policy . . . 5"
@@ -16,10 +16,10 @@ def content_page(p):
     heading is "Contents" (or a French equivalent) and goes on while most lines end with a page
     number. The page right after it is the first page of actual content.
     """
-    if not PDFTOTEXT:
+    if not config.P.pdftotext:
         return 1
     out = subprocess.run(
-        [PDFTOTEXT, "-f", "1", "-l", "12", "-enc", "UTF-8", str(p), "-"],
+        [config.P.pdftotext, "-f", "1", "-l", "12", "-enc", "UTF-8", str(p), "-"],
         capture_output=True, text=True, encoding="utf-8", errors="replace",
     ).stdout
     pages = [[l.strip() for l in page.splitlines() if l.strip()] for page in out.split("\f")]
@@ -43,10 +43,10 @@ def preview(p):
     png = p.with_name(f"{p.name}.p{page}.png")  # page in the name, so a new page means a new preview
     if png.exists() and png.stat().st_mtime >= p.stat().st_mtime:
         return png
-    if not PDFTOPPM:
+    if not config.P.pdftoppm:
         return None
     subprocess.run(
-        [PDFTOPPM, "-f", str(page), "-l", str(page), "-png", "-singlefile", "-scale-to", str(PREVIEW_PX),
+        [config.P.pdftoppm, "-f", str(page), "-l", str(page), "-png", "-singlefile", "-scale-to", str(config.P.settings["preview_px"]),
          str(p), str(png.with_suffix(""))],  # pdftoppm adds the .png itself
         capture_output=True,
     )

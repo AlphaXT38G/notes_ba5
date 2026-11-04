@@ -1,0 +1,11 @@
+{
+  "title": "Notes BA5",
+  "short": "BA5",
+  "subtitle": "EPFL IN, autumn semester: course notes, weekly notes and cheat sheets",
+  "repo": "AlphaXT38G/notes_ba5",
+  "kinds": {
+    "course.pdf": "Course notes",
+    "cheatsheet.pdf": "Cheat sheet",
+    "course2.pdf": "Course notes, explained"
+  }
+}

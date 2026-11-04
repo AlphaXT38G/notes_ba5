@@ -291,9 +291,14 @@
 \fancyhead[C]{\small\color{black!60}%
   \expandafter\MakeUppercase\expandafter{\toprightxmark}}
 \fancyfoot[C]{\small\color{black!60}\thepage}
+% Repository link of the footer: the build writes notes-site.tex (\notesrepourl, \notesrepolabel)
+% from the "repo" setting of site.json. Without it, no link.
+\InputIfFileExists{notes-site.tex}{}{}
+\providecommand{\notesrepourl}{}
+\providecommand{\notesrepolabel}{}
+\newcommand{\notes@repolink}{\ifx\notesrepourl\@empty\else\href{\notesrepourl}{\notesrepolabel}\fi}
 % Small clickable link to the repository, bottom right of every page
-\newcommand{\course@repolink}{\scriptsize\color{black!50}%
-  \href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\newcommand{\course@repolink}{\scriptsize\color{black!50}\notes@repolink}
 \fancyfoot[R]{\course@repolink}
 \fancypagestyle{plain}{%
   \fancyhf{}%

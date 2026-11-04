@@ -9,7 +9,7 @@ import re
 import subprocess
 import unicodedata
 
-from .config import DIST, PDFTOTEXT
+from . import config
 from .log import ok
 
 def pages(p):
@@ -23,9 +23,9 @@ def pages(p):
     """
     txt = p.with_name(f"{p.name}.txt")
     if not (txt.exists() and txt.stat().st_mtime >= p.stat().st_mtime):
-        if not PDFTOTEXT:
+        if not config.P.pdftotext:
             return None
-        out = subprocess.run([PDFTOTEXT, "-enc", "UTF-8", str(p), "-"], capture_output=True).stdout
+        out = subprocess.run([config.P.pdftotext, "-enc", "UTF-8", str(p), "-"], capture_output=True).stdout
         txt.write_text(out.decode("utf-8", errors="replace"), encoding="utf-8")
     text = unicodedata.normalize("NFKC", txt.read_text(encoding="utf-8"))
     text = re.sub(r"(\w)-\n(?=[a-zà-ÿ])", r"\1", text)  # secu-\nrity -> security
@@ -39,6 +39,6 @@ def write_search(texts):
     texts = {href: t for href, t in texts.items() if t}
     if not texts:
         return
-    (DIST / "search.json").write_text(json.dumps(texts, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    size = (DIST / "search.json").stat().st_size
+    (config.P.dist / "search.json").write_text(json.dumps(texts, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    size = (config.P.dist / "search.json").stat().st_size
     ok(f"dist/search.json ({len(texts)} documents, {sum(map(len, texts.values()))} pages, {size / 1e3:.0f} kB)")

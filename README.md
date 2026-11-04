@@ -13,8 +13,8 @@ python build.py --index-only    # regenerate dist/index.html without compiling
 python -m http.server 8765 --directory dist   # preview at http://localhost:8765/
 ```
 
-`dist/` is generated, never edit it by hand. The build itself lives in `builder/`, and
-the index page (HTML, CSS, JS) in `site/`.
+`dist/` is generated, never edit it by hand. The build and the index page
+are the notes engine, in `engine/`.
 
 **Contributing** (humans and AI agents alike): read [`AGENTS.md`](AGENTS.md) first. It
 explains how the build and the page are organised, how to add a new screen to the page,
@@ -72,7 +72,7 @@ where it was, without a new ad.
 
 From **21:30 to 01:00** the page turns into a jazz bar 🎷 (neon title, smoke,
 floating notes) and plays background jazz ("Just One More Drink", jazz noir). The
-music of every screen is an mp3 served with the page (`site/audio/`). It starts by
+music of every screen is an mp3 served with the page (`engine/notes_engine/site/audio/`). It starts by
 itself; browsers only allow sound after a click, so until the page has had one it
 plays muted and the sound comes on at the first click or key press. The turntable in
 the bottom left corner plays / pauses it, and so does the space bar, on every screen
