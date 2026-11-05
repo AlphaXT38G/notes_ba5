@@ -24,7 +24,7 @@ replace `main` by that tag in `requirements.txt` and in both places of `pages.ym
 ## Repository layout
 
 ```
-requirements.txt      pins the engine's version
+requirements.txt      the engine's version (follows its main; a tag once frozen)
 subjects.json         subjects: id, display name, exam rules, optional "weeks", "week_pdfs" and "color"
 site.json             the site's settings: title, subtitle, short name, GitHub repo, kinds of documents
 <subject>/            course.tex, cheatsheet.tex, week/NN.tex (chapters), extra PDFs...
