@@ -21,8 +21,8 @@ concurrency:
 
 jobs:
   publish:
-    # The build and the deploy are the engine's: the same tag is pinned twice (workflow and engine)
-    # and in requirements.txt.
-    uses: AlphaXT38G/notes-engine/.github/workflows/pages.yml@v0.2.0
+    # The build and the deploy are the engine's, always from its main (the same ref in the workflow, twice, and in requirements.txt).
+    # When the semester ends, replace main by a tag in both (see AGENTS.md).
+    uses: AlphaXT38G/notes-engine/.github/workflows/pages.yml@main
     with:
-      engine-ref: v0.2.0
+      engine-ref: main

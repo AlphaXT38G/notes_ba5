@@ -13,8 +13,13 @@ build and publishes `dist/` at <https://alphaxt38g.github.io/notes_ba5/>.
 
 **The website itself (page, search, screens, LaTeX styles, build code) is the notes engine**, in its own
 repository, <https://github.com/AlphaXT38G/notes-engine> (its `AGENTS.md` explains it), shared by the notes of
-every semester. This repository only configures it, and pins a tag of it in `requirements.txt` and in
-the workflow: to take a new version, change the tag in both.
+every semester. This repository only configures it, and follows the engine's `main` in `requirements.txt`
+and in the workflow, so it always builds with the latest engine (the daily 04:00 UTC run picks up engine
+changes within a day; re-run the workflow to get them at once).
+
+**When the semester ends, freeze the engine's version**: tag the engine's last commit (`vX.Y.Z`), then
+replace `main` by that tag in `requirements.txt` and in both places of `pages.yml` (`uses:` and
+`engine-ref:`). That tag is then the version this semester stopped at.
 
 ## Repository layout
 
