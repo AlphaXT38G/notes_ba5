@@ -23,6 +23,6 @@ jobs:
   publish:
     # The build and the deploy are the engine's: the same tag is pinned twice (workflow and engine)
     # and in requirements.txt.
-    uses: AlphaXT38G/notes-engine/.github/workflows/pages.yml@v0.1.0
+    uses: AlphaXT38G/notes-engine/.github/workflows/pages.yml@v0.2.0
     with:
-      engine-ref: v0.1.0
+      engine-ref: v0.2.0
