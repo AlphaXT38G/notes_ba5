@@ -1,3 +1,4 @@
 # The notes engine (builds the PDFs and the index page): see https://github.com/AlphaXT38G/notes-engine
-# The same tag is pinned in .github/workflows/pages.yml
-notes-engine @ git+https://github.com/AlphaXT38G/notes-engine@v0.2.0
+# Follows the engine's main, so this repo always has its latest version. The same ref is used in .github/workflows/pages.yml.
+# When the semester ends, freeze it: replace main by a tag (see AGENTS.md).
+notes-engine @ git+https://github.com/AlphaXT38G/notes-engine@main
