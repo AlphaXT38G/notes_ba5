@@ -66,16 +66,17 @@ searches the names only.
 
 In the bottom left corner, a vintage cassette deck 📼 plays music while you read, with
 VU meters, a tape counter and real keys (▶❚❚, ◀◀ / ▶▶ wind 30 s). Its station key
-goes through the bands: Lofi Girl mixes from YouTube, the music of the screens (jazz
-bar, late night, metal show, epic finale, Christmas, Halloween) and Radio Impuls and Hit Radio Maroc live. ⏏, or the
+goes through the bands: lofi mixes, the music of the screens (jazz
+bar, late night, metal show, epic finale, Christmas, Halloween, sakura) and Radio Impuls and Hit Radio Maroc live. ⏏, or the
 next tape leaning behind the deck, puts in the next tape of the band. It never starts
 by itself, and only shows during the day.
 YouTube ads stay silent: only the music is heard, and a tape you come back to plays on
 where it was, without a new ad.
 
 From **21:30 to 01:00** the page turns into a jazz bar 🎷 (neon title, smoke,
-floating notes) and plays background jazz ("Just One More Drink", jazz noir). The
-music of every screen is an mp3 served with the page (the engine's `site/audio/`). It starts by
+floating notes) and plays background jazz, one track after the other: noir jazz ("Just One
+More Drink", "Whispers & Jazz") and electro swing. The music of the screens comes from the
+[notes-musics](https://github.com/AlphaXT38G/notes-musics) repository. It starts by
 itself; browsers only allow sound after a click, so until the page has had one it
 plays muted and the sound comes on at the first click or key press. The turntable in
 the bottom left corner plays / pauses it, and so does the space bar, on every screen
@@ -126,7 +127,7 @@ Christmas day from 06:00 to 18:00 and a Christmas night from 18:00 to 06:00. A
 garland across the top (lit at night), falling snow,
 big snowy mountains, a decorated tree with gifts, a snowman companion beside the
 courses, a countdown to Christmas in the subtitle, and Christmas music on a
-Christmas turntable: Jingle Bell Rock or a live Christmas radio from YouTube (the
+Christmas turntable: Jingle Bell Rock or Lofi Girl's Christmas mix from YouTube (the
 other record waits in its sleeve behind the turntable: click it to swap them), or
 paused. At night the moon rises, chalets light up on the mountains, the tree lights
 play changing patterns and Santa's sleigh crosses the sky now and then. Look closely
