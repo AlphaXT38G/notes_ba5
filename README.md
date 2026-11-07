@@ -80,7 +80,8 @@ More Drink", "Whispers & Jazz") and electro swing. The music of the screens come
 itself; browsers only allow sound after a click, so until the page has had one it
 plays muted and the sound comes on at the first click or key press. The turntable in
 the bottom left corner plays / pauses it, and so does the space bar, on every screen
-(anywhere but in the search field).
+(anywhere but in the search field). The next record waits in its sleeve behind the
+turntable: click it to put that record on.
 
 Jazz plays until 00:45, then the bar closes until 01:00 (darker light, the neon goes
 out letter by letter, then the bartender, a Gigachad, comes over the whole screen, life-size
