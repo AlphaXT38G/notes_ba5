@@ -254,3 +254,22 @@ voit un \textbf{filtre passe-haut}, les deux résistances étant alors \textbf{e
 ($V_{CC}$ éteinte = court-circuit).
 \end{rembox}
 
+\begin{exbox}[title={Solution proposée (calculs ajoutés avec les méthodes du cours, pas dans les slides)}]
+\textbf{Partie continue} : $V_{OUT,DC} = V_{CC}\frac{R_2}{R_1 + R_2} = 10\cdot\frac{15}{20} = 7{,}5$\,V. \\
+\textbf{Partie variable} : $R_1/\!/R_2 = \frac{5\cdot15}{20} = 3{,}75$\,k$\Omega$, donc
+$\tau = 3{,}75\,\text{k}\Omega\times100\,\text{nF} = 375\,\mu$s,
+$\omega_0 = 1/\tau\approx2667$\,rad/s ($f_0\approx424$\,Hz).
+
+\textbf{Exercice 1} ($v_{IN} = 5\sin(2\pi\cdot1000\,t)$) : $\omega/\omega_0\approx2{,}36$ ;
+passe-haut : $|\underline H| = \frac{\omega/\omega_0}{\sqrt{1 + (\omega/\omega_0)^2}}\approx0{,}92$
+et $\varphi = \frac\pi2 - \arctan(2{,}36)\approx23\ensuremath{^\circ}$. Donc $v_{OUT}$ est un sinus
+d'amplitude $\approx4{,}6$\,V, en avance d'environ $23\ensuremath{^\circ}$, \textbf{centré sur 7,5\,V}.
+
+\textbf{Exercice 2} (créneau 0/5\,V, paliers de 500\,$\mu$s) : $5\tau = 1{,}875$\,ms $>$
+500\,$\mu$s, donc la charge \textbf{n'est pas complète} pendant un palier. Au premier front
+montant, $v_{OUT}$ saute de $+5$\,V (continuité aux bornes de C) : $7{,}5\to12{,}5$\,V, puis
+redescend vers 7,5\,V avec $\tau = 375\,\mu$s ; après 500\,$\mu$s (formule magique) :
+$7{,}5 + 5e^{-500/375}\approx8{,}8$\,V. Au front descendant, il saute de $-5$\,V
+($\approx3{,}8$\,V) puis remonte vers 7,5\,V, et ainsi de suite.
+\end{exbox}
+
