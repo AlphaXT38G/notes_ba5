@@ -84,3 +84,14 @@ et ensuite tout passe d'un coup.
 
 \slide{c07-06}{Diviseur résistif (facile) vs résistance + diode (équation transcendante).}
 
+\begin{propbox}[title={Deux résistances vs résistance + diode}]
+Deux résistances : $I_R = \frac{U_{R1}}{R_1}$ et
+$U_{R1} = U_0 - R_2 I_R = U_0\frac{R_1}{R_1 + R_2}$ : trivial. \\
+Résistance + diode : $I_D = I_S e^{U_D/nU_T}$ et
+\[ U_D = U_0 - R_2 I_D = U_0 - R_2 I_S\,e^{\frac{U_D}{nU_T}} \]
+$U_D$ apparaît des deux côtés, dont une fois dans une exponentielle : c'est une équation
+\textbf{transcendante}, sans résolution analytique (il faut des méthodes numériques). Trois
+approches : \textbf{résolution mathématique impossible}, \textbf{résolution graphique},
+\textbf{utilisation de modèles}.
+\end{propbox}
+
