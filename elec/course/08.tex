@@ -58,3 +58,16 @@ C07 & Diodes & non-linéaire, droite de charge, modèles, Zener \\
 \end{itemize}
 \end{thmbox}
 
+\begin{thmbox}[title={Composants (C02, C04)}]
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|c|c|c|c}
+ & $u(i)$ & $i(u)$ & $\underline Z$ & en sinus \\ \hline
+R & $Ri$ & $u/R$ & $R$ & en phase \\
+C & $\frac1C\int i\,dt$ & $C\frac{du}{dt}$ & $\frac1{j\omega C}$ & $i$ en avance de $\pi/2$ \\
+L & $L\frac{di}{dt}$ & $\frac1L\int u\,dt$ & $j\omega L$ & $u$ en avance de $\pi/2$ \\
+\end{tabular}
+\end{center}
+$q = Cu$. C : ouvert en continu ($\omega = 0$), court-circuit pour un saut ($\omega\to\infty$).
+\end{thmbox}
+
