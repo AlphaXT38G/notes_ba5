@@ -364,3 +364,33 @@ conduisait (1,7\,V sur $D_3$). Seule $D_3$ conduit : $V_S = 3 - 0{,}7 = 2{,}3$\,
 \end{enumerate}
 \end{exbox}
 
+\begin{recapbox}[title={Récap pour l'examen --- C07 : Diodes}]
+\begin{itemize}
+  \item Symbole : flèche anode $\to$ cathode = sens du courant. $P_{MAX}$ limite le courant.
+  \item 3 zones : passante vers \textbf{0,7\,V} (silicium), bloquée (courant $\approx I_S$),
+        zone Zener/avalanche à $-V_Z$ (destructive sauf pour les Zener).
+  \item \textbf{Loi} : $I_D = I_S(e^{U_D/nU_T} - 1)\approx I_S e^{U_D/nU_T}$ ;
+        $U_T = kT/q = 26$\,mV à 27\ensuremath{^\circ}C ; $1<n<2$ ; $10^{-15} < I_S < 10^{-10}$\,A (exercices).
+  \item R + diode : équation \textbf{transcendante}, pas de solution analytique $\Rightarrow$
+        \textbf{droite de charge} ($I_{RMAX} = U_E/R$, $I_{RMIN} = 0$ en $U_D = U_E$) ;
+        intersection = \textbf{point de repos}. Le courant varie beaucoup, la tension reste
+        $\approx0{,}7$\,V.
+  \item \textbf{Modèles} : idéale (seuil 0) ; \textbf{$U_j = 0{,}7$\,V} (le plus commun) ;
+        $U_j$ + petite résistance (DC + AC).
+  \item \textbf{DANGER} : avec $U_j$, calculer le courant par la loi d'Ohm
+        $I = (U_E - U_j)/R$ (1\,\% d'erreur), \textbf{jamais} par l'exponentielle (270\,\%,
+        facteur $e$). Fiable si $U_E\gg0{,}7$\,V.
+  \item \textbf{Écrêtage} : diode normale $\to$ sortie limitée à $U_j$ (ou $-U_j$ retournée),
+        sortie = entrée sinon ; en réalité écrêtage bombé.
+  \item \textbf{Zener} : écrête à $U_j$ et $-V_Z$ (retournée : $-U_j$ et $+V_Z$). Deux Zener
+        tête-bêche : $V_{Z1} + U_j$ et $-(V_{Z2} + U_j)$.
+  \item Montages : limiteur (écrêtage décalé de $u_P$), détecteur à seuil, détecteur de la
+        tension la plus élevée (par l'absurde).
+\end{itemize}
+\textbf{Comment ça s'appuie sur le reste} : la linéarisation du C00 (tangentes, modèles
+linéaires par morceaux) devient ici les modèles de la diode ; une fois le modèle choisi, on
+retrouve la loi d'Ohm (C01), Kirchhoff et le diviseur (C02), les droites de type
+$U = U_0 - RI$ des sources linéaires (C03 : la droite de charge en est une). Le redressement
+annoncé au C01 (valeur moyenne d'un signal redressé) est ce que fait une diode. La suite
+(Électronique 2) applique la même méthode DC + AC aux transistors.
+\end{recapbox}
