@@ -71,3 +71,18 @@ $1 + j\frac\omega{\omega_Z}$, $\frac1{1 + j\omega/\omega_P}$.
 
 \slide{c05-06}{Les modules en dB des termes de base, et l'origine du facteur 20.}
 
+\begin{thmbox}[title=Log d'un produit = somme des log]
+\begin{enumerate}
+  \item Les fonctions de transfert s'expriment comme un \textbf{produit de termes de base}.
+  \item Avec une échelle logarithmique : $\log(A\cdot B) = \log A + \log B$ ; si $A$ et $B$
+        sont complexes : $|A\cdot B| = |A|\cdot|B|$ et
+        $\log|A\cdot B| = \log|A| + \log|B|$.
+  \item Les modules des termes de base en dB :
+\end{enumerate}
+\[ |K|_{dB} = 20\log K \qquad
+   \left|j\frac{\omega}{\omega_{Z1}}\right|_{dB} = 20\log\left(\frac{\omega}{\omega_{Z1}}\right) \qquad
+   \left|1 + j\frac{\omega}{\omega_{Z2}}\right|_{dB} = 20\log\sqrt{1 + \left(\frac{\omega}{\omega_{Z2}}\right)^2} \]
+\[ \left|\frac1{j\frac\omega{\omega_{P1}}}\right|_{dB} = -20\log\left(\frac{\omega}{\omega_{P1}}\right) \qquad
+   \left|\frac1{1 + j\frac\omega{\omega_{P2}}}\right|_{dB} = -20\log\sqrt{1 + \left(\frac{\omega}{\omega_{P2}}\right)^2} \]
+\end{thmbox}
+
