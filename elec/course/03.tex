@@ -332,3 +332,16 @@ réductions}.
 
 \slide{c03-19}{Montage 1 : $V_{TH} = U/4$, $R_{IN} = \frac34 R$, et on retrouve 2\,V.}
 
+\begin{exbox}[title={Montage 1 : développement complet}]
+\textbf{Calcul de $V_{TH}$} (à vide, sans $R_L$) : diviseur résistif entre $3R$ et $R$ :
+\[ V_{TH} = \frac{R}{R + 3R}\,U = \frac U4 \]
+\textbf{Calcul de $R_{IN}$} ($U$ court-circuitée, vue entre A et B) : trois $R$ en série, le
+tout en parallèle avec la dernière $R$ :
+\[ R_{IN} = R\,/\!/\,3R = \frac{3R\cdot R}{4R} = \frac34 R \]
+\textbf{Avec la charge} (modèle de Thévenin + $R_L$, diviseur résistif), $R_L = R$,
+$U = 14$\,V :
+\[ V_L = \frac{R_L}{R_L + R_{IN}}\,V_{TH} = \frac{R}{R + \frac34 R}\cdot\frac U4
+       = \frac47\cdot\frac U4 = \frac U7 = 2\text{ V} \qquad\textbf{CQFD} \]
+C'est bien le même résultat que le calcul direct de l'expérience 2.
+\end{exbox}
+
