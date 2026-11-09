@@ -188,3 +188,15 @@ Erreur sur $I_{D1}$ : \textbf{1\,\%} (diminue si $U_E$ augmente). Erreur sur $I_
    I_{D1\_R\acute eel} = \frac{3 - 0{,}674}{1000} = 2{,}326\text{ mA} \]
 \end{exbox}
 
+\begin{warnbox}[title=Les deux remarques à retenir]
+\begin{enumerate}
+  \item \textbf{Ne jamais utiliser le modèle $U_j$ dans la loi exponentielle} : 3\,\%
+        d'erreur sur $U_j$ donnent 270\,\% d'erreur sur le courant.
+  \item Le modèle est d'autant plus fiable que $U_E$ est \textbf{grand devant 0,7\,V}
+        (limite de conduction). Plus on s'approche de 0,7\,V, plus l'erreur sur le courant
+        grandit.
+\end{enumerate}
+Avec le modèle, on calcule toujours le courant avec la \textbf{loi d'Ohm} :
+$I_D = \frac{U_E - U_j}{R}$.
+\end{warnbox}
+
