@@ -373,3 +373,33 @@ Sur une règle normale, chaque pas ajoute 1. Sur l'axe log, chaque grand pas
 sur la même feuille ce qui se passe à 10\,Hz et à 100\,kHz.
 \end{goatbox}
 
+\begin{recapbox}[title={Récap pour l'examen --- C05 : Bode}]
+\begin{itemize}
+  \item Bode = module en \textbf{dB} ($20\log|\underline H|$) et phase (rad ou degrés), axe
+        des pulsations \textbf{logarithmique}. $20$ car $P\propto U^2$.
+  \item \textbf{Forme canonique} : $K\cdot\frac{(j\omega/\omega_{Z1})(1 + j\omega/\omega_{Z2})\cdots}{(j\omega/\omega_{P1})(1 + j\omega/\omega_{P2})\cdots}$ ;
+        zéros au numérateur, pôles au dénominateur.
+  \item Produit $\Rightarrow$ \textbf{somme} des dB et \textbf{somme} des phases.
+  \item Valeurs : $\times10 = 20$\,dB, $\times100 = 40$\,dB, $\times0{,}1 = -20$\,dB,
+        $\times2 = 6$\,dB, $\times0{,}5 = -6$\,dB, $1/\sqrt2 = -3$\,dB.
+  \item \textbf{Les 5 termes} (module / phase) :
+  \begin{itemize}
+    \item $K$ : horizontale $20\log|K|$ / $0$ ($K>0$) ou $\pi$ ($K<0$) ;
+    \item $j\omega/\omega_Z$ : $+20$\,dB/déc, 0\,dB en $\omega_Z$ / $+90\ensuremath{^\circ}$ ;
+    \item $1/(j\omega/\omega_P)$ : $-20$\,dB/déc, 0\,dB en $\omega_P$ / $-90\ensuremath{^\circ}$ ;
+    \item $1 + j\omega/\omega_Z$ : 0\,dB puis $+20$\,dB/déc (erreur $+3$\,dB en $\omega_Z$) /
+          $0\to+90\ensuremath{^\circ}$ de $0{,}1\omega_Z$ à $10\omega_Z$, $45\ensuremath{^\circ}$ en $\omega_Z$ (erreur $5{,}7\ensuremath{^\circ}$) ;
+    \item $1/(1 + j\omega/\omega_P)$ : 0\,dB puis $-20$\,dB/déc ($-3$\,dB en $\omega_P$) /
+          $0\to-90\ensuremath{^\circ}$, $-45\ensuremath{^\circ}$ en $\omega_P$.
+  \end{itemize}
+  \item Passe-bas RC : $\frac1{1 + j\omega/\omega_0}$, $\omega_0 = 1/RC$. Passe-haut :
+        $\frac{j\omega/\omega_0}{1 + j\omega/\omega_0}$ ($-3$\,dB et $\pm45\ensuremath{^\circ}$ en $\omega_0$).
+  \item Méthode : forme canonique $\to$ pulsations triées $\to$ chaque terme seul $\to$
+        additionner les pentes par intervalles $\to$ vérifier aux limites.
+\end{itemize}
+\textbf{Comment ça s'appuie sur le reste} : l'idée de \og modélisation linéaire par
+morceaux\fg{} du C00 (exemple de Bode) est réalisée ici ; les fonctions de transfert et les
+filtres viennent du C04 ($\omega_0 = 1/RC$). Le C06 étudie le même circuit RC non plus avec
+des sinus mais avec un \textbf{saut indiciel} (créneau) : $\tau = RC = 1/\omega_0$ y joue le
+rôle de $\omega_0$.
+\end{recapbox}
