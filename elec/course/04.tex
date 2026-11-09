@@ -419,3 +419,11 @@ se référer au cours sur les diagrammes de Bode.
 
 \slide{c04-24}{Le RLC du C02, en complexe : du second ordre, mais simple.}
 
+\begin{exbox}[title={RLC série, sortie sur L}]
+\[ \underline u_{IN} = R\underline i + \frac{\underline i}{j\omega C} + j\omega L\underline i \]
+\[ \underline v = \underline u_{IN}\cdot\frac{j\omega L}{R + \frac1{j\omega C} + j\omega L}
+   = \underline u_{IN}\cdot\frac{(j\omega)^2 LC}{1 + j\omega RC + (j\omega)^2 LC} \]
+Toujours du second ordre (le $(j\omega)^2$), mais bien plus simple à exploiter que
+l'équation différentielle.
+\end{exbox}
+
