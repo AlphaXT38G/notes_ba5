@@ -297,3 +297,13 @@ aux dispositifs qui doivent dissiper l'énergie. Les signaux étant souvent
 constant (non variable). Ne pas confondre.
 \end{warnbox}
 
+\slide{c01-15}{1) Histogramme à pas large : grande erreur.}
+
+\textbf{1) Approximation par un histogramme} (comparable au domaine discret). Chaque barre a
+une surface $S_i = H_i\cdot\Delta t_i$ :
+\[ Surface\ totale = \sum_i H_i\,\Delta t_i \qquad
+   Moyenne = \frac{Surface\ totale}{NB\ \acute{e}chantillons\cdot\Delta t}
+           = \frac{Surface\ totale}{Temps\ total} \]
+ou, avec $Somme\ totale = \sum_i H_i$ : $Moyenne = \dfrac{Somme\ totale}{NB\ \acute{e}chantillons}$.
+\textbf{L'erreur est grande car $\Delta t_i$ est grand.}
+
