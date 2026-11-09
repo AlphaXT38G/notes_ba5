@@ -408,3 +408,12 @@ $i(t) = \frac{v_{IN}(t) - v(t)}{R} = C\frac{dv}{dt}$, ou encore
 
 \slide{c02-21}{Circuit RLC série : équation différentielle du second ordre.}
 
+\begin{thmbox}[title=Circuit RLC]
+$v_{IN} = v_R + v_C + v_L$ : $v_C$ est une intégrale et $v_L$ une dérivée, d'où une
+\textbf{équation différentielle du second ordre} :
+\[ v_{IN}(t) = R\,i(t) + \frac1C\int i(t)\,dt + L\frac{di}{dt} \]
+On dérive et on multiplie par $C$ :
+\[ C\frac{dv_{IN}}{dt} = i(t) + RC\frac{di}{dt} + LC\frac{d^2 i}{dt^2} \]
+Cas particulier $V_{IN}$ = constante : $0 = i(t) + RC\frac{di}{dt} + LC\frac{d^2i}{dt^2}$.
+\end{thmbox}
+
