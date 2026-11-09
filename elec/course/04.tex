@@ -89,3 +89,13 @@ $i(t) = I\sqrt2\sin(\omega t)$ et $u(t) = U\sqrt2\sin(\omega t)$, le doute n'est
 
 \slide{c04-07}{Condensateur : le courant est en avance de $\pi/2$.}
 
+\begin{thmbox}[title=Condensateur en sinusoïdal]
+\textbf{Tension imposée} $u(t) = U_0\sin(\omega t)$ (on dérive) :
+\[ i(t) = C\frac{du}{dt} = C\omega U_0\cos(\omega t) = C\omega U_0\sin\!\left(\omega t + \frac\pi2\right) \]
+\textbf{Courant imposé} $i(t) = I_0\sin(\omega t)$ (on intègre, $du = \frac{i\,dt}{C}$) :
+\[ u(t) = \int\frac{I_0\sin(\omega t)}{C}\,dt = \frac{-I_0\cos(\omega t)}{\omega C}
+   = \frac{-I_0\sin(\omega t + \frac\pi2)}{\omega C} = \frac{I_0\sin(\omega t - \frac\pi2)}{\omega C} \]
+\textbf{Conclusion} : déphasage \textbf{constant} de $\frac\pi2$ entre courant et tension ;
+\textbf{$i(t)$ est en avance sur $u(t)$}.
+\end{thmbox}
+
