@@ -363,3 +363,16 @@ déphasage est nul en basse fréquence et maximal ($-\pi/2$) en haute fréquence
 fréquence.
 \end{propbox}
 
+\begin{exbox}[title={Méthode : reconnaître un filtre en 10 secondes}]
+Remplacer C par un \textbf{circuit ouvert} à $\omega\to0$ ($\underline Z_C\to\infty$) et par
+un \textbf{fil} à $\omega\to\infty$ ($\underline Z_C\to0$), puis regarder la sortie :
+\begin{itemize}
+  \item RC avec sortie sur C : à basse fréquence C ouvert, $u_S = u$ ; à haute fréquence C
+        fil, $u_S = 0$ $\Rightarrow$ passe-bas ;
+  \item CR avec sortie sur R : à basse fréquence C ouvert, plus de courant, $u_S = 0$ ; à
+        haute fréquence $u_S = u$ $\Rightarrow$ passe-haut.
+\end{itemize}
+(C'est exactement l'étude aux limites $\omega\to0$ et $\omega\to\infty$ du cours, faite sur le
+schéma.)
+\end{exbox}
+
