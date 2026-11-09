@@ -306,3 +306,23 @@ Avec $M_1 = \rho_1 e^{j\theta_1}$ et $M_2 = \rho_2 e^{j\theta_2}$ :
 
 \slide{c04-19}{Le RC devient un diviseur d'impédances : $\underline H(j\omega) = \frac{1}{1 + j\omega RC}$.}
 
+\begin{thmbox}[title=Fonction de transfert]
+On remplace C par son impédance $\underline Z_C$ : le circuit RC est un \textbf{diviseur
+résistif} (d'impédances). On calcule $\frac{\underline u_S}{\underline u}$ plutôt que
+$\frac{u_S(t)}{u(t)}$ :
+\[ \frac{\underline u_S}{\underline u} = \frac{\underline Z_C}{R + \underline Z_C}
+   = \frac{\frac1{j\omega C}}{R + \frac1{j\omega C}} = \frac1{1 + j\omega RC} = \underline H(j\omega) \]
+(ne pas laisser sous la forme avec des fractions empilées). Ce rapport s'appelle la
+\textbf{FONCTION DE TRANSFERT}. C'est un complexe, dont on calcule :
+\begin{itemize}
+  \item le \textbf{module} $|\underline H(j\omega)|$ : compare, selon $\omega$, les
+        \textbf{amplitudes} de la sortie et de l'entrée ;
+  \item l'\textbf{argument} $\mathrm{Arg}(\underline H(j\omega))$ : donne, selon $\omega$, le
+        \textbf{déphasage} entre la sortie et l'entrée.
+\end{itemize}
+Ici (module d'un rapport = rapport des modules, argument d'un rapport = différence des
+arguments) :
+\[ |\underline H(j\omega)| = \frac{1}{\sqrt{1 + (\omega RC)^2}} \qquad
+   \mathrm{Arg}(\underline H(j\omega)) = 0 - \arctan(\omega RC) = -\arctan(\omega RC) \]
+\end{thmbox}
+
