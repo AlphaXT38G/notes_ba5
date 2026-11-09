@@ -203,3 +203,21 @@ diviseur résistif.
 
 \slide{c03-12}{Quatre expériences pour mesurer $V_{TH}$ et $R_{IN}$.}
 
+\begin{propbox}[title={Mesurer le modèle de Thévenin : quatre expériences}]
+\begin{enumerate}
+  \item \textbf{Tension à vide} : on lit $U_{2\_lu} = U_{1\_inconnu}$ directement. \textbf{Ça
+        marche.}
+  \item \textbf{Court-circuit} : on lit $I_{2\_lu}$ et $R_{IN} = \frac{U_{1\_inconnu}}{I_{2\_lu}}$.
+        Sur papier OK, \textbf{danger en pratique} : on ne sait pas a priori ce qu'on
+        court-circuite.
+  \item \textbf{On élimine les sources internes} et on impose $U_{2\_impos\acute e}$ (ou on
+        met un ohmmètre) : $R_{IN} = \frac{U_{2\_impos\acute e}}{I_{2\_lu}}$. Sur papier OK,
+        \textbf{en pratique impossible} (il faudrait ouvrir le montage).
+  \item \textbf{Résistance variable $R_2$} en sortie : on lit un diviseur résistif
+        \[ U_{2\_lu} = \frac{R_2}{R_2 + R_{IN}}\,U_{1\_inconnu} \]
+        $U_{1\_inconnu}$ étant connu (expérience 1), on règle $R_2$ jusqu'à lire
+        $U_{2\_lu} = U_{1\_inconnu}/2$ : alors \textbf{$R_2 = R_{IN}$}, qu'on lit directement.
+        En changeant $R_2$ on retrouve toujours les mêmes valeurs (invariance du dipôle).
+\end{enumerate}
+\end{propbox}
+
