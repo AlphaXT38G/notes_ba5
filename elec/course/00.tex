@@ -110,3 +110,11 @@ moteurs/lampes à la place des sabots.
 
 \slide{c00-09}{La même moyenne, en analogique (intégrale) et en numérique (somme d'échantillons).}
 
+\begin{exbox}[title=Calculer la moyenne d'un signal sur un temps $T_{MAX}$]
+\textbf{Signal analogique} : on calcule la surface sous la courbe et on divise par la durée :
+\[ Z = \frac{1}{T_{MAX}}\int_0^{T_{MAX}} V(T^\circ, t)\,dt \]
+\textbf{Signal numérique} : on prend des échantillons (codés en binaire, par ex.\ 10011) et on
+fait la moyenne :
+\[ Z = \frac{\sum_{i=1}^{N} V_i}{NB\acute{e}chantillons} \]
+\end{exbox}
+
