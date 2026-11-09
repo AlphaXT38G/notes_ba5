@@ -347,3 +347,28 @@ C'est bien le même résultat que le calcul direct de l'expérience 2.
 
 \slide{c03-20}{Montage 2 : Thévenin local $\to$ Norton, fusion, Norton $\to$ Thévenin, fusion.}
 
+\begin{exbox}[title={Montage 2 : transformations en alternance}]
+Circuit : $U$ en série avec $R_1$, puis $R_2$ et la source de courant $I$ en parallèle, puis
+$R_3$ vers la sortie X--Y.
+\begin{enumerate}
+  \item \textbf{Observation} : deux dipôles en parallèle (le \og Thévenin local\fg{} $U$+$R_1$
+        et le \og Norton local\fg{} $I$+$R_2$). \textbf{Réflexe} : il faut des modèles Norton
+        pour fusionner des dipôles parallèles.
+  \item \textbf{Transformation} du Thévenin local en Norton : $I_2 = U/R_1$ en parallèle avec
+        $R_1$.
+  \item \textbf{Réduction} : les sources de courant en parallèle s'additionnent, les
+        résistances aussi en parallèle :
+        \[ I_3 = I_2 + I = \frac{U}{R_1} + I \qquad R_{12} = \frac{R_1 R_2}{R_1 + R_2} \]
+  \item \textbf{Observation} : un modèle Norton en série avec $R_3$. \textbf{Réflexe} : il
+        faut des modèles Thévenin pour fusionner des dipôles série.
+  \item \textbf{Transformation} du Norton en Thévenin : $U_4 = R_{12}\cdot I_3$ en série avec
+        $R_{12}$.
+  \item \textbf{Réduction} : $R_{12}$ et $R_3$ en série :
+        \[ R_{IN} = R_{12} + R_3 \qquad U_{TH} = U_4 = R_{12}\cdot I_3 \]
+\end{enumerate}
+En développant :
+$U_{TH} = \frac{R_1 R_2}{R_1+R_2}\left(\frac U{R_1} + I\right)
+        = \frac{R_2}{R_1+R_2}\,U + \frac{R_1R_2}{R_1+R_2}\,I$,
+à comparer avec la superposition ci-dessous.
+\end{exbox}
+
