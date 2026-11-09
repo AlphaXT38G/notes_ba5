@@ -212,3 +212,14 @@ d'équations linéaires}. On remplace donc la réalité par un \textbf{modèle l
 Plusieurs techniques existent ; l'\textbf{approximation aux moindres carrés} est l'une des
 plus exploitées.
 
+\begin{exbox}[title=Deux exemples de linéarisation]
+\begin{itemize}
+  \item \textbf{Résistance thermique CTP} ($Y$ : résistance, $X$ : température) :
+        \textbf{modélisation linéaire d'une zone \og utile\fg{}} entre $X_0$ et $X_+$ ; il
+        reste une erreur max entre le modèle (rouge) et la réalité (vert).
+  \item \textbf{Diagramme de Bode} ($Y$ : gain, $X$ : fréquence) : \textbf{modélisation
+        linéaire par morceaux du domaine complet}, avec une cassure en $X_C$ ; l'erreur max
+        est au coude (on retrouvera cela au chapitre Bode).
+\end{itemize}
+\end{exbox}
+
