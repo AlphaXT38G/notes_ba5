@@ -215,3 +215,14 @@ de 0 à 13\,V. Le saut de $V_B$ est décalé de la tension initiale $K$ (ici $+3
 
 \slide{c06-16}{Une seule formule pour passe-bas et passe-haut ; $\tau = RC$.}
 
+\begin{thmbox}[title={La formule magique (premier ordre, passe-bas ou passe-haut)}]
+\[ \boxed{V(t) = V(0) + \big(V(\infty) - V(0)\big)\cdot\left(1 - e^{-\frac t{RC}}\right)} \]
+\begin{itemize}
+  \item $V(0)$ : l'\textbf{état initial} (juste après le saut) ;
+  \item $V(\infty) - V(0)$ : le \textbf{chemin à parcourir} (si on laissait le temps) ;
+  \item $1 - e^{-t/RC}$ : la \textbf{loi de parcours}, le \textbf{pourcentage du chemin
+        parcouru} ;
+  \item le produit est le \textbf{chemin parcouru}.
+\end{itemize}
+\end{thmbox}
+
