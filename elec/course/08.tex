@@ -71,3 +71,16 @@ L & $L\frac{di}{dt}$ & $\frac1L\int u\,dt$ & $j\omega L$ & $u$ en avance de $\pi
 $q = Cu$. C : ouvert en continu ($\omega = 0$), court-circuit pour un saut ($\omega\to\infty$).
 \end{thmbox}
 
+\begin{thmbox}[title={Assemblages (C02)}]
+\begin{itemize}
+  \item $R$, $L$ : série $R_1 + R_2$ ; parallèle $\frac{R_1R_2}{R_1 + R_2}$.
+        $C$ : parallèle $C_1 + C_2$ ; série $\frac{C_1C_2}{C_1 + C_2}$.
+  \item Mailles : $\sum U = 0$. N\oe uds : $\sum I_{entrants} = \sum I_{sortants}$.
+  \item Diviseur : $v_{R2} = v_{IN}\frac{R_2}{R_1 + R_2}$ (aussi avec $\underline Z$).
+  \item Millman : $V_X = \frac{\sum V_i/R_i + \sum I}{\sum 1/R_i}$.
+  \item Kennelly : $R_A = \frac{R_{AB}R_{AC}}{R_{AB} + R_{AC} + R_{BC}}$ ;
+        $R_{BC} = \frac{R_AR_B + R_AR_C + R_BR_C}{R_A}$.
+  \item RC : $v_{IN} = v + RC\frac{dv}{dt}$. RLC : $C\frac{dv_{IN}}{dt} = i + RC\frac{di}{dt} + LC\frac{d^2i}{dt^2}$.
+\end{itemize}
+\end{thmbox}
+
