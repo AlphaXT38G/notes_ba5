@@ -151,3 +151,18 @@ dépend de la température).
 
 \slide{c00-11}{Régulation de température : tout ou rien vs valeur pondérée.}
 
+\begin{exbox}[title=Régulation de température avec thermostat]
+\textbf{Tout ou rien} (version gourmande en énergie) :
+\[ V_{IN} > V_{REF} \Rightarrow P = P_{MAX} \qquad\text{ou}\qquad V_{IN} \le V_{REF} \Rightarrow P = 0 \]
+\textbf{Valeur pondérée} (version plus intelligente, diminution de la consommation) :
+\[ P = P_{MAX}\cdot f\!\left(|V_{REF}-V_{IN}|,\ \frac{dV_{IN}}{dt}\right) \]
+La puissance dépend de l'écart à la consigne et de la vitesse à laquelle il évolue.
+\end{exbox}
+
+Les deux approches peuvent être traitées en analogique et en numérique. Exemple du
+\textbf{calcul de dérivée} :
+\begin{itemize}
+  \item en analogique : calcul de dérivée réalisé avec des AOP (voir Électronique 2) ;
+  \item en numérique : échantillonnage et analyse de l'écart entre deux points.
+\end{itemize}
+
