@@ -170,3 +170,15 @@ d'environ $-90\ensuremath{^\circ}$.
 
 \slide{c05-12}{Le module en dB d'un produit est la somme des modules en dB.}
 
+\begin{thmbox}[title=Module d'une fonction de transfert canonique]
+Le module d'un produit est le produit des modules, et le log d'un produit est une somme de
+log : si $\underline H = \underline H_1\cdot\underline H_2$ alors
+$|\underline H|_{dB} = |\underline H_1|_{dB} + |\underline H_2|_{dB}$. Pour la forme
+canonique :
+\[ |\underline H(j\omega)|_{dB} = |K|_{dB} + \left|j\frac\omega{\omega_{Z1}}\right|_{dB}
+   + \left|1 + j\frac\omega{\omega_{Z2}}\right|_{dB} + \cdots
+   + \left|\frac1{j\frac\omega{\omega_{P1}}}\right|_{dB} + \cdots
+   + \left|\frac1{1 + j\frac\omega{\omega_{Pl}}}\right|_{dB} \]
+\textbf{But : faciliter le tracé du diagramme de Bode.}
+\end{thmbox}
+
