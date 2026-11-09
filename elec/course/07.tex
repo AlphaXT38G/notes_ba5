@@ -148,3 +148,18 @@ le courant change.
 
 \slide{c07-10}{Les trois modèles : idéale, chute de tension 0,7\,V, 0,7\,V + petite résistance.}
 
+\begin{thmbox}[title=Trois modèles de la diode]
+\begin{enumerate}
+  \item \textbf{Diode idéale} : conduit dès que la tension à ses bornes est positive, ne
+        conduit pas pour une tension négative. Pour la logique, ou l'analogique sans
+        précision (détection de seuil, redressement). Le courant est quelconque, imposé par
+        l'environnement.
+  \item \textbf{Modèle à chute de tension} (\textbf{le plus commun}) : quand la diode conduit,
+        la tension à ses bornes vaut $U_j = 0{,}7$\,V (quasi constante) : une diode idéale en
+        série avec une source de 0,7\,V. Le courant dépend encore de l'environnement.
+  \item \textbf{$U_j$ + petite résistance} (pente $1/R$) : utilisé quand on superposera des
+        signaux DC et AC : $U_j$ pour le DC, une résistance de faible valeur pour l'AC (faibles
+        variations), qu'on apprendra à évaluer plus tard.
+\end{enumerate}
+\end{thmbox}
+
