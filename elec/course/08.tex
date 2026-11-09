@@ -46,3 +46,15 @@ C07 & Diodes & non-linéaire, droite de charge, modèles, Zener \\
 
 \section{Formulaire complet}
 
+\begin{thmbox}[title={Signaux et puissance (C01)}]
+\begin{itemize}
+  \item $U = RI$ ; $P = UI$ ($>0$ : récepteur, $<0$ : source ; $U$ et $I$ de même sens
+        $\Rightarrow$ même signe).
+  \item Moyenne : $\frac1T\int_0^T v(t)\,dt$. Sinus redressé : $V_{MOY} = \frac{2A}{\pi}\approx0{,}636A$.
+  \item Efficace : $P_{EFF} = \frac1T\int_0^T p(t)\,dt = U_{EFF}I_{EFF} = \frac{U_{EFF}^2}{R}$ ;
+        sinus : $U_{EFF} = \frac{A}{\sqrt2}\approx0{,}707A$, $P_{EFF} = \frac{A^2}{2R}$.
+  \item Source de tension réelle : $U_0$ + $r_i$ série, $U_R = U_0\frac{R}{R + r_i}$.
+        Source de courant réelle : $I_0$ + $r_i$ parallèle, $I_R = I_0\frac{r_i}{R + r_i}$.
+\end{itemize}
+\end{thmbox}
+
