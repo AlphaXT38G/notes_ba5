@@ -88,3 +88,18 @@ courant celui de la vitesse.
 
 \slide{c02-06}{Le tableau à connaître par c\oe ur.}
 
+\begin{thmbox}[title={Tableau $u = f_1(i)$ et $i = f_2(u)$}]
+Pour un dipôle X entre A et B, $u(t) = u_A(t) - u_B(t)$ :
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{c|c|c}
+ & $u(t) = f_1(i(t))$ & $i(t) = f_2(u(t))$ \\ \hline
+R & $R\cdot i(t)$ & $\dfrac{u(t)}{R}$ \\
+C & $\dfrac1C\displaystyle\int i(t)\,dt + k$ & $C\dfrac{du}{dt}$ \\
+L & $L\dfrac{di}{dt}$ & $\dfrac1L\displaystyle\int u(t)\,dt + k$ \\
+\end{tabular}
+\end{center}
+Quand une intégrale est nécessaire sans bornes connues, le résultat est exprimé \textbf{à une
+constante près} ($k$).
+\end{thmbox}
+
