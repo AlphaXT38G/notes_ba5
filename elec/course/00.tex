@@ -255,3 +255,30 @@ La démarche est \textbf{bottom-up} :
 
 \slide[0.75]{c00-16}{Le puzzle de connaissances, qui reviendra au début de chaque chapitre.}
 
+\begin{recapbox}[title={Récap pour l'examen --- C00 : Introduction}]
+\begin{itemize}
+  \item Un système électronique \textbf{mesure} (capteurs), \textbf{décide} (traitement) et
+        \textbf{agit} (actuateurs) : exemple de l'aquarium, A/B/C pour l'humain, A'/B'/C'
+        pour le système (autonome ou supervisé).
+  \item Chaîne : capteurs $\to$ conditionnement (amplifier, filtrer, adapter l'impédance)
+        $\to$ CAN $\to$ traitement numérique (hard/soft) $\to$ CNA $\to$ conditionnement
+        $\to$ actuateurs ; ou traitement analogique ; le tout alimenté.
+  \item Opérateurs analogiques : intégrale, dérivée, $\pm$, $\times$, sin, log, exp, carré,
+        racine, amplification, filtrage. Numériques : portes $\to$ combinatoire, + mémoire
+        $\to$ séquentiel, mélange $\to$ automates, + langage $\to$ algorithmes.
+  \item Moyenne : analogique $Z = \frac{1}{T_{MAX}}\int_0^{T_{MAX}}V\,dt$ ; numérique
+        $Z = \frac{\sum V_i}{N}$.
+  \item \textbf{Analogique} : + vitesse, respect du phénomène (si linéaire), amplification ;
+        -- aucune immunité au bruit, beaucoup de matériel pour les transformations complexes.
+        \textbf{Numérique} : + immunité au bruit, transformations complexes avec peu de
+        matériel ; -- fréquences limitées, déformation du phénomène, pas d'amplification.
+        Systèmes hybrides possibles.
+  \item Thermostat : tout ou rien (gourmand) vs valeur pondérée
+        $P = P_{MAX} f(|V_{REF}-V_{IN}|, dV_{IN}/dt)$ (économe).
+  \item Modélisation : on linéarise (moindres carrés, zone utile, linéaire par morceaux,
+        tangentes + segmentation) parce qu'on sait résoudre des systèmes linéaires.
+\end{itemize}
+\textbf{Pour la suite} : ce chapitre est la carte du cours. On part des signaux et sources
+(C01), puis des composants R, L, C et des lois de Kirchhoff (C02), des méthodes d'analyse
+(C03), des impédances (C04), de Bode (C05), des impulsions (C06) et enfin des diodes (C07).
+\end{recapbox}
