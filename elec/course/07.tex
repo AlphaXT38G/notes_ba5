@@ -328,3 +328,16 @@ On atteint tout juste 5\,V en haut (les Zener commencent à peine à conduire) e
 
 \slide{c07-21}{Limiteur et détecteur à seuil (modèle $U_j = 0$).}
 
+\begin{propbox}[title=Limiteur et détecteur à seuil]
+Pour simplifier, on prend le modèle $U_j = 0$\,V.
+\begin{itemize}
+  \item \textbf{Limiteur} : la diode est reliée à une tension $u_P$ ; c'est l'écrêtage à
+        0,7\,V, mais \textbf{décalé de $u_P$} : $u_2$ suit $u_1$ tant que $u_1 < u_P$, et
+        est limitée à $u_P$ au-dessus.
+  \item \textbf{Détecteur à seuil} : rappelle l'écrêteur à $-U_j$ ; $u_1$ est comparée à
+        $u_P$ (la diode voit $u_1 - u_P$) : la sortie $u_2$ ne montre que les parties de
+        $u_1$ \textbf{au-dessus du seuil $u_P$} (écrêtage quand $u_1 - u_P < -U_j$, soit
+        $u_1 < u_P - U_j$).
+\end{itemize}
+\end{propbox}
+
