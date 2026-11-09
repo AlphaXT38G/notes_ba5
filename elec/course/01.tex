@@ -348,3 +348,16 @@ valeur absolue s'appelle \textbf{redresser} le signal.
 
 \slide{c01-19}{Calcul de la valeur moyenne du sinus redressé.}
 
+\begin{exbox}[title={Valeur moyenne d'un sinus redressé, $V(t) = A\sin(\omega t)$}]
+Le signal redressé est compliqué à écrire ; on intègre le sinus sur une
+\textbf{demi-période} $T/2$, où il est positif :
+\[ Surface = \int_0^{T/2} A\sin(2\pi f t)\,dt
+   = -\frac{A}{2\pi f}\Big[\cos(2\pi f t)\Big]_0^{T/2}
+   = -\frac{AT}{2\pi}\big[\cos\pi - \cos 0\big] = \frac{AT}{\pi} \]
+$V_{MOY}$ = surface / période d'analyse, avec période d'analyse $= T/2$ :
+\[ \boxed{V_{MOY} = \frac{AT/\pi}{T/2} = \frac{2A}{\pi}} \qquad
+   \text{A.N. : } A = 1\text{ V} \Rightarrow V_{MOY} = 0{,}636\text{ V} \]
+Ce n'est \textbf{pas} le $1/\sqrt2 \approx 0{,}7$\,V de la valeur efficace. D'où vient la
+différence ? Voir la section suivante.
+\end{exbox}
+
