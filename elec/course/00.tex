@@ -120,3 +120,25 @@ fait la moyenne :
 
 \slide{c00-10}{Réalisation : intégrateurs, multiplieur, comparateur en analogique ; une boucle en numérique.}
 
+\begin{exbox}[title=Comment on le réalise]
+\textbf{En analogique} (cours AOP, Électronique 2), dans l'ordre des numéros de la
+diapositive :
+\begin{enumerate}
+  \item on veut $Z = \frac{1}{T_{MAX}}\int_0^{T_{MAX}} V(T^\circ,t)\,dt$ ;
+  \item un \textbf{multiplieur} (X) multiplie l'intégrale par $K_2 = 1/K_1 = 1/V(T_{MAX})$
+        (remarque : on sait calculer une division analogique) ;
+  \item deux \textbf{intégrateurs} : l'un intègre $V(T^\circ,t)$, l'autre intègre une
+        constante $a$ ;
+  \item l'intégrale d'une constante donne une rampe $V(t)=a\,t$ : une tension
+        \textbf{à l'image du temps}, qui vaut $K_1 = V(T_{MAX})$ à la fin ;
+  \item un \textbf{comparateur} arrête (hold) puis remet à zéro (RAZ) les intégrateurs quand
+        la rampe atteint $V(T_{MAX})$.
+\end{enumerate}
+\textbf{En numérique}, une simple boucle :
+\begin{verbatim}
+Somme = 0;
+for (i = 0; i < nbSamples; i++) { lire(data); Somme = Somme + data; }
+Z = Somme/nbSamples;  ecrire(Z);
+\end{verbatim}
+\end{exbox}
+
