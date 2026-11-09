@@ -387,3 +387,20 @@ ou en avance : c'est le déphasage.
 
 \slide{c04-22}{Le tableau des impédances (tension en fonction du courant) et des admittances.}
 
+\begin{thmbox}[title=Tableau en grandeurs complexes]
+Pour un dipôle d'impédance $\underline Z$ entre A et B : $\underline v = f_1(\underline i)$,
+$\underline i = f_2(\underline v)$.
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{c|c|c}
+ & $\underline v$ & $\underline i$ \\ \hline
+R & $R\,\underline i$ & $\dfrac{\underline v}{R}$ \\
+C & $\dfrac1{j\omega C}\,\underline i$ & $\underline v\,j\omega C$ \\
+L & $j\omega L\,\underline i$ & $\dfrac1{j\omega L}\,\underline v$ \\
+\end{tabular}
+\end{center}
+Comparer avec le tableau du C02 : \textbf{dériver devient multiplier par $j\omega$,
+intégrer devient diviser par $j\omega$}. La colonne $\underline v$ donne les
+\textbf{impédances}, la colonne $\underline i$ les \textbf{admittances}.
+\end{thmbox}
+
