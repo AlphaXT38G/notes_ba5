@@ -107,3 +107,16 @@ $q = Cu$. C : ouvert en continu ($\omega = 0$), court-circuit pour un saut ($\om
 \end{itemize}
 \end{thmbox}
 
+\begin{thmbox}[title={Bode (C05)}]
+\begin{itemize}
+  \item $|H|_{dB} = 20\log|H|$ ; $\times10\to+20$\,dB, $\times2\to+6$\,dB,
+        $1/\sqrt2\to-3$\,dB.
+  \item Forme canonique $K\cdot\frac{\prod(j\omega/\omega_Z)(1 + j\omega/\omega_Z)}{\prod(j\omega/\omega_P)(1 + j\omega/\omega_P)}$ ;
+        les dB et les phases s'additionnent.
+  \item Zéro $1 + j\omega/\omega_Z$ : $+20$\,dB/déc après $\omega_Z$ ; phase $0\to90\ensuremath{^\circ}$ de
+        $0{,}1\omega_Z$ à $10\omega_Z$. Pôle : $-20$\,dB/déc, $0\to-90\ensuremath{^\circ}$. Erreurs : 3\,dB,
+        $5{,}7\ensuremath{^\circ}$.
+  \item $j\omega/\omega_Z$ : $+20$\,dB/déc partout, $+90\ensuremath{^\circ}$. $K<0$ : phase $\pi$.
+\end{itemize}
+\end{thmbox}
+
