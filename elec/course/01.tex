@@ -399,3 +399,33 @@ aussi du temps près de zéro ; \og en moyenne d'énergie\fg{}, cela fait comme 
 constante $A/\sqrt2$.
 \end{goatbox}
 
+\begin{recapbox}[title={Récap pour l'examen --- C01 : Signaux et sources}]
+\begin{itemize}
+  \item \textbf{Signal} = information + phénomène (énergie). $U$ : statique (répartition de
+        charges) ; $I$ : dynamique (charges en mouvement). Majuscules = continu, minuscules
+        = variable. Courant électrique opposé au mouvement des électrons.
+  \item Périodique : se répète après $T$ ; tout signal périodique = somme de sin/cos
+        (Fourier). Sinus : crête $A$, crête-crête $2A$, moyenne, \textbf{efficace}.
+  \item \textbf{Potentiel} : par rapport à une référence. \textbf{Tension} : différence entre
+        deux points. Terre = 0\,V absolu, masse = 0\,V relatif au système. Équipotentielle
+        = points reliés par un fil parfait. Court-circuit = même potentiel ; circuit ouvert
+        = aucune liaison.
+  \item Courant : il faut une source \textbf{et} un circuit fermé. Loi d'Ohm $U = RI$.
+  \item \textbf{Convention} : $U$ et $I$ de même sens $\Rightarrow$ même signe. $P = UI > 0$ :
+        récepteur (absorbe) ; $P<0$ : source (donne). Une source peut être récepteur
+        ($U_1 = 2$\,V face à $U_2 = 5$\,V).
+  \item \textbf{Source de tension réelle} : $U_0$ + $r_i$ en \textbf{série} :
+        $U_R = U_0\frac{R}{R+r_i}$, $I = \frac{U_0}{R+r_i}$. \textbf{Source de courant
+        réelle} : $I_0$ + $r_i$ en \textbf{parallèle} : $I_R = I_0\frac{r_i}{R+r_i}$,
+        $U_R = I_0 (R/\!/r_i)$. Idéales : $U_R = U_0$, resp.\ $I_R = I_0$, quelle que soit $R$.
+  \item Superposition : $U_0 + u_1(t)$ voulue, ou bruit gênant.
+  \item Moyenne : $\frac{1}{T}\int_0^T H(t)\,dt$ (limite des histogrammes). Sinus : moyenne
+        nulle ; redressé : $V_{MOY} = 2A/\pi \approx 0{,}636A$.
+  \item \textbf{Efficace} : $P_{EFF} = \frac{1}{T}\int_0^T P\,dt = \frac{U_{EFF}^2}{R}$ ;
+        sinus : $U_{EFF} = A/\sqrt2 \approx 0{,}707A$, $P_{EFF} = \frac{A^2}{2R}$.
+\end{itemize}
+\textbf{Pour la suite} : le C00 a dit que tout part des signaux et des sources ; ce
+chapitre les définit, avec la loi d'Ohm comme premier lien entre $U$ et $I$. Le C02 ajoute
+les deux autres composants passifs (C et L) et les lois de Kirchhoff pour assembler le tout ;
+le diviseur résistif vu ici (source réelle, superposition) y sera démontré.
+\end{recapbox}
