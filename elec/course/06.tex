@@ -167,3 +167,21 @@ Dans chaque cas, la tension aux bornes de C ($V_A - V_B$) est la même en $0^-$ 
 
 \slide{c06-13}{Passe-haut : $V_B$ saute à $V_0$ puis redescend à 0.}
 
+\begin{exbox}[title={Analyse complète du passe-haut}]
+\begin{center}
+\begin{tabular}{c|c|c|c}
+ & $t_0 = 0$ & $t_1 > t_0$ & $t_2 \gg t_0$ \\ \hline
+$V_C$ & 0 & $\nearrow$ & $V_0$ \\
+$V_B$ & $0 + V_0$ & $\searrow$ & 0 \\
+$V_A$ & $0 + V_0$ & $V_0$ & $V_0$ \\
+$i$ & $\frac{V_B}{R} = \frac{V_0}{R}$ & $\searrow$ & 0 \\
+\end{tabular}
+\end{center}
+$V_C(0) = 0$ donc $V_A = V_B = V_0$ juste après le saut. La tension sur R crée un courant qui
+charge C ; $V_B$ descend jusqu'à 0. Avec les équations :
+\[ i = \frac{V_B}{R} = C\frac{dV_C}{dt} = C\frac{d(V_A - V_B)}{dt}, \quad V_A = V_0 = \text{cte}
+   \Rightarrow \frac{dV_B}{V_B} = -\frac{dt}{RC} \]
+On a directement l'équation sans second membre : le \textbf{permanent vaut 0} et
+$V_B = K_2\,e^{-t/RC}$.
+\end{exbox}
+
