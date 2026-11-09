@@ -343,3 +343,12 @@ Pour simplifier, on prend le modèle $U_j = 0$\,V.
 
 \slide{c07-22}{Détecteur de la tension la plus élevée : raisonner par l'absurde.}
 
+\begin{exbox}[title={Détecteur de tension la plus élevée}]
+Trois diodes $D_1, D_2, D_3$ relient $V_1, V_2, V_3$ à la sortie $V_S$ (avec $R_1$ vers la
+masse). La sortie vaut (à $U_j$ près) \textbf{la tension la plus élevée}. \textbf{Par
+l'absurde}, avec $V_1 = 1$\,V, $V_2 = 2$\,V, $V_3 = 3$\,V : si $D_1$ conduisait,
+$V_S = V_1 - U_j = 0{,}3$\,V et il y aurait $3 - 0{,}3 = 2{,}7$\,V aux bornes de $D_3$ :
+impossible (une diode qui conduit est limitée à $\approx0{,}7$\,V). De même si $D_2$
+conduisait (1,7\,V sur $D_3$). Seule $D_3$ conduit : $V_S = 3 - 0{,}7 = 2{,}3$\,V.
+\end{exbox}
+
