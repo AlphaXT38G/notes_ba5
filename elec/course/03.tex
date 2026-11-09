@@ -418,3 +418,36 @@ pousser la première seule, puis la deuxième seule, et additionner. Ça marche 
 charrette est \og linéaire\fg{} : pousser deux fois plus la fait avancer deux fois plus.
 \end{goatbox}
 
+\begin{recapbox}[title={Récap pour l'examen --- C03 : Méthodes d'analyse}]
+\begin{itemize}
+  \item \textbf{Dipôle} = boîte noire à 2 bornes ; passif (pas de source, $U$ et $I$ toujours
+        nuls) ou actif. Trois mesures : tension à vide, courant de court-circuit, tension sur
+        une résistance. Tripôle (transistor) peu utilisé ; \textbf{quadripôle} pour
+        transformer $I$, $V$ (filtres, amplis).
+  \item Simplifications locales : permutations série/parallèle, fusions (tensions en série,
+        courants en parallèle, R série/parallèle). \textbf{Ne jamais fusionner la charge
+        étudiée} (on perd son courant : conceptuellement faux).
+  \item \textbf{Source linéaire de tension} : $U = U_0 - R_S I$ ; \textbf{de courant} :
+        $U = R_P I_{CC} - R_P I$. Équivalentes si $R_S = R_P = R$ et
+        $\boxed{U_0 = R\,I_{CC}}$.
+  \item \textbf{Thévenin} : $V_{TH}$ + $R_{IN}$ en série. \textbf{Norton} : $I_{NO}$ +
+        $R_{IN}$ en parallèle. $V_{TH}$ = tension \textbf{à vide} ; $I_{NO}$ = courant de
+        \textbf{court-circuit} ; $R_{IN}$ = résistance vue des bornes \textbf{sources
+        éteintes} (tension $\to$ court-circuit, courant $\to$ circuit ouvert) ;
+        $V_{TH} = R_{IN} I_{NO}$.
+  \item Mesure pratique : tension à vide (sûr) ; court-circuit (dangereux) ; éteindre les
+        sources (impossible) ; \textbf{$R_2$ variable jusqu'à lire la moitié de la tension à
+        vide $\Rightarrow R_2 = R_{IN}$}.
+  \item Réflexes : parallèle $\to$ Norton ; série $\to$ Thévenin ; alterner transformations
+        et réductions.
+  \item Exemple : 4 $R$ + $U$ : $V_{TH} = U/4$, $R_{IN} = \frac34 R$, $V_L = U/7 = 2$\,V
+        ($U = 14$\,V, $R = R_L$).
+  \item \textbf{Superposition} (linéaire) : somme des contributions de chaque source seule.
+        Montage 2 : $U_S = \frac{R_2}{R_1+R_2}U_1 + \frac{R_1R_2}{R_1+R_2}I_2$.
+\end{itemize}
+\textbf{Comment ça s'appuie sur le reste} : les sources idéales/réelles du C01 deviennent ici
+les \og sources linéaires\fg{} ; les lois de Kirchhoff et les équivalences série/parallèle du
+C02 démontrent chaque transformation. Au C04, ces mêmes théorèmes (et Millman) s'appliquent
+tels quels aux \textbf{impédances} complexes à la place des résistances ; le quadripôle
+reviendra comme \textbf{fonction de transfert} (filtres).
+\end{recapbox}
