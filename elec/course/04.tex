@@ -125,3 +125,15 @@ classique (pas dans les slides) : \og CIVIL\fg{} --- dans C, I avant V ; V avant
 
 \slide{c04-09}{C et L se comportent comme des résistances qui dépendent de la fréquence.}
 
+\begin{propbox}[title=Constat]
+\begin{itemize}
+  \item Tension aux bornes de R : $U = R\cdot I$.
+  \item Aux bornes de C : $u(t) = \frac{I_0\sin(\omega t - \pi/2)}{\omega C}$, de la forme
+        $U = \frac{1}{\omega C}\cdot I_2$ ($I_2$ différent du courant $I$ : il est déphasé).
+  \item Aux bornes de L : $u(t) = L\omega I_0\sin(\omega t + \pi/2)$, de la forme
+        $U = \omega L\cdot I_2$.
+\end{itemize}
+$\frac1{\omega C}$ est comparable à une résistance qui \textbf{diminue} avec la fréquence ;
+$\omega L$ à une résistance qui \textbf{augmente} avec la fréquence.
+\end{propbox}
+
