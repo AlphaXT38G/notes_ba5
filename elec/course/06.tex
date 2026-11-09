@@ -88,3 +88,12 @@ La réponse complète est la \textbf{somme} des deux.
 
 \slide{c06-07}{Résolution de l'équation sans second membre.}
 
+\begin{proofbox}[title=Développement]
+\[ RC\frac{dV_C}{dt} + V_C = 0 \Rightarrow \frac{dV_C}{V_C} = -\frac{dt}{RC}
+   \Rightarrow \int\frac{dV_C}{V_C} = -\frac1{RC}\int dt
+   \Rightarrow \log(V_C) = -\frac t{RC} + K_1 \]
+\[ V_C = e^{-\frac t{RC} + K_1} = e^{-\frac t{RC}}e^{K_1} = K_2\,e^{-\frac t{RC}} \]
+Comportement complet = transitoire + permanent :
+\[ V_C = V_0 + K_2\,e^{-\frac t{RC}} \qquad\text{et } K_2\ ? \]
+\end{proofbox}
+
