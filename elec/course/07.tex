@@ -352,3 +352,15 @@ impossible (une diode qui conduit est limitée à $\approx0{,}7$\,V). De même s
 conduisait (1,7\,V sur $D_3$). Seule $D_3$ conduit : $V_S = 3 - 0{,}7 = 2{,}3$\,V.
 \end{exbox}
 
+\begin{exbox}[title={Méthode générale pour un circuit à diodes (synthèse du chapitre)}]
+\begin{enumerate}
+  \item Choisir le modèle (souvent $U_j = 0{,}7$\,V ; $U_j = 0$ si on le dit) ;
+  \item \textbf{supposer} un état pour chaque diode (passante : source de $U_j$ ; bloquée :
+        circuit ouvert) ;
+  \item calculer avec les lois linéaires (Ohm, Kirchhoff, diviseur) ;
+  \item \textbf{vérifier} : une diode supposée passante doit avoir un courant dans le sens
+        direct ; une diode supposée bloquée doit avoir moins de $U_j$ à ses bornes (et plus
+        de $-V_Z$ pour une Zener). Sinon, changer l'hypothèse (raisonnement par l'absurde).
+\end{enumerate}
+\end{exbox}
+
