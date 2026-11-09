@@ -1,0 +1,24 @@
+% =========================================================
+\chapter{C06 --- Impulsions : le saut indiciel dans les circuits RC}
+% =========================================================
+
+\begin{rembox}[title=En bref]
+\textbf{De quoi parle ce chapitre ?} Le couple $[R, C]$ revient partout (diodes,
+transistors, AOP) : \textbf{volontairement}, pour réaliser des fonctions, ou
+\textbf{involontairement}, comme modèle de phénomènes parasites qui limitent ou perturbent
+le système. On l'étudie ici avec la deuxième catégorie de signaux : le \textbf{saut
+indiciel} (les signaux carrés des horloges numériques). \\
+\textbf{Les trois objectifs} :
+\begin{enumerate}
+  \item \textbf{le retour au temporel} : face à un saut brutal, le raccourci des complexes
+        ne marche plus, on revient aux équations différentielles (premier ordre seulement :
+        un seul condensateur, autant de résistances que nécessaire) ;
+  \item \textbf{la continuité de la tension} : la tension aux bornes d'un condensateur ne
+        peut pas sauter instantanément ($\Delta t\to0$) ; cela fixe les conditions
+        initiales ;
+  \item \textbf{la formule magique et sa recette} : une formule unique pour tous les circuits
+        d'ordre 1 (passe-bas et passe-haut), qui dépend de la valeur initiale, de la valeur
+        finale et de $\tau = RC$, pour résoudre les 4 \og angles\fg{} d'un signal carré.
+\end{enumerate}
+\end{rembox}
+
