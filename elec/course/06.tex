@@ -99,3 +99,11 @@ Comportement complet = transitoire + permanent :
 
 \slide{c06-08}{Avec $V_C(0) = 0$ : $K_2 = -V_0$.}
 
+\begin{thmbox}[title={Cas particulier : condensateur déchargé, $V_C(0) = 0$}]
+On utilise une valeur simple : à $t = 0$ le condensateur n'a pas eu le temps de se charger :
+$V_C(0) = 0 = V_0 + K_2 e^0 \Rightarrow K_2 = -V_0$.
+\[ \boxed{V_C = V_0\left(1 - e^{-\frac t{RC}}\right)} = \text{permanent ($V_0$)} + \text{transitoire ($-V_0e^{-t/RC}$)} \]
+Interprétation : $-V_0$ est le \textbf{déficit} du circuit par rapport à son état
+d'équilibre ; $-V_0e^{-t/\tau}$ dit comment l'équilibre est retrouvé.
+\end{thmbox}
+
