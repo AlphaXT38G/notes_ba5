@@ -167,3 +167,13 @@ le courant change.
 
 \slide{c07-11}{$U_E = 3$\,V, $R_1 = 1$\,k$\Omega$ : comparer deux façons d'utiliser $U_j$.}
 
+\begin{exbox}[title={Deux façons de calculer le courant avec $U_D = U_j = 0{,}7$\,V}]
+Circuit : $U_E = 3$\,V, $R_1 = 1$\,k$\Omega$, une diode. On suppose que la vraie tension de
+la diode est $U_{D,r\acute eel} = 0{,}674$\,V : $U_j$ fait donc une erreur d'environ
+\textbf{3\,\%} en tension. On compare :
+\[ I_{D1} = \frac{U_E - U_j}{R_1} \ \text{(loi d'Ohm)} \qquad\text{et}\qquad
+   I_{D2} = I_S\,e^{\frac{U_j}{nU_T}} \ \text{(loi exponentielle)} \]
+Erreur sur $I_{D1}$ : \textbf{1\,\%} (diminue si $U_E$ augmente). Erreur sur $I_{D2}$ :
+\textbf{270\,\%} !
+\end{exbox}
+
