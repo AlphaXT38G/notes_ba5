@@ -241,3 +241,15 @@ Pour une source de courant, la \textbf{résistance interne $r_i$ est en parallè
 source $I_0$.
 \end{defnbox}
 
+\begin{propbox}[title=Les trois cas (charge $R$)]
+\textbf{Cas 1} ($U_R$ en fonction de $I_0$) : idéale, pente $R$ ; réelle, pente
+$R_{EQ} = R\,/\!/\,r_i < R$ (deux résistances en parallèle donnent toujours moins que la plus
+petite). Intuitivement : $I_0$ se répartit entre $r_i$ et $R$. \
+\textbf{Cas 2} ($I_R$ en fonction de $I_0$) : idéale, $I_R = I_0$ (une seule boucle), pente
+1 ; réelle, $I_R < I_0$, pente $\frac{r_i}{R+r_i}$. \
+\textbf{Cas 3} ($I_R$ en fonction de $R$) : idéale, $I_R = I_0$ toujours ; réelle :
+\[ U_R = I_0 R_{EQ} = I_0\frac{r_i R}{R+r_i} = I_R R \quad\Rightarrow\quad
+   I_R = I_0\cdot\frac{r_i}{R+r_i} \]
+qui vaut $I_0$ pour $R\to 0$ et tend vers 0 quand $R\to\infty$.
+\end{propbox}
+
