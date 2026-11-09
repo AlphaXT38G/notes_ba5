@@ -220,3 +220,14 @@ tranquille et linéaire.
 
 \slide{c07-14}{Diviseur résistif (réduit le sinus) vs diode (écrête à $U_j$).}
 
+\begin{thmbox}[title=L'écrêtage à $U_j$]
+Pour un diviseur résistif, $U_{R2}$ est toujours $U_E\frac{R_2}{R_1+R_2}$ (le sinus est
+réduit). Avec une diode, tout dépend si elle conduit :
+\begin{itemize}
+  \item \textbf{diode bloquée} ($U_E < 0{,}7$\,V selon le modèle) : aucun courant, aucune
+        chute dans R : \textbf{la sortie vaut $U_E$} ;
+  \item \textbf{diode passante} ($U_E > 0{,}7$\,V) : la tension à ses bornes reste
+        $\approx0{,}7$\,V : la diode \textbf{écrête} la sortie à $U_j$.
+\end{itemize}
+\end{thmbox}
+
