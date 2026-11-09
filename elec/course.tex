@@ -24,6 +24,14 @@
   title=Récap pour l'examen, #1
 }
 
+% Capture d'une diapositive du cours : \slide[largeur]{cNN-PP}{légende}
+\graphicspath{{images/course/}}
+\newcommand{\slide}[3][0.85]{%
+  \begin{center}
+    \includegraphics[width=#1\linewidth]{#2}\\[2pt]
+    {\small\itshape #3}
+  \end{center}}
+
 \begin{document}
 \raggedbottom
 
