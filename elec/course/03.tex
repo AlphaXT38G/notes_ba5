@@ -393,3 +393,16 @@ contributions de chaque source prise seule}, les autres étant éliminées.
 
 \slide{c03-22}{Le calcul des deux contributions.}
 
+\begin{exbox}[title={Superposition sur le montage 2 ($U_1$, $I_2$, sortie à vide)}]
+\textbf{Contribution de $U_1$} : $I_2$ éliminée (\textbf{circuit ouvert}). À vide, aucun
+courant dans $R_3$ : $U_{S1}$ ne dépend pas de $R_3$. Diviseur :
+\[ U_{S1}(U_1) = \frac{R_2}{R_1 + R_2}\,U_1 \]
+\textbf{Contribution de $I_2$} : $U_1$ éliminée (\textbf{court-circuit}). $I_2$ traverse
+$R_1/\!/R_2$ ; $U_{S2}$ ne dépend pas non plus de $R_3$ :
+\[ U_{S2}(I_2) = (R_1/\!/R_2)\cdot I_2 = \frac{R_1R_2}{R_1 + R_2}\,I_2 \]
+\textbf{Total} :
+\[ U_{S\_TOTAL} = U_{S1}(U_1) + U_{S2}(I_2)
+   = \frac{R_2}{R_1 + R_2}\,U_1 + \frac{R_1 R_2}{R_1 + R_2}\,I_2 \]
+C'est exactement le $U_{TH}$ obtenu par transformations Thévenin--Norton.
+\end{exbox}
+
