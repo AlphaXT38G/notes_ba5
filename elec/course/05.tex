@@ -86,3 +86,12 @@ $1 + j\frac\omega{\omega_Z}$, $\frac1{1 + j\omega/\omega_P}$.
    \left|\frac1{1 + j\frac\omega{\omega_{P2}}}\right|_{dB} = -20\log\sqrt{1 + \left(\frac{\omega}{\omega_{P2}}\right)^2} \]
 \end{thmbox}
 
+\begin{rembox}[title={Pourquoi 20 et pas 10 ? (log en base 10)}]
+Le dB vient d'un \textbf{rapport de puissances} (comme en acoustique) :
+$\left|\frac{P_2}{P_1}\right|_{dB} = 10\log\frac{P_2}{P_1}$. Or $P = U^2/R$ :
+\[ 10\log\left(\frac{U_2^2/R}{U_1^2/R}\right) = 10\log\left(\frac{U_2}{U_1}\right)^2
+   = 20\log\left(\frac{U_2}{U_1}\right) \]
+Sortir le carré du log revient à multiplier par 2 ($\log x^2 = 2\log x$) : d'où
+$\left|\frac{U_2}{U_1}\right|_{dB} = 20\log\frac{U_2}{U_1}$.
+\end{rembox}
+
