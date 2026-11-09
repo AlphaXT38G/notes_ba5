@@ -302,3 +302,18 @@ En posant les trois égalités, on retrouve les formules.
 
 \slide{c02-15}{Exemple : un pont de résistances débloqué par Kennelly.}
 
+\begin{exbox}[title={Pourquoi Kennelly : calculer le courant $I$ d'un pont}]
+Dans le circuit du haut (source $V$, $R_1$ à $R_5$, $R_3$ entre C et B), il n'y a
+\textbf{ni résistances en série, ni en parallèle} : sans réduction, il faudrait poser les
+équations de Kirchhoff. Deux façons de débloquer :
+\begin{itemize}
+  \item transformer le \textbf{triangle ABC} ($R_1, R_2, R_3$) en \textbf{étoile} de centre
+        X ($R_A, R_B, R_C$) : $R_C$ se retrouve en série avec $R_4$, $R_B$ en série avec
+        $R_5$, ces deux branches sont en parallèle, puis en série avec $R_A$ ;
+  \item ou transformer l'\textbf{étoile ABD de centre C} ($R_1, R_3, R_4$) en
+        \textbf{triangle} ($R_{AB}, R_{AD}, R_{BD}$) : $R_{AB}/\!/R_2$, $R_{BD}/\!/R_5$, etc.
+\end{itemize}
+Une fois la transformation faite, \textbf{des résistances sont en série et/ou en parallèle et
+peuvent fusionner}.
+\end{exbox}
+
