@@ -277,3 +277,18 @@ $7{,}5 + 5e^{-500/375}\approx8{,}8$\,V. Au front descendant, il saute de $-5$\,V
 
 \slide{c06-18}{Montage : $2R$ puis C, sortie A (avant C) et B (sur R).}
 
+\begin{exbox}[title={Le montage et ses allures}]
+$v_{IN}$ (créneau de 0 à $V_{CC}$) attaque $2R$ ; le point A est entre $2R$ et C ; le point B
+entre C et R (vers la masse). Constante de temps :
+\[ \tau = (R + 2R)\cdot C = 3RC \]
+Les allures (justifiées ci-dessous), en supposant les paliers plus longs que $5\tau$ :
+\begin{itemize}
+  \item $V_A$ (rouge) : saute à $\frac{V_{CC}}3$ en $t_1$, monte vers $V_{CC}$ ; en $t_3$
+        retombe à $V_{CC} - \frac{V_{CC}}3 = \frac{2V_{CC}}3$, puis descend vers 0 ;
+  \item $V_B$ (vert) : saute à $\frac{V_{CC}}3$ en $t_1$, redescend vers 0 ; en $t_3$ saute à
+        $-\frac{V_{CC}}3$, puis remonte vers 0.
+\end{itemize}
+Les expressions littérales donnent des résultats précis grâce à la proportionnalité simple
+entre les résistances.
+\end{exbox}
+
