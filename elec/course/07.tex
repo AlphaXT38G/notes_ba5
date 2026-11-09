@@ -56,3 +56,20 @@ potentiel).
 
 \slide{c07-05}{Résistance : droite. Diode : exponentielle, coude vers 0,7\,V.}
 
+\begin{thmbox}[title=Loi de la diode]
+Résistance : $I_0 = \frac{V_0}{R}$ (droite de pente $1/R$). Diode :
+\[ I_0 = I_S\left(e^{\frac{V_0}{nU_T}} - 1\right) \qquad
+   \text{première approximation :}\quad I_0 = I_S\,e^{\frac{V_0}{nU_T}} \]
+\begin{itemize}
+  \item $I_S$ : \textbf{courant inverse de saturation}, dépend de la technologie et de la
+        température, très dispersé ($10^{-6}$ à $10^{-20}$\,A) ; \textbf{dans les exercices
+        $10^{-15} < I_S < 10^{-10}$\,A} ;
+  \item $V_0$ (ou $V_D$) : tension aux bornes ; environ 0,7\,V quand le courant est
+        significatif ;
+  \item $U_T = \frac{kT}{q} = 26$\,mV à 27\ensuremath{^\circ}C ($k = 1{,}380\,649\times10^{-23}$\,J/K) :
+        l'agitation thermodynamique ;
+  \item $1 < n < 2$ : facteur d'idéalité.
+\end{itemize}
+Le $-1$ est négligé vers 0,7\,V ; il compte seulement près de 0\,V.
+\end{thmbox}
+
