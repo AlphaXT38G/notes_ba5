@@ -23,3 +23,20 @@ pour les transistors. \\
 
 \slide{c07-03}{Symbole et caractéristique : sens direct, sens inverse, zone Zener.}
 
+\begin{defnbox}[title=Symbole et caractéristique]
+Le symbole est une \textbf{flèche} qui indique le sens naturel du courant : l'entrée est
+l'\textbf{anode}, la sortie la \textbf{cathode}. Le constructeur donne aussi la
+\textbf{puissance maximale} $P_{MAX}$ ($P = UI$) : quel que soit le type de diode, un courant
+trop élevé la détruit. Trois zones de comportement :
+\begin{enumerate}
+  \item vers \textbf{0,7\,V} (diode au silicium) : le courant grimpe très vite pour le
+        moindre accroissement de tension (\textbf{sens direct}) ;
+  \item entre une tension négative limite et 0,7\,V : quasiment pas de courant (seulement
+        $I_S$, insignifiant) : la diode est \textbf{bloquée} ;
+  \item au seuil négatif $-V_Z$ (\textbf{tension Zener}) : le courant redevient très
+        important, en sens inverse (\textbf{effet Zener ou avalanche}, effet tunnel\ldots).
+        Destructeur ou non selon la construction ; s'il est prévisible et non destructif
+        (réversible), il est exploitable : ce sont les \textbf{diodes Zener}.
+\end{enumerate}
+\end{defnbox}
+
