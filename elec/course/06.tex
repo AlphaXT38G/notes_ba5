@@ -310,3 +310,16 @@ magique avec le temps réel du palier.
 
 \slide{c06-20}{Analyse aux quatre temps significatifs.}
 
+\begin{thmbox}[title={La recette : 4 instants}]
+On étudie le circuit en 4 points : $t_1$ juste après le saut positif, $t_2$ juste avant le
+saut négatif, $t_3$ juste après le saut négatif, $t_4$ juste avant le saut positif.
+\begin{itemize}
+  \item \textbf{Juste après un saut ($t_1$, $t_3$)} : superposition de l'état \textbf{avant
+        le saut} (DC, encore présent après 0\,s) et de l'\textbf{effet du saut} (AC, avec C
+        \textbf{court-circuit}) : $V = V(DC) + V(AC)$.
+  \item \textbf{Juste avant un saut ($t_2$, $t_4$)}, si le temps écoulé dépasse $5\tau$ : C
+        est revenu au repos, c'est un \textbf{circuit ouvert} ; les rapports résistifs donnent
+        les tensions.
+\end{itemize}
+\end{thmbox}
+
