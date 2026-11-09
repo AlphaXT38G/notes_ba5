@@ -373,3 +373,14 @@ La \textbf{puissance efficace} est comparable à la puissance moyenne :
 \[ P_{EFF} = \frac{\acute{E}nergie}{T} = U_{EFF}\cdot I_{EFF} = \frac{U_{EFF}^2}{R} = R\,I_{EFF}^2 \]
 \end{thmbox}
 
+\begin{exbox}[title={Calcul pour $U(t) = A\sin(2\pi f t)$ sur une résistance}]
+\[ \acute{E}nergie = \int_0^T \frac{A^2\sin^2(2\pi f t)}{R}\,dt
+   = \int_0^T \frac{A^2\,[1-\cos(4\pi f t)]}{2R}\,dt
+   = \frac{A^2}{R}\left[\frac t2 - \frac{\sin 4\pi f t}{8\pi f}\right]_0^T
+   = \frac{A^2 T}{2R} \]
+(les termes en sinus s'annulent car $\sin(4\pi fT) = \sin 4\pi = 0$). Donc
+\[ \boxed{P_{EFF} = \frac{\acute{E}nergie}{T} = \frac{A^2}{2R} = \frac{U_{EFF}^2}{R}
+   \quad\Longrightarrow\quad U_{EFF} = \frac{A}{\sqrt2}} \]
+A.N. : $A = 1$\,V $\Rightarrow U_{EFF} = 0{,}707$\,V.
+\end{exbox}
+
