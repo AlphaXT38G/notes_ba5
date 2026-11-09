@@ -65,3 +65,20 @@ moteurs/lampes à la place des sabots.
 
 \slide{c00-07}{Chaîne complète d'un système électronique.}
 
+\begin{defnbox}[title=Les blocs d'un système électronique]
+\begin{itemize}
+  \item \textbf{Capteurs} : transforment une grandeur physique (température, pH\ldots) en
+        signal électrique.
+  \item \textbf{Conditionnement} : mise en forme du signal --- amplification, filtrage,
+        adaptation d'impédance, changement de gamme, de dimension, modulation.
+  \item \textbf{Échantillonnage \& conversion} : \textbf{CAN} (convertisseur
+        analogique-numérique) vers le traitement numérique, \textbf{CNA}
+        (numérique-analogique) pour revenir vers le monde réel.
+  \item \textbf{Traitement} : \textbf{analogique}, ou \textbf{numérique} (hardware et/ou
+        software). Une éventuelle \textbf{transmission} entre les deux.
+  \item \textbf{Actuateurs} : agissent sur l'environnement (pompe, lumière\ldots), précédés
+        d'un conditionnement.
+  \item Le tout a besoin d'une \textbf{alimentation}.
+\end{itemize}
+\end{defnbox}
+
