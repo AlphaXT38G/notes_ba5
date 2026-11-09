@@ -103,3 +103,13 @@ $i(t) = I\sqrt2\sin(\omega t)$ et $u(t) = U\sqrt2\sin(\omega t)$, le doute n'est
 
 \slide{c04-08}{Inductance : la tension est en avance de $\pi/2$.}
 
+\begin{thmbox}[title=Inductance en sinusoïdal]
+\textbf{Courant imposé} $i(t) = I_0\sin(\omega t)$ :
+\[ u(t) = L\frac{di}{dt} = L\omega I_0\cos(\omega t) = L\omega I_0\sin\!\left(\omega t + \frac\pi2\right) \]
+\textbf{Tension imposée} $u(t) = U_0\sin(\omega t)$ :
+\[ i(t) = \int\frac{U_0\sin(\omega t)}{L}\,dt = \frac{-U_0\cos(\omega t)}{\omega L}
+   = \frac{U_0\sin(\omega t - \frac\pi2)}{\omega L} \]
+\textbf{Conclusion} : déphasage constant de $\frac\pi2$ ; cette fois \textbf{$u(t)$ est en
+avance sur $i(t)$}.
+\end{thmbox}
+
