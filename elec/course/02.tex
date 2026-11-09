@@ -391,3 +391,16 @@ la somme fait bien 10\,V).
 
 \slide{c02-20}{Circuit RC : équation différentielle du premier ordre.}
 
+\begin{thmbox}[title=Circuit RC]
+Avec $v_{IN} = v_R + v_C$, $v_C$ étant une intégrale, on obtient une \textbf{équation
+différentielle du premier ordre}.
+
+\textbf{Méthode 1} (en courant) :
+$R\,i(t) + \frac1C\int i(t)\,dt - v_{IN}(t) = 0 \Rightarrow
+ i(t) + RC\frac{di}{dt} = C\frac{dv_{IN}}{dt}$
+
+\textbf{Méthode 2} (en tension) :
+$i(t) = \frac{v_{IN}(t) - v(t)}{R} = C\frac{dv}{dt}$, ou encore
+\[ v_{IN}(t) = v(t) + RC\frac{dv}{dt} \]
+\end{thmbox}
+
