@@ -250,3 +250,23 @@ descend. Le coude, c'est la pulsation caractéristique.
 
 \slide{c05-17}{Somme des asymptotes de trois termes.}
 
+\begin{exbox}[title={$\underline H(j\omega) = \frac{j\frac\omega{\omega_2}}{\left(1 + j\frac\omega{\omega_1}\right)\left(1 + j\frac\omega{\omega_2}\right)}$, $\omega_2 = 10^2$, $\omega_1 = 10^3$ rad/s}]
+Trois termes, chacun avec son allure et sa pulsation :
+\begin{itemize}
+  \item $j\frac\omega{\omega_2}$ (rouge) : $+20$\,dB/décade partout, 0\,dB en
+        $\omega_2 = 100$ ;
+  \item $\frac1{1 + j\omega/\omega_2}$ (bleu) : 0\,dB puis $-20$\,dB/décade dès
+        $\omega_2 = 100$ ;
+  \item $\frac1{1 + j\omega/\omega_1}$ (vert) : 0\,dB puis $-20$\,dB/décade dès
+        $\omega_1 = 1000$.
+\end{itemize}
+\textbf{Somme, intervalle par intervalle} :
+\begin{itemize}
+  \item $\omega < 100$ : seul le rouge compte : $+20$\,dB/décade, qui atteint 0\,dB en 100
+        (il vaut $-20$\,dB en 10) ;
+  \item $100 < \omega < 1000$ : $+20 - 20 = 0$\,dB/décade : \textbf{palier à 0\,dB} ;
+  \item $\omega > 1000$ : $+20 - 20 - 20 = -20$\,dB/décade.
+\end{itemize}
+C'est un \textbf{passe-bande} (droite, à comparer à la courbe réelle en pointillés).
+\end{exbox}
+
