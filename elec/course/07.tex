@@ -300,3 +300,17 @@ la retourne).
 
 \slide{c07-20}{$v_1$ sinusoïdale de 12\,V, $V_{Z1} = 4{,}3$\,V, $V_{Z2} = 6{,}3$\,V.}
 
+\begin{exbox}[title={Ce que dit le cours (question 1)}]
+Avec deux Zener tête-bêche, les deux peuvent conduire en même temps : Z1 en zone Zener et Z2
+en zone normale, ou Z1 en zone normale (vers le haut) et Z2 en zone Zener. La sortie vaut
+alors la \textbf{somme des tensions à leurs bornes} :
+\begin{itemize}
+  \item $v_2 = V_{Z1} + U_j$, possible si $v_1 > V_{Z1} + U_j$ ;
+  \item $v_2 = -V_{Z2} - U_j$, possible si $v_1 < -V_{Z2} - U_j$ ;
+  \item dans tous les autres cas ($-V_{Z2} - U_j < v_1 < V_{Z1} + U_j$), les diodes sont
+        bloquées et $v_2 = v_1$.
+\end{itemize}
+Numériquement : $v_2$ est écrêtée à $4{,}3 + 0{,}7 = 5$\,V en haut et à
+$-(6{,}3 + 0{,}7) = -7$\,V en bas.
+\end{exbox}
+
