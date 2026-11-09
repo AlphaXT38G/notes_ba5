@@ -1,0 +1,405 @@
+% =========================================================
+\chapter{C05 --- Diagrammes de Bode}
+% =========================================================
+
+\begin{rembox}[title=En bref]
+\textbf{De quoi parle ce chapitre ?} Dessiner, pour toutes les fréquences, ce que fait une
+fonction de transfert : le \textbf{diagramme de Bode en module} (rapport des amplitudes
+sortie/entrée) et le \textbf{diagramme de Bode en phase} (déphasage sortie/entrée). \\
+\textbf{Les trois objectifs} :
+\begin{enumerate}
+  \item \textbf{factoriser} les fonctions de transfert en un produit de termes fondamentaux
+        du premier ordre (comme on décompose un polynôme de degré N) ;
+  \item suivre une \textbf{recette de cuisine systématique} : comportement physique aux
+        limites ($\omega\to0$, $\omega\to\infty$), forme canonique à partir des impédances,
+        vérification de la cohérence, tracé du module et de l'argument ;
+  \item la \textbf{superposition asymptotique} : dessiner chaque terme élémentaire seul (des
+        droites), puis \textbf{additionner graphiquement} ces droites, intervalle par
+        intervalle.
+\end{enumerate}
+\end{rembox}
+
+\section{Objectifs : la forme canonique}
+
+\slide{c05-04}{La forme canonique et les règles de dessin.}
+
+\begin{defnbox}[title=Forme canonique (cinq termes du premier ordre)]
+\[ \underline H(j\omega) = K\cdot
+   \frac{j\frac{\omega}{\omega_{Z1}}\cdot\left(1 + j\frac{\omega}{\omega_{Z2}}\right)\cdot
+         \left(1 + j\frac{\omega}{\omega_{Z3}}\right)\cdots\left(1 + j\frac{\omega}{\omega_{Zk}}\right)}
+        {j\frac{\omega}{\omega_{P1}}\cdot\left(1 + j\frac{\omega}{\omega_{P2}}\right)\cdot
+         \left(1 + j\frac{\omega}{\omega_{P3}}\right)\cdots\left(1 + j\frac{\omega}{\omega_{Pl}}\right)} \]
+\begin{itemize}
+  \item $K$ est une constante ;
+  \item $\omega_{Zi}$ ($i = 1..k$) : les \textbf{zéros} (pulsations caractéristiques au
+        \textbf{numérateur}) ;
+  \item $\omega_{Pi}$ ($i = 1..l$) : les \textbf{pôles} (au \textbf{dénominateur}).
+\end{itemize}
+La notation est libre, mais doit permettre de différencier les pulsations. Les cinq termes
+de base sont donc : $K$, $j\frac\omega{\omega_Z}$, $\frac1{j\omega/\omega_P}$,
+$1 + j\frac\omega{\omega_Z}$, $\frac1{1 + j\omega/\omega_P}$.
+\end{defnbox}
+
+\begin{defnbox}[title=Règles de dessin]
+\begin{itemize}
+  \item Le \textbf{module} $|\underline H(j\omega)|$ est exprimé en \textbf{dB} (décibels),
+        sur une échelle \textbf{linéaire} ;
+  \item l'\textbf{argument} $\mathrm{Arg}(\underline H(j\omega))$ en \textbf{radians ou
+        degrés}, échelle \textbf{linéaire} ;
+  \item dans les deux cas, l'axe des pulsations est sur une \textbf{échelle
+        logarithmique}.
+\end{itemize}
+\end{defnbox}
+
+\section{Rappel : différence entre R et Z}
+
+\slide{c05-05}{Diviseur résistif : le rapport est une valeur. Diviseur d'impédances : une fonction de $\omega$.}
+
+\begin{propbox}[title={Diviseur résistif vs fonction de transfert}]
+\begin{itemize}
+  \item Avec deux résistances : $\frac{u_S}{u} = \frac{R_2}{R_1 + R_2}$ : \textbf{le rapport
+        est une valeur}. Quelle que soit la fréquence, l'amplitude de sortie est un rapport
+        constant de l'entrée, et il n'y a pas de décalage.
+  \item Avec des impédances : $\frac{\underline u_S}{\underline u} = \frac{\underline Z_2}{\underline Z_1 + \underline Z_2} = \underline H(j\omega)$ :
+        \textbf{le rapport est une fonction}, la fonction de transfert, avec un
+        \textbf{module} (l'amplitude varie avec la fréquence) et un \textbf{argument} (la
+        sortie est décalée).
+\end{itemize}
+\end{propbox}
+
+\section{Pourquoi des produits, et pourquoi des dB ?}
+
+\slide{c05-06}{Les modules en dB des termes de base, et l'origine du facteur 20.}
+
+\begin{thmbox}[title=Log d'un produit = somme des log]
+\begin{enumerate}
+  \item Les fonctions de transfert s'expriment comme un \textbf{produit de termes de base}.
+  \item Avec une échelle logarithmique : $\log(A\cdot B) = \log A + \log B$ ; si $A$ et $B$
+        sont complexes : $|A\cdot B| = |A|\cdot|B|$ et
+        $\log|A\cdot B| = \log|A| + \log|B|$.
+  \item Les modules des termes de base en dB :
+\end{enumerate}
+\[ |K|_{dB} = 20\log K \qquad
+   \left|j\frac{\omega}{\omega_{Z1}}\right|_{dB} = 20\log\left(\frac{\omega}{\omega_{Z1}}\right) \qquad
+   \left|1 + j\frac{\omega}{\omega_{Z2}}\right|_{dB} = 20\log\sqrt{1 + \left(\frac{\omega}{\omega_{Z2}}\right)^2} \]
+\[ \left|\frac1{j\frac\omega{\omega_{P1}}}\right|_{dB} = -20\log\left(\frac{\omega}{\omega_{P1}}\right) \qquad
+   \left|\frac1{1 + j\frac\omega{\omega_{P2}}}\right|_{dB} = -20\log\sqrt{1 + \left(\frac{\omega}{\omega_{P2}}\right)^2} \]
+\end{thmbox}
+
+\begin{rembox}[title={Pourquoi 20 et pas 10 ? (log en base 10)}]
+Le dB vient d'un \textbf{rapport de puissances} (comme en acoustique) :
+$\left|\frac{P_2}{P_1}\right|_{dB} = 10\log\frac{P_2}{P_1}$. Or $P = U^2/R$ :
+\[ 10\log\left(\frac{U_2^2/R}{U_1^2/R}\right) = 10\log\left(\frac{U_2}{U_1}\right)^2
+   = 20\log\left(\frac{U_2}{U_1}\right) \]
+Sortir le carré du log revient à multiplier par 2 ($\log x^2 = 2\log x$) : d'où
+$\left|\frac{U_2}{U_1}\right|_{dB} = 20\log\frac{U_2}{U_1}$.
+\end{rembox}
+
+\begin{goatbox}
+Multiplier des nombres, c'est pénible ; les additionner, c'est facile. Le logarithme
+transforme les multiplications en additions. Comme la fonction de transfert est un produit
+de petits morceaux, en dB elle devient une \emph{somme} de petits morceaux : on dessine
+chaque morceau, et on empile les dessins.
+\end{goatbox}
+
+\section{L'exemple le plus simple : le passe-bas}
+
+\slide{c05-07}{Passe-bas RC en forme canonique, avec $\omega_0 = 1/RC$.}
+
+\begin{exbox}[title={Passe-bas RC}]
+\[ \underline H(j\omega) = \frac{\underline V_2}{\underline V_1} = \frac{\frac1{j\omega C}}{R + \frac1{j\omega C}}
+   = \frac1{1 + j\omega RC} = \frac1{1 + j\frac{\omega}{\omega_0}}
+   \qquad\text{avec}\quad \omega_0 = \frac1{RC} = \frac1\tau \]
+\[ |\underline H(j\omega)| = \frac1{\sqrt{1 + \left(\frac\omega{\omega_0}\right)^2}} \qquad
+   \mathrm{Arg}(\underline H(j\omega)) = -\arctan\frac{\omega}{\omega_0} \]
+$\omega_0 = 1/RC$ est la \textbf{pulsation caractéristique} (de coupure).
+\end{exbox}
+
+\slide[0.7]{c05-08}{Le tracé réel : lent puis $-20$\,dB/décade ; phase de 0 à $-90\ensuremath{^\circ}$.}
+
+\textbf{Allure réelle} (méthode longue mais sûre : beaucoup de points). Module : évolution
+très lente jusqu'à la pulsation de coupure, puis la pente s'accélère jusqu'à
+\textbf{$-20$\,dB/décade}. Argument : déphasage très faible en basse fréquence, il s'accélère
+vers la coupure ($-45\ensuremath{^\circ}$ en $\omega_0$) et un peu au-delà, puis se stabilise à $-90\ensuremath{^\circ}$.
+
+\slide[0.7]{c05-09}{Approximation asymptotique : erreur max $-3$\,dB et $5{,}7\ensuremath{^\circ}$.}
+
+\begin{thmbox}[title=Approximation asymptotique du passe-bas]
+\textbf{Module} : deux asymptotes : $0$\,dB jusqu'à $\omega_0$, puis $-20$\,dB/décade.
+L'erreur maximale est à la pulsation caractéristique et vaut \textbf{$-3$\,dB}. \\
+\textbf{Argument} : trois asymptotes : horizontale à $0$ jusqu'à $0{,}1\,\omega_0$,
+horizontale à $-90\ensuremath{^\circ}$ à partir de $10\,\omega_0$, et une pente de $-\pi/2$ sur
+\textbf{deux décades} entre les deux. À $\omega_0$ : $-45\ensuremath{^\circ}$. Erreur maximale
+\textbf{$5{,}7\ensuremath{^\circ}$} aux points $0{,}1\,\omega_0$ et $10\,\omega_0$.
+\end{thmbox}
+
+\section{Le passe-haut}
+
+\slide{c05-10}{Passe-haut RC en forme canonique.}
+
+\begin{exbox}[title={Passe-haut RC}]
+\[ \underline H(j\omega) = \frac{R}{R + \frac1{j\omega C}} = \frac{j\omega RC}{1 + j\omega RC}
+   = \frac{j\frac\omega{\omega_0}}{1 + j\frac\omega{\omega_0}} \]
+\[ |\underline H(j\omega)| = \frac{\frac\omega{\omega_0}}{\sqrt{1 + \left(\frac\omega{\omega_0}\right)^2}} \qquad
+   \mathrm{Arg}(\underline H(j\omega)) = \frac\pi2 - \arctan\frac\omega{\omega_0} \]
+Autre représentation de la littérature (difficile à exploiter) :
+$|\underline H| = \frac1{\sqrt{1 + (\omega_0/\omega)^2}}$,
+$\mathrm{Arg}(\underline H) = \arctan\frac{\omega_0}{\omega}$.
+\end{exbox}
+
+\slide{c05-11}{Asymptotes du passe-haut : $+20$\,dB/décade puis 0\,dB ; phase de $90\ensuremath{^\circ}$ à $0$.}
+
+\begin{propbox}[title=Asymptotes du passe-haut]
+\begin{enumerate}
+  \item $\omega\ll\omega_0$ : $\underline H(j\omega)\approx j\frac\omega{\omega_0}$
+        ($+20$\,dB/décade, phase $90\ensuremath{^\circ}$) ;
+  \item $\omega\gg\omega_0$ : $\underline H(j\omega)\approx 1$ (0\,dB, phase $0$) ;
+  \item cas particulier $\omega = \omega_0$ : $\underline H = \frac{j}{1+j}$,
+        $|\underline H| = \frac1{\sqrt2}$ ($-3$\,dB), $\mathrm{Arg} = 45\ensuremath{^\circ}$.
+\end{enumerate}
+\end{propbox}
+
+\begin{exbox}[title={Application numérique (exemple ajouté, pas dans les slides)}]
+$R = 1$\,k$\Omega$, $C = 1\,\mu$F : $\omega_0 = \frac1{RC} = \frac1{10^{-3}} = 1000$\,rad/s
+($f_0 = \omega_0/2\pi\approx159$\,Hz). Passe-bas : à $\omega = 10^4$\,rad/s (une décade
+au-dessus), l'asymptote donne $-20$\,dB, soit une amplitude divisée par 10, et une phase
+d'environ $-90\ensuremath{^\circ}$.
+\end{exbox}
+
+\section{Diagramme de Bode : le module}
+
+\slide{c05-12}{Le module en dB d'un produit est la somme des modules en dB.}
+
+\begin{thmbox}[title=Module d'une fonction de transfert canonique]
+Le module d'un produit est le produit des modules, et le log d'un produit est une somme de
+log : si $\underline H = \underline H_1\cdot\underline H_2$ alors
+$|\underline H|_{dB} = |\underline H_1|_{dB} + |\underline H_2|_{dB}$. Pour la forme
+canonique :
+\[ |\underline H(j\omega)|_{dB} = |K|_{dB} + \left|j\frac\omega{\omega_{Z1}}\right|_{dB}
+   + \left|1 + j\frac\omega{\omega_{Z2}}\right|_{dB} + \cdots
+   + \left|\frac1{j\frac\omega{\omega_{P1}}}\right|_{dB} + \cdots
+   + \left|\frac1{1 + j\frac\omega{\omega_{Pl}}}\right|_{dB} \]
+\textbf{But : faciliter le tracé du diagramme de Bode.}
+\end{thmbox}
+
+\section{Module des cinq termes élémentaires}
+
+\slide[0.75]{c05-13}{Terme 1 : une constante, droite horizontale.}
+
+\begin{propbox}[title={Terme 1 : $\underline H = K$}]
+Droite horizontale à $|K|_{dB} = 20\log|K|$ : si $|K| > 1$, $|K|_{dB} > 0$ ; si $|K| < 1$,
+$|K|_{dB} < 0$ (ex. $K = 10\to20$\,dB ; $K = 0{,}05\to-26$\,dB). Le choix de la pulsation de
+départ de l'axe est arbitraire mais doit faciliter la représentation du domaine étudié.
+\end{propbox}
+
+\slide[0.7]{c05-14}{Valeurs à connaître par c\oe ur.}
+
+\begin{center}
+\begin{tabular}{c|c||c|c}
+$|\underline H|$ & $|\underline H|_{dB}$ & $|\underline H|$ & $|\underline H|_{dB}$ \\ \hline
+1 & 0\,dB & 0,1 & $-20$\,dB \\
+10 & 20\,dB & 0,01 & $-40$\,dB \\
+100 & 40\,dB & 0,001 & $-60$\,dB \\
+1000 & 60\,dB & 2 & 6\,dB \\
+ & & 0,5 & $-6$\,dB \\
+\end{tabular}
+\end{center}
+
+\slide{c05-15}{Termes 2 et 3 : $\pm20$\,dB/décade sur tout l'axe, 0\,dB en $\omega_Z$ ou $\omega_P$.}
+
+\begin{propbox}[title={Termes 2 et 3 : imaginaires purs $j\frac\omega{\omega_{Z1}}$ et $\frac1{j\omega/\omega_{P1}}$}]
+\begin{itemize}
+  \item $j\frac\omega{\omega_{Z1}}$ : \textbf{pente constante de $+20$\,dB/décade} sur toute
+        l'échelle, qui coupe 0\,dB en $\omega_{Z1}$. Il atténue en dessous de $\omega_{Z1}$
+        et amplifie au-dessus.
+  \item $\frac1{j\omega/\omega_{P1}}$ : symétrique, \textbf{$-20$\,dB/décade} partout, 0\,dB
+        en $\omega_{P1}$ ; amplifie en dessous, atténue au-dessus.
+\end{itemize}
+\end{propbox}
+
+\begin{rembox}[title=Remarque importante]
+Travailler avec $a\log X$ sur une échelle logarithmique revient à travailler avec $aX$ sur
+une échelle linéaire : chaque dessin est une \textbf{droite}, ce qui simplifie énormément la
+représentation globale (somme de dessins linéaires).
+\end{rembox}
+
+\slide{c05-16}{Termes 4 et 5 : plat à 0\,dB puis $\pm20$\,dB/décade, erreur $\pm3$\,dB.}
+
+\begin{propbox}[title={Termes 4 et 5 : $1 + j\frac\omega{\omega_{Z2}}$ et $\frac1{1 + j\omega/\omega_{P2}}$}]
+$\left|1 + j\frac\omega{\omega_{Z2}}\right| = \sqrt{1 + (\omega/\omega_{Z2})^2}$ (partie réelle
+et imaginaire) : deux asymptotes :
+\begin{itemize}
+  \item \textbf{basses fréquences} ($\omega\ll\omega_{Z2}$, $\omega/\omega_{Z2}$ négligeable
+        devant 1) : comme la constante 1, \textbf{0\,dB} ;
+  \item \textbf{hautes fréquences} (le 1 négligeable) : comme $j\frac\omega{\omega_{Z2}}$,
+        \textbf{$+20$\,dB/décade}.
+\end{itemize}
+Erreur maximale à la pulsation caractéristique : \textbf{$+3$\,dB}. \\
+$\frac1{1 + j\omega/\omega_{P2}}$ est symétrique : 0\,dB puis \textbf{$-20$\,dB/décade},
+erreur maximale \textbf{$-3$\,dB} en $\omega_{P2}$.
+\end{propbox}
+
+\begin{goatbox}
+Le terme \og $1 + j\omega/\omega_Z$\fg{} dort tant que la fréquence est petite (il vaut
+presque 1, donc 0\,dB), puis se réveille en $\omega_Z$ et monte de 20\,dB à chaque fois que
+la fréquence est multipliée par 10. Son cousin au dénominateur fait la même chose mais
+descend. Le coude, c'est la pulsation caractéristique.
+\end{goatbox}
+
+\section{Exemple complet : le module}
+
+\slide{c05-17}{Somme des asymptotes de trois termes.}
+
+\begin{exbox}[title={$\underline H(j\omega) = \frac{j\frac\omega{\omega_2}}{\left(1 + j\frac\omega{\omega_1}\right)\left(1 + j\frac\omega{\omega_2}\right)}$, $\omega_2 = 10^2$, $\omega_1 = 10^3$ rad/s}]
+Trois termes, chacun avec son allure et sa pulsation :
+\begin{itemize}
+  \item $j\frac\omega{\omega_2}$ (rouge) : $+20$\,dB/décade partout, 0\,dB en
+        $\omega_2 = 100$ ;
+  \item $\frac1{1 + j\omega/\omega_2}$ (bleu) : 0\,dB puis $-20$\,dB/décade dès
+        $\omega_2 = 100$ ;
+  \item $\frac1{1 + j\omega/\omega_1}$ (vert) : 0\,dB puis $-20$\,dB/décade dès
+        $\omega_1 = 1000$.
+\end{itemize}
+\textbf{Somme, intervalle par intervalle} :
+\begin{itemize}
+  \item $\omega < 100$ : seul le rouge compte : $+20$\,dB/décade, qui atteint 0\,dB en 100
+        (il vaut $-20$\,dB en 10) ;
+  \item $100 < \omega < 1000$ : $+20 - 20 = 0$\,dB/décade : \textbf{palier à 0\,dB} ;
+  \item $\omega > 1000$ : $+20 - 20 - 20 = -20$\,dB/décade.
+\end{itemize}
+C'est un \textbf{passe-bande} (droite, à comparer à la courbe réelle en pointillés).
+\end{exbox}
+
+\begin{exbox}[title={Recette pour tracer le module}]
+\begin{enumerate}
+  \item Mettre $\underline H$ sous forme canonique (constante $\times$ termes $j\omega/\omega$,
+        $1 + j\omega/\omega$) ;
+  \item ranger les pulsations caractéristiques par ordre croissant ;
+  \item tracer chaque terme seul (droites) ;
+  \item additionner les pentes intervalle par intervalle (chaque zéro ajoute $+20$\,dB/déc,
+        chaque pôle $-20$\,dB/déc à partir de sa pulsation), en partant d'un point connu ;
+  \item vérifier la cohérence avec les limites physiques ($\omega\to0$, $\omega\to\infty$ :
+        condensateur ouvert ou fil).
+\end{enumerate}
+(C'est la \og recette de cuisine\fg{} annoncée au début du chapitre.)
+\end{exbox}
+
+\section{Diagramme de Bode : l'argument (la phase)}
+
+\slide{c05-18}{L'argument d'un produit est la somme des arguments.}
+
+\begin{thmbox}[title=Argument d'une fonction de transfert canonique]
+La phase $\mathrm{Arg}(\underline H(j\omega))$ est exprimée en radians, \textbf{à $2\pi$
+près}. L'argument d'un produit est la somme des arguments, celui d'un rapport la différence :
+\[ \mathrm{Arg}(\underline H) = \mathrm{Arg}(K) + \mathrm{Arg}\left(j\frac\omega{\omega_{Z1}}\right)
+   + \mathrm{Arg}\left(1 + j\frac\omega{\omega_{Z2}}\right) + \cdots \]
+\[ \qquad - \mathrm{Arg}\left(j\frac\omega{\omega_{P1}}\right)
+   - \mathrm{Arg}\left(1 + j\frac\omega{\omega_{P2}}\right) - \cdots \]
+\end{thmbox}
+
+\section{Phase des cinq termes élémentaires}
+
+\slide[0.7]{c05-19}{Terme 1 : $0$ si $K>0$, $\pi$ si $K<0$.}
+
+\begin{propbox}[title={Terme 1 : $K$}]
+$\mathrm{Arg}(K) = 0$ pour $K > 0$ ; $\mathrm{Arg}(K) = \pi$ (180\ensuremath{^\circ}) pour $K < 0$. Pour le
+module, le signe n'intervenait pas (seule la valeur absolue comptait) ; pour la phase, si.
+\end{propbox}
+
+\slide{c05-20}{Termes 2 et 3 : $+90\ensuremath{^\circ}$ et $-90\ensuremath{^\circ}$ constants.}
+
+\begin{propbox}[title={Termes 2 et 3 : imaginaires purs}]
+$j\frac\omega{\omega_{Z1}}$ : imaginaire pur, partie réelle nulle, $\arctan(Y/0)$ vaut
+toujours $90\ensuremath{^\circ}$ : \textbf{déphasage constant de $+\pi/2$}. \\
+$\frac1{j\omega/\omega_{P1}}$ : symétrique, \textbf{$-\pi/2$ constant}.
+\end{propbox}
+
+\slide{c05-21}{Termes 4 et 5 : trois zones, $\pm45\ensuremath{^\circ}$ au coude, erreur $5{,}7\ensuremath{^\circ}$.}
+
+\begin{propbox}[title={Termes 4 et 5 : $1 + j\frac\omega{\omega_{Z2}}$ et $\frac1{1 + j\omega/\omega_{P2}}$}]
+Trois zones pour $1 + j\frac\omega{\omega_{Z2}}$ :
+\begin{itemize}
+  \item jusqu'à $0{,}1\,\omega_{Z2}$ : comme la constante 1, \textbf{$\varphi = 0$} ;
+  \item à partir de $10\,\omega_{Z2}$ : comme $j\frac\omega{\omega_{Z2}}$,
+        \textbf{$\varphi = \pi/2$} ;
+  \item entre les deux : une droite qui relie les asymptotes, avec
+        $\mathrm{Arg} = \pi/4 = 45\ensuremath{^\circ}$ \textbf{à la pulsation caractéristique}.
+\end{itemize}
+Erreur maximale \textbf{$5{,}7\ensuremath{^\circ}$} ($\arctan(0{,}1) = 0{,}1$\,rad) aux deux pulsations
+$0{,}1\,\omega_{Z2}$ et $10\,\omega_{Z2}$. \\
+$\frac1{1 + j\omega/\omega_{P2}}$ est symétrique : $0$, puis descente, $-45\ensuremath{^\circ}$ en $\omega_{P2}$,
+$-90\ensuremath{^\circ}$ à partir de $10\,\omega_{P2}$ ; même erreur $5{,}7\ensuremath{^\circ}$.
+\end{propbox}
+
+\begin{warnbox}[title={Module vs phase : pas les mêmes coudes}]
+Pour le module, le coude est \textbf{en $\omega_0$} (une décade suffit à changer de
+régime). Pour la phase d'un terme $1 + j\omega/\omega_0$, la transition s'étale sur
+\textbf{deux décades}, de $0{,}1\,\omega_0$ à $10\,\omega_0$, soit $\pm45\ensuremath{^\circ}$ par décade.
+\end{warnbox}
+
+\section{Exemple complet : la phase}
+
+\slide{c05-22}{Même fonction : phase exacte du terme $j\omega/\omega_2$, approximations des deux pôles, somme.}
+
+\begin{exbox}[title={Phase de $\underline H(j\omega) = \frac{j\frac\omega{\omega_2}}{\left(1 + j\frac\omega{\omega_1}\right)\left(1 + j\frac\omega{\omega_2}\right)}$}]
+\begin{itemize}
+  \item $j\frac\omega{\omega_2}$ : $+90\ensuremath{^\circ}$ partout (exact) ;
+  \item $\frac1{1 + j\omega/\omega_2}$ (bleu) : $0$ jusqu'à $10$, $-90\ensuremath{^\circ}$ à partir de
+        $1000$, $-45\ensuremath{^\circ}$ par décade entre les deux ;
+  \item $\frac1{1 + j\omega/\omega_1}$ (vert) : $0$ jusqu'à $100$, $-90\ensuremath{^\circ}$ à partir de
+        $10\,000$.
+\end{itemize}
+\textbf{Somme} : $90\ensuremath{^\circ}$ jusqu'à 10 ; puis $-45\ensuremath{^\circ}$/décade jusqu'à 100 ($45\ensuremath{^\circ}$ en $\omega_2$) ;
+puis $-90\ensuremath{^\circ}$/décade entre 100 et 1000 (les deux pôles agissent : de $45\ensuremath{^\circ}$ à $-45\ensuremath{^\circ}$ en
+$\omega_1$) ; puis $-45\ensuremath{^\circ}$/décade jusqu'à $10\,000$ ; enfin $-90\ensuremath{^\circ}$. Le dessin est à peine plus
+complexe que pour le module et approxime toujours bien la réalité.
+\end{exbox}
+
+\section{La feuille lin-log}
+
+\slide[0.6]{c05-23}{Papier semi-logarithmique à 6 décades.}
+
+\begin{rembox}[title=Feuille lin--log]
+La feuille proposée a \textbf{6 décades} (il existe d'autres formats) : axe horizontal
+logarithmique (1, 10, 100\ldots, avec les graduations 2, 3, 4\ldots{} de plus en plus
+serrées), axe vertical linéaire (dB ou degrés). La fréquence la plus basse est arbitraire
+(ici 1\,Hz) et doit faciliter le dessin : par exemple en audio, les fréquences utiles
+couvrent 3 décades (20\,Hz à 20\,kHz), qu'il faut centrer sur la feuille.
+\end{rembox}
+
+\begin{goatbox}
+Sur une règle normale, chaque pas ajoute 1. Sur l'axe log, chaque grand pas
+\emph{multiplie par 10} : de 1 à 10 il y a autant de place que de 10 à 100. Ça permet de voir
+sur la même feuille ce qui se passe à 10\,Hz et à 100\,kHz.
+\end{goatbox}
+
+\begin{recapbox}[title={Récap pour l'examen --- C05 : Bode}]
+\begin{itemize}
+  \item Bode = module en \textbf{dB} ($20\log|\underline H|$) et phase (rad ou degrés), axe
+        des pulsations \textbf{logarithmique}. $20$ car $P\propto U^2$.
+  \item \textbf{Forme canonique} : $K\cdot\frac{(j\omega/\omega_{Z1})(1 + j\omega/\omega_{Z2})\cdots}{(j\omega/\omega_{P1})(1 + j\omega/\omega_{P2})\cdots}$ ;
+        zéros au numérateur, pôles au dénominateur.
+  \item Produit $\Rightarrow$ \textbf{somme} des dB et \textbf{somme} des phases.
+  \item Valeurs : $\times10 = 20$\,dB, $\times100 = 40$\,dB, $\times0{,}1 = -20$\,dB,
+        $\times2 = 6$\,dB, $\times0{,}5 = -6$\,dB, $1/\sqrt2 = -3$\,dB.
+  \item \textbf{Les 5 termes} (module / phase) :
+  \begin{itemize}
+    \item $K$ : horizontale $20\log|K|$ / $0$ ($K>0$) ou $\pi$ ($K<0$) ;
+    \item $j\omega/\omega_Z$ : $+20$\,dB/déc, 0\,dB en $\omega_Z$ / $+90\ensuremath{^\circ}$ ;
+    \item $1/(j\omega/\omega_P)$ : $-20$\,dB/déc, 0\,dB en $\omega_P$ / $-90\ensuremath{^\circ}$ ;
+    \item $1 + j\omega/\omega_Z$ : 0\,dB puis $+20$\,dB/déc (erreur $+3$\,dB en $\omega_Z$) /
+          $0\to+90\ensuremath{^\circ}$ de $0{,}1\omega_Z$ à $10\omega_Z$, $45\ensuremath{^\circ}$ en $\omega_Z$ (erreur $5{,}7\ensuremath{^\circ}$) ;
+    \item $1/(1 + j\omega/\omega_P)$ : 0\,dB puis $-20$\,dB/déc ($-3$\,dB en $\omega_P$) /
+          $0\to-90\ensuremath{^\circ}$, $-45\ensuremath{^\circ}$ en $\omega_P$.
+  \end{itemize}
+  \item Passe-bas RC : $\frac1{1 + j\omega/\omega_0}$, $\omega_0 = 1/RC$. Passe-haut :
+        $\frac{j\omega/\omega_0}{1 + j\omega/\omega_0}$ ($-3$\,dB et $\pm45\ensuremath{^\circ}$ en $\omega_0$).
+  \item Méthode : forme canonique $\to$ pulsations triées $\to$ chaque terme seul $\to$
+        additionner les pentes par intervalles $\to$ vérifier aux limites.
+\end{itemize}
+\textbf{Comment ça s'appuie sur le reste} : l'idée de \og modélisation linéaire par
+morceaux\fg{} du C00 (exemple de Bode) est réalisée ici ; les fonctions de transfert et les
+filtres viennent du C04 ($\omega_0 = 1/RC$). Le C06 étudie le même circuit RC non plus avec
+des sinus mais avec un \textbf{saut indiciel} (créneau) : $\tau = RC = 1/\omega_0$ y joue le
+rôle de $\omega_0$.
+\end{recapbox}

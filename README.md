@@ -36,7 +36,10 @@ chapters with no `\documentclass` (compsec's `week/01.tex`, `02.tex`, ...; swent
 (`week/NN.pdf`, from a generated `_weekNN.tex`, git-ignored); compsec opts out
 (`"week_pdfs": false`), since those PDFs would repeat the course notes. compsec also has
 `course2.tex` ("Course notes, explained"): the same course with simple explanations, an exam
-recap per chapter and a tree of the access control models.
+recap per chapter and a tree of the access control models. elec's course notes
+(`course.tex`) are the whole electronics course explained in French from the commented
+slides, with the slides' diagrams, "goat" explanations, a recap per lecture and a final exam
+recap.
 
 On the page, the course notes come first, then two collapsible sections: weekly notes (PDFs named `weekNN` in a `notes/` folder, or the per-week PDFs above, with a semester progress bar) and every other
 PDF, grouped by folder. Dates come from the last commit touching each document,

@@ -1,0 +1,458 @@
+% =========================================================
+\chapter{C02 --- Composants R, L, C et lois de Kirchhoff}
+% =========================================================
+
+\begin{rembox}[title=En bref]
+\textbf{De quoi parle ce chapitre ?} Un composant se décrit par une formule simple ; un
+\textbf{montage} demande déjà un \textbf{système d'équations}. Les \textbf{lois de Kirchhoff}
+(mailles et n\oe uds) permettent de poser toutes ces équations, puis d'en tirer des formules
+de simplification : composants équivalents en série/parallèle (R, L, C), théorème de
+\textbf{Millman}, théorème de \textbf{Kennelly} (étoile $\leftrightarrow$ triangle). \\
+\textbf{Les trois objectifs} : maîtriser les composants de base (R, L, C) avec des analogies
+hydrauliques ; décrire un circuit (loi des n\oe uds = conservation des courants, loi des
+mailles = conservation de l'énergie) ; simplifier l'analyse (théorèmes clés).
+\end{rembox}
+
+\section{Rappel : la résistance}
+
+\slide{c02-03}{Résistance alimentée par une source de courant puis par une source de tension.}
+
+\begin{defnbox}[title=La résistance]
+Le composant passif le plus simple. Loi d'Ohm :
+\[ u(t) = R\cdot i(t) \qquad\Longleftrightarrow\qquad i(t) = \frac{u(t)}{R} \qquad (R \text{ en } \Omega) \]
+Source de courant continue (constante) : $U = R\cdot I$. Source de tension continue :
+$I = U/R$.
+\end{defnbox}
+
+\begin{goatbox}
+L'analogie hydraulique : la tension, c'est la masse d'eau disponible et sa hauteur ; le
+courant, c'est la quantité d'eau qui circule ; la résistance, c'est un tuyau étroit (la
+section qui freine l'eau). Plus le tuyau est étroit, moins il passe d'eau pour une même
+hauteur.
+\end{goatbox}
+
+\section{Rappel : le condensateur}
+
+\slide{c02-04}{Le condensateur : $i = C\,du/dt$, analogie du réservoir d'eau.}
+
+\begin{defnbox}[title={Le condensateur (appelé abusivement \og capacité\fg{})}]
+\[ q(t) = C\cdot u(t) \qquad i(t) = \frac{dq}{dt} = C\frac{du}{dt} \qquad (C \text{ en F}) \]
+Contrairement à la résistance, il \textbf{n'y a pas de loi simple} entre $U$ et $I$ : il faut
+dériver ou intégrer.
+\end{defnbox}
+
+\begin{exbox}[title={Courant constant $i(t) = I$ dans un condensateur}]
+De $\frac{i(t)\,dt}{C} = du$ :
+\[ \int\frac{I\,dt}{C} = \int du = \frac{I\,t}{C} + k = u(t)
+   \qquad\text{(allure : équation d'une droite)} \]
+\[ \int_{t_0}^{t_1}\frac{I\,dt}{C} = \int_{u(t_0)}^{u(t_1)} du
+   = \frac{I\,(t_1-t_0)}{C} = u(t_1) - u(t_0) \qquad\text{(parcours)} \]
+Un courant constant charge le condensateur \textbf{linéairement} : la tension monte en rampe.
+\end{exbox}
+
+\begin{goatbox}
+Le condensateur est un réservoir d'eau : la charge $q$ est la masse d'eau
+($M(t) = S\cdot h(t)$), la tension est la hauteur $h$, la capacité $C$ est la surface $S$ du
+fond. Si on verse un débit constant, la hauteur monte régulièrement ; un réservoir large
+(grande $C$) monte lentement.
+\end{goatbox}
+
+\section{Rappel : l'inductance}
+
+\slide{c02-05}{L'inductance : $u = L\,di/dt$.}
+
+\begin{defnbox}[title=L'inductance]
+\[ u(t) = L\frac{di}{dt} \qquad\Longleftrightarrow\qquad \frac{u(t)\,dt}{L} = di \qquad (L \text{ en H}) \]
+\end{defnbox}
+
+\begin{exbox}[title={Tension constante $u(t) = U$ sur une inductance}]
+\[ \int\frac{U\,dt}{L} = \int di = \frac{U\,t}{L} + k = i(t) \qquad\text{(une droite)} \]
+\[ \int_{t_0}^{t_1}\frac{U\,dt}{L} = \frac{U\,(t_1-t_0)}{L} = i(t_1) - i(t_0) \]
+Une tension constante fait monter le courant \textbf{linéairement}.
+\end{exbox}
+
+\begin{rembox}[title=Analogie]
+L'analogie hydraulique avec l'inductance n'existe pas vraiment (la diapositive montre une
+roue à aubes). On se limite à la loi $u = L\,di/dt$. Il existe une analogie plus subtile entre
+l'énergie magnétique $\frac12 L\,I^2$ et l'énergie cinétique $\frac12 m\,v^2$.
+\end{rembox}
+
+\begin{goatbox}
+L'inductance, c'est une lourde roue à eau : elle n'aime pas changer de vitesse. Pour la
+faire tourner plus vite (augmenter le courant) il faut pousser (une tension) ; et une fois
+lancée, elle continue sur son élan. C'est comme une masse : $L$ joue le rôle de $m$ et le
+courant celui de la vitesse.
+\end{goatbox}
+
+\section{Les composants passifs : lois fondamentales}
+
+\slide{c02-06}{Le tableau à connaître par c\oe ur.}
+
+\begin{thmbox}[title={Tableau $u = f_1(i)$ et $i = f_2(u)$}]
+Pour un dipôle X entre A et B, $u(t) = u_A(t) - u_B(t)$ :
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{c|c|c}
+ & $u(t) = f_1(i(t))$ & $i(t) = f_2(u(t))$ \\ \hline
+R & $R\cdot i(t)$ & $\dfrac{u(t)}{R}$ \\
+C & $\dfrac1C\displaystyle\int i(t)\,dt + k$ & $C\dfrac{du}{dt}$ \\
+L & $L\dfrac{di}{dt}$ & $\dfrac1L\displaystyle\int u(t)\,dt + k$ \\
+\end{tabular}
+\end{center}
+Quand une intégrale est nécessaire sans bornes connues, le résultat est exprimé \textbf{à une
+constante près} ($k$).
+\end{thmbox}
+
+\section{Assemblage de composants : analyse de circuits}
+
+\slide[0.7]{c02-07}{Le courant et la tension d'un composant X dépendent de tout le circuit.}
+
+Dans un circuit, on cherche la tension aux bornes d'un composant X et/ou le courant qui le
+traverse. Ils dépendent de X, de tous les autres composants et de toutes les sources :
+\[ i(t) = F_2(X, composant_1, \ldots, composant_n, source_1, \ldots, source_m) \]
+\[ u(t) = F_1(X, composant_1, \ldots, composant_n, source_1, \ldots, source_m) \]
+Vu le nombre de composants, il faut des méthodes ; la première série : \textbf{les lois de
+Kirchhoff}.
+
+\section{Lois de Kirchhoff : définitions}
+
+\slide{c02-08}{Segments, n\oe uds, branches, mailles.}
+
+\begin{defnbox}[title={N\oe uds, branches, mailles}]
+Un circuit est composé de \textbf{segments}, qui portent des composants (ou des sources) et
+se connectent entre eux. On identifie :
+\begin{itemize}
+  \item des \textbf{n\oe uds} : extrémités des segments, connexion entre \textbf{deux
+        segments au moins}. Exemple : A (2 segments) et B (3 segments) ;
+  \item des \textbf{branches} : succession de segments connectés deux par deux. Exemple :
+        ABCD ;
+  \item des \textbf{mailles} : parcours \textbf{fermé}, constitué de branches, ne passant
+        \textbf{qu'une seule fois} par un n\oe ud donné.
+\end{itemize}
+\end{defnbox}
+
+\begin{warnbox}[title={Un fil = un seul n\oe ud}]
+Sur la diapositive, les points I, H et G du bas sont reliés par des fils sans composant :
+ils forment \textbf{un seul n\oe ud} (une équipotentielle). Il ne faut pas compter un n\oe ud
+par point de soudure.
+\end{warnbox}
+
+\section{Loi des mailles}
+
+\slide{c02-09}{Dans une maille, la somme des tensions est nulle.}
+
+\begin{thmbox}[title=Loi des mailles]
+\[ \text{Dans un cycle : } \sum U_i = 0 \]
+Une \og promenade\fg{} en montagne qui part d'un point et revient au même point a une
+dénivellation totale nulle : $(H_3-0) + (H_2-H_3) + (H_1-H_2) + (0-H_1) = 0$. En électricité,
+la différence de potentiel entre un n\oe ud et lui-même vaut 0\,V, et elle est égale à la
+somme des différences de potentiel le long d'une maille qui contient ce n\oe ud.
+\end{thmbox}
+
+\begin{exbox}[title=Mailles du circuit de la diapositive]
+Objectif : calculer toutes les tensions ou tous les courants. (Se rappeler des
+conventions de fléchage.)
+\begin{itemize}
+  \item $R_1 i_1 + R_2 i_2 + R_3 i_3 + U_2 - U_1 = 0$
+  \item $R_4 i_4 + R_5 i_5 + R_6 i_5 + R_7 i_5 - R_3 i_3 = 0$
+  \item $R_1 i_1 + R_2 i_2 + R_4 i_4 + R_5 i_5 + R_6 i_5 + R_7 i_5 + U_2 - U_1 = 0$
+        \textbf{(pas indépendante)} : c'est la somme des deux premières.
+\end{itemize}
+Trois mailles possibles, mais \textbf{seulement deux mailles indépendantes}.
+\end{exbox}
+
+\begin{warnbox}[title=Attention]
+Pour être calculable, \textbf{une maille ne doit pas inclure de source de courant} (on ne
+connaît pas la tension aux bornes d'une source de courant).
+\end{warnbox}
+
+\section{Loi des n\oe uds}
+
+\slide{c02-10}{Dans un n\oe ud, ce qui entre égale ce qui sort.}
+
+\begin{thmbox}[title={Loi des n\oe uds}]
+\[ \sum I_{sortants} - \sum I_{entrants} = 0 \qquad\text{ou encore}\qquad
+   \sum I_{sortants} = \sum I_{entrants} \]
+\og Rien ne se perd, rien ne se crée\fg{} : tous les électrons qui entrent dans un
+conducteur en ressortent.
+\end{thmbox}
+
+\begin{exbox}[title={N\oe uds du même circuit}]
+\begin{itemize}
+  \item $i_1 + I_A - i_2 = 0$
+  \item $i_2 - i_3 - i_4 = 0$
+  \item $i_4 - I_B - i_5 = 0$
+  \item $i_5 + I_B + i_3 - I_A - i_1 = 0$ \textbf{(pas indépendante)}
+\end{itemize}
+\end{exbox}
+
+\begin{warnbox}[title=Attention]
+Pour être calculable, \textbf{un n\oe ud ne doit pas être relié à une source de tension}. Un
+n\oe ud intéressant regroupe \textbf{au minimum trois courants}.
+\end{warnbox}
+
+\begin{rembox}[title=Constat]
+On pose l'ensemble des équations indépendantes (mailles + n\oe uds) et on résout par
+\textbf{calcul matriciel}. Avec un ordinateur : rapide. À la main : rapidement très long.
+\og Au moins on comprend à quoi cela sert\fg{} : d'où les techniques de simplification qui
+suivent.
+\end{rembox}
+
+\begin{goatbox}
+Loi des mailles : une chèvre qui fait le tour de la montagne et revient à son étable a
+autant monté que descendu. Loi des n\oe uds : à un carrefour de chemins, autant de chèvres
+arrivent qu'il en repart ; aucune ne disparaît.
+\end{goatbox}
+
+\section{Théorème de Millman}
+
+\slide{c02-11}{Millman : le potentiel d'un n\oe ud à partir de ses voisins.}
+
+\begin{thmbox}[title=Théorème de Millman]
+Issu de la loi des n\oe uds, il donne le potentiel d'un n\oe ud X en fonction de son
+voisinage (potentiels $V_i$ au bout de chaque résistance $R_i$) :
+\[ V_X = \frac{\dfrac{V_1}{R_1} + \dfrac{V_2}{R_2} + \dfrac{V_3}{R_3} + \dfrac{V_4}{R_4}}
+              {\dfrac1{R_1} + \dfrac1{R_2} + \dfrac1{R_3} + \dfrac1{R_4}} \]
+C'est un \textbf{barycentre} des potentiels pondérés par les \textbf{conductances} $1/R_i$.
+Le principe reste le même quand les résistances deviendront des impédances.
+\end{thmbox}
+
+\begin{proofbox}[title=Démonstration]
+On dessine arbitrairement des courants entrants et sortants sans se soucier du sens réel
+(algébriquement un courant négatif allait simplement dans l'autre sens) :
+\[ I_1 + I_2 + I_3 - I_4 = 0 = \frac{V_1-V_X}{R_1} + \frac{V_2-V_X}{R_2}
+   + \frac{V_3-V_X}{R_3} - \frac{V_X-V_4}{R_4} \]
+On isole les termes en $V_X$ :
+\[ \frac{V_X}{R_1}+\frac{V_X}{R_2}+\frac{V_X}{R_3}+\frac{V_X}{R_4}
+   = \frac{V_1}{R_1}+\frac{V_2}{R_2}+\frac{V_3}{R_3}+\frac{V_4}{R_4} \]
+puis on factorise $V_X$ et on l'isole.
+\end{proofbox}
+
+\begin{warnbox}[title={Les $V_i$ sont des potentiels, pas des sources}]
+$V_1,\ldots,V_4$ sont des valeurs de \textbf{potentiel}. Ce sont généralement des sources
+reliées à la masse : le potentiel est alors la tension de la source par rapport à la masse.
+\end{warnbox}
+
+\slide{c02-12}{Millman avec des sources de courant.}
+
+\begin{propbox}[title=Millman avec des sources de courant]
+\[ V_X = \frac{\dfrac{V_1}{R_1} + \dfrac{V_2}{R_2} + \dfrac{V_3}{R_3} + \dfrac{V_4}{R_4} + I_A + I_B}
+              {\dfrac1{R_1} + \dfrac1{R_2} + \dfrac1{R_3} + \dfrac1{R_4}} \]
+(courants entrant dans X comptés positivement). Une résistance \textbf{en série avec une
+source de courant} (ici $R_5$) \textbf{n'apparaît pas} : le courant de la branche est imposé
+par la source.
+\end{propbox}
+
+\begin{warnbox}[title={Cas particulier : $V_i = 0$}]
+Une branche avec une résistance reliée à la masse est une source de tension nulle en série
+avec la résistance : \textbf{on garde $1/R_i$ au dénominateur}, mais rien au numérateur.
+\end{warnbox}
+
+\begin{goatbox}
+Le n\oe ud X est une chèvre attachée par plusieurs cordes élastiques à des piquets de
+hauteurs $V_1, V_2\ldots$ Une corde courte et forte (petite $R$, grande conductance) tire
+plus. La chèvre se place à la moyenne des hauteurs, pondérée par la force de chaque corde.
+\end{goatbox}
+
+\section{Simplifications intermédiaires : les résistances}
+
+Les valeurs de composants sont \textbf{normalisées} : une valeur précise est souvent
+introuvable, on combine alors plusieurs composants (série, parallèle) pour s'en approcher.
+Les lois de Kirchhoff redémontrent ces combinaisons.
+
+\slide{c02-13}{Résistances en série et en parallèle.}
+
+\begin{thmbox}[title=Résistances en série et en parallèle]
+\textbf{Série} (même courant) : $V = R_1 I + R_2 I = R_{EQ} I$ $\Rightarrow$
+\[ R_{EQ} = R_1 + R_2 \]
+\textbf{Parallèle} (même tension) : $I = I_1 + I_2$, $I_1 = \frac{V}{R_1}$, $I_2 = \frac{V}{R_2}$,
+donc $\frac{V}{R_{EQ}} = \frac{V}{R_1} + \frac{V}{R_2}$ $\Rightarrow$
+\[ \frac1{R_{EQ}} = \frac1{R_1} + \frac1{R_2} \qquad\text{soit}\qquad
+   R_{EQ} = \frac{R_1 R_2}{R_1 + R_2} \]
+\end{thmbox}
+
+\section{Théorème de Kennelly (étoile $\leftrightarrow$ triangle)}
+
+\slide{c02-14}{Transformation étoile (T) $\leftrightarrow$ triangle ($\Pi$).}
+
+\begin{thmbox}[title=Théorème de Kennelly]
+Transforme une structure en \textbf{étoile} (ou en T : $R_A, R_B, R_C$ reliées à un centre)
+en une structure en \textbf{triangle} (ou en $\Pi$ : $R_{AB}, R_{BC}, R_{AC}$) et
+réciproquement.
+
+\textbf{Triangle $\to$ étoile} (produit des deux côtés qui touchent le sommet / somme) :
+\[ R_A = \frac{R_{AB} R_{AC}}{R_{AB}+R_{AC}+R_{BC}} \]
+\[ R_B = \frac{R_{AB} R_{BC}}{R_{AB}+R_{AC}+R_{BC}} \]
+\[ R_C = \frac{R_{AC} R_{BC}}{R_{AB}+R_{AC}+R_{BC}} \]
+\textbf{Étoile $\to$ triangle} (somme des produits deux à deux / la branche opposée) :
+\[ R_{BC} = \frac{R_A R_B + R_A R_C + R_B R_C}{R_A} \]
+\[ R_{AB} = \frac{R_A R_B + R_A R_C + R_B R_C}{R_C} \]
+\[ R_{AC} = \frac{R_A R_B + R_A R_C + R_B R_C}{R_B} \]
+\end{thmbox}
+
+\begin{proofbox}[title=Méthode de démonstration]
+\begin{enumerate}
+  \item Déconnecter une borne (par exemple B) ;
+  \item regarder la résistance entre les deux autres bornes : elle doit être la même dans
+        les deux circuits. Entre A et C : $R_A + R_C$ pour l'étoile,
+        $R_{AC}/\!/(R_{AB}+R_{BC})$ pour le triangle.
+\end{enumerate}
+En posant les trois égalités, on retrouve les formules.
+\end{proofbox}
+
+\slide{c02-15}{Exemple : un pont de résistances débloqué par Kennelly.}
+
+\begin{exbox}[title={Pourquoi Kennelly : calculer le courant $I$ d'un pont}]
+Dans le circuit du haut (source $V$, $R_1$ à $R_5$, $R_3$ entre C et B), il n'y a
+\textbf{ni résistances en série, ni en parallèle} : sans réduction, il faudrait poser les
+équations de Kirchhoff. Deux façons de débloquer :
+\begin{itemize}
+  \item transformer le \textbf{triangle ABC} ($R_1, R_2, R_3$) en \textbf{étoile} de centre
+        X ($R_A, R_B, R_C$) : $R_C$ se retrouve en série avec $R_4$, $R_B$ en série avec
+        $R_5$, ces deux branches sont en parallèle, puis en série avec $R_A$ ;
+  \item ou transformer l'\textbf{étoile ABD de centre C} ($R_1, R_3, R_4$) en
+        \textbf{triangle} ($R_{AB}, R_{AD}, R_{BD}$) : $R_{AB}/\!/R_2$, $R_{BD}/\!/R_5$, etc.
+\end{itemize}
+Une fois la transformation faite, \textbf{des résistances sont en série et/ou en parallèle et
+peuvent fusionner}.
+\end{exbox}
+
+\begin{goatbox}
+Parfois les tuyaux sont branchés en un nœud de spaghettis où rien n'est \og l'un après
+l'autre\fg{} ni \og côte à côte\fg{}. Kennelly permet de remplacer trois tuyaux en triangle
+par trois tuyaux en étoile qui font exactement le même effet vu de l'extérieur. Après ça, les
+spaghettis se démêlent.
+\end{goatbox}
+
+\section{Simplifications intermédiaires : les inductances}
+
+\slide{c02-16}{Inductances en série et en parallèle : comme les résistances.}
+
+\begin{thmbox}[title=Inductances en série et en parallèle]
+\textbf{Série} : $V = V_{L1} + V_{L2} = L_1\frac{di}{dt} + L_2\frac{di}{dt} = L_{EQ}\frac{di}{dt}$
+$\Rightarrow$ $\boxed{L_{EQ} = L_1 + L_2}$ \\[4pt]
+\textbf{Parallèle} : $i = i_1 + i_2 \Rightarrow di = di_1 + di_2$, et
+$V = L_1\frac{di_1}{dt} = L_2\frac{di_2}{dt} = L_{EQ}\frac{di}{dt}$, donc
+$\frac{V\,dt}{L_1} + \frac{V\,dt}{L_2} = \frac{V\,dt}{L_{EQ}}$ $\Rightarrow$
+$\boxed{\dfrac1{L_{EQ}} = \dfrac1{L_1} + \dfrac1{L_2}}$
+\end{thmbox}
+
+\section{Simplifications intermédiaires : les condensateurs}
+
+\slide{c02-17}{Condensateurs en parallèle : les capacités s'additionnent.}
+
+\begin{thmbox}[title=Condensateurs en parallèle]
+On pourrait poser $i = i_1 + i_2$, mais c'est plus simple avec les \textbf{charges}.
+$V_1 = V_2$ (même source, mêmes équipotentielles) et la charge totale déplacée (donc
+stockée) est la même : $Q_{EQ} = Q_1 + Q_2$, soit
+$C_{EQ} V_2 = C_1 V_1 + C_2 V_1 = (C_1 + C_2)V_1$ :
+\[ C_{EQ} = C_1 + C_2 \]
+(à comparer avec les résistances \emph{en parallèle} : c'est l'inverse !)
+\end{thmbox}
+
+\slide{c02-18}{Condensateurs en série : comme les résistances en parallèle.}
+
+\begin{thmbox}[title=Condensateurs en série]
+Le même courant traverse les deux : $i = i_1 = i_2$, donc ils stockent la même charge.
+$V = V_1 + V_2$ et $dV = dV_1 + dV_2$ $\Rightarrow$
+$\frac{i\,dt}{C_{EQ}} = \frac{i_1\,dt}{C_1} + \frac{i_2\,dt}{C_2}$ ; on factorise par $i\,dt$ :
+\[ \frac1{C_{EQ}} = \frac1{C_1} + \frac1{C_2} \]
+\end{thmbox}
+
+\begin{warnbox}[title=Le piège classique]
+R et L : série $\to$ on additionne, parallèle $\to$ on additionne les inverses. \textbf{C :
+c'est l'inverse} : parallèle $\to$ on additionne, série $\to$ on additionne les inverses.
+\end{warnbox}
+
+\begin{goatbox}
+Deux réservoirs côte à côte (parallèle), c'est un réservoir plus large : les capacités
+s'additionnent. Deux tuyaux étroits l'un après l'autre (résistances en série), c'est un
+tuyau encore plus dur à traverser : les résistances s'additionnent.
+\end{goatbox}
+
+\section{Cas particulier : le diviseur résistif}
+
+\slide{c02-19}{Le diviseur résistif, résultat direct de Kirchhoff.}
+
+\begin{thmbox}[title=Diviseur résistif]
+$v_{R1} = R_1 i$, $v_{R2} = R_2 i$, et la maille donne
+$v_{IN} = v_{R1} + v_{R2} = (R_1 + R_2)\,i$ :
+\[ i(t) = \frac{v_{IN}(t)}{R_1 + R_2} \qquad\qquad
+   v_{R2}(t) = v_{IN}(t)\cdot\frac{R_2}{R_1 + R_2} \]
+\end{thmbox}
+
+\begin{exbox}[title={Application numérique (exemple ajouté, pas dans les slides)}]
+$v_{IN} = 10$\,V, $R_1 = 3$\,k$\Omega$, $R_2 = 2$\,k$\Omega$ :
+$i = 10/5000 = 2$\,mA et $v_{R2} = 10\cdot\frac{2}{5} = 4$\,V (et $v_{R1} = 6$\,V,
+la somme fait bien 10\,V).
+\end{exbox}
+
+\section{Cas particulier : le circuit RC (premier ordre)}
+
+\slide{c02-20}{Circuit RC : équation différentielle du premier ordre.}
+
+\begin{thmbox}[title=Circuit RC]
+Avec $v_{IN} = v_R + v_C$, $v_C$ étant une intégrale, on obtient une \textbf{équation
+différentielle du premier ordre}.
+
+\textbf{Méthode 1} (en courant) :
+$R\,i(t) + \frac1C\int i(t)\,dt - v_{IN}(t) = 0 \Rightarrow
+ i(t) + RC\frac{di}{dt} = C\frac{dv_{IN}}{dt}$
+
+\textbf{Méthode 2} (en tension) :
+$i(t) = \frac{v_{IN}(t) - v(t)}{R} = C\frac{dv}{dt}$, ou encore
+\[ v_{IN}(t) = v(t) + RC\frac{dv}{dt} \]
+\end{thmbox}
+
+\section{Cas particulier : le circuit RLC (second ordre)}
+
+\slide{c02-21}{Circuit RLC série : équation différentielle du second ordre.}
+
+\begin{thmbox}[title=Circuit RLC]
+$v_{IN} = v_R + v_C + v_L$ : $v_C$ est une intégrale et $v_L$ une dérivée, d'où une
+\textbf{équation différentielle du second ordre} :
+\[ v_{IN}(t) = R\,i(t) + \frac1C\int i(t)\,dt + L\frac{di}{dt} \]
+On dérive et on multiplie par $C$ :
+\[ C\frac{dv_{IN}}{dt} = i(t) + RC\frac{di}{dt} + LC\frac{d^2 i}{dt^2} \]
+Cas particulier $V_{IN}$ = constante : $0 = i(t) + RC\frac{di}{dt} + LC\frac{d^2i}{dt^2}$.
+\end{thmbox}
+
+\begin{goatbox}
+Avec seulement des résistances, les équations sont de simples multiplications. Dès qu'on
+ajoute un réservoir (C) ou une roue lourde (L), le circuit \og se souvient\fg{} du passé :
+il faut des dérivées. Un réservoir ou une roue : premier ordre. Les deux : second ordre.
+\end{goatbox}
+
+\begin{recapbox}[title={Récap pour l'examen --- C02 : Composants et Kirchhoff}]
+\begin{itemize}
+  \item \textbf{R} : $u = Ri$. \textbf{C} : $q = Cu$, $i = C\frac{du}{dt}$,
+        $u = \frac1C\int i\,dt + k$ (courant constant $\Rightarrow$ rampe de tension
+        $\frac{I t}{C}$). \textbf{L} : $u = L\frac{di}{dt}$, $i = \frac1L\int u\,dt + k$
+        (tension constante $\Rightarrow$ rampe de courant $\frac{U t}{L}$). Énergie
+        $\frac12 L I^2$ comme $\frac12 m v^2$.
+  \item \textbf{N\oe ud} : connexion d'au moins 2 segments (un fil = un seul n\oe ud).
+        \textbf{Branche} : segments en chaîne. \textbf{Maille} : parcours fermé passant une
+        seule fois par chaque n\oe ud.
+  \item \textbf{Mailles} : $\sum U_i = 0$ (pas de source de courant dans la maille).
+        \textbf{N\oe uds} : $\sum I_{entrants} = \sum I_{sortants}$ (pas de source de tension
+        sur le n\oe ud ; au moins 3 courants). Garder seulement les équations
+        \textbf{indépendantes}.
+  \item \textbf{Millman} : $V_X = \dfrac{\sum V_i/R_i + \sum I_{sources}}{\sum 1/R_i}$ ;
+        résistance à la masse : seulement au dénominateur ; résistance en série avec une
+        source de courant : ignorée.
+  \item \textbf{Équivalences} : $R$ et $L$ : série $+$, parallèle $\frac1{\cdot}$ ;
+        $C$ : parallèle $+$, série $\frac1{\cdot}$. $R_1/\!/R_2 = \frac{R_1R_2}{R_1+R_2}$.
+  \item \textbf{Kennelly} : triangle$\to$étoile $R_A = \frac{R_{AB}R_{AC}}{\Sigma}$ ;
+        étoile$\to$triangle $R_{BC} = \frac{R_AR_B+R_AR_C+R_BR_C}{R_A}$ (la branche opposée).
+        Sert à débloquer un pont.
+  \item \textbf{Diviseur} : $v_{R2} = v_{IN}\frac{R_2}{R_1+R_2}$.
+        \textbf{RC} : $v_{IN} = v + RC\frac{dv}{dt}$ (1\textsuperscript{er} ordre).
+        \textbf{RLC} : $C\frac{dv_{IN}}{dt} = i + RC\frac{di}{dt} + LC\frac{d^2i}{dt^2}$
+        (2\textsuperscript{e} ordre).
+\end{itemize}
+\textbf{Comment ça s'appuie sur la suite} : le C01 a donné $U$, $I$, les sources et la loi
+d'Ohm ; ce chapitre ajoute C et L et les \textbf{deux lois universelles} qui assemblent tout.
+Le C03 utilisera Kirchhoff pour démontrer des méthodes encore plus puissantes (Thévenin,
+Norton, superposition) ; les équations différentielles du RC/RLC seront évitées au C04 grâce
+aux \textbf{impédances}, et retrouvées au C06 (saut indiciel).
+\end{recapbox}

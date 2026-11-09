@@ -1,0 +1,396 @@
+% =========================================================
+\chapter{C07 --- Introduction aux diodes}
+% =========================================================
+
+\begin{rembox}[title=En bref]
+\textbf{De quoi parle ce chapitre ?} Les diodes ouvrent les \textbf{dispositifs à
+semi-conducteur} : composants passifs (qui ne font que dissiper de l'énergie) et actifs (les
+transistors, qui amplifient). La méthode vue ici (signaux continus + alternatifs) resservira
+pour les transistors. \\
+\textbf{Les trois objectifs} :
+\begin{enumerate}
+  \item \textbf{un composant non linéaire} : \og bienvenue dans un monde sans loi d'Ohm
+        linéaire\fg{} ; la diode suit une loi \textbf{exponentielle} $I_D = I_S e^{U_D/nU_T}$ ;
+  \item \textbf{la modélisation analytique} : avec une exponentielle, la résolution directe
+        devient impossible, même pour une diode et une résistance ; la \textbf{droite de
+        charge} donne l'intuition, puis des \textbf{modèles} simples ;
+  \item \textbf{la dualité standard vs Zener} : la Zener limite le passage du courant dans
+        les \textbf{deux} sens.
+\end{enumerate}
+\end{rembox}
+
+\section{La diode normale}
+
+\slide{c07-03}{Symbole et caractéristique : sens direct, sens inverse, zone Zener.}
+
+\begin{defnbox}[title=Symbole et caractéristique]
+Le symbole est une \textbf{flèche} qui indique le sens naturel du courant : l'entrée est
+l'\textbf{anode}, la sortie la \textbf{cathode}. Le constructeur donne aussi la
+\textbf{puissance maximale} $P_{MAX}$ ($P = UI$) : quel que soit le type de diode, un courant
+trop élevé la détruit. Trois zones de comportement :
+\begin{enumerate}
+  \item vers \textbf{0,7\,V} (diode au silicium) : le courant grimpe très vite pour le
+        moindre accroissement de tension (\textbf{sens direct}) ;
+  \item entre une tension négative limite et 0,7\,V : quasiment pas de courant (seulement
+        $I_S$, insignifiant) : la diode est \textbf{bloquée} ;
+  \item au seuil négatif $-V_Z$ (\textbf{tension Zener}) : le courant redevient très
+        important, en sens inverse (\textbf{effet Zener ou avalanche}, effet tunnel\ldots).
+        Destructeur ou non selon la construction ; s'il est prévisible et non destructif
+        (réversible), il est exploitable : ce sont les \textbf{diodes Zener}.
+\end{enumerate}
+\end{defnbox}
+
+\slide[0.7]{c07-04}{Parenthèse semi-conducteurs (pour en savoir plus).}
+
+\begin{rembox}[title={Petite parenthèse : semi-conducteurs (hors du c\oe ur du cours)}]
+La physique des semi-conducteurs est une matière à part entière ; le cours en donne juste les
+mots-clés : l'atome et le cristal de silicium ; les bandes d'énergie (changement de niveau,
+génération d'une paire électron--trou, durée de vie des porteurs libres) ; une quantité de
+charges insuffisante pour des courants significatifs, d'où le \textbf{dopage N et P}
+(donneurs et accepteurs, plus de porteurs libres, porteurs minoritaires, charge fixe) ; la
+\textbf{jonction} (courant de diffusion, courant de conduction, équilibre et barrière de
+potentiel).
+\end{rembox}
+
+\section{Comparaison diode -- résistance}
+
+\slide{c07-05}{Résistance : droite. Diode : exponentielle, coude vers 0,7\,V.}
+
+\begin{thmbox}[title=Loi de la diode]
+Résistance : $I_0 = \frac{V_0}{R}$ (droite de pente $1/R$). Diode :
+\[ I_0 = I_S\left(e^{\frac{V_0}{nU_T}} - 1\right) \qquad
+   \text{première approximation :}\quad I_0 = I_S\,e^{\frac{V_0}{nU_T}} \]
+\begin{itemize}
+  \item $I_S$ : \textbf{courant inverse de saturation}, dépend de la technologie et de la
+        température, très dispersé ($10^{-6}$ à $10^{-20}$\,A) ; \textbf{dans les exercices
+        $10^{-15} < I_S < 10^{-10}$\,A} ;
+  \item $V_0$ (ou $V_D$) : tension aux bornes ; environ 0,7\,V quand le courant est
+        significatif ;
+  \item $U_T = \frac{kT}{q} = 26$\,mV à 27\ensuremath{^\circ}C ($k = 1{,}380\,649\times10^{-23}$\,J/K) :
+        l'agitation thermodynamique ;
+  \item $1 < n < 2$ : facteur d'idéalité.
+\end{itemize}
+Le $-1$ est négligé vers 0,7\,V ; il compte seulement près de 0\,V.
+\end{thmbox}
+
+\begin{goatbox}
+Une résistance, c'est une porte normale : plus on pousse, plus ça passe, proportionnellement.
+Une diode, c'est un portillon à sens unique avec un ressort : dans le mauvais sens, rien ne
+passe ; dans le bon sens, il faut pousser d'abord d'environ 0,7\,V pour vaincre le ressort,
+et ensuite tout passe d'un coup.
+\end{goatbox}
+
+\section{Circuit de base : pourquoi c'est impossible à calculer}
+
+\slide{c07-06}{Diviseur résistif (facile) vs résistance + diode (équation transcendante).}
+
+\begin{propbox}[title={Deux résistances vs résistance + diode}]
+Deux résistances : $I_R = \frac{U_{R1}}{R_1}$ et
+$U_{R1} = U_0 - R_2 I_R = U_0\frac{R_1}{R_1 + R_2}$ : trivial. \\
+Résistance + diode : $I_D = I_S e^{U_D/nU_T}$ et
+\[ U_D = U_0 - R_2 I_D = U_0 - R_2 I_S\,e^{\frac{U_D}{nU_T}} \]
+$U_D$ apparaît des deux côtés, dont une fois dans une exponentielle : c'est une équation
+\textbf{transcendante}, sans résolution analytique (il faut des méthodes numériques). Trois
+approches : \textbf{résolution mathématique impossible}, \textbf{résolution graphique},
+\textbf{utilisation de modèles}.
+\end{propbox}
+
+\section{Résolution graphique : la droite de charge}
+
+\slide{c07-07}{Le point de repos est l'intersection de la droite de charge et de l'exponentielle.}
+
+\begin{thmbox}[title=Droite de charge et point de repos]
+Le courant est le même dans la résistance et la diode. On trace sur le même graphe :
+\begin{itemize}
+  \item la \textbf{caractéristique de la diode} (l'exponentielle) ;
+  \item la \textbf{droite de charge} de la résistance : $I = \frac{U_E - U_D}{R}$, qui va de
+        $I_{RMAX} = U_E/R$ (pour $U_D = 0$) à $I_{RMIN} = 0$ (pour $U_D = U_E$, il ne reste
+        rien aux bornes de R).
+\end{itemize}
+Leur \textbf{intersection} donne $I_D$ et $U_D$ (et $U_R = U_E - U_D$) : c'est le
+\textbf{point de polarisation}, ou \textbf{point de repos} pour des grandeurs continues.
+\end{thmbox}
+
+\slide{c07-08}{Le courant bouge beaucoup, la tension presque pas.}
+
+\begin{propbox}[title={Remarque : courant rapide, tension lente}]
+\begin{itemize}
+  \item \textbf{Changement de résistance} (même $U_E$) : petite R $\to$ droite abrupte $\to$
+        fort courant ; grande R $\to$ droite plate $\to$ faible courant.
+  \item \textbf{Changement de tension d'entrée} (même R) : la droite garde sa pente et se
+        décale vers la droite quand $U_E$ monte.
+\end{itemize}
+Dans les deux cas, le courant change beaucoup ($I_1$, $I_2$, $I_3$) mais la tension de la
+diode reste \textbf{toujours autour de 0,7\,V}.
+\end{propbox}
+
+\begin{goatbox}
+La droite de charge, c'est \og ce que la résistance accepte\fg{}, la courbe, \og ce que la
+diode accepte\fg{}. Le seul point où les deux sont d'accord, c'est le point de repos. Et comme
+la courbe de la diode est presque verticale, ce point est presque toujours à 0,7\,V : seul
+le courant change.
+\end{goatbox}
+
+\section{Les modèles de la diode}
+
+\slide[0.75]{c07-09}{Pourquoi des modèles.}
+
+\begin{propbox}[title=Justification des modèles]
+\begin{enumerate}
+  \item \textbf{Simplifier les calculs} (impossibles avec la loi physique) ;
+  \item \textbf{sentir les ordres de grandeur} (démarche plus qualitative que
+        quantitative) : une erreur de 10\,\% est acceptable, la précision viendra du
+        simulateur ;
+  \item \textbf{introduire des éléments linéaires} qui approximent la réalité : toute la
+        panoplie des méthodes linéaires (C02 à C04) redevient utilisable.
+\end{enumerate}
+\end{propbox}
+
+\slide{c07-10}{Les trois modèles : idéale, chute de tension 0,7\,V, 0,7\,V + petite résistance.}
+
+\begin{thmbox}[title=Trois modèles de la diode]
+\begin{enumerate}
+  \item \textbf{Diode idéale} : conduit dès que la tension à ses bornes est positive, ne
+        conduit pas pour une tension négative. Pour la logique, ou l'analogique sans
+        précision (détection de seuil, redressement). Le courant est quelconque, imposé par
+        l'environnement.
+  \item \textbf{Modèle à chute de tension} (\textbf{le plus commun}) : quand la diode conduit,
+        la tension à ses bornes vaut $U_j = 0{,}7$\,V (quasi constante) : une diode idéale en
+        série avec une source de 0,7\,V. Le courant dépend encore de l'environnement.
+  \item \textbf{$U_j$ + petite résistance} (pente $1/R$) : utilisé quand on superposera des
+        signaux DC et AC : $U_j$ pour le DC, une résistance de faible valeur pour l'AC (faibles
+        variations), qu'on apprendra à évaluer plus tard.
+\end{enumerate}
+\end{thmbox}
+
+\section{Usage du modèle $U_D = U_j$ : DANGER !}
+
+\slide{c07-11}{$U_E = 3$\,V, $R_1 = 1$\,k$\Omega$ : comparer deux façons d'utiliser $U_j$.}
+
+\begin{exbox}[title={Deux façons de calculer le courant avec $U_D = U_j = 0{,}7$\,V}]
+Circuit : $U_E = 3$\,V, $R_1 = 1$\,k$\Omega$, une diode. On suppose que la vraie tension de
+la diode est $U_{D,r\acute eel} = 0{,}674$\,V : $U_j$ fait donc une erreur d'environ
+\textbf{3\,\%} en tension. On compare :
+\[ I_{D1} = \frac{U_E - U_j}{R_1} \ \text{(loi d'Ohm)} \qquad\text{et}\qquad
+   I_{D2} = I_S\,e^{\frac{U_j}{nU_T}} \ \text{(loi exponentielle)} \]
+Erreur sur $I_{D1}$ : \textbf{1\,\%} (diminue si $U_E$ augmente). Erreur sur $I_{D2}$ :
+\textbf{270\,\%} !
+\end{exbox}
+
+\slide{c07-12}{Les chiffres parlent d'eux-mêmes.}
+
+\begin{exbox}[title=Le calcul]
+\textbf{Via la loi exponentielle} (erreur monstrueuse) :
+\[ \frac{I_{D2\_Mod\grave ele}}{I_{D2\_R\acute eel}} = \frac{e^{0{,}700/0{,}026}}{e^{0{,}674/0{,}026}}
+   = e^{\frac{0{,}700 - 0{,}674}{0{,}026}} = e^1 = e \approx 2{,}7 \]
+\textbf{Via la loi d'Ohm} (erreur faible) :
+\[ I_{D1\_Mod\grave ele} = \frac{3 - 0{,}7}{1000} = 2{,}3\text{ mA} \qquad
+   I_{D1\_R\acute eel} = \frac{3 - 0{,}674}{1000} = 2{,}326\text{ mA} \]
+\end{exbox}
+
+\begin{warnbox}[title=Les deux remarques à retenir]
+\begin{enumerate}
+  \item \textbf{Ne jamais utiliser le modèle $U_j$ dans la loi exponentielle} : 3\,\%
+        d'erreur sur $U_j$ donnent 270\,\% d'erreur sur le courant.
+  \item Le modèle est d'autant plus fiable que $U_E$ est \textbf{grand devant 0,7\,V}
+        (limite de conduction). Plus on s'approche de 0,7\,V, plus l'erreur sur le courant
+        grandit.
+\end{enumerate}
+Avec le modèle, on calcule toujours le courant avec la \textbf{loi d'Ohm} :
+$I_D = \frac{U_E - U_j}{R}$.
+\end{warnbox}
+
+\slide{c07-13}{Vérification graphique : la droite de charge croise le modèle tout près du réel.}
+
+Graphiquement : avec le modèle et la loi d'Ohm, l'intersection de la droite de charge avec la
+verticale $U_j$ donne un point de repos $(U_j, I_{mod\grave ele})$ très proche de la
+réalité. Avec le modèle dans la loi exponentielle, on monte sur l'exponentielle jusqu'à $U_j$
+et le courant obtenu est beaucoup trop grand (comme si la charge était bien plus petite :
+droite en pointillés beaucoup plus pentue).
+
+\begin{goatbox}
+Sur la courbe de la diode, quelques millivolts de différence font des énormes différences
+de courant (la courbe est presque verticale). Donc si on \og devine\fg{} la tension (0,7\,V)
+et qu'on en déduit le courant avec l'exponentielle, on se trompe énormément. Il faut faire
+l'inverse : deviner la tension, puis demander le courant à la résistance, qui elle est
+tranquille et linéaire.
+\end{goatbox}
+
+\section{Grands signaux : diode dans le sens normal}
+
+\slide{c07-14}{Diviseur résistif (réduit le sinus) vs diode (écrête à $U_j$).}
+
+\begin{thmbox}[title=L'écrêtage à $U_j$]
+Pour un diviseur résistif, $U_{R2}$ est toujours $U_E\frac{R_2}{R_1+R_2}$ (le sinus est
+réduit). Avec une diode, tout dépend si elle conduit :
+\begin{itemize}
+  \item \textbf{diode bloquée} ($U_E < 0{,}7$\,V selon le modèle) : aucun courant, aucune
+        chute dans R : \textbf{la sortie vaut $U_E$} ;
+  \item \textbf{diode passante} ($U_E > 0{,}7$\,V) : la tension à ses bornes reste
+        $\approx0{,}7$\,V : la diode \textbf{écrête} la sortie à $U_j$.
+\end{itemize}
+\end{thmbox}
+
+\slide{c07-15}{Explication avec les droites de charge.}
+
+La pente de la droite de charge est constante (R ne change pas) mais sa position dépend de
+$U_E$ : une infinité de positions entre $U_{EMIN}$ et $U_{EMAX}$. Les droites issues de
+tensions entre $U_j$ et $U_{EMAX}$ coupent la verticale du modèle : la diode conduit et impose
+0,7\,V à la sortie. Celles issues de tensions entre $U_{EMIN}$ et $U_j$ ne la coupent pas :
+la diode est bloquée et la sortie vaut l'entrée. \textbf{Les courbes réelles sont un peu
+différentes !}
+
+\slide{c07-16}{La réalité : un écrêtage \og bombé\fg{}.}
+
+En réalité l'écrêtage n'est pas si net mais \textbf{bombé} : les droites de charge coupent
+la vraie exponentielle, pas la verticale du modèle ; près de la limite de conduction, la
+tension de sortie suit encore un peu l'entrée.
+
+\section{Grands signaux : diode en inverse}
+
+\slide{c07-17}{Diode retournée : écrêtage à $-U_j$.}
+
+\begin{propbox}[title={Diode montée en inverse (la caractéristique pivote de 180\ensuremath{^\circ})}]
+\begin{itemize}
+  \item pour $U_E > -U_j$ : la diode est \textbf{bloquée}, la sortie vaut l'entrée ;
+  \item pour $U_E < -U_j$ : la diode conduit (du bas vers le haut) : la cathode est 0,7\,V
+        sous l'anode, qui est à 0\,V, donc \textbf{$U_D = -U_j = -0{,}7$\,V}.
+\end{itemize}
+Même raisonnement par droites de charge : celles entre $U_{EMIN}$ et $-U_j$ coupent la
+caractéristique verticale (sortie $= -0{,}7$\,V) ; les autres non (sortie $=$ entrée).
+\end{propbox}
+
+\section{Diode Zener dans le sens normal}
+
+\slide{c07-18}{Zener : écrêtage à $U_j$ en haut et à $-V_Z$ en bas.}
+
+\begin{thmbox}[title={Zener, sens normal : trois zones}]
+On s'intéresse à la verticale $U_j$ \textbf{et} à la verticale négative $-V_Z$ (tension
+Zener) :
+\begin{enumerate}
+  \item $U_j < U_E < U_{EMAX}$ : la diode conduit en zone \og normale\fg{}, la sortie est
+        \textbf{écrêtée à $U_j$} ;
+  \item $-V_Z < U_E < U_j$ : la diode est \textbf{bloquée} dans les deux sens, la sortie
+        \textbf{vaut l'entrée} ;
+  \item $U_{EMIN} < U_E < -V_Z$ : la diode conduit en zone \og Zener\fg{}, la sortie est
+        \textbf{écrêtée à $-V_Z$}.
+\end{enumerate}
+\end{thmbox}
+
+\section{Diode Zener dans le sens inverse}
+
+\slide{c07-19}{Zener retournée : écrêtage à $+V_Z$ en haut et à $-U_j$ en bas.}
+
+\begin{thmbox}[title={Zener, sens inverse (caractéristique pivotée de 180\ensuremath{^\circ}) : dual}]
+\begin{enumerate}
+  \item $U_{EMIN} < U_E < -U_j$ : zone normale, sortie \textbf{écrêtée à $-U_j$} ;
+  \item $-U_j < U_E < +V_Z$ : bloquée, \textbf{sortie = entrée} ;
+  \item $+V_Z < U_E < U_{EMAX}$ : zone Zener, sortie \textbf{écrêtée à $+V_Z$}.
+\end{enumerate}
+\end{thmbox}
+
+\begin{goatbox}
+Une diode normale est un portillon à sens unique ; une Zener est un portillon à sens unique
+\emph{qui cède quand on pousse très fort dans l'autre sens} (à $V_Z$), sans se casser. Mise
+dans un circuit, elle coupe le haut du sinus à 0,7\,V et le bas à $-V_Z$ (ou l'inverse si on
+la retourne).
+\end{goatbox}
+
+\section{Exemple : deux Zener tête-bêche}
+
+\slide{c07-20}{$v_1$ sinusoïdale de 12\,V, $V_{Z1} = 4{,}3$\,V, $V_{Z2} = 6{,}3$\,V.}
+
+\begin{exbox}[title={Ce que dit le cours (question 1)}]
+Avec deux Zener tête-bêche, les deux peuvent conduire en même temps : Z1 en zone Zener et Z2
+en zone normale, ou Z1 en zone normale (vers le haut) et Z2 en zone Zener. La sortie vaut
+alors la \textbf{somme des tensions à leurs bornes} :
+\begin{itemize}
+  \item $v_2 = V_{Z1} + U_j$, possible si $v_1 > V_{Z1} + U_j$ ;
+  \item $v_2 = -V_{Z2} - U_j$, possible si $v_1 < -V_{Z2} - U_j$ ;
+  \item dans tous les autres cas ($-V_{Z2} - U_j < v_1 < V_{Z1} + U_j$), les diodes sont
+        bloquées et $v_2 = v_1$.
+\end{itemize}
+Numériquement : $v_2$ est écrêtée à $4{,}3 + 0{,}7 = 5$\,V en haut et à
+$-(6{,}3 + 0{,}7) = -7$\,V en bas.
+\end{exbox}
+
+\begin{exbox}[title={Questions 2 et 3 : solution proposée (pas dans les slides ; on prend 12\,V comme amplitude)}]
+\textbf{2.} Le courant dans les diodes est maximal au sommet positif : $v_2 = 5$\,V, donc
+$I_{max} = \frac{12 - 5}{R_1} \le 50$\,mA $\Rightarrow R_1 \ge \frac{7}{0{,}05} = 140\,\Omega$
+(au sommet négatif : $\frac{12 - 7}{R_1}$, plus petit). On prend $R_1 = 140\,\Omega$. \\
+\textbf{3.} Avec $R_L = 100\,\Omega$ : diodes bloquées, on a un diviseur
+$v_2 = v_1\frac{R_L}{R_1 + R_L} = v_1\frac{100}{240}$, d'amplitude $12\cdot\frac{100}{240} = 5$\,V.
+On atteint tout juste 5\,V en haut (les Zener commencent à peine à conduire) et $-5$\,V en bas
+($> -7$\,V, pas d'écrêtage) : $v_2$ est pratiquement un \textbf{sinus de 5\,V d'amplitude}.
+\end{exbox}
+
+\section{Montages spéciaux}
+
+\slide{c07-21}{Limiteur et détecteur à seuil (modèle $U_j = 0$).}
+
+\begin{propbox}[title=Limiteur et détecteur à seuil]
+Pour simplifier, on prend le modèle $U_j = 0$\,V.
+\begin{itemize}
+  \item \textbf{Limiteur} : la diode est reliée à une tension $u_P$ ; c'est l'écrêtage à
+        0,7\,V, mais \textbf{décalé de $u_P$} : $u_2$ suit $u_1$ tant que $u_1 < u_P$, et
+        est limitée à $u_P$ au-dessus.
+  \item \textbf{Détecteur à seuil} : rappelle l'écrêteur à $-U_j$ ; $u_1$ est comparée à
+        $u_P$ (la diode voit $u_1 - u_P$) : la sortie $u_2$ ne montre que les parties de
+        $u_1$ \textbf{au-dessus du seuil $u_P$} (écrêtage quand $u_1 - u_P < -U_j$, soit
+        $u_1 < u_P - U_j$).
+\end{itemize}
+\end{propbox}
+
+\slide{c07-22}{Détecteur de la tension la plus élevée : raisonner par l'absurde.}
+
+\begin{exbox}[title={Détecteur de tension la plus élevée}]
+Trois diodes $D_1, D_2, D_3$ relient $V_1, V_2, V_3$ à la sortie $V_S$ (avec $R_1$ vers la
+masse). La sortie vaut (à $U_j$ près) \textbf{la tension la plus élevée}. \textbf{Par
+l'absurde}, avec $V_1 = 1$\,V, $V_2 = 2$\,V, $V_3 = 3$\,V : si $D_1$ conduisait,
+$V_S = V_1 - U_j = 0{,}3$\,V et il y aurait $3 - 0{,}3 = 2{,}7$\,V aux bornes de $D_3$ :
+impossible (une diode qui conduit est limitée à $\approx0{,}7$\,V). De même si $D_2$
+conduisait (1,7\,V sur $D_3$). Seule $D_3$ conduit : $V_S = 3 - 0{,}7 = 2{,}3$\,V.
+\end{exbox}
+
+\begin{exbox}[title={Méthode générale pour un circuit à diodes (synthèse du chapitre)}]
+\begin{enumerate}
+  \item Choisir le modèle (souvent $U_j = 0{,}7$\,V ; $U_j = 0$ si on le dit) ;
+  \item \textbf{supposer} un état pour chaque diode (passante : source de $U_j$ ; bloquée :
+        circuit ouvert) ;
+  \item calculer avec les lois linéaires (Ohm, Kirchhoff, diviseur) ;
+  \item \textbf{vérifier} : une diode supposée passante doit avoir un courant dans le sens
+        direct ; une diode supposée bloquée doit avoir moins de $U_j$ à ses bornes (et plus
+        de $-V_Z$ pour une Zener). Sinon, changer l'hypothèse (raisonnement par l'absurde).
+\end{enumerate}
+\end{exbox}
+
+\begin{recapbox}[title={Récap pour l'examen --- C07 : Diodes}]
+\begin{itemize}
+  \item Symbole : flèche anode $\to$ cathode = sens du courant. $P_{MAX}$ limite le courant.
+  \item 3 zones : passante vers \textbf{0,7\,V} (silicium), bloquée (courant $\approx I_S$),
+        zone Zener/avalanche à $-V_Z$ (destructive sauf pour les Zener).
+  \item \textbf{Loi} : $I_D = I_S(e^{U_D/nU_T} - 1)\approx I_S e^{U_D/nU_T}$ ;
+        $U_T = kT/q = 26$\,mV à 27\ensuremath{^\circ}C ; $1<n<2$ ; $10^{-15} < I_S < 10^{-10}$\,A (exercices).
+  \item R + diode : équation \textbf{transcendante}, pas de solution analytique $\Rightarrow$
+        \textbf{droite de charge} ($I_{RMAX} = U_E/R$, $I_{RMIN} = 0$ en $U_D = U_E$) ;
+        intersection = \textbf{point de repos}. Le courant varie beaucoup, la tension reste
+        $\approx0{,}7$\,V.
+  \item \textbf{Modèles} : idéale (seuil 0) ; \textbf{$U_j = 0{,}7$\,V} (le plus commun) ;
+        $U_j$ + petite résistance (DC + AC).
+  \item \textbf{DANGER} : avec $U_j$, calculer le courant par la loi d'Ohm
+        $I = (U_E - U_j)/R$ (1\,\% d'erreur), \textbf{jamais} par l'exponentielle (270\,\%,
+        facteur $e$). Fiable si $U_E\gg0{,}7$\,V.
+  \item \textbf{Écrêtage} : diode normale $\to$ sortie limitée à $U_j$ (ou $-U_j$ retournée),
+        sortie = entrée sinon ; en réalité écrêtage bombé.
+  \item \textbf{Zener} : écrête à $U_j$ et $-V_Z$ (retournée : $-U_j$ et $+V_Z$). Deux Zener
+        tête-bêche : $V_{Z1} + U_j$ et $-(V_{Z2} + U_j)$.
+  \item Montages : limiteur (écrêtage décalé de $u_P$), détecteur à seuil, détecteur de la
+        tension la plus élevée (par l'absurde).
+\end{itemize}
+\textbf{Comment ça s'appuie sur le reste} : la linéarisation du C00 (tangentes, modèles
+linéaires par morceaux) devient ici les modèles de la diode ; une fois le modèle choisi, on
+retrouve la loi d'Ohm (C01), Kirchhoff et le diviseur (C02), les droites de type
+$U = U_0 - RI$ des sources linéaires (C03 : la droite de charge en est une). Le redressement
+annoncé au C01 (valeur moyenne d'un signal redressé) est ce que fait une diode. La suite
+(Électronique 2) applique la même méthode DC + AC aux transistors.
+\end{recapbox}

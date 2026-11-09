@@ -1,0 +1,431 @@
+% =========================================================
+\chapter{C01 --- Les signaux et les sources}
+% =========================================================
+
+\begin{rembox}[title=En bref]
+\textbf{De quoi parle ce chapitre ?} Des \textbf{signaux électriques} (tension $U$ et courant
+$I$, leurs formes), des \textbf{sources} qui les créent (idéales vs réelles, de tension et de
+courant), des \textbf{conventions} (fléchage, signe de la puissance) et de la
+\textbf{puissance} : valeur moyenne et \textbf{valeur efficace}. \\
+\textbf{Les deux formules du jour :} $U = R\cdot I$ (loi d'Ohm) et $P = U\cdot I$
+(puissance électrique).
+\end{rembox}
+
+Les trois choses à maîtriser à la fin du chapitre (diapositive 2) :
+\begin{enumerate}
+  \item \textbf{Maîtriser les signaux électriques} : leur nature (tension, courant), leurs
+        formes (sinus, carré, triangle, continu), les définitions clés et la convention de
+        fléchage de l'EPFL, directement liée à la notion de puissance.
+  \item \textbf{Sources idéales vs réelles} : comment imposer une tension ou un courant à un
+        circuit ; les sources \og idéales\fg{} (impossibles en pratique) comparées aux sources
+        \og réelles\fg{}, en tension et en courant.
+  \item \textbf{Analyser la puissance} : comprendre la puissance efficace (ou moyenne) pour
+        évaluer la consommation et la tolérance d'un circuit ; c'est de là que viennent les
+        valeurs efficaces $U_{EFF}$, $I_{EFF}$ utilisées partout.
+\end{enumerate}
+
+\section{C'est quoi un signal ?}
+
+\slide[0.7]{c01-03}{Un signal : une information portée par un phénomène qui demande de l'énergie.}
+
+\begin{defnbox}[title=Signal]
+Un signal, c'est :
+\begin{itemize}
+  \item une \textbf{information} : le signal véhicule un \textbf{message}, qu'il faut
+        exploiter selon son contenu ;
+  \item un \textbf{phénomène} à l'origine de sa génération : de l'énergie est nécessaire pour
+        le produire (cours d'électrotechnique) ; toute activité implique une variation
+        d'énergie ;
+  \item \textbf{notion dynamique} : $I$, des charges en déplacement ;
+  \item \textbf{notion statique} : $U$, une répartition de charges.
+\end{itemize}
+Une source d'énergie produit des \textbf{signaux continus} (énergie consommée constante dans
+le temps) ou des \textbf{signaux variables} (énergie consommée variable).
+\end{defnbox}
+
+La tension est liée à une \textbf{quantité de matière disponible} ; le courant est une notion
+plus dynamique, une \textbf{quantité de matière qui se déplace}. Pour exploiter un courant, il
+faut un \textbf{chemin} pour le véhiculer ; pour le quantifier on utilise la loi d'Ohm avec une
+résistance.
+
+\begin{goatbox}
+La tension, c'est la hauteur du tas de foin en haut de la colline (ce qui est disponible).
+Le courant, c'est le foin qui roule le long du chemin (ce qui bouge). Sans chemin, le foin
+reste en haut : pas de courant.
+\end{goatbox}
+
+\section{Signaux alternatifs, périodiques et sinusoïdaux}
+
+\slide[0.7]{c01-05}{Signaux périodiques : quelconque, triangle, carré.}
+
+\begin{defnbox}[title=Alternatif et périodique]
+\begin{itemize}
+  \item Un signal variable est \textbf{alternatif} s'il présente des valeurs centrées
+        autour d'un seuil de référence (généralement 0\,V).
+  \item Il est \textbf{périodique} s'il reproduit systématiquement la même évolution après
+        une durée appelée \textbf{période} $T$.
+\end{itemize}
+On peut démontrer que \textbf{tout signal périodique est une somme de sin et de cos} de
+fréquences calculables : c'est la \textbf{série de Fourier}.
+\end{defnbox}
+
+\slide[0.7]{c01-06}{Les quatre grandeurs d'un sinus.}
+
+Puisque tout signal périodique se ramène à un ou plusieurs sinus, c'est le \textbf{sinus
+\og pur\fg{}} qui sert le plus souvent à caractériser les circuits. On en retient :
+\begin{itemize}
+  \item la \textbf{valeur crête} (l'amplitude $A$, le sommet) ;
+  \item la \textbf{valeur crête-crête} (ou crête à creux), du creux au sommet : $2A$ pour un
+        sinus centré ;
+  \item la \textbf{valeur moyenne} ;
+  \item la \textbf{valeur efficace} (en rouge sur la diapositive : la plus importante, liée à
+        la puissance, voir fin du chapitre).
+\end{itemize}
+
+\section{Comment créer ces signaux ? Sources et conventions}
+
+\slide[0.7]{c01-07}{Symboles des sources et premières conventions.}
+
+Produire un signal suppose un travail ; son origine s'appelle une \textbf{source}. Deux
+grandes catégories :
+\begin{itemize}
+  \item la \textbf{source de tension} impose de manière prévisible une quantité de matière
+        disponible (une tension $U_0$) ;
+  \item la \textbf{source de courant} impose de manière prévisible le déplacement d'une
+        quantité de matière (un courant $i$).
+\end{itemize}
+
+\begin{defnbox}[title=Premières conventions]
+\begin{itemize}
+  \item \textbf{Signaux continus} (constants) : \textbf{majuscules} $U, V, I$.
+  \item \textbf{Signaux variables} : \textbf{minuscules} $u(t), v(t), i(t)$, ou $u, v, i$.
+  \item Le \textbf{courant électrique} est de sens \textbf{inverse} au déplacement des
+        électrons.
+\end{itemize}
+\end{defnbox}
+
+\section{Complément terminologique}
+
+\slide[0.75]{c01-08}{Potentiels, tensions, Terre et masse.}
+
+\begin{defnbox}[title=Mots clefs]
+\begin{itemize}
+  \item \textbf{Potentiel} : toujours évalué \textbf{par rapport à une référence} (Terre ou
+        masse).
+  \item \textbf{Différence de potentiel} : écart entre deux points dont les valeurs
+        spécifiques sont connues.
+  \item \textbf{Tension} : aussi une différence de potentiel entre deux points, mais
+        \textbf{sans obligatoirement connaître} les potentiels de chaque point.
+  \item \textbf{Équipotentielle} : ensemble de points tous reliés entre eux (contact physique
+        nécessaire) par un fil considéré comme un conducteur parfait (résistivité nulle).
+  \item \textbf{Terre} : neutre, potentiel nul. \textbf{Masse} : référence (0\,V
+        \emph{relatif}) d'un système donné, qui peut valoir plusieurs volts par rapport à la
+        Terre.
+  \item \textbf{Circuit ouvert} : deux potentiels reliés par aucun obstacle (pas de liaison).
+        \textbf{Court-circuit} : deux points reliés au même potentiel.
+\end{itemize}
+\end{defnbox}
+
+\begin{exbox}[title={Lire la diapositive : même tension, potentiels différents}]
+Dans la zone verte, les potentiels des lignes A, B, C sont mesurés \textbf{par rapport à la
+Terre} : 15\,V, 10\,V et 5\,V. Dans la zone jaune, on prend la ligne B comme
+\textbf{masse} (0\,V) : A vaut alors $+5$\,V et C vaut $-5$\,V. Les \textbf{tensions} entre
+lignes ne changent pas ($U_{AB} = 5$\,V dans les deux cas) ; seuls les potentiels changent
+avec la référence choisie.
+\end{exbox}
+
+\begin{warnbox}[title=Ne pas confondre Terre et masse]
+Cette confusion est souvent la cause de bien des soucis lorsqu'on branche des appareils
+connectés à la Terre sans y prêter attention : la masse d'un appareil n'est pas forcément
+au potentiel de la Terre.
+\end{warnbox}
+
+\begin{goatbox}
+Mesurer une hauteur, il faut dire \og à partir d'où\fg{}. La Terre, c'est le niveau de la
+mer ; la masse, c'est le sol de l'étable. Une chèvre sur le toit est à 3\,m du sol de
+l'étable, mais peut-être à 500\,m de la mer. La différence de hauteur entre le toit et le
+sol, elle, est toujours 3\,m.
+\end{goatbox}
+
+\section{Établissement d'un courant et loi d'Ohm}
+
+\slide{c01-09}{Conditions pour un courant, loi d'Ohm et conventions de fléchage.}
+
+\begin{propbox}[title=Condition pour observer un courant]
+\begin{itemize}
+  \item \textbf{Une source d'énergie} ;
+  \item \textbf{un circuit fermé} (!!!) : un chemin qui amène les électrons de l'endroit où
+        ils sont créés (noté \og $-$\fg{}) vers l'endroit où il en manque (noté \og $+$\fg{}).
+\end{itemize}
+Ce chemin inclut généralement des conducteurs. Un fil a deux extrémités ; pour relier plus
+de deux objets il faut des embranchements, tous au \textbf{même potentiel}
+(équipotentielle). Une équipotentielle particulière sert souvent de référence : la
+\textbf{masse} (0\,V relatif au circuit).
+\end{propbox}
+
+\begin{thmbox}[title=Loi d'Ohm]
+En électricité, outre le fil, le conducteur le plus courant est la résistance :
+\[ U = R\cdot I \]
+\textbf{Principe de causalité} : avec une source de tension $U$, c'est $U$ qui impose
+$I_R = U/R$ ; avec une source de courant $I$, c'est $I$ qui impose $U_R = R\cdot I$.
+\end{thmbox}
+
+\begin{warnbox}[title={Convention : même sens $\Rightarrow$ même signe}]
+\textbf{Si courant et tension sont dessinés dans le même sens, ils sont de même signe.}
+C'est une \textbf{convention}, pas une réalité physique (justifiée par la puissance,
+ci-dessous). \og Danger !!! Bien observer les circuits\fg{} : sur la dernière figure de la
+diapositive, $i(t)$ et $u(t)$ sur la résistance sont fléchés dans le même sens, donc
+$u = R\,i$ ; s'ils étaient opposés, on écrirait $u = -R\,i$.
+\end{warnbox}
+
+\section{Petite parenthèse : puissance et convention}
+
+\slide{c01-10}{Le signe de la puissance dit qui donne et qui reçoit.}
+
+\begin{defnbox}[title=Signe de la puissance (convention suisse)]
+\[ P = U\cdot I \]
+\begin{itemize}
+  \item $P > 0$ : le dipôle \textbf{absorbe} (gagne) de la puissance : c'est un
+        \textbf{récepteur}. Courant et tension sont de \textbf{même sens}, donc de même
+        signe (par exemple la résistance : $P_R > 0$).
+  \item $P < 0$ : le dipôle \textbf{donne} (perd) de la puissance : c'est une
+        \textbf{source}. Courant et tension sont de \textbf{sens opposés}, donc de signes
+        opposés ($P_U < 0$, $P_I < 0$).
+\end{itemize}
+\end{defnbox}
+
+\begin{exbox}[title=Attention : une source peut être récepteur]
+Deux sources de tension face à face, $U_1 = 2$\,V et $U_2 = 5$\,V, reliées par une
+résistance. La plus forte ($U_2$) impose le courant $I$ : pour elle courant et tension sont
+de sens opposés, $P_{U2} < 0$, elle \textbf{joue le rôle de source}. Pour $U_1$, courant et
+tension sont de même sens : $P_{U1} > 0$, elle \textbf{joue le rôle de récepteur} (elle
+absorbe de la puissance, comme une batterie qu'on recharge).
+\end{exbox}
+
+\begin{goatbox}
+Si la flèche du courant et la flèche de la tension vont dans le même sens, le composant
+\og mange\fg{} de l'énergie (comme une chèvre qui mange du foin : $P>0$). Si elles vont en
+sens contraire, il \og donne\fg{} de l'énergie ($P<0$). Une grosse chèvre peut forcer une
+petite chèvre à manger, même si la petite voulait donner.
+\end{goatbox}
+
+\section{Sources de tension idéale et réelle}
+
+\slide{c01-11}{Source de tension idéale (bleu) et réelle avec $r_i$ en série (rouge).}
+
+\begin{defnbox}[title=Source de tension idéale / réelle]
+\begin{itemize}
+  \item \textbf{Idéale} : aucune imperfection ; elle impose $U_0$ quelle que soit la charge.
+  \item \textbf{Réelle} : une \textbf{résistance interne $r_i$ en série} avec $U_0$.
+\end{itemize}
+\end{defnbox}
+
+\begin{propbox}[title=Les trois cas de la diapositive (charge $R$)]
+\textbf{Cas 1} ($I$ en fonction de $U_0$) : idéale, pente $\frac{1}{R}$ ; réelle, pente plus
+faible $\frac{1}{R+r_i}$. \
+\textbf{Cas 2} ($U_R$ en fonction de $U_0$) : idéale, $U_R = U_0$ (mêmes équipotentielles),
+pente 1 (45\ensuremath{^\circ}) ; réelle, $U_R < U_0$ à cause de la chute de potentiel dans $r_i$, pente
+constante $\frac{R}{R+r_i} < 1$ : c'est un \textbf{diviseur résistif}. \
+\textbf{Cas 3} ($U_R$ en fonction de $R$) : idéale, $U_R = U_0$ constant quelle que soit la
+charge ; réelle,
+\[ U_R = U_0\cdot\frac{R}{R+r_i} \]
+qui part de 0 pour $R\to 0$ et tend vers $U_0$ quand $R\to\infty$.
+\end{propbox}
+
+\section{Sources de courant idéale et réelle}
+
+\slide{c01-12}{Source de courant idéale et réelle avec $r_i$ en parallèle.}
+
+\begin{defnbox}[title=Source de courant idéale / réelle]
+Pour une source de courant, la \textbf{résistance interne $r_i$ est en parallèle} avec la
+source $I_0$.
+\end{defnbox}
+
+\begin{propbox}[title=Les trois cas (charge $R$)]
+\textbf{Cas 1} ($U_R$ en fonction de $I_0$) : idéale, pente $R$ ; réelle, pente
+$R_{EQ} = R\,/\!/\,r_i < R$ (deux résistances en parallèle donnent toujours moins que la plus
+petite). Intuitivement : $I_0$ se répartit entre $r_i$ et $R$. \
+\textbf{Cas 2} ($I_R$ en fonction de $I_0$) : idéale, $I_R = I_0$ (une seule boucle), pente
+1 ; réelle, $I_R < I_0$, pente $\frac{r_i}{R+r_i}$. \
+\textbf{Cas 3} ($I_R$ en fonction de $R$) : idéale, $I_R = I_0$ toujours ; réelle :
+\[ U_R = I_0 R_{EQ} = I_0\frac{r_i R}{R+r_i} = I_R R \quad\Rightarrow\quad
+   I_R = I_0\cdot\frac{r_i}{R+r_i} \]
+qui vaut $I_0$ pour $R\to 0$ et tend vers 0 quand $R\to\infty$.
+\end{propbox}
+
+\begin{goatbox}
+Une vraie source a toujours un petit défaut caché. La source de tension réelle, c'est un
+tuyau d'arrosage avec un étranglement \emph{sur le chemin} ($r_i$ en série) : plus on tire
+d'eau, plus on perd de pression. La source de courant réelle, c'est une pompe avec une
+\emph{fuite à côté} ($r_i$ en parallèle) : plus la sortie est dure à pousser, plus d'eau
+repart par la fuite. Une bonne source de tension a $r_i$ très petit, une bonne source de
+courant a $r_i$ très grand.
+\end{goatbox}
+
+\section{Superposition de signaux}
+
+\slide{c01-13}{Superposition souhaitée (continu + sinus) et gênante (bruit).}
+
+La plupart des circuits mélangent des signaux continus et variables : c'est la
+\textbf{superposition} de signaux.
+\begin{itemize}
+  \item \textbf{souhaitée} : par exemple en amplification, $U = U_0 + u_1(t)$ (deux sources en
+        série) ; à travers un diviseur résistif,
+        $U_{OUT} = U\cdot\frac{R_2}{R_1+R_2}$ ;
+  \item \textbf{gênante} : quand l'un des signaux est une perturbation (le \textbf{bruit}).
+\end{itemize}
+
+\section{Valeurs moyennes : domaine discret}
+
+\slide[0.7]{c01-14}{Moyenne de valeurs d'échantillons.}
+
+Outre $I$ et $U$, une des grandeurs principales est la \textbf{consommation}. La
+consommation totale est celle qu'on paie ; la \textbf{consommation instantanée} est plus
+intéressante en électronique, car elle est liée aux sources qui doivent fournir un travail et
+aux dispositifs qui doivent dissiper l'énergie. Les signaux étant souvent
+\og anarchiques\fg{}, on ne constate que la \textbf{consommation moyenne}.
+
+\begin{defnbox}[title=Moyenne dans le monde discret]
+\[ SOMME\_TOTALE = \sum_i VALEUR_i \]
+\[ VALEUR\_MOYENNE = \frac{SOMME\_TOTALE}{NB\_ECHANTILLONS} \]
+\end{defnbox}
+
+\section{Valeurs moyennes : domaine continu}
+
+\begin{warnbox}[title=Deux sens du mot \og continu\fg{}]
+\og Domaine continu\fg{} = analogique (temps continu). \og Signal continu\fg{} = signal
+constant (non variable). Ne pas confondre.
+\end{warnbox}
+
+\slide{c01-15}{1) Histogramme à pas large : grande erreur.}
+
+\textbf{1) Approximation par un histogramme} (comparable au domaine discret). Chaque barre a
+une surface $S_i = H_i\cdot\Delta t_i$ :
+\[ Surface\ totale = \sum_i H_i\,\Delta t_i \qquad
+   Moyenne = \frac{Surface\ totale}{NB\ \acute{e}chantillons\cdot\Delta t}
+           = \frac{Surface\ totale}{Temps\ total} \]
+ou, avec $Somme\ totale = \sum_i H_i$ : $Moyenne = \dfrac{Somme\ totale}{NB\ \acute{e}chantillons}$.
+\textbf{L'erreur est grande car $\Delta t_i$ est grand.}
+
+\slide{c01-16}{2) Pas plus fin : erreur petite.}
+
+\textbf{2) Pas plus fin} : mêmes formules, plus d'échantillons, chaque surface est plus
+petite et respecte mieux la forme d'origine. \textbf{L'erreur est petite car $\Delta t_j$
+est petit.} Le calcul reste un calcul de moyenne du monde discret.
+
+\slide{c01-17}{3) Pas infinitésimal : l'intégrale, erreur nulle.}
+
+\begin{thmbox}[title=3) Pas infinitésimal : la valeur moyenne]
+Si l'écart entre deux échantillons est infinitésimal, on revient à la courbe d'origine.
+Une barre infinitésimale a une surface $dS = H(t)\,dt$ ; la somme d'éléments non
+énumérables est l'\textbf{intégrale}. \textbf{L'erreur est nulle.}
+\[ Surface\ totale = \int_0^T H(t)\,dt \qquad
+   Moyenne = \frac{Surface\ totale}{P\acute{e}riode\ d'analyse} = \frac{1}{T}\int_0^T H(t)\,dt \]
+\end{thmbox}
+
+\begin{rembox}[title={Pourquoi passer par la surface divisée par le temps ?}]
+La somme des valeurs divisée par le nombre d'échantillons est plus simple, mais dans une
+solution \textbf{analogique} on n'a pas d'autre choix que de calculer la surface réelle (via
+une intégrale). Le calcul de surface sert à comparer les deux mondes.
+\end{rembox}
+
+\begin{goatbox}
+La moyenne d'une colline, c'est sa hauteur \og si on l'aplatissait\fg{}. On découpe la
+colline en tranches (barres), on additionne leurs surfaces et on divise par la largeur. Plus
+les tranches sont fines, plus c'est juste ; avec des tranches infiniment fines, c'est
+l'intégrale et c'est exact.
+\end{goatbox}
+
+\section{Application : signal redressé et non redressé}
+
+\slide{c01-18}{Moyenne nulle d'un sinus, moyenne non nulle du sinus redressé.}
+
+Un sinus centré a une \textbf{valeur moyenne nulle}, alors que sur le plan énergétique il
+s'est passé bien autre chose (pour s'en convaincre, ne surtout pas mettre ses doigts dans une
+prise 220\,V !). Les effets du courant ne se compensent pas : \og le retour ne compense pas
+l'aller\fg{}. C'est plutôt la \textbf{valeur absolue} du signal qui compte : calculer la
+valeur absolue s'appelle \textbf{redresser} le signal.
+
+\slide{c01-19}{Calcul de la valeur moyenne du sinus redressé.}
+
+\begin{exbox}[title={Valeur moyenne d'un sinus redressé, $V(t) = A\sin(\omega t)$}]
+Le signal redressé est compliqué à écrire ; on intègre le sinus sur une
+\textbf{demi-période} $T/2$, où il est positif :
+\[ Surface = \int_0^{T/2} A\sin(2\pi f t)\,dt
+   = -\frac{A}{2\pi f}\Big[\cos(2\pi f t)\Big]_0^{T/2}
+   = -\frac{AT}{2\pi}\big[\cos\pi - \cos 0\big] = \frac{AT}{\pi} \]
+$V_{MOY}$ = surface / période d'analyse, avec période d'analyse $= T/2$ :
+\[ \boxed{V_{MOY} = \frac{AT/\pi}{T/2} = \frac{2A}{\pi}} \qquad
+   \text{A.N. : } A = 1\text{ V} \Rightarrow V_{MOY} = 0{,}636\text{ V} \]
+Ce n'est \textbf{pas} le $1/\sqrt2 \approx 0{,}7$\,V de la valeur efficace. D'où vient la
+différence ? Voir la section suivante.
+\end{exbox}
+
+\section{Calcul de la valeur efficace}
+
+\slide{c01-20}{De l'énergie à la valeur efficace $U_{EFF} = A/\sqrt2$.}
+
+\begin{thmbox}[title=Valeur efficace (liée à la puissance)]
+L'\textbf{énergie} est la somme de toutes les puissances :
+\[ \acute{E}nergie = \int_0^T P(t)\,dt = \int_0^T U(t)\,I(t)\,dt
+   = \int_0^T \frac{U^2(t)}{R}\,dt = \int_0^T R\,I^2(t)\,dt \quad\text{(appliquée à $R$)} \]
+La \textbf{puissance efficace} est comparable à la puissance moyenne :
+\[ P_{EFF} = \frac{\acute{E}nergie}{T} = U_{EFF}\cdot I_{EFF} = \frac{U_{EFF}^2}{R} = R\,I_{EFF}^2 \]
+\end{thmbox}
+
+\begin{exbox}[title={Calcul pour $U(t) = A\sin(2\pi f t)$ sur une résistance}]
+\[ \acute{E}nergie = \int_0^T \frac{A^2\sin^2(2\pi f t)}{R}\,dt
+   = \int_0^T \frac{A^2\,[1-\cos(4\pi f t)]}{2R}\,dt
+   = \frac{A^2}{R}\left[\frac t2 - \frac{\sin 4\pi f t}{8\pi f}\right]_0^T
+   = \frac{A^2 T}{2R} \]
+(les termes en sinus s'annulent car $\sin(4\pi fT) = \sin 4\pi = 0$). Donc
+\[ \boxed{P_{EFF} = \frac{\acute{E}nergie}{T} = \frac{A^2}{2R} = \frac{U_{EFF}^2}{R}
+   \quad\Longrightarrow\quad U_{EFF} = \frac{A}{\sqrt2}} \]
+A.N. : $A = 1$\,V $\Rightarrow U_{EFF} = 0{,}707$\,V.
+\end{exbox}
+
+\begin{propbox}[title=Moyenne vs efficace]
+La valeur efficace est obtenue \textbf{depuis la puissance} : c'est la tension continue qui
+donnerait la même puissance moyenne dans une résistance. La valeur moyenne du redressé
+($2A/\pi\approx 0{,}636A$) mesure la surface ; la valeur efficace ($A/\sqrt2\approx0{,}707A$)
+mesure l'énergie (elle passe par le carré). Si on connaît $U_{EFF}$ et $I_{EFF}$ :
+$P_{EFF} = U_{EFF}\cdot I_{EFF}$, et pour une résistance $U_{EFF} = R\cdot I_{EFF}$.
+\end{propbox}
+
+\begin{goatbox}
+La valeur efficace, c'est la tension continue qui chaufferait une résistance exactement
+autant que le sinus qui monte et descend. Le sinus atteint $A$ au sommet, mais il passe
+aussi du temps près de zéro ; \og en moyenne d'énergie\fg{}, cela fait comme une tension
+constante $A/\sqrt2$.
+\end{goatbox}
+
+\begin{recapbox}[title={Récap pour l'examen --- C01 : Signaux et sources}]
+\begin{itemize}
+  \item \textbf{Signal} = information + phénomène (énergie). $U$ : statique (répartition de
+        charges) ; $I$ : dynamique (charges en mouvement). Majuscules = continu, minuscules
+        = variable. Courant électrique opposé au mouvement des électrons.
+  \item Périodique : se répète après $T$ ; tout signal périodique = somme de sin/cos
+        (Fourier). Sinus : crête $A$, crête-crête $2A$, moyenne, \textbf{efficace}.
+  \item \textbf{Potentiel} : par rapport à une référence. \textbf{Tension} : différence entre
+        deux points. Terre = 0\,V absolu, masse = 0\,V relatif au système. Équipotentielle
+        = points reliés par un fil parfait. Court-circuit = même potentiel ; circuit ouvert
+        = aucune liaison.
+  \item Courant : il faut une source \textbf{et} un circuit fermé. Loi d'Ohm $U = RI$.
+  \item \textbf{Convention} : $U$ et $I$ de même sens $\Rightarrow$ même signe. $P = UI > 0$ :
+        récepteur (absorbe) ; $P<0$ : source (donne). Une source peut être récepteur
+        ($U_1 = 2$\,V face à $U_2 = 5$\,V).
+  \item \textbf{Source de tension réelle} : $U_0$ + $r_i$ en \textbf{série} :
+        $U_R = U_0\frac{R}{R+r_i}$, $I = \frac{U_0}{R+r_i}$. \textbf{Source de courant
+        réelle} : $I_0$ + $r_i$ en \textbf{parallèle} : $I_R = I_0\frac{r_i}{R+r_i}$,
+        $U_R = I_0 (R/\!/r_i)$. Idéales : $U_R = U_0$, resp.\ $I_R = I_0$, quelle que soit $R$.
+  \item Superposition : $U_0 + u_1(t)$ voulue, ou bruit gênant.
+  \item Moyenne : $\frac{1}{T}\int_0^T H(t)\,dt$ (limite des histogrammes). Sinus : moyenne
+        nulle ; redressé : $V_{MOY} = 2A/\pi \approx 0{,}636A$.
+  \item \textbf{Efficace} : $P_{EFF} = \frac{1}{T}\int_0^T P\,dt = \frac{U_{EFF}^2}{R}$ ;
+        sinus : $U_{EFF} = A/\sqrt2 \approx 0{,}707A$, $P_{EFF} = \frac{A^2}{2R}$.
+\end{itemize}
+\textbf{Pour la suite} : le C00 a dit que tout part des signaux et des sources ; ce
+chapitre les définit, avec la loi d'Ohm comme premier lien entre $U$ et $I$. Le C02 ajoute
+les deux autres composants passifs (C et L) et les lois de Kirchhoff pour assembler le tout ;
+le diviseur résistif vu ici (source réelle, superposition) y sera démontré.
+\end{recapbox}

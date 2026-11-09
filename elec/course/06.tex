@@ -1,0 +1,369 @@
+% =========================================================
+\chapter{C06 --- Impulsions : le saut indiciel dans les circuits RC}
+% =========================================================
+
+\begin{rembox}[title=En bref]
+\textbf{De quoi parle ce chapitre ?} Le couple $[R, C]$ revient partout (diodes,
+transistors, AOP) : \textbf{volontairement}, pour réaliser des fonctions, ou
+\textbf{involontairement}, comme modèle de phénomènes parasites qui limitent ou perturbent
+le système. On l'étudie ici avec la deuxième catégorie de signaux : le \textbf{saut
+indiciel} (les signaux carrés des horloges numériques). \\
+\textbf{Les trois objectifs} :
+\begin{enumerate}
+  \item \textbf{le retour au temporel} : face à un saut brutal, le raccourci des complexes
+        ne marche plus, on revient aux équations différentielles (premier ordre seulement :
+        un seul condensateur, autant de résistances que nécessaire) ;
+  \item \textbf{la continuité de la tension} : la tension aux bornes d'un condensateur ne
+        peut pas sauter instantanément ($\Delta t\to0$) ; cela fixe les conditions
+        initiales ;
+  \item \textbf{la formule magique et sa recette} : une formule unique pour tous les circuits
+        d'ordre 1 (passe-bas et passe-haut), qui dépend de la valeur initiale, de la valeur
+        finale et de $\tau = RC$, pour résoudre les 4 \og angles\fg{} d'un signal carré.
+\end{enumerate}
+\end{rembox}
+
+\section{Sauts indiciels (signaux carrés)}
+
+\slide{c06-03}{Un créneau à l'entrée : ralentissement ou perturbation à la sortie.}
+
+Les combinaisons R et C forment des filtres (volontaires ou non). Leur \textbf{analyse
+temporelle} pour des sauts indiciels :
+\begin{itemize}
+  \item explique les \textbf{limites en fréquence des circuits numériques} (le créneau est
+        \textbf{ralenti} : il monte et descend lentement) ;
+  \item explique les \textbf{couplages parasites} qui produisent des \textbf{perturbations}
+        (des pics à chaque front), par exemple quand on mélange numérique et analogique.
+\end{itemize}
+Il faut comprendre \textbf{une formule magique} et \textbf{une recette de cuisine}.
+
+\section{Saut indiciel sur un passe-bas}
+
+\slide{c06-04}{Avant et après la fermeture de l'interrupteur.}
+
+\begin{exbox}[title={Observations : RC passe-bas, interrupteur fermé à $t_0 = 0$}]
+\textbf{Avant le saut} (interrupteur ouvert) : $i = 0$, $V_A = V_B = 0$, et par hypothèse le
+condensateur est déchargé, $V_C = 0$. \\
+\textbf{Après} : $V_0$ est appliquée instantanément en A.
+\begin{center}
+\begin{tabular}{c|c|c|c}
+ & $t_0 = 0$ & $t_1 > t_0$ & $t_2 \gg t_0$ \\ \hline
+$V_C$ & 0 & $\nearrow$ & $V_C = V_A = V_0$ \\
+$V_B$ & 0 & $\nearrow$ & $V_B = V_A = V_0$ \\
+$V_A$ & $V_0$ & $=$ & $=$ \\
+$i$ & $\frac{V_A - V_B}{R}$ & $\searrow$ & 0 \\
+\end{tabular}
+\end{center}
+La différence de potentiel entre A et B fait circuler un courant qui charge C. $V_C$ monte
+tant qu'il y a du courant ; quand $V_C$ atteint $V_0$, plus de différence de potentiel
+entre A et B, $i = 0$ et le système n'évolue plus. Ici $V_C = V_B$.
+\end{exbox}
+
+\slide{c06-05}{Analyse graphique : $i$ décroît de $V_0/R$ à 0, $V_C$ monte de 0 à $V_0$.}
+
+\begin{propbox}[title=Ce qui est facile à calculer]
+\[ i_{MAX} = \frac{V_0}{R}\quad (t = 0,\ V_B = 0) \qquad i_{MIN} = 0 \qquad
+   V_{B\_MIN} = 0 \qquad V_{B\_MAX} = V_0 \]
+$i_{MAX}$ est obtenu quand la différence de potentiel entre A et B est maximale
+(condensateur vide, $V_B = 0$) ; $i_{min}$ quand $V_B$ a atteint $V_A$. Question : comment
+déterminer l'allure exacte des courbes ?
+\end{propbox}
+
+\slide{c06-06}{Équation, transitoire et permanent.}
+
+\begin{thmbox}[title=Équation du passe-bas]
+\[ i = \frac{V_0 - V_C}{R} = C\frac{dV_C}{dt} \qquad\Longleftrightarrow\qquad
+   V_0 = RC\frac{dV_C}{dt} + V_C \]
+Deux discours : mathématique (équation \textbf{sans} et \textbf{avec} second membre) et
+physique (\textbf{transitoire} et \textbf{permanent}) :
+\begin{itemize}
+  \item \textbf{Transitoire} : ne dépend pas de l'excitation ; c'est le comportement pour
+        revenir à l'état d'équilibre. Équation sans second membre :
+        $0 = RC\frac{dV_C}{dt} + V_C$.
+  \item \textbf{Permanent} : dépend de l'excitation, $V_C$ a l'allure de $V_0$ :
+        $V_0 = $ cte $\Rightarrow V_C = $ cte $\Rightarrow \frac{dV_C}{dt} = 0 \Rightarrow V_C = V_0$.
+\end{itemize}
+Pour un circuit linéaire, la réponse finit par avoir l'allure du signal (ici un palier).
+La réponse complète est la \textbf{somme} des deux.
+\end{thmbox}
+
+\slide{c06-07}{Résolution de l'équation sans second membre.}
+
+\begin{proofbox}[title=Développement]
+\[ RC\frac{dV_C}{dt} + V_C = 0 \Rightarrow \frac{dV_C}{V_C} = -\frac{dt}{RC}
+   \Rightarrow \int\frac{dV_C}{V_C} = -\frac1{RC}\int dt
+   \Rightarrow \log(V_C) = -\frac t{RC} + K_1 \]
+\[ V_C = e^{-\frac t{RC} + K_1} = e^{-\frac t{RC}}e^{K_1} = K_2\,e^{-\frac t{RC}} \]
+Comportement complet = transitoire + permanent :
+\[ V_C = V_0 + K_2\,e^{-\frac t{RC}} \qquad\text{et } K_2\ ? \]
+\end{proofbox}
+
+\slide{c06-08}{Avec $V_C(0) = 0$ : $K_2 = -V_0$.}
+
+\begin{thmbox}[title={Cas particulier : condensateur déchargé, $V_C(0) = 0$}]
+On utilise une valeur simple : à $t = 0$ le condensateur n'a pas eu le temps de se charger :
+$V_C(0) = 0 = V_0 + K_2 e^0 \Rightarrow K_2 = -V_0$.
+\[ \boxed{V_C = V_0\left(1 - e^{-\frac t{RC}}\right)} = \text{permanent ($V_0$)} + \text{transitoire ($-V_0e^{-t/RC}$)} \]
+Interprétation : $-V_0$ est le \textbf{déficit} du circuit par rapport à son état
+d'équilibre ; $-V_0e^{-t/\tau}$ dit comment l'équilibre est retrouvé.
+\end{thmbox}
+
+\slide{c06-09}{Avec une charge initiale $K$.}
+
+\begin{thmbox}[title={Condition initiale différente : $V_C(0) = K$}]
+$V_C(0) = K = V_0 + K_2 e^0 \Rightarrow K_2 = K - V_0$ :
+\[ V_C = V_0 + (K - V_0)\,e^{-\frac t{RC}} = K + (V_0 - K)\left(1 - e^{-\frac t{RC}}\right) \]
+\end{thmbox}
+
+\begin{goatbox}
+Le condensateur est un seau qu'on remplit à travers un tuyau étroit (R). Au début le seau
+est vide, l'eau entre très vite (gros courant). Plus il se remplit, moins il y a de
+différence de niveau, plus l'eau entre lentement. Il ne déborde jamais : il s'approche du
+niveau $V_0$ de plus en plus doucement. C'est la courbe en exponentielle.
+\end{goatbox}
+
+\section{Saut indiciel sur un passe-haut}
+
+\slide{c06-10}{Passe-haut : que vaut $V_B$ juste après le saut ?}
+
+Le passe-haut est plus subtil. Avant le saut : $i = 0$, $V_C = 0$ (hypothèse), $V_A = V_B = 0$,
+$V_R = 0$ (pas de courant, boucle ouverte). À la fermeture, $V_0$ arrive instantanément en A.
+\textbf{Mais que vaut $V_B$ ?} On sait seulement qu'après un long temps le système trouve un
+équilibre où aucun courant ne charge ni ne décharge C.
+
+\section{Comportement de la capacité : la continuité de la tension}
+
+\slide{c06-11}{En un temps nul, aucune charge ne bouge : la tension aux bornes de C ne saute pas.}
+
+\begin{thmbox}[title={Continuité de la tension aux bornes d'un condensateur}]
+\textbf{Vision physique} : si $\Delta t = 0$, aucune charge n'a eu le temps de bouger :
+$\Delta Q = 0$. Or $\Delta Q = C\,\Delta V$, donc $\Delta V = 0$. Avec $V = V_A - V_B$ :
+\[ \Delta V = \Delta V_A - \Delta V_B = 0 \Rightarrow \boxed{\Delta V_A = \Delta V_B} \]
+Quand A saute brusquement, \textbf{B saute exactement de la même quantité}. \\
+\textbf{Autre vision} : $\underline Z_C = \frac1{j\omega C}$ ; si $\omega = 0$, C est un
+\textbf{circuit ouvert} ; si $\omega$ est infini, C est un \textbf{court-circuit}. Un saut qui
+dure 0\,s équivaut à une fréquence infinie : \textbf{pour le saut, C est un court-circuit}.
+\end{thmbox}
+
+\begin{goatbox}
+C'est comme une photo : si on déplace la photo d'un coup, rien n'a eu le temps de bouger
+\emph{dans} la photo. Le condensateur est une barre rigide entre A et B : si on soulève
+brusquement A de 6\,cm, B monte aussi de 6\,cm. Ce n'est qu'ensuite, avec le temps, que la
+barre peut \og s'allonger ou se raccourcir\fg{} (se charger ou se décharger).
+\end{goatbox}
+
+\slide{c06-12}{Quatre exemples : B saute toujours autant que A.}
+
+\begin{exbox}[title={Exemples de sauts (superposition : état avant + effet du saut)}]
+Avec un saut en un temps nul, on superpose l'état qui précédait le saut (contribution
+\og continue\fg{}) et l'effet du saut (contribution \og variable\fg{}, C court-circuit) :
+\begin{itemize}
+  \item A passe de 2\,V à 8\,V ($+6$\,V), B était à 5\,V $\Rightarrow$ B passe à 11\,V ;
+  \item A passe de 3\,V à 10\,V ($+7$\,V), B était à $-1$\,V $\Rightarrow$ B passe à 6\,V ;
+  \item A passe de 8\,V à 2\,V ($-6$\,V), B était à 13\,V $\Rightarrow$ B passe à 7\,V ;
+  \item A passe de 10\,V à 3\,V ($-7$\,V), B était à 4\,V $\Rightarrow$ B passe à $-3$\,V.
+\end{itemize}
+Dans chaque cas, la tension aux bornes de C ($V_A - V_B$) est la même en $0^-$ et en $0^+$.
+\end{exbox}
+
+\slide{c06-13}{Passe-haut : $V_B$ saute à $V_0$ puis redescend à 0.}
+
+\begin{exbox}[title={Analyse complète du passe-haut}]
+\begin{center}
+\begin{tabular}{c|c|c|c}
+ & $t_0 = 0$ & $t_1 > t_0$ & $t_2 \gg t_0$ \\ \hline
+$V_C$ & 0 & $\nearrow$ & $V_0$ \\
+$V_B$ & $0 + V_0$ & $\searrow$ & 0 \\
+$V_A$ & $0 + V_0$ & $V_0$ & $V_0$ \\
+$i$ & $\frac{V_B}{R} = \frac{V_0}{R}$ & $\searrow$ & 0 \\
+\end{tabular}
+\end{center}
+$V_C(0) = 0$ donc $V_A = V_B = V_0$ juste après le saut. La tension sur R crée un courant qui
+charge C ; $V_B$ descend jusqu'à 0. Avec les équations :
+\[ i = \frac{V_B}{R} = C\frac{dV_C}{dt} = C\frac{d(V_A - V_B)}{dt}, \quad V_A = V_0 = \text{cte}
+   \Rightarrow \frac{dV_B}{V_B} = -\frac{dt}{RC} \]
+On a directement l'équation sans second membre : le \textbf{permanent vaut 0} et
+$V_B = K_2\,e^{-t/RC}$.
+\end{exbox}
+
+\slide{c06-14}{$V_B = V_0e^{-t/RC}$ : transitoire = comportement complet.}
+
+\begin{thmbox}[title={Passe-haut, cas particulier $V_B(0) = V_0$}]
+$V_B(0) = V_0 = K_2e^0 \Rightarrow K_2 = V_0$ :
+\[ \boxed{V_B = V_0\,e^{-\frac t{RC}}} \]
+Transitoire = comportement complet ; permanent = 0. $V_C$ a une allure symétrique à $V_B$
+(elle monte de 0 à $V_0$).
+\end{thmbox}
+
+\slide{c06-15}{Avec une charge initiale $K$ : $V_B = (V_0 + K)e^{-t/RC}$.}
+
+\begin{thmbox}[title={Passe-haut, condition initiale différente}]
+L'équation ne change pas : $i = \frac{V_B}{R} = C\frac{d(V_A - V_B)}{dt}$ et
+$-dV_B = \frac1{RC}V_B\,dt$. Si avant le saut $V_B = V_A + K$ (charge initiale), juste après
+le saut $V_B(0) = K + V_0 = K_2$ :
+\[ V_B(t) = (V_0 + K)\,e^{-\frac t{RC}} \]
+\end{thmbox}
+
+\begin{exbox}[title={Exemple du commentaire de la diapositive}]
+Un condensateur chargé avec 0\,V côté A et 3\,V côté B (ce qui compte, c'est l'écart de 3\,V
+en faveur de B). B est relié à la masse par R, A est en l'air. B passe instantanément à 0
+(pas de courant dans R), donc A passe instantanément à $-3$\,V (l'écart reste 3\,V). Si on
+connecte maintenant A à une source de 10\,V : A passe de $-3$ à 10\,V ($+13$\,V), donc B passe
+de 0 à 13\,V. Le saut de $V_B$ est décalé de la tension initiale $K$ (ici $+3$\,V).
+\end{exbox}
+
+\section{Cas général : la formule magique}
+
+\slide{c06-16}{Une seule formule pour passe-bas et passe-haut ; $\tau = RC$.}
+
+\begin{thmbox}[title={La formule magique (premier ordre, passe-bas ou passe-haut)}]
+\[ \boxed{V(t) = V(0) + \big(V(\infty) - V(0)\big)\cdot\left(1 - e^{-\frac t{RC}}\right)} \]
+\begin{itemize}
+  \item $V(0)$ : l'\textbf{état initial} (juste après le saut) ;
+  \item $V(\infty) - V(0)$ : le \textbf{chemin à parcourir} (si on laissait le temps) ;
+  \item $1 - e^{-t/RC}$ : la \textbf{loi de parcours}, le \textbf{pourcentage du chemin
+        parcouru} ;
+  \item le produit est le \textbf{chemin parcouru}.
+\end{itemize}
+\end{thmbox}
+
+\begin{propbox}[title={La constante de temps $\tau = RC$}]
+\begin{itemize}
+  \item $V(\tau)$ = \textbf{63\,\%} du chemin ;
+  \item la pente à l'origine vaut $1/\tau$ : la tangente en 0 coupe la valeur finale au bout
+        de $t = \tau$ ;
+  \item $V(5\tau) > $ \textbf{99\,\%} : on considère charge et décharge \textbf{complètes} ;
+  \item $V(7\tau) > 99{,}9\,\%$.
+\end{itemize}
+\end{propbox}
+
+\begin{goatbox}
+La formule magique dit : \og là où je suis = là où j'étais + (là où je vais -- là où
+j'étais) $\times$ le pourcentage de route déjà faite\fg{}. Après un $\tau$, la chèvre a fait
+63\,\% du chemin ; après cinq $\tau$, elle est pratiquement arrivée.
+\end{goatbox}
+
+\section{Application}
+
+\slide{c06-17}{Exercice : $V_{CC} = 10$\,V, $R_1 = 5$\,k$\Omega$, $R_2 = 15$\,k$\Omega$, $C_1 = 100$\,nF.}
+
+\begin{rembox}[title=Ce que dit le cours]
+Ce circuit exploite le \textbf{théorème de superposition} : un signal continu $V_{CC} = 10$\,V
+et un signal variable $v_{IN}(t)$. Pour $V_{CC}$, seules les résistances jouent
+(\textbf{diviseur résistif}, C est un circuit ouvert en continu) ; pour $v_{IN}$, le signal
+voit un \textbf{filtre passe-haut}, les deux résistances étant alors \textbf{en parallèle}
+($V_{CC}$ éteinte = court-circuit).
+\end{rembox}
+
+\begin{exbox}[title={Solution proposée (calculs ajoutés avec les méthodes du cours, pas dans les slides)}]
+\textbf{Partie continue} : $V_{OUT,DC} = V_{CC}\frac{R_2}{R_1 + R_2} = 10\cdot\frac{15}{20} = 7{,}5$\,V. \\
+\textbf{Partie variable} : $R_1/\!/R_2 = \frac{5\cdot15}{20} = 3{,}75$\,k$\Omega$, donc
+$\tau = 3{,}75\,\text{k}\Omega\times100\,\text{nF} = 375\,\mu$s,
+$\omega_0 = 1/\tau\approx2667$\,rad/s ($f_0\approx424$\,Hz).
+
+\textbf{Exercice 1} ($v_{IN} = 5\sin(2\pi\cdot1000\,t)$) : $\omega/\omega_0\approx2{,}36$ ;
+passe-haut : $|\underline H| = \frac{\omega/\omega_0}{\sqrt{1 + (\omega/\omega_0)^2}}\approx0{,}92$
+et $\varphi = \frac\pi2 - \arctan(2{,}36)\approx23\ensuremath{^\circ}$. Donc $v_{OUT}$ est un sinus
+d'amplitude $\approx4{,}6$\,V, en avance d'environ $23\ensuremath{^\circ}$, \textbf{centré sur 7,5\,V}.
+
+\textbf{Exercice 2} (créneau 0/5\,V, paliers de 500\,$\mu$s) : $5\tau = 1{,}875$\,ms $>$
+500\,$\mu$s, donc la charge \textbf{n'est pas complète} pendant un palier. Au premier front
+montant, $v_{OUT}$ saute de $+5$\,V (continuité aux bornes de C) : $7{,}5\to12{,}5$\,V, puis
+redescend vers 7,5\,V avec $\tau = 375\,\mu$s ; après 500\,$\mu$s (formule magique) :
+$7{,}5 + 5e^{-500/375}\approx8{,}8$\,V. Au front descendant, il saute de $-5$\,V
+($\approx3{,}8$\,V) puis remonte vers 7,5\,V, et ainsi de suite.
+\end{exbox}
+
+\section{Recette de cuisine pour un signal carré}
+
+\slide{c06-18}{Montage : $2R$ puis C, sortie A (avant C) et B (sur R).}
+
+\begin{exbox}[title={Le montage et ses allures}]
+$v_{IN}$ (créneau de 0 à $V_{CC}$) attaque $2R$ ; le point A est entre $2R$ et C ; le point B
+entre C et R (vers la masse). Constante de temps :
+\[ \tau = (R + 2R)\cdot C = 3RC \]
+Les allures (justifiées ci-dessous), en supposant les paliers plus longs que $5\tau$ :
+\begin{itemize}
+  \item $V_A$ (rouge) : saute à $\frac{V_{CC}}3$ en $t_1$, monte vers $V_{CC}$ ; en $t_3$
+        retombe à $V_{CC} - \frac{V_{CC}}3 = \frac{2V_{CC}}3$, puis descend vers 0 ;
+  \item $V_B$ (vert) : saute à $\frac{V_{CC}}3$ en $t_1$, redescend vers 0 ; en $t_3$ saute à
+        $-\frac{V_{CC}}3$, puis remonte vers 0.
+\end{itemize}
+Les expressions littérales donnent des résultats précis grâce à la proportionnalité simple
+entre les résistances.
+\end{exbox}
+
+\slide{c06-19}{Calcul de $\tau$ : on court-circuite $v_{IN}$, C se décharge à travers $2R + R$.}
+
+\begin{thmbox}[title={Comment calculer $\tau$}]
+Soit en posant l'équation différentielle, soit plus simplement : on \textbf{court-circuite la
+source} $v_{IN}$ (retour à l'équilibre, pas d'excitation) et on regarde \textbf{la résistance
+vue par le condensateur} --- le réseau à travers lequel il doit se décharger. Ici $2R$ et $R$
+se retrouvent \textbf{en série} : $\tau = 3RC$ (le schéma ressemble alors au passe-bas du
+début).
+\end{thmbox}
+
+\begin{warnbox}[title=Vérifier avant d'utiliser les allures]
+Avec des valeurs numériques, vérifier que $\tau$ est assez petit devant $T/2$ (en pratique
+$5\tau < T/2$) pour affirmer que charge et décharge sont complètes. Sinon, utiliser la formule
+magique avec le temps réel du palier.
+\end{warnbox}
+
+\slide{c06-20}{Analyse aux quatre temps significatifs.}
+
+\begin{thmbox}[title={La recette : 4 instants}]
+On étudie le circuit en 4 points : $t_1$ juste après le saut positif, $t_2$ juste avant le
+saut négatif, $t_3$ juste après le saut négatif, $t_4$ juste avant le saut positif.
+\begin{itemize}
+  \item \textbf{Juste après un saut ($t_1$, $t_3$)} : superposition de l'état \textbf{avant
+        le saut} (DC, encore présent après 0\,s) et de l'\textbf{effet du saut} (AC, avec C
+        \textbf{court-circuit}) : $V = V(DC) + V(AC)$.
+  \item \textbf{Juste avant un saut ($t_2$, $t_4$)}, si le temps écoulé dépasse $5\tau$ : C
+        est revenu au repos, c'est un \textbf{circuit ouvert} ; les rapports résistifs donnent
+        les tensions.
+\end{itemize}
+\end{thmbox}
+
+\begin{exbox}[title={Le tableau rempli}]
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{c|l|l}
+ & $V_A$ & $V_B$ \\ \hline
+avant $t_1$ & 0 & 0 \\
+$t_1$ (saut $+V_{CC}$) & $0 + V_{CC}\frac{R}{R + 2R} = \frac{V_{CC}}3$ & $0 + \frac{V_{CC}}3$ \\
+$t_2$ (entrée stable $V_{CC}$) & $V_{CC}$ (pas de courant dans $2R$) & 0 (pas de courant dans R) \\
+$t_3$ (saut $-V_{CC}$) & $V_{CC} - \frac{V_{CC}}3 = \frac{2V_{CC}}3$ & $0 - \frac{V_{CC}}3$ \\
+$t_4$ (entrée stable 0) & 0 & 0 \\
+\end{tabular}
+\end{center}
+Juste après chaque saut, la différence $V_A - V_B$ n'a pas changé (ce qui était prévisible) :
+0 en $t_1$, $V_{CC}$ en $t_3$.
+\end{exbox}
+
+\begin{recapbox}[title={Récap pour l'examen --- C06 : Impulsions}]
+\begin{itemize}
+  \item Saut indiciel = front de créneau (horloges). Les RC (voulus ou parasites)
+        \textbf{ralentissent} les fronts ou créent des \textbf{perturbations}. Pas de
+        complexes ici : on revient au \textbf{temporel}, ordre 1.
+  \item Réponse = \textbf{transitoire} (sans second membre, $Ke^{-t/RC}$, ne dépend pas de
+        l'excitation) + \textbf{permanent} (a l'allure de l'excitation).
+  \item Passe-bas : $V_0 = RC\frac{dV_C}{dt} + V_C$ ; $V_C = V_0(1 - e^{-t/RC})$ ;
+        $i_{MAX} = V_0/R$. Avec charge initiale $K$ : $V_C = V_0 + (K - V_0)e^{-t/RC}$.
+  \item Passe-haut : permanent 0, $V_B = V_0e^{-t/RC}$ ; avec charge initiale
+        $V_B = (V_0 + K)e^{-t/RC}$.
+  \item \textbf{Continuité} : la tension aux bornes de C ne saute pas
+        ($\Delta Q = C\Delta V = 0$) $\Rightarrow\Delta V_A = \Delta V_B$. Pour un saut, C
+        = \textbf{court-circuit} ; à l'équilibre, C = \textbf{circuit ouvert}.
+  \item \textbf{Formule magique} :
+        $V(t) = V(0) + (V(\infty) - V(0))(1 - e^{-t/\tau})$, $\tau = RC$ ; 63\,\% en $\tau$,
+        $>99\,\%$ en $5\tau$, pente à l'origine $1/\tau$.
+  \item $\tau$ = C $\times$ \textbf{résistance vue par C, sources éteintes} (ex. $3RC$).
+  \item \textbf{Recette carré} : 4 instants ; juste après un saut = état avant (DC) +
+        effet du saut avec C court-circuit (AC) ; juste avant un saut (si $>5\tau$) = C
+        ouvert, diviseurs résistifs.
+\end{itemize}
+\textbf{Comment ça s'appuie sur le reste} : l'équation RC du C02 est enfin résolue ; la
+superposition et l'extinction des sources (C03) servent à chaque saut ; le comportement de C
+en court-circuit/ouvert vient de $\underline Z_C = 1/j\omega C$ (C04) ; $\tau = 1/\omega_0$
+fait le lien avec Bode (C05). Le C07 introduit le premier composant \textbf{non linéaire}, la
+diode, où la superposition ne s'applique plus directement.
+\end{recapbox}

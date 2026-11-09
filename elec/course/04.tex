@@ -1,0 +1,483 @@
+% =========================================================
+\chapter{C04 --- Impédances et fonction de transfert}
+% =========================================================
+
+\begin{rembox}[title=En bref]
+\textbf{De quoi parle ce chapitre ?} Prédire le comportement de circuits R, C (et L) soumis à
+des \textbf{sinus}. La notation \textbf{complexe} évite deux difficultés : résoudre des
+\textbf{équations différentielles}, et manipuler à la fois des \textbf{amplitudes et des
+phases}. \\
+\textbf{Les trois objectifs} : la correspondance sinus $\leftrightarrow$ complexes ; le
+concept d'\textbf{impédance} $\underline Z$ (C et L se comportent comme une \og résistance
+imaginaire\fg{} qui varie avec la fréquence) ; la \textbf{fonction de transfert}, un diviseur
+d'impédances qui donne, selon la fréquence, l'atténuation et le déphasage entre entrée et
+sortie.
+\end{rembox}
+
+\section{Rappels : R, C, L et la difficulté des combinaisons}
+
+\slide{c04-03}{Seuls : facile. Combinés (R et C) : équations différentielles.}
+
+\begin{propbox}[title=Le degré de complexité]
+\begin{enumerate}
+  \item \textbf{Résistances uniquement} : $U = RI$, équations linéaires ; série, parallèle et
+        étoile $\leftrightarrow$ triangle faciles.
+  \item \textbf{Condensateurs uniquement} : $i = \frac{dq}{dt}$ (a) $= C\frac{du}{dt}$ (b) ;
+        avec la charge $Q = CV$ on a encore un système linéaire.
+  \item \textbf{Inductances uniquement} : $u = L\frac{di}{dt}$ ; mêmes facilités.
+  \item \textbf{Combinaisons} : plus délicat, on travaille sur des \textbf{équations
+        différentielles} (premier ordre pour RC ou RL avec un seul élément réactif, second
+        ordre pour RLC). \textbf{Dans ce cours on se limite aux combinaisons R et C.}
+\end{enumerate}
+\end{propbox}
+
+\section{Circuit de base et analyse temporelle}
+
+\slide{c04-04}{Le circuit RC de base et son équation différentielle.}
+
+\begin{thmbox}[title=Circuit RC : équation temporelle]
+Le même courant circule dans R et dans C (Kirchhoff) :
+\[ i(t) = \frac{u_{IN}(t) - u_{OUT}(t)}{R} = C\frac{du_{OUT}}{dt}
+   \qquad\text{ou encore}\qquad u_{IN}(t) = u_{OUT}(t) + RC\frac{du_{OUT}}{dt} \]
+C'est une \textbf{équation différentielle du premier ordre}. Avec des sinus, on utilisera
+une méthode plus simple, les \textbf{complexes} : l'analyse temporelle est remplacée par une
+\textbf{analyse fréquentielle}.
+\end{thmbox}
+
+Sur la diapositive, le condensateur : d'un côté on extrait des électrons, de l'autre on en
+injecte ; un champ électrique apparaît entre les armatures.
+
+\slide{c04-05}{La même équation, deux excitations : saut indiciel et sinus.}
+
+\begin{propbox}[title=Deux types de signaux]
+L'équation différentielle est posée de la même façon ; seule l'\textbf{excitation} change
+(capacité supposée déchargée au départ, $u_{OUT}(0) = 0$) :
+\begin{itemize}
+  \item \textbf{saut indiciel} (variation brutale, par exemple le front d'une horloge) : la
+        sortie (rouge) monte progressivement vers l'entrée (bleue) ;
+  \item \textbf{signal sinusoïdal} : la sortie est un sinus plus petit et décalé.
+\end{itemize}
+Dans les deux cas, la réponse = un \textbf{transitoire} + un \textbf{régime permanent}
+(atteint au bout d'un \og certain\fg{} temps). Pour un sinus, seul le
+\textbf{permanent} nous intéresse (le démarrage a peu d'intérêt) : c'est lui qu'on étudie
+avec les complexes. Le saut indiciel sera traité au chapitre C06.
+\end{propbox}
+
+\section{Avec une résistance : pas de déphasage}
+
+\slide{c04-06}{Résistance : courant et tension en phase.}
+
+\begin{thmbox}[title=Résistance en sinusoïdal]
+Source de tension $u(t) = U_0\sin(\omega t)$ :
+$i(t) = \frac{u(t)}{R} = \frac{U_0}{R}\sin(\omega t) = I_0\sin(\omega t)$ avec
+$I_0 = U_0/R$. \\
+Source de courant $i(t) = I_0\sin(\omega t)$ : $u(t) = R\,i(t) = R I_0\sin(\omega t)$, avec
+$U_0 = R I_0$. \\
+Dans les deux cas $\sin(\omega t)$ pour $u$ et $i$ : \textbf{avec R, courant et tension sont
+en phase.}
+\end{thmbox}
+
+\begin{warnbox}[title=Amplitude ou valeur efficace ?]
+$I_0$ et $U_0$ sont des \textbf{amplitudes} (parfois notées $\hat I$, $\hat U$). On utilise
+aussi très souvent la \textbf{valeur efficace}, notée $I$ ou $I_{EFF}$, $U$ ou $U_{EFF}$
+(pour les puissances). Les notations $I$ et $U$ sont ambiguës, mais si on écrit
+$i(t) = I\sqrt2\sin(\omega t)$ et $u(t) = U\sqrt2\sin(\omega t)$, le doute n'est plus permis
+(rappel C01 : $U_{EFF} = U_0/\sqrt2$).
+\end{warnbox}
+
+\section{Avec un condensateur : déphasage de $\pi/2$}
+
+\slide{c04-07}{Condensateur : le courant est en avance de $\pi/2$.}
+
+\begin{thmbox}[title=Condensateur en sinusoïdal]
+\textbf{Tension imposée} $u(t) = U_0\sin(\omega t)$ (on dérive) :
+\[ i(t) = C\frac{du}{dt} = C\omega U_0\cos(\omega t) = C\omega U_0\sin\!\left(\omega t + \frac\pi2\right) \]
+\textbf{Courant imposé} $i(t) = I_0\sin(\omega t)$ (on intègre, $du = \frac{i\,dt}{C}$) :
+\[ u(t) = \int\frac{I_0\sin(\omega t)}{C}\,dt = \frac{-I_0\cos(\omega t)}{\omega C}
+   = \frac{-I_0\sin(\omega t + \frac\pi2)}{\omega C} = \frac{I_0\sin(\omega t - \frac\pi2)}{\omega C} \]
+\textbf{Conclusion} : déphasage \textbf{constant} de $\frac\pi2$ entre courant et tension ;
+\textbf{$i(t)$ est en avance sur $u(t)$}.
+\end{thmbox}
+
+\section{Avec une inductance : déphasage de $\pi/2$}
+
+\slide{c04-08}{Inductance : la tension est en avance de $\pi/2$.}
+
+\begin{thmbox}[title=Inductance en sinusoïdal]
+\textbf{Courant imposé} $i(t) = I_0\sin(\omega t)$ :
+\[ u(t) = L\frac{di}{dt} = L\omega I_0\cos(\omega t) = L\omega I_0\sin\!\left(\omega t + \frac\pi2\right) \]
+\textbf{Tension imposée} $u(t) = U_0\sin(\omega t)$ :
+\[ i(t) = \int\frac{U_0\sin(\omega t)}{L}\,dt = \frac{-U_0\cos(\omega t)}{\omega L}
+   = \frac{U_0\sin(\omega t - \frac\pi2)}{\omega L} \]
+\textbf{Conclusion} : déphasage constant de $\frac\pi2$ ; cette fois \textbf{$u(t)$ est en
+avance sur $i(t)$}.
+\end{thmbox}
+
+\begin{goatbox}
+Le condensateur est un réservoir : le débit (courant) est le plus fort quand le niveau
+(tension) change le plus vite, donc \emph{avant} que le niveau soit au sommet : le courant
+est en avance. L'inductance est une roue lourde : il faut d'abord pousser (tension) avant
+qu'elle prenne de la vitesse (courant) : la tension est en avance. Un moyen mnémotechnique
+classique (pas dans les slides) : \og CIVIL\fg{} --- dans C, I avant V ; V avant I dans L.
+\end{goatbox}
+
+\section{Commentaires : vers l'impédance}
+
+\slide{c04-09}{C et L se comportent comme des résistances qui dépendent de la fréquence.}
+
+\begin{propbox}[title=Constat]
+\begin{itemize}
+  \item Tension aux bornes de R : $U = R\cdot I$.
+  \item Aux bornes de C : $u(t) = \frac{I_0\sin(\omega t - \pi/2)}{\omega C}$, de la forme
+        $U = \frac{1}{\omega C}\cdot I_2$ ($I_2$ différent du courant $I$ : il est déphasé).
+  \item Aux bornes de L : $u(t) = L\omega I_0\sin(\omega t + \pi/2)$, de la forme
+        $U = \omega L\cdot I_2$.
+\end{itemize}
+$\frac1{\omega C}$ est comparable à une résistance qui \textbf{diminue} avec la fréquence ;
+$\omega L$ à une résistance qui \textbf{augmente} avec la fréquence.
+\end{propbox}
+
+\begin{rembox}[title={Objectif : un outil mathématique qui permet}]
+\begin{itemize}
+  \item d'\textbf{absorber le problème du déphasage} :
+        $A\sin(\omega t) + B\sin(\omega t - \frac\pi2) = A\sin(\omega t) + X\sin(\omega t) = (A + X)\sin(\omega t)$ ;
+  \item d'assimiler la capacité (idem l'inductance) à une \textbf{résistance variable}
+        $\to$ \textbf{impédance} ;
+  \item de reproduire le déphasage en temps utile ;
+  \item une représentation aisée quelle que soit la fréquence $\to$ \textbf{diagramme de
+        Bode} (C05).
+\end{itemize}
+\end{rembox}
+
+\section{Le sinus et le cercle trigonométrique}
+
+\slide[0.75]{c04-10}{Représenter le sinus sur le cercle plutôt que dans le temps.}
+
+Quel que soit le nombre de périodes, le profil d'un sinus $y(t) = A\sin(\omega t)$ se répète
+tous les $2\pi$. Idée : \textbf{ne pas représenter le signal sur l'axe des Y en fonction du
+temps, mais sur le cercle trigonométrique}. La position du point dépend de la rotation
+$\omega t$ ; après une période, $\omega T = 2\pi$ et on repasse par le point de départ.
+
+\slide[0.75]{c04-11}{Un point M : coordonnées polaires et projections.}
+
+\begin{defnbox}[title=Point M sur le cercle]
+\begin{itemize}
+  \item Coordonnées polaires : $M = \rho\,e^{i\theta}$ avec $\omega t = \theta$ et
+        $A = \rho$ (le rayon).
+  \item Projection sur Y : $y_1 = \rho\sin(\omega t) = \rho\sin\theta$ ; sur X :
+        $x_1 = \rho\cos(\omega t) = \rho\cos\theta$.
+\end{itemize}
+\end{defnbox}
+
+\section{Autres représentations : vecteurs et plan complexe}
+
+\slide[0.8]{c04-12}{Vecteurs (Fresnel) et plan complexe.}
+
+\begin{defnbox}[title=Plan complexe]
+Avec des vecteurs (source d'inspiration de la représentation de Fresnel) :
+$\overrightarrow{OM} = \overrightarrow{Ox_1} + \overrightarrow{Oy_1}$, $\theta = \omega t$.
+Dans le \textbf{plan complexe} (axe des réels Re, axe des imaginaires Im) :
+\[ M = x_1 + i\,y_1 \ \text{(mathématiciens)} \qquad M = x_1 + j\,y_1 \ \text{(physiciens)} \]
+$i$ et $j$ précisent qu'il s'agit de l'axe des imaginaires. En électronique on écrit
+\textbf{$j$} (car $i$ est le courant). Le diagramme de Fresnel n'est pas exploité dans ce
+cours.
+\end{defnbox}
+
+\section{Intérêt : module et argument}
+
+\slide{c04-13}{M porte deux informations : son module et son argument.}
+
+\begin{thmbox}[title=Module et argument]
+On peut s'affranchir des $\sin(\omega t)$ : à tout moment on retrouve $y_1 = \rho\sin\theta$
+et $x_1 = \rho\cos\theta$, car $M$ porte \textbf{deux informations} :
+\begin{enumerate}
+  \item sa \og longueur\fg{}, le \textbf{module} (Pythagore) :
+        $\rho^2 = x_1^2 + y_1^2$, soit $\rho = \sqrt{x_1^2 + y_1^2}$ ;
+  \item son déphasage par rapport à l'axe des réels, l'\textbf{argument} $\theta$ :
+        $\sin\theta = \frac{y_1}{\sqrt{x_1^2+y_1^2}}$,
+        $\cos\theta = \frac{x_1}{\sqrt{x_1^2+y_1^2}}$,
+        $\tan\theta = \frac{y_1}{x_1} = \frac{Im}{Re}$.
+\end{enumerate}
+$\theta = \arctan\left(\frac{Im}{Re}\right)$ : \textbf{\og pas tout à fait\fg{}} --- cela
+dépend du quadrant.
+\end{thmbox}
+
+\section{Calcul de l'argument : 4 cas}
+
+\slide{c04-14}{L'argument selon le quadrant.}
+
+\begin{thmbox}[title=Argument selon le quadrant]
+\begin{enumerate}
+  \item 1\textsuperscript{er} quadrant ($Im>0$, $Re>0$) :
+        $\theta_1 = \arctan\left(\frac{Im}{Re}\right)$
+  \item 2\textsuperscript{e} quadrant ($Im>0$, $Re<0$) :
+        $\theta_2 = \pi + \arctan\left(\frac{Im}{Re}\right) = \pi - \arctan\left(\left|\frac{Im}{Re}\right|\right)$
+  \item 3\textsuperscript{e} quadrant ($Im<0$, $Re<0$) :
+        $\theta_3 = \pi + \arctan\left(\frac{Im}{Re}\right)$
+  \item 4\textsuperscript{e} quadrant ($Im<0$, $Re>0$) :
+        $\theta_4 = \arctan\left(\frac{Im}{Re}\right) = -\arctan\left(\left|\frac{Im}{Re}\right|\right)$
+\end{enumerate}
+\end{thmbox}
+
+\begin{warnbox}[title=Le piège]
+La calculatrice donne $\arctan$ entre $-\frac\pi2$ et $+\frac\pi2$ : elle ne voit que les
+quadrants 1 et 4. Si la \textbf{partie réelle est négative}, il faut \textbf{ajouter $\pi$}.
+\end{warnbox}
+
+\section{Autres propriétés des nombres complexes : le $j$}
+
+\slide{c04-15}{Tourner de $\pi/2$ = multiplier par $j$.}
+
+\begin{thmbox}[title=Multiplier par $j$ = tourner de $\pi/2$]
+$M = x_1 + j y_1 = \rho\cos\theta_1 + j\rho\sin\theta_1$. Partons de
+$M_1 = \rho\cos(0) + j\rho\sin(0) = \rho$.
+\begin{itemize}
+  \item $M_1 \to M_2$ (déphasage $\frac\pi2$) :
+        $M_2 = \rho\cos\frac\pi2 + j\rho\sin\frac\pi2 = j\rho = j\,M_1$.
+        \textbf{Conséquence 1} : ajouter un déphasage de $\pi/2$ revient à
+        \textbf{multiplier par $j$}.
+\end{itemize}
+\end{thmbox}
+
+\slide{c04-16}{$j^2 = -1$, $j^3 = -j$, $1/j = -j$, $j^4 = 1$.}
+
+\begin{thmbox}[title=Les puissances de $j$]
+\begin{itemize}
+  \item $M_1 \to M_3$ (déphasage $\pi$) : $M_3 = \rho\cos\pi = -\rho = -M_1$.
+        \textbf{Conséquence 2.a} : déphaser de $\pi$ = multiplier par $-1$. Et
+        $M_3 = jM_2 = j^2 M_1$, donc \textbf{conséquence 2.b} : $\boxed{j^2 = -1}$.
+  \item $M_1 \to M_4$ (déphasage $3\pi/2$) : $M_4 = j\rho\sin\frac{3\pi}2 = -j\rho = -jM_1$.
+        \textbf{Conséquence 3.a} : déphaser de $3\pi/2$ = multiplier par $-j$. Et
+        $M_4 = jM_3 = j^2M_2 = j^3M_1$, donc \textbf{3.b} : $\boxed{j^3 = -j}$.
+  \item \textbf{Conséquence 4} : $-j = \frac{-j\cdot j}{j} = \frac1j$ et
+        $j^4 = j^3\cdot j = -j\cdot j = -(-1) = 1$ (on retombe sur nos pattes).
+\end{itemize}
+\end{thmbox}
+
+\begin{goatbox}
+$j$ c'est un quart de tour. Une chèvre qui regarde vers l'est et fait un quart de tour
+regarde le nord ($j$) ; deux quarts de tour, elle regarde l'ouest, c'est-à-dire
+\og le contraire\fg{} ($j^2 = -1$) ; trois, le sud ($-j$) ; quatre, elle est revenue ($j^4 = 1$).
+\end{goatbox}
+
+\section{Notion d'impédance complexe}
+
+\slide{c04-17}{Remplacer le déphasage $-\pi/2$ par un facteur $-j$ : l'impédance $1/(j\omega C)$.}
+
+\begin{thmbox}[title=Impédance complexe]
+Pour $i(t) = I_0\sin(\omega t)$ : avec R, $u_S = R I_0\sin(\omega t)$ ; avec C,
+$u_S = \frac{I_0}{\omega C}\sin(\omega t - \frac\pi2)$. On voudrait la forme
+$K\sin(\omega t)$ pour \textbf{travailler sans se préoccuper du déphasage}. Comme un déphasage
+de $-\pi/2$ (soit $3\pi/2$) revient à multiplier par $j^3 = -j$ :
+\[ u_S(t) = \frac{I_0}{\omega C}\sin\!\left(\omega t - \frac\pi2\right)
+   = -j\frac{I_0}{\omega C}\sin(\omega t) = \frac{I_0}{j\omega C}\sin(\omega t) \]
+Par analogie avec $U = RI$ :
+\begin{itemize}
+  \item avec R : $u_S = R\,i$ ;
+  \item avec C : $\underline{u}_S = \underline Z_C\,\underline i$ où
+        $\boxed{\underline Z_C = \dfrac1{j\omega C}}$ ;
+  \item avec L : $\underline{u}_S = \underline Z_L\,\underline i$ où
+        $\boxed{\underline Z_L = j\omega L}$.
+\end{itemize}
+(Écrire $u_S(t) = R_C\,i(t)$ est une \og écriture impropre\fg{} : il faut passer aux
+grandeurs complexes soulignées.)
+\end{thmbox}
+
+\begin{goatbox}
+L'impédance, c'est une \og résistance\fg{} qui contient aussi le quart de tour. Pour un
+condensateur, elle est énorme aux basses fréquences (le réservoir a le temps de se remplir
+complètement, ensuite plus rien ne passe : il bloque presque tout) et minuscule aux hautes fréquences ($\frac1{\omega C}\to0$,
+il laisse tout passer). Pour une inductance, c'est le contraire.
+\end{goatbox}
+
+\section{Petite parenthèse : produit et rapport}
+
+\slide[0.75]{c04-18}{En polaire, produits et rapports sont faciles.}
+
+\begin{thmbox}[title=Produit et rapport en module et argument]
+Avec $M_1 = \rho_1 e^{j\theta_1}$ et $M_2 = \rho_2 e^{j\theta_2}$ :
+\[ M_1\cdot M_2 = \rho_1\rho_2\,e^{j(\theta_1+\theta_2)} \qquad
+   \frac{M_1}{M_2} = \frac{\rho_1}{\rho_2}\,e^{j(\theta_1-\theta_2)} \]
+\textbf{Produit} : module = produit des modules, argument = somme des arguments.
+\textbf{Rapport} : module = rapport des modules, argument = différence des arguments.
+\end{thmbox}
+
+\section{Application aux circuits : la fonction de transfert}
+
+\slide{c04-19}{Le RC devient un diviseur d'impédances : $\underline H(j\omega) = \frac{1}{1 + j\omega RC}$.}
+
+\begin{thmbox}[title=Fonction de transfert]
+On remplace C par son impédance $\underline Z_C$ : le circuit RC est un \textbf{diviseur
+résistif} (d'impédances). On calcule $\frac{\underline u_S}{\underline u}$ plutôt que
+$\frac{u_S(t)}{u(t)}$ :
+\[ \frac{\underline u_S}{\underline u} = \frac{\underline Z_C}{R + \underline Z_C}
+   = \frac{\frac1{j\omega C}}{R + \frac1{j\omega C}} = \frac1{1 + j\omega RC} = \underline H(j\omega) \]
+(ne pas laisser sous la forme avec des fractions empilées). Ce rapport s'appelle la
+\textbf{FONCTION DE TRANSFERT}. C'est un complexe, dont on calcule :
+\begin{itemize}
+  \item le \textbf{module} $|\underline H(j\omega)|$ : compare, selon $\omega$, les
+        \textbf{amplitudes} de la sortie et de l'entrée ;
+  \item l'\textbf{argument} $\mathrm{Arg}(\underline H(j\omega))$ : donne, selon $\omega$, le
+        \textbf{déphasage} entre la sortie et l'entrée.
+\end{itemize}
+Ici (module d'un rapport = rapport des modules, argument d'un rapport = différence des
+arguments) :
+\[ |\underline H(j\omega)| = \frac{1}{\sqrt{1 + (\omega RC)^2}} \qquad
+   \mathrm{Arg}(\underline H(j\omega)) = 0 - \arctan(\omega RC) = -\arctan(\omega RC) \]
+\end{thmbox}
+
+\section{Filtre passe-bas}
+
+\slide{c04-20}{Étude aux limites du passe-bas.}
+
+\begin{propbox}[title={Passe-bas $\underline H = \frac1{1+j\omega RC}$ : étude aux limites}]
+\textbf{Module} $\frac1{\sqrt{1+(\omega RC)^2}}$ :
+\begin{itemize}
+  \item $\omega\to0$ : $|\underline H|\to1$ (pas d'atténuation) ;
+  \item $\omega\to\infty$ : $|\underline H|\to0$ (atténuation complète).
+\end{itemize}
+\textbf{Argument} $-\arctan(\omega RC)$ :
+\begin{itemize}
+  \item $\omega\to0$ : $0$ ;
+  \item $\omega\to\infty$ : $-\pi/2$.
+\end{itemize}
+Les basses fréquences passent, les hautes sont atténuées : \textbf{filtre passe-bas}. Le
+déphasage est nul en basse fréquence et maximal ($-\pi/2$) en haute fréquence.
+\end{propbox}
+
+\section{Filtre passe-haut}
+
+\slide{c04-21}{En permutant R et C : passe-haut $\underline H = \frac{j\omega RC}{1 + j\omega RC}$.}
+
+\begin{propbox}[title={Passe-haut : R et C permutés}]
+\[ \underline H(j\omega) = \frac{\underline u_S}{\underline u} = \frac{R}{R + \underline Z_C}
+   = \frac{R}{R + \frac1{j\omega C}} = \frac{j\omega RC}{1 + j\omega RC} \]
+\[ |\underline H(j\omega)| = \frac{\omega RC}{\sqrt{1 + (\omega RC)^2}} \qquad
+   \mathrm{Arg}(\underline H(j\omega)) = \frac\pi2 - \arctan(\omega RC) \]
+\begin{itemize}
+  \item $\omega\to0$ : $|\underline H|\to0$ (atténuation complète), argument $\pi/2$ ;
+  \item $\omega\to\infty$ : $|\underline H|\to1$ (pas d'atténuation), argument
+        $\pi/2 - \pi/2 = 0$.
+\end{itemize}
+\textbf{Filtre passe-haut} : déphasage maximal ($\pi/2$) en basse fréquence, nul en haute
+fréquence.
+\end{propbox}
+
+\begin{exbox}[title={Méthode : reconnaître un filtre en 10 secondes}]
+Remplacer C par un \textbf{circuit ouvert} à $\omega\to0$ ($\underline Z_C\to\infty$) et par
+un \textbf{fil} à $\omega\to\infty$ ($\underline Z_C\to0$), puis regarder la sortie :
+\begin{itemize}
+  \item RC avec sortie sur C : à basse fréquence C ouvert, $u_S = u$ ; à haute fréquence C
+        fil, $u_S = 0$ $\Rightarrow$ passe-bas ;
+  \item CR avec sortie sur R : à basse fréquence C ouvert, plus de courant, $u_S = 0$ ; à
+        haute fréquence $u_S = u$ $\Rightarrow$ passe-haut.
+\end{itemize}
+(C'est exactement l'étude aux limites $\omega\to0$ et $\omega\to\infty$ du cours, faite sur le
+schéma.)
+\end{exbox}
+
+\begin{goatbox}
+Un filtre, c'est une porte qui laisse passer certaines chèvres selon leur vitesse. Le
+passe-bas laisse passer les chèvres lentes (basses fréquences) et arrête les rapides. Le
+passe-haut fait l'inverse. Et en plus d'être freinées, les chèvres arrivent un peu en retard
+ou en avance : c'est le déphasage.
+\end{goatbox}
+
+\section{Les composants de base en sinusoïdal}
+
+\slide{c04-22}{Le tableau des impédances (tension en fonction du courant) et des admittances.}
+
+\begin{thmbox}[title=Tableau en grandeurs complexes]
+Pour un dipôle d'impédance $\underline Z$ entre A et B : $\underline v = f_1(\underline i)$,
+$\underline i = f_2(\underline v)$.
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{c|c|c}
+ & $\underline v$ & $\underline i$ \\ \hline
+R & $R\,\underline i$ & $\dfrac{\underline v}{R}$ \\
+C & $\dfrac1{j\omega C}\,\underline i$ & $\underline v\,j\omega C$ \\
+L & $j\omega L\,\underline i$ & $\dfrac1{j\omega L}\,\underline v$ \\
+\end{tabular}
+\end{center}
+Comparer avec le tableau du C02 : \textbf{dériver devient multiplier par $j\omega$,
+intégrer devient diviser par $j\omega$}. La colonne $\underline v$ donne les
+\textbf{impédances}, la colonne $\underline i$ les \textbf{admittances}.
+\end{thmbox}
+
+\section{Cas particuliers : RC et RLC en sinusoïdal}
+
+\slide{c04-23}{Le RC du C02, en complexe.}
+
+\begin{exbox}[title={RC : même démarche (Kirchhoff) que la diapositive 4}]
+\[ \underline i = \frac{\underline u_{IN} - \underline v}{R} = \underline v\,j\omega C
+   \;\Rightarrow\; \frac{\underline u_{IN}}{R} = \frac{\underline v}{R} + \underline v\,j\omega C
+   = \underline v\left(\frac{1 + j\omega RC}{R}\right)
+   \;\Rightarrow\; \underline v = \underline u_{IN}\cdot\frac1{1 + j\omega RC} \]
+L'équation différentielle du premier ordre est devenue une simple fraction. Pour l'analyse,
+se référer au cours sur les diagrammes de Bode.
+\end{exbox}
+
+\slide{c04-24}{Le RLC du C02, en complexe : du second ordre, mais simple.}
+
+\begin{exbox}[title={RLC série, sortie sur L}]
+\[ \underline u_{IN} = R\underline i + \frac{\underline i}{j\omega C} + j\omega L\underline i \]
+\[ \underline v = \underline u_{IN}\cdot\frac{j\omega L}{R + \frac1{j\omega C} + j\omega L}
+   = \underline u_{IN}\cdot\frac{(j\omega)^2 LC}{1 + j\omega RC + (j\omega)^2 LC} \]
+Toujours du second ordre (le $(j\omega)^2$), mais bien plus simple à exploiter que
+l'équation différentielle.
+\end{exbox}
+
+\section{Exemples d'application : impédances équivalentes}
+
+\slide{c04-25}{Deux impédances équivalentes calculées pas à pas.}
+
+Les règles série/parallèle des résistances s'appliquent \textbf{telles quelles} aux
+impédances.
+
+\begin{exbox}[title={$\underline Z_{EQ1}$ : $R_1$ en parallèle avec ($R_2$ série C)}]
+\[ \underline Z_A = R_2 + \underline Z_C = R_2 + \frac1{j\omega C} = \frac{1 + j\omega R_2C}{j\omega C} \]
+\[ \underline Z_{EQ1} = \frac{R_1\underline Z_A}{R_1 + \underline Z_A}
+   = \frac{R_1(1 + j\omega R_2C)}{j\omega C R_1 + 1 + j\omega R_2C}
+   = \frac{R_1(1 + j\omega R_2C)}{1 + j\omega C(R_1 + R_2)} \]
+\end{exbox}
+
+\begin{exbox}[title={$\underline Z_{EQ2}$ : ($R_1$ parallèle C) en série avec $R_2$}]
+\[ \underline Z_B = \frac{R_1\underline Z_C}{R_1 + \underline Z_C}
+   = \frac{R_1\frac1{j\omega C}}{R_1 + \frac1{j\omega C}} = \frac{R_1}{1 + j\omega R_1C} \]
+\[ \underline Z_{EQ2} = \underline Z_B + R_2 = \frac{R_1 + R_2(1 + j\omega R_1C)}{1 + j\omega R_1C}
+   = \frac{R_1 + R_2 + j\omega R_1R_2C}{1 + j\omega R_1C} \]
+\[ \underline Z_{EQ2} = (R_1 + R_2)\cdot\frac{1 + j\omega\frac{R_1R_2}{R_1+R_2}C}{1 + j\omega R_1C} \]
+La dernière forme, \og constante $\times\frac{1 + j\omega/\ldots}{1 + j\omega/\ldots}$\fg{},
+est celle qu'il faut viser pour Bode (C05).
+\end{exbox}
+
+\begin{recapbox}[title={Récap pour l'examen --- C04 : Impédances}]
+\begin{itemize}
+  \item Combinaison R + C $\Rightarrow$ équation différentielle
+        ($u_{IN} = u_{OUT} + RC\frac{du_{OUT}}{dt}$). Réponse = transitoire + permanent ; pour
+        un sinus on n'étudie que le \textbf{permanent}, avec les complexes.
+  \item \textbf{R} : $u$ et $i$ en phase. \textbf{C} : $i$ en avance de $\pi/2$ sur $u$,
+        amplitude $U_0 = I_0/(\omega C)$. \textbf{L} : $u$ en avance de $\pi/2$ sur $i$,
+        $U_0 = \omega L I_0$. Déphasage constant.
+  \item Plan complexe : $M = x + jy = \rho e^{j\theta}$, module $\rho = \sqrt{x^2+y^2}$,
+        argument $\arctan(Im/Re)$ \textbf{+ $\pi$ si $Re<0$}.
+  \item $j$ = rotation de $\pi/2$ ; $j^2 = -1$, $j^3 = -j$, $1/j = -j$, $j^4 = 1$.
+  \item \textbf{Impédances} : $\underline Z_R = R$, $\underline Z_C = \frac1{j\omega C}$,
+        $\underline Z_L = j\omega L$. Toutes les méthodes (Kirchhoff, diviseur, Millman,
+        Thévenin, série/parallèle) s'appliquent avec $\underline Z$.
+  \item Produit : modules $\times$, arguments $+$. Rapport : modules $\div$, arguments $-$.
+  \item \textbf{Fonction de transfert} $\underline H(j\omega) = \underline u_S/\underline u$ :
+        module = rapport d'amplitudes, argument = déphasage sortie/entrée.
+  \item \textbf{Passe-bas} RC : $\frac1{1+j\omega RC}$, $|H| = \frac1{\sqrt{1+(\omega RC)^2}}$,
+        $\varphi = -\arctan(\omega RC)$ : de 1 à 0, de $0$ à $-\pi/2$.
+        \textbf{Passe-haut} CR : $\frac{j\omega RC}{1+j\omega RC}$,
+        $|H| = \frac{\omega RC}{\sqrt{1+(\omega RC)^2}}$, $\varphi = \frac\pi2 - \arctan(\omega RC)$ :
+        de 0 à 1, de $\pi/2$ à $0$.
+  \item RLC sortie sur L : $\frac{(j\omega)^2LC}{1 + j\omega RC + (j\omega)^2LC}$.
+\end{itemize}
+\textbf{Comment ça s'appuie sur le reste} : les équations différentielles du RC/RLC du C02
+deviennent de simples fractions ; le diviseur résistif (C01, C02) devient un diviseur
+d'impédances, et le quadripôle du C03 devient une fonction de transfert. Le C05 apprend à
+\textbf{dessiner} $|\underline H|$ et $\mathrm{Arg}(\underline H)$ pour toutes les
+fréquences : les diagrammes de Bode.
+\end{recapbox}

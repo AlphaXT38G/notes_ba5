@@ -1,0 +1,225 @@
+% =========================================================
+\chapter{Récapitulatif général pour l'examen}
+% =========================================================
+
+\begin{rembox}[title=Comment utiliser ce chapitre]
+Ce chapitre rassemble \textbf{tout le cours} en quelques pages : le fil conducteur, le
+formulaire complet, les méthodes pas à pas et les pièges classiques. Il ne contient rien de
+nouveau : chaque ligne renvoie à un chapitre (Cxx). La veille de l'examen, lire d'abord la
+boîte \og chèvre\fg{}, puis le formulaire, puis les méthodes.
+\end{rembox}
+
+\begin{goatbox}[title=Tout le cours expliqué à une chèvre]
+L'électricité, c'est de l'eau : la \textbf{tension} est la hauteur, le \textbf{courant} le
+débit (C01). Une \textbf{résistance} est un tuyau étroit, un \textbf{condensateur} un
+réservoir, une \textbf{inductance} une lourde roue à eau (C02). L'eau ne disparaît jamais aux
+carrefours, et faire le tour de la montagne ramène à la même altitude : ce sont les deux lois
+de \textbf{Kirchhoff} (C02). Vue de l'extérieur, toute machine compliquée faite de ces pièces
+ressemble à une seule pile avec un seul tuyau (\textbf{Thévenin}) ou une seule pompe avec une
+fuite (\textbf{Norton}), et on peut étudier chaque source séparément puis additionner
+(\textbf{superposition}, C03). Quand l'eau va et vient comme une vague (\textbf{sinus}), les
+réservoirs et les roues deviennent des \og tuyaux\fg{} dont l'étroitesse dépend de la vitesse
+de la vague : ce sont les \textbf{impédances}, et le rapport sortie/entrée est la
+\textbf{fonction de transfert} (C04). On la dessine avec des règles droites sur du papier
+logarithmique : \textbf{Bode} (C05). Quand on ouvre le robinet d'un coup (\textbf{créneau}),
+le réservoir se remplit en exponentielle, 63\,\% après $\tau$, presque tout après $5\tau$
+(C06). Enfin la \textbf{diode} est un portillon à sens unique qui demande 0,7\,V pour
+s'ouvrir, et la \textbf{Zener} cède aussi dans l'autre sens à $V_Z$ (C07).
+\end{goatbox}
+
+\section{Le fil conducteur du cours}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{0.08\linewidth}p{0.3\linewidth}p{0.52\linewidth}}
+\textbf{Ch.} & \textbf{Thème} & \textbf{Ce qu'il apporte} \\ \hline
+C00 & Introduction & mesurer/décider/agir ; analogique vs numérique ; linéarisation \\
+C01 & Signaux et sources & $U$, $I$, conventions, sources réelles, moyenne, efficace \\
+C02 & R, L, C, Kirchhoff & lois des composants, mailles/n\oe uds, Millman, Kennelly, équivalences \\
+C03 & Méthodes d'analyse & dipôles, Thévenin, Norton, superposition \\
+C04 & Impédances & complexes, $\underline Z$, fonction de transfert, filtres \\
+C05 & Bode & forme canonique, dB, asymptotes \\
+C06 & Impulsions & saut indiciel, continuité de $V_C$, formule magique \\
+C07 & Diodes & non-linéaire, droite de charge, modèles, Zener \\
+\end{tabular}
+\end{center}
+
+\section{Formulaire complet}
+
+\begin{thmbox}[title={Signaux et puissance (C01)}]
+\begin{itemize}
+  \item $U = RI$ ; $P = UI$ ($>0$ : récepteur, $<0$ : source ; $U$ et $I$ de même sens
+        $\Rightarrow$ même signe).
+  \item Moyenne : $\frac1T\int_0^T v(t)\,dt$. Sinus redressé : $V_{MOY} = \frac{2A}{\pi}\approx0{,}636A$.
+  \item Efficace : $P_{EFF} = \frac1T\int_0^T p(t)\,dt = U_{EFF}I_{EFF} = \frac{U_{EFF}^2}{R}$ ;
+        sinus : $U_{EFF} = \frac{A}{\sqrt2}\approx0{,}707A$, $P_{EFF} = \frac{A^2}{2R}$.
+  \item Source de tension réelle : $U_0$ + $r_i$ série, $U_R = U_0\frac{R}{R + r_i}$.
+        Source de courant réelle : $I_0$ + $r_i$ parallèle, $I_R = I_0\frac{r_i}{R + r_i}$.
+\end{itemize}
+\end{thmbox}
+
+\begin{thmbox}[title={Composants (C02, C04)}]
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|c|c|c|c}
+ & $u(i)$ & $i(u)$ & $\underline Z$ & en sinus \\ \hline
+R & $Ri$ & $u/R$ & $R$ & en phase \\
+C & $\frac1C\int i\,dt$ & $C\frac{du}{dt}$ & $\frac1{j\omega C}$ & $i$ en avance de $\pi/2$ \\
+L & $L\frac{di}{dt}$ & $\frac1L\int u\,dt$ & $j\omega L$ & $u$ en avance de $\pi/2$ \\
+\end{tabular}
+\end{center}
+$q = Cu$. C : ouvert en continu ($\omega = 0$), court-circuit pour un saut ($\omega\to\infty$).
+\end{thmbox}
+
+\begin{thmbox}[title={Assemblages (C02)}]
+\begin{itemize}
+  \item $R$, $L$ : série $R_1 + R_2$ ; parallèle $\frac{R_1R_2}{R_1 + R_2}$.
+        $C$ : parallèle $C_1 + C_2$ ; série $\frac{C_1C_2}{C_1 + C_2}$.
+  \item Mailles : $\sum U = 0$. N\oe uds : $\sum I_{entrants} = \sum I_{sortants}$.
+  \item Diviseur : $v_{R2} = v_{IN}\frac{R_2}{R_1 + R_2}$ (aussi avec $\underline Z$).
+  \item Millman : $V_X = \frac{\sum V_i/R_i + \sum I}{\sum 1/R_i}$.
+  \item Kennelly : $R_A = \frac{R_{AB}R_{AC}}{R_{AB} + R_{AC} + R_{BC}}$ ;
+        $R_{BC} = \frac{R_AR_B + R_AR_C + R_BR_C}{R_A}$.
+  \item RC : $v_{IN} = v + RC\frac{dv}{dt}$. RLC : $C\frac{dv_{IN}}{dt} = i + RC\frac{di}{dt} + LC\frac{d^2i}{dt^2}$.
+\end{itemize}
+\end{thmbox}
+
+\begin{thmbox}[title={Thévenin / Norton (C03)}]
+\begin{itemize}
+  \item $V_{TH}$ = tension à vide ; $I_{NO}$ = courant de court-circuit ;
+        $R_{IN}$ = résistance vue des bornes, sources éteintes ; $V_{TH} = R_{IN}I_{NO}$.
+  \item Éteindre : source de tension $\to$ fil ; source de courant $\to$ circuit ouvert.
+  \item Source linéaire : $U = U_0 - R_SI$ $\Leftrightarrow$ $U = R_PI_{CC} - R_PI$ ;
+        équivalentes si $R_S = R_P = R$ et $U_0 = RI_{CC}$.
+\end{itemize}
+\end{thmbox}
+
+\begin{thmbox}[title={Complexes et filtres (C04)}]
+\begin{itemize}
+  \item $M = x + jy = \rho e^{j\theta}$, $\rho = \sqrt{x^2 + y^2}$,
+        $\theta = \arctan\frac{y}{x}$ ($+\pi$ si $x<0$). $j^2 = -1$, $1/j = -j$.
+  \item Produit : $\rho_1\rho_2$, $\theta_1 + \theta_2$. Rapport : $\rho_1/\rho_2$,
+        $\theta_1 - \theta_2$.
+  \item Passe-bas : $\frac1{1 + j\omega RC}$, $|H| = \frac1{\sqrt{1 + (\omega RC)^2}}$,
+        $\varphi = -\arctan\omega RC$.
+  \item Passe-haut : $\frac{j\omega RC}{1 + j\omega RC}$, $|H| = \frac{\omega RC}{\sqrt{1 + (\omega RC)^2}}$,
+        $\varphi = \frac\pi2 - \arctan\omega RC$.
+\end{itemize}
+\end{thmbox}
+
+\begin{thmbox}[title={Bode (C05)}]
+\begin{itemize}
+  \item $|H|_{dB} = 20\log|H|$ ; $\times10\to+20$\,dB, $\times2\to+6$\,dB,
+        $1/\sqrt2\to-3$\,dB.
+  \item Forme canonique $K\cdot\frac{\prod(j\omega/\omega_Z)(1 + j\omega/\omega_Z)}{\prod(j\omega/\omega_P)(1 + j\omega/\omega_P)}$ ;
+        les dB et les phases s'additionnent.
+  \item Zéro $1 + j\omega/\omega_Z$ : $+20$\,dB/déc après $\omega_Z$ ; phase $0\to90\ensuremath{^\circ}$ de
+        $0{,}1\omega_Z$ à $10\omega_Z$. Pôle : $-20$\,dB/déc, $0\to-90\ensuremath{^\circ}$. Erreurs : 3\,dB,
+        $5{,}7\ensuremath{^\circ}$.
+  \item $j\omega/\omega_Z$ : $+20$\,dB/déc partout, $+90\ensuremath{^\circ}$. $K<0$ : phase $\pi$.
+\end{itemize}
+\end{thmbox}
+
+\begin{thmbox}[title={Impulsions (C06)}]
+\begin{itemize}
+  \item $V(t) = V(0) + (V(\infty) - V(0))\left(1 - e^{-t/\tau}\right)$, $\tau = RC$ ($R$ vue
+        par C, sources éteintes).
+  \item 63\,\% en $\tau$ ; $>99\,\%$ en $5\tau$ ; $>99{,}9\,\%$ en $7\tau$ ; pente initiale
+        $1/\tau$.
+  \item Continuité : $\Delta V_A = \Delta V_B$ aux bornes de C lors d'un saut.
+  \item Passe-bas : $V_C = V_0(1 - e^{-t/\tau})$ ; passe-haut : $V_B = V_0e^{-t/\tau}$.
+\end{itemize}
+\end{thmbox}
+
+\begin{thmbox}[title={Diodes (C07)}]
+\begin{itemize}
+  \item $I_D = I_S(e^{U_D/nU_T} - 1)$, $U_T = 26$\,mV (27\ensuremath{^\circ}C), $1<n<2$.
+  \item Droite de charge : $I = \frac{U_E - U_D}{R}$ ; point de repos = intersection.
+  \item Modèle : passante $\to$ $U_j = 0{,}7$\,V et $I = \frac{U_E - U_j}{R}$ ; bloquée
+        $\to$ circuit ouvert. Zener : conduit aussi en inverse à $-V_Z$.
+\end{itemize}
+\end{thmbox}
+
+\section{Les méthodes pas à pas}
+
+\begin{exbox}[title={Résoudre un circuit en continu (C02, C03)}]
+\begin{enumerate}
+  \item Flécher courants et tensions (convention : même sens $\Rightarrow$ même signe).
+  \item Simplifier ce qui est en série/parallèle (\textbf{sans jamais avaler la charge
+        étudiée}) ; Kennelly si c'est bloqué.
+  \item Une seule tension de n\oe ud cherchée $\to$ \textbf{Millman}. Plusieurs sources
+        $\to$ \textbf{superposition} ou \textbf{Thévenin/Norton} en alternance (parallèle
+        $\to$ Norton, série $\to$ Thévenin).
+  \item Sinon, Kirchhoff : équations \textbf{indépendantes} (mailles sans source de
+        courant, n\oe uds sans source de tension).
+\end{enumerate}
+\end{exbox}
+
+\begin{exbox}[title={Trouver un modèle de Thévenin (C03)}]
+\begin{enumerate}
+  \item Retirer la charge. $V_{TH}$ = tension à vide entre les bornes.
+  \item Éteindre toutes les sources ; $R_{IN}$ = résistance vue des bornes.
+  \item (Ou $I_{NO}$ en court-circuit, puis $R_{IN} = V_{TH}/I_{NO}$.)
+  \item Remettre la charge : $V_L = V_{TH}\frac{R_L}{R_L + R_{IN}}$.
+\end{enumerate}
+\end{exbox}
+
+\begin{exbox}[title={Fonction de transfert et Bode (C04, C05)}]
+\begin{enumerate}
+  \item Limites physiques : $\omega\to0$ (C ouvert, L fil), $\omega\to\infty$ (C fil, L
+        ouvert) : que vaut la sortie ? (passe-bas, passe-haut, passe-bande\ldots)
+  \item Remplacer par les impédances ; diviseur ou Millman $\to$ $\underline H(j\omega)$.
+  \item Mettre sous \textbf{forme canonique} ; repérer $K$, zéros, pôles ; trier les
+        pulsations.
+  \item Tracer chaque terme (module puis phase), additionner intervalle par intervalle.
+  \item Vérifier la cohérence avec l'étape 1.
+\end{enumerate}
+\end{exbox}
+
+\begin{exbox}[title={Signal carré sur un circuit RC (C06)}]
+\begin{enumerate}
+  \item $\tau$ : éteindre la source, résistance vue par C, $\tau = R_{vue}C$ ; comparer
+        $5\tau$ à la durée d'un palier.
+  \item Juste après un saut : état d'avant (DC) + effet du saut avec C en court-circuit
+        (AC) ; la tension aux bornes de C ne change pas.
+  \item Juste avant le saut suivant (si $>5\tau$) : C ouvert, diviseurs résistifs. Sinon
+        formule magique avec le temps réel.
+  \item Relier les points par des exponentielles de constante $\tau$.
+\end{enumerate}
+\end{exbox}
+
+\begin{exbox}[title={Circuit à diodes (C07)}]
+\begin{enumerate}
+  \item Supposer chaque diode passante ($U_j$) ou bloquée (ouverte).
+  \item Calculer avec les lois linéaires ; le courant par la \textbf{loi d'Ohm}.
+  \item Vérifier les hypothèses (courant dans le bon sens / tension sous le seuil) ; sinon
+        changer d'hypothèse.
+  \item Pour un sinus en entrée : chercher les seuils d'entrée où chaque diode bascule,
+        dessiner la sortie zone par zone (écrêtage).
+\end{enumerate}
+\end{exbox}
+
+\section{Les pièges classiques}
+
+\begin{warnbox}[title=À ne pas oublier le jour de l'examen]
+\begin{itemize}
+  \item \textbf{Terre $\neq$ masse} ; un potentiel se donne toujours par rapport à une
+        référence.
+  \item \textbf{Amplitude $\neq$ valeur efficace} (facteur $\sqrt2$) ; moyenne du redressé
+        ($2A/\pi$) $\neq$ efficace ($A/\sqrt2$).
+  \item \textbf{C} se combine à l'envers de R (en parallèle, on additionne).
+  \item Ne pas fusionner la \textbf{charge} qu'on étudie.
+  \item Pas de source de courant dans une \textbf{maille}, pas de source de tension sur un
+        \textbf{n\oe ud} utilisé.
+  \item Millman : la résistance reliée à la masse reste au \textbf{dénominateur} ; celle en
+        série avec une source de courant \textbf{disparaît}.
+  \item Éteindre une source : tension $\to$ \textbf{fil}, courant $\to$ \textbf{trou}.
+  \item Argument : \textbf{$+\pi$ si la partie réelle est négative}.
+  \item Bode : la phase d'un terme du premier ordre s'étale sur \textbf{deux décades} ; un
+        $K$ négatif ajoute $\pi$.
+  \item Saut : la tension aux bornes de C \textbf{ne saute pas} ; $\tau$ = R \textbf{vue par
+        C} (pas forcément une seule résistance).
+  \item Diode : jamais $U_j$ dans l'\textbf{exponentielle} ; toujours vérifier l'état
+        supposé.
+\end{itemize}
+\end{warnbox}

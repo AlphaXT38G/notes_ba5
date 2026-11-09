@@ -1,0 +1,284 @@
+% =========================================================
+\chapter{C00 --- Introduction : le monde de l'électronique}
+% =========================================================
+
+\begin{rembox}[title=En bref]
+\textbf{De quoi parle ce chapitre ?} Il situe l'électronique : à quoi elle sert (mesurer,
+décider, agir sur l'environnement), comment est construit un système électronique (capteurs,
+conditionnement, conversion, traitement, actuateurs), quand choisir une solution
+\textbf{analogique} ou \textbf{numérique}, et pourquoi on \textbf{linéarise} des composants qui
+ne le sont pas. Il donne enfin le plan de tout le cours. \\
+\textbf{Ce qu'il faut retenir :} l'exemple de l'aquarium, le tableau avantages /
+inconvénients analogique vs numérique, et l'idée de modélisation linéaire.
+\end{rembox}
+
+\begin{rembox}[title=Organisation du cours (Moodle)]
+\begin{itemize}
+  \item Annonces importantes : liens, dates, recommandations pour les midterms.
+  \item Cours en 2 versions : slides de présentation et \textbf{slides avec commentaires}
+        (ces notes suivent la version commentée).
+  \item Exercices et corrigés complets (disponibles le soir de la séance), forum de questions.
+  \item Pas de livres ; enregistrements du cours sur GoogleDrive.
+\end{itemize}
+\end{rembox}
+
+\section{Le monde de l'électronique}
+
+Le cours relie quatre notions : l'\textbf{électricité} (la nature), les \textbf{technologies}
+(composants et sources, issus de la physique et de la chimie), les \textbf{applications}
+(qui manipulent de l'énergie ou de l'information) et les \textbf{concepts de traitement}
+(\textbf{analogique} ou \textbf{numérique}).
+
+\section{Nature des applications : l'exemple de l'aquarium}
+
+\slide{c00-05}{Interagir avec l'environnement : mesurer (A), décider (B), agir (C).}
+
+\begin{exbox}[title=Régulation d'un aquarium --- à la main]
+\begin{itemize}
+  \item[\textbf{A.}] \textbf{Mesurer et observer} l'environnement : la température, le pH,
+        l'apparence des poissons, l'opacité.
+  \item[\textbf{B.}] \textbf{Décider} : selon nos perceptions, que faire ?
+  \item[\textbf{C.}] \textbf{Agir} sur l'environnement : selon l'équipement disponible,
+        déclencher la pompe à oxygène, et/ou mettre de la lumière, filtrer l'eau, nourrir
+        les poissons.
+\end{itemize}
+\end{exbox}
+
+\slide{c00-06}{Le même travail fait par un système électronique : A', B', C'.}
+
+Un \textbf{système électronique} peut remplacer (ou aider) l'humain. On a alors un système
+\textbf{autonome ou supervisé} :
+\begin{itemize}
+  \item Mesurer et observer : \textbf{A'} (le système), éventuellement A (l'humain) ;
+  \item Décider : \textbf{B'} et/ou B ;
+  \item Agir : éventuellement C et C'.
+\end{itemize}
+
+\begin{goatbox}
+Une chèvre qui garde un aquarium regarde l'eau (mesurer), réfléchit (décider), puis appuie
+sur le bouton de la pompe (agir). Un système électronique fait exactement la même chose,
+mais avec des capteurs à la place des yeux, un circuit à la place du cerveau et des
+moteurs/lampes à la place des sabots.
+\end{goatbox}
+
+\section{Les systèmes électroniques}
+
+\slide{c00-07}{Chaîne complète d'un système électronique.}
+
+\begin{defnbox}[title=Les blocs d'un système électronique]
+\begin{itemize}
+  \item \textbf{Capteurs} : transforment une grandeur physique (température, pH\ldots) en
+        signal électrique.
+  \item \textbf{Conditionnement} : mise en forme du signal --- amplification, filtrage,
+        adaptation d'impédance, changement de gamme, de dimension, modulation.
+  \item \textbf{Échantillonnage \& conversion} : \textbf{CAN} (convertisseur
+        analogique-numérique) vers le traitement numérique, \textbf{CNA}
+        (numérique-analogique) pour revenir vers le monde réel.
+  \item \textbf{Traitement} : \textbf{analogique}, ou \textbf{numérique} (hardware et/ou
+        software). Une éventuelle \textbf{transmission} entre les deux.
+  \item \textbf{Actuateurs} : agissent sur l'environnement (pompe, lumière\ldots), précédés
+        d'un conditionnement.
+  \item Le tout a besoin d'une \textbf{alimentation}.
+\end{itemize}
+\end{defnbox}
+
+\section{Choix d'une solution numérique ou analogique}
+
+\slide{c00-08}{Ce que savent faire les opérateurs analogiques et numériques.}
+
+\begin{propbox}[title=Opérateurs analogiques]
+\begin{itemize}
+  \item Analyse : intégrale $\int_a^b f(x)\,dx$, dérivée $\dfrac{df(x)}{dx}$ ;
+  \item Arithmétique : $x\pm y$, $x\cdot y$, $\sin(x)$, $\log(x)$, $e^x$, $x^2$, $\sqrt x$ ;
+  \item Mise en forme de signaux : amplifier, filtrer.
+\end{itemize}
+\end{propbox}
+
+\begin{propbox}[title=Opérateurs numériques]
+\begin{itemize}
+  \item Portes logiques de base (NOT, AND, OR, NOR, NAND, XOR\ldots) $\Rightarrow$
+        \textbf{logique combinatoire} ;
+  \item on rajoute de la mémoire $\Rightarrow$ \textbf{logique séquentielle} ;
+  \item on mélange combinatoire et séquentiel $\Rightarrow$ \textbf{machines d'états finis
+        (automates)} ;
+  \item si l'automate peut interpréter un langage $\Rightarrow$ \textbf{écriture
+        d'algorithmes}.
+\end{itemize}
+\end{propbox}
+
+\section{Exemple de traitement : la moyenne sur un temps donné}
+
+\slide{c00-09}{La même moyenne, en analogique (intégrale) et en numérique (somme d'échantillons).}
+
+\begin{exbox}[title=Calculer la moyenne d'un signal sur un temps $T_{MAX}$]
+\textbf{Signal analogique} : on calcule la surface sous la courbe et on divise par la durée :
+\[ Z = \frac{1}{T_{MAX}}\int_0^{T_{MAX}} V(T^\circ, t)\,dt \]
+\textbf{Signal numérique} : on prend des échantillons (codés en binaire, par ex.\ 10011) et on
+fait la moyenne :
+\[ Z = \frac{\sum_{i=1}^{N} V_i}{NB\acute{e}chantillons} \]
+\end{exbox}
+
+\slide{c00-10}{Réalisation : intégrateurs, multiplieur, comparateur en analogique ; une boucle en numérique.}
+
+\begin{exbox}[title=Comment on le réalise]
+\textbf{En analogique} (cours AOP, Électronique 2), dans l'ordre des numéros de la
+diapositive :
+\begin{enumerate}
+  \item on veut $Z = \frac{1}{T_{MAX}}\int_0^{T_{MAX}} V(T^\circ,t)\,dt$ ;
+  \item un \textbf{multiplieur} (X) multiplie l'intégrale par $K_2 = 1/K_1 = 1/V(T_{MAX})$
+        (remarque : on sait calculer une division analogique) ;
+  \item deux \textbf{intégrateurs} : l'un intègre $V(T^\circ,t)$, l'autre intègre une
+        constante $a$ ;
+  \item l'intégrale d'une constante donne une rampe $V(t)=a\,t$ : une tension
+        \textbf{à l'image du temps}, qui vaut $K_1 = V(T_{MAX})$ à la fin ;
+  \item un \textbf{comparateur} arrête (hold) puis remet à zéro (RAZ) les intégrateurs quand
+        la rampe atteint $V(T_{MAX})$.
+\end{enumerate}
+\textbf{En numérique}, une simple boucle :
+\begin{verbatim}
+Somme = 0;
+for (i = 0; i < nbSamples; i++) { lire(data); Somme = Somme + data; }
+Z = Somme/nbSamples;  ecrire(Z);
+\end{verbatim}
+\end{exbox}
+
+\begin{warnbox}[title=Attention]
+Ne pas confondre $V(t)$ (la rampe, image du temps) et $V(T^\circ, t)$ (le signal mesuré, qui
+dépend de la température).
+\end{warnbox}
+
+\section{Autre exemple : optimisation des performances (thermostat)}
+
+\slide{c00-11}{Régulation de température : tout ou rien vs valeur pondérée.}
+
+\begin{exbox}[title=Régulation de température avec thermostat]
+\textbf{Tout ou rien} (version gourmande en énergie) :
+\[ V_{IN} > V_{REF} \Rightarrow P = P_{MAX} \qquad\text{ou}\qquad V_{IN} \le V_{REF} \Rightarrow P = 0 \]
+\textbf{Valeur pondérée} (version plus intelligente, diminution de la consommation) :
+\[ P = P_{MAX}\cdot f\!\left(|V_{REF}-V_{IN}|,\ \frac{dV_{IN}}{dt}\right) \]
+La puissance dépend de l'écart à la consigne et de la vitesse à laquelle il évolue.
+\end{exbox}
+
+Les deux approches peuvent être traitées en analogique et en numérique. Exemple du
+\textbf{calcul de dérivée} :
+\begin{itemize}
+  \item en analogique : calcul de dérivée réalisé avec des AOP (voir Électronique 2) ;
+  \item en numérique : échantillonnage et analyse de l'écart entre deux points.
+\end{itemize}
+
+\begin{goatbox}
+Le chauffage \og tout ou rien\fg{} c'est la chèvre qui court à fond dès qu'elle a froid et
+s'arrête net dès qu'elle a chaud : elle se fatigue beaucoup. La \og valeur pondérée\fg{},
+c'est la chèvre qui marche plus ou moins vite selon qu'elle a un peu ou très froid : même
+résultat, moins d'énergie.
+\end{goatbox}
+
+\section{Justification d'une solution numérique ou analogique}
+
+\slide{c00-12}{Le tableau à connaître : avantages et inconvénients.}
+
+\begin{center}
+\begin{tabular}{p{0.18\linewidth}|p{0.35\linewidth}|p{0.35\linewidth}}
+ & \textbf{Analogique} & \textbf{Numérique} \\ \hline
+\textbf{Avantages} &
+1A) Vitesse \newline 2A) Respect du phénomène (si le système est linéaire) \newline
+3A) Amplification du signal &
+4N) Grande immunité au bruit \newline 5N) Transformation complexe avec peu de matériel
+(algorithme) \\ \hline
+\textbf{Inconvénients} &
+4A) Aucune immunité au bruit \newline 5A) Transformation complexe avec beaucoup de
+matériel &
+1N) Fréquences limitées \newline 2N) Déformation du phénomène \newline 3N) Pas
+d'amplification du signal \\
+\end{tabular}
+\end{center}
+
+Chaque avantage d'un côté est un inconvénient de l'autre (les flèches croisées de la
+diapositive) : d'où des \textbf{systèmes hybrides} possibles.
+
+\begin{goatbox}
+L'analogique, c'est une chèvre qui suit exactement le chemin (rapide et fidèle) mais qui se
+laisse distraire par tous les bruits. Le numérique, c'est une chèvre qui saute de pierre en
+pierre (elle déforme un peu le chemin et ne peut pas aller infiniment vite), mais aucun bruit
+ne la fait tomber et elle peut faire des choses compliquées avec peu de matériel.
+\end{goatbox}
+
+\section{Modélisation : les techniques de linéarisation}
+
+\slide{c00-13}{Modèle linéaire d'une zone utile (CTP) et modèle linéaire par morceaux (Bode).}
+
+Beaucoup de composants ne sont pas linéaires. Or on sait bien résoudre un \textbf{système
+d'équations linéaires}. On remplace donc la réalité par un \textbf{modèle linéaire}.
+Plusieurs techniques existent ; l'\textbf{approximation aux moindres carrés} est l'une des
+plus exploitées.
+
+\begin{exbox}[title=Deux exemples de linéarisation]
+\begin{itemize}
+  \item \textbf{Résistance thermique CTP} ($Y$ : résistance, $X$ : température) :
+        \textbf{modélisation linéaire d'une zone \og utile\fg{}} entre $X_0$ et $X_+$ ; il
+        reste une erreur max entre le modèle (rouge) et la réalité (vert).
+  \item \textbf{Diagramme de Bode} ($Y$ : gain, $X$ : fréquence) : \textbf{modélisation
+        linéaire par morceaux du domaine complet}, avec une cassure en $X_C$ ; l'erreur max
+        est au coude (on retrouvera cela au chapitre Bode).
+\end{itemize}
+\end{exbox}
+
+\slide{c00-14}{Approximation par tangentes et segmentation, le principe des simulateurs.}
+
+\begin{defnbox}[title=Approximation par calcul de tangentes]
+Principe utilisé dans les simulateurs : autour d'un point $(X_0, Y_0)$ on remplace la
+courbe par sa pente $\left.\frac{dy}{dx}\right|_{X_0}$ (approximation d'une portion de la
+courbe par une pente). En répétant avec un certain \textbf{pas}, on modélise toute la
+courbe par \textbf{segmentation}.
+\end{defnbox}
+
+\begin{goatbox}
+Une colline courbe, c'est difficile à décrire. Mais si la chèvre ne regarde qu'un petit
+bout à la fois, chaque petit bout ressemble à une pente toute droite. En collant plein de
+petites pentes droites, on retrouve la colline.
+\end{goatbox}
+
+\section{Les grands thèmes du cours}
+
+\slide{c00-15}{Démarche bottom-up : des composants aux fonctions.}
+
+La démarche est \textbf{bottom-up} :
+\begin{itemize}
+  \item \textbf{Composants de base} : les signaux (les sources), les composants passifs
+        linéaires (R, L, C) ;
+  \item \textbf{Outils d'analyse} : assemblage de composants (circuits) et techniques
+        d'analyse : Kirchhoff, Thévenin--Norton, superposition, impédances, Bode, sauts
+        indiciels, quadripôles ;
+  \item \textbf{Composants semiconducteurs} : les diodes, puis (Électronique 2) les
+        transistors bipolaires et MOS et les AOP.
+\end{itemize}
+
+\slide[0.75]{c00-16}{Le puzzle de connaissances, qui reviendra au début de chaque chapitre.}
+
+\begin{recapbox}[title={Récap pour l'examen --- C00 : Introduction}]
+\begin{itemize}
+  \item Un système électronique \textbf{mesure} (capteurs), \textbf{décide} (traitement) et
+        \textbf{agit} (actuateurs) : exemple de l'aquarium, A/B/C pour l'humain, A'/B'/C'
+        pour le système (autonome ou supervisé).
+  \item Chaîne : capteurs $\to$ conditionnement (amplifier, filtrer, adapter l'impédance)
+        $\to$ CAN $\to$ traitement numérique (hard/soft) $\to$ CNA $\to$ conditionnement
+        $\to$ actuateurs ; ou traitement analogique ; le tout alimenté.
+  \item Opérateurs analogiques : intégrale, dérivée, $\pm$, $\times$, sin, log, exp, carré,
+        racine, amplification, filtrage. Numériques : portes $\to$ combinatoire, + mémoire
+        $\to$ séquentiel, mélange $\to$ automates, + langage $\to$ algorithmes.
+  \item Moyenne : analogique $Z = \frac{1}{T_{MAX}}\int_0^{T_{MAX}}V\,dt$ ; numérique
+        $Z = \frac{\sum V_i}{N}$.
+  \item \textbf{Analogique} : + vitesse, respect du phénomène (si linéaire), amplification ;
+        -- aucune immunité au bruit, beaucoup de matériel pour les transformations complexes.
+        \textbf{Numérique} : + immunité au bruit, transformations complexes avec peu de
+        matériel ; -- fréquences limitées, déformation du phénomène, pas d'amplification.
+        Systèmes hybrides possibles.
+  \item Thermostat : tout ou rien (gourmand) vs valeur pondérée
+        $P = P_{MAX} f(|V_{REF}-V_{IN}|, dV_{IN}/dt)$ (économe).
+  \item Modélisation : on linéarise (moindres carrés, zone utile, linéaire par morceaux,
+        tangentes + segmentation) parce qu'on sait résoudre des systèmes linéaires.
+\end{itemize}
+\textbf{Pour la suite} : ce chapitre est la carte du cours. On part des signaux et sources
+(C01), puis des composants R, L, C et des lois de Kirchhoff (C02), des méthodes d'analyse
+(C03), des impédances (C04), de Bode (C05), des impulsions (C06) et enfin des diodes (C07).
+\end{recapbox}

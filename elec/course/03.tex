@@ -1,0 +1,453 @@
+% =========================================================
+\chapter{C03 --- Méthodes d'analyse : dipôles, Thévenin, Norton, superposition}
+% =========================================================
+
+\begin{rembox}[title=En bref]
+\textbf{De quoi parle ce chapitre ?} Le but n'est pas de reproduire tout ce qui se passe
+\emph{dans} un circuit, mais de voir son \textbf{influence sur son environnement}. Un circuit
+vu de l'extérieur par deux connexions est un \textbf{dipôle} (une boîte noire). Les théorèmes
+de \textbf{Thévenin} et de \textbf{Norton} le réduisent à une source et une résistance ; le
+théorème de \textbf{superposition} analyse une source à la fois. Tout vient encore des lois
+de Kirchhoff. \\
+\textbf{Les trois objectifs} : le principe des modèles \og boîte noire\fg{} ; l'équivalence
+Thévenin--Norton (\og le passage secret entre le monde des tensions et celui des
+courants\fg{}) ; les théorèmes de simplification.
+\end{rembox}
+
+\section{Le dipôle}
+
+\slide{c03-03}{Trois expériences pour savoir si une boîte noire est active ou passive.}
+
+\begin{defnbox}[title={Dipôle, passif ou actif}]
+Un \textbf{dipôle} est une \textbf{boîte noire} reliée à son environnement par \textbf{deux
+connexions} (les \og broches\fg{}). Peu importe ce qu'elle contient : seul compte son
+comportement vu de l'extérieur.
+\begin{itemize}
+  \item \textbf{Dipôle passif} : aucune source capable de produire de l'énergie et/ou
+        d'amplifier un signal (par exemple une combinaison de résistances).
+  \item \textbf{Dipôle actif} : peut produire de l'énergie et/ou amplifier un signal ; il
+        peut aussi contenir des composants passifs.
+\end{itemize}
+\end{defnbox}
+
+\begin{propbox}[title=Les trois mesures qui identifient la nature du dipôle]
+\begin{enumerate}
+  \item \textbf{Tension à vide} ($I = 0$) : on lit $U_1$ ;
+  \item \textbf{courant de court-circuit} ($U = 0$) : on lit $I \neq 0$ ;
+  \item \textbf{tension avec une résistance externe} : $I = f(R)$, on lit $U_2$.
+\end{enumerate}
+Pour un dipôle \textbf{passif}, la tension mesurée est \textbf{toujours nulle} (avec ou sans
+résistance externe), et le courant aussi. Sur la diapositive, en bas : des dipôles actifs
+(source de tension + résistance, source de courant + résistance) et des dipôles passifs
+(résistances seules).
+\end{propbox}
+
+\section{Le tripôle et le quadripôle}
+
+\slide[0.7]{c03-04}{Tripôle (peu utilisé) et quadripôle.}
+
+\begin{defnbox}[title=Tripôle et quadripôle]
+\begin{itemize}
+  \item Le \textbf{transistor} (MOS, bipolaire) est un \textbf{tripôle} : pas très pratique
+        à exploiter, peu utilisé comme modèle.
+  \item Le \textbf{quadripôle} (deux entrées, deux sorties) sert à \textbf{transformer les
+        grandeurs physiques $I$, $V$} : un signal d'entrée (courant ou tension) influence un
+        signal de sortie (courant ou tension). Les transformations les plus simples sont des
+        \textbf{atténuations (filtres)} ou des \textbf{amplifications}. On modélise facilement
+        un tripôle sous forme de quadripôle.
+\end{itemize}
+\end{defnbox}
+
+\section{Rappel des simplifications locales}
+
+\slide{c03-05}{Permutations et fusions.}
+
+\begin{propbox}[title=Ce qu'on sait faire localement]
+\begin{itemize}
+  \item \textbf{Permutation série} dans un dipôle : l'ordre des éléments en série ne change
+        rien vu de l'extérieur (on peut déplacer $U$, $R_1$, $R_2$ le long de la branche).
+  \item \textbf{Permutation parallèle} : idem pour des éléments en parallèle.
+  \item \textbf{Fusion série} : sources de tension en série ($U_3 = U_1 + U_2$, en tenant
+        compte des sens) ; résistances en série ($R_3 = R_1 + R_2$).
+  \item \textbf{Fusion parallèle} : sources de courant en parallèle ($I_3 = I_1 + I_2$) ;
+        résistances en parallèle ($R_3 = R_1/\!/R_2$).
+\end{itemize}
+Les permutations servent à \textbf{rapprocher} des éléments qu'on peut ensuite fusionner.
+\end{propbox}
+
+\section{Application : ce qu'on a le droit de fusionner}
+
+\slide{c03-06}{Expérience 1 (bonne réduction) et expérience 2 (charge avalée : conceptuellement faux).}
+
+\begin{exbox}[title={Expérience 1 : réduction correcte}]
+Source $U$, trois résistances $R$ en série, puis la charge $R_L$. Les trois $R$ fusionnent en
+$3R$ ; on perd les tensions intermédiaires, mais elles n'intéressent pas la charge. Diviseur
+résistif :
+\[ V_L = U\cdot\frac{R_L}{3R + R_L} \]
+\end{exbox}
+
+\begin{exbox}[title={Expérience 2 : \og pas la bonne méthode\fg{}}]
+Quatre $R$ en série, la charge $R_L$ en parallèle sur la dernière. Si on fusionne la charge
+avec la résistance d'en face ($R/\!/R_L$) :
+\[ V_L = U\cdot\frac{R/\!/R_L}{3R + (R/\!/R_L)} \]
+$V_L$ reste facile à trouver, mais la charge a \textbf{virtuellement disparu} : \textbf{plus
+aucune indication sur $I$} qui la traverse. $R_L$ a été intégrée au montage qu'on veut
+modéliser : \textbf{conceptuellement faux}.
+\end{exbox}
+
+\begin{warnbox}[title=Morale]
+Une réduction entraîne forcément une \textbf{perte d'information}. Les simplifications ne
+s'appliquent pas de manière \og anarchique\fg{} : \textbf{on ne fusionne jamais la charge
+qu'on étudie}.
+\end{warnbox}
+
+\section{Théorèmes de simplification : l'idée}
+
+\slide{c03-07}{L'expérience 2 réduite en modèle de Thévenin ou de Norton.}
+
+\begin{exbox}[title={Expérience 2, A.N. : $R = R_L = 1$\,k$\Omega$, $U = 14$\,V}]
+\[ R_{EQ} = \frac{R\,R_L}{R + R_L} = \frac R2 \qquad
+   V_L = \frac{R_{EQ}}{R_{EQ} + 3R}\,U = \frac{R/2}{R/2 + 3R}\,U = \frac17\cdot 14 = 2\text{ V} \]
+(résultat à comparer avec la suite.)
+\end{exbox}
+
+Le gros montage (4 résistances + 1 source) peut se réduire à \textbf{une source et une
+résistance} : soit une source de tension $V_{TH}$ avec $R_{IN}$ en série (\textbf{modèle
+Thévenin}), soit une source de courant $I_{NO}$ avec $R_{IN}$ en parallèle (\textbf{modèle
+Norton}). Ce n'est plus une simple fusion de composants, mais une approche globale incluant
+\textbf{toutes} les sources et composants. Comme on sait fusionner tensions, courants et
+résistances, il est légitime de trouver à la fin une source et une résistance. Question :
+quelles expériences (avec une résistance, un ampèremètre A, un voltmètre V) mettent en
+évidence la résistance et la source de la boîte noire ?
+
+\begin{goatbox}
+Peu importe la machinerie à l'intérieur de la grange. Vu de la porte, tout ce qui compte
+c'est \og combien ça pousse\fg{} (la source) et \og combien ça résiste\fg{} (la résistance).
+Thévenin et Norton disent que n'importe quelle grange linéaire, vue depuis deux bornes, se
+comporte comme une seule pile avec une seule résistance.
+\end{goatbox}
+
+\section{Transformation de sources}
+
+\slide{c03-08}{Source linéaire de tension : $U = U_0 - R_S I$.}
+
+\begin{defnbox}[title={Source linéaire de tension}]
+Une source idéale $U_0$ et une \textbf{résistance interne $R_S$ en série}. Par la loi des
+mailles : $R_S I + U - U_0 = 0$, soit
+\[ U = U_0 - R_S\cdot I \]
+C'est une \textbf{droite de pente négative} ($-R_S$) :
+\begin{itemize}
+  \item à vide ($I = 0$) : la source délivre la \textbf{tension à vide} $U = U_0$ ;
+  \item en court-circuit ($U = 0$) : $I(U = 0) = \dfrac{U_0}{R_S}$.
+\end{itemize}
+\end{defnbox}
+
+\slide{c03-09}{Source linéaire de courant : $U = R_P I_{CC} - R_P I$.}
+
+\begin{defnbox}[title={Source linéaire de courant}]
+Une source idéale $I_{CC}$ et une \textbf{résistance interne $R_P$ en parallèle}. Par la loi
+des n\oe uds : $I_{CC} - \frac{U}{R_P} - I = 0$, soit
+\[ U = R_P\cdot I_{CC} - R_P\cdot I \]
+Encore une \textbf{droite de pente négative} ($-R_P$) :
+\begin{itemize}
+  \item à vide : $U(I = 0) = R_P\cdot I_{CC}$ ;
+  \item en court-circuit : $I = I_{CC}$, le courant de la source idéale.
+\end{itemize}
+\end{defnbox}
+
+\slide{c03-10}{Les deux droites sont confondues si $R_S = R_P = R$ et $U_0 = R\,I_{CC}$.}
+
+\begin{thmbox}[title={Équivalence source de tension $\leftrightarrow$ source de courant}]
+Les deux sources ont la même caractéristique (droite de pente négative). Elles sont
+équivalentes si :
+\begin{itemize}
+  \item \textbf{même pente} : $R_S = R_P = R$ (même résistance interne) ;
+  \item \textbf{un point commun} (par exemple la tension à vide) :
+\end{itemize}
+\[ \boxed{U_0 = R\cdot I_{CC}} \]
+On transforme donc une source de tension $U_0$ + $R$ en série en une source de courant
+$I_{CC} = U_0/R$ + $R$ en parallèle, et réciproquement : \textbf{la résistance est la même et
+la loi d'Ohm fait le lien}.
+\end{thmbox}
+
+\begin{warnbox}[title={À quoi ça sert, et la limite}]
+Ces transformations font apparaître des configurations qui permettent des
+\textbf{fusions} (résistances série/parallèle, sources de tension en série, sources de courant
+en parallèle). De fusion en fusion, le circuit se réduit à une seule source linéaire.
+Attention : le circuit obtenu \textbf{n'est plus le circuit d'origine} (des composants ont
+disparu) ; il a seulement le \textbf{même comportement vu de l'extérieur}.
+\end{warnbox}
+
+\begin{goatbox}
+Une pile avec une résistance en série et une \og pompe à courant\fg{} avec la même résistance
+à côté, c'est la même chose vue de l'extérieur, à condition que la pompe donne
+$I = U_0/R$. C'est juste la loi d'Ohm : on peut toujours échanger l'un contre l'autre.
+\end{goatbox}
+
+\section{Le théorème de Thévenin}
+
+\slide{c03-11}{Un dipôle vu comme une boîte noire : source de tension + résistance en série.}
+
+\begin{thmbox}[title={Théorème de Thévenin (Léon Charles, 1883)}]
+\og Le dipôle (boîte noire) est constitué d'une \textbf{source de tension $V_{TH}$ en série
+avec une résistance $R_{IN}$}.\fg{} Le dipôle complet et le dipôle réduit interagissent de la
+même façon avec l'environnement.
+\end{thmbox}
+
+\begin{rembox}[title=Pourquoi c'est utile]
+On peut toujours calculer l'influence mutuelle dipôle--charge avec Kirchhoff, mais c'est un
+calcul global, et \textbf{il faut tout recalculer} à chaque nouvelle charge. Avec le modèle
+de Thévenin, on calcule $V_{TH}$ et $R_{IN}$ une fois, puis chaque charge est un simple
+diviseur résistif.
+\end{rembox}
+
+\slide{c03-12}{Quatre expériences pour mesurer $V_{TH}$ et $R_{IN}$.}
+
+\begin{propbox}[title={Mesurer le modèle de Thévenin : quatre expériences}]
+\begin{enumerate}
+  \item \textbf{Tension à vide} : on lit $U_{2\_lu} = U_{1\_inconnu}$ directement. \textbf{Ça
+        marche.}
+  \item \textbf{Court-circuit} : on lit $I_{2\_lu}$ et $R_{IN} = \frac{U_{1\_inconnu}}{I_{2\_lu}}$.
+        Sur papier OK, \textbf{danger en pratique} : on ne sait pas a priori ce qu'on
+        court-circuite.
+  \item \textbf{On élimine les sources internes} et on impose $U_{2\_impos\acute e}$ (ou on
+        met un ohmmètre) : $R_{IN} = \frac{U_{2\_impos\acute e}}{I_{2\_lu}}$. Sur papier OK,
+        \textbf{en pratique impossible} (il faudrait ouvrir le montage).
+  \item \textbf{Résistance variable $R_2$} en sortie : on lit un diviseur résistif
+        \[ U_{2\_lu} = \frac{R_2}{R_2 + R_{IN}}\,U_{1\_inconnu} \]
+        $U_{1\_inconnu}$ étant connu (expérience 1), on règle $R_2$ jusqu'à lire
+        $U_{2\_lu} = U_{1\_inconnu}/2$ : alors \textbf{$R_2 = R_{IN}$}, qu'on lit directement.
+        En changeant $R_2$ on retrouve toujours les mêmes valeurs (invariance du dipôle).
+\end{enumerate}
+\end{propbox}
+
+\slide{c03-13}{Calcul : $R_{IN}$ sources éliminées, $U_{Th}$ à vide.}
+
+\begin{thmbox}[title=Méthode de base pour calculer le modèle de Thévenin]
+\textbf{Résistance $R_{IN}$} :
+\begin{enumerate}
+  \item éliminer les sources intérieures ;
+  \item évaluer la résistance vue depuis les bornes du dipôle.
+\end{enumerate}
+\textbf{Source $U_{Th}$} :
+\begin{enumerate}
+  \item laisser les bornes du dipôle \textbf{à vide} ;
+  \item calculer la tension aux bornes du dipôle (Kirchhoff, ou en alternant avec Norton).
+\end{enumerate}
+\end{thmbox}
+
+\begin{warnbox}[title=Éliminer une source]
+\begin{itemize}
+  \item Éliminer une \textbf{source de tension} $\to$ la remplacer par un
+        \textbf{court-circuit} ;
+  \item éliminer une \textbf{source de courant} $\to$ la remplacer par un \textbf{circuit
+        ouvert}.
+\end{itemize}
+\end{warnbox}
+
+\begin{goatbox}
+Éteindre une source de tension, c'est mettre sa hauteur à zéro : il reste un fil. Éteindre
+une source de courant, c'est arrêter la pompe : plus rien ne passe, il reste un trou. Pour
+trouver $R_{IN}$, on éteint tout et on regarde \og à quel point c'est dur de pousser\fg{}
+depuis les bornes.
+\end{goatbox}
+
+\section{Le théorème de Norton}
+
+\slide{c03-14}{Le même dipôle vu comme source de courant + résistance en parallèle.}
+
+\begin{thmbox}[title={Théorème de Norton (Edward, 1926)}]
+\og Un dipôle constitué d'une \textbf{source de courant $I_{NO}$ en parallèle avec une
+résistance $R_{IN}$}.\fg{} Pour le monde extérieur, le dipôle réel ou le modèle sont
+fonctionnellement identiques.
+\end{thmbox}
+
+\slide{c03-15}{Les mêmes expériences, version Norton.}
+
+\begin{propbox}[title={Mesurer le modèle de Norton}]
+\begin{enumerate}
+  \item \textbf{Courant de court-circuit} : $I_{2\_lu} = I_{1\_inconnu}$ directement, mais
+        \textbf{danger} (on ne sait pas ce qu'on court-circuite).
+  \item \textbf{Tension à vide} : $U_{1\_lu} = R_{IN}\cdot I_{1\_inconnu}$ :
+        \textbf{toujours deux inconnues}.
+  \item \textbf{Sources éliminées}, $R_{IN} = \frac{U_{2\_impos\acute e}}{I_{2\_lu}}$ : sur
+        papier OK, en pratique impossible.
+  \item \textbf{Résistance variable $R_2$} :
+        $I_{2\_lu} = \frac{R_{IN}}{R_2 + R_{IN}}\,I_{1\_inconnu}$ et
+        $U_{2\_lu} = \frac{R_2 R_{IN}}{R_2 + R_{IN}}\,I_{1\_inconnu}$. Plutôt que le courant
+        (le courant Norton n'est pas connu sans l'expérience dangereuse), on lit la tension :
+        quand $U_{2\_lu} = \frac12 U_{1\_lu}$, alors $R_2 = R_{IN}$, et on en déduit
+        $I_{1\_inconnu}$ par la loi d'Ohm.
+\end{enumerate}
+\end{propbox}
+
+\slide{c03-16}{Calcul : $R_{IN}$ sources éliminées, $I_{Norton}$ en court-circuit.}
+
+\begin{thmbox}[title=Méthode de base pour calculer le modèle de Norton]
+\textbf{Résistance $R_{IN}$} : la même qu'avec Thévenin (sources éliminées, résistance vue
+depuis les bornes). \\
+\textbf{Source $I_{Norton}$} :
+\begin{enumerate}
+  \item \textbf{court-circuiter} les bornes du dipôle ;
+  \item calculer le \textbf{courant de court-circuit}.
+\end{enumerate}
+\end{thmbox}
+
+\section{Résumé et combinaison Thévenin--Norton}
+
+\slide{c03-17}{Le lien entre les deux modèles : $U_{Th} = R_{IN}\cdot I_{Norton}$.}
+
+\begin{thmbox}[title=Résumé Thévenin--Norton]
+\begin{itemize}
+  \item \textbf{$U_{Th}$} : tension mesurée (calculée) \textbf{à vide} à la sortie.
+  \item \textbf{$I_{Norton}$} : courant mesuré (calculé) \textbf{en court-circuit} à la
+        sortie.
+  \item \textbf{$R_{IN}$} (la même pour les deux) : obtenue en \textbf{éliminant toutes les
+        sources internes}.
+\end{itemize}
+\[ \boxed{U_{Th} = R_{IN}\cdot I_{Norton}} \]
+On opère des transformations Thévenin--Norton \textbf{en alternance} et des réductions
+locales (permutations, fusions) jusqu'à un modèle limité à une source et une résistance.
+\end{thmbox}
+
+\begin{propbox}[title=Les deux réflexes]
+\begin{itemize}
+  \item Deux dipôles \textbf{en parallèle} $\Rightarrow$ il faut des modèles
+        \textbf{Norton} pour les fusionner (les sources de courant en parallèle
+        s'additionnent).
+  \item Deux dipôles \textbf{en série} $\Rightarrow$ il faut des modèles \textbf{Thévenin}
+        (les sources de tension en série s'additionnent).
+\end{itemize}
+\end{propbox}
+
+\section{Exemples de combinaison Norton--Thévenin}
+
+\slide{c03-18}{Montage 1 (analyse directe) et montage 2 (transformations/réductions).}
+
+Le \textbf{montage 1} (celui de l'expérience 2, une seule source) s'étudie
+\textbf{directement}, sans transformation : $V_{TH}$ à vide (sans $R_L$), $R_{IN}$ depuis la
+sortie avec la source $U$ court-circuitée. Le \textbf{montage 2} contient deux dipôles locaux
+($U$ avec $R_1$, et $I$ avec $R_3$) : on l'analyse par \textbf{transformations et
+réductions}.
+
+\slide{c03-19}{Montage 1 : $V_{TH} = U/4$, $R_{IN} = \frac34 R$, et on retrouve 2\,V.}
+
+\begin{exbox}[title={Montage 1 : développement complet}]
+\textbf{Calcul de $V_{TH}$} (à vide, sans $R_L$) : diviseur résistif entre $3R$ et $R$ :
+\[ V_{TH} = \frac{R}{R + 3R}\,U = \frac U4 \]
+\textbf{Calcul de $R_{IN}$} ($U$ court-circuitée, vue entre A et B) : trois $R$ en série, le
+tout en parallèle avec la dernière $R$ :
+\[ R_{IN} = R\,/\!/\,3R = \frac{3R\cdot R}{4R} = \frac34 R \]
+\textbf{Avec la charge} (modèle de Thévenin + $R_L$, diviseur résistif), $R_L = R$,
+$U = 14$\,V :
+\[ V_L = \frac{R_L}{R_L + R_{IN}}\,V_{TH} = \frac{R}{R + \frac34 R}\cdot\frac U4
+       = \frac47\cdot\frac U4 = \frac U7 = 2\text{ V} \qquad\textbf{CQFD} \]
+C'est bien le même résultat que le calcul direct de l'expérience 2.
+\end{exbox}
+
+\slide{c03-20}{Montage 2 : Thévenin local $\to$ Norton, fusion, Norton $\to$ Thévenin, fusion.}
+
+\begin{exbox}[title={Montage 2 : transformations en alternance}]
+Circuit : $U$ en série avec $R_1$, puis $R_2$ et la source de courant $I$ en parallèle, puis
+$R_3$ vers la sortie X--Y.
+\begin{enumerate}
+  \item \textbf{Observation} : deux dipôles en parallèle (le \og Thévenin local\fg{} $U$+$R_1$
+        et le \og Norton local\fg{} $I$+$R_2$). \textbf{Réflexe} : il faut des modèles Norton
+        pour fusionner des dipôles parallèles.
+  \item \textbf{Transformation} du Thévenin local en Norton : $I_2 = U/R_1$ en parallèle avec
+        $R_1$.
+  \item \textbf{Réduction} : les sources de courant en parallèle s'additionnent, les
+        résistances aussi en parallèle :
+        \[ I_3 = I_2 + I = \frac{U}{R_1} + I \qquad R_{12} = \frac{R_1 R_2}{R_1 + R_2} \]
+  \item \textbf{Observation} : un modèle Norton en série avec $R_3$. \textbf{Réflexe} : il
+        faut des modèles Thévenin pour fusionner des dipôles série.
+  \item \textbf{Transformation} du Norton en Thévenin : $U_4 = R_{12}\cdot I_3$ en série avec
+        $R_{12}$.
+  \item \textbf{Réduction} : $R_{12}$ et $R_3$ en série :
+        \[ R_{IN} = R_{12} + R_3 \qquad U_{TH} = U_4 = R_{12}\cdot I_3 \]
+\end{enumerate}
+En développant :
+$U_{TH} = \frac{R_1 R_2}{R_1+R_2}\left(\frac U{R_1} + I\right)
+        = \frac{R_2}{R_1+R_2}\,U + \frac{R_1R_2}{R_1+R_2}\,I$,
+à comparer avec la superposition ci-dessous.
+\end{exbox}
+
+\begin{goatbox}
+Le jeu est toujours le même : quand deux morceaux sont \emph{côte à côte}, on les met en
+version \og pompe + fuite\fg{} (Norton) pour additionner les pompes ; quand ils sont
+\emph{l'un derrière l'autre}, on les met en version \og pile + tuyau\fg{} (Thévenin) pour
+additionner les piles. On recommence jusqu'à ce qu'il ne reste qu'une pile et un tuyau.
+\end{goatbox}
+
+\section{Le théorème de superposition}
+
+\slide{c03-21}{Deux robinets : la contribution de chacun s'additionne.}
+
+\begin{thmbox}[title=Théorème de superposition]
+Remplir une baignoire avec les robinets A et B pendant 10\,s équivaut à la remplir avec A
+pendant 10\,s, puis avec B pendant 10\,s. \textbf{En électronique linéaire, c'est la même
+chose} : la tension (ou le courant) due à plusieurs sources est la \textbf{somme des
+contributions de chaque source prise seule}, les autres étant éliminées.
+\[ U_{S\_Total} = U_S(U_1) + U_S(I_2) \]
+\end{thmbox}
+
+\slide{c03-22}{Le calcul des deux contributions.}
+
+\begin{exbox}[title={Superposition sur le montage 2 ($U_1$, $I_2$, sortie à vide)}]
+\textbf{Contribution de $U_1$} : $I_2$ éliminée (\textbf{circuit ouvert}). À vide, aucun
+courant dans $R_3$ : $U_{S1}$ ne dépend pas de $R_3$. Diviseur :
+\[ U_{S1}(U_1) = \frac{R_2}{R_1 + R_2}\,U_1 \]
+\textbf{Contribution de $I_2$} : $U_1$ éliminée (\textbf{court-circuit}). $I_2$ traverse
+$R_1/\!/R_2$ ; $U_{S2}$ ne dépend pas non plus de $R_3$ :
+\[ U_{S2}(I_2) = (R_1/\!/R_2)\cdot I_2 = \frac{R_1R_2}{R_1 + R_2}\,I_2 \]
+\textbf{Total} :
+\[ U_{S\_TOTAL} = U_{S1}(U_1) + U_{S2}(I_2)
+   = \frac{R_2}{R_1 + R_2}\,U_1 + \frac{R_1 R_2}{R_1 + R_2}\,I_2 \]
+C'est exactement le $U_{TH}$ obtenu par transformations Thévenin--Norton.
+\end{exbox}
+
+\begin{warnbox}[title=Conditions]
+La superposition n'est valable qu'en électronique \textbf{linéaire}. Quand on éteint une
+source, on applique la même règle que pour Thévenin : tension $\to$ court-circuit, courant
+$\to$ circuit ouvert.
+\end{warnbox}
+
+\begin{goatbox}
+Deux chèvres poussent la même charrette. Pour savoir de combien elle avance, on peut faire
+pousser la première seule, puis la deuxième seule, et additionner. Ça marche parce que la
+charrette est \og linéaire\fg{} : pousser deux fois plus la fait avancer deux fois plus.
+\end{goatbox}
+
+\begin{recapbox}[title={Récap pour l'examen --- C03 : Méthodes d'analyse}]
+\begin{itemize}
+  \item \textbf{Dipôle} = boîte noire à 2 bornes ; passif (pas de source, $U$ et $I$ toujours
+        nuls) ou actif. Trois mesures : tension à vide, courant de court-circuit, tension sur
+        une résistance. Tripôle (transistor) peu utilisé ; \textbf{quadripôle} pour
+        transformer $I$, $V$ (filtres, amplis).
+  \item Simplifications locales : permutations série/parallèle, fusions (tensions en série,
+        courants en parallèle, R série/parallèle). \textbf{Ne jamais fusionner la charge
+        étudiée} (on perd son courant : conceptuellement faux).
+  \item \textbf{Source linéaire de tension} : $U = U_0 - R_S I$ ; \textbf{de courant} :
+        $U = R_P I_{CC} - R_P I$. Équivalentes si $R_S = R_P = R$ et
+        $\boxed{U_0 = R\,I_{CC}}$.
+  \item \textbf{Thévenin} : $V_{TH}$ + $R_{IN}$ en série. \textbf{Norton} : $I_{NO}$ +
+        $R_{IN}$ en parallèle. $V_{TH}$ = tension \textbf{à vide} ; $I_{NO}$ = courant de
+        \textbf{court-circuit} ; $R_{IN}$ = résistance vue des bornes \textbf{sources
+        éteintes} (tension $\to$ court-circuit, courant $\to$ circuit ouvert) ;
+        $V_{TH} = R_{IN} I_{NO}$.
+  \item Mesure pratique : tension à vide (sûr) ; court-circuit (dangereux) ; éteindre les
+        sources (impossible) ; \textbf{$R_2$ variable jusqu'à lire la moitié de la tension à
+        vide $\Rightarrow R_2 = R_{IN}$}.
+  \item Réflexes : parallèle $\to$ Norton ; série $\to$ Thévenin ; alterner transformations
+        et réductions.
+  \item Exemple : 4 $R$ + $U$ : $V_{TH} = U/4$, $R_{IN} = \frac34 R$, $V_L = U/7 = 2$\,V
+        ($U = 14$\,V, $R = R_L$).
+  \item \textbf{Superposition} (linéaire) : somme des contributions de chaque source seule.
+        Montage 2 : $U_S = \frac{R_2}{R_1+R_2}U_1 + \frac{R_1R_2}{R_1+R_2}I_2$.
+\end{itemize}
+\textbf{Comment ça s'appuie sur le reste} : les sources idéales/réelles du C01 deviennent ici
+les \og sources linéaires\fg{} ; les lois de Kirchhoff et les équivalences série/parallèle du
+C02 démontrent chaque transformation. Au C04, ces mêmes théorèmes (et Millman) s'appliquent
+tels quels aux \textbf{impédances} complexes à la place des résistances ; le quadripôle
+reviendra comme \textbf{fonction de transfert} (filtres).
+\end{recapbox}
