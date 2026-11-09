@@ -79,6 +79,13 @@ python -m http.server 8765 --directory dist   # then open http://localhost:8765/
   builds on the earlier ones) and, in `04.tex`, a `forest` tree of every access control seen.
   `course.tex` and `week/` stay as they are. It shows on the card as "Course notes, explained"
   (`kinds` in `site.json`), among the other documents.
+- `elec/course.tex` is the electronics course, explained, in French, written from the commented
+  slides (C00 to C07): one chapter per lecture in `elec/course/` (`00.tex` ... `07.tex`) and a
+  general exam recap (`08.tex`: formula sheet, step-by-step methods, pitfalls). Like compsec's,
+  each chapter has "Expliqué à une chèvre" boxes and ends with an exam recap saying how it builds
+  on the others. Screenshots of the slides are in `elec/images/course/` (`cNN-PP.png`: lecture
+  NN, page PP of the commented PDF), shown with the `\slide[width]{cNN-PP}{caption}` command of
+  `course.tex`. Worked numbers that are not in the slides are labelled as such.
 - Courses and cheat sheets load `\usepackage{course}` / `\usepackage{cheatsheet}`, the engine's styles
   (the engine's `notes_engine/shared/`; layout, boxes, footer with the repository link of `site.json`). No path is needed:
   the build sets `TEXINPUTS`. Change the look of all of them there.
