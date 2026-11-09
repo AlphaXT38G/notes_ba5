@@ -134,3 +134,13 @@ $V_R = 0$ (pas de courant, boucle ouverte). À la fermeture, $V_0$ arrive instan
 
 \slide{c06-11}{En un temps nul, aucune charge ne bouge : la tension aux bornes de C ne saute pas.}
 
+\begin{thmbox}[title={Continuité de la tension aux bornes d'un condensateur}]
+\textbf{Vision physique} : si $\Delta t = 0$, aucune charge n'a eu le temps de bouger :
+$\Delta Q = 0$. Or $\Delta Q = C\,\Delta V$, donc $\Delta V = 0$. Avec $V = V_A - V_B$ :
+\[ \Delta V = \Delta V_A - \Delta V_B = 0 \Rightarrow \boxed{\Delta V_A = \Delta V_B} \]
+Quand A saute brusquement, \textbf{B saute exactement de la même quantité}. \\
+\textbf{Autre vision} : $\underline Z_C = \frac1{j\omega C}$ ; si $\omega = 0$, C est un
+\textbf{circuit ouvert} ; si $\omega$ est infini, C est un \textbf{court-circuit}. Un saut qui
+dure 0\,s équivaut à une fréquence infinie : \textbf{pour le saut, C est un court-circuit}.
+\end{thmbox}
+
