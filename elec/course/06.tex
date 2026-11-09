@@ -323,3 +323,19 @@ saut négatif, $t_3$ juste après le saut négatif, $t_4$ juste avant le saut po
 \end{itemize}
 \end{thmbox}
 
+\begin{exbox}[title={Le tableau rempli}]
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{c|l|l}
+ & $V_A$ & $V_B$ \\ \hline
+avant $t_1$ & 0 & 0 \\
+$t_1$ (saut $+V_{CC}$) & $0 + V_{CC}\frac{R}{R + 2R} = \frac{V_{CC}}3$ & $0 + \frac{V_{CC}}3$ \\
+$t_2$ (entrée stable $V_{CC}$) & $V_{CC}$ (pas de courant dans $2R$) & 0 (pas de courant dans R) \\
+$t_3$ (saut $-V_{CC}$) & $V_{CC} - \frac{V_{CC}}3 = \frac{2V_{CC}}3$ & $0 - \frac{V_{CC}}3$ \\
+$t_4$ (entrée stable 0) & 0 & 0 \\
+\end{tabular}
+\end{center}
+Juste après chaque saut, la différence $V_A - V_B$ n'a pas changé (ce qui était prévisible) :
+0 en $t_1$, $V_{CC}$ en $t_3$.
+\end{exbox}
+
