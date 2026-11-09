@@ -70,3 +70,19 @@ déterminer l'allure exacte des courbes ?
 
 \slide{c06-06}{Équation, transitoire et permanent.}
 
+\begin{thmbox}[title=Équation du passe-bas]
+\[ i = \frac{V_0 - V_C}{R} = C\frac{dV_C}{dt} \qquad\Longleftrightarrow\qquad
+   V_0 = RC\frac{dV_C}{dt} + V_C \]
+Deux discours : mathématique (équation \textbf{sans} et \textbf{avec} second membre) et
+physique (\textbf{transitoire} et \textbf{permanent}) :
+\begin{itemize}
+  \item \textbf{Transitoire} : ne dépend pas de l'excitation ; c'est le comportement pour
+        revenir à l'état d'équilibre. Équation sans second membre :
+        $0 = RC\frac{dV_C}{dt} + V_C$.
+  \item \textbf{Permanent} : dépend de l'excitation, $V_C$ a l'allure de $V_0$ :
+        $V_0 = $ cte $\Rightarrow V_C = $ cte $\Rightarrow \frac{dV_C}{dt} = 0 \Rightarrow V_C = V_0$.
+\end{itemize}
+Pour un circuit linéaire, la réponse finit par avoir l'allure du signal (ici un palier).
+La réponse complète est la \textbf{somme} des deux.
+\end{thmbox}
+
