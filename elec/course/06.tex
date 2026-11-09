@@ -339,3 +339,31 @@ Juste après chaque saut, la différence $V_A - V_B$ n'a pas changé (ce qui ét
 0 en $t_1$, $V_{CC}$ en $t_3$.
 \end{exbox}
 
+\begin{recapbox}[title={Récap pour l'examen --- C06 : Impulsions}]
+\begin{itemize}
+  \item Saut indiciel = front de créneau (horloges). Les RC (voulus ou parasites)
+        \textbf{ralentissent} les fronts ou créent des \textbf{perturbations}. Pas de
+        complexes ici : on revient au \textbf{temporel}, ordre 1.
+  \item Réponse = \textbf{transitoire} (sans second membre, $Ke^{-t/RC}$, ne dépend pas de
+        l'excitation) + \textbf{permanent} (a l'allure de l'excitation).
+  \item Passe-bas : $V_0 = RC\frac{dV_C}{dt} + V_C$ ; $V_C = V_0(1 - e^{-t/RC})$ ;
+        $i_{MAX} = V_0/R$. Avec charge initiale $K$ : $V_C = V_0 + (K - V_0)e^{-t/RC}$.
+  \item Passe-haut : permanent 0, $V_B = V_0e^{-t/RC}$ ; avec charge initiale
+        $V_B = (V_0 + K)e^{-t/RC}$.
+  \item \textbf{Continuité} : la tension aux bornes de C ne saute pas
+        ($\Delta Q = C\Delta V = 0$) $\Rightarrow\Delta V_A = \Delta V_B$. Pour un saut, C
+        = \textbf{court-circuit} ; à l'équilibre, C = \textbf{circuit ouvert}.
+  \item \textbf{Formule magique} :
+        $V(t) = V(0) + (V(\infty) - V(0))(1 - e^{-t/\tau})$, $\tau = RC$ ; 63\,\% en $\tau$,
+        $>99\,\%$ en $5\tau$, pente à l'origine $1/\tau$.
+  \item $\tau$ = C $\times$ \textbf{résistance vue par C, sources éteintes} (ex. $3RC$).
+  \item \textbf{Recette carré} : 4 instants ; juste après un saut = état avant (DC) +
+        effet du saut avec C court-circuit (AC) ; juste avant un saut (si $>5\tau$) = C
+        ouvert, diviseurs résistifs.
+\end{itemize}
+\textbf{Comment ça s'appuie sur le reste} : l'équation RC du C02 est enfin résolue ; la
+superposition et l'extinction des sources (C03) servent à chaque saut ; le comportement de C
+en court-circuit/ouvert vient de $\underline Z_C = 1/j\omega C$ (C04) ; $\tau = 1/\omega_0$
+fait le lien avec Bode (C05). Le C07 introduit le premier composant \textbf{non linéaire}, la
+diode, où la superposition ne s'applique plus directement.
+\end{recapbox}
