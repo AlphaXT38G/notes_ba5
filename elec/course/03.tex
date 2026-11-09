@@ -264,3 +264,20 @@ fonctionnellement identiques.
 
 \slide{c03-15}{Les mêmes expériences, version Norton.}
 
+\begin{propbox}[title={Mesurer le modèle de Norton}]
+\begin{enumerate}
+  \item \textbf{Courant de court-circuit} : $I_{2\_lu} = I_{1\_inconnu}$ directement, mais
+        \textbf{danger} (on ne sait pas ce qu'on court-circuite).
+  \item \textbf{Tension à vide} : $U_{1\_lu} = R_{IN}\cdot I_{1\_inconnu}$ :
+        \textbf{toujours deux inconnues}.
+  \item \textbf{Sources éliminées}, $R_{IN} = \frac{U_{2\_impos\acute e}}{I_{2\_lu}}$ : sur
+        papier OK, en pratique impossible.
+  \item \textbf{Résistance variable $R_2$} :
+        $I_{2\_lu} = \frac{R_{IN}}{R_2 + R_{IN}}\,I_{1\_inconnu}$ et
+        $U_{2\_lu} = \frac{R_2 R_{IN}}{R_2 + R_{IN}}\,I_{1\_inconnu}$. Plutôt que le courant
+        (le courant Norton n'est pas connu sans l'expérience dangereuse), on lit la tension :
+        quand $U_{2\_lu} = \frac12 U_{1\_lu}$, alors $R_2 = R_{IN}$, et on en déduit
+        $I_{1\_inconnu}$ par la loi d'Ohm.
+\end{enumerate}
+\end{propbox}
+
