@@ -451,3 +451,33 @@ La dernière forme, \og constante $\times\frac{1 + j\omega/\ldots}{1 + j\omega/\
 est celle qu'il faut viser pour Bode (C05).
 \end{exbox}
 
+\begin{recapbox}[title={Récap pour l'examen --- C04 : Impédances}]
+\begin{itemize}
+  \item Combinaison R + C $\Rightarrow$ équation différentielle
+        ($u_{IN} = u_{OUT} + RC\frac{du_{OUT}}{dt}$). Réponse = transitoire + permanent ; pour
+        un sinus on n'étudie que le \textbf{permanent}, avec les complexes.
+  \item \textbf{R} : $u$ et $i$ en phase. \textbf{C} : $i$ en avance de $\pi/2$ sur $u$,
+        amplitude $U_0 = I_0/(\omega C)$. \textbf{L} : $u$ en avance de $\pi/2$ sur $i$,
+        $U_0 = \omega L I_0$. Déphasage constant.
+  \item Plan complexe : $M = x + jy = \rho e^{j\theta}$, module $\rho = \sqrt{x^2+y^2}$,
+        argument $\arctan(Im/Re)$ \textbf{+ $\pi$ si $Re<0$}.
+  \item $j$ = rotation de $\pi/2$ ; $j^2 = -1$, $j^3 = -j$, $1/j = -j$, $j^4 = 1$.
+  \item \textbf{Impédances} : $\underline Z_R = R$, $\underline Z_C = \frac1{j\omega C}$,
+        $\underline Z_L = j\omega L$. Toutes les méthodes (Kirchhoff, diviseur, Millman,
+        Thévenin, série/parallèle) s'appliquent avec $\underline Z$.
+  \item Produit : modules $\times$, arguments $+$. Rapport : modules $\div$, arguments $-$.
+  \item \textbf{Fonction de transfert} $\underline H(j\omega) = \underline u_S/\underline u$ :
+        module = rapport d'amplitudes, argument = déphasage sortie/entrée.
+  \item \textbf{Passe-bas} RC : $\frac1{1+j\omega RC}$, $|H| = \frac1{\sqrt{1+(\omega RC)^2}}$,
+        $\varphi = -\arctan(\omega RC)$ : de 1 à 0, de $0$ à $-\pi/2$.
+        \textbf{Passe-haut} CR : $\frac{j\omega RC}{1+j\omega RC}$,
+        $|H| = \frac{\omega RC}{\sqrt{1+(\omega RC)^2}}$, $\varphi = \frac\pi2 - \arctan(\omega RC)$ :
+        de 0 à 1, de $\pi/2$ à $0$.
+  \item RLC sortie sur L : $\frac{(j\omega)^2LC}{1 + j\omega RC + (j\omega)^2LC}$.
+\end{itemize}
+\textbf{Comment ça s'appuie sur le reste} : les équations différentielles du RC/RLC du C02
+deviennent de simples fractions ; le diviseur résistif (C01, C02) devient un diviseur
+d'impédances, et le quadripôle du C03 devient une fonction de transfert. Le C05 apprend à
+\textbf{dessiner} $|\underline H|$ et $\mathrm{Arg}(\underline H)$ pour toutes les
+fréquences : les diagrammes de Bode.
+\end{recapbox}
