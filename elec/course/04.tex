@@ -264,3 +264,22 @@ regarde le nord ($j$) ; deux quarts de tour, elle regarde l'ouest, c'est-à-dire
 
 \slide{c04-17}{Remplacer le déphasage $-\pi/2$ par un facteur $-j$ : l'impédance $1/(j\omega C)$.}
 
+\begin{thmbox}[title=Impédance complexe]
+Pour $i(t) = I_0\sin(\omega t)$ : avec R, $u_S = R I_0\sin(\omega t)$ ; avec C,
+$u_S = \frac{I_0}{\omega C}\sin(\omega t - \frac\pi2)$. On voudrait la forme
+$K\sin(\omega t)$ pour \textbf{travailler sans se préoccuper du déphasage}. Comme un déphasage
+de $-\pi/2$ (soit $3\pi/2$) revient à multiplier par $j^3 = -j$ :
+\[ u_S(t) = \frac{I_0}{\omega C}\sin\!\left(\omega t - \frac\pi2\right)
+   = -j\frac{I_0}{\omega C}\sin(\omega t) = \frac{I_0}{j\omega C}\sin(\omega t) \]
+Par analogie avec $U = RI$ :
+\begin{itemize}
+  \item avec R : $u_S = R\,i$ ;
+  \item avec C : $\underline{u}_S = \underline Z_C\,\underline i$ où
+        $\boxed{\underline Z_C = \dfrac1{j\omega C}}$ ;
+  \item avec L : $\underline{u}_S = \underline Z_L\,\underline i$ où
+        $\boxed{\underline Z_L = j\omega L}$.
+\end{itemize}
+(Écrire $u_S(t) = R_C\,i(t)$ est une \og écriture impropre\fg{} : il faut passer aux
+grandeurs complexes soulignées.)
+\end{thmbox}
+
