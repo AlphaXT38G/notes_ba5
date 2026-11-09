@@ -423,3 +423,36 @@ ajoute un réservoir (C) ou une roue lourde (L), le circuit \og se souvient\fg{}
 il faut des dérivées. Un réservoir ou une roue : premier ordre. Les deux : second ordre.
 \end{goatbox}
 
+\begin{recapbox}[title={Récap pour l'examen --- C02 : Composants et Kirchhoff}]
+\begin{itemize}
+  \item \textbf{R} : $u = Ri$. \textbf{C} : $q = Cu$, $i = C\frac{du}{dt}$,
+        $u = \frac1C\int i\,dt + k$ (courant constant $\Rightarrow$ rampe de tension
+        $\frac{I t}{C}$). \textbf{L} : $u = L\frac{di}{dt}$, $i = \frac1L\int u\,dt + k$
+        (tension constante $\Rightarrow$ rampe de courant $\frac{U t}{L}$). Énergie
+        $\frac12 L I^2$ comme $\frac12 m v^2$.
+  \item \textbf{N\oe ud} : connexion d'au moins 2 segments (un fil = un seul n\oe ud).
+        \textbf{Branche} : segments en chaîne. \textbf{Maille} : parcours fermé passant une
+        seule fois par chaque n\oe ud.
+  \item \textbf{Mailles} : $\sum U_i = 0$ (pas de source de courant dans la maille).
+        \textbf{N\oe uds} : $\sum I_{entrants} = \sum I_{sortants}$ (pas de source de tension
+        sur le n\oe ud ; au moins 3 courants). Garder seulement les équations
+        \textbf{indépendantes}.
+  \item \textbf{Millman} : $V_X = \dfrac{\sum V_i/R_i + \sum I_{sources}}{\sum 1/R_i}$ ;
+        résistance à la masse : seulement au dénominateur ; résistance en série avec une
+        source de courant : ignorée.
+  \item \textbf{Équivalences} : $R$ et $L$ : série $+$, parallèle $\frac1{\cdot}$ ;
+        $C$ : parallèle $+$, série $\frac1{\cdot}$. $R_1/\!/R_2 = \frac{R_1R_2}{R_1+R_2}$.
+  \item \textbf{Kennelly} : triangle$\to$étoile $R_A = \frac{R_{AB}R_{AC}}{\Sigma}$ ;
+        étoile$\to$triangle $R_{BC} = \frac{R_AR_B+R_AR_C+R_BR_C}{R_A}$ (la branche opposée).
+        Sert à débloquer un pont.
+  \item \textbf{Diviseur} : $v_{R2} = v_{IN}\frac{R_2}{R_1+R_2}$.
+        \textbf{RC} : $v_{IN} = v + RC\frac{dv}{dt}$ (1\textsuperscript{er} ordre).
+        \textbf{RLC} : $C\frac{dv_{IN}}{dt} = i + RC\frac{di}{dt} + LC\frac{d^2i}{dt^2}$
+        (2\textsuperscript{e} ordre).
+\end{itemize}
+\textbf{Comment ça s'appuie sur la suite} : le C01 a donné $U$, $I$, les sources et la loi
+d'Ohm ; ce chapitre ajoute C et L et les \textbf{deux lois universelles} qui assemblent tout.
+Le C03 utilisera Kirchhoff pour démontrer des méthodes encore plus puissantes (Thévenin,
+Norton, superposition) ; les équations différentielles du RC/RLC seront évitées au C04 grâce
+aux \textbf{impédances}, et retrouvées au C06 (saut indiciel).
+\end{recapbox}
