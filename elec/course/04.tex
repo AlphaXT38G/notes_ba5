@@ -441,3 +441,13 @@ impédances.
    = \frac{R_1(1 + j\omega R_2C)}{1 + j\omega C(R_1 + R_2)} \]
 \end{exbox}
 
+\begin{exbox}[title={$\underline Z_{EQ2}$ : ($R_1$ parallèle C) en série avec $R_2$}]
+\[ \underline Z_B = \frac{R_1\underline Z_C}{R_1 + \underline Z_C}
+   = \frac{R_1\frac1{j\omega C}}{R_1 + \frac1{j\omega C}} = \frac{R_1}{1 + j\omega R_1C} \]
+\[ \underline Z_{EQ2} = \underline Z_B + R_2 = \frac{R_1 + R_2(1 + j\omega R_1C)}{1 + j\omega R_1C}
+   = \frac{R_1 + R_2 + j\omega R_1R_2C}{1 + j\omega R_1C} \]
+\[ \underline Z_{EQ2} = (R_1 + R_2)\cdot\frac{1 + j\omega\frac{R_1R_2}{R_1+R_2}C}{1 + j\omega R_1C} \]
+La dernière forme, \og constante $\times\frac{1 + j\omega/\ldots}{1 + j\omega/\ldots}$\fg{},
+est celle qu'il faut viser pour Bode (C05).
+\end{exbox}
+
