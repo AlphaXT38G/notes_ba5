@@ -40,3 +40,21 @@ Il faut comprendre \textbf{une formule magique} et \textbf{une recette de cuisin
 
 \slide{c06-04}{Avant et après la fermeture de l'interrupteur.}
 
+\begin{exbox}[title={Observations : RC passe-bas, interrupteur fermé à $t_0 = 0$}]
+\textbf{Avant le saut} (interrupteur ouvert) : $i = 0$, $V_A = V_B = 0$, et par hypothèse le
+condensateur est déchargé, $V_C = 0$. \\
+\textbf{Après} : $V_0$ est appliquée instantanément en A.
+\begin{center}
+\begin{tabular}{c|c|c|c}
+ & $t_0 = 0$ & $t_1 > t_0$ & $t_2 \gg t_0$ \\ \hline
+$V_C$ & 0 & $\nearrow$ & $V_C = V_A = V_0$ \\
+$V_B$ & 0 & $\nearrow$ & $V_B = V_A = V_0$ \\
+$V_A$ & $V_0$ & $=$ & $=$ \\
+$i$ & $\frac{V_A - V_B}{R}$ & $\searrow$ & 0 \\
+\end{tabular}
+\end{center}
+La différence de potentiel entre A et B fait circuler un courant qui charge C. $V_C$ monte
+tant qu'il y a du courant ; quand $V_C$ atteint $V_0$, plus de différence de potentiel
+entre A et B, $i = 0$ et le système n'évolue plus. Ici $V_C = V_B$.
+\end{exbox}
+
