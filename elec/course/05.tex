@@ -106,3 +106,12 @@ chaque morceau, et on empile les dessins.
 
 \slide{c05-07}{Passe-bas RC en forme canonique, avec $\omega_0 = 1/RC$.}
 
+\begin{exbox}[title={Passe-bas RC}]
+\[ \underline H(j\omega) = \frac{\underline V_2}{\underline V_1} = \frac{\frac1{j\omega C}}{R + \frac1{j\omega C}}
+   = \frac1{1 + j\omega RC} = \frac1{1 + j\frac{\omega}{\omega_0}}
+   \qquad\text{avec}\quad \omega_0 = \frac1{RC} = \frac1\tau \]
+\[ |\underline H(j\omega)| = \frac1{\sqrt{1 + \left(\frac\omega{\omega_0}\right)^2}} \qquad
+   \mathrm{Arg}(\underline H(j\omega)) = -\arctan\frac{\omega}{\omega_0} \]
+$\omega_0 = 1/RC$ est la \textbf{pulsation caractéristique} (de coupure).
+\end{exbox}
+
