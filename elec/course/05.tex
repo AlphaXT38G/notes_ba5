@@ -23,3 +23,20 @@ sortie/entrée) et le \textbf{diagramme de Bode en phase} (déphasage sortie/ent
 
 \slide{c05-04}{La forme canonique et les règles de dessin.}
 
+\begin{defnbox}[title=Forme canonique (cinq termes du premier ordre)]
+\[ \underline H(j\omega) = K\cdot
+   \frac{j\frac{\omega}{\omega_{Z1}}\cdot\left(1 + j\frac{\omega}{\omega_{Z2}}\right)\cdot
+         \left(1 + j\frac{\omega}{\omega_{Z3}}\right)\cdots\left(1 + j\frac{\omega}{\omega_{Zk}}\right)}
+        {j\frac{\omega}{\omega_{P1}}\cdot\left(1 + j\frac{\omega}{\omega_{P2}}\right)\cdot
+         \left(1 + j\frac{\omega}{\omega_{P3}}\right)\cdots\left(1 + j\frac{\omega}{\omega_{Pl}}\right)} \]
+\begin{itemize}
+  \item $K$ est une constante ;
+  \item $\omega_{Zi}$ ($i = 1..k$) : les \textbf{zéros} (pulsations caractéristiques au
+        \textbf{numérateur}) ;
+  \item $\omega_{Pi}$ ($i = 1..l$) : les \textbf{pôles} (au \textbf{dénominateur}).
+\end{itemize}
+La notation est libre, mais doit permettre de différencier les pulsations. Les cinq termes
+de base sont donc : $K$, $j\frac\omega{\omega_Z}$, $\frac1{j\omega/\omega_P}$,
+$1 + j\frac\omega{\omega_Z}$, $\frac1{1 + j\omega/\omega_P}$.
+\end{defnbox}
+
