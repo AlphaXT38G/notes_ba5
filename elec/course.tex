@@ -2,6 +2,28 @@
 
 \usepackage[french]{course}
 
+% Deux boîtes propres à ce document, comme dans compsec/course2.tex :
+% goatbox, l'idée d'une section dite le plus simplement possible, et recapbox, le grand
+% récapitulatif de fin de chapitre à relire la veille de l'examen (sécable : il est long).
+\definecolor{goatColor}{HTML}{8A5A1F}
+\definecolor{recapColor}{HTML}{5B3A8E}
+\newtcolorbox{goatbox}[1][]{
+  enhanced, colback=goatColor!6, colframe=goatColor,
+  boxrule=0.5pt, arc=3pt, left=5pt, right=5pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries\small, coltitle=white,
+  colbacktitle=goatColor,
+  attach boxed title to top left={yshift=-3pt, xshift=6pt},
+  boxed title style={size=small, colback=goatColor, boxrule=0pt, arc=2pt},
+  title=Expliqué à une chèvre, #1
+}
+\newtcolorbox{recapbox}[1][]{
+  enhanced, breakable, colback=recapColor!5, colframe=recapColor,
+  boxrule=1.2pt, arc=4pt, left=8pt, right=8pt, top=8pt, bottom=8pt,
+  fonttitle=\bfseries\large, coltitle=white,
+  colbacktitle=recapColor,
+  title=Récap pour l'examen, #1
+}
+
 \begin{document}
 \raggedbottom
 
