@@ -86,6 +86,15 @@ python -m http.server 8765 --directory dist   # then open http://localhost:8765/
   on the others. Screenshots of the slides are in `elec/images/course/` (`cNN-PP.png`: lecture
   NN, page PP of the commented PDF), shown with the `\slide[width]{cNN-PP}{caption}` command of
   `course.tex`. Worked numbers that are not in the slides are labelled as such.
+- `comecma/course.tex` (MSE 234, Comportement mécanique des matériaux) follows the same model, in
+  French: one chapter per chapter of the slides in `comecma/course/` (`01.tex` essais mécaniques,
+  `02.tex` céramiques, `03.tex` Al, Cu et alliages, `04.tex` fer et aciers) and a general exam
+  recap (`05.tex`: the official list of formulas to know by heart, methods, pitfalls); add the
+  polymers and composites as new chapters before it. Screenshots are in `comecma/images/course/`
+  (`cNN-PP.png`, `c03a`/`c03b`/`c03c` for the three PDFs of chapter 3). Its weekly notes
+  (`comecma/week/weekNN.tex`, standalone two-column documents, each section ending with a goat box
+  and the document with a "Récap pour l'examen") reuse those screenshots; their week numbers follow
+  the lecture each part was taught in (no lecture in weeks 03 and 07).
 - Courses and cheat sheets load `\usepackage{course}` / `\usepackage{cheatsheet}`, the engine's styles
   (the engine's `notes_engine/shared/`; layout, boxes, footer with the repository link of `site.json`). No path is needed:
   the build sets `TEXINPUTS`. Change the look of all of them there.
