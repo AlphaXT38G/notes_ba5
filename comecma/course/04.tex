@@ -43,3 +43,76 @@ sort est plein de carbone (la fonte) ; on souffle ensuite de l'oxygène dedans p
 carbone en trop, et cette combustion chauffe tellement que le métal reste liquide : c'est
 l'acier.
 \end{goatbox}
+
+\section{Le fer, le carbone et le diagramme Fe--C}
+
+\slide[0.5]{c04-17}{Le fer pur change deux fois de structure : CC ($\alpha$) $\to$ CFC ($\gamma$) à 912\,°C $\to$ CC ($\delta$) à 1394\,°C.}
+
+\begin{defnbox}[title={Les phases du fer}]
+\begin{itemize}
+  \item \textbf{Ferrite} ($\alpha$, et $\delta$ à haute $T$) : cubique centré (CC),
+        ferromagnétique sous le point de Curie (770\,°C).
+  \item \textbf{Austénite} ($\gamma$) : cubique faces centrées (CFC), entre 912 et 1394\,°C
+        pour le fer pur.
+  \item \textbf{Cémentite} Fe$_3$C : carbure dur et fragile, \textbf{métastable} (le graphite
+        est plus stable, mais c'est la cémentite qu'on voit dans les aciers).
+\end{itemize}
+\end{defnbox}
+
+\subsection*{Le carbone, un soluté d'insertion}
+
+L'atome de carbone est presque deux fois plus petit que celui de fer : il ne remplace pas un
+atome de fer, il se loge \textbf{entre} eux (solution solide \textbf{d'insertion}). Il est donc
+toujours entouré de sites libres et \textbf{diffuse beaucoup plus vite} (de plusieurs ordres de
+grandeur) qu'un soluté de substitution, qui doit attendre qu'une lacune passe.
+
+\begin{propbox}[title={Conséquence : pas de microségrégation du carbone}]
+Aux vitesses de refroidissement usuelles, le carbone a le temps de se redistribuer : on observe
+ce que prédit le diagramme de phase (loi du levier comprise), contrairement à Al--Cu
+(chapitre~3). Seules les trempes très rapides changent cela --- et c'est justement le sujet de
+la martensite.
+\end{propbox}
+
+\slide[0.6]{c04-21}{Le diagramme Fe--C (traits pleins : Fe--Fe$_3$C ; pointillés : Fe--graphite). Aciers jusqu'à 2,1\,\% C, fontes au-delà.}
+
+\begin{propbox}[title={Lire le diagramme Fe--C}]
+\begin{itemize}
+  \item Le carbone est bien plus soluble dans l'austénite (jusqu'à 2,1\,\%) que dans la
+        ferrite ($\le 0{,}02\,\%$) : les sites interstitiels de la CFC sont plus grands.
+  \item \textbf{Aciers} : $\le 2{,}1\,\%$ C (en pratique $\le 1{,}2$) ; ils passent tous par un
+        état 100\,\% austénitique. \textbf{Fontes} : $> 2{,}1\,\%$ C ; elles solidifient avec un
+        eutectique (4,3\,\%, 1148\,°C), ne sont jamais 100\,\% austénite et fondent bien plus bas
+        (d'où leur nom).
+  \item \textbf{Eutectoïde} : 0,77\,\% C à 727\,°C, $\gamma \to \alpha + \text{Fe}_3\text{C}$.
+\end{itemize}
+\end{propbox}
+
+\subsection*{Perlite, aciers hypo- et hypereutectoïdes}
+
+\slide[0.75]{c04-24}{La perlite : lamelles alternées de ferrite et de cémentite, formées côte à côte.}
+
+Un eutectoïde est comme un eutectique, mais à partir d'un solide : à 0,77\,\% C, l'austénite se
+transforme en \textbf{perlite}, des lamelles alternées de ferrite (pauvre en C) et de cémentite
+(6,7\,\% C) qui croissent ensemble pour que le carbone n'ait que peu de chemin à faire.
+\begin{itemize}
+  \item \textbf{Hypoeutectoïde} ($< 0{,}77\,\%$) : la \textbf{ferrite proeutectoïde} germe d'abord
+        aux joints de grains de l'austénite, puis l'austénite restante (enrichie jusqu'à 0,77\,\%)
+        devient perlite.
+  \item \textbf{Hypereutectoïde} ($> 0{,}77\,\%$) : c'est la \textbf{cémentite proeutectoïde} qui
+        germe d'abord aux joints de grains, puis le reste devient perlite.
+\end{itemize}
+
+\slide[0.6]{c04-25}{Acier hypoeutectoïde : ferrite proeutectoïde (claire) aux anciens joints de grains, puis perlite (foncée).}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Acier à 0,4\,\% C juste sous 727\,°C. Ferrite à 0,02\,\%, perlite à 0,77\,\% :
+fraction de perlite $= \dfrac{0{,}4 - 0{,}02}{0{,}77 - 0{,}02} \approx 0{,}51$. Moitié ferrite,
+moitié perlite : c'est l'image de la micrographie Fe--0,4\,\% C.
+\end{exbox}
+
+\begin{goatbox}
+Le fer change de rangement d'atomes avec la température. Le carbone, tout petit, se faufile entre
+les atomes de fer et circule très vite. À chaud, dans l'austénite, il y a de la place pour lui ;
+en refroidissant, il n'y en a plus : il doit se regrouper dans un carbure, la cémentite. Le plus
+rapide est de faire des lamelles alternées de fer presque pur et de carbure : la perlite.
+\end{goatbox}
