@@ -1,3 +1,82 @@
 % =========================================================
 \chapter{Les céramiques}
 % =========================================================
+
+\begin{rembox}[title=En bref]
+\textbf{De quoi parle ce chapitre ?} Première grande classe de matériaux : les céramiques
+(pierres, briques et porcelaines, verres, ciments et bétons, céramiques techniques). On voit
+leurs propriétés (rigides, dures, réfractaires\ldots{} mais \textbf{fragiles}), leur structure
+atomique (cristaux ioniques ou covalents, verres amorphes), leur élaboration (argiles,
+frittage, mise en forme du verre, contraintes thermiques) et surtout leur
+\textbf{comportement mécanique} : rupture fragile, \textbf{statistique de Weibull}, rupture
+en compression, fissuration lente. \\
+\textbf{Le fil rouge} : tout découle de $K = Y\sigma\sqrt{\pi a}$ (chapitre~1) appliqué à des
+matériaux sans plasticité et pleins de petits défauts.
+\end{rembox}
+
+\section{Panorama : une famille rigide, dure\ldots{} et fragile}
+
+\begin{defnbox}[title=Les grandes familles de céramiques]
+\begin{enumerate}
+  \item \textbf{Naturelles} : calcaire/marbre, grès, granite, glace.
+  \item \textbf{Poreuses et vitrifiées} : porcelaine, faïence, briques (à base d'argiles).
+  \item \textbf{Verres} : verre sodocalcique ($\approx$ 70\,\% SiO$_2$, 10\,\% CaO, 15\,\%
+        Na$_2$O), borosilicaté (Pyrex).
+  \item \textbf{Ciments et bétons} : ciment Portland (CaO + SiO$_2$ + Al$_2$O$_3$).
+  \item \textbf{Céramiques techniques} (haute performance) : alumine Al$_2$O$_3$, SiC,
+        Si$_3$N$_4$, zircone ZrO$_2$\ldots{} plus fibres de renfort, revêtements (diamant),
+        abrasifs.
+\end{enumerate}
+\end{defnbox}
+
+Elles sont faites des éléments les plus \textbf{abondants} de l'écorce terrestre (O, Si, Al,
+Ca, Na, Mg, K\ldots) : beaucoup sont bon marché.
+
+\subsection*{Choisir un matériau léger et rigide : les indices $E/\rho$ et $E/\rho^2$}
+
+Les cartes d'Ashby placent chaque matériau dans un plan (densité, module\ldots) en échelle
+logarithmique. Pour s'en servir, il faut savoir \textbf{quelle combinaison de propriétés} on
+veut maximiser, et cela dépend de la forme de la pièce.
+
+\begin{itemize}
+  \item \textbf{Barreau en traction} (rayon $r$, longueur $L$, flèche $\delta$ sous la force $F$) :
+        $\dfrac{F}{\pi r^2} = E\dfrac{\delta}{L}$ et $M = \pi r^2 L\rho$, d'où
+        $M = \dfrac{L^2 F}{\delta}\,\dfrac{\rho}{E}$. Pour la masse la plus faible à rigidité
+        donnée : \textbf{maximiser $E/\rho$}.
+  \item \textbf{Poutre pleine en flexion} (section carrée $t\times t$, longueur $l$) :
+        $\delta = \dfrac{4l^3F}{Et^4}$ et $M = lt^2\rho$, d'où
+        $M = \Big(\dfrac{4l^5F}{\delta}\Big)^{1/2}\dfrac{\rho}{E^{1/2}}$ :
+        \textbf{maximiser $E^{1/2}/\rho$}, c'est-à-dire $E/\rho^2$.
+  \item \textbf{Tube mince en flexion} (rayon $r$ fixé, épaisseur $t \ll r$) : seule $t$ est
+        libre, $M \propto \rho/E$ : de nouveau \textbf{$E/\rho$}.
+\end{itemize}
+
+Pourquoi la flexion d'une poutre pleine donne-t-elle $\rho^2$ ? Parce qu'en flexion la rigidité
+croît comme $t^4$ alors que la masse croît comme $t^2$ : épaissir une poutre légère est très
+efficace, donc la densité \og pèse\fg{} deux fois plus.
+
+\slide[0.6]{c02-21}{Carte module--densité : les droites $E/\rho = $ cste et $E/\rho^2 = $ cste. Les céramiques techniques sont en haut : très rigides pour leur poids.}
+
+\begin{propbox}[title=Ce que disent les cartes]
+\begin{itemize}
+  \item \textbf{Module} : très élevé (alumine 380\,GPa, SiC 410\,GPa, diamant 1050\,GPa).
+  \item \textbf{Densité} moyenne (2,2 à 4, sauf zircone et carbures lourds) : excellentes en
+        $E/\rho$.
+  \item \textbf{Limite d'élasticité} énorme, mais \textbf{sans importance} : elles cassent
+        avant de l'atteindre.
+  \item \textbf{Réfractaires} (points de fusion élevés) et souvent résistantes à l'attaque
+        chimique.
+  \item \textbf{Ténacité très faible} ($K_c \approx 0{,}7$ à $\approx 10\,\text{MPa}\sqrt{\text m}$,
+        contre 20 à 200 pour les métaux) : \textbf{c'est leur grande faiblesse}.
+\end{itemize}
+\end{propbox}
+
+\slide[0.6]{c02-26}{Carte ténacité--module : les céramiques sont à droite (rigides) mais en bas (fragiles).}
+
+\begin{goatbox}
+Les céramiques, c'est la pierre et le verre : très rigides, très dures, légères pour leur
+rigidité, elles supportent la chaleur et la rouille ne les touche pas. Mais elles ont un gros
+défaut : la moindre fissure les fait casser net. Pour choisir un matériau, on ne regarde pas
+une seule propriété mais un mélange (rigidité divisée par poids, par exemple), et ce mélange
+dépend de la forme de la pièce.
+\end{goatbox}
