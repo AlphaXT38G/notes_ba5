@@ -189,6 +189,71 @@ Une chaîne casse à son maillon le plus faible, et une grande chaîne a plus de
 un mauvais.
 \end{goat}
 
+%=========================================================
+\section{Statistique de Weibull}
+
+\textbf{D'où elle vient} : volume homogène, un petit volume qui casse fait tout casser ;
+$S(V_1+V_2) = S(V_1)S(V_2)$ $\Rightarrow S = e^{-V\Phi(\sigma)}$ ; Weibull pose
+$\Phi = K(\sigma-\sigma_u)^m$ (3 paramètres), souvent $\sigma_u = 0$ (2 paramètres).
+
+\begin{formula}
+\[ S = 1-F = \exp\!\Big[-\frac{V}{V_0}\Big(\frac{\sigma}{\sigma_0}\Big)^m\Big] \]
+\[ \ln S = \ln[1-F] = -\frac{V}{V_0}\Big(\frac{\sigma}{\sigma_0}\Big)^m, \quad \ln[1-F] \approx -F \ (F\ll1) \]
+Surface : $A/A_0$. $V_0$, $\sigma_0$ par paire : $K = [V_0\sigma_0^m]^{-1}$.
+\end{formula}
+
+\slide[0.8]{c02-95}
+
+\begin{warning}
+$\sigma = \sigma_0$, $V = V_0$ : $S = e^{-1}$, \textbf{pas} la médiane.
+\end{warning}
+
+\begin{important}
+Non uniforme : $S = \exp[-\int_V(\sigma/\sigma_0)^m dV/V_0] = \exp[-k_m\frac{V}{V_0}(\frac{\sigma_{\max}}{\sigma_0})^m]$.
+$k_m = 1$ traction ; $1/[2(m+1)]$ flexion pure ; $1/[2(m+1)^2]$ 3 points ;
+$(mL_i+L_o)/[2L_o(m+1)^2]$ 4 points. $k_m < 1$ : flexion \textbf{flatteuse}.
+\end{important}
+
+\begin{important}
+\textbf{Mesure} : classer $\sigma_1 \le \ldots \le \sigma_N$, $F_i \approx i/N$ ;
+$\ln\ln(1/S) = m\ln\sigma_{\max} - m\ln\sigma_0 + \ln(k_mV/V_0)$ : droite de pente $m$.
+\end{important}
+
+\begin{example}
+\textit{(pas dans les diapos)} À même $S$, $V\sigma^m$ constant : pièce 1000$\times$ plus grosse,
+$m = 10$ : $\sigma \times 1000^{-0{,}1} = 0{,}5\,\sigma$.
+\end{example}
+
+\begin{goat}
+Weibull donne la chance qu'aucun maillon ne lâche. $m$ grand : maillons tous pareils, fiable ;
+$m$ petit : très inégaux.
+\end{goat}
+
+%=========================================================
+\section{Compression et fissuration lente}
+
+\begin{formula}
+\[ \sigma_{\text{compr.}} = C\frac{K_c}{Y\sqrt{\pi\bar a}}, \quad C \approx 15 \]
+Fissures parallèles à la compression, croissance \textbf{stable}, $\bar a$ = longueur
+\textbf{moyenne} ; émiettement.
+\end{formula}
+
+\begin{formula}
+\[ \frac{da}{dt} = F(P_{\text{H}_2\text{O}}, K)\,e^{-Q/RT}, \quad K = Y\sigma\sqrt{\pi a} \]
+L'eau casse les Si--O tendues en pointe de fissure ($K < K_c$ : sous-critique, \og fatigue
+statique\fg{}) ; seuil à bas $K$, plateau à haut $K$.
+\[ \Big(\frac{\sigma}{\sigma_{TS}}\Big)^n = \frac{t_{\text{test}}}{t}, \quad n \approx 10\text{--}20 \]
+\end{formula}
+
+\begin{important}
+Fibre de verre fraîche : 14\,GPa ; à l'air : $\approx 5$\,GPa.
+\end{important}
+
+\begin{goat}
+Écrasée, une céramique tient 15 fois mieux. Et l'humidité grignote lentement les fissures
+tendues : la vitre finit par casser sous une charge qu'elle tenait au début.
+\end{goat}
+
 \end{multicols}
 
 \end{document}
