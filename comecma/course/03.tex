@@ -143,3 +143,71 @@ et beaucoup. Le cuivre, lui, lâche son oxygène (ou son soufre) facilement, mai
 dispersé. La même passion de l'aluminium pour l'oxygène le protège : une fine peau d'oxyde,
 bien collée, l'empêche de rouiller.
 \end{goatbox}
+
+\section{Solidification des alliages Al--Cu}
+
+Le système Al--Cu est \textbf{le} système d'école : côté aluminium, un simple
+\textbf{eutectique} entre $\alpha$ (solution solide de Cu dans Al, au plus 5,7\,\% pds Cu à
+548\,°C) et $\theta$ = Al$_2$Cu (intermétallique fragile), à 33,2\,\% Cu.
+
+\begin{thmbox}[title={La loi du levier (à connaître)}]
+Un alliage de composition $C$ contient deux phases de compositions $C_\alpha < C < C_\beta$
+(lues aux extrémités du palier horizontal à la température considérée). Les fractions valent
+\[ f_\alpha = \frac{C_\beta - C}{C_\beta - C_\alpha}, \qquad
+   f_\beta = \frac{C - C_\alpha}{C_\beta - C_\alpha}, \qquad f_\alpha + f_\beta = 1 . \]
+Elles viennent de deux équations : la somme des fractions vaut 1, et la composition moyenne
+doit être $C = f_\alpha C_\alpha + f_\beta C_\beta$.
+\end{thmbox}
+
+\slide[0.45]{c03b-05}{Le levier : la fraction d'une phase est le bras \emph{opposé}, divisé par la longueur totale.}
+
+\begin{warnbox}[title={Le piège du levier}]
+La fraction de $\alpha$ est le segment entre $C$ et $C_\beta$, c'est-à-dire du côté
+\textbf{opposé} à $\alpha$. Vérification de bon sens : si $C$ est proche de $C_\alpha$, il y a
+presque tout $\alpha$.
+\end{warnbox}
+
+\begin{propbox}[title={Trois alliages, trois microstructures}]
+\begin{itemize}
+  \item \textbf{Al--4,5\,\% Cu} : à l'équilibre, il se solidifie entièrement en $\alpha$, sous
+        forme de \textbf{dendrites} (cristaux en sapin, comme les flocons de neige).
+  \item \textbf{Al--33\,\% Cu} (eutectique) : $\alpha$ et $\theta$ croissent
+        \textbf{ensemble}, côte à côte en fines lamelles (\textbf{croissance couplée}) :
+        structure eutectique.
+  \item \textbf{Al--10\,\% Cu} : d'abord des dendrites d'$\alpha$ primaire, puis le liquide
+        restant, enrichi en Cu jusqu'à 33\,\%, se solidifie en eutectique entre les dendrites.
+\end{itemize}
+\end{propbox}
+
+\slide[0.55]{c03b-13}{Al--10\,\% Cu : dendrites primaires d'$\alpha$, puis eutectique.}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Al--10\,\% Cu juste au-dessus de 548\,°C : $\alpha$ à 5,7\,\% et liquide à 33,2\,\%.
+Fraction de liquide $= \dfrac{10 - 5{,}7}{33{,}2 - 5{,}7} = 0{,}16$ : 16\,\% du métal deviendra
+eutectique, 84\,\% est déjà en dendrites d'$\alpha$.
+\end{exbox}
+
+\subsection*{La microségrégation : le levier n'est pas respecté}
+
+La loi du levier suppose que \textbf{toutes} les phases ajustent leur composition à chaque
+instant. Vrai dans le liquide (diffusion rapide), presque jamais dans le solide pendant le temps
+d'une solidification. En pratique, \textbf{le solide garde la composition qu'il avait en se
+formant} : les c\oe urs de dendrites sont pauvres en Cu, leurs bords plus riches, et le dernier
+liquide s'enrichit tellement qu'il atteint l'eutectique.
+
+\slide[0.5]{c03b-16}{Al--4,5\,\% Cu brut de coulée : gradients de concentration dans les dendrites et phase $\theta$ (vert) qui ne devrait pas exister selon le diagramme.}
+
+\begin{defnbox}[title={Microségrégation (ségrégation mineure)}]
+Gradients de concentration dans les grains, et parfois \textbf{phases hors équilibre}, dus à
+la lenteur de la diffusion dans le solide. Exemple : Al--4,5\,\% Cu brut de coulée contient de
+l'eutectique avec $\theta$, alors qu'à l'équilibre il serait 100\,\% $\alpha$. Exception :
+quand le soluté diffuse vite dans le solide (soluté interstitiel, comme C dans Fe, chapitre~4).
+\end{defnbox}
+
+\begin{goatbox}
+Le diagramme de phase dit ce que l'alliage \emph{voudrait} être s'il avait tout son temps. En
+refroidissant, les premiers cristaux qui poussent (en forme de sapins) sont pauvres en cuivre ;
+le cuivre s'accumule dans le liquide qui reste, et le dernier liquide, très riche, gèle en
+fines lamelles mélangées. Comme les atomes bougent très mal dans le solide, ces différences
+restent figées : c'est la microségrégation.
+\end{goatbox}
