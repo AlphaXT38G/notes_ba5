@@ -243,6 +243,89 @@ $\sigma = K\dot\varepsilon$, \textbf{pas de striction} (verre chaud, caramel).
 elle durcit quand on la tire plus vite, aucun endroit ne s'amincit en avance.
 \end{goat}
 
+%=========================================================
+\section{Mécanique de la rupture}
+
+\begin{definition}
+Mécanique des \textbf{corps fissurés}. Deux paramètres :
+\begin{itemize}
+\item \textbf{énergie} : $G = \pi F(a)\sigma^2a/E$ (force motrice), rupture si $G = G_c$
+      (énergie pour créer 1\,m$^2$ de fissure, J/m$^2$) ;
+\item \textbf{contraintes} : en pointe, $\sigma \propto K/\sqrt{2\pi r}$ ; rupture si $K = K_c$
+      (ténacité, MPa$\sqrt{\text m}$).
+\end{itemize}
+\end{definition}
+
+\begin{formula}
+\[ K = Y\sigma\sqrt{\pi a}, \qquad \sigma_r = \frac{K_c}{Y\sqrt{\pi a}}, \qquad G_c = A\frac{K_c^2}{E} \]
+$Y = 1$ : fissure interne de \textbf{demi}-longueur $a$, plaque infinie ; $Y = 1{,}12$ : fissure
+de bord de longueur $a$.
+\end{formula}
+
+\slide[0.9]{c01-69}
+
+\begin{important}
+$K$ croît avec $a$ : une fois partie, la fissure ne s'arrête pas. $K = K_c$ = rupture
+\textbf{catastrophique}. On travaille avec $K$ car il est proportionnel à $\sigma$.
+\end{important}
+
+\begin{example}
+\textit{(pas dans les diapos)} Verre, $K_c = 0{,}7$, rayure de bord $a = 10\,\mu$m :
+$\sigma_r = 0{,}7/(1{,}12\sqrt{\pi\cdot10^{-5}}) \approx 110$\,MPa.
+\end{example}
+
+\begin{goat}
+Toute la force se concentre au bout d'une déchirure. $K$ dit à quel point ; quand il atteint ce
+que le matériau supporte, la déchirure file et ne s'arrête plus.
+\end{goat}
+
+%=========================================================
+\section{Essais de rupture et fatigue}
+
+\begin{itemize}
+\item \textbf{Ténacité} : éprouvette entaillée + préfissure, charge de départ $\to K_c$.
+\item \textbf{Charpy} (Izod) : pendule, énergie absorbée ; montre la \textbf{transition
+      ductile--fragile} des aciers.
+\item \textbf{Formabilité} des tôles : pliage, emboutissage (Erichsen, Swift\ldots), cornes.
+\end{itemize}
+
+\slide[0.85]{c01-80}
+
+\begin{important}
+\textbf{Fatigue}, charge cyclique, rupture bien sous $R_m$.
+(i) Éprouvette lisse : \textbf{Wöhler} (S--N), $N_f$ à amplitude donnée ;
+\textbf{statistique}, sensible à la fréquence (échauffement des polymères), l'environnement, la
+surface.
+(ii) Éprouvette fissurée : $da/dN$ en fonction de $\Delta K$.
+\end{important}
+
+\begin{formula}
+\[ \Delta K = K_{\max} - K_{\min} = Y\Delta\sigma\sqrt{\pi a}, \qquad \frac{da}{dN} = A(\Delta K)^m \]
+($K_{\min} = 0$ si $\sigma_{\min} < 0$). Seuil $\Delta K_{th}$ ; rupture quand $K_{\max} = K_c$.
+\end{formula}
+
+\slide[0.75]{c01-84}
+
+\begin{goat}
+Plier un trombone vingt fois : à chaque aller-retour la petite fissure avance d'un pas, plus
+grand si elle est déjà longue. Quand elle est assez longue, tout casse.
+\end{goat}
+
+%=========================================================
+\section{Récap de la semaine}
+
+\begin{recap}
+\begin{itemize}
+\item Compression : flambage vs tonneau, $h/d \approx 3$--$4$, pas de striction.
+\item $H = F/A \approx 3\sigma_y$. Flexion : $\varepsilon_{xx} = y/R$.
+\item $\sigma = K\dot\varepsilon^m$ ; relaxation ; fluage 3 stades ;
+      $\dot\varepsilon = A\sigma^Ne^{-Q/RT}$ ; $m = 1/N$ ; newtonien $m = 1$ sans striction.
+\item $K = Y\sigma\sqrt{\pi a}$, rupture à $K_c$ ; $Y = 1$ (interne, $a$ demi-longueur) ou
+      $1{,}12$ (bord) ; $G_c = AK_c^2/E$ ; rupture catastrophique.
+\item Charpy, ténacité, formabilité ; Wöhler ; $da/dN = A(\Delta K)^m$.
+\end{itemize}
+\end{recap}
+
 \end{multicols}
 
 \end{document}
