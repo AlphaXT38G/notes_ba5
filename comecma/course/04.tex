@@ -244,3 +244,101 @@ Le diagramme TTT est une carte routière : en refroidissant l'acier, il faut pas
 martensite. Plus l'acier contient d'ingrédients, plus le nez est loin à droite, et plus on a le
 temps de passer.
 \end{goatbox}
+
+\section{Trempe, trempabilité et revenu}
+
+\begin{defnbox}[title={Trempabilité (\emph{hardenability})}]
+La \textbf{facilité} à tremper un acier, c'est-à-dire la \textbf{lenteur} de formation de la
+ferrite ou de la cémentite, de la perlite et de la bainite (nez loin à droite). Ce n'est
+\textbf{pas} la dureté obtenue (qui dépend du carbone) : c'est la \textbf{profondeur} jusqu'à
+laquelle on obtient de la martensite.
+\end{defnbox}
+
+\begin{propbox}[title={Ce qui augmente la trempabilité}]
+\begin{itemize}
+  \item Les \textbf{éléments d'alliage} (le chrome, notamment, a un effet fort).
+  \item Une \textbf{taille de grain d'austénite plus grande} : les joints de grains sont les sites
+        de germination de la ferrite et de la cémentite ; moins de joints, transformation plus
+        lente. (Mais un gros grain a d'autres inconvénients.)
+\end{itemize}
+\end{propbox}
+
+Pourquoi une grande trempabilité est-elle précieuse ? On obtient de la martensite plus en
+profondeur, et l'on peut refroidir \textbf{moins vite} : moins de gradients de température,
+donc moins de contraintes thermiques. C'est crucial car la martensite est fragile et sa formation
+s'accompagne d'une \textbf{dilatation} : une trempe trop brutale peut fissurer ou déformer la
+pièce. Les contraintes restantes s'enlèvent par un \textbf{revenu de détensionnement}.
+
+\subsection*{Mesurer la trempabilité}
+
+\slide[0.6]{c04-58}{Essai Jominy : un barreau austénitisé est trempé par un bout ; la dureté le long du barreau montre jusqu'où la martensite s'est formée.}
+
+\begin{itemize}
+  \item \textbf{Essai Jominy} : on arrose d'eau l'extrémité d'un barreau austénitisé ; chaque
+        point du barreau a ainsi vu une vitesse de refroidissement différente. On mesure la
+        dureté le long du barreau : la distance où elle chute indique où il n'y a plus 100\,\% de
+        martensite. Les variations d'un échantillon à l'autre donnent une \textbf{bande} Jominy.
+  \item \textbf{Diamètre critique} : le plus grand diamètre que l'on peut tremper dans un milieu
+        donné en obtenant au moins 50\,\% de martensite partout (donc exactement 50\,\% au c\oe ur).
+\end{itemize}
+
+\subsection*{Le revenu de la martensite}
+
+La martensite est très instable : contraintes internes, carbone sursaturé coincé dans des sites
+trop étroits, beaucoup de dislocations. Si on la \textbf{chauffe}, le carbone (interstitiel,
+mobile) s'en va :
+\begin{itemize}
+  \item il se loge le long des dislocations ;
+  \item il forme de petits carbures $\varepsilon$ cohérents (léger durcissement structural) ;
+  \item plus chaud et plus long : de la cémentite, qui mûrit en particules sphériques
+        (\textbf{cémentite sphéroïdale}) ; les dislocations s'éliminent, la ferrite peut
+        recristalliser.
+\end{itemize}
+
+\slide[0.55]{c04-63}{Dureté de la martensite après 1\,h de revenu à différentes températures, pour plusieurs teneurs en carbone.}
+
+\begin{propbox}[title={Le revenu : moins dur, mais surtout moins fragile}]
+\begin{itemize}
+  \item Résultat : l'acier perd un peu de dureté mais gagne beaucoup en \textbf{ténacité} et en
+        ductilité. Le couple \og trempe + revenu\fg{} est le traitement classique des aciers.
+  \item \textbf{Durcissement secondaire} : dans les aciers alliés, à haute température de
+        revenu, d'autres carbures (Cr, Mo, V\ldots) précipitent ; formés à chaud, ils restent
+        stables à chaud.
+  \item \textbf{Austénite résiduelle} : le revenu peut l'appauvrir en carbone, ce qui élève son
+        $M_s$ ; elle devient martensite (fraîche, fragile) au retour à l'ambiante. D'où les
+        \textbf{revenus multiples} des aciers à outils.
+  \item \textbf{Fragilisation de revenu} : vers 350--600\,°C, certaines impuretés (P, Sb, Sn, As)
+        associées à certains éléments (Cr) fragilisent les anciens joints de l'austénite. Antidote :
+        le molybdène.
+\end{itemize}
+\end{propbox}
+
+\subsection*{Trempes étagées et traitements de surface}
+
+\slide[0.75]{c04-69}{Trempe classique, trempe martensitique étagée, trempe bainitique étagée.}
+
+En lisant le TTT, on peut faire mieux qu'une trempe brutale : un \textbf{maintien} juste
+au-dessus de $M_s$ laisse le c\oe ur et la surface s'égaliser en température avant de former la
+martensite (\textbf{trempe martensitique étagée}) : moins de fissures et de distorsions. Ou
+maintenir dans le domaine bainitique pour obtenir de la bainite (\textbf{trempe bainitique
+étagée}). L'\textbf{austénitoformage} déforme l'austénite métastable avant la trempe.
+
+\begin{propbox}[title={Durcir seulement la surface}]
+Pour une surface dure et un c\oe ur tenace :
+\begin{enumerate}
+  \item chauffer brièvement la surface (flamme, induction, laser) puis tremper ;
+  \item \textbf{cémentation} (\emph{carburizing}) : chauffer dans le domaine austénitique sous
+        atmosphère riche en carbone ; la surface s'enrichit, devient plus dure et plus
+        trempable (l'inverse, la décarburation, est néfaste) ;
+  \item \textbf{nitruration} : enrichir la surface en azote, dans le domaine \textbf{ferritique}
+        (solution solide ou couche de nitrures durs).
+\end{enumerate}
+\end{propbox}
+
+\begin{goatbox}
+La trempabilité, c'est la facilité à attraper de la martensite jusqu'au c\oe ur d'une grosse
+pièce : on l'améliore en ajoutant des éléments d'alliage. La martensite brute casse comme du
+verre ; en la réchauffant un peu (le revenu), on laisse le carbone sortir de sa cage : l'acier
+devient un peu moins dur mais beaucoup moins cassant. Et si on veut juste une peau dure, on durcit
+seulement la surface.
+\end{goatbox}
