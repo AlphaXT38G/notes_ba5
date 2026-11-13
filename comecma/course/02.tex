@@ -1,0 +1,553 @@
+% =========================================================
+\chapter{Les céramiques}
+% =========================================================
+
+\begin{rembox}[title=En bref]
+\textbf{De quoi parle ce chapitre ?} Première grande classe de matériaux : les céramiques
+(pierres, briques et porcelaines, verres, ciments et bétons, céramiques techniques). On voit
+leurs propriétés (rigides, dures, réfractaires\ldots{} mais \textbf{fragiles}), leur structure
+atomique (cristaux ioniques ou covalents, verres amorphes), leur élaboration (argiles,
+frittage, mise en forme du verre, contraintes thermiques) et surtout leur
+\textbf{comportement mécanique} : rupture fragile, \textbf{statistique de Weibull}, rupture
+en compression, fissuration lente. \\
+\textbf{Le fil rouge} : tout découle de $K = Y\sigma\sqrt{\pi a}$ (chapitre~1) appliqué à des
+matériaux sans plasticité et pleins de petits défauts.
+\end{rembox}
+
+\section{Panorama : une famille rigide, dure\ldots{} et fragile}
+
+\begin{defnbox}[title=Les grandes familles de céramiques]
+\begin{enumerate}
+  \item \textbf{Naturelles} : calcaire/marbre, grès, granite, glace.
+  \item \textbf{Poreuses et vitrifiées} : porcelaine, faïence, briques (à base d'argiles).
+  \item \textbf{Verres} : verre sodocalcique ($\approx$ 70\,\% SiO$_2$, 10\,\% CaO, 15\,\%
+        Na$_2$O), borosilicaté (Pyrex).
+  \item \textbf{Ciments et bétons} : ciment Portland (CaO + SiO$_2$ + Al$_2$O$_3$).
+  \item \textbf{Céramiques techniques} (haute performance) : alumine Al$_2$O$_3$, SiC,
+        Si$_3$N$_4$, zircone ZrO$_2$\ldots{} plus fibres de renfort, revêtements (diamant),
+        abrasifs.
+\end{enumerate}
+\end{defnbox}
+
+Elles sont faites des éléments les plus \textbf{abondants} de l'écorce terrestre (O, Si, Al,
+Ca, Na, Mg, K\ldots) : beaucoup sont bon marché.
+
+\subsection*{Choisir un matériau léger et rigide : les indices $E/\rho$ et $E/\rho^2$}
+
+Les cartes d'Ashby placent chaque matériau dans un plan (densité, module\ldots) en échelle
+logarithmique. Pour s'en servir, il faut savoir \textbf{quelle combinaison de propriétés} on
+veut maximiser, et cela dépend de la forme de la pièce.
+
+\begin{itemize}
+  \item \textbf{Barreau en traction} (rayon $r$, longueur $L$, flèche $\delta$ sous la force $F$) :
+        $\dfrac{F}{\pi r^2} = E\dfrac{\delta}{L}$ et $M = \pi r^2 L\rho$, d'où
+        $M = \dfrac{L^2 F}{\delta}\,\dfrac{\rho}{E}$. Pour la masse la plus faible à rigidité
+        donnée : \textbf{maximiser $E/\rho$}.
+  \item \textbf{Poutre pleine en flexion} (section carrée $t\times t$, longueur $l$) :
+        $\delta = \dfrac{4l^3F}{Et^4}$ et $M = lt^2\rho$, d'où
+        $M = \Big(\dfrac{4l^5F}{\delta}\Big)^{1/2}\dfrac{\rho}{E^{1/2}}$ :
+        \textbf{maximiser $E^{1/2}/\rho$}, c'est-à-dire $E/\rho^2$.
+  \item \textbf{Tube mince en flexion} (rayon $r$ fixé, épaisseur $t \ll r$) : seule $t$ est
+        libre, $M \propto \rho/E$ : de nouveau \textbf{$E/\rho$}.
+\end{itemize}
+
+Pourquoi la flexion d'une poutre pleine donne-t-elle $\rho^2$ ? Parce qu'en flexion la rigidité
+croît comme $t^4$ alors que la masse croît comme $t^2$ : épaissir une poutre légère est très
+efficace, donc la densité \og pèse\fg{} deux fois plus.
+
+\slide[0.6]{c02-21}{Carte module--densité : les droites $E/\rho = $ cste et $E/\rho^2 = $ cste. Les céramiques techniques sont en haut : très rigides pour leur poids.}
+
+\begin{propbox}[title=Ce que disent les cartes]
+\begin{itemize}
+  \item \textbf{Module} : très élevé (alumine 380\,GPa, SiC 410\,GPa, diamant 1050\,GPa).
+  \item \textbf{Densité} moyenne (2,2 à 4, sauf zircone et carbures lourds) : excellentes en
+        $E/\rho$.
+  \item \textbf{Limite d'élasticité} énorme, mais \textbf{sans importance} : elles cassent
+        avant de l'atteindre.
+  \item \textbf{Réfractaires} (points de fusion élevés) et souvent résistantes à l'attaque
+        chimique.
+  \item \textbf{Ténacité très faible} ($K_c \approx 0{,}7$ à $\approx 10\,\text{MPa}\sqrt{\text m}$,
+        contre 20 à 200 pour les métaux) : \textbf{c'est leur grande faiblesse}.
+\end{itemize}
+\end{propbox}
+
+\slide[0.6]{c02-26}{Carte ténacité--module : les céramiques sont à droite (rigides) mais en bas (fragiles).}
+
+\begin{goatbox}
+Les céramiques, c'est la pierre et le verre : très rigides, très dures, légères pour leur
+rigidité, elles supportent la chaleur et la rouille ne les touche pas. Mais elles ont un gros
+défaut : la moindre fissure les fait casser net. Pour choisir un matériau, on ne regarde pas
+une seule propriété mais un mélange (rigidité divisée par poids, par exemple), et ce mélange
+dépend de la forme de la pièce.
+\end{goatbox}
+
+\section{Structure : cristaux ioniques, cristaux covalents, silicates}
+
+Les céramiques sont des solides à liaisons \textbf{iono-covalentes}. Grossièrement :
+\begin{itemize}
+  \item \textbf{métal + non-métal} (MgO, Al$_2$O$_3$, ZrO$_2$) : liaisons à dominante
+        \textbf{ionique} ;
+  \item \textbf{non-métal + non-métal}, ou élément non métallique seul (SiC, Si$_3$N$_4$,
+        diamant) : liaisons à dominante \textbf{covalente} ;
+  \item en réalité, souvent un caractère mixte.
+\end{itemize}
+
+\subsection*{Les cristaux ioniques : des règles de bon voisinage}
+
+\begin{propbox}[title=Comment s'arrangent les ions]
+\begin{itemize}
+  \item Les \textbf{anions} (O$^{2-}$, Cl$^-$) sont le plus souvent plus gros que les
+        \textbf{cations} (Al$^{3+}$, Mg$^{2+}$) ; exception : Zr$^{4+}$.
+  \item Ions de signes opposés veulent être voisins ; ions de même signe veulent être loin.
+  \item Il faut remplir l'espace efficacement et rester \textbf{électriquement neutre}.
+\end{itemize}
+Résultat : les gros anions forment un empilement dense (CFC ou HC, sinon cubique simple) et
+les petits cations se logent dans les \textbf{sites interstitiels} (trous) entre eux. Le site
+choisi doit être \textbf{un peu trop petit} pour le cation : il écarte légèrement les anions,
+qui ainsi \og ne se touchent pas\fg{}.
+\end{propbox}
+
+\slide[0.55]{c02-36}{Coordination selon le rapport des rayons cation/anion : tétraédrique (4), octaédrique (6), cubique (8).}
+
+Plus le cation est gros par rapport à l'anion, plus il peut s'entourer de voisins : 4
+(tétraèdre), 6 (octaèdre), 8 (cube). Exemples à reconnaître : NaCl et MgO (sel gemme : anions
+CFC, cations dans tous les sites octaédriques), CsCl, ZnS (blende), CaF$_2$ (fluorine), ZrO$_2$,
+Al$_2$O$_3$ (anions HC, cations dans deux tiers des sites octaédriques), pérovskite BaTiO$_3$,
+spinelle MgAl$_2$O$_4$.
+
+\subsection*{Les cristaux covalents et la silice}
+
+Les liaisons covalentes sont \textbf{dirigées} : elles imposent des angles. Les structures
+sont donc \textbf{moins denses} (diamant, SiC, silice cubique). La silice SiO$_2$ montre bien
+la richesse possible :
+\begin{itemize}
+  \item l'unité de base est le \textbf{tétraèdre SiO$_4$} (un Si au centre, quatre O aux
+        sommets), chaque O étant partagé entre deux tétraèdres (O \og pontant\fg{}) ;
+  \item SiO$_2$ pur a trois structures cristallines (quartz, tridymite, cristobalite) selon la
+        température ;
+  \item si l'on ajoute d'autres oxydes (le rapport O/Si augmente), les tétraèdres se lient
+        moins entre eux : réseaux 3D, puis \textbf{feuillets} 2D, puis \textbf{chaînes}, puis
+        tétraèdres isolés.
+\end{itemize}
+
+\begin{propbox}[title=Pourquoi l'argile mouillée est malléable]
+Mica, talc et argiles sont faits de \textbf{feuillets} de silicates. L'eau s'insère entre les
+feuillets et leur permet de \textbf{glisser} les uns sur les autres : c'est ce qui rend l'argile
+humide plastique et façonnable.
+\end{propbox}
+
+\begin{warnbox}[title={Diagrammes de phase \og quasi-binaires\fg{}}]
+Un diagramme comme SiO$_2$--Al$_2$O$_3$ ou MgO--Al$_2$O$_3$ n'est \textbf{pas} un vrai
+diagramme binaire : c'est une coupe d'un diagramme ternaire (Si--O--Al). Il n'est valable que
+si les proportions d'oxygène restent stœchiométriques (2 O par Si, 3/2 O par Al).
+\end{warnbox}
+
+\begin{goatbox}
+Dans un cristal ionique, les gros ions négatifs s'empilent comme des oranges sur l'étal, et les
+petits ions positifs se glissent dans les trous, en choisissant un trou juste un peu trop petit
+pour eux. Dans la silice, la brique de base est une petite pyramide (un silicium entouré de
+quatre oxygènes) ; selon ce qu'on ajoute, les pyramides forment un bloc, des feuilles ou des
+chaînes. Les feuilles d'argile glissent les unes sur les autres quand elles sont mouillées.
+\end{goatbox}
+
+\section{Les verres : des liquides figés}
+
+\slide[0.7]{c02-50}{Silice cristalline (a) et silice amorphe (b) : mêmes tétraèdres, mais aucun ordre à longue distance.}
+
+Dans la silice, les angles Si--O--Si peuvent varier dans une assez large gamme sans perdre
+beaucoup de stabilité. Le liquide a donc \textbf{peu d'envie de cristalliser}, même froid. S'il
+refroidit assez vite, il reste désordonné et se fige : c'est un \textbf{verre} (solide
+\textbf{amorphe}). Ordre à courte distance (chaque Si a bien ses 4 O), désordre à longue
+distance, \textbf{ni cristaux ni joints de grains}. C'est un état \textbf{métastable}.
+
+\slide[0.6]{c02-51}{Volume en fonction de la température : le cristal saute à $T_f$ ; le verre suit le liquide surfondu puis se fige à $T_g$, d'autant plus haut et moins dense qu'on refroidit vite.}
+
+\begin{propbox}[title=La température de transition vitreuse $T_g$]
+En refroidissant, un liquide qui ne cristallise pas devient de plus en plus visqueux, puis se
+fige à la \textbf{transition vitreuse} $T_g$ (changement de pente de la courbe volume--$T$). Plus
+le refroidissement est rapide, plus le liquide se fige tôt : le verre obtenu est \textbf{moins
+dense} (plus de volume libre). La densité d'un verre dépend donc de son histoire.
+\end{propbox}
+
+\subsection*{La viscosité, la propriété clé du verre chaud}
+
+\begin{defnbox}[title={Fluide newtonien et viscosité (à connaître par c\oe ur)}]
+\[ \tau = \eta\,\dot\gamma = \eta\,\frac{d\gamma}{dt}
+   \qquad\text{(cisaillement)}, \qquad
+   \sigma = 3\eta\,\dot\varepsilon \qquad\text{(contrainte uniaxiale)} \]
+$\eta$ est la viscosité (Pa$\cdot$s). Ordres de grandeur : eau ou métal liquide
+$10^{-3}$\,Pa$\cdot$s ; huile $5\cdot10^{-2}$ ; miel 2 à 10.
+\end{defnbox}
+
+Le facteur 3 en traction vient de ce qu'un fluide newtonien incompressible tiré dans une
+direction se cisaille dans les autres : c'est le même facteur 3 qu'entre module d'Young et
+module de cisaillement pour $\nu = 1/2$.
+
+\slide[0.6]{c02-53}{Viscosité de différents verres en fonction de la température et les points de référence.}
+
+\begin{defnbox}[title=Les températures repères du verre (par la viscosité)]
+\begin{itemize}
+  \item \textbf{point de fusion} : $\eta = 10$\,Pa$\cdot$s, le verre se comporte comme un liquide ;
+  \item \textbf{température de mise en forme} : $\eta = 10^3$\,Pa$\cdot$s, facilement déformable ;
+  \item \textbf{température de ramollissement} : $\eta = 4\cdot10^6$\,Pa$\cdot$s, la plus haute
+        à laquelle on peut manipuler une pièce sans la déformer ;
+  \item plus bas, points de \textbf{recuit} et de \textbf{tension} (relaxation des contraintes
+        internes en minutes ou en heures).
+\end{itemize}
+\end{defnbox}
+
+\begin{thmbox}[title={Viscosité et température}]
+Le mouvement des atomes étant thermiquement activé, à haute température :
+\[ \eta = K\,\exp\!\Big(+\frac{Q}{RT}\Big) \]
+(le signe $+$ : la viscosité \emph{diminue} quand $T$ augmente). C'est la loi d'Arrhenius
+(chapitre~1) appliquée à l'inverse d'une vitesse.
+\end{thmbox}
+
+\begin{propbox}[title={Les modifiants de réseau}]
+La silice pure a d'excellentes propriétés mais n'est formable qu'à très haute température. On
+ajoute donc quelques dizaines de \% de \textbf{modifiants} (Na$_2$O, CaO, B$_2$O$_3$) qui
+\og cassent\fg{} localement le réseau 3D des tétraèdres : la viscosité baisse, le verre se
+travaille à plus basse température. C'est le verre sodocalcique des fenêtres et des bouteilles.
+\end{propbox}
+
+\begin{goatbox}
+Un verre, c'est un liquide qui a refroidi trop vite pour ranger ses atomes : il s'est figé en
+désordre, comme une photo d'une foule en mouvement. Chaud, il coule comme du miel, de moins en
+moins épais quand on chauffe. Ajouter de la soude, c'est couper des liens du réseau pour qu'il
+coule à une température plus facile à atteindre.
+\end{goatbox}
+
+\section{Élaboration : argiles, frittage, verre}
+
+\subsection*{Les argiles et les poudres}
+
+Les argiles (kaolinite, montmorillonite\ldots) viennent de l'altération des roches. On les met en
+forme \textbf{humides} (formage hydroplastique : malaxeur sous vide, extrusion, calibrage au
+tour), ou en \textbf{barbotine} (suspension dans l'eau coulée dans un moule en plâtre qui boit
+l'eau), ou par \textbf{pressage de poudres}. Vient ensuite le \textbf{séchage} : la pièce
+rétrécit tant que les particules ne se touchent pas, puis le retrait s'arrête (à sécher
+lentement, sinon elle fissure). La pièce crue (\emph{green body}) est ensuite cuite.
+
+\subsection*{La capillarité, moteur du frittage}
+
+\begin{defnbox}[title={Énergie de surface}]
+Les atomes d'une surface ou d'une interface ont des liaisons moins stables : créer de la
+surface coûte une énergie $\gamma$ (J/m$^2$). Comme $1\,\text{J/m}^2 = 1\,\text{N/m}$, c'est
+aussi une \textbf{tension de surface} : pour créer 1\,m$^2$ de surface, il faut tirer sur 1\,m de
+bord avec une force $F = \gamma$.
+\end{defnbox}
+
+\slide[0.55]{c02-67}{Les trois stades du frittage : les grains se soudent, les pores s'arrondissent, rétrécissent et disparaissent.}
+
+\begin{propbox}[title={Le frittage (\emph{sintering})}]
+Une poudre compacte a énormément de surface, donc beaucoup d'énergie de surface. À chaud
+(diffusion possible), la matière se déplace pour \textbf{réduire cette surface} : les grains se
+soudent par des \og cous\fg{}, les pores rétrécissent et s'éliminent. La pièce se densifie et se
+contracte sans jamais fondre. C'est ainsi que l'on cuit les poteries et que l'on fabrique les
+céramiques techniques.
+\end{propbox}
+
+Les ciments et le plâtre, eux, durcissent par \textbf{réaction chimique} avec l'eau
+(hydratation), à froid.
+
+\subsection*{Mettre en forme le verre}
+
+Le verre chaud est un \textbf{fluide newtonien} : on a vu au chapitre~1 qu'il \textbf{ne fait
+pas de striction}. On peut donc l'\textbf{étirer} (fibres de verre), le \textbf{souffler}
+(bouteilles : pressage puis soufflage dans un moule), le laminer, ou le couler sur un bain d'étain
+liquide (verre \emph{float}, parfaitement plan) sans qu'il se rompe.
+
+\begin{goatbox}
+Une poudre, c'est plein de surface, et la surface coûte de l'énergie, comme une bulle de savon
+qui veut rapetisser. En chauffant, les grains se collent entre eux et les trous se referment
+pour diminuer la surface : la poudre devient un bloc. Le verre chaud, lui, s'étire comme du
+miel sans jamais s'amincir à un endroit : on peut le tirer en fil ou le gonfler en bouteille.
+\end{goatbox}
+
+\section{Contraintes thermiques, choc thermique et verre trempé}
+
+\slide[0.6]{c02-75}{Une couche de surface refroidie d'un coup veut se contracter ; le c\oe ur chaud l'en empêche : elle est mise en traction.}
+
+\begin{thmbox}[title={Contrainte thermique (à connaître par c\oe ur)}]
+Une fine couche de surface ramenée brutalement de $T_1$ à $T_2 < T_1$, collée à un substrat qui ne
+se déforme pas (le c\oe ur encore chaud), subit la contrainte
+\[ \sigma = \frac{E}{1-\nu}\,\alpha\,(T_1 - T_2) \]
+($\alpha$ : coefficient de dilatation). C'est une contrainte de \textbf{traction} (la surface
+veut se contracter et en est empêchée). Le $1-\nu$ apparaît parce que la contrainte agit dans
+\textbf{les deux directions} du plan de la surface (état biaxial), et non dans une seule.
+\end{thmbox}
+
+\begin{exbox}[title=Ordre de grandeur (diapositives)]
+Verre sodocalcique : $E = 74$\,GPa, $\nu \approx 0{,}25$, $\alpha = 8{,}5\cdot10^{-6}$\,K$^{-1}$,
+$\Delta T = 200$\,K :
+\[ \sigma \approx \frac{74}{0{,}75}\times8{,}5\cdot10^{-6}\times200
+   \approx 10^2 \times 1{,}7\cdot10^{-3}\ \text{GPa} = 170\,\text{MPa}. \]
+C'est plus que la résistance d'un verre ordinaire : il casse. C'est le \textbf{choc thermique}.
+\end{exbox}
+
+\begin{warnbox}[title={La \og résistance au choc thermique\fg{} n'est pas une propriété du matériau}]
+Dans les tableaux, c'est l'écart $\Delta T$ maximal qu'une pièce supporte quand on la trempe
+(par exemple dans l'eau à 0\,°C). Elle dépend des défauts, de la forme, de la taille, de la vitesse
+de trempe : sa mesure doit suivre une procédure normalisée.
+\end{warnbox}
+
+\subsection*{Retourner le problème : le verre trempé}
+
+\slide[0.55]{c02-80}{Profil des contraintes dans un verre trempé : compression en surface, traction à c\oe ur.}
+
+Si la plaque est \textbf{encore molle} quand on refroidit sa surface, le c\oe ur chaud
+s'adapte au retrait de la surface : pas de contrainte. Puis le c\oe ur refroidit et se
+contracte à son tour ; la surface, déjà rigide, ne suit pas : \textbf{la surface se retrouve en
+compression}, le c\oe ur en traction.
+
+\begin{propbox}[title=Le principe de la trempe du verre]
+Les fissures partent de la surface, et une fissure en compression ne s'ouvre pas : la
+compression de surface \textbf{protège} le verre. Mais si une fissure atteint le c\oe ur en
+traction, elle s'y propage spontanément et la pièce \textbf{s'émiette} (pare-brise latéraux,
+larmes de Batavia). On obtient le même effet par \textbf{échange d'ions} (remplacer Na$^+$ par
+le plus gros K$^+$ dans un bain de sel fondu) : compressions $> 500$\,MPa sur une très faible
+épaisseur (verre \og Gorilla\fg{} des téléphones).
+\end{propbox}
+
+\begin{goatbox}
+Si tu refroidis d'un coup la peau d'un verre chaud, la peau veut rétrécir mais l'intérieur, encore
+gros et chaud, la retient : elle est tirée et se fissure. Si au contraire l'intérieur est encore
+mou quand la peau durcit, c'est l'intérieur qui rétrécit ensuite en tirant la peau vers lui : la
+peau est serrée, et une peau serrée ne se fissure pas. C'est le verre trempé.
+\end{goatbox}
+
+\section{Rupture fragile et résistance statistique}
+
+Une céramique ne se déforme pas plastiquement : elle casse dès qu'une fissure atteint
+$K = K_c$, de façon catastrophique. Le faciès de rupture montre souvent, depuis le défaut
+d'origine, une zone \textbf{miroir} lisse, puis une zone brumeuse, puis des \textbf{branches}
+(la fissure accélère et se divise). Les transitions ont lieu à des valeurs de $K$ assez fixes :
+utile pour l'analyse d'avaries.
+
+\slide[0.45]{c02-84}{Faciès de rupture d'un verre : origine, zone miroir, zone de branchement.}
+
+\subsection*{Pourquoi la résistance est une grandeur statistique}
+
+Tout matériau contient des défauts (microfissures, pores, inclusions, rayures). La pièce casse
+au premier endroit où $K = Y\sigma\sqrt{\pi a}$ atteint $K_c$, c'est-à-dire au \textbf{plus gros
+défaut bien orienté} : $\sigma_r = K_c/(Y\sqrt{\pi a_{\max}})$. Or la taille de ce plus gros
+défaut est \textbf{aléatoire}. Conséquences :
+\begin{itemize}
+  \item on ne peut pas parler de \og \emph{la}\fg{} résistance d'un verre : il faut une
+        \textbf{distribution} de résistances ;
+  \item \textbf{effet de volume} : une grande pièce a plus de chances de contenir un gros
+        défaut, elle est en moyenne moins résistante qu'une petite ;
+  \item \textbf{effet de la répartition des contraintes} : en flexion, seule une fine couche est
+        fortement chargée ; le plus gros défaut n'y est probablement pas. Une céramique paraît donc
+        plus résistante en flexion qu'en traction.
+\end{itemize}
+
+\slide[0.75]{c02-87}{En flexion, la contrainte maximale n'agit que près de la surface : le plus gros défaut n'y est pas forcément.}
+
+\subsection*{La statistique de Weibull : d'où elle vient}
+
+\begin{enumerate}
+  \item \textbf{Hypothèses} : le solide est homogène (chaque petit volume a la même
+        distribution de défauts, indépendante des autres), et \textbf{si un petit volume casse,
+        toute la pièce casse} (maillon le plus faible).
+  \item \textbf{Survie = produit des survies} : un volume $V_1 + V_2$ survit à $\sigma$ si $V_1$
+        \emph{et} $V_2$ survivent : $S(V_1+V_2,\sigma) = S(V_1,\sigma)\,S(V_2,\sigma)$.
+  \item La seule fonction qui transforme une \textbf{somme} de volumes en \textbf{produit} est
+        l'exponentielle : $S(V,\sigma) = e^{-V\,\Phi(\sigma)}$, avec $\Phi \ge 0$.
+  \item Weibull \textbf{propose} une loi puissance : $\Phi(\sigma) = K(\sigma - \sigma_u)^m$
+        (trois paramètres), et le plus souvent $\sigma_u = 0$ (deux paramètres : par prudence,
+        ou parce que les données s'y prêtent).
+\end{enumerate}
+
+\begin{thmbox}[title={Statistique de Weibull (à connaître par c\oe ur)}]
+Pour une contrainte uniforme $\sigma$ sur un volume $V$ (défauts de volume) :
+\[ S(\sigma,V) = \exp\!\Big[-\frac{V}{V_0}\Big(\frac{\sigma}{\sigma_0}\Big)^m\Big],
+   \qquad
+   \ln S = -\frac{V}{V_0}\Big(\frac{\sigma}{\sigma_0}\Big)^m,
+   \qquad F = 1 - S . \]
+Pour des défauts de surface, remplacer $V/V_0$ par $A/A_0$.
+\begin{itemize}
+  \item $m$ : \textbf{module de Weibull}. Grand $m$ = distribution étroite, matériau fiable
+        (métaux $\approx 100$) ; petit $m$ = grande dispersion (céramiques 5 à 20).
+  \item $V_0$ et $\sigma_0$ \textbf{vont par paire} : il n'y a en fait qu'une seule constante,
+        $K = [V_0\sigma_0^m]^{-1}$.
+  \item Pour $F \ll 1$ : $-\ln S = -\ln(1-F) \approx F$, donc
+        $F \approx \dfrac{V}{V_0}\Big(\dfrac{\sigma}{\sigma_0}\Big)^m$ (pratique en conception).
+\end{itemize}
+\end{thmbox}
+
+\slide[0.6]{c02-95}{La distribution de Weibull : plus $m$ est grand, plus la chute de la probabilité de survie est brutale.}
+
+\begin{warnbox}[title={$\sigma = \sigma_0$ n'est pas la médiane}]
+Pour $V = V_0$ et $\sigma = \sigma_0$, $S = e^{-1} \approx 0{,}37$, pas $1/2$ : $\sigma_0$ n'est
+\textbf{pas} la résistance médiane.
+\end{warnbox}
+
+\begin{propbox}[title={Contrainte non uniforme : le facteur $k_m$}]
+Chaque petit volume survit selon sa contrainte locale ; on multiplie les survies, donc on
+\textbf{intègre} dans l'exposant :
+\[ S = \exp\!\Big[-\int_V \Big(\frac{\sigma}{\sigma_0}\Big)^m\frac{dV}{V_0}\Big]
+     = \exp\!\Big[-k_m\frac{V}{V_0}\Big(\frac{\sigma_{\max}}{\sigma_0}\Big)^m\Big] \]
+$k_m \le 1$ dépend de la géométrie, du chargement et de $m$ : $k_m = 1$ en traction ;
+$1/[2(m+1)]$ en flexion pure ; $1/[2(m+1)^2]$ en flexion trois points ;
+$(mL_i + L_o)/[2L_o(m+1)^2]$ en flexion quatre points. Comme $k_m < 1$, la flexion donne des
+$\sigma_{\max}$ à rupture plus élevées : l'essai de flexion est \textbf{\og flatteur\fg{}}.
+\end{propbox}
+
+\subsection*{Mesurer $m$ : le diagramme de Weibull}
+
+On casse $N$ éprouvettes, on classe les contraintes à rupture par ordre croissant
+$\sigma_1 \le \ldots \le \sigma_N$ et on attribue à la $i$-ème la probabilité de rupture
+$F_i \approx i/N$ (pour $N$ assez grand ; la 20\up{e} sur 50 donne $F = 40\,\%$). En prenant deux
+fois le logarithme de $1/S$ :
+\[ \ln\ln\frac{1}{S} = m\ln\sigma_{\max} - m\ln\sigma_0 + \ln\Big(k_m\frac{V}{V_0}\Big) \]
+Le graphe de $\ln\ln(1/S)$ contre $\ln\sigma$ est une \textbf{droite de pente $m$} si Weibull est
+obéie.
+
+\slide[0.5]{c02-103}{Un diagramme de Weibull réel (nitrure de silicium en flexion).}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives) : l'effet de volume}]
+À même probabilité de survie, $V\sigma^m$ est constant :
+$\sigma_2 = \sigma_1 (V_1/V_2)^{1/m}$. Une pièce 1000 fois plus grosse que l'éprouvette, avec
+$m = 10$ : $\sigma_2 = \sigma_1 \times 1000^{-0{,}1} = 0{,}50\,\sigma_1$. Elle ne supporte que la
+moitié. Avec $m = 20$, $0{,}71\,\sigma_1$ : un $m$ élevé rend l'effet de taille moins
+pénalisant.
+\end{exbox}
+
+\begin{goatbox}
+Une chaîne casse à son maillon le plus faible. Une céramique est une chaîne de petits bouts de
+matière, chacun avec ses petits défauts. Plus la pièce est grande, plus elle a de chances
+d'avoir un très mauvais maillon : elle casse plus tôt. Weibull donne la probabilité qu'aucun
+maillon ne lâche ; $m$ dit si tous les maillons se ressemblent (grand $m$) ou s'ils sont très
+inégaux (petit $m$).
+\end{goatbox}
+
+\section{Compression et fissuration lente}
+
+\subsection*{En compression, les céramiques sont bien plus fortes}
+
+\slide[0.55]{c02-105}{(a) En traction, le plus gros défaut se propage d'un coup ; (b) en compression, beaucoup de fissures croissent lentement, parallèlement à la compression.}
+
+Une fissure perpendiculaire à une compression ne s'ouvre pas. Les fissures croissent
+\textbf{parallèlement} à la compression, à partir des bords des défauts, et cette croissance est
+\textbf{stable} : elles avancent un peu à chaque augmentation de la charge. L'échantillon finit
+par s'émietter (\emph{crushing}), après une phase qui ressemble à de la plasticité mais est de
+l'endommagement.
+
+\begin{thmbox}[title={Résistance en compression}]
+\[ \sigma_{\text{compr.}} = C\,\frac{K_c}{Y\sqrt{\pi\bar a}}, \qquad C \approx 15 \]
+avec $\bar a$ la longueur \textbf{moyenne} des fissures (et non la plus grande, puisque la ruine
+vient de nombreuses fissures). Une céramique est donc environ \textbf{15 fois plus résistante en
+compression qu'en traction} : on l'utilise de préférence comprimée (voûtes, piliers).
+\end{thmbox}
+
+\subsection*{La fissuration lente (corrosion sous contrainte)}
+
+Les liaisons Si--O sont attaquées par l'eau, et d'autant plus qu'elles sont tendues : en pointe
+de fissure, la molécule d'eau casse la liaison et la fissure avance d'un cran, même si
+$K < K_c$.
+
+\slide[0.5]{c02-109}{La vapeur d'eau rompt les liaisons Si--O en pointe de fissure : la fissure avance lentement.}
+
+\begin{thmbox}[title={Loi de fissuration sous-critique (à connaître par c\oe ur)}]
+\[ \frac{da}{dt} = F(P_{\text{H}_2\text{O}}, K)\,e^{-Q/RT}, \qquad K = Y\sigma\sqrt{\pi a} \]
+$F$ augmente avec l'humidité et avec $K$ ; aux faibles $K$, il peut y avoir un seuil ; aux $K$
+élevés, la vitesse plafonne (limitée par l'arrivée de l'eau en pointe d'une longue fissure).
+On l'appelle \og fissuration sous-critique\fg{} ($K < K_c$) ou, improprement, \og fatigue
+statique\fg{}.
+\end{thmbox}
+
+\begin{propbox}[title=Conséquence : la résistance dépend du temps]
+Sous charge, les défauts grandissent lentement : la résistance du verre et des oxydes
+\textbf{diminue avec la durée de chargement}. On l'estime par une loi puissance :
+\[ \Big(\frac{\sigma}{\sigma_{TS}}\Big)^n = \frac{t_{\text{test}}}{t}, \qquad n \approx 10 \text{ à } 20 \]
+où $\sigma_{TS}$ est la contrainte à rupture mesurée en un temps $t_{\text{test}}$ et $\sigma$
+celle que la pièce supporte pendant $t$. Autre conséquence : une fibre de verre fraîche atteint
+14\,GPa, mais seulement $\approx 5$\,GPa à l'air ambiant.
+\end{propbox}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Un verre casse à 100\,MPa dans un essai d'une minute ($n = 15$). Pour tenir 10 ans
+($5{,}3\cdot10^6$\,min) : $\sigma = 100\times(5{,}3\cdot10^6)^{-1/15} = 100\times e^{-15{,}5/15}
+\approx 36$\,MPa. Il faut presque diviser par trois.
+\end{exbox}
+
+\begin{goatbox}
+Écrasée, une céramique tient très bien, parce que ses fissures doivent être nombreuses et
+grandir petit à petit avant qu'elle s'effrite. Tirée, une seule fissure suffit. Et l'eau de l'air
+grignote doucement le bout des fissures tendues : une vitre chargée pendant des années casse
+sous une charge qu'elle supportait sans problème le premier jour.
+\end{goatbox}
+
+\section*{Récap du chapitre 2}
+\addcontentsline{toc}{section}{Récap du chapitre 2}
+
+\begin{recapbox}
+\textbf{Comment ce chapitre s'appuie sur le premier} : les céramiques n'ont pas de plasticité,
+donc leur comportement est entièrement dicté par la \textbf{mécanique de la rupture}
+($K = Y\sigma\sqrt{\pi a}$) et par la taille aléatoire de leurs défauts. La loi du fluide newtonien
+(pas de striction) explique la mise en forme du verre ; la loi d'Arrhenius, sa viscosité.
+
+\textbf{Panorama}
+\begin{itemize}
+  \item Familles : naturelles, argiles (porcelaine, briques), verres, ciments/bétons,
+        céramiques techniques (Al$_2$O$_3$, SiC, Si$_3$N$_4$, ZrO$_2$).
+  \item Rigides, dures, réfractaires, inertes, souvent bon marché, mais \textbf{faible
+        ténacité} ($K_c \approx 1$--$10\,\text{MPa}\sqrt{\text m}$).
+  \item Indices : \textbf{$E/\rho$} (barreau en traction, tube mince), \textbf{$E/\rho^2$}
+        (poutre pleine en flexion, car rigidité $\propto t^4$, masse $\propto t^2$).
+\end{itemize}
+
+\textbf{Structure}
+\begin{itemize}
+  \item Iono-covalentes. Ioniques : gros anions en empilement dense, cations dans les sites
+        interstitiels \og un peu trop petits\fg{}, neutralité ; coordinence 4, 6, 8 selon les
+        rayons.
+  \item Covalentes : liaisons dirigées, structures peu denses. Silice : tétraèdres SiO$_4$, en
+        3D, feuillets (argiles : l'eau fait glisser les feuillets), chaînes.
+  \item Diagrammes quasi-binaires = coupes de ternaires.
+\end{itemize}
+
+\textbf{Verres}
+\begin{itemize}
+  \item Liquide figé, amorphe, métastable ; $T_g$ et densité dépendent de la vitesse de
+        refroidissement.
+  \item \textbf{$\tau = \eta\dot\gamma$} ($\sigma = 3\eta\dot\varepsilon$) ; repères : fusion
+        $10$, mise en forme $10^3$, ramollissement $4\cdot10^6$\,Pa$\cdot$s ;
+        $\eta = K e^{+Q/RT}$ ; modifiants (Na$_2$O, CaO, B$_2$O$_3$) cassent le réseau.
+  \item Fluide newtonien : pas de striction, d'où étirage, soufflage, float.
+\end{itemize}
+
+\textbf{Élaboration} : formage humide, barbotine, pressage, séchage ; énergie de surface
+$\gamma$ (J/m$^2$ = N/m) ; \textbf{frittage} = densification par réduction de la surface ;
+ciments par réaction chimique.
+
+\textbf{Contraintes thermiques}
+\begin{itemize}
+  \item \textbf{$\sigma = \dfrac{E}{1-\nu}\alpha(T_1 - T_2)$} (couche collée, biaxial) :
+        170\,MPa pour le verre avec $\Delta T = 200$\,K $\Rightarrow$ choc thermique.
+  \item Verre trempé : surface en compression (protège), c\oe ur en traction (émiettement) ;
+        échange d'ions (K$^+$ pour Na$^+$).
+\end{itemize}
+
+\textbf{Comportement mécanique}
+\begin{itemize}
+  \item Rupture au plus gros défaut : $\sigma_r = K_c/(Y\sqrt{\pi a_{\max}})$ ; faciès miroir
+        puis branches.
+  \item \textbf{Weibull} : $S = \exp[-(V/V_0)(\sigma/\sigma_0)^m]$, $F = 1 - S$, surface :
+        $A/A_0$ ; $\ln[1-F] \approx -F$ si $F \ll 1$ ; $V_0, \sigma_0$ par paire ;
+        $\sigma_0$ n'est pas la médiane ($S = 1/e$). Savoir refaire l'argument du maillon
+        faible. Contrainte non uniforme : $k_m$ ($1$ traction, $<1$ flexion : flexion
+        flatteuse). Diagramme $\ln\ln(1/S)$ vs $\ln\sigma$ : pente $m$ ; $F_i \approx i/N$.
+  \item Effet de taille : $V\sigma^m$ = cste à probabilité donnée.
+  \item Compression : $\sigma = C K_c/(Y\sqrt{\pi\bar a})$, $C \approx 15$, fissuration
+        stable, $\bar a$ moyen.
+  \item Fissuration lente : $da/dt = F(P_{\text{H}_2\text{O}}, K)e^{-Q/RT}$ ;
+        $(\sigma/\sigma_{TS})^n = t_{\text{test}}/t$, $n \approx 10$--$20$.
+\end{itemize}
+
+\textbf{Pour la suite} : l'énergie de surface $\gamma$ réapparaît au chapitre~3 pour la
+\textbf{maturation} des microstructures ; le diagramme de phase et la loi du levier deviennent
+centraux avec les métaux ; le \og renfort\fg{} rigide dans une matrice (composites) apparaît
+avec les laitons.
+\end{recapbox}

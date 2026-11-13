@@ -1,0 +1,307 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+\setlist[enumerate]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+\definecolor{Goat}{HTML}{F7EEDF}
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+\definecolor{GoatTitle}{HTML}{8A5A1F}
+\definecolor{RecapTitle}{HTML}{5B3A8E}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Comportement mécanique des matériaux}}
+\fancyhead[C]{\small Al--Cu : solidification, maturation, durcissement structural}
+\fancyhead[R]{\small Week 08 --- 26/10-01/11/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+\newtcolorbox{definition}{
+enhanced, unbreakable, colback=Blue, colframe=BlueTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Définition}, fonttitle=\bfseries
+}
+
+\newtcolorbox{important}{
+enhanced, unbreakable, colback=Pink, colframe=PinkTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Idée clé}, fonttitle=\bfseries
+}
+
+\newtcolorbox{formula}{
+enhanced, unbreakable, colback=Green, colframe=GreenTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Formules clés}, fonttitle=\bfseries
+}
+
+\newtcolorbox{warning}{
+enhanced, unbreakable, colback=Orange, colframe=OrangeTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Attention}, fonttitle=\bfseries
+}
+
+\newtcolorbox{example}{
+enhanced, unbreakable, colback=Purple, colframe=PurpleTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Exemple}, fonttitle=\bfseries
+}
+
+% GOAT - brown: the idea told as simply as possible
+\newtcolorbox{goat}{
+enhanced, unbreakable, colback=Goat, colframe=GoatTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Expliqué à une chèvre}, fonttitle=\bfseries
+}
+
+% RECAP - violet: what to know for the exam, at the end of the week
+\newtcolorbox{recap}{
+enhanced, breakable, colback=Purple, colframe=RecapTitle,
+boxrule=1pt, arc=0mm, title=\textbf{Récap pour l'examen}, fonttitle=\bfseries
+}
+
+% Screenshot of a slide of the course: \slide{cNN-PP}
+\newcommand{\slide}[2][0.95]{%
+\begin{center}
+\includegraphics[width=#1\linewidth]{../images/course/#2}
+\end{center}}
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+\thispagestyle{fancy}
+
+\begin{multicols}{2}
+
+%=========================================================
+\section{Solidification de Al--Cu}
+
+\begin{definition}
+Côté Al : eutectique $\alpha$ (Cu dans Al, max 5,7\,\% à 548\,°C) + $\theta$ (Al$_2$Cu,
+fragile) à 33,2\,\% Cu. Points triples : eutectique, eutectoïde, péritectique, péritectoïde.
+\end{definition}
+
+\begin{formula}
+Levier : $f_\alpha = \dfrac{C_\beta - C}{C_\beta - C_\alpha}$, $f_\beta = \dfrac{C - C_\alpha}{C_\beta - C_\alpha}$
+(bras \textbf{opposé}).
+\end{formula}
+
+\begin{important}
+Al--4,5Cu : dendrites $\alpha$. Al--33Cu : eutectique (croissance \textbf{couplée}). Al--10Cu :
+dendrites puis eutectique ($\frac{10-5{,}7}{33{,}2-5{,}7} = 16\,\%$ d'eutectique, \textit{calcul pas dans
+les diapos}).
+\end{important}
+
+\slide[0.8]{c03b-16}
+
+\begin{warning}
+Le levier suppose l'équilibre partout ; dans le solide la diffusion est trop lente : le solide
+garde sa composition $\Rightarrow$ \textbf{microségrégation} (gradients, $\theta$ hors équilibre
+dans Al--4,5Cu brut de coulée). Sauf soluté interstitiel (C dans Fe).
+\end{warning}
+
+\begin{goat}
+Les premiers cristaux (des sapins) sont pauvres en cuivre, le dernier liquide très riche gèle en
+lamelles, et comme rien ne bouge dans le solide, ça reste figé.
+\end{goat}
+
+%=========================================================
+\section{Maturation et homogénéisation}
+
+\begin{formula}
+\[ \Delta P = \frac{2\gamma}{R}, \quad \Delta G = \frac{2\gamma V_m}{R}, \quad \lambda^3 - \lambda_0^3 = Kt \ (l = kt^{1/3}) \]
+\end{formula}
+
+\begin{important}
+Petites particules moins stables (deux ballons : le petit se vide dans le gros) : la structure
+grossit. Refroidir vite $\Rightarrow$ plus fin ; très vite : phases hors équilibre, voire amorphe.
+\end{important}
+
+\slide[0.85]{c03b-23}
+
+\begin{warning}
+\textbf{Homogénéisation} (dissoudre $\theta$, égaliser) \textbf{sous l'eutectique} : sinon
+l'eutectique fond, mûrit, $\theta$ aux joints : alliage \textbf{brûlé}, fragile.
+\end{warning}
+
+\begin{goat}
+Les grosses gouttes mangent les petites ; la structure grossit comme la racine cubique du temps.
+\end{goat}
+
+%=========================================================
+\section{Cinétique et TTT}
+
+\begin{important}
+Thermodynamique : \textbf{si} ($\Delta G$). Cinétique : \textbf{à quelle vitesse}. Lente près de
+l'équilibre (pas de force motrice) et à froid (pas de diffusion) $\Rightarrow$ \textbf{nez}.
+Isotherme : courbe en S.
+\end{important}
+
+\slide[0.75]{c03b-35}
+
+\begin{definition}
+\textbf{TTT} : trempe infiniment rapide à $T$ puis maintien ; début et fin de transformation.
+Valable pour des histoires isothermes.
+\end{definition}
+
+\begin{goat}
+Il faut à la fois en avoir envie (froid) et pouvoir bouger (chaud) : le plus rapide est au milieu.
+\end{goat}
+
+%=========================================================
+\section{Durcissement structural}
+
+\begin{definition}
+\textbf{Mise en solution} ($\alpha$ seul) $\to$ \textbf{trempe} (sursaturation : à l'ambiante
+$\approx 0{,}1\,\%$ Cu toléré) $\to$ \textbf{revenu} (à chaud) ou \textbf{vieillissement}
+(ambiante).
+\end{definition}
+
+\slide[0.8]{c03b-42}
+
+\begin{important}
+Séquence GP $\to \theta'' \to \theta' \to \theta$. Interfaces \textbf{cohérentes} (faible
+$\gamma$, champ de contraintes), semi-cohérentes (dislocations), incohérentes ($\gamma$
+élevée). Les cohérents germent plus facilement : ils viennent d'abord. Moins stable = plus basse
+$T$ max de formation, plus de Cu requis.
+\end{important}
+
+\begin{formula}
+Contournement (Orowan) : $\sigma = \dfrac{2Gb}{d} \approx \dfrac{Ea}{d}$ ($d$ : distance entre
+précipités).
+\end{formula}
+
+\slide[0.75]{c03b-48}
+
+\begin{important}
+Petits précipités \textbf{cisaillés} (durcit avec la taille) ; gros \textbf{contournés}, et la
+maturation les écarte ($d$ $\uparrow$) $\Rightarrow$ \textbf{optimum}, puis sur-revenu. Dépend
+de la température.
+\end{important}
+
+\begin{warning}
+Conditions : solubilité décroissante avec $T$ ; cinétique praticable ; précipités efficaces
+(pas Al--Mg) ; pas d'usage là où la maturation agit.
+\end{warning}
+
+\begin{goat}
+On piège le cuivre, puis il ressort en poussière de grains où les dislocations se cognent.
+Trop attendre : les grains grossissent, s'écartent, et le métal ramollit.
+\end{goat}
+
+%=========================================================
+\section{Récap de la semaine}
+
+\begin{recap}
+\begin{itemize}
+\item Levier (bras opposé) ; 3 alliages Al--Cu ; dendrites, eutectique.
+\item Microségrégation : solide figé, phases hors équilibre.
+\item $\Delta P = 2\gamma/R$ ; $\lambda^3 - \lambda_0^3 = Kt$ ; homogénéiser sous l'eutectique.
+\item TTT : nez = force motrice vs diffusion.
+\item Durcissement structural : solution, trempe, revenu ; GP $\to\theta$ ; cohérence ;
+      cisaillement puis $\sigma = 2Gb/d$ ; optimum ; conditions.
+\end{itemize}
+\end{recap}
+
+\end{multicols}
+
+\end{document}

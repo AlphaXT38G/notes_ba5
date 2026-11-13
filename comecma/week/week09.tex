@@ -1,0 +1,257 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+\setlist[enumerate]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+\definecolor{Goat}{HTML}{F7EEDF}
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+\definecolor{GoatTitle}{HTML}{8A5A1F}
+\definecolor{RecapTitle}{HTML}{5B3A8E}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Comportement mécanique des matériaux}}
+\fancyhead[C]{\small Al--Mg : solution solide, écrouissage, recuit ; Al--Si}
+\fancyhead[R]{\small Week 09 --- 02-08/11/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+\newtcolorbox{definition}{
+enhanced, unbreakable, colback=Blue, colframe=BlueTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Définition}, fonttitle=\bfseries
+}
+
+\newtcolorbox{important}{
+enhanced, unbreakable, colback=Pink, colframe=PinkTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Idée clé}, fonttitle=\bfseries
+}
+
+\newtcolorbox{formula}{
+enhanced, unbreakable, colback=Green, colframe=GreenTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Formules clés}, fonttitle=\bfseries
+}
+
+\newtcolorbox{warning}{
+enhanced, unbreakable, colback=Orange, colframe=OrangeTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Attention}, fonttitle=\bfseries
+}
+
+\newtcolorbox{example}{
+enhanced, unbreakable, colback=Purple, colframe=PurpleTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Exemple}, fonttitle=\bfseries
+}
+
+% GOAT - brown: the idea told as simply as possible
+\newtcolorbox{goat}{
+enhanced, unbreakable, colback=Goat, colframe=GoatTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Expliqué à une chèvre}, fonttitle=\bfseries
+}
+
+% RECAP - violet: what to know for the exam, at the end of the week
+\newtcolorbox{recap}{
+enhanced, breakable, colback=Purple, colframe=RecapTitle,
+boxrule=1pt, arc=0mm, title=\textbf{Récap pour l'examen}, fonttitle=\bfseries
+}
+
+% Screenshot of a slide of the course: \slide{cNN-PP}
+\newcommand{\slide}[2][0.95]{%
+\begin{center}
+\includegraphics[width=#1\linewidth]{../images/course/#2}
+\end{center}}
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+\thispagestyle{fancy}
+
+\begin{multicols}{2}
+
+%=========================================================
+\section{Al--Mg : solution solide et écrouissage}
+
+\begin{important}
+Dans Al--Mg les précipités durcissent peu. On utilise :
+\begin{itemize}
+\item \textbf{solution solide} : champ de contraintes du soluté (gros : compression ; petit :
+      traction) et de la dislocation interagissent ; attraction \emph{ou} répulsion, les deux
+      freinent ;
+\item \textbf{écrouissage} : les dislocations se gênent entre elles, et la déformation les
+      multiplie.
+\end{itemize}
+\end{important}
+
+\slide[0.75]{c03b-58}
+
+\begin{goat}
+Tout ce qui gêne les dislocations durcit le métal : des atomes d'une autre taille, ou les autres
+dislocations qu'on crée en le déformant.
+\end{goat}
+
+%=========================================================
+\section{Recuit : restauration, recristallisation}
+
+\begin{important}
+5--10\,\% du travail de déformation reste stocké dans les dislocations ; chauffer les élimine
+(\textbf{recuit}) :
+\begin{itemize}
+\item \textbf{restauration} : annihilation, réarrangement ; adoucissement modeste ;
+\item \textbf{recristallisation} : nouveaux grains \textbf{équiaxes} presque sans dislocations ;
+      seuil de déformation ; plus d'écrouissage $\Rightarrow$ grains plus fins.
+\end{itemize}
+\end{important}
+
+\slide[0.85]{c03b-66}
+
+\begin{important}
+Joints mobiles à chaud : \textbf{croissance de grain} (réduire l'aire, comme une mousse),
+parfois \textbf{anormale}. Fins précipités \textbf{épinglent} les joints. Déformation + recuit
+partiel > écrouissage seul.
+\end{important}
+
+\begin{goat}
+Chauffer un métal écroui permet de démêler les dislocations ou de refaire des grains neufs : il
+redevient mou.
+\end{goat}
+
+%=========================================================
+\section{Al--Si et désignations}
+
+\begin{important}
+Al--Si : alliages de \textbf{fonderie}. Retrait $\Rightarrow$ retassures, \textbf{masselottes} ;
+H dissous $\Rightarrow$ bulles, \textbf{dégazage}. Si en plaquettes ; \textbf{modification}
+(Sr, Na ou solidification rapide) : Si fin et ramifié, meilleures propriétés.
+\end{important}
+
+\begin{definition}
+Corroyés 4 chiffres, fonderie 3. 1xxx pur, 2xxx Cu, 3xxx Mn, 4xxx Si, 5xxx Mg, 6xxx Mg+Si,
+7xxx Zn, 8xxx autres. \textbf{Durcissables} : 2xxx (Al$_2$Cu), 6xxx (Mg$_2$Si), 7xxx (MgZn$_2$).
+\end{definition}
+
+\begin{goat}
+Pour couler, l'aluminium au silicium ; les familles 2, 6, 7 se durcissent par traitement
+thermique.
+\end{goat}
+
+%=========================================================
+\section{Récap de la semaine}
+
+\begin{recap}
+\begin{itemize}
+\item Trois mécanismes (avec la semaine 08) : écrouissage (obstacle : dislocations), solution
+      solide (atomes étrangers), durcissement structural (précipités).
+\item Recuit : restauration, recristallisation (seuil, grain fin si très déformé), croissance
+      normale/anormale, épinglage.
+\item Al--Si : retrait, masselottes, dégazage, modification.
+\item Séries ; durcissables 2xxx, 6xxx, 7xxx.
+\end{itemize}
+\end{recap}
+
+\end{multicols}
+
+\end{document}

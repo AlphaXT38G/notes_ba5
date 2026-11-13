@@ -1,0 +1,331 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+\setlist[enumerate]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+\definecolor{Goat}{HTML}{F7EEDF}
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+\definecolor{GoatTitle}{HTML}{8A5A1F}
+\definecolor{RecapTitle}{HTML}{5B3A8E}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Comportement mécanique des matériaux}}
+\fancyhead[C]{\small Compression, dureté, fluage, rupture, fatigue}
+\fancyhead[R]{\small Week 02 --- 14-20/09/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+\newtcolorbox{definition}{
+enhanced, unbreakable, colback=Blue, colframe=BlueTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Définition}, fonttitle=\bfseries
+}
+
+\newtcolorbox{important}{
+enhanced, unbreakable, colback=Pink, colframe=PinkTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Idée clé}, fonttitle=\bfseries
+}
+
+\newtcolorbox{formula}{
+enhanced, unbreakable, colback=Green, colframe=GreenTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Formules clés}, fonttitle=\bfseries
+}
+
+\newtcolorbox{warning}{
+enhanced, unbreakable, colback=Orange, colframe=OrangeTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Attention}, fonttitle=\bfseries
+}
+
+\newtcolorbox{example}{
+enhanced, unbreakable, colback=Purple, colframe=PurpleTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Exemple}, fonttitle=\bfseries
+}
+
+% GOAT - brown: the idea told as simply as possible
+\newtcolorbox{goat}{
+enhanced, unbreakable, colback=Goat, colframe=GoatTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Expliqué à une chèvre}, fonttitle=\bfseries
+}
+
+% RECAP - violet: what to know for the exam, at the end of the week
+\newtcolorbox{recap}{
+enhanced, breakable, colback=Purple, colframe=RecapTitle,
+boxrule=1pt, arc=0mm, title=\textbf{Récap pour l'examen}, fonttitle=\bfseries
+}
+
+% Screenshot of a slide of the course: \slide{cNN-PP}
+\newcommand{\slide}[2][0.95]{%
+\begin{center}
+\includegraphics[width=#1\linewidth]{../images/course/#2}
+\end{center}}
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+\thispagestyle{fancy}
+
+\begin{multicols}{2}
+
+%=========================================================
+\section{Compression, dureté, flexion}
+
+\begin{important}
+\textbf{Compression} : deux défauts opposés. \textbf{Flambage} $\Rightarrow$ barreaux trapus ;
+\textbf{frottement} (mise en tonneau) $\Rightarrow$ barreaux longs. Compromis
+$h/d \approx 3$--$4$. Courbe conventionnelle plus haute qu'en traction (section qui grandit, pas
+de striction). Utile si pas de barreau de traction possible, ou béton, composites.
+\end{important}
+
+\slide[0.75]{c01-47}
+
+\begin{formula}
+\[ H = \frac{F}{A} \qquad\text{et}\qquad H \approx 3\sigma_y \]
+(sans écrouissage, déformation 2D). Le métal sous l'indenteur est confiné : il faut $\approx 3$
+fois $\sigma_y$ pour le faire couler.
+\end{formula}
+
+Essais : Brinell (bille), Vickers et Knoop (pyramides), Rockwell (profondeur, table),
+instrumenté (nanoindentation, courbe force--enfoncement). Unités conventionnelles (HV\ldots).
+
+\begin{formula}
+Flexion (Euler--Bernoulli) : $\varepsilon_{xx} = y/R$ ($y$ : distance à l'axe neutre,
+$R$ : courbure). Profil $\sigma(y)$ = courbe $\sigma(\varepsilon)$ à l'échelle $1/R$ près.
+\end{formula}
+
+\begin{warning}
+Remonter à $\sigma(\varepsilon)$ à partir de ($P$, $\delta$) en flexion n'est pas simple.
+Flexion 3 points (moment max au centre) / 4 points (moment constant au milieu).
+\end{warning}
+
+\begin{goat}
+Écraser : trop long ça se plie, trop court ça frotte et gonfle. Dureté : on enfonce une bille, la
+pression dans le trou vaut trois fois la résistance en traction. Plier : une face tirée, l'autre
+poussée.
+\end{goat}
+
+%=========================================================
+\section{Quand le temps compte}
+
+\begin{important}
+À $T > \frac12 T_f$ (K) pour métaux et céramiques (dès l'ambiante pour les polymères), la
+déformation dépend du temps : \textbf{vitesse}, \textbf{relaxation} (déformation fixée,
+$\sigma$ baisse), \textbf{fluage} (charge fixée, $\varepsilon$ monte).
+\end{important}
+
+\begin{formula}
+\[ \sigma = K\dot\varepsilon^{\,m}, \quad m = \frac{\partial\ln\sigma}{\partial\ln\dot\varepsilon}
+   \approx \frac{\ln(\sigma_2/\sigma_1)}{\ln(\dot\varepsilon_2/\dot\varepsilon_1)} \]
+(essai de saut de vitesse).
+\[ \dot\varepsilon = A\,\sigma^N e^{-Q/RT} \]
+fluage stationnaire ; $N$ entre 1 et 10 (5 : dislocations), $Q \sim 10^5$\,J/mol ;
+$\mathbf{m = 1/N}$.
+\end{formula}
+
+\slide[0.85]{c01-59}
+
+Fluage : primaire (ralentit), \textbf{secondaire} (constant, le plus long), tertiaire (accélère
+jusqu'à rupture). $N$ = pente de $\log\dot\varepsilon$ vs $\log\sigma$ ; $-Q/R$ = pente de
+$\ln\dot\varepsilon$ vs $1/T$.
+
+\begin{important}
+$m$ élevé freine la striction (superplasticité). $m = 1$ : \textbf{fluide newtonien}
+$\sigma = K\dot\varepsilon$, \textbf{pas de striction} (verre chaud, caramel).
+\end{important}
+
+\begin{goat}
+À chaud, la matière coule comme du miel épais : sous un poids elle s'allonge peu à peu, et si
+elle durcit quand on la tire plus vite, aucun endroit ne s'amincit en avance.
+\end{goat}
+
+%=========================================================
+\section{Mécanique de la rupture}
+
+\begin{definition}
+Mécanique des \textbf{corps fissurés}. Deux paramètres :
+\begin{itemize}
+\item \textbf{énergie} : $G = \pi F(a)\sigma^2a/E$ (force motrice), rupture si $G = G_c$
+      (énergie pour créer 1\,m$^2$ de fissure, J/m$^2$) ;
+\item \textbf{contraintes} : en pointe, $\sigma \propto K/\sqrt{2\pi r}$ ; rupture si $K = K_c$
+      (ténacité, MPa$\sqrt{\text m}$).
+\end{itemize}
+\end{definition}
+
+\begin{formula}
+\[ K = Y\sigma\sqrt{\pi a}, \qquad \sigma_r = \frac{K_c}{Y\sqrt{\pi a}}, \qquad G_c = A\frac{K_c^2}{E} \]
+$Y = 1$ : fissure interne de \textbf{demi}-longueur $a$, plaque infinie ; $Y = 1{,}12$ : fissure
+de bord de longueur $a$.
+\end{formula}
+
+\slide[0.9]{c01-69}
+
+\begin{important}
+$K$ croît avec $a$ : une fois partie, la fissure ne s'arrête pas. $K = K_c$ = rupture
+\textbf{catastrophique}. On travaille avec $K$ car il est proportionnel à $\sigma$.
+\end{important}
+
+\begin{example}
+\textit{(pas dans les diapos)} Verre, $K_c = 0{,}7$, rayure de bord $a = 10\,\mu$m :
+$\sigma_r = 0{,}7/(1{,}12\sqrt{\pi\cdot10^{-5}}) \approx 110$\,MPa.
+\end{example}
+
+\begin{goat}
+Toute la force se concentre au bout d'une déchirure. $K$ dit à quel point ; quand il atteint ce
+que le matériau supporte, la déchirure file et ne s'arrête plus.
+\end{goat}
+
+%=========================================================
+\section{Essais de rupture et fatigue}
+
+\begin{itemize}
+\item \textbf{Ténacité} : éprouvette entaillée + préfissure, charge de départ $\to K_c$.
+\item \textbf{Charpy} (Izod) : pendule, énergie absorbée ; montre la \textbf{transition
+      ductile--fragile} des aciers.
+\item \textbf{Formabilité} des tôles : pliage, emboutissage (Erichsen, Swift\ldots), cornes.
+\end{itemize}
+
+\slide[0.85]{c01-80}
+
+\begin{important}
+\textbf{Fatigue}, charge cyclique, rupture bien sous $R_m$.
+(i) Éprouvette lisse : \textbf{Wöhler} (S--N), $N_f$ à amplitude donnée ;
+\textbf{statistique}, sensible à la fréquence (échauffement des polymères), l'environnement, la
+surface.
+(ii) Éprouvette fissurée : $da/dN$ en fonction de $\Delta K$.
+\end{important}
+
+\begin{formula}
+\[ \Delta K = K_{\max} - K_{\min} = Y\Delta\sigma\sqrt{\pi a}, \qquad \frac{da}{dN} = A(\Delta K)^m \]
+($K_{\min} = 0$ si $\sigma_{\min} < 0$). Seuil $\Delta K_{th}$ ; rupture quand $K_{\max} = K_c$.
+\end{formula}
+
+\slide[0.75]{c01-84}
+
+\begin{goat}
+Plier un trombone vingt fois : à chaque aller-retour la petite fissure avance d'un pas, plus
+grand si elle est déjà longue. Quand elle est assez longue, tout casse.
+\end{goat}
+
+%=========================================================
+\section{Récap de la semaine}
+
+\begin{recap}
+\begin{itemize}
+\item Compression : flambage vs tonneau, $h/d \approx 3$--$4$, pas de striction.
+\item $H = F/A \approx 3\sigma_y$. Flexion : $\varepsilon_{xx} = y/R$.
+\item $\sigma = K\dot\varepsilon^m$ ; relaxation ; fluage 3 stades ;
+      $\dot\varepsilon = A\sigma^Ne^{-Q/RT}$ ; $m = 1/N$ ; newtonien $m = 1$ sans striction.
+\item $K = Y\sigma\sqrt{\pi a}$, rupture à $K_c$ ; $Y = 1$ (interne, $a$ demi-longueur) ou
+      $1{,}12$ (bord) ; $G_c = AK_c^2/E$ ; rupture catastrophique.
+\item Charpy, ténacité, formabilité ; Wöhler ; $da/dN = A(\Delta K)^m$.
+\end{itemize}
+\end{recap}
+
+\end{multicols}
+
+\end{document}

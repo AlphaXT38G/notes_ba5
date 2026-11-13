@@ -1,0 +1,665 @@
+% =========================================================
+\chapter{Métaux et alliages 1 : l'aluminium, le cuivre et leurs alliages}
+% =========================================================
+
+\begin{rembox}[title=En bref]
+\textbf{De quoi parle ce chapitre ?} Les métaux, à travers deux exemples : l'\textbf{aluminium}
+et le \textbf{cuivre}. On voit d'où ils viennent (ressources, énergie, recyclage, extraction
+guidée par le diagramme d'Ellingham), puis le c\oe ur du chapitre : comment la
+\textbf{microstructure} se forme (solidification, ségrégation, maturation, précipitation) et
+comment on l'utilise pour \textbf{durcir} un métal. \\
+\textbf{Les quatre mécanismes de durcissement vus ici} : écrouissage (défait par le recuit),
+solution solide, durcissement structural (précipités), renfort par une seconde phase dure. Tous
+(sauf le dernier) consistent à mettre des \textbf{obstacles sur le chemin des dislocations}.
+\end{rembox}
+
+\section{Panorama des métaux : propriétés, ressources, énergie}
+
+\begin{propbox}[title=Ce qui distingue les métaux et alliages]
+Un élément principal (Fe, Al, Cu, Mg, Ti, Ni\ldots) plus des \textbf{éléments d'alliage}. Moins
+rigides et moins durs, souvent plus lourds que les céramiques, mais \textbf{ductiles} et
+\textbf{tenaces} : c'est ce qui en fait les matériaux de structure par excellence. Ils peuvent
+s'oxyder, ont une empreinte énergie/carbone non négligeable, mais se recyclent facilement.
+\end{propbox}
+
+\begin{rembox}[title={Une coïncidence utile}]
+Fe, Al, Ti, Mg et Ni ont presque le \textbf{même $E/\rho$} ($\approx 25$\,GPa/(Mg/m$^3$)) : en
+traction, à rigidité égale, une pièce en aluminium pèse autant qu'une pièce en acier. L'avantage
+des alliages légers n'apparaît qu'en flexion ($E/\rho^2$, chapitre~2) ou en résistance.
+\end{rembox}
+
+\begin{defnbox}[title={Réserves et ressources}]
+\textbf{Réserves} : gisements connus exploitables \textbf{avec profit}, aujourd'hui, avec les
+techniques d'aujourd'hui (elles augmentent quand le prix monte ou que la technique progresse).
+\textbf{Ressources} : tout ce dont on peut envisager l'extraction, l'autre extrême.
+\end{defnbox}
+
+Le coût énergétique d'un métal augmente avec sa \textbf{dilution} dans l'écorce terrestre et
+avec la stabilité de son oxyde : l'aluminium, très abondant mais très lié à l'oxygène, coûte
+cher en énergie ; l'or, peu lié mais très dilué, encore plus.
+
+\subsection*{Le recyclage est limité par la croissance de la demande}
+
+\slide[0.6]{c03a-38}{Ce qu'on recycle aujourd'hui a été produit il y a $n$ années, quand on produisait moins.}
+
+\begin{thmbox}[title=Taux de recyclage maximal]
+Si la production croît de $i$ par an et qu'un objet dure $n$ ans en moyenne, le métal récupérable
+aujourd'hui vient de la production d'il y a $n$ ans ($A$), plus faible que celle d'aujourd'hui
+($B$) :
+\[ F \le \frac{A}{B} = (1+i)^{-n} \]
+\end{thmbox}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Aluminium : $n = 15$ ans, croissance $i = 4\,\%$ par an :
+$F \le 1{,}04^{-15} = 0{,}56$. Même en recyclant \emph{tout}, on ne couvrirait que 56\,\% de la
+production : le reste doit venir du minerai.
+\end{exbox}
+
+\begin{goatbox}
+Les métaux sont les matériaux qui plient au lieu de casser. On en a plein sous nos pieds, mais
+les extraire coûte de l'énergie, surtout quand le métal est très attaché à l'oxygène (aluminium)
+ou très dispersé (or). Recycler aide beaucoup, mais tant qu'on en veut chaque année plus, les
+vieux objets à recycler ne suffisent pas à tout fournir.
+\end{goatbox}
+
+\section{Produire l'aluminium et le cuivre}
+
+\subsection*{Le diagramme d'Ellingham}
+
+\slide[0.7]{c03a-45}{Diagramme d'Ellingham : plus la droite d'un oxyde est basse, plus l'oxyde est stable. Al$_2$O$_3$ est tout en bas.}
+
+\begin{defnbox}[title={Lire le diagramme d'Ellingham}]
+Pour chaque réaction \og métal + O$_2$ $\to$ oxyde\fg{} (rapportée à une mole d'O$_2$), on trace
+$\Delta G^\circ$ en fonction de $T$.
+\begin{itemize}
+  \item \textbf{Plus la droite est basse} ($\Delta G^\circ$ très négatif), \textbf{plus
+        l'oxyde est stable}, plus il est difficile d'en extraire le métal.
+  \item Un élément dont la droite est \textbf{en dessous} de celle d'un autre peut
+        \textbf{réduire} l'oxyde de cet autre (il lui \og vole\fg{} l'oxygène).
+  \item La droite C + O$_2$ $\to$ 2CO \textbf{descend} quand $T$ augmente : à haute
+        température, le carbone devient capable de réduire de nombreux oxydes (fer, cuivre),
+        mais pas Al$_2$O$_3$ dans des conditions raisonnables.
+\end{itemize}
+(Une simplification : les droites dépendent aussi des pressions partielles des gaz.)
+\end{defnbox}
+
+\subsection*{Le cuivre : facile à réduire, difficile à trouver}
+
+Le cuivre ne représente que 50\,ppm de l'écorce : le minerai (sulfures, souvent
+CuFeS$_2$) est pauvre et coûteux à concentrer. En revanche, Cu est presque \textbf{noble} :
+réduire ses composés demande peu d'énergie. La voie \textbf{pyrométallurgique} : concentration
+par flottation, fusion en \textbf{matte} (Cu$_2$S--FeS), \textbf{convertisseur} où l'on souffle de
+l'air (le fer part dans la scorie avec la silice, le soufre en SO$_2$), cuivre blister, puis
+\textbf{raffinage électrolytique} (anodes impures, cathodes de cuivre pur à 99,99\,\%). Il existe
+aussi une voie \textbf{hydrométallurgique} (lixiviation à l'acide sulfurique, puis
+électrolyse).
+
+\subsection*{L'aluminium : abondant mais très lié à l'oxygène}
+
+Son oxyde est si stable qu'on ne peut pas le réduire au carbone : il faut
+l'\textbf{électrolyse}.
+\begin{enumerate}
+  \item \textbf{Procédé Bayer} : de la bauxite on tire de l'alumine Al$_2$O$_3$ pure.
+  \item \textbf{Procédé Hall--Héroult} (1886) : l'alumine est dissoute dans de la cryolithe
+        fondue ($\approx 960$\,°C) et électrolysée : $2\,\text{Al}^{3+} + 6e^- \to 2\,\text{Al}$
+        à la cathode ; à l'anode en carbone, $3\,\text{O}^{2-} \to \frac32\text{O}_2 + 6e^-$,
+        l'oxygène brûlant l'anode en CO$_2$.
+\end{enumerate}
+
+\slide[0.6]{c03a-58}{La cuve d'électrolyse à anodes précuites.}
+
+\begin{propbox}[title={L'énergie de l'aluminium}]
+Production mondiale $\approx 100$\,Mt/an, dont $\approx 30\,\%$ recyclé. Produire 1\,kg depuis le
+minerai coûte $12 \pm 2$\,kWh (limite théorique 6,5\,kWh/kg) ; le recycler, $\approx 1$\,kWh/kg
+(10\,\%).
+\end{propbox}
+
+\begin{exbox}[title=Le petit exercice des diapositives]
+À combien d'accélérations de 0 à 100\,km/h correspondent 12\,kWh/kg ? Par kilogramme,
+$\frac12 v^2 = \frac12(10^5/3600)^2 = 386$\,J ; $12$\,kWh $= 43\,200$\,kJ ; donc
+$43\,200\,000/386 \approx 112\,000$ accélérations, soit 31 par jour pendant 10 ans. Alléger un
+véhicule avec de l'aluminium peut donc rembourser l'énergie de sa production --- à évaluer au
+cas par cas.
+\end{exbox}
+
+\begin{propbox}[title={Pourquoi l'aluminium ne rouille pas}]
+Son oxyde, très stable, forme une couche dure, inerte et \textbf{mécaniquement compatible} avec
+le métal : le rapport de \textbf{Pilling--Bedworth} (volume de l'oxyde / volume du métal
+consommé) est proche de 1, donc la couche se forme sans fissures ni décollement et protège le
+métal. On dit que l'aluminium est \textbf{passivé}.
+\end{propbox}
+
+\begin{rembox}[title=Mise en forme]
+Fusion, puis soit coulée en lingot suivie de \textbf{laminage} (tôles, feuilles),
+\textbf{extrusion} (profilés, tubes) ou \textbf{forgeage} ; soit \textbf{moulage} direct
+(sable, cire perdue, moule permanent, sous pression) ; et désormais l'impression 3D (fusion
+laser de poudre).
+\end{rembox}
+
+\begin{goatbox}
+Le diagramme d'Ellingham est un classement de \og qui tient le plus fort à l'oxygène\fg{}.
+L'aluminium y tient tellement qu'aucun charbon ne peut le lui arracher : il faut l'électricité,
+et beaucoup. Le cuivre, lui, lâche son oxygène (ou son soufre) facilement, mais il est rare et
+dispersé. La même passion de l'aluminium pour l'oxygène le protège : une fine peau d'oxyde,
+bien collée, l'empêche de rouiller.
+\end{goatbox}
+
+\section{Solidification des alliages Al--Cu}
+
+Le système Al--Cu est \textbf{le} système d'école : côté aluminium, un simple
+\textbf{eutectique} entre $\alpha$ (solution solide de Cu dans Al, au plus 5,7\,\% pds Cu à
+548\,°C) et $\theta$ = Al$_2$Cu (intermétallique fragile), à 33,2\,\% Cu.
+
+\begin{thmbox}[title={La loi du levier (à connaître)}]
+Un alliage de composition $C$ contient deux phases de compositions $C_\alpha < C < C_\beta$
+(lues aux extrémités du palier horizontal à la température considérée). Les fractions valent
+\[ f_\alpha = \frac{C_\beta - C}{C_\beta - C_\alpha}, \qquad
+   f_\beta = \frac{C - C_\alpha}{C_\beta - C_\alpha}, \qquad f_\alpha + f_\beta = 1 . \]
+Elles viennent de deux équations : la somme des fractions vaut 1, et la composition moyenne
+doit être $C = f_\alpha C_\alpha + f_\beta C_\beta$.
+\end{thmbox}
+
+\slide[0.45]{c03b-05}{Le levier : la fraction d'une phase est le bras \emph{opposé}, divisé par la longueur totale.}
+
+\begin{warnbox}[title={Le piège du levier}]
+La fraction de $\alpha$ est le segment entre $C$ et $C_\beta$, c'est-à-dire du côté
+\textbf{opposé} à $\alpha$. Vérification de bon sens : si $C$ est proche de $C_\alpha$, il y a
+presque tout $\alpha$.
+\end{warnbox}
+
+\begin{propbox}[title={Trois alliages, trois microstructures}]
+\begin{itemize}
+  \item \textbf{Al--4,5\,\% Cu} : à l'équilibre, il se solidifie entièrement en $\alpha$, sous
+        forme de \textbf{dendrites} (cristaux en sapin, comme les flocons de neige).
+  \item \textbf{Al--33\,\% Cu} (eutectique) : $\alpha$ et $\theta$ croissent
+        \textbf{ensemble}, côte à côte en fines lamelles (\textbf{croissance couplée}) :
+        structure eutectique.
+  \item \textbf{Al--10\,\% Cu} : d'abord des dendrites d'$\alpha$ primaire, puis le liquide
+        restant, enrichi en Cu jusqu'à 33\,\%, se solidifie en eutectique entre les dendrites.
+\end{itemize}
+\end{propbox}
+
+\slide[0.55]{c03b-13}{Al--10\,\% Cu : dendrites primaires d'$\alpha$, puis eutectique.}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Al--10\,\% Cu juste au-dessus de 548\,°C : $\alpha$ à 5,7\,\% et liquide à 33,2\,\%.
+Fraction de liquide $= \dfrac{10 - 5{,}7}{33{,}2 - 5{,}7} = 0{,}16$ : 16\,\% du métal deviendra
+eutectique, 84\,\% est déjà en dendrites d'$\alpha$.
+\end{exbox}
+
+\subsection*{La microségrégation : le levier n'est pas respecté}
+
+La loi du levier suppose que \textbf{toutes} les phases ajustent leur composition à chaque
+instant. Vrai dans le liquide (diffusion rapide), presque jamais dans le solide pendant le temps
+d'une solidification. En pratique, \textbf{le solide garde la composition qu'il avait en se
+formant} : les c\oe urs de dendrites sont pauvres en Cu, leurs bords plus riches, et le dernier
+liquide s'enrichit tellement qu'il atteint l'eutectique.
+
+\slide[0.5]{c03b-16}{Al--4,5\,\% Cu brut de coulée : gradients de concentration dans les dendrites et phase $\theta$ (vert) qui ne devrait pas exister selon le diagramme.}
+
+\begin{defnbox}[title={Microségrégation (ségrégation mineure)}]
+Gradients de concentration dans les grains, et parfois \textbf{phases hors équilibre}, dus à
+la lenteur de la diffusion dans le solide. Exemple : Al--4,5\,\% Cu brut de coulée contient de
+l'eutectique avec $\theta$, alors qu'à l'équilibre il serait 100\,\% $\alpha$. Exception :
+quand le soluté diffuse vite dans le solide (soluté interstitiel, comme C dans Fe, chapitre~4).
+\end{defnbox}
+
+\begin{goatbox}
+Le diagramme de phase dit ce que l'alliage \emph{voudrait} être s'il avait tout son temps. En
+refroidissant, les premiers cristaux qui poussent (en forme de sapins) sont pauvres en cuivre ;
+le cuivre s'accumule dans le liquide qui reste, et le dernier liquide, très riche, gèle en
+fines lamelles mélangées. Comme les atomes bougent très mal dans le solide, ces différences
+restent figées : c'est la microségrégation.
+\end{goatbox}
+
+\section{Maturation, homogénéisation et cinétique}
+
+\subsection*{La maturation (capillarité)}
+
+\begin{thmbox}[title={Surpression dans une sphère et instabilité des petites particules}]
+Une sphère de rayon $R$ entourée d'une interface d'énergie $\gamma$ : l'équilibre des forces sur
+une demi-sphère, $\pi R^2\Delta P = 2\pi R\gamma$, donne
+\[ \Delta P = \frac{2\gamma}{R}, \qquad \Delta G = V_m\,\Delta P = \frac{2\gamma V_m}{R} \]
+($V_m$ : volume molaire). Plus généralement $\Delta P = \gamma C$, avec $C$ la courbure. Les
+\textbf{petites} particules (forte courbure) ont une énergie libre \textbf{plus élevée} : elles
+sont moins stables.
+\end{thmbox}
+
+\slide[0.5]{c03b-18}{La surpression $\Delta P = 2\gamma/R$ dans une sphère.}
+
+\begin{exbox}[title={La question des deux ballons (diapositives)}]
+Deux ballons de caoutchouc (tension de surface constante), un petit et un gros, reliés par une
+paille : la surpression $2\gamma/R$ est plus grande dans le \textbf{petit}, qui se vide dans le
+gros. Dans un alliage, c'est pareil : les petites particules se dissolvent par diffusion au
+profit des grosses. C'est la \textbf{maturation} (ou mûrissement, \emph{coarsening}).
+\end{exbox}
+
+\begin{thmbox}[title={Loi de maturation (à connaître par c\oe ur)}]
+La dimension caractéristique $\lambda$ de la microstructure (espacement des bras de dendrites,
+taille et espacement des précipités, diamètre des bulles d'une mousse) croît comme
+\[ \lambda^3 - \lambda_0^3 = K\,t \qquad\Longrightarrow\qquad \lambda \approx (Kt)^{1/3} \]
+quand la cinétique est régie par la diffusion.
+\end{thmbox}
+
+\slide[0.6]{c03b-23}{Maturation de dendrites après 1, 3 et 5 minutes : les bras fins disparaissent, les gros grossissent.}
+
+\begin{propbox}[title=Ce qui fixe la finesse d'une pièce coulée]
+Pendant la solidification, la maturation agit pendant le \textbf{temps de solidification
+local}. Refroidir vite donne donc une structure \textbf{plus fine}. À très grande vitesse, on peut
+même obtenir des phases hors équilibre, voire un métal amorphe : les phases stables \og n'ont pas
+le temps\fg{} de se former.
+\end{propbox}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Avec $\lambda \propto t^{1/3}$, solidifier 1000 fois plus vite divise l'espacement des bras de
+dendrites par $1000^{1/3} = 10$.
+\end{exbox}
+
+\subsection*{L'homogénéisation et le danger de la brûlure}
+
+Pour effacer la microségrégation d'un Al--4,5\,\% Cu brut de coulée, on le \textbf{chauffe}
+dans le domaine monophasé $\alpha$ (vers 500--540\,°C) assez longtemps pour que la diffusion
+dissolve $\theta$ et égalise la composition : c'est l'\textbf{homogénéisation}.
+
+\begin{warnbox}[title={Rester sous la température eutectique !}]
+Au-dessus de 548\,°C, l'eutectique hors équilibre \textbf{fond}. La structure mûrit alors très
+vite, et l'on retrouve après refroidissement de gros films de $\theta$ fragile aux joints de
+grains, impossibles à homogénéiser : l'alliage est \textbf{brûlé} et fragile.
+\end{warnbox}
+
+\subsection*{La cinétique des transformations : le diagramme TTT}
+
+La thermodynamique dit \textbf{si} une transformation peut avoir lieu ($\Delta G < 0$) ; la
+cinétique dit \textbf{à quelle vitesse}. Deux effets s'opposent :
+\begin{itemize}
+  \item près de la température d'équilibre, la force motrice $\Delta G$ est faible : la
+        transformation est \textbf{lente} ;
+  \item près de 0\,K, rien ne bouge (activation thermique nulle) : elle est aussi \textbf{lente}.
+\end{itemize}
+Entre les deux, la vitesse est maximale. En maintien isotherme, la fraction transformée suit
+une courbe en \textbf{S} en fonction de $\log t$.
+
+\slide[0.55]{c03b-35}{Diagramme TTT : début et fin de la transformation en maintien isotherme ; la forme en \og nez\fg{} vient de la compétition force motrice / diffusion.}
+
+\begin{defnbox}[title={Diagramme TTT (Temps--Température--Transformation)}]
+On part d'un état donné (généralement à haute température), on \textbf{trempe infiniment vite}
+à une température $T$ et on maintient. Le diagramme donne, pour chaque $T$, le temps de début
+($f \ll 100\,\%$) et de fin de la transformation. Les courbes ont une forme de \textbf{\og C\fg{}
+ou de nez}. Attention : il ne s'applique en toute rigueur qu'aux maintiens isothermes.
+\end{defnbox}
+
+\begin{goatbox}
+Les petites gouttes coûtent plus cher en surface que les grosses : avec le temps, les grosses
+mangent les petites, et la structure grossit, de plus en plus lentement (comme la racine
+cubique du temps). Pour une transformation, il faut à la fois en avoir envie (froid, loin de
+l'équilibre) et pouvoir bouger (chaud) : c'est au milieu qu'elle va le plus vite, d'où le nez
+du diagramme TTT.
+\end{goatbox}
+
+\section{Le durcissement structural}
+
+\begin{defnbox}[title={Durcissement structural (\emph{precipitation} ou \emph{age hardening})}]
+Trois étapes :
+\begin{enumerate}
+  \item \textbf{mise en solution} (homogénéisation) dans le domaine $\alpha$ : tout le Cu est dissous ;
+  \item \textbf{trempe} : refroidissement rapide, trop rapide pour que $\theta$ se forme ; on
+        obtient une solution solide \textbf{sursaturée} (à l'ambiante, l'équilibre ne tolère que
+        $\approx 0{,}1\,\%$ Cu : Al--4\,\% Cu en contient 40 fois trop) ;
+  \item \textbf{revenu} (si la précipitation se fait à chaud) ou \textbf{vieillissement} (à
+        l'ambiante) : de très nombreux petits précipités se forment.
+\end{enumerate}
+\end{defnbox}
+
+\slide[0.55]{c03b-42}{Diagramme TTT de Al--4\,\% Cu : zones GP, $\theta''$, $\theta'$, $\theta$, et le traitement (mise en solution, trempe, revenu).}
+
+\subsection*{Pourquoi des précipités \og moins stables\fg{} d'abord}
+
+Dans Al--Cu sursaturé, il se forme successivement des \textbf{zones GP}, puis $\theta''$,
+$\theta'$, et enfin $\theta$ (Al$_2$Cu d'équilibre). Pourquoi pas directement le plus stable ?
+Parce que la \textbf{germination} dépend de l'énergie d'interface.
+
+\begin{defnbox}[title={Interfaces cohérentes, semi-cohérentes, incohérentes}]
+\begin{itemize}
+  \item \textbf{Cohérente} : les plans atomiques se continuent d'un cristal à l'autre ;
+        énergie d'interface faible, mais des \textbf{contraintes} élastiques autour (distances
+        interatomiques différentes).
+  \item \textbf{Semi-cohérente} : des dislocations d'interface soulagent ces contraintes.
+  \item \textbf{Incohérente} : les atomes ne coïncident plus ; énergie d'interface élevée.
+\end{itemize}
+\end{defnbox}
+
+Un précipité cohérent (zones GP, $\theta''$) germe beaucoup plus facilement : il apparaît
+\textbf{avant} le précipité stable, puis est absorbé par lui. Moins un précipité est stable,
+plus la température au-dessus de laquelle il ne se forme pas est basse, et plus il lui faut de
+cuivre en solution pour se former.
+
+\subsection*{Couper ou contourner : l'optimum de durcissement}
+
+Un précipité est un obstacle pour une dislocation, qui a deux façons de passer :
+\begin{itemize}
+  \item le \textbf{cisailler} (petits précipités cohérents) : la contrainte nécessaire
+        \textbf{augmente avec leur taille} ;
+  \item le \textbf{contourner} en se courbant entre deux précipités et en laissant une boucle
+        autour (mécanisme d'Orowan, gros précipités).
+\end{itemize}
+
+\begin{thmbox}[title={Contrainte de contournement (à connaître par c\oe ur)}]
+\[ \sigma = \frac{2Gb}{d} \approx \frac{Ea}{d} \]
+$d$ : distance entre précipités, $G$ : module de cisaillement, $b$ : vecteur de Burgers,
+$E$ : module d'Young, $a$ : distance interatomique. Plus les précipités sont
+\textbf{rapprochés}, plus il est difficile de passer entre eux.
+\end{thmbox}
+
+\slide[0.6]{c03b-47}{(a) cisaillement d'un précipité ; (b) contournement, avec $\sigma \approx Ea/d$.}
+
+À fraction volumique fixée (précipitation terminée), la maturation fait grossir les précipités
+et en diminue le nombre : $d$ augmente, donc la contrainte de contournement \textbf{diminue}.
+
+\slide[0.5]{c03b-48}{Le durcissement monte (cisaillement de précipités qui grossissent), passe par un optimum, puis baisse (contournement de précipités de plus en plus espacés).}
+
+\begin{propbox}[title={Il y a un temps de revenu optimal}]
+Au début, les précipités sont petits et cisaillés : le durcissement croît avec leur taille.
+Plus tard, ils sont contournés et s'écartent par maturation : le durcissement décroît
+(\textbf{sur-revenu}). L'\textbf{optimum} est à la transition ; il dépend de la température de
+revenu (plus elle est basse, plus il est long à atteindre mais plus il est élevé, tant que la
+température n'est pas trop basse pour la cinétique). Avec plusieurs précipités, la courbe peut
+avoir plusieurs bosses.
+\end{propbox}
+
+\begin{warnbox}[title=Les conditions pour qu'un alliage soit durcissable]
+\begin{itemize}
+  \item une solubilité de l'élément d'alliage qui \textbf{diminue} quand $T$ baisse ;
+  \item une cinétique (TTT) qui permet de \textbf{tremper} puis de précipiter en des temps et
+        températures praticables ;
+  \item des précipités qui \textbf{durcissent efficacement} (ce n'est pas le cas dans Al--Mg) ;
+  \item et une limite : on ne peut pas utiliser l'alliage à des températures où la maturation
+        agit (il se sur-reviendrait).
+\end{itemize}
+\end{warnbox}
+
+\begin{goatbox}
+On dissout le cuivre dans l'aluminium à chaud, on refroidit d'un coup pour l'y piéger, puis on
+le laisse ressortir en une poussière de minuscules grains. Les défauts qui permettent au métal de
+se déformer (les dislocations) se cognent contre ces grains : le métal durcit. Si on attend
+trop, les grains grossissent et s'écartent, les dislocations passent entre eux et le métal
+redevient mou. Il faut donc s'arrêter au bon moment.
+\end{goatbox}
+
+\section{Al--Mg : solution solide, écrouissage et recuit}
+
+Dans Al--Mg, la solubilité du Mg décroît bien avec $T$ et la cinétique est correcte\ldots{} mais
+les précipités durcissent peu. On durcit donc ces alliages autrement, par deux mécanismes qui
+agissent aussi dans Al--Cu.
+
+\subsection*{Le durcissement par solution solide}
+
+Une dislocation est entourée d'un champ de contraintes (compression d'un côté du demi-plan en
+trop, traction de l'autre). Un atome étranger en solution aussi (un gros atome comprime ses
+voisins, un petit les tire). Les deux champs interagissent : soluté et dislocation
+\textbf{s'attirent ou se repoussent}. Dans les deux cas, la dislocation a plus de mal à
+avancer : il faut une contrainte plus élevée.
+
+\slide[0.45]{c03b-58}{Gros atomes du côté comprimé : répulsion ; petits atomes : attraction. Les deux freinent la dislocation.}
+
+\subsection*{L'écrouissage}
+
+Les dislocations interagissent aussi \textbf{entre elles} par leurs champs de contraintes. Or
+la déformation plastique \textbf{multiplie} les dislocations : plus on déforme, plus elles sont
+nombreuses, plus elles se gênent, plus le métal durcit. C'est l'\textbf{écrouissage}
+(\emph{work hardening}), l'origine principale de la montée de la courbe de traction (chapitre~1).
+Al--Mg est utilisé durci par solution solide \textbf{et} par écrouissage (tôles, canettes).
+
+\subsection*{Le recuit : restauration et recristallisation}
+
+Les dislocations stockent de l'énergie (environ 5 à 10\,\% du travail de déformation ; le reste
+part en chaleur) : un métal écroui est instable. En le chauffant (\textbf{recuit},
+\emph{annealing}), on lui donne la mobilité pour se débarrasser de ses dislocations :
+\begin{itemize}
+  \item \textbf{restauration} (\emph{recovery}) : les dislocations de signes opposés
+        s'annihilent et les autres se rangent en configurations stables ; adoucissement
+        modeste ;
+  \item \textbf{recristallisation} : de \textbf{nouveaux grains} presque sans dislocations
+        germent et croissent dans le métal écroui ; ils sont \textbf{équiaxes}. Adoucissement
+        complet.
+\end{itemize}
+
+\slide[0.65]{c03b-66}{Taille de grain recristallisé selon l'écrouissage avant recuit (0, 2, 4, 6, 8, 10\,\%) : plus on a déformé, plus les grains sont fins.}
+
+\begin{propbox}[title={Ce qu'il faut savoir de la recristallisation}]
+\begin{itemize}
+  \item Il faut un \textbf{seuil} de déformation (assez de dislocations) pour qu'elle ait lieu.
+  \item Plus l'écrouissage est fort, plus il y a de sites de germination, donc des grains
+        \textbf{plus fins}.
+  \item Ensuite, les joints de grains, mobiles à chaud, se déplacent pour réduire leur aire
+        (énergie d'interface, comme une mousse qui grossit) : \textbf{croissance de grain} ; si
+        quelques grains sont beaucoup plus gros, ils avalent les autres : croissance
+        \textbf{anormale}.
+  \item De fins précipités stables \textbf{épinglent} les joints de grains (un précipité à
+        cheval sur un joint en réduit l'aire) : on les utilise pour garder un grain fin.
+  \item Le recuit diminue la résistance et augmente la ductilité ; une déformation suivie d'un
+        recuit \emph{partiel} donne de meilleures combinaisons qu'un simple écrouissage direct.
+\end{itemize}
+\end{propbox}
+
+\begin{keybox}[title=Bilan : trois mécanismes de durcissement]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{l|l}
+mécanisme & obstacle aux dislocations \\ \hline
+écrouissage (défait par le recuit) & les autres dislocations \\
+solution solide & les atomes étrangers \\
+durcissement structural & de petits cristaux étrangers (précipités) \\
+\end{tabular}
+\end{center}
+\end{keybox}
+
+\begin{goatbox}
+Un métal se déforme grâce à des défauts qui glissent, les dislocations. Tout ce qui les gêne le
+durcit : des atomes d'une autre taille glissés dans le cristal, ou les autres dislocations. En le
+déformant, on en crée tellement qu'elles s'emmêlent : le métal durcit (c'est pour ça qu'un fil
+plié devient raide). Chauffer permet de démêler tout ça ou de refaire des grains neufs : le métal
+redevient mou.
+\end{goatbox}
+
+\section{Al--Si de fonderie et les désignations des alliages d'aluminium}
+
+\subsection*{Al--Si : faciles à couler}
+
+Al--Si (eutectique à 12,6\,\% Si) est la base des alliages de \textbf{fonderie}, bon marché et
+faciles à couler. Les problèmes de toute pièce coulée :
+\begin{itemize}
+  \item le \textbf{retrait de solidification} (quelques \% en volume) crée des
+        \textbf{retassures} ; on ajoute des \textbf{masselottes}, réservoirs qui restent liquides
+        plus longtemps et alimentent la pièce ;
+  \item l'\textbf{hydrogène} (venu de l'humidité) se dissout dans l'aluminium liquide et forme
+        des bulles en refroidissant : on \textbf{dégaze} le métal avant la coulée.
+\end{itemize}
+Le silicium forme des cristaux à facettes ; dans l'eutectique, des plaquettes grossières et
+fragiles. En solidifiant vite, ou en ajoutant un peu de \textbf{strontium} ou de
+\textbf{sodium}, il prend une forme fine et ramifiée : c'est la \textbf{modification}, qui
+améliore les propriétés mécaniques.
+
+\subsection*{Les désignations}
+
+\slide[0.75]{c03b-80}{Les séries des alliages corroyés.}
+
+\begin{defnbox}[title={Séries des alliages d'aluminium}]
+4 chiffres pour les alliages \textbf{corroyés} (mis en forme à l'état solide), 3 (+ une
+décimale) pour les alliages de \textbf{fonderie}. Le premier chiffre donne l'élément principal :
+1xxx Al pur ($\ge 99\,\%$), 2xxx Cu, 3xxx Mn, 4xxx Si, 5xxx Mg, 6xxx Mg + Si, 7xxx Zn (+ Mg),
+8xxx autres (Al--Li). Des suffixes donnent le traitement (O recuit, H écroui, T traitement
+thermique).
+\end{defnbox}
+
+\begin{propbox}[title={Retenir les séries durcissables par précipitation}]
+Il suffit de connaître les trois précipités durcissants principaux : \textbf{Al$_2$Cu}
+(\textbf{2xxx}), \textbf{Mg$_2$Si} (\textbf{6xxx}), \textbf{MgZn$_2$} (\textbf{7xxx}). Ces séries
+atteignent 210 à 570\,MPa après trempe et revenu ; les séries non durcissables (1xxx, 3xxx,
+5xxx) sont durcies par écrouissage et solution solide (jusqu'à $\approx 370$\,MPa).
+\end{propbox}
+
+\begin{goatbox}
+Pour couler une pièce, on choisit l'aluminium au silicium, qui coule bien ; il faut juste lui
+donner du métal en réserve parce qu'il rétrécit en gelant, et chasser les bulles de gaz. Le
+numéro d'un alliage dit ce qu'on y a mis ; les familles 2, 6 et 7 sont celles qu'on durcit par
+un traitement thermique.
+\end{goatbox}
+
+\section{Le cuivre et ses alliages}
+
+\begin{propbox}[title={Cuivre et aluminium : différences et points communs}]
+\textbf{Différences} : diagrammes de phase côté Cu bien plus riches (nombreux intermétalliques,
+eutectiques, péritectiques, eutectoïdes) ; densité bien plus élevée (8,93 contre 2,7) ; module
+plus élevé mais \textbf{très anisotrope} (180\,GPa selon $\langle111\rangle$, 60\,GPa selon
+$\langle100\rangle$) ; oxyde bien moins stable ; abondance bien plus faible ; \textbf{taux
+d'écrouissage élevés}. \\
+\textbf{Points communs} : métaux CFC, ductiles, bons conducteurs (Ag 106, Cu 100, Au 72, Al 62 en
+conductivité électrique relative).
+\end{propbox}
+
+\subsection*{Le cuivre conducteur}
+
+La conductivité du cuivre chute vite avec les éléments d'alliage \textbf{en solution solide}
+(un atome étranger diffuse les électrons). Mais le cuivre liquide dissout de l'oxygène, qui
+précipite en \textbf{oxydule} Cu$_2$O : le cuivre ETP (99,9\,\%) en contient (0,02--0,05\,\% O).
+
+\begin{warnbox}[title={La maladie de l'hydrogène}]
+Chauffé en présence d'hydrogène, le cuivre ETP voit H diffuser dans le métal et réduire Cu$_2$O
+en vapeur d'eau : les molécules d'eau, trop grosses pour diffuser, forment des
+\textbf{bulles} aux joints de grains, qui le fragilisent. Parades : désoxyder au
+\textbf{phosphore} (oxyde plus stable que Cu$_2$O, mais P en solution baisse la conductivité),
+ou purifier en atmosphère réductrice : cuivre \textbf{OFHC} (\emph{oxygen-free high
+conductivity}).
+\end{warnbox}
+
+Pour un conducteur un peu plus résistant : Cu--0,08\,\% Ag (Ag retarde la recristallisation et
+abaisse peu la conductivité), ou Cu--1\,\% Cr ou Zr (durcissement structural : précipités, donc
+peu de soluté, donc bonne conductivité).
+
+\subsection*{Les laitons (Cu--Zn) et les bronzes}
+
+Laitons (Cu--Zn), bronzes à l'étain (Cu--Sn), à l'aluminium, au silicium, au phosphore\ldots :
+leurs diagrammes ressemblent au côté cuivre de Al--Cu (bonne solubilité, puis une cascade
+d'intermétalliques).
+
+\slide[0.6]{c03c-14}{Le diagramme Cu--Zn. Les traits en pointillés à basse température : la diffusion y est trop lente pour que la structure évolue.}
+
+\begin{propbox}[title={Laitons monophasés et biphasés}]
+\begin{itemize}
+  \item \textbf{Monophasés $\alpha$} (0 à 30\,\% Zn, couleur de l'orange au jaune) :
+        malléables, mis en forme \textbf{à froid}, durcis par le zinc en solution solide (qui
+        rend aussi plus difficile le changement de plan de glissement des dislocations, donc
+        écrouissage fort).
+  \item \textbf{Biphasés $\alpha + \beta'$} : mis en forme \textbf{à chaud}, dans le domaine
+        $\beta$ désordonné et ductile. En refroidissant, $\alpha$ précipite puis $\beta$
+        s'\textbf{ordonne} en $\beta'$, plus dur mais moins ductile. Plus résistants, moins
+        ductiles que les monophasés.
+\end{itemize}
+\end{propbox}
+
+\begin{rembox}[title={La mise en ordre $\beta \to \beta'$}]
+$G = H - TS$ : la structure ordonnée a une énergie interne plus basse ($H_{\beta'} < H_\beta$)
+mais aussi une entropie plus basse ($S_{\beta'} < S_\beta$). À basse température le terme $H$
+l'emporte (ordre), à haute température le terme $-TS$ (désordre).
+\end{rembox}
+
+\subsection*{Un quatrième mécanisme : le renfort}
+
+\slide[0.45]{c03c-19}{Particules rigides dans une matrice élastoplastique : la courbe du composite est au-dessus de celle de la matrice seule.}
+
+\begin{thmbox}[title={Durcissement par une seconde phase dure (renfort)}]
+Une phase plus \textbf{rigide et dure} que la matrice porte une contrainte \textbf{plus élevée}
+que la moyenne ; la matrice en porte donc moins. Quand la matrice atteint sa limite
+d'élasticité, la contrainte moyenne du matériau est plus élevée que pour la matrice seule.
+Ce mécanisme est \textbf{mécanique}, pas lié aux dislocations : c'est le principe des
+\textbf{composites} (fibres de verre ou de carbone dans l'époxy).
+\end{thmbox}
+
+\subsection*{Fragilisations des laitons et autres alliages}
+
+\begin{itemize}
+  \item \textbf{Dézincification} : le zinc, moins noble, se dissout sélectivement et laisse
+        du cuivre poreux (cas particulier du \textbf{désalliage}).
+  \item \textbf{Corrosion saisonnière} (\emph{season cracking}) : fissuration par corrosion
+        sous contrainte (ammoniaque + oxygène + eau), due aux \textbf{contraintes internes} de
+        mise en forme ; on l'évite par un \textbf{recuit de détensionnement}.
+  \item Autres alliages : \textbf{cupronickels} (Cu et Ni totalement miscibles, très résistants
+        à la corrosion) ; \textbf{bronzes au béryllium} (jusqu'à 1,4\,GPa par durcissement
+        structural + écrouissage, sans étincelles, mais chers et le béryllium est toxique) ;
+        \textbf{maillechorts} (Cu--Ni--Zn, aspect d'argent) ; quelques \% de \textbf{plomb}
+        pour l'usinabilité (copeaux cassants ; on cherche à le remplacer).
+\end{itemize}
+
+\begin{goatbox}
+Le cuivre est le champion des fils électriques, mais tout ce qu'on dissout dedans gêne le passage
+des électrons, et l'oxygène qu'il contient peut former des bulles d'eau s'il rencontre de
+l'hydrogène. Le laiton (cuivre + zinc) se travaille à froid s'il a peu de zinc, à chaud s'il en
+a beaucoup. Mettre des grains très durs dans un métal mou, c'est comme mettre des cailloux dans
+du béton : ce sont eux qui portent l'effort.
+\end{goatbox}
+
+\section*{Récap du chapitre 3}
+\addcontentsline{toc}{section}{Récap du chapitre 3}
+
+\begin{recapbox}
+\textbf{Comment ce chapitre s'appuie sur les précédents} : la courbe de traction et
+l'écrouissage $\theta$ (chapitre~1) sont maintenant expliqués par les dislocations ; l'énergie de
+surface $\gamma$ du frittage (chapitre~2) explique la maturation ; la loi d'Arrhenius gouverne
+diffusion et cinétique ; la résistance des métaux vient de leur plasticité, ce qui les rend
+\textbf{tenaces}, à l'inverse des céramiques.
+
+\textbf{Panorama et production}
+\begin{itemize}
+  \item Fe, Al, Ti, Mg, Ni : même $E/\rho$. Réserves (exploitables avec profit) vs ressources.
+  \item Recyclage : \textbf{$F \le (1+i)^{-n}$}.
+  \item \textbf{Ellingham} : droite basse = oxyde stable ; un élément plus bas réduit l'oxyde
+        d'un plus haut ; C de plus en plus réducteur à chaud.
+  \item Cu : rare (50\,ppm) mais facile à réduire (matte, convertisseur, électrolyse). Al :
+        abondant mais oxyde très stable : Bayer puis \textbf{Hall--Héroult}
+        ($2\text{Al}^{3+} + 6e^- \to 2\text{Al}$), $12$\,kWh/kg (théorie 6,5 ; recyclage 1).
+        Passivation (Pilling--Bedworth $\approx 1$).
+\end{itemize}
+
+\textbf{Solidification}
+\begin{itemize}
+  \item \textbf{Loi du levier} : $f_\alpha = (C_\beta - C)/(C_\beta - C_\alpha)$.
+  \item Al--4,5Cu : dendrites $\alpha$ ; Al--33Cu : eutectique (croissance couplée) ;
+        Al--10Cu : dendrites + eutectique.
+  \item \textbf{Microségrégation} : le solide garde sa composition $\Rightarrow$ gradients et
+        phases hors équilibre ($\theta$ dans Al--4,5Cu).
+  \item \textbf{Maturation} : $\Delta P = 2\gamma/R$, $\Delta G = 2\gamma V_m/R$ ;
+        \textbf{$\lambda^3 - \lambda_0^3 = Kt$} ($l = kt^{1/3}$) ; refroidir vite = plus fin.
+  \item Homogénéisation sous l'eutectique, sinon \textbf{brûlure}.
+  \item Cinétique : lente près de l'équilibre (pas de force motrice) et à basse $T$ (pas de
+        diffusion) $\Rightarrow$ \textbf{nez} des courbes TTT ; courbe en S.
+\end{itemize}
+
+\textbf{Durcissement}
+\begin{itemize}
+  \item \textbf{Structural} : mise en solution, trempe (sursaturation), revenu/vieillissement.
+        GP $\to \theta'' \to \theta' \to \theta$ (cohérent $\to$ incohérent : les cohérents
+        germent plus facilement). Cisaillement (petits) puis contournement
+        \textbf{$\sigma = 2Gb/d \approx Ea/d$} (gros, espacés) $\Rightarrow$ \textbf{optimum} ;
+        conditions : solubilité décroissante, cinétique praticable, précipités efficaces ;
+        pas d'usage à chaud.
+  \item \textbf{Solution solide} : interaction des champs de contraintes soluté/dislocation.
+  \item \textbf{Écrouissage} : interaction dislocation/dislocation ; \textbf{recuit} =
+        restauration + recristallisation (seuil, grain plus fin si plus déformé, croissance
+        normale ou anormale, épinglage par des précipités).
+  \item \textbf{Renfort} par une seconde phase dure (laitons biphasés, composites) :
+        mécanisme mécanique.
+\end{itemize}
+
+\textbf{Alliages}
+\begin{itemize}
+  \item Al : 2xxx (Al$_2$Cu), 6xxx (Mg$_2$Si), 7xxx (MgZn$_2$) durcissables ; Al--Si de
+        fonderie (retrait, masselottes, dégazage, modification Sr/Na).
+  \item Cu : conductivité sensible au soluté ; ETP, maladie de l'hydrogène, OFHC ; laitons
+        $\alpha$ (à froid) et $\alpha + \beta'$ (à chaud) ; mise en ordre $G = H - TS$ ;
+        dézincification, corrosion saisonnière ; CuBe 1,4\,GPa.
+\end{itemize}
+
+\textbf{Pour la suite} : au chapitre~4, le fer reprend tout cela (diagramme de phase, levier,
+TTT) et ajoute la \textbf{martensite}, une transformation sans diffusion, et un cinquième
+mécanisme de durcissement, l'affinage du grain (Hall--Petch).
+\end{recapbox}

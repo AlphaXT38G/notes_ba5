@@ -1,0 +1,283 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+\setlist[enumerate]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+\definecolor{Goat}{HTML}{F7EEDF}
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+\definecolor{GoatTitle}{HTML}{8A5A1F}
+\definecolor{RecapTitle}{HTML}{5B3A8E}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Comportement mécanique des matériaux}}
+\fancyhead[C]{\small Verres, élaboration, contraintes thermiques}
+\fancyhead[R]{\small Week 05 --- 05-11/10/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+\newtcolorbox{definition}{
+enhanced, unbreakable, colback=Blue, colframe=BlueTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Définition}, fonttitle=\bfseries
+}
+
+\newtcolorbox{important}{
+enhanced, unbreakable, colback=Pink, colframe=PinkTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Idée clé}, fonttitle=\bfseries
+}
+
+\newtcolorbox{formula}{
+enhanced, unbreakable, colback=Green, colframe=GreenTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Formules clés}, fonttitle=\bfseries
+}
+
+\newtcolorbox{warning}{
+enhanced, unbreakable, colback=Orange, colframe=OrangeTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Attention}, fonttitle=\bfseries
+}
+
+\newtcolorbox{example}{
+enhanced, unbreakable, colback=Purple, colframe=PurpleTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Exemple}, fonttitle=\bfseries
+}
+
+% GOAT - brown: the idea told as simply as possible
+\newtcolorbox{goat}{
+enhanced, unbreakable, colback=Goat, colframe=GoatTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Expliqué à une chèvre}, fonttitle=\bfseries
+}
+
+% RECAP - violet: what to know for the exam, at the end of the week
+\newtcolorbox{recap}{
+enhanced, breakable, colback=Purple, colframe=RecapTitle,
+boxrule=1pt, arc=0mm, title=\textbf{Récap pour l'examen}, fonttitle=\bfseries
+}
+
+% Screenshot of a slide of the course: \slide{cNN-PP}
+\newcommand{\slide}[2][0.95]{%
+\begin{center}
+\includegraphics[width=#1\linewidth]{../images/course/#2}
+\end{center}}
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+\thispagestyle{fancy}
+
+\begin{multicols}{2}
+
+%=========================================================
+\section{Les verres}
+
+\slide[0.85]{c02-50}
+
+\begin{definition}
+Angles Si--O--Si souples $\Rightarrow$ le liquide cristallise mal ; refroidi assez vite, il se
+fige : \textbf{verre}, solide \textbf{amorphe}, métastable, ordre à courte distance seulement,
+ni cristaux ni joints de grains.
+\end{definition}
+
+\slide[0.8]{c02-51}
+
+\begin{important}
+$T_g$ (transition vitreuse) et densité dépendent de la vitesse de refroidissement : plus vite
+$\Rightarrow$ figé plus tôt, \textbf{moins dense}.
+\end{important}
+
+\begin{formula}
+\[ \tau = \eta\dot\gamma = \eta\frac{d\gamma}{dt}, \qquad \sigma = 3\eta\dot\varepsilon, \qquad
+   \eta = K\,e^{+Q/RT} \]
+Eau $10^{-3}$, huile $5\cdot10^{-2}$, miel 2--10\,Pa$\cdot$s. Repères du verre : fusion $10$,
+mise en forme $10^3$, ramollissement $4\cdot10^6$\,Pa$\cdot$s.
+\end{formula}
+
+\begin{important}
+\textbf{Modifiants} (Na$_2$O, CaO, B$_2$O$_3$, quelques dizaines de \%) : cassent le réseau,
+baissent la viscosité, la silice devient formable plus bas.
+\end{important}
+
+\begin{goat}
+Un verre est un liquide figé en désordre. Chaud, il coule comme du miel, de plus en plus
+facilement quand on chauffe ; la soude coupe des liens pour qu'il coule plus tôt.
+\end{goat}
+
+%=========================================================
+\section{Élaboration}
+
+\begin{itemize}
+\item \textbf{Argiles} : formage humide (malaxeur, extrusion, calibrage), \textbf{barbotine}
+      (moule en plâtre qui boit l'eau), \textbf{pressage} de poudres ; séchage (retrait puis
+      arrêt) ; cuisson.
+\item \textbf{Capillarité} : énergie de surface $\gamma$ (J/m$^2$ = N/m).
+\item \textbf{Frittage} : à chaud, la poudre réduit sa surface ; cous, pores qui rétrécissent et
+      disparaissent ; densification sans fusion.
+\item Ciment, plâtre : durcissement \textbf{chimique}.
+\item \textbf{Verre} : newtonien $\Rightarrow$ pas de striction $\Rightarrow$ étirage (fibres),
+      pressage--soufflage (bouteilles), float (bain d'étain).
+\end{itemize}
+
+\slide[0.8]{c02-67}
+
+\begin{goat}
+Une poudre a trop de surface ; en chauffant, les grains se collent et les trous se referment.
+Le verre chaud s'étire en fil sans jamais s'amincir à un endroit.
+\end{goat}
+
+%=========================================================
+\section{Contraintes thermiques}
+
+\begin{formula}
+\[ \sigma = \frac{E}{1-\nu}\,\alpha\,(T_1 - T_2) \]
+Couche de surface refroidie d'un coup, collée à un c\oe ur qui ne se déforme pas ;
+\textbf{traction} ; $1-\nu$ car état \textbf{biaxial}.
+\end{formula}
+
+\begin{example}
+Verre sodocalcique : $E = 74$\,GPa, $\nu = 0{,}25$, $\alpha = 8{,}5\cdot10^{-6}$, $\Delta T = 200$\,K
+$\Rightarrow \sigma \approx 170$\,MPa : \textbf{choc thermique}, il casse.
+\end{example}
+
+\begin{warning}
+La \og résistance au choc thermique\fg{} ($\Delta T$ max à la trempe) n'est pas une propriété du
+matériau : défauts, forme, taille, vitesse comptent ; procédure normalisée.
+\end{warning}
+
+\slide[0.8]{c02-80}
+
+\begin{important}
+\textbf{Verre trempé} : refroidi encore mou, le c\oe ur suit la surface, puis se contracte en
+dernier : \textbf{surface en compression} (protège des fissures), c\oe ur en traction
+(émiettement si une fissure l'atteint). \textbf{Échange d'ions} (K$^+$ pour Na$^+$) : $> 500$\,MPa
+sur une fine couche (Gorilla).
+\end{important}
+
+\begin{goat}
+Peau refroidie d'un coup : elle veut rétrécir, le c\oe ur la retient, elle se fissure. Si le
+c\oe ur est encore mou, c'est lui qui rétrécit en dernier et serre la peau : une peau serrée ne se
+fissure pas.
+\end{goat}
+
+%=========================================================
+\section{Récap de la semaine}
+
+\begin{recap}
+\begin{itemize}
+\item Verre : amorphe, métastable ; $T_g$ et densité selon la vitesse.
+\item $\tau = \eta\dot\gamma$, $\sigma = 3\eta\dot\varepsilon$ ; $\eta = Ke^{Q/RT}$ ;
+      $10$ / $10^3$ / $4\cdot10^6$\,Pa$\cdot$s ; modifiants.
+\item Argiles, barbotine, pressage, séchage ; $\gamma$ ; frittage ; ciment chimique ; verre :
+      pas de striction, étirage, soufflage, float.
+\item $\sigma = \frac{E}{1-\nu}\alpha(T_1 - T_2)$ (170\,MPa) ; choc thermique ; verre trempé,
+      échange d'ions.
+\end{itemize}
+\end{recap}
+
+\end{multicols}
+
+\end{document}

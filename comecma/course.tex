@@ -1,0 +1,87 @@
+\documentclass[11pt,a4paper,openany]{book}
+
+\usepackage[french]{course}
+
+% Deux boîtes propres à ce document, comme dans elec/course.tex :
+% goatbox, l'idée d'une section dite le plus simplement possible, et recapbox, le grand
+% récapitulatif de fin de chapitre à relire la veille de l'examen (sécable : il est long).
+\definecolor{goatColor}{HTML}{8A5A1F}
+\definecolor{recapColor}{HTML}{5B3A8E}
+\newtcolorbox{goatbox}[1][]{
+  enhanced, colback=goatColor!6, colframe=goatColor,
+  boxrule=0.5pt, arc=3pt, left=5pt, right=5pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries\small, coltitle=white,
+  colbacktitle=goatColor,
+  attach boxed title to top left={yshift=-3pt, xshift=6pt},
+  boxed title style={size=small, colback=goatColor, boxrule=0pt, arc=2pt},
+  title=Expliqué à une chèvre, #1
+}
+\newtcolorbox{recapbox}[1][]{
+  enhanced, breakable, colback=recapColor!5, colframe=recapColor,
+  boxrule=1.2pt, arc=4pt, left=8pt, right=8pt, top=8pt, bottom=8pt,
+  fonttitle=\bfseries\large, coltitle=white,
+  colbacktitle=recapColor,
+  title=Récap pour l'examen, #1
+}
+
+% Capture d'une diapositive du cours : \slide[largeur]{cNN-PP}{légende}
+\graphicspath{{images/course/}}
+\newcommand{\slide}[3][0.8]{%
+  \begin{center}
+    \includegraphics[width=#1\linewidth]{#2}\\[2pt]
+    {\small\itshape #3}
+  \end{center}}
+
+\begin{document}
+\raggedbottom
+
+\coursetitle{Comportement mécanique des matériaux --- expliqué}{BA5}{2026--2027}
+
+\tableofcontents
+\clearpage
+
+\chapter*{Comment lire ces notes}
+\addcontentsline{toc}{chapter}{Comment lire ces notes}
+
+Ces notes reprennent le cours \emph{MSE 234 --- Comportement mécanique des matériaux}
+(A.~Mortensen, EPFL, automne 2026), chapitre par chapitre, à partir des diapositives. Elles ne
+recopient pas les diapositives : elles \textbf{expliquent} ce qu'il faut en comprendre, pourquoi
+les formules ont cette forme et comment s'en servir. Les exemples chiffrés qui ne viennent pas
+des diapositives sont signalés comme tels.
+
+Chaque chapitre contient :
+\begin{itemize}
+  \item les définitions, lois et formules du cours dans des boîtes de couleur (vert :
+        définition, rouge : loi/théorème, bleu : propriété, orange : attention, gris :
+        remarque, exemples en encadré) ;
+  \item \textbf{les captures des diapositives} utiles (courbes, diagrammes, schémas), avec ce
+        qu'il faut y regarder ;
+  \item \textbf{des boîtes brunes \og Expliqué à une chèvre\fg{}} : l'idée de la section avec
+        les mots les plus simples possibles, à lire d'abord quand une notion ne passe pas ;
+  \item \textbf{une grande boîte violette \og Récap pour l'examen\fg{}} à la fin : ce qu'il
+        faut savoir, assez court pour être relu la veille, et comment le chapitre s'appuie
+        sur les précédents.
+\end{itemize}
+Le dernier chapitre est un \textbf{récapitulatif général} : les formules à connaître par c\oe
+ur, les méthodes pas à pas et les pièges classiques.
+
+\begin{rembox}[title={L'examen en deux mots (chapitre 0 du cours)}]
+\begin{itemize}
+  \item Examen final \textbf{sans document ni formulaire} (seulement un dictionnaire de
+        traduction non technique) : la liste des \og formules à connaître par c\oe ur\fg{}
+        est reprise au dernier chapitre.
+  \item Note : 75\,\% questions sur le cours, 18\,\% questions sur les TP, 7\,\% cahier de
+        laboratoire et participation aux TP.
+  \item Ce qui fait foi : le contenu des diapositives. Les livres (Ashby \& Jones, le
+        polycopié \emph{Métaux et Alliages}, Callister, Brinson \& Brinson) aident à
+        comprendre mais vont au-delà.
+\end{itemize}
+\end{rembox}
+
+\input{course/01}
+\input{course/02}
+\input{course/03}
+\input{course/04}
+\input{course/05}
+
+\end{document}

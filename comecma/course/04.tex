@@ -1,0 +1,555 @@
+% =========================================================
+\chapter{Le fer et ses alliages}
+% =========================================================
+
+\begin{rembox}[title=En bref]
+\textbf{De quoi parle ce chapitre ?} Le fer et l'acier, l'alliage le plus utilisé au monde. On
+voit comment on le produit (haut-fourneau, convertisseur), puis le diagramme fer--carbone
+(ferrite, austénite, cémentite, perlite), la \textbf{martensite} (une transformation sans
+diffusion, à l'origine de la trempe), les diagrammes \textbf{TTT et TRC}, la
+\textbf{trempabilité}, le \textbf{revenu}, les traitements de surface, les grandes familles
+d'aciers et les fontes. \\
+\textbf{Le nouveau mécanisme de durcissement} : l'affinage du grain (\textbf{Hall--Petch}), qui
+complète les quatre du chapitre~3.
+\end{rembox}
+
+\section{Produire le fer et l'acier}
+
+Retour au diagramme d'Ellingham (chapitre~3) : les oxydes de fer sont moins stables que ceux de
+l'aluminium, du chrome ou du silicium, et la droite du carbone passe sous eux à haute
+température. Le \textbf{carbone} (bois, charbon de bois, coke) peut donc \textbf{réduire le
+minerai de fer}. C'est plus difficile que pour le cuivre : les oxydes sont plus stables et le fer
+fond bien plus haut (1538\,°C contre 1084\,°C). D'où un âge du fer ($\approx 1500$ av.\,J.-C.)
+venu bien après l'âge du bronze ($\approx 3500$ av.\,J.-C.).
+
+\begin{propbox}[title={Du minerai à l'acier}]
+\begin{enumerate}
+  \item \textbf{Haut-fourneau} : le coke réduit le minerai ; on obtient la \textbf{fonte} (fer
+        liquide riche en carbone, $\approx 4\,\%$), qui fond vers 1200\,°C, bien plus bas que le
+        fer.
+  \item \textbf{Convertisseur} (Bessemer, 1856) : on souffle de l'air, aujourd'hui de
+        l'oxygène, dans la fonte liquide. La combustion du carbone (i) abaisse la teneur en
+        carbone (la fonte devient de l'acier) et (ii) dégage la chaleur qui garde le métal
+        liquide alors que son point de fusion monte. Une scorie d'oxydes flotte dessus.
+  \item Deux filières : \textbf{aciérie intégrée} (minerai, haut-fourneau, convertisseur) et
+        \textbf{aciérie électrique} (ferrailles refondues au four à arc). Depuis 2021, la
+        réduction par l'\textbf{hydrogène} (sans carbone) démarre en Suède.
+\end{enumerate}
+\end{propbox}
+
+\begin{goatbox}
+Pour faire du fer, on enlève l'oxygène de la rouille avec du charbon très chaud. Le fer qui
+sort est plein de carbone (la fonte) ; on souffle ensuite de l'oxygène dedans pour brûler ce
+carbone en trop, et cette combustion chauffe tellement que le métal reste liquide : c'est
+l'acier.
+\end{goatbox}
+
+\section{Le fer, le carbone et le diagramme Fe--C}
+
+\slide[0.5]{c04-17}{Le fer pur change deux fois de structure : CC ($\alpha$) $\to$ CFC ($\gamma$) à 912\,°C $\to$ CC ($\delta$) à 1394\,°C.}
+
+\begin{defnbox}[title={Les phases du fer}]
+\begin{itemize}
+  \item \textbf{Ferrite} ($\alpha$, et $\delta$ à haute $T$) : cubique centré (CC),
+        ferromagnétique sous le point de Curie (770\,°C).
+  \item \textbf{Austénite} ($\gamma$) : cubique faces centrées (CFC), entre 912 et 1394\,°C
+        pour le fer pur.
+  \item \textbf{Cémentite} Fe$_3$C : carbure dur et fragile, \textbf{métastable} (le graphite
+        est plus stable, mais c'est la cémentite qu'on voit dans les aciers).
+\end{itemize}
+\end{defnbox}
+
+\subsection*{Le carbone, un soluté d'insertion}
+
+L'atome de carbone est presque deux fois plus petit que celui de fer : il ne remplace pas un
+atome de fer, il se loge \textbf{entre} eux (solution solide \textbf{d'insertion}). Il est donc
+toujours entouré de sites libres et \textbf{diffuse beaucoup plus vite} (de plusieurs ordres de
+grandeur) qu'un soluté de substitution, qui doit attendre qu'une lacune passe.
+
+\begin{propbox}[title={Conséquence : pas de microségrégation du carbone}]
+Aux vitesses de refroidissement usuelles, le carbone a le temps de se redistribuer : on observe
+ce que prédit le diagramme de phase (loi du levier comprise), contrairement à Al--Cu
+(chapitre~3). Seules les trempes très rapides changent cela --- et c'est justement le sujet de
+la martensite.
+\end{propbox}
+
+\slide[0.6]{c04-21}{Le diagramme Fe--C (traits pleins : Fe--Fe$_3$C ; pointillés : Fe--graphite). Aciers jusqu'à 2,1\,\% C, fontes au-delà.}
+
+\begin{propbox}[title={Lire le diagramme Fe--C}]
+\begin{itemize}
+  \item Le carbone est bien plus soluble dans l'austénite (jusqu'à 2,1\,\%) que dans la
+        ferrite ($\le 0{,}02\,\%$) : les sites interstitiels de la CFC sont plus grands.
+  \item \textbf{Aciers} : $\le 2{,}1\,\%$ C (en pratique $\le 1{,}2$) ; ils passent tous par un
+        état 100\,\% austénitique. \textbf{Fontes} : $> 2{,}1\,\%$ C ; elles solidifient avec un
+        eutectique (4,3\,\%, 1148\,°C), ne sont jamais 100\,\% austénite et fondent bien plus bas
+        (d'où leur nom).
+  \item \textbf{Eutectoïde} : 0,77\,\% C à 727\,°C, $\gamma \to \alpha + \text{Fe}_3\text{C}$.
+\end{itemize}
+\end{propbox}
+
+\subsection*{Perlite, aciers hypo- et hypereutectoïdes}
+
+\slide[0.75]{c04-24}{La perlite : lamelles alternées de ferrite et de cémentite, formées côte à côte.}
+
+Un eutectoïde est comme un eutectique, mais à partir d'un solide : à 0,77\,\% C, l'austénite se
+transforme en \textbf{perlite}, des lamelles alternées de ferrite (pauvre en C) et de cémentite
+(6,7\,\% C) qui croissent ensemble pour que le carbone n'ait que peu de chemin à faire.
+\begin{itemize}
+  \item \textbf{Hypoeutectoïde} ($< 0{,}77\,\%$) : la \textbf{ferrite proeutectoïde} germe d'abord
+        aux joints de grains de l'austénite, puis l'austénite restante (enrichie jusqu'à 0,77\,\%)
+        devient perlite.
+  \item \textbf{Hypereutectoïde} ($> 0{,}77\,\%$) : c'est la \textbf{cémentite proeutectoïde} qui
+        germe d'abord aux joints de grains, puis le reste devient perlite.
+\end{itemize}
+
+\slide[0.6]{c04-25}{Acier hypoeutectoïde : ferrite proeutectoïde (claire) aux anciens joints de grains, puis perlite (foncée).}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Acier à 0,4\,\% C juste sous 727\,°C. Ferrite à 0,02\,\%, perlite à 0,77\,\% :
+fraction de perlite $= \dfrac{0{,}4 - 0{,}02}{0{,}77 - 0{,}02} \approx 0{,}51$. Moitié ferrite,
+moitié perlite : c'est l'image de la micrographie Fe--0,4\,\% C.
+\end{exbox}
+
+\begin{goatbox}
+Le fer change de rangement d'atomes avec la température. Le carbone, tout petit, se faufile entre
+les atomes de fer et circule très vite. À chaud, dans l'austénite, il y a de la place pour lui ;
+en refroidissant, il n'y en a plus : il doit se regrouper dans un carbure, la cémentite. Le plus
+rapide est de faire des lamelles alternées de fer presque pur et de carbure : la perlite.
+\end{goatbox}
+
+\section{La martensite}
+
+Toutes les transformations vues jusqu'ici sont \textbf{diffusives} : germination puis
+croissance, pilotées par l'activation thermique, avec une cinétique en nez (lente près de
+l'équilibre, lente à froid). La transformation \textbf{martensitique} est d'une autre nature.
+
+\slide[0.45]{c04-30}{Deux mailles CFC contiennent une maille quadratique centrée ; comprimée verticalement et élargie latéralement, elle devient CC (déformation de Bain).}
+
+\begin{defnbox}[title={Transformation martensitique (displacive)}]
+On passe de la CFC à la CC par une simple \textbf{déformation} du réseau, sans que les atomes
+changent de voisins : chaque atome bouge de moins d'une distance interatomique, tous ensemble,
+\og au pas\fg{} (transformation \og militaire\fg{}). Elle progresse par le mouvement d'une
+paroi proche d'un mur de dislocations, \textbf{à la vitesse du son}.
+\end{defnbox}
+
+\begin{propbox}[title={Pourquoi elle est athermale}]
+La force motrice $\Delta G_{\text{mart}} = G_{\text{martensite}} - G_{\text{austénite}}$ grandit
+quand $T$ baisse. Mais la martensite formée déforme l'austénite autour d'elle, ce qui stocke de
+l'énergie élastique et \textbf{freine} la suite, d'autant plus qu'on a déjà transformé. Résultat :
+\begin{itemize}
+  \item la transformation commence à $M_s$ (\emph{martensite start}) ;
+  \item à chaque température, elle avance d'un coup puis \textbf{s'arrête} : la fraction
+        transformée ne dépend que de $T$, \textbf{pas du temps} (transformation
+        \textbf{athermale}) ;
+  \item elle est complète à $M_f$ (\emph{martensite finish}).
+\end{itemize}
+Sur un diagramme TTT, elle trace donc des \textbf{droites horizontales} ($M_s$, $M_{50}$, $M_f$).
+\end{propbox}
+
+\slide[0.5]{c04-33}{Fraction de martensite en fonction de la température seulement.}
+
+\subsection*{Et le carbone ?}
+
+Il n'a pas le temps de bouger. Or les sites interstitiels, distribués au hasard dans la CFC, ne
+le sont plus dans la maille issue de la déformation : le carbone se trouve tous sur le même type
+de site et \textbf{empêche la maille de s'aplatir complètement}. La martensite est donc
+\textbf{quadratique centrée}, d'autant plus allongée qu'elle contient de carbone. Deux
+conséquences :
+
+\begin{thmbox}[title={$M_s$ baisse avec le carbone (et les autres éléments)}]
+Pour les aciers à moins de 0,6\,\% C :
+\[ M_s\,[^\circ\text{C}] = 539 - 423\,\text{C} - 30{,}4\,\text{Mn} - 17{,}7\,\text{Ni}
+   - 12{,}1\,\text{Cr} - 7{,}5\,\text{Mo} \quad (\%\text{ pds}) \]
+Le carbone pèse de loin le plus lourd.
+\end{thmbox}
+
+\begin{propbox}[title={La martensite est très dure}]
+Les atomes de carbone coincés créent de fortes contraintes locales qui gênent le mouvement des
+dislocations : la dureté de la martensite \textbf{croît fortement avec le carbone}. Elle est aussi
+\textbf{fragile}.
+\end{propbox}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Acier 0,4\,\% C, 0,7\,\% Mn : $M_s = 539 - 169 - 21 = 349$\,°C. Un acier 0,4\,\% C avec 5\,\% Mn :
+$M_s = 539 - 169 - 152 = 218$\,°C.
+\end{exbox}
+
+\begin{goatbox}
+La martensite, c'est l'austénite qui change de forme d'un coup, comme une boîte de carton qu'on
+écrase, sans que les atomes aient le temps de se déplacer. Le carbone, coincé dans la boîte
+écrasée, l'empêche de s'aplatir complètement et la rend très tendue : c'est très dur, mais
+cassant. Et plus il fait froid, plus il y a de boîtes écrasées, mais attendre ne change rien.
+\end{goatbox}
+
+\section{Diagrammes TTT et TRC}
+
+Tout traitement thermique d'un acier commence par l'\textbf{austénitisation} : chauffer dans le
+domaine $\gamma$ pour obtenir de l'austénite homogène (le carbone et même les éléments de
+substitution diffusent). Trop long ou trop chaud, les grains d'austénite grossissent (maturation),
+ce qui est en général néfaste.
+
+\slide[0.55]{c04-41}{Diagramme TTT d'un acier eutectoïde : nez de la perlite vers 550\,°C en moins d'une seconde ; bainite en dessous ; droites $M_s$, $M_{50}$, $M_f$.}
+
+\begin{propbox}[title={Lire le TTT de l'acier eutectoïde}]
+\begin{itemize}
+  \item Entre 727 et $\approx 550$\,°C : \textbf{perlite} (plus fine quand $T$ baisse).
+  \item Entre le nez et $M_s$ : \textbf{bainite} --- biphasée (ferrite + carbure) comme la perlite
+        mais bien plus fine, avec une ferrite qui se forme un peu comme la martensite ;
+        \textbf{supérieure} (plus haute $T$) et \textbf{inférieure} (plus basse, plus fine).
+  \item Sous $M_s$ : \textbf{martensite}, droites horizontales.
+\end{itemize}
+Pour obtenir de la martensite, il suffit d'\textbf{éviter le nez} : ici, passer de l'austénite à
+550\,°C en moins d'une seconde.
+\end{propbox}
+
+\begin{keybox}[title=La phrase à retenir]
+On trempe un acier \textbf{non pas tant pour former la martensite que pour éviter de former autre
+chose avant qu'elle n'apparaisse}.
+\end{keybox}
+
+Pour un acier hypo- ou hypereutectoïde, une courbe supplémentaire apparaît au-dessus : le début
+de la ferrite (ou de la cémentite) proeutectoïde.
+
+\subsection*{TRC : refroidir en continu}
+
+\slide[0.45]{c04-46}{TTT : maintiens isothermes (droites horizontales) ; TRC : faisceau de courbes de refroidissement continu.}
+
+\begin{defnbox}[title={Diagramme TRC (\emph{CCT}, transformation en refroidissement continu)}]
+On enregistre les transformations le long d'un \textbf{faisceau de courbes de refroidissement}
+(qui ne se coupent pas), plus proche des traitements réels qu'un maintien isotherme. Attention :
+à chaque \textbf{type} de refroidissement (linéaire, exponentiel\ldots) correspond son diagramme
+TRC.
+\end{defnbox}
+
+\begin{propbox}[title={Ce qu'il faut savoir des TTT et TRC}]
+\begin{enumerate}
+  \item Le nez du TRC est \textbf{à droite} (plus tard) de celui du TTT : en refroidissant, on ne
+        passe qu'un instant à la température la plus favorable. Donc \textbf{éviter le nez du TTT
+        suffit} pour éviter la transformation en continu.
+  \item Plus il y a d'\textbf{éléments d'alliage}, plus les nez se décalent vers les temps
+        longs (l'effet dépend de l'élément).
+  \item Loin de l'équilibre, les proportions et même la nature des phases peuvent différer du
+        diagramme de phase.
+  \item Dans les aciers alliés, perlite et bainite ont \textbf{deux nez séparés}.
+  \item Les éléments d'alliage baissent aussi $M_s$ et $M_f$ (le manganèse spectaculairement). Si
+        $M_f$ est sous l'ambiante, il reste de l'\textbf{austénite résiduelle} ; si même $M_s$ y
+        est, l'acier trempé est 100\,\% austénitique. Cette austénite instable peut se transformer
+        en martensite sous contrainte : aciers très tenaces (Hadfield, TRIP).
+\end{enumerate}
+\end{propbox}
+
+\begin{goatbox}
+Le diagramme TTT est une carte routière : en refroidissant l'acier, il faut passer à gauche du
+\og nez\fg{} sans le toucher, sinon on fabrique de la perlite ou de la bainite au lieu de la
+martensite. Plus l'acier contient d'ingrédients, plus le nez est loin à droite, et plus on a le
+temps de passer.
+\end{goatbox}
+
+\section{Trempe, trempabilité et revenu}
+
+\begin{defnbox}[title={Trempabilité (\emph{hardenability})}]
+La \textbf{facilité} à tremper un acier, c'est-à-dire la \textbf{lenteur} de formation de la
+ferrite ou de la cémentite, de la perlite et de la bainite (nez loin à droite). Ce n'est
+\textbf{pas} la dureté obtenue (qui dépend du carbone) : c'est la \textbf{profondeur} jusqu'à
+laquelle on obtient de la martensite.
+\end{defnbox}
+
+\begin{propbox}[title={Ce qui augmente la trempabilité}]
+\begin{itemize}
+  \item Les \textbf{éléments d'alliage} (le chrome, notamment, a un effet fort).
+  \item Une \textbf{taille de grain d'austénite plus grande} : les joints de grains sont les sites
+        de germination de la ferrite et de la cémentite ; moins de joints, transformation plus
+        lente. (Mais un gros grain a d'autres inconvénients.)
+\end{itemize}
+\end{propbox}
+
+Pourquoi une grande trempabilité est-elle précieuse ? On obtient de la martensite plus en
+profondeur, et l'on peut refroidir \textbf{moins vite} : moins de gradients de température,
+donc moins de contraintes thermiques. C'est crucial car la martensite est fragile et sa formation
+s'accompagne d'une \textbf{dilatation} : une trempe trop brutale peut fissurer ou déformer la
+pièce. Les contraintes restantes s'enlèvent par un \textbf{revenu de détensionnement}.
+
+\subsection*{Mesurer la trempabilité}
+
+\slide[0.6]{c04-58}{Essai Jominy : un barreau austénitisé est trempé par un bout ; la dureté le long du barreau montre jusqu'où la martensite s'est formée.}
+
+\begin{itemize}
+  \item \textbf{Essai Jominy} : on arrose d'eau l'extrémité d'un barreau austénitisé ; chaque
+        point du barreau a ainsi vu une vitesse de refroidissement différente. On mesure la
+        dureté le long du barreau : la distance où elle chute indique où il n'y a plus 100\,\% de
+        martensite. Les variations d'un échantillon à l'autre donnent une \textbf{bande} Jominy.
+  \item \textbf{Diamètre critique} : le plus grand diamètre que l'on peut tremper dans un milieu
+        donné en obtenant au moins 50\,\% de martensite partout (donc exactement 50\,\% au c\oe ur).
+\end{itemize}
+
+\subsection*{Le revenu de la martensite}
+
+La martensite est très instable : contraintes internes, carbone sursaturé coincé dans des sites
+trop étroits, beaucoup de dislocations. Si on la \textbf{chauffe}, le carbone (interstitiel,
+mobile) s'en va :
+\begin{itemize}
+  \item il se loge le long des dislocations ;
+  \item il forme de petits carbures $\varepsilon$ cohérents (léger durcissement structural) ;
+  \item plus chaud et plus long : de la cémentite, qui mûrit en particules sphériques
+        (\textbf{cémentite sphéroïdale}) ; les dislocations s'éliminent, la ferrite peut
+        recristalliser.
+\end{itemize}
+
+\slide[0.55]{c04-63}{Dureté de la martensite après 1\,h de revenu à différentes températures, pour plusieurs teneurs en carbone.}
+
+\begin{propbox}[title={Le revenu : moins dur, mais surtout moins fragile}]
+\begin{itemize}
+  \item Résultat : l'acier perd un peu de dureté mais gagne beaucoup en \textbf{ténacité} et en
+        ductilité. Le couple \og trempe + revenu\fg{} est le traitement classique des aciers.
+  \item \textbf{Durcissement secondaire} : dans les aciers alliés, à haute température de
+        revenu, d'autres carbures (Cr, Mo, V\ldots) précipitent ; formés à chaud, ils restent
+        stables à chaud.
+  \item \textbf{Austénite résiduelle} : le revenu peut l'appauvrir en carbone, ce qui élève son
+        $M_s$ ; elle devient martensite (fraîche, fragile) au retour à l'ambiante. D'où les
+        \textbf{revenus multiples} des aciers à outils.
+  \item \textbf{Fragilisation de revenu} : vers 350--600\,°C, certaines impuretés (P, Sb, Sn, As)
+        associées à certains éléments (Cr) fragilisent les anciens joints de l'austénite. Antidote :
+        le molybdène.
+\end{itemize}
+\end{propbox}
+
+\subsection*{Trempes étagées et traitements de surface}
+
+\slide[0.75]{c04-69}{Trempe classique, trempe martensitique étagée, trempe bainitique étagée.}
+
+En lisant le TTT, on peut faire mieux qu'une trempe brutale : un \textbf{maintien} juste
+au-dessus de $M_s$ laisse le c\oe ur et la surface s'égaliser en température avant de former la
+martensite (\textbf{trempe martensitique étagée}) : moins de fissures et de distorsions. Ou
+maintenir dans le domaine bainitique pour obtenir de la bainite (\textbf{trempe bainitique
+étagée}). L'\textbf{austénitoformage} déforme l'austénite métastable avant la trempe.
+
+\begin{propbox}[title={Durcir seulement la surface}]
+Pour une surface dure et un c\oe ur tenace :
+\begin{enumerate}
+  \item chauffer brièvement la surface (flamme, induction, laser) puis tremper ;
+  \item \textbf{cémentation} (\emph{carburizing}) : chauffer dans le domaine austénitique sous
+        atmosphère riche en carbone ; la surface s'enrichit, devient plus dure et plus
+        trempable (l'inverse, la décarburation, est néfaste) ;
+  \item \textbf{nitruration} : enrichir la surface en azote, dans le domaine \textbf{ferritique}
+        (solution solide ou couche de nitrures durs).
+\end{enumerate}
+\end{propbox}
+
+\begin{goatbox}
+La trempabilité, c'est la facilité à attraper de la martensite jusqu'au c\oe ur d'une grosse
+pièce : on l'améliore en ajoutant des éléments d'alliage. La martensite brute casse comme du
+verre ; en la réchauffant un peu (le revenu), on laisse le carbone sortir de sa cage : l'acier
+devient un peu moins dur mais beaucoup moins cassant. Et si on veut juste une peau dure, on durcit
+seulement la surface.
+\end{goatbox}
+
+\section{Les grandes familles d'aciers}
+
+\subsection*{Les aciers au carbone et l'affinage du grain}
+
+Fer + carbone + un peu de manganèse (il capte le soufre et améliore l'acier à bas coût) et de
+silicium, avec peu d'impuretés nocives (S, P). Ils sont durcis par les mécanismes déjà vus, plus
+un nouveau : l'\textbf{affinage du grain}.
+
+\begin{thmbox}[title={Loi de Hall--Petch (à connaître par c\oe ur)}]
+\[ \sigma(e = x\,\%) = \sigma_0 + k\,D^{-1/2} \]
+$\sigma(e=x\,\%)$ : contrainte d'écoulement à une déformation donnée ; $\sigma_0$, $k$ :
+constantes ; $D$ : taille moyenne des grains. L'obstacle aux dislocations est ici le
+\textbf{joint de grain}. $k$ est élevé pour les aciers (et le cuivre), plus faible pour l'aluminium.
+\end{thmbox}
+
+\slide[0.55]{c04-77}{Limite d'élasticité en fonction de $D^{-1/2}$ : des droites, plus pentues pour les aciers.}
+
+\begin{propbox}[title={Le seul mécanisme \og tout bénéfice\fg{}}]
+Affiner le grain augmente la résistance \textbf{sans réduire} la ductilité (qui peut même
+augmenter), et \textbf{abaisse la température de transition ductile--fragile}. C'est pourquoi on
+le pratique sur les aciers doux hypoeutectoïdes, par déformation à chaud + recristallisation, et
+par \textbf{normalisation} : chauffer juste au-dessus de la transformation en austénite, puis
+refroidir, pour que la ferrite germe sur les nombreux joints de grains de la nouvelle austénite
+fine.
+\end{propbox}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Avec $\sigma_0 = 70$\,MPa et $k = 0{,}74\,\text{MPa}\sqrt{\text m}$ (ordres de grandeur d'un
+acier doux) : $D = 100\,\mu$m donne $\sigma = 70 + 0{,}74/0{,}01 = 144$\,MPa ; $D = 10\,\mu$m donne
+$70 + 0{,}74/0{,}00316 = 304$\,MPa. Diviser le grain par 10 double la limite d'élasticité.
+\end{exbox}
+
+\begin{keybox}[title=Les cinq mécanismes de durcissement des métaux]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{l|l}
+mécanisme & obstacle \\ \hline
+écrouissage (défait par le recuit) & dislocations \\
+solution solide & atomes étrangers \\
+durcissement structural & précipités fins et rapprochés \\
+affinage du grain (Hall--Petch) & joints de grains \\
+seconde phase dure (composite) & aucun : la phase rigide porte plus de charge \\
+\end{tabular}
+\end{center}
+Les quatre premiers agissent sur le mouvement des dislocations ; le cinquième est purement
+mécanique.
+\end{keybox}
+
+\subsection*{Deux particularités des aciers au carbone}
+
+\begin{itemize}
+  \item \textbf{Le crochet de traction} (chapitre~1, courbe (c)) : les atomes de carbone, très
+        mobiles, migrent vers les dislocations et les \textbf{bloquent} (\og atmosphères\fg{}). Il
+        faut une contrainte plus élevée pour les arracher, puis elles bougent facilement : chute de
+        contrainte, déformation hétérogène par \textbf{bandes de Lüders} (\og vermiculures\fg{}
+        sur les tôles). Si on laisse au carbone le temps de revenir (vieillissement, accéléré à
+        60\,°C), le crochet réapparaît, plus haut.
+  \item \textbf{La transition ductile--fragile} : dans la ferrite \textbf{CC}, la mobilité des
+        dislocations chute brutalement sous une certaine température, souvent proche de
+        l'ambiante : l'acier devient fragile (essai Charpy, chapitre~1). Propre aux métaux CC
+        (aussi le tungstène) ; \textbf{absent des CFC} (Al, Cu, austénite). La température de
+        transition augmente avec le carbone, diminue avec l'affinage du grain.
+\end{itemize}
+
+\slide[0.55]{c04-83}{La transition ductile--fragile (Charpy) se décale vers le haut quand le carbone augmente.}
+
+\subsection*{Les autres familles}
+
+\begin{itemize}
+  \item \textbf{Fil de perlite} : une perlite très fine, fortement tréfilée (cordes à piano,
+        renforts de pneus), atteint 3 à 7\,GPa, un des matériaux les plus résistants.
+  \item \textbf{Aciers microalliés (HSLA)} : purs, avec des éléments formant de fins carbures ou
+        nitrures qui (i) durcissent par précipitation et (ii) épinglent les joints et gardent le
+        grain fin.
+  \item \textbf{Aciers modérément alliés à tremper} : 0,25--0,5\,\% C, Mn, et jusqu'à 5\,\% de
+        Cr, Ni, Mo, B, V, Si, qui augmentent trempabilité et propriétés ; trempés puis revenus.
+  \item \textbf{Aciers à outils} : beaucoup de carbone et d'éléments carburigènes (dureté,
+        trempabilité) ; certains \og autotrempants\fg{} (martensite à l'air) ; traitements
+        délicats, revenus multiples ; désignations par usage (M2, D2, H13).
+\end{itemize}
+
+\subsection*{Les aciers inoxydables}
+
+Au-delà de 12\,\% de \textbf{chrome}, une fine couche d'oxyde de chrome imperméable
+\textbf{passive} l'acier. Mais le chrome change aussi la microstructure :
+\begin{itemize}
+  \item il favorise la ferrite : il est \textbf{alphagène} (comme Mo, Si, Nb, Ti) ;
+  \item le nickel, le carbone et l'azote favorisent l'austénite : ils sont \textbf{gammagènes}.
+\end{itemize}
+
+\begin{thmbox}[title={Chrome et nickel équivalents (diagramme de Pryce--Andrews)}]
+\[ C_{\text{Cr,éq}} = \%\text{Cr} + \%\text{Mo} + 1{,}5\,\%\text{Si} + 0{,}5\,\%\text{Nb} + 2\,\%\text{Ti} \]
+\[ C_{\text{Ni,éq}} = \%\text{Ni} + 21\,\%\text{C} + 11{,}5\,\%\text{N} \]
+On place l'alliage dans le plan ($C_{\text{Cr,éq}}$, $C_{\text{Ni,éq}}$) et on lit sa structure
+(ferrite, martensite, austénite ou mélanges). Le diagramme de \textbf{Schaeffler} fait de même
+pour les soudures (refroidies plus vite).
+\end{thmbox}
+
+\slide[0.55]{c04-95}{Le diagramme de Pryce--Andrews.}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Un inox 18-8 (18\,\% Cr, 8\,\% Ni, 0,05\,\% C, 0,5\,\% Si) : $C_{\text{Cr,éq}} = 18 + 0{,}75 = 18{,}75$,
+$C_{\text{Ni,éq}} = 8 + 1{,}05 = 9{,}05$ : on tombe dans le domaine austénitique (avec un peu de
+ferrite) : c'est un inox austénitique, non magnétique.
+\end{exbox}
+
+\begin{goatbox}
+Plus les grains d'un métal sont petits, plus il y a de frontières pour arrêter les dislocations :
+le métal est plus solide, et en plus il ne devient pas cassant, c'est gagnant sur tous les
+tableaux. Les aciers ordinaires deviennent cassants quand il fait froid, à cause de leur
+rangement d'atomes cubique centré. Avec beaucoup de chrome, l'acier se couvre d'une peau d'oxyde
+qui le protège : il devient inoxydable.
+\end{goatbox}
+
+\section{Les fontes}
+
+Au-delà de 2,1\,\% C. Le carbone en excès peut prendre deux formes :
+\begin{itemize}
+  \item \textbf{graphite} (stable) : fontes \textbf{grises} ; favorisé par le carbone, le
+        silicium et un refroidissement lent ;
+  \item \textbf{cémentite} (métastable) : fontes \textbf{blanches} (dures et fragiles) ; favorisée
+        par d'autres éléments et un refroidissement rapide.
+\end{itemize}
+
+\slide[0.5]{c04-98}{Diagramme stable (Fe--graphite, pointillés) et métastable (Fe--Fe$_3$C, traits pleins).}
+
+La solidification donne un eutectique austénite + graphite (ou + cémentite), précédé de dendrites
+d'austénite (fonte hypoeutectique) ou de graphite/cémentite primaire (hypereutectique) ; puis
+l'austénite donne ferrite + graphite ou perlite. Le graphite en \textbf{lamelles} agit comme des
+fissures (fonte grise fragile en traction, mais excellente en compression et pour amortir).
+Par ajout de \textbf{magnésium ou cérium} à une fonte désulfurée, le graphite devient
+\textbf{sphéroïdal} : fonte \textbf{ductile} (GS). Un traitement thermique d'une fonte blanche donne
+un graphite plus compact : fonte \textbf{malléable}.
+
+\begin{goatbox}
+Une fonte, c'est du fer avec tellement de carbone qu'il en reste en morceaux. Si ces morceaux de
+graphite sont des feuilles, ils font comme des fissures et la fonte casse facilement ; si on les
+arrondit en billes (avec un peu de magnésium), la fonte devient presque aussi déformable qu'un
+acier.
+\end{goatbox}
+
+\section*{Récap du chapitre 4}
+\addcontentsline{toc}{section}{Récap du chapitre 4}
+
+\begin{recapbox}
+\textbf{Comment ce chapitre s'appuie sur les précédents} : Ellingham (chapitre~3) explique la
+réduction du minerai par le carbone ; le diagramme de phase, la loi du levier, la diffusion et
+les diagrammes TTT (chapitre~3) s'appliquent au fer --- sans microségrégation du carbone ; le
+revenu est un durcissement structural suivi de maturation ; le crochet de traction et la
+transition ductile--fragile (chapitre~1) trouvent leur explication.
+
+\textbf{Production} : coke $\to$ haut-fourneau $\to$ \textbf{fonte} ($\approx 4\,\%$ C, fond vers
+1200\,°C) $\to$ convertisseur (O$_2$ brûle le C et chauffe) $\to$ acier. Filières intégrée et
+électrique ; réduction à l'hydrogène.
+
+\textbf{Fe--C}
+\begin{itemize}
+  \item Ferrite $\alpha$ (CC), austénite $\gamma$ (CFC, 912--1394\,°C), cémentite Fe$_3$C
+        (métastable ; graphite stable).
+  \item C en \textbf{insertion} $\Rightarrow$ diffusion rapide $\Rightarrow$ pas de microségrégation.
+  \item Aciers $\le 2{,}1\,\%$ C, fontes au-delà ; eutectoïde \textbf{0,77\,\% C, 727\,°C}
+        $\to$ perlite ; hypoeutectoïde : ferrite proeutectoïde aux joints puis perlite ;
+        hyper : cémentite proeutectoïde. Levier.
+\end{itemize}
+
+\textbf{Martensite}
+\begin{itemize}
+  \item Displacive (déformation de Bain CFC $\to$ CC), vitesse du son, \textbf{athermale}
+        ($M_s$, $M_f$ : droites horizontales sur le TTT).
+  \item Carbone piégé $\Rightarrow$ quadratique, très dure, fragile ; $M_s$ baisse avec C
+        ($-423$\,°C par \%), Mn, Ni, Cr, Mo.
+\end{itemize}
+
+\textbf{TTT, TRC, trempe}
+\begin{itemize}
+  \item Perlite au-dessus du nez, bainite (supérieure/inférieure) entre nez et $M_s$, martensite
+        sous $M_s$. \textbf{On trempe pour éviter de former autre chose.}
+  \item TRC : nez à droite du TTT ; éléments d'alliage $\Rightarrow$ nez vers la droite, $M_s$ et
+        $M_f$ plus bas (austénite résiduelle, TRIP, Hadfield) ; deux nez dans les aciers alliés.
+  \item \textbf{Trempabilité} = profondeur de martensite ; augmente avec les éléments d'alliage
+        (Cr) et la taille de grain ; Jominy (bande), diamètre critique (50\,\% à c\oe ur).
+        Trempe : dilatation, fissures, distorsions ; détensionnement.
+\end{itemize}
+
+\textbf{Revenu} : C vers les dislocations, carbures $\varepsilon$, puis cémentite sphéroïdale,
+restauration $\Rightarrow$ moins dur, \textbf{beaucoup moins fragile}. Durcissement secondaire
+(carbures alliés), revenus multiples (austénite résiduelle), fragilisation de revenu (P, Sb, Sn,
+As + Cr ; antidote Mo). Trempes étagées (martensitique, bainitique), austénitoformage. Surface :
+chauffe + trempe, \textbf{cémentation} (austénitique), \textbf{nitruration} (ferritique).
+
+\textbf{Familles}
+\begin{itemize}
+  \item \textbf{Hall--Petch : $\sigma = \sigma_0 + kD^{-1/2}$}, le seul mécanisme tout bénéfice
+        (ductilité conservée, transition ductile--fragile abaissée) ; normalisation.
+  \item Les \textbf{cinq mécanismes} : écrouissage, solution solide, précipitation, affinage du
+        grain, seconde phase dure.
+  \item Aciers au carbone : crochet + Lüders (carbone sur les dislocations), transition
+        ductile--fragile (CC seulement, monte avec C). Fil de perlite 3--7\,GPa, HSLA, aciers à
+        tremper, aciers à outils.
+  \item Inox : $\ge 12\,\%$ Cr ; alphagènes (Cr, Mo, Si, Nb, Ti) / gammagènes (Ni, C, N) ;
+        $C_{\text{Cr,éq}}$, $C_{\text{Ni,éq}}$ (Pryce--Andrews ; Schaeffler pour les soudures).
+\end{itemize}
+
+\textbf{Fontes} : grises (graphite, lent, Si) ou blanches (cémentite, rapide) ; graphite lamellaire
+(fragile) $\to$ sphéroïdal par Mg ou Ce (ductile) ; malléable par traitement thermique.
+
+\textbf{Pour la suite} : le cours passe aux polymères (viscoélasticité, chapitre~5) puis aux
+composites, où le cinquième mécanisme (une phase rigide qui porte la charge) devient la règle
+(lois des mélanges).
+\end{recapbox}

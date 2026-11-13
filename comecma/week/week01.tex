@@ -1,0 +1,339 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+\setlist[enumerate]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+\definecolor{Goat}{HTML}{F7EEDF}
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+\definecolor{GoatTitle}{HTML}{8A5A1F}
+\definecolor{RecapTitle}{HTML}{5B3A8E}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Comportement mécanique des matériaux}}
+\fancyhead[C]{\small Présentation, essai de traction, striction}
+\fancyhead[R]{\small Week 01 --- 07-13/09/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+\newtcolorbox{definition}{
+enhanced, unbreakable, colback=Blue, colframe=BlueTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Définition}, fonttitle=\bfseries
+}
+
+\newtcolorbox{important}{
+enhanced, unbreakable, colback=Pink, colframe=PinkTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Idée clé}, fonttitle=\bfseries
+}
+
+\newtcolorbox{formula}{
+enhanced, unbreakable, colback=Green, colframe=GreenTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Formules clés}, fonttitle=\bfseries
+}
+
+\newtcolorbox{warning}{
+enhanced, unbreakable, colback=Orange, colframe=OrangeTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Attention}, fonttitle=\bfseries
+}
+
+\newtcolorbox{example}{
+enhanced, unbreakable, colback=Purple, colframe=PurpleTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Exemple}, fonttitle=\bfseries
+}
+
+% GOAT - brown: the idea told as simply as possible
+\newtcolorbox{goat}{
+enhanced, unbreakable, colback=Goat, colframe=GoatTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Expliqué à une chèvre}, fonttitle=\bfseries
+}
+
+% RECAP - violet: what to know for the exam, at the end of the week
+\newtcolorbox{recap}{
+enhanced, breakable, colback=Purple, colframe=RecapTitle,
+boxrule=1pt, arc=0mm, title=\textbf{Récap pour l'examen}, fonttitle=\bfseries
+}
+
+% Screenshot of a slide of the course: \slide{cNN-PP}
+\newcommand{\slide}[2][0.95]{%
+\begin{center}
+\includegraphics[width=#1\linewidth]{../images/course/#2}
+\end{center}}
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+\thispagestyle{fancy}
+
+\begin{multicols}{2}
+
+%=========================================================
+\section{Le cours en bref}
+
+\begin{definition}
+\textbf{MSE 234} : comportement mécanique, élaboration, structure et cycle de vie des grandes
+classes de matériaux de structure : essais mécaniques, céramiques, métaux (Al, Cu, Fe), polymères,
+composites et matériaux poreux.
+\end{definition}
+
+\begin{warning}
+\textbf{Examen sans document ni formulaire} : la liste des formules à connaître par c\oe ur est
+sur Moodle. Note : 75\,\% cours + 18\,\% questions de TP (examen) + 7\,\% cahier de labo et
+participation aux 7 TP. Ce qui fait foi : les diapositives.
+\end{warning}
+
+\begin{goat}
+Un cours pour savoir pourquoi un verre casse, pourquoi un trombone plie, et comment on rend un
+métal plus solide. À l'examen, rien sous les yeux : les formules doivent être dans la tête.
+\end{goat}
+
+%=========================================================
+\section{L'essai de traction}
+
+\slide[0.8]{c01-06}
+
+\begin{important}
+Dans la section réduite : \textbf{une seule contrainte}, $\sigma_{xx}$, uniforme. On sait
+exactement ce qu'on impose. La déformation, elle, a 3 composantes (le barreau maigrit).
+\end{important}
+
+\begin{formula}
+\[ \varepsilon_{xx} = \frac{\sigma_{xx}}{E}, \qquad \varepsilon_{yy} = \varepsilon_{zz} = -\nu\frac{\sigma_{xx}}{E} \]
+Volume constant (plasticité) : $\frac{\Delta V}{V} \approx \varepsilon_{xx}+\varepsilon_{yy}+\varepsilon_{zz} = 0$
+$\Rightarrow \varepsilon_{yy} = \varepsilon_{zz} = -\varepsilon_{xx}/2$ ($\nu = 1/2$).
+\end{formula}
+
+Mesures : force par cellule de charge ; allongement par traverse (imprécis), extensomètre, jauge
+ou suivi optique.
+
+\begin{goat}
+On tire sur un barreau aminci au milieu : là, toute la matière est tirée pareil, dans une seule
+direction. Il s'allonge et maigrit, comme un chewing-gum.
+\end{goat}
+
+%=========================================================
+\section{Nominal vs vrai}
+
+\begin{formula}
+\[ e = \frac{L-L_0}{L_0}, \quad \varepsilon = \int_{L_0}^{L}\frac{dL}{L} = \ln\frac{L}{L_0} = \ln(1+e) \]
+\[ R = \frac{P}{S_0}, \quad \sigma = \frac{P}{S} \approx \frac{P}{S_0}\frac{L}{L_0} = R(1+e) \]
+(la seconde : volume constant $S_0L_0 = SL$).
+\end{formula}
+
+\begin{important}
+Les déformations vraies s'additionnent ; $\varepsilon \approx e$ aux petites déformations.
+$\sigma > R$ car la section diminue.
+\end{important}
+
+\begin{example}
+\textit{(pas dans les diapos)} $L_0 = 50 \to L = 60$\,mm, $P = 20$\,kN, $S_0 = 50$\,mm$^2$ :
+$e = 0{,}20$, $\varepsilon = 0{,}182$, $R = 400$\,MPa, $\sigma = 480$\,MPa.
+\end{example}
+
+\begin{goat}
+Nominal : on fait comme si le barreau n'avait pas bougé. Vrai : on le regarde tel qu'il est,
+plus long et plus maigre, donc plus tiré pour la même force.
+\end{goat}
+
+%=========================================================
+\section{Lire la courbe conventionnelle}
+
+\slide[0.85]{c01-14}
+
+\begin{definition}
+$E$ (pente) ; $R_e$ (premier écart, mal défini) ; $\mathbf{R_{0,2}}$ (parallèle décalée de
+0,2\,\%) ; $\mathbf{R_m}$ (maximum, UTS) ; $e_h$ (déformation répartie) ; $e_F$ (après rupture).
+\end{definition}
+
+\slide[0.85]{c01-15}
+
+Allures : (a) fragile, (b) métal ductile, (c) crochet + bandes de Lüders (acier doux,
+polymères), (d) élastomère (500--1000\,\%, réversible).
+
+\begin{important}
+\begin{itemize}
+\item Décharge : droite de pente $E$ ; seule la part élastique revient.
+\item Énergie volumique $\mathcal{E} = \int_0^\varepsilon\sigma\,d\varepsilon$ (J/m$^3$)
+      = élastique (rendue) + irréversible (chaleur, dislocations).
+\item Contrainte d'écoulement $\sigma(\varepsilon)$ ; taux d'écrouissage
+      $\theta = d\sigma/d\varepsilon$.
+\item Ductilité : $\Delta L/L_0 \le 1\,\%$ fragile, $> 10\,\%$ ductile ; ou $A_f/A_0$.
+\end{itemize}
+\end{important}
+
+\begin{goat}
+D'abord un ressort, puis le barreau s'étire pour de bon en durcissant, puis il s'amincit à un
+endroit et casse. Si on lâche en route, seul le \og ressort\fg{} revient.
+\end{goat}
+
+%=========================================================
+\section{Striction : l'instabilité de Considère}
+
+\slide[0.8]{c01-26}
+
+\begin{important}
+Après le maximum M, $R$ baisse mais $\sigma$ \textbf{continue de monter} : la déformation se
+concentre dans une zone qui s'amincit. C'est une \textbf{instabilité}.
+\end{important}
+
+\textbf{Raisonnement} :
+\begin{enumerate}
+\item Volume constant : $dS = -S\,d\varepsilon$.
+\item Même force partout : $dP = \sigma dS + Sd\sigma = 0$ $\Rightarrow$ une tranche plus
+      allongée voit $d\sigma = \sigma\,d\varepsilon$ de plus.
+\item Elle a aussi durci de $\theta\,d\varepsilon$.
+\item $\theta > \sigma$ : stable (elle s'arrête, les autres rattrapent). $\theta < \sigma$ :
+      elle continue, la force baisse, le reste s'arrête : \textbf{striction}.
+\end{enumerate}
+
+\begin{formula}
+Striction quand $\displaystyle\sigma = \frac{d\sigma}{d\varepsilon} \iff \frac{dR}{de} = 0$
+\[ \frac{dR}{de} = \Big(\frac{L_0}{L}\Big)^2\Big(\frac{d\sigma}{d\varepsilon} - \sigma\Big) \]
+(avec $R = \sigma/(1+e)$, $de = (L/L_0)d\varepsilon$, $1/(1+e) = L_0/L$).
+\end{formula}
+
+\slide[0.8]{c01-33}
+
+\begin{important}
+\textbf{Construction de Considère} : sur $\sigma(\varepsilon)$, la tangente au point de striction
+recoupe l'axe une unité ($100\,\%$) plus à gauche ; sur $\sigma(e)$, elle part de $e = -1$.
+\end{important}
+
+\begin{example}
+\textit{(pas dans les diapos)} $\sigma = K\varepsilon^n$ : $nK\varepsilon^{n-1} = K\varepsilon^n$
+$\Rightarrow \varepsilon_{\text{striction}} = n$.
+\end{example}
+
+\begin{warning}
+La traction ne mesure qu'une petite partie de la ductilité réelle (tréfilage : déformations
+vraies de plusieurs unités).
+\end{warning}
+
+\begin{goat}
+Un endroit un peu plus fin porte plus de force par unité de surface. Tant que la matière durcit
+assez vite, il résiste ; quand elle ne durcit plus assez, il s'amincit de plus en plus : c'est la
+striction, pile au moment où la force est maximale.
+\end{goat}
+
+%=========================================================
+\section{Récap de la semaine}
+
+\begin{recap}
+\begin{itemize}
+\item Traction : une seule contrainte ; $\nu = 1/2$ à volume constant.
+\item $\varepsilon = \ln(1+e)$, $\sigma = R(1+e)$ (à connaître par c\oe ur).
+\item $E$, $R_{0,2}$, $R_m$, $e_h$, $e_F$ ; quatre allures de courbes ; décharge et énergie.
+\item $\theta = d\sigma/d\varepsilon$.
+\item \textbf{Considère} : $\sigma = d\sigma/d\varepsilon \iff dR/de = 0$ ; savoir le
+      démontrer et faire la construction.
+\end{itemize}
+\end{recap}
+
+\end{multicols}
+
+\end{document}

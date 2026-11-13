@@ -1,0 +1,623 @@
+% =========================================================
+\chapter{Les essais mécaniques}
+% =========================================================
+
+\begin{rembox}[title=En bref]
+\textbf{De quoi parle ce chapitre ?} Avant de parler des matériaux, il faut savoir
+\textbf{comment on mesure} leur comportement mécanique. Le chapitre passe en revue les essais
+classiques : traction (le roi), compression, dureté, flexion, essais où le temps compte
+(vitesse de déformation, relaxation, fluage), puis les essais de rupture (ténacité, Charpy,
+formabilité, fatigue). \\
+\textbf{Les trois idées à retenir} : la différence entre grandeurs \emph{nominales} et
+\emph{vraies} ; la \textbf{striction} comme instabilité (critère de Considère) ; la
+\textbf{mécanique de la rupture} ($K = Y\sigma\sqrt{\pi a}$), qui reviendra dans tous les
+chapitres suivants.
+\end{rembox}
+
+\section{Pourquoi l'essai de traction est le roi des essais}
+
+\slide[0.75]{c01-06}{Le barreau de traction : une section réduite (\emph{gauge section}) entre deux zones d'amarrage.}
+
+On tire sur un barreau dont le milieu est aminci. Tout l'intérêt est là : dans la section
+réduite, l'état de contrainte est le plus simple possible --- \textbf{une seule composante,
+$\sigma_{xx}$, la même partout}. Toutes les autres composantes du tenseur des contraintes sont
+nulles. On sait donc exactement ce qu'on impose au matériau, ce qui n'est vrai pour presque
+aucun autre essai. Les zones d'amarrage sont plus larges pour que ce soit la section réduite,
+et elle seule, qui se déforme et casse.
+
+La déformation, elle, a \textbf{trois} composantes : le barreau s'allonge selon $x$ mais
+rétrécit selon $y$ et $z$.
+
+\begin{thmbox}[title=Élasticité linéaire isotrope en traction]
+\[ \varepsilon_{xx} = \frac{\sigma_{xx}}{E}, \qquad
+   \varepsilon_{yy} = \varepsilon_{zz} = -\nu\,\frac{\sigma_{xx}}{E} \]
+$E$ = module d'Young (rigidité), $\nu$ = coefficient de Poisson (combien le matériau se
+rétrécit latéralement quand on l'allonge).
+\end{thmbox}
+
+\begin{propbox}[title={À volume constant, $\nu = 1/2$}]
+Le changement relatif de volume vaut, pour de petites déformations,
+$\dfrac{\Delta V}{V} \approx \varepsilon_{xx} + \varepsilon_{yy} + \varepsilon_{zz}$.
+Si le volume ne change pas (c'est \textbf{grosso modo le cas en déformation plastique}),
+cette somme est nulle, donc $\varepsilon_{yy} = \varepsilon_{zz} = -\varepsilon_{xx}/2$ :
+tout se passe comme si $\nu = 0{,}5$. En élasticité, $\nu$ est plus petit (souvent
+$\approx 0{,}3$ pour les métaux, $\approx 0{,}25$ pour le verre) : le volume augmente un peu
+quand on tire.
+\end{propbox}
+
+\begin{rembox}[title=En pratique]
+La force $P$ est mesurée par une \textbf{cellule de charge}. L'allongement $\Delta L$ se lit
+sur le déplacement de la traverse (peu précis, car toute la machine se déforme aussi), ou mieux
+avec un \textbf{extensomètre} pincé sur la section réduite, une \textbf{jauge résistive} collée
+dessus, ou par suivi optique de points à la surface.
+\end{rembox}
+
+\begin{goatbox}
+Tirer sur un barreau, c'est la seule façon simple d'être sûr de ce que l'on fait subir au
+matériau : partout au milieu du barreau, il est tiré de la même façon, dans une seule
+direction. Quand il s'allonge, il maigrit sur les côtés, comme un chewing-gum qu'on étire.
+\end{goatbox}
+
+\section{Nominal ou vrai : deux façons de compter}
+
+L'essai donne une force $P$ et un allongement $\Delta L$. Pour en faire une propriété du
+\emph{matériau} (indépendante de la taille du barreau), on les divise par une aire et une
+longueur. Toute la question est : \textbf{lesquelles} --- celles du début, ou celles de
+l'instant présent ?
+
+\begin{defnbox}[title={Grandeurs nominales (\emph{engineering}) et vraies (\emph{true})}]
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{l|c|c}
+ & nominale (dimensions initiales) & vraie (dimensions actuelles) \\ \hline
+contrainte & $R = \dfrac{P}{S_0}$ & $\sigma = \dfrac{P}{S}$ \\
+déformation & $e = \dfrac{L - L_0}{L_0}$ & $\varepsilon = \displaystyle\int_{L_0}^{L}\frac{dL}{L} = \ln\frac{L}{L_0}$ \\
+\end{tabular}
+\end{center}
+\end{defnbox}
+
+\begin{thmbox}[title=Passer de l'une à l'autre (à connaître par c\oe ur)]
+\[ \varepsilon = \ln(1 + e) \qquad\qquad \sigma = R\,(1 + e) \]
+La première vient de $L/L_0 = 1 + e$. La seconde suppose le \textbf{volume constant}
+($S_0 L_0 = S L$, vrai en plasticité) : $\sigma = \dfrac{P}{S} = \dfrac{P}{S_0}\dfrac{L}{L_0} = R(1+e)$.
+\end{thmbox}
+
+Pourquoi la déformation vraie est-elle une intégrale ? Parce qu'à chaque instant le petit
+allongement $dL$ est rapporté à la longueur \emph{du moment}, $L$, et non à $L_0$. On additionne
+donc des petits $dL/L$, d'où un logarithme. Avantage : les déformations vraies
+\textbf{s'additionnent} (allonger de $L_0$ à $L_1$ puis de $L_1$ à $L_2$ donne
+$\ln\frac{L_1}{L_0} + \ln\frac{L_2}{L_1} = \ln\frac{L_2}{L_0}$), ce qui n'est pas le cas des
+déformations nominales.
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Un barreau passe de $L_0 = 50$\,mm à $L = 60$\,mm sous $P = 20$\,kN, avec $S_0 = 50\,\text{mm}^2$.
+\begin{itemize}
+  \item $e = 10/50 = 0{,}20$ et $\varepsilon = \ln 1{,}2 = 0{,}182$ : aux petites déformations
+        les deux se confondent ($\ln(1+e) \approx e$), à 20\,\% elles diffèrent déjà de 10\,\%.
+  \item $R = 20\,000/50 = 400$\,MPa et $\sigma = 400 \times 1{,}2 = 480$\,MPa : la section a
+        diminué de $50$ à $50/1{,}2 \approx 41{,}7\,\text{mm}^2$.
+\end{itemize}
+\end{exbox}
+
+\slide[0.6]{c01-13}{La courbe vraie $\sigma(\varepsilon)$ est au-dessus et à gauche de la courbe nominale $R(e)$.}
+
+\begin{goatbox}
+Nominal, c'est compter comme si le barreau n'avait pas changé depuis le début. Vrai, c'est
+regarder le barreau tel qu'il est maintenant : plus long et plus maigre. Comme il est plus
+maigre, la même force le tire plus fort : la contrainte vraie est plus grande que la nominale.
+\end{goatbox}
+
+\section{Lire une courbe de traction}
+
+\slide[0.7]{c01-14}{Les grandeurs relevées sur la courbe conventionnelle $R(e)$.}
+
+\begin{defnbox}[title=Les grandeurs de la courbe conventionnelle]
+\begin{itemize}
+  \item $E$ : la pente du début, partie élastique et linéaire.
+  \item $R_e$ : limite d'élasticité \og microscopique\fg{}, premier écart à la droite. Elle
+        est \textbf{difficile à mesurer} (cela dépend de la précision de l'extensomètre).
+  \item $R_{0,2}$ : limite d'élasticité \textbf{conventionnelle à 0,2\,\%} : on trace une
+        parallèle à la droite élastique décalée de $e = 0{,}2\,\%$ et on lit où elle coupe la
+        courbe. C'est la valeur que l'on utilise en pratique, car elle est reproductible.
+  \item $R_m$ : \textbf{résistance en traction} (UTS), le maximum de la courbe $R(e)$.
+  \item $e_h$ : déformation répartie (ou homogène), celle au maximum $R_m$ : jusque-là tout
+        le barreau s'allonge de la même façon.
+  \item $e_F$ : allongement après rupture.
+\end{itemize}
+\end{defnbox}
+
+Pourquoi un décalage de 0,2\,\% ? Parce que la courbe s'écarte de la droite très
+progressivement : \og le premier écart\fg{} n'a pas de valeur nette. En décrétant
+\og la contrainte qui laisse 0,2\,\% de déformation permanente\fg{}, tout le monde mesure la même
+chose.
+
+\slide[0.75]{c01-15}{Quatre allures typiques : (a) fragile, (b) métal ductile, (c) crochet de traction (aciers doux, polymères), (d) élastomère ou alliage pseudoélastique.}
+
+À reconnaître d'un coup d'\oe il :
+\begin{itemize}
+  \item \textbf{(a) fragile} (verre, céramiques) : une droite, puis la rupture. Pas de
+        plasticité.
+  \item \textbf{(b) métal ductile} : droite, puis courbe qui monte de moins en moins
+        (écrouissage), un maximum, puis une descente (striction) jusqu'à la rupture.
+  \item \textbf{(c) crochet} : la contrainte chute juste après la limite d'élasticité
+        ($R_{eH}$ puis $R_{eL}$), avec un palier où la déformation avance par
+        \textbf{bandes de Lüders} (expliqué au chapitre~4 : ce sont les atomes de carbone qui
+        bloquent les dislocations).
+  \item \textbf{(d) caoutchouc} : déformations énormes (500 à 1000\,\%) et presque toutes
+        réversibles.
+\end{itemize}
+
+\subsection*{Décharger : qu'est-ce qui revient ?}
+
+\slide[0.6]{c01-19}{Si on relâche la charge, on redescend parallèlement à la droite élastique (b) ; le caoutchouc (d) revient presque à zéro.}
+
+\begin{propbox}[title={Décharge et énergie}]
+\begin{itemize}
+  \item En relâchant la charge depuis un point de la zone plastique, la courbe redescend
+        \textbf{selon une droite de pente $E$} : seule la part élastique revient, la
+        déformation plastique reste.
+  \item L'énergie mécanique fournie par unité de volume est l'aire sous la courbe :
+        \[ \mathcal{E} = \int_0^{\varepsilon} \sigma\,d\varepsilon \quad [\text{J/m}^3] \]
+        (c'est $\int F\,dL$ pour un mètre cube de matière).
+  \item Elle se partage en une part \textbf{réversible} (l'aire sous la droite de
+        décharge : énergie élastique, rendue) et une part \textbf{irréversible} (le reste :
+        dissipée en chaleur, ou stockée dans le métal sous forme de dislocations).
+\end{itemize}
+\end{propbox}
+
+\subsection*{Contrainte d'écoulement et taux d'écrouissage}
+
+\begin{defnbox}[title=Deux grandeurs que l'on réutilise sans cesse]
+\begin{itemize}
+  \item La \textbf{contrainte d'écoulement} (\emph{flow stress}) $\sigma(\varepsilon)$ : la
+        contrainte vraie qu'il faut pour continuer à déformer plastiquement le matériau quand
+        il est déjà déformé de $\varepsilon$.
+  \item Le \textbf{taux d'écrouissage} (\emph{work hardening rate})
+        $\theta(\varepsilon) = d\sigma/d\varepsilon$ : la pente de la courbe vraie, c'est-à-dire
+        \og combien le métal durcit\fg{} quand on le déforme un peu plus.
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title=Ductile ou fragile]
+On mesure la ductilité par l'allongement relatif à rupture $\Delta L/L_0$ :
+$\le 1\,\%$ = matériau \textbf{fragile}, $> 10\,\%$ = matériau \textbf{ductile}. On utilise
+aussi le rapport de l'aire de la surface de rupture à l'aire initiale, $A_f/A_0$ (petit pour un
+métal très ductile qui s'est aminci en pointe).
+\end{rembox}
+
+\begin{goatbox}
+La courbe de traction raconte la vie du barreau : d'abord il se comporte comme un ressort
+(si on lâche, il revient) ; ensuite il se déforme pour de bon et devient de plus en plus dur à
+étirer ; puis, à un moment, il commence à s'amincir à un seul endroit et casse là. Lâcher en
+cours de route, c'est récupérer seulement le \og ressort\fg{}, pas l'allongement déjà acquis.
+\end{goatbox}
+
+\section{La striction et le critère de Considère}
+
+\slide[0.65]{c01-26}{La courbe nominale $R(e)$ passe par un maximum M alors que la contrainte vraie $\sigma(\varepsilon)$ continue de monter.}
+
+Un paradoxe d'abord : après le maximum M, la courbe nominale \emph{descend}. Le métal
+s'adoucit-il ? Non : la contrainte vraie, mesurée là où il se déforme, continue de
+\textbf{monter}. Ce qui se passe, c'est que toute la déformation se concentre dans une petite
+zone qui s'amincit : la \textbf{striction} (\emph{necking}). La force totale $P$ baisse parce
+que la section y diminue plus vite que le métal ne durcit. La striction est une
+\textbf{instabilité mécanique} (comme le flambage).
+
+\subsection*{Le raisonnement de Considère, pas à pas}
+
+\begin{enumerate}
+  \item \textbf{Volume constant.} Dans une tranche du barreau,
+        $dV = d(SL) = S\,dL + L\,dS = 0$, donc un allongement local $d\varepsilon = dL/L$ fait
+        rétrécir la section : $dS = -S\,d\varepsilon$.
+  \item \textbf{Même force partout.} La force $P = \sigma S$ est la même dans toutes les
+        tranches : $dP = \sigma\,dS + S\,d\sigma = 0$. Si une tranche s'est allongée d'un petit
+        $d\varepsilon$ de plus que les autres, sa section est plus petite et la contrainte y
+        est plus grande de
+        \[ d\sigma_{\text{appliquée}} = -\sigma\,\frac{dS}{S} = \sigma\,d\varepsilon . \]
+  \item \textbf{Mais le métal y a aussi durci} : sa contrainte d'écoulement a augmenté de
+        $d\sigma_{\text{matériau}} = \theta\,d\varepsilon$ avec $\theta = d\sigma/d\varepsilon$.
+  \item \textbf{Qui gagne ?}
+  \begin{itemize}
+    \item Si $\theta > \sigma$ : le durcissement l'emporte. La tranche plus déformée est
+          devenue trop dure pour la contrainte qu'elle porte ; elle s'arrête, les autres la
+          rattrapent. La déformation est \textbf{stable} et reste homogène.
+    \item Si $\theta < \sigma$ : l'excès de contrainte l'emporte. La tranche continue de se
+          déformer, en demandant une force de plus en plus faible ; la force baisse, le reste
+          du barreau se décharge et s'arrête. \textbf{La striction démarre.}
+  \end{itemize}
+\end{enumerate}
+
+\begin{thmbox}[title={Critère de Considère (à connaître par c\oe ur)}]
+La striction s'amorce quand
+\[ \sigma = \frac{d\sigma}{d\varepsilon}
+   \qquad\Longleftrightarrow\qquad \frac{dR}{de} = 0 . \]
+Le \textbf{maximum de la courbe conventionnelle} correspond donc à l'amorçage de la
+striction : $R_m$ et $e_h$ sont lus au début de la striction.
+\end{thmbox}
+
+\begin{proofbox}[title={Pourquoi $dR/de = 0$ (démonstration manuscrite du cours)}]
+\slide[0.4]{c01-considere}{La démonstration distribuée avec le cours.}
+Avec $R = \dfrac{\sigma}{1+e}$ :
+$\dfrac{dR}{de} = \dfrac{d\sigma}{de}\,\dfrac{1}{1+e} - \dfrac{\sigma}{(1+e)^2}$.
+Or $de = \dfrac{dL}{L_0} = \dfrac{L}{L_0}\dfrac{dL}{L} = \dfrac{L}{L_0}\,d\varepsilon$, donc
+$\dfrac{d\sigma}{de} = \dfrac{L_0}{L}\dfrac{d\sigma}{d\varepsilon}$, et
+$\dfrac{1}{1+e} = \dfrac{L_0}{L}$. D'où
+\[ \frac{dR}{de} = \Big(\frac{L_0}{L}\Big)^2 \Big(\frac{d\sigma}{d\varepsilon} - \sigma\Big),
+   \]
+qui est nul exactement quand $d\sigma/d\varepsilon = \sigma$.
+\end{proofbox}
+
+\slide[0.65]{c01-33}{La construction de Considère : on cherche le point de $\sigma(\varepsilon)$ où la pente égale la valeur.}
+
+\begin{propbox}[title=La construction de Considère]
+Sur la courbe vraie $\sigma(\varepsilon)$, le point de striction est celui où la tangente a
+une pente égale à $\sigma$ : graphiquement, la tangente en ce point recoupe l'axe horizontal
+\textbf{une unité de déformation plus à gauche} (en $\varepsilon - 1$, soit $100\,\%$ plus
+loin : c'est le triangle rouge de la diapositive, de base $\varepsilon = 1 = 100\,\%$ et de
+hauteur $\sigma$). Si on trace $\sigma$ en fonction de la déformation nominale $e$, la
+tangente cherchée part toujours du même point fixe, $e = -1$.
+\end{propbox}
+
+\begin{exbox}[title={Exemple classique (pas dans les diapositives) : loi puissance}]
+Si $\sigma = K\varepsilon^n$ (loi d'écrouissage courante), alors
+$\theta = nK\varepsilon^{n-1}$ et $\theta = \sigma$ donne $\varepsilon_{\text{striction}} = n$.
+Un métal qui écrouit beaucoup ($n$ grand, comme le cuivre) s'allonge donc longtemps de façon
+homogène avant de faire sa striction.
+\end{exbox}
+
+\begin{rembox}[title=La traction sous-estime la ductilité]
+Comme la striction concentre tout dans une petite zone, l'essai de traction ne mesure qu'une
+petite partie de la vraie capacité de déformation d'un matériau ductile : un fil de fer tréfilé
+par étapes successives atteint des déformations vraies de plusieurs unités (diapositive 35).
+\end{rembox}
+
+\begin{goatbox}
+Imagine une corde de pâte à modeler que tu étires. Si un endroit devient un peu plus fin, il
+porte plus de force par unité de surface. Tant que la pâte \og durcit\fg{} assez vite en
+s'étirant, cet endroit résiste et le reste rattrape. Le jour où elle ne durcit plus assez vite,
+l'endroit fin devient de plus en plus fin : c'est la striction, et ça arrive juste quand la
+force que tu dois mettre est maximale.
+\end{goatbox}
+
+\section{Compression, dureté et flexion}
+
+\subsection*{L'essai de compression}
+
+On pourrait croire qu'il suffit de pousser au lieu de tirer. Mais deux problèmes tirent en
+sens opposés :
+\begin{itemize}
+  \item le \textbf{flambage} (autre instabilité mécanique) : un barreau long et fin se plie
+        sur le côté. Pour l'éviter, il faut des barreaux \textbf{trapus} ;
+  \item le \textbf{frottement} entre l'échantillon et les plateaux : les faces collent, le
+        milieu gonfle, l'échantillon prend une \textbf{forme de tonneau} et de l'énergie est
+        dissipée. Là, il faudrait des barreaux \textbf{longs}.
+\end{itemize}
+Le compromis : un rapport hauteur/diamètre $\approx 3$ à $4$.
+
+\slide[0.55]{c01-41}{Sans frottement la déformation est homogène ; avec frottement, mise en tonneau.}
+
+\begin{propbox}[title=Ce que donne la compression]
+\begin{itemize}
+  \item On l'utilise quand on ne peut pas faire ou amarrer des barreaux de traction, ou quand
+        on veut justement le comportement en compression (béton, composites).
+  \item La courbe conventionnelle de compression est \textbf{plus haute} que celle de
+        traction : la section \emph{grandit} au lieu de rétrécir, et il n'y a \textbf{pas de
+        striction}. Les déformations atteintes sont aussi plus grandes.
+\end{itemize}
+\end{propbox}
+
+\subsection*{L'essai de dureté}
+
+On enfonce un indenteur dur (bille de Brinell, pyramide de Vickers ou de Knoop, cône ou bille
+de Rockwell) avec une force connue, et on mesure l'empreinte : son aire (Brinell, Vickers) ou
+sa profondeur (Rockwell). L'essai \textbf{instrumenté} (nanoindentation) enregistre toute la
+courbe force--enfoncement.
+
+\begin{thmbox}[title=Dureté et limite d'élasticité]
+Au niveau le plus simple, la dureté est la force divisée par l'aire de l'empreinte :
+\[ H = \frac{F}{A} \qquad\text{(c'est une contrainte)} \]
+et, pour un matériau sans écrouissage (déformation 2D) :
+\[ H \approx 3\,\sigma_y \qquad\Longleftrightarrow\qquad \sigma_y \approx H/3 . \]
+\end{thmbox}
+
+Pourquoi 3 et pas 1 ? Sous l'indenteur, le métal ne peut pas s'écouler librement : il est
+entouré de métal non déformé qui le confine. Il faut donc une pression environ trois fois plus
+grande que $\sigma_y$ pour le faire céder. C'est très utile : un simple essai de dureté, rapide
+et presque non destructif, donne une estimation de la limite d'élasticité.
+
+\begin{warnbox}[title=Attention aux unités]
+Les essais normalisés ont leurs propres conventions (le Vickers HV est donné en kgf/mm$^2$, le
+Rockwell se lit dans une table). $H = 3\sigma_y$ est un ordre de grandeur, pas une conversion
+exacte.
+\end{warnbox}
+
+\subsection*{L'essai de flexion}
+
+\slide[0.65]{c01-50}{Théorie des poutres d'Euler--Bernoulli : $\varepsilon_{xx} = y/R$.}
+
+En flexion trois points (une charge au milieu, moment maximal sous la charge) ou quatre points
+(moment constant entre les deux appuis centraux), la poutre se courbe. La théorie simplifiée
+d'Euler--Bernoulli dit que la déformation varie \textbf{linéairement} dans l'épaisseur :
+\[ \varepsilon_{xx} = \frac{y}{R} \]
+avec $y$ la distance à l'axe neutre et $R$ le rayon de courbure local. Le profil de contrainte
+$\sigma(y)$ a donc la même forme que la courbe de traction/compression $\sigma(\varepsilon)$,
+au facteur d'échelle $1/R$ près : en traction d'un côté, en compression de l'autre, nulle au
+milieu.
+
+\begin{warnbox}[title={Simple à faire, difficile à exploiter}]
+Remonter à la courbe de traction depuis les mesures d'un essai de flexion (charge $P$,
+flèche $\delta$) n'est \textbf{pas simple}. Mais l'essai est très utilisé pour les matériaux
+fragiles (pas besoin d'amarrage) : on y reviendra avec Weibull (chapitre~2), où l'on verra
+que la flexion \og flatte\fg{} la résistance.
+\end{warnbox}
+
+\begin{goatbox}
+Pousser un échantillon, c'est délicat : trop long il se plie, trop court il frotte et gonfle
+en tonneau. La dureté, c'est appuyer une bille dans le métal et regarder le trou : plus il est
+petit, plus le métal est dur, et la pression dans le trou vaut environ trois fois la contrainte
+qu'il supporte en traction. Plier une poutre, c'est tirer sur une face et pousser sur l'autre.
+\end{goatbox}
+
+\section{Quand le temps compte : vitesse, relaxation, fluage}
+
+À température ambiante, un métal comme le cuivre se moque presque de la vitesse à laquelle on
+le tire. Mais quand la température est \og élevée\fg{} (pour les métaux et les céramiques,
+au-dessus de $\approx \frac12 T_f$ en kelvins ; pour les polymères, souvent dès l'ambiante), les
+atomes bougent par activation thermique et \textbf{le temps entre en jeu}.
+
+\begin{defnbox}[title=Sensibilité à la vitesse de déformation]
+\[ \sigma = K\,\dot\varepsilon^{\,m}, \qquad
+   m = \left.\frac{\partial\ln\sigma}{\partial\ln\dot\varepsilon}\right|_{\varepsilon,T}
+   \approx \frac{\ln(\sigma_2/\sigma_1)}{\ln(\dot\varepsilon_2/\dot\varepsilon_1)} \]
+$m$ est l'exposant de sensibilité à la vitesse (\emph{strain rate exponent}). On le mesure par
+un \textbf{essai de saut de vitesse} : on change brusquement $\dot\varepsilon$ en cours d'essai
+et on lit le saut de contrainte.
+\end{defnbox}
+
+\begin{defnbox}[title=Relaxation et fluage]
+\begin{itemize}
+  \item \textbf{Relaxation} : on impose une déformation et on la \emph{maintient} ; la
+        contrainte nécessaire diminue avec le temps.
+  \item \textbf{Fluage} (\emph{creep}) : on impose une charge (ou une contrainte) et on la
+        maintient ; la déformation augmente avec le temps.
+\end{itemize}
+\end{defnbox}
+
+\slide[0.7]{c01-59}{Les trois stades du fluage et la loi du régime stationnaire.}
+
+\begin{thmbox}[title={Loi de fluage stationnaire (à connaître par c\oe ur)}]
+La courbe de fluage a trois stades : \textbf{primaire} (la vitesse diminue), \textbf{secondaire}
+ou stationnaire (vitesse constante, le stade le plus long, celui qui sert au
+dimensionnement), \textbf{tertiaire} (la vitesse accélère jusqu'à la rupture). Au stade
+stationnaire :
+\[ \dot\varepsilon = \frac{d\varepsilon}{dt} = A\,\sigma^N\,e^{-Q/RT} \]
+\begin{itemize}
+  \item $N$ entre 1 et 10, souvent $\approx 5$ pour le fluage par mouvement de dislocations ;
+  \item $Q$ : énergie d'activation (loi d'Arrhenius), souvent celle de l'autodiffusion,
+        de l'ordre de $10^5$\,J/mol.
+\end{itemize}
+\end{thmbox}
+
+Comment lire cette loi ? À $T$ fixée, $\log\dot\varepsilon$ en fonction de $\log\sigma$ est une
+droite de pente $N$. À $\sigma$ fixée, $\ln\dot\varepsilon$ en fonction de $1/T$ est une droite
+de pente $-Q/R$. C'est ainsi qu'on mesure $N$ et $Q$ (diapositive 60).
+
+\begin{exbox}[title={Ordre de grandeur (pas dans les diapositives)}]
+Avec $Q = 10^5$\,J/mol, passer de $T = 800$\,K à $900$\,K multiplie la vitesse de fluage par
+$\exp\!\big[\frac{Q}{R}\big(\frac{1}{800} - \frac{1}{900}\big)\big]
+= \exp(12\,027 \times 1{,}39\cdot10^{-4}) \approx e^{1{,}67} \approx 5$.
+Et avec $N = 5$, doubler la contrainte multiplie la vitesse par $2^5 = 32$.
+\end{exbox}
+
+\begin{propbox}[title={Lien entre $m$ et $N$ ; pourquoi $m$ empêche la striction}]
+En régime stationnaire, $\dot\varepsilon \propto \sigma^N$ revient à
+$\sigma \propto \dot\varepsilon^{1/N}$ : \textbf{$m = 1/N$}.
+Si le matériau durcit quand on le déforme plus vite ($m$ grand), une zone qui commence à
+s'amincir se déforme plus vite, donc durcit, donc résiste : la striction est freinée. L'effet
+peut être spectaculaire (alliages \textbf{superplastiques}, plusieurs milliers de \% d'allongement).
+\end{propbox}
+
+\begin{thmbox}[title={Cas extrême : le fluide visqueux newtonien ($m = 1$)}]
+\[ \sigma = K\,\dot\varepsilon \]
+La contrainte est proportionnelle à la vitesse : c'est la définition d'un fluide newtonien.
+\textbf{On n'observe alors pas la striction} : verre chaud, caramel. C'est ce qui permet
+d'étirer le verre en fibres (chapitre~2).
+\end{thmbox}
+
+\begin{goatbox}
+Quand il fait assez chaud pour que les atomes se baladent, le matériau coule lentement comme
+du miel très épais : sous un poids constant il s'allonge petit à petit (fluage), et si on le
+tient étiré, la force qu'il faut diminue (relaxation). Un matériau qui devient plus dur quand
+on le tire plus vite empêche une zone de s'amincir en avance : le miel, qui est l'extrême de
+ça, s'étire en fil sans jamais faire de striction.
+\end{goatbox}
+
+\section{La mécanique de la rupture}
+
+La mécanique de la rupture, c'est la \textbf{mécanique des corps fissurés} : on suppose qu'il y a
+déjà une fissure, et on cherche si elle va avancer sous la contrainte. Deux paramètres,
+venus de deux raisonnements différents, finissent par dire la même chose.
+
+\begin{defnbox}[title={Premier point de vue : l'énergie ($G$, $G_c$)}]
+La fissure avance si son avancée \textbf{libère plus d'énergie} (énergie élastique stockée,
+travail des charges) \textbf{qu'elle n'en coûte} pour créer de la surface fissurée :
+\[ G \equiv \frac{\pi F(a)\,\sigma^2 a}{E} = R = G_c \]
+$G$ est la force motrice d'avancée de la fissure (J/m$^2$), $G_c$ (ou $R$) l'\textbf{énergie de
+fissuration} : l'énergie qu'il faut pour créer 1\,m$^2$ de fissure. $a$ est la longueur de la
+fissure et $F(a)$ dépend de la géométrie.
+\end{defnbox}
+
+\begin{defnbox}[title={Second point de vue : les contraintes ($K$, $K_c$)}]
+Près de la pointe d'une fissure, dans un solide élastique, les contraintes ont toujours la même
+forme $\sigma \propto \dfrac{K}{\sqrt{2\pi r}}\,f(\theta)$ : elles divergent quand on approche
+la pointe ($r \to 0$), et toute l'intensité de ce champ est résumée par un seul nombre, le
+\textbf{facteur d'intensité des contraintes} :
+\[ K = Y\,\sigma\sqrt{\pi a} \qquad [\text{MPa}\sqrt{\text{m}}] \]
+La fissure se propage quand $K = K_c$, la \textbf{ténacité} du matériau.
+\end{defnbox}
+
+\slide[0.75]{c01-69}{$Y = 1$ pour une fissure interne de demi-longueur $a$ dans une plaque infinie ; $Y = 1{,}12$ pour une fissure débouchante de longueur $a$ au bord d'une plaque semi-infinie.}
+
+\begin{warnbox}[title={Les pièges de $K = Y\sigma\sqrt{\pi a}$}]
+\begin{itemize}
+  \item Pour une fissure \textbf{interne}, $a$ est la \textbf{demi}-longueur (la fissure fait
+        $2a$). Pour une fissure \textbf{de bord}, $a$ est la longueur entière.
+  \item $Y$ dépend de la géométrie, donc en général aussi de $a$ (sauf pour un corps infini).
+  \item $\sigma$ est la contrainte appliquée loin de la fissure, pas celle à la pointe.
+\end{itemize}
+\end{warnbox}
+
+\begin{thmbox}[title={Les deux critères se rejoignent (à connaître par c\oe ur)}]
+\[ G_c = A\,\frac{K_c^2}{E}, \qquad\text{rupture quand } K = K_c
+   \;\Longleftrightarrow\; \sigma_{\text{rupture}} = \frac{K_c}{Y\sqrt{\pi a}} \]
+($A$ dépend de la géométrie de la pièce.) On raisonne d'habitude avec $K$ parce qu'il est
+\textbf{proportionnel à la contrainte}, ce qui le rend facile à manipuler ; la ténacité est donc
+le plus souvent donnée par $K_c$.
+\end{thmbox}
+
+\begin{propbox}[title={Une fois partie, la fissure ne s'arrête pas}]
+$K$ croît avec $\sqrt a$ : plus la fissure avance, plus elle satisfait le critère. Sauf cas
+particulier (contrainte qui diminue quand la fissure avance), $K = K_c$ signe donc la
+\textbf{rupture catastrophique} : la pièce est coupée en deux d'un coup.
+\end{propbox}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Une plaque de verre ($K_c \approx 0{,}7\,\text{MPa}\sqrt{\text{m}}$) a une rayure de bord de
+$a = 10\,\mu$m. Elle casse à
+$\sigma = \dfrac{0{,}7}{1{,}12\sqrt{\pi\cdot10^{-5}}} \approx \dfrac{0{,}7}{1{,}12 \times 0{,}0056}
+\approx 110$\,MPa.
+Un acier ($K_c \approx 50\,\text{MPa}\sqrt{\text{m}}$) avec la même rayure tiendrait
+$\approx 8$\,GPa par ce calcul : bien au-delà de sa limite d'élasticité, il plastifie avant ;
+cette rayure n'est pas dangereuse pour lui.
+\end{exbox}
+
+\begin{goatbox}
+Une fissure, c'est comme une déchirure dans une feuille : la force se concentre toute à son
+bout. $K$ mesure à quel point elle est concentrée ; il grandit avec la force et avec la longueur
+de la déchirure. Quand il atteint ce que le matériau supporte ($K_c$), la déchirure file d'un
+coup, et comme elle s'allonge en filant, elle ne s'arrête plus.
+\end{goatbox}
+
+\section{Les essais de rupture}
+
+\begin{itemize}
+  \item \textbf{Essai de ténacité} : on prépare une éprouvette normalisée (\emph{compact
+        tension} ou flexion) avec une entaille et une préfissure de fatigue, et on mesure la
+        charge à laquelle la fissure part : on en tire $K_c$.
+  \item \textbf{Essai d'impact Charpy} (et Izod) : un pendule casse une éprouvette entaillée ;
+        la hauteur de remontée donne l'\textbf{énergie absorbée}. Ce n'est pas une ténacité au
+        sens strict, mais c'est rapide, et cela révèle la \textbf{transition ductile--fragile}
+        des aciers (chapitre~4).
+  \item \textbf{Essais de formabilité} (tôles) : pliage, emboutissage (Erichsen, Olsen,
+        Swift\ldots) : on regarde jusqu'où on peut déformer une tôle avant la striction ou la
+        fissure, et l'anisotropie (\og cornes\fg{} d'emboutissage).
+\end{itemize}
+
+\slide[0.6]{c01-75}{Charpy : l'énergie absorbée chute brutalement à basse température (acier).}
+
+\section{La fatigue}
+
+Une pièce soumise à une charge qui \textbf{varie de façon cyclique} peut casser à des contraintes
+bien inférieures à sa résistance en traction : c'est la fatigue (essieux, ailes d'avion,
+trombones qu'on plie et déplie). Deux types d'essais :
+
+\subsection*{(i) Éprouvette lisse : courbes de Wöhler}
+
+\slide[0.75]{c01-80}{Courbes de Wöhler (S--N) : amplitude de contrainte en fonction du nombre de cycles à rupture.}
+
+On cycle à une amplitude de contrainte donnée et on compte les cycles jusqu'à rupture $N_f$. On
+obtient une courbe \textbf{S--N} (\emph{stress -- number of cycles}). Certains aciers ont une
+limite d'endurance (un plateau : en dessous, pas de rupture), l'aluminium et beaucoup de
+polymères n'en ont pas.
+
+\begin{warnbox}[title=Les résultats sont statistiques]
+Pour un même niveau de contrainte, $N_f$ varie beaucoup d'une éprouvette à l'autre (la rupture
+part d'un défaut, et les défauts sont aléatoires). Ils dépendent aussi de la fréquence, de
+l'environnement (fatigue-corrosion), de l'état de surface\ldots{} Un polymère, qui dissipe de
+l'énergie en se déformant, peut même s'échauffer et rompre prématurément à haute fréquence.
+\end{warnbox}
+
+\subsection*{(ii) Éprouvette fissurée : vitesse de fissuration}
+
+On part d'une fissure de longueur $a$ et on mesure son avancée par cycle, $da/dN$ (par exemple
+avec la chute de potentiel électrique à travers l'éprouvette). Ce qui pilote l'avancée, c'est
+l'\textbf{amplitude} du facteur d'intensité des contraintes pendant un cycle :
+\[ \Delta K = K_{\max} - K_{\min} = Y\,\Delta\sigma\sqrt{\pi a}
+   \qquad (K_{\min} = 0 \text{ si } \sigma_{\min} < 0 \text{ : une fissure comprimée est fermée}) \]
+
+\slide[0.6]{c01-84}{Vitesse de fissuration en fatigue : seuil, régime stationnaire (droite de pente $m$), rupture brutale quand $K_{\max} = K_c$.}
+
+\begin{thmbox}[title={Loi de Paris}]
+Dans le régime intermédiaire (une droite en log--log) :
+\[ \frac{da}{dN} = A\,(\Delta K)^m \]
+En dessous d'un \textbf{seuil} $\Delta K_{th}$, la fissure ne progresse pas. Quand $K_{\max}$
+atteint $K_c$, c'est la rupture brutale.
+\end{thmbox}
+
+\begin{goatbox}
+Plier un trombone une fois ne le casse pas ; le plier vingt fois, si. À chaque aller-retour, une
+toute petite fissure avance d'un pas minuscule, d'autant plus grand qu'elle est déjà longue et
+que l'on plie fort. Le jour où elle est assez longue pour que $K$ atteigne $K_c$, tout casse.
+\end{goatbox}
+
+\section*{Récap du chapitre 1}
+\addcontentsline{toc}{section}{Récap du chapitre 1}
+
+\begin{recapbox}
+\textbf{Ce chapitre est la boîte à outils de tout le cours} : chaque matériau des chapitres
+suivants sera décrit avec ces essais et ces grandeurs.
+
+\textbf{Traction}
+\begin{itemize}
+  \item Une seule contrainte, uniforme : c'est pour cela qu'on l'aime.
+        $\varepsilon_{xx} = \sigma/E$, $\varepsilon_{yy} = \varepsilon_{zz} = -\nu\sigma/E$ ;
+        à volume constant (plasticité), $\nu = 1/2$.
+  \item $R = P/S_0$, $e = \Delta L/L_0$ ; $\sigma = P/S$, $\varepsilon = \ln(L/L_0)$.
+        \textbf{$\varepsilon = \ln(1+e)$, $\sigma = R(1+e)$} (volume constant).
+  \item Grandeurs : $E$, $R_e$, $R_{0,2}$ (décalage de 0,2\,\%), $R_m$ (maximum), $e_h$
+        (déformation répartie), $e_F$ (après rupture). Fragile $\le 1\,\%$, ductile $> 10\,\%$.
+  \item Décharge parallèle à la droite élastique ; énergie $= \int\sigma\,d\varepsilon$
+        (J/m$^3$) = élastique (rendue) + irréversible (chaleur, dislocations).
+  \item $\theta = d\sigma/d\varepsilon$ (taux d'écrouissage).
+\end{itemize}
+
+\textbf{Striction (Considère)} : instabilité qui démarre quand le durcissement ne compense plus
+l'amincissement : \textbf{$\sigma = d\sigma/d\varepsilon \Leftrightarrow dR/de = 0$}, donc au
+maximum de $R(e)$. Savoir refaire le raisonnement (volume constant + même force partout) et la
+démonstration de $dR/de = (L_0/L)^2(d\sigma/d\varepsilon - \sigma)$. Construction de Considère.
+
+\textbf{Autres essais}
+\begin{itemize}
+  \item Compression : flambage (barreaux trapus) contre frottement/tonneau (barreaux longs),
+        $h/d \approx 3$--$4$ ; courbe plus haute qu'en traction, pas de striction.
+  \item Dureté : $H = F/A \approx 3\sigma_y$.
+  \item Flexion : $\varepsilon_{xx} = y/R$ ; facile à faire, difficile à exploiter.
+\end{itemize}
+
+\textbf{Le temps} (à $T > \frac12 T_f$)
+\begin{itemize}
+  \item $\sigma = K\dot\varepsilon^m$ ; saut de vitesse ; relaxation (déformation fixée) ;
+        fluage (charge fixée), 3 stades.
+  \item \textbf{$\dot\varepsilon = A\sigma^N e^{-Q/RT}$}, $N \approx 1$--$10$ (5 pour les
+        dislocations), $Q \sim 10^5$\,J/mol. $m = 1/N$.
+  \item $m$ grand freine la striction ; $m = 1$ : fluide newtonien, pas de striction.
+\end{itemize}
+
+\textbf{Rupture}
+\begin{itemize}
+  \item $G = \pi F(a)\sigma^2 a/E$, rupture quand $G = G_c$ (J/m$^2$).
+  \item \textbf{$K = Y\sigma\sqrt{\pi a}$}, rupture quand $K = K_c$ (MPa$\sqrt{\text m}$),
+        donc $\sigma_r = K_c/(Y\sqrt{\pi a})$. $Y = 1$ (fissure interne, $a$ = demi-longueur,
+        plaque infinie), $Y = 1{,}12$ (fissure de bord). $G_c = AK_c^2/E$.
+  \item Rupture \textbf{catastrophique} : $K$ croît avec $a$.
+  \item Ténacité (éprouvette préfissurée), Charpy (énergie, transition ductile--fragile),
+        formabilité.
+  \item Fatigue : courbes de Wöhler (statistiques !) ; fissure : $\Delta K$,
+        $da/dN = A(\Delta K)^m$, seuil, rupture à $K_{\max} = K_c$.
+\end{itemize}
+
+\textbf{Pour la suite} : $K = Y\sigma\sqrt{\pi a}$ expliquera la fragilité des céramiques et la
+statistique de Weibull (chapitre~2) ; la loi d'Arrhenius reviendra pour la viscosité du verre
+et la cinétique des transformations (chapitres~2 à~4) ; le crochet de traction et la transition
+ductile--fragile seront expliqués pour les aciers (chapitre~4).
+\end{recapbox}
