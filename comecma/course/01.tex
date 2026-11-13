@@ -429,3 +429,86 @@ tient étiré, la force qu'il faut diminue (relaxation). Un matériau qui devien
 on le tire plus vite empêche une zone de s'amincir en avance : le miel, qui est l'extrême de
 ça, s'étire en fil sans jamais faire de striction.
 \end{goatbox}
+
+\section{La mécanique de la rupture}
+
+La mécanique de la rupture, c'est la \textbf{mécanique des corps fissurés} : on suppose qu'il y a
+déjà une fissure, et on cherche si elle va avancer sous la contrainte. Deux paramètres,
+venus de deux raisonnements différents, finissent par dire la même chose.
+
+\begin{defnbox}[title={Premier point de vue : l'énergie ($G$, $G_c$)}]
+La fissure avance si son avancée \textbf{libère plus d'énergie} (énergie élastique stockée,
+travail des charges) \textbf{qu'elle n'en coûte} pour créer de la surface fissurée :
+\[ G \equiv \frac{\pi F(a)\,\sigma^2 a}{E} = R = G_c \]
+$G$ est la force motrice d'avancée de la fissure (J/m$^2$), $G_c$ (ou $R$) l'\textbf{énergie de
+fissuration} : l'énergie qu'il faut pour créer 1\,m$^2$ de fissure. $a$ est la longueur de la
+fissure et $F(a)$ dépend de la géométrie.
+\end{defnbox}
+
+\begin{defnbox}[title={Second point de vue : les contraintes ($K$, $K_c$)}]
+Près de la pointe d'une fissure, dans un solide élastique, les contraintes ont toujours la même
+forme $\sigma \propto \dfrac{K}{\sqrt{2\pi r}}\,f(\theta)$ : elles divergent quand on approche
+la pointe ($r \to 0$), et toute l'intensité de ce champ est résumée par un seul nombre, le
+\textbf{facteur d'intensité des contraintes} :
+\[ K = Y\,\sigma\sqrt{\pi a} \qquad [\text{MPa}\sqrt{\text{m}}] \]
+La fissure se propage quand $K = K_c$, la \textbf{ténacité} du matériau.
+\end{defnbox}
+
+\slide[0.75]{c01-69}{$Y = 1$ pour une fissure interne de demi-longueur $a$ dans une plaque infinie ; $Y = 1{,}12$ pour une fissure débouchante de longueur $a$ au bord d'une plaque semi-infinie.}
+
+\begin{warnbox}[title={Les pièges de $K = Y\sigma\sqrt{\pi a}$}]
+\begin{itemize}
+  \item Pour une fissure \textbf{interne}, $a$ est la \textbf{demi}-longueur (la fissure fait
+        $2a$). Pour une fissure \textbf{de bord}, $a$ est la longueur entière.
+  \item $Y$ dépend de la géométrie, donc en général aussi de $a$ (sauf pour un corps infini).
+  \item $\sigma$ est la contrainte appliquée loin de la fissure, pas celle à la pointe.
+\end{itemize}
+\end{warnbox}
+
+\begin{thmbox}[title={Les deux critères se rejoignent (à connaître par c\oe ur)}]
+\[ G_c = A\,\frac{K_c^2}{E}, \qquad\text{rupture quand } K = K_c
+   \;\Longleftrightarrow\; \sigma_{\text{rupture}} = \frac{K_c}{Y\sqrt{\pi a}} \]
+($A$ dépend de la géométrie de la pièce.) On raisonne d'habitude avec $K$ parce qu'il est
+\textbf{proportionnel à la contrainte}, ce qui le rend facile à manipuler ; la ténacité est donc
+le plus souvent donnée par $K_c$.
+\end{thmbox}
+
+\begin{propbox}[title=Une fois partie, la fissure ne s'arrête pas]
+$K$ croît avec $\sqrt a$ : plus la fissure avance, plus elle satisfait le critère. Sauf cas
+particulier (contrainte qui diminue quand la fissure avance), $K = K_c$ signe donc la
+\textbf{rupture catastrophique} : la pièce est coupée en deux d'un coup.
+\end{propbox}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Une plaque de verre ($K_c \approx 0{,}7\,\text{MPa}\sqrt{\text{m}}$) a une rayure de bord de
+$a = 10\,\mu$m. Elle casse à
+$\sigma = \dfrac{0{,}7}{1{,}12\sqrt{\pi\cdot10^{-5}}} \approx \dfrac{0{,}7}{1{,}12 \times 0{,}0056}
+\approx 110$\,MPa.
+Un acier ($K_c \approx 50\,\text{MPa}\sqrt{\text{m}}$) avec la même rayure tiendrait
+$\approx 8$\,GPa par ce calcul : bien au-delà de sa limite d'élasticité, il plastifie avant ;
+cette rayure n'est pas dangereuse pour lui.
+\end{exbox}
+
+\begin{goatbox}
+Une fissure, c'est comme une déchirure dans une feuille : la force se concentre toute à son
+bout. $K$ mesure à quel point elle est concentrée ; il grandit avec la force et avec la longueur
+de la déchirure. Quand il atteint ce que le matériau supporte ($K_c$), la déchirure file d'un
+coup, et comme elle s'allonge en filant, elle ne s'arrête plus.
+\end{goatbox}
+
+\section{Les essais de rupture}
+
+\begin{itemize}
+  \item \textbf{Essai de ténacité} : on prépare une éprouvette normalisée (\emph{compact
+        tension} ou flexion) avec une entaille et une préfissure de fatigue, et on mesure la
+        charge à laquelle la fissure part : on en tire $K_c$.
+  \item \textbf{Essai d'impact Charpy} (et Izod) : un pendule casse une éprouvette entaillée ;
+        la hauteur de remontée donne l'\textbf{énergie absorbée}. Ce n'est pas une ténacité au
+        sens strict, mais c'est rapide, et cela révèle la \textbf{transition ductile--fragile}
+        des aciers (chapitre~4).
+  \item \textbf{Essais de formabilité} (tôles) : pliage, emboutissage (Erichsen, Olsen,
+        Swift\ldots) : on regarde jusqu'où on peut déformer une tôle avant la striction ou la
+        fissure, et l'anisotropie (\og cornes\fg{} d'emboutissage).
+\end{itemize}
+
+\slide[0.6]{c01-75}{Charpy : l'énergie absorbée chute brutalement à basse température (acier).}
