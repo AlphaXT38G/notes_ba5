@@ -180,3 +180,67 @@ La martensite, c'est l'austénite qui change de forme d'un coup, comme une boît
 écrasée, l'empêche de s'aplatir complètement et la rend très tendue : c'est très dur, mais
 cassant. Et plus il fait froid, plus il y a de boîtes écrasées, mais attendre ne change rien.
 \end{goatbox}
+
+\section{Diagrammes TTT et TRC}
+
+Tout traitement thermique d'un acier commence par l'\textbf{austénitisation} : chauffer dans le
+domaine $\gamma$ pour obtenir de l'austénite homogène (le carbone et même les éléments de
+substitution diffusent). Trop long ou trop chaud, les grains d'austénite grossissent (maturation),
+ce qui est en général néfaste.
+
+\slide[0.55]{c04-41}{Diagramme TTT d'un acier eutectoïde : nez de la perlite vers 550\,°C en moins d'une seconde ; bainite en dessous ; droites $M_s$, $M_{50}$, $M_f$.}
+
+\begin{propbox}[title={Lire le TTT de l'acier eutectoïde}]
+\begin{itemize}
+  \item Entre 727 et $\approx 550$\,°C : \textbf{perlite} (plus fine quand $T$ baisse).
+  \item Entre le nez et $M_s$ : \textbf{bainite} --- biphasée (ferrite + carbure) comme la perlite
+        mais bien plus fine, avec une ferrite qui se forme un peu comme la martensite ;
+        \textbf{supérieure} (plus haute $T$) et \textbf{inférieure} (plus basse, plus fine).
+  \item Sous $M_s$ : \textbf{martensite}, droites horizontales.
+\end{itemize}
+Pour obtenir de la martensite, il suffit d'\textbf{éviter le nez} : ici, passer de l'austénite à
+550\,°C en moins d'une seconde.
+\end{propbox}
+
+\begin{keybox}[title=La phrase à retenir]
+On trempe un acier \textbf{non pas tant pour former la martensite que pour éviter de former autre
+chose avant qu'elle n'apparaisse}.
+\end{keybox}
+
+Pour un acier hypo- ou hypereutectoïde, une courbe supplémentaire apparaît au-dessus : le début
+de la ferrite (ou de la cémentite) proeutectoïde.
+
+\subsection*{TRC : refroidir en continu}
+
+\slide[0.45]{c04-46}{TTT : maintiens isothermes (droites horizontales) ; TRC : faisceau de courbes de refroidissement continu.}
+
+\begin{defnbox}[title={Diagramme TRC (\emph{CCT}, transformation en refroidissement continu)}]
+On enregistre les transformations le long d'un \textbf{faisceau de courbes de refroidissement}
+(qui ne se coupent pas), plus proche des traitements réels qu'un maintien isotherme. Attention :
+à chaque \textbf{type} de refroidissement (linéaire, exponentiel\ldots) correspond son diagramme
+TRC.
+\end{defnbox}
+
+\begin{propbox}[title={Ce qu'il faut savoir des TTT et TRC}]
+\begin{enumerate}
+  \item Le nez du TRC est \textbf{à droite} (plus tard) de celui du TTT : en refroidissant, on ne
+        passe qu'un instant à la température la plus favorable. Donc \textbf{éviter le nez du TTT
+        suffit} pour éviter la transformation en continu.
+  \item Plus il y a d'\textbf{éléments d'alliage}, plus les nez se décalent vers les temps
+        longs (l'effet dépend de l'élément).
+  \item Loin de l'équilibre, les proportions et même la nature des phases peuvent différer du
+        diagramme de phase.
+  \item Dans les aciers alliés, perlite et bainite ont \textbf{deux nez séparés}.
+  \item Les éléments d'alliage baissent aussi $M_s$ et $M_f$ (le manganèse spectaculairement). Si
+        $M_f$ est sous l'ambiante, il reste de l'\textbf{austénite résiduelle} ; si même $M_s$ y
+        est, l'acier trempé est 100\,\% austénitique. Cette austénite instable peut se transformer
+        en martensite sous contrainte : aciers très tenaces (Hadfield, TRIP).
+\end{enumerate}
+\end{propbox}
+
+\begin{goatbox}
+Le diagramme TTT est une carte routière : en refroidissant l'acier, il faut passer à gauche du
+\og nez\fg{} sans le toucher, sinon on fabrique de la perlite ou de la bainite au lieu de la
+martensite. Plus l'acier contient d'ingrédients, plus le nez est loin à droite, et plus on a le
+temps de passer.
+\end{goatbox}
