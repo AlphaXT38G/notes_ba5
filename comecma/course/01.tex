@@ -512,3 +512,48 @@ coup, et comme elle s'allonge en filant, elle ne s'arrête plus.
 \end{itemize}
 
 \slide[0.6]{c01-75}{Charpy : l'énergie absorbée chute brutalement à basse température (acier).}
+
+\section{La fatigue}
+
+Une pièce soumise à une charge qui \textbf{varie de façon cyclique} peut casser à des contraintes
+bien inférieures à sa résistance en traction : c'est la fatigue (essieux, ailes d'avion,
+trombones qu'on plie et déplie). Deux types d'essais :
+
+\subsection*{(i) Éprouvette lisse : courbes de Wöhler}
+
+\slide[0.75]{c01-80}{Courbes de Wöhler (S--N) : amplitude de contrainte en fonction du nombre de cycles à rupture.}
+
+On cycle à une amplitude de contrainte donnée et on compte les cycles jusqu'à rupture $N_f$. On
+obtient une courbe \textbf{S--N} (\emph{stress -- number of cycles}). Certains aciers ont une
+limite d'endurance (un plateau : en dessous, pas de rupture), l'aluminium et beaucoup de
+polymères n'en ont pas.
+
+\begin{warnbox}[title=Les résultats sont statistiques]
+Pour un même niveau de contrainte, $N_f$ varie beaucoup d'une éprouvette à l'autre (la rupture
+part d'un défaut, et les défauts sont aléatoires). Ils dépendent aussi de la fréquence, de
+l'environnement (fatigue-corrosion), de l'état de surface\ldots{} Un polymère, qui dissipe de
+l'énergie en se déformant, peut même s'échauffer et rompre prématurément à haute fréquence.
+\end{warnbox}
+
+\subsection*{(ii) Éprouvette fissurée : vitesse de fissuration}
+
+On part d'une fissure de longueur $a$ et on mesure son avancée par cycle, $da/dN$ (par exemple
+avec la chute de potentiel électrique à travers l'éprouvette). Ce qui pilote l'avancée, c'est
+l'\textbf{amplitude} du facteur d'intensité des contraintes pendant un cycle :
+\[ \Delta K = K_{\max} - K_{\min} = Y\,\Delta\sigma\sqrt{\pi a}
+   \qquad (K_{\min} = 0 \text{ si } \sigma_{\min} < 0 \text{ : une fissure comprimée est fermée}) \]
+
+\slide[0.6]{c01-84}{Vitesse de fissuration en fatigue : seuil, régime stationnaire (droite de pente $m$), rupture brutale quand $K_{\max} = K_c$.}
+
+\begin{thmbox}[title={Loi de Paris}]
+Dans le régime intermédiaire (une droite en log--log) :
+\[ \frac{da}{dN} = A\,(\Delta K)^m \]
+En dessous d'un \textbf{seuil} $\Delta K_{th}$, la fissure ne progresse pas. Quand $K_{\max}$
+atteint $K_c$, c'est la rupture brutale.
+\end{thmbox}
+
+\begin{goatbox}
+Plier un trombone une fois ne le casse pas ; le plier vingt fois, si. À chaque aller-retour, une
+toute petite fissure avance d'un pas minuscule, d'autant plus grand qu'elle est déjà longue et
+que l'on plie fort. Le jour où elle est assez longue pour que $K$ atteigne $K_c$, tout casse.
+\end{goatbox}
