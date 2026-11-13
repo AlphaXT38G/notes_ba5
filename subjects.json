@@ -5,5 +5,6 @@
   {"id": "nummet",   "name": "Numerical methods for visual computing and ML",    "exam": ""},
   {"id": "elec",     "name": "Électronique I",                                   "exam": ""},
   {"id": "respsoft", "name": "Responsible software",                             "exam": ""},
-  {"id": "gametheory", "name": "Game theory and strategic decisions",            "exam": ""}
+  {"id": "gametheory", "name": "Game theory and strategic decisions",            "exam": ""},
+  {"id": "comecma",  "name": "Comportement mécanique des matériaux",             "exam": ""}
 ]
