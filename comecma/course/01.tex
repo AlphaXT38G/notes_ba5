@@ -276,3 +276,82 @@ s'étirant, cet endroit résiste et le reste rattrape. Le jour où elle ne durci
 l'endroit fin devient de plus en plus fin : c'est la striction, et ça arrive juste quand la
 force que tu dois mettre est maximale.
 \end{goatbox}
+
+\section{Compression, dureté et flexion}
+
+\subsection*{L'essai de compression}
+
+On pourrait croire qu'il suffit de pousser au lieu de tirer. Mais deux problèmes tirent en
+sens opposés :
+\begin{itemize}
+  \item le \textbf{flambage} (autre instabilité mécanique) : un barreau long et fin se plie
+        sur le côté. Pour l'éviter, il faut des barreaux \textbf{trapus} ;
+  \item le \textbf{frottement} entre l'échantillon et les plateaux : les faces collent, le
+        milieu gonfle, l'échantillon prend une \textbf{forme de tonneau} et de l'énergie est
+        dissipée. Là, il faudrait des barreaux \textbf{longs}.
+\end{itemize}
+Le compromis : un rapport hauteur/diamètre $\approx 3$ à $4$.
+
+\slide[0.55]{c01-41}{Sans frottement la déformation est homogène ; avec frottement, mise en tonneau.}
+
+\begin{propbox}[title=Ce que donne la compression]
+\begin{itemize}
+  \item On l'utilise quand on ne peut pas faire ou amarrer des barreaux de traction, ou quand
+        on veut justement le comportement en compression (béton, composites).
+  \item La courbe conventionnelle de compression est \textbf{plus haute} que celle de
+        traction : la section \emph{grandit} au lieu de rétrécir, et il n'y a \textbf{pas de
+        striction}. Les déformations atteintes sont aussi plus grandes.
+\end{itemize}
+\end{propbox}
+
+\subsection*{L'essai de dureté}
+
+On enfonce un indenteur dur (bille de Brinell, pyramide de Vickers ou de Knoop, cône ou bille
+de Rockwell) avec une force connue, et on mesure l'empreinte : son aire (Brinell, Vickers) ou
+sa profondeur (Rockwell). L'essai \textbf{instrumenté} (nanoindentation) enregistre toute la
+courbe force--enfoncement.
+
+\begin{thmbox}[title=Dureté et limite d'élasticité]
+Au niveau le plus simple, la dureté est la force divisée par l'aire de l'empreinte :
+\[ H = \frac{F}{A} \qquad\text{(c'est une contrainte)} \]
+et, pour un matériau sans écrouissage (déformation 2D) :
+\[ H \approx 3\,\sigma_y \qquad\Longleftrightarrow\qquad \sigma_y \approx H/3 . \]
+\end{thmbox}
+
+Pourquoi 3 et pas 1 ? Sous l'indenteur, le métal ne peut pas s'écouler librement : il est
+entouré de métal non déformé qui le confine. Il faut donc une pression environ trois fois plus
+grande que $\sigma_y$ pour le faire céder. C'est très utile : un simple essai de dureté, rapide
+et presque non destructif, donne une estimation de la limite d'élasticité.
+
+\begin{warnbox}[title=Attention aux unités]
+Les essais normalisés ont leurs propres conventions (le Vickers HV est donné en kgf/mm$^2$, le
+Rockwell se lit dans une table). $H = 3\sigma_y$ est un ordre de grandeur, pas une conversion
+exacte.
+\end{warnbox}
+
+\subsection*{L'essai de flexion}
+
+\slide[0.65]{c01-50}{Théorie des poutres d'Euler--Bernoulli : $\varepsilon_{xx} = y/R$.}
+
+En flexion trois points (une charge au milieu, moment maximal sous la charge) ou quatre points
+(moment constant entre les deux appuis centraux), la poutre se courbe. La théorie simplifiée
+d'Euler--Bernoulli dit que la déformation varie \textbf{linéairement} dans l'épaisseur :
+\[ \varepsilon_{xx} = \frac{y}{R} \]
+avec $y$ la distance à l'axe neutre et $R$ le rayon de courbure local. Le profil de contrainte
+$\sigma(y)$ a donc la même forme que la courbe de traction/compression $\sigma(\varepsilon)$,
+au facteur d'échelle $1/R$ près : en traction d'un côté, en compression de l'autre, nulle au
+milieu.
+
+\begin{warnbox}[title=Simple à faire, difficile à exploiter]
+Remonter à la courbe de traction depuis les mesures d'un essai de flexion (charge $P$,
+flèche $\delta$) n'est \textbf{pas simple}. Mais l'essai est très utilisé pour les matériaux
+fragiles (pas besoin d'amarrage) : on y reviendra avec Weibull (chapitre~2), où l'on verra
+que la flexion \og flatte\fg{} la résistance.
+\end{warnbox}
+
+\begin{goatbox}
+Pousser un échantillon, c'est délicat : trop long il se plie, trop court il frotte et gonfle
+en tonneau. La dureté, c'est appuyer une bille dans le métal et regarder le trou : plus il est
+petit, plus le métal est dur, et la pression dans le trou vaut environ trois fois la contrainte
+qu'il supporte en traction. Plier une poutre, c'est tirer sur une face et pousser sur l'autre.
+\end{goatbox}
