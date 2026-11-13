@@ -355,3 +355,77 @@ en tonneau. La dureté, c'est appuyer une bille dans le métal et regarder le tr
 petit, plus le métal est dur, et la pression dans le trou vaut environ trois fois la contrainte
 qu'il supporte en traction. Plier une poutre, c'est tirer sur une face et pousser sur l'autre.
 \end{goatbox}
+
+\section{Quand le temps compte : vitesse, relaxation, fluage}
+
+À température ambiante, un métal comme le cuivre se moque presque de la vitesse à laquelle on
+le tire. Mais quand la température est \og élevée\fg{} (pour les métaux et les céramiques,
+au-dessus de $\approx \frac12 T_f$ en kelvins ; pour les polymères, souvent dès l'ambiante), les
+atomes bougent par activation thermique et \textbf{le temps entre en jeu}.
+
+\begin{defnbox}[title=Sensibilité à la vitesse de déformation]
+\[ \sigma = K\,\dot\varepsilon^{\,m}, \qquad
+   m = \left.\frac{\partial\ln\sigma}{\partial\ln\dot\varepsilon}\right|_{\varepsilon,T}
+   \approx \frac{\ln(\sigma_2/\sigma_1)}{\ln(\dot\varepsilon_2/\dot\varepsilon_1)} \]
+$m$ est l'exposant de sensibilité à la vitesse (\emph{strain rate exponent}). On le mesure par
+un \textbf{essai de saut de vitesse} : on change brusquement $\dot\varepsilon$ en cours d'essai
+et on lit le saut de contrainte.
+\end{defnbox}
+
+\begin{defnbox}[title=Relaxation et fluage]
+\begin{itemize}
+  \item \textbf{Relaxation} : on impose une déformation et on la \emph{maintient} ; la
+        contrainte nécessaire diminue avec le temps.
+  \item \textbf{Fluage} (\emph{creep}) : on impose une charge (ou une contrainte) et on la
+        maintient ; la déformation augmente avec le temps.
+\end{itemize}
+\end{defnbox}
+
+\slide[0.7]{c01-59}{Les trois stades du fluage et la loi du régime stationnaire.}
+
+\begin{thmbox}[title={Loi de fluage stationnaire (à connaître par c\oe ur)}]
+La courbe de fluage a trois stades : \textbf{primaire} (la vitesse diminue), \textbf{secondaire}
+ou stationnaire (vitesse constante, le stade le plus long, celui qui sert au
+dimensionnement), \textbf{tertiaire} (la vitesse accélère jusqu'à la rupture). Au stade
+stationnaire :
+\[ \dot\varepsilon = \frac{d\varepsilon}{dt} = A\,\sigma^N\,e^{-Q/RT} \]
+\begin{itemize}
+  \item $N$ entre 1 et 10, souvent $\approx 5$ pour le fluage par mouvement de dislocations ;
+  \item $Q$ : énergie d'activation (loi d'Arrhenius), souvent celle de l'autodiffusion,
+        de l'ordre de $10^5$\,J/mol.
+\end{itemize}
+\end{thmbox}
+
+Comment lire cette loi ? À $T$ fixée, $\log\dot\varepsilon$ en fonction de $\log\sigma$ est une
+droite de pente $N$. À $\sigma$ fixée, $\ln\dot\varepsilon$ en fonction de $1/T$ est une droite
+de pente $-Q/R$. C'est ainsi qu'on mesure $N$ et $Q$ (diapositive 60).
+
+\begin{exbox}[title={Ordre de grandeur (pas dans les diapositives)}]
+Avec $Q = 10^5$\,J/mol, passer de $T = 800$\,K à $900$\,K multiplie la vitesse de fluage par
+$\exp\!\big[\frac{Q}{R}\big(\frac{1}{800} - \frac{1}{900}\big)\big]
+= \exp(12\,027 \times 1{,}39\cdot10^{-4}) \approx e^{1{,}67} \approx 5$.
+Et avec $N = 5$, doubler la contrainte multiplie la vitesse par $2^5 = 32$.
+\end{exbox}
+
+\begin{propbox}[title={Lien entre $m$ et $N$ ; pourquoi $m$ empêche la striction}]
+En régime stationnaire, $\dot\varepsilon \propto \sigma^N$ revient à
+$\sigma \propto \dot\varepsilon^{1/N}$ : \textbf{$m = 1/N$}.
+Si le matériau durcit quand on le déforme plus vite ($m$ grand), une zone qui commence à
+s'amincir se déforme plus vite, donc durcit, donc résiste : la striction est freinée. L'effet
+peut être spectaculaire (alliages \textbf{superplastiques}, plusieurs milliers de \% d'allongement).
+\end{propbox}
+
+\begin{thmbox}[title={Cas extrême : le fluide visqueux newtonien ($m = 1$)}]
+\[ \sigma = K\,\dot\varepsilon \]
+La contrainte est proportionnelle à la vitesse : c'est la définition d'un fluide newtonien.
+\textbf{On n'observe alors pas la striction} : verre chaud, caramel. C'est ce qui permet
+d'étirer le verre en fibres (chapitre~2).
+\end{thmbox}
+
+\begin{goatbox}
+Quand il fait assez chaud pour que les atomes se baladent, le matériau coule lentement comme
+du miel très épais : sous un poids constant il s'allonge petit à petit (fluage), et si on le
+tient étiré, la force qu'il faut diminue (relaxation). Un matériau qui devient plus dur quand
+on le tire plus vite empêche une zone de s'amincir en avance : le miel, qui est l'extrême de
+ça, s'étire en fil sans jamais faire de striction.
+\end{goatbox}
