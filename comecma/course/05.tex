@@ -69,3 +69,85 @@ $E/\rho^2$ ; compression des céramiques $\sigma = CK_c/(Y\sqrt{\pi\bar a})$, $C
 $(\sigma/\sigma_{TS})^n = t_{\text{test}}/t$ ; $F \le (1+i)^{-n}$ ; $M_s$ décroît avec C ;
 $\eta = Ke^{Q/RT}$.
 \end{rembox}
+
+\section{Les méthodes pas à pas}
+
+\begin{exbox}[title={Exploiter une courbe de traction}]
+\begin{enumerate}
+  \item Convertir : $\varepsilon = \ln(1+e)$, $\sigma = R(1+e)$ (valable tant que la déformation est
+        homogène, donc jusqu'à $R_m$).
+  \item $E$ = pente initiale ; $R_{0,2}$ = intersection avec la parallèle décalée de 0,2\,\%.
+  \item Striction : au maximum de $R(e)$ ; ou, sur $\sigma(\varepsilon)$, là où
+        $d\sigma/d\varepsilon = \sigma$ (pour $\sigma = K\varepsilon^n$ : $\varepsilon = n$).
+  \item Énergie : aire sous la courbe ; la part élastique est l'aire sous la droite de décharge.
+\end{enumerate}
+\end{exbox}
+
+\begin{exbox}[title={Problème de rupture}]
+\begin{enumerate}
+  \item Identifier la géométrie : fissure interne (longueur $2a$, $Y = 1$) ou de bord
+        (longueur $a$, $Y = 1{,}12$).
+  \item Rupture si $Y\sigma\sqrt{\pi a} \ge K_c$ : soit $\sigma_r = K_c/(Y\sqrt{\pi a})$, soit la
+        taille critique $a_c = \frac{1}{\pi}\big(\frac{K_c}{Y\sigma}\big)^2$.
+  \item Comparer à la limite d'élasticité : si $\sigma_r > \sigma_y$, la pièce plastifie avant de
+        rompre (cas des métaux tenaces).
+  \item Fatigue : $\Delta K = Y\Delta\sigma\sqrt{\pi a}$ et intégrer $da/dN = A(\Delta K)^m$ jusqu'à
+        $a_c$.
+\end{enumerate}
+\end{exbox}
+
+\begin{exbox}[title={Problème de Weibull}]
+\begin{enumerate}
+  \item Écrire $S = \exp[-k_m(V/V_0)(\sigma_{\max}/\sigma_0)^m]$ ($k_m = 1$ en traction).
+  \item Deux pièces à même probabilité : $k_{m,1}V_1\sigma_1^m = k_{m,2}V_2\sigma_2^m$.
+  \item Petite probabilité de rupture : $F \approx k_m(V/V_0)(\sigma/\sigma_0)^m$.
+  \item Données d'essais : classer, $F_i = i/N$, tracer $\ln\ln(1/S)$ contre $\ln\sigma$ :
+        pente $m$.
+\end{enumerate}
+\end{exbox}
+
+\begin{exbox}[title={Lire un diagramme de phase}]
+\begin{enumerate}
+  \item Placer le point (composition, température) ; s'il est dans un domaine biphasé, tracer
+        l'horizontale jusqu'aux frontières : compositions des deux phases.
+  \item Levier : la fraction d'une phase est le bras \textbf{opposé} / longueur totale.
+  \item Pour les microstructures (\og combien d'eutectique ?\fg{}, \og combien de perlite ?\fg{}),
+        appliquer le levier \textbf{juste au-dessus} du palier eutectique ou eutectoïde.
+  \item Se demander si la diffusion a eu le temps : non pour les solutés de substitution
+        (microségrégation), oui pour C dans Fe.
+\end{enumerate}
+\end{exbox}
+
+\begin{exbox}[title={Choisir un traitement thermique}]
+\begin{itemize}
+  \item Alliage d'Al durcissable (2xxx, 6xxx, 7xxx) : mise en solution (sous l'eutectique !),
+        trempe, revenu au temps optimal.
+  \item Métal écroui trop dur : recuit (restauration, recristallisation).
+  \item Acier : austénitiser, tremper en évitant le nez du TTT (sinon perlite/bainite), revenir ;
+        pièce épaisse : choisir un acier à forte trempabilité ; surface dure : cémentation,
+        nitruration, trempe superficielle.
+\end{itemize}
+\end{exbox}
+
+\section{Les pièges classiques}
+
+\begin{warnbox}[title={À ne pas oublier le jour de l'examen}]
+\begin{itemize}
+  \item $\sigma = R(1+e)$ suppose le \textbf{volume constant} (plasticité), et n'a plus de sens
+        après le début de la striction.
+  \item $R_m$ n'est pas un affaiblissement du métal : c'est le début de la striction.
+  \item Fissure interne : $a$ = \textbf{demi}-longueur.
+  \item $\sigma_0$ de Weibull n'est pas la médiane ($S = 1/e$) ; $V_0$ et $\sigma_0$ vont par paire.
+  \item La flexion \og flatte\fg{} les céramiques ($k_m < 1$).
+  \item Le $1-\nu$ des contraintes thermiques vient de l'état biaxial ; la traction est en
+        \textbf{surface} au refroidissement brutal.
+  \item Le levier : bras opposé. Le diagramme de phase ne décrit pas une pièce brute de coulée
+        (microségrégation).
+  \item Homogénéiser \textbf{sous} la température eutectique (sinon brûlure).
+  \item Le durcissement structural a un \textbf{optimum} ; au-delà, sur-revenu.
+  \item On trempe pour \textbf{éviter} perlite et bainite. La trempabilité n'est pas la dureté.
+  \item La martensite est athermale : attendre à $T$ fixée ne la fait pas progresser.
+  \item La transition ductile--fragile concerne les métaux \textbf{CC}, pas les CFC.
+  \item Hall--Petch est le seul mécanisme qui ne coûte pas de ductilité.
+\end{itemize}
+\end{warnbox}
