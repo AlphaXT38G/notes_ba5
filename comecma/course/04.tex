@@ -342,3 +342,144 @@ verre ; en la réchauffant un peu (le revenu), on laisse le carbone sortir de sa
 devient un peu moins dur mais beaucoup moins cassant. Et si on veut juste une peau dure, on durcit
 seulement la surface.
 \end{goatbox}
+
+\section{Les grandes familles d'aciers}
+
+\subsection*{Les aciers au carbone et l'affinage du grain}
+
+Fer + carbone + un peu de manganèse (il capte le soufre et améliore l'acier à bas coût) et de
+silicium, avec peu d'impuretés nocives (S, P). Ils sont durcis par les mécanismes déjà vus, plus
+un nouveau : l'\textbf{affinage du grain}.
+
+\begin{thmbox}[title={Loi de Hall--Petch (à connaître par c\oe ur)}]
+\[ \sigma(e = x\,\%) = \sigma_0 + k\,D^{-1/2} \]
+$\sigma(e=x\,\%)$ : contrainte d'écoulement à une déformation donnée ; $\sigma_0$, $k$ :
+constantes ; $D$ : taille moyenne des grains. L'obstacle aux dislocations est ici le
+\textbf{joint de grain}. $k$ est élevé pour les aciers (et le cuivre), plus faible pour l'aluminium.
+\end{thmbox}
+
+\slide[0.55]{c04-77}{Limite d'élasticité en fonction de $D^{-1/2}$ : des droites, plus pentues pour les aciers.}
+
+\begin{propbox}[title={Le seul mécanisme \og tout bénéfice\fg{}}]
+Affiner le grain augmente la résistance \textbf{sans réduire} la ductilité (qui peut même
+augmenter), et \textbf{abaisse la température de transition ductile--fragile}. C'est pourquoi on
+le pratique sur les aciers doux hypoeutectoïdes, par déformation à chaud + recristallisation, et
+par \textbf{normalisation} : chauffer juste au-dessus de la transformation en austénite, puis
+refroidir, pour que la ferrite germe sur les nombreux joints de grains de la nouvelle austénite
+fine.
+\end{propbox}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Avec $\sigma_0 = 70$\,MPa et $k = 0{,}74\,\text{MPa}\sqrt{\text m}$ (ordres de grandeur d'un
+acier doux) : $D = 100\,\mu$m donne $\sigma = 70 + 0{,}74/0{,}01 = 144$\,MPa ; $D = 10\,\mu$m donne
+$70 + 0{,}74/0{,}00316 = 304$\,MPa. Diviser le grain par 10 double la limite d'élasticité.
+\end{exbox}
+
+\begin{keybox}[title=Les cinq mécanismes de durcissement des métaux]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{l|l}
+mécanisme & obstacle \\ \hline
+écrouissage (défait par le recuit) & dislocations \\
+solution solide & atomes étrangers \\
+durcissement structural & précipités fins (trop petits pour être contournés facilement) \\
+affinage du grain (Hall--Petch) & joints de grains \\
+seconde phase dure (composite) & aucun : la phase rigide porte plus de charge \\
+\end{tabular}
+\end{center}
+Les quatre premiers agissent sur le mouvement des dislocations ; le cinquième est purement
+mécanique.
+\end{keybox}
+
+\subsection*{Deux particularités des aciers au carbone}
+
+\begin{itemize}
+  \item \textbf{Le crochet de traction} (chapitre~1, courbe (c)) : les atomes de carbone, très
+        mobiles, migrent vers les dislocations et les \textbf{bloquent} (\og atmosphères\fg{}). Il
+        faut une contrainte plus élevée pour les arracher, puis elles bougent facilement : chute de
+        contrainte, déformation hétérogène par \textbf{bandes de Lüders} (\og vermiculures\fg{}
+        sur les tôles). Si on laisse au carbone le temps de revenir (vieillissement, accéléré à
+        60\,°C), le crochet réapparaît, plus haut.
+  \item \textbf{La transition ductile--fragile} : dans la ferrite \textbf{CC}, la mobilité des
+        dislocations chute brutalement sous une certaine température, souvent proche de
+        l'ambiante : l'acier devient fragile (essai Charpy, chapitre~1). Propre aux métaux CC
+        (aussi le tungstène) ; \textbf{absent des CFC} (Al, Cu, austénite). La température de
+        transition augmente avec le carbone, diminue avec l'affinage du grain.
+\end{itemize}
+
+\slide[0.55]{c04-83}{La transition ductile--fragile (Charpy) se décale vers le haut quand le carbone augmente.}
+
+\subsection*{Les autres familles}
+
+\begin{itemize}
+  \item \textbf{Fil de perlite} : une perlite très fine, fortement tréfilée (cordes à piano,
+        renforts de pneus), atteint 3 à 7\,GPa, un des matériaux les plus résistants.
+  \item \textbf{Aciers microalliés (HSLA)} : purs, avec des éléments formant de fins carbures ou
+        nitrures qui (i) durcissent par précipitation et (ii) épinglent les joints et gardent le
+        grain fin.
+  \item \textbf{Aciers modérément alliés à tremper} : 0,25--0,5\,\% C, Mn, et jusqu'à 5\,\% de
+        Cr, Ni, Mo, B, V, Si, qui augmentent trempabilité et propriétés ; trempés puis revenus.
+  \item \textbf{Aciers à outils} : beaucoup de carbone et d'éléments carburigènes (dureté,
+        trempabilité) ; certains \og autotrempants\fg{} (martensite à l'air) ; traitements
+        délicats, revenus multiples ; désignations par usage (M2, D2, H13).
+\end{itemize}
+
+\subsection*{Les aciers inoxydables}
+
+Au-delà de 12\,\% de \textbf{chrome}, une fine couche d'oxyde de chrome imperméable
+\textbf{passive} l'acier. Mais le chrome change aussi la microstructure :
+\begin{itemize}
+  \item il favorise la ferrite : il est \textbf{alphagène} (comme Mo, Si, Nb, Ti) ;
+  \item le nickel, le carbone et l'azote favorisent l'austénite : ils sont \textbf{gammagènes}.
+\end{itemize}
+
+\begin{thmbox}[title={Chrome et nickel équivalents (diagramme de Pryce--Andrews)}]
+\[ C_{\text{Cr,éq}} = \%\text{Cr} + \%\text{Mo} + 1{,}5\,\%\text{Si} + 0{,}5\,\%\text{Nb} + 2\,\%\text{Ti} \]
+\[ C_{\text{Ni,éq}} = \%\text{Ni} + 21\,\%\text{C} + 11{,}5\,\%\text{N} \]
+On place l'alliage dans le plan ($C_{\text{Cr,éq}}$, $C_{\text{Ni,éq}}$) et on lit sa structure
+(ferrite, martensite, austénite ou mélanges). Le diagramme de \textbf{Schaeffler} fait de même
+pour les soudures (refroidies plus vite).
+\end{thmbox}
+
+\slide[0.55]{c04-95}{Le diagramme de Pryce--Andrews.}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Un inox 18-8 (18\,\% Cr, 8\,\% Ni, 0,05\,\% C, 0,5\,\% Si) : $C_{\text{Cr,éq}} = 18 + 0{,}75 = 18{,}75$,
+$C_{\text{Ni,éq}} = 8 + 1{,}05 = 9{,}05$ : on tombe dans le domaine austénitique (avec un peu de
+ferrite) : c'est un inox austénitique, non magnétique.
+\end{exbox}
+
+\begin{goatbox}
+Plus les grains d'un métal sont petits, plus il y a de frontières pour arrêter les dislocations :
+le métal est plus solide, et en plus il ne devient pas cassant, c'est gagnant sur tous les
+tableaux. Les aciers ordinaires deviennent cassants quand il fait froid, à cause de leur
+rangement d'atomes cubique centré. Avec beaucoup de chrome, l'acier se couvre d'une peau d'oxyde
+qui le protège : il devient inoxydable.
+\end{goatbox}
+
+\section{Les fontes}
+
+Au-delà de 2,1\,\% C. Le carbone en excès peut prendre deux formes :
+\begin{itemize}
+  \item \textbf{graphite} (stable) : fontes \textbf{grises} ; favorisé par le carbone, le
+        silicium et un refroidissement lent ;
+  \item \textbf{cémentite} (métastable) : fontes \textbf{blanches} (dures et fragiles) ; favorisée
+        par d'autres éléments et un refroidissement rapide.
+\end{itemize}
+
+\slide[0.5]{c04-98}{Diagramme stable (Fe--graphite, pointillés) et métastable (Fe--Fe$_3$C, traits pleins).}
+
+La solidification donne un eutectique austénite + graphite (ou + cémentite), précédé de dendrites
+d'austénite (fonte hypoeutectique) ou de graphite/cémentite primaire (hypereutectique) ; puis
+l'austénite donne ferrite + graphite ou perlite. Le graphite en \textbf{lamelles} agit comme des
+fissures (fonte grise fragile en traction, mais excellente en compression et pour amortir).
+Par ajout de \textbf{magnésium ou cérium} à une fonte désulfurée, le graphite devient
+\textbf{sphéroïdal} : fonte \textbf{ductile} (GS). Un traitement thermique d'une fonte blanche donne
+un graphite plus compact : fonte \textbf{malléable}.
+
+\begin{goatbox}
+Une fonte, c'est du fer avec tellement de carbone qu'il en reste en morceaux. Si ces morceaux de
+graphite sont des feuilles, ils font comme des fissures et la fonte casse facilement ; si on les
+arrondit en billes (avec un peu de magnésium), la fonte devient presque aussi déformable qu'un
+acier.
+\end{goatbox}
