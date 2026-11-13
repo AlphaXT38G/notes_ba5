@@ -216,6 +216,61 @@ On tire sur un barreau aminci au milieu : là, toute la matière est tirée pare
 direction. Il s'allonge et maigrit, comme un chewing-gum.
 \end{goat}
 
+%=========================================================
+\section{Nominal vs vrai}
+
+\begin{formula}
+\[ e = \frac{L-L_0}{L_0}, \quad \varepsilon = \int_{L_0}^{L}\frac{dL}{L} = \ln\frac{L}{L_0} = \ln(1+e) \]
+\[ R = \frac{P}{S_0}, \quad \sigma = \frac{P}{S} \approx \frac{P}{S_0}\frac{L}{L_0} = R(1+e) \]
+(la seconde : volume constant $S_0L_0 = SL$).
+\end{formula}
+
+\begin{important}
+Les déformations vraies s'additionnent ; $\varepsilon \approx e$ aux petites déformations.
+$\sigma > R$ car la section diminue.
+\end{important}
+
+\begin{example}
+\textit{(pas dans les diapos)} $L_0 = 50 \to L = 60$\,mm, $P = 20$\,kN, $S_0 = 50$\,mm$^2$ :
+$e = 0{,}20$, $\varepsilon = 0{,}182$, $R = 400$\,MPa, $\sigma = 480$\,MPa.
+\end{example}
+
+\begin{goat}
+Nominal : on fait comme si le barreau n'avait pas bougé. Vrai : on le regarde tel qu'il est,
+plus long et plus maigre, donc plus tiré pour la même force.
+\end{goat}
+
+%=========================================================
+\section{Lire la courbe conventionnelle}
+
+\slide[0.85]{c01-14}
+
+\begin{definition}
+$E$ (pente) ; $R_e$ (premier écart, mal défini) ; $\mathbf{R_{0,2}}$ (parallèle décalée de
+0,2\,\%) ; $\mathbf{R_m}$ (maximum, UTS) ; $e_h$ (déformation répartie) ; $e_F$ (après rupture).
+\end{definition}
+
+\slide[0.85]{c01-15}
+
+Allures : (a) fragile, (b) métal ductile, (c) crochet + bandes de Lüders (acier doux,
+polymères), (d) élastomère (500--1000\,\%, réversible).
+
+\begin{important}
+\begin{itemize}
+\item Décharge : droite de pente $E$ ; seule la part élastique revient.
+\item Énergie volumique $\mathcal{E} = \int_0^\varepsilon\sigma\,d\varepsilon$ (J/m$^3$)
+      = élastique (rendue) + irréversible (chaleur, dislocations).
+\item Contrainte d'écoulement $\sigma(\varepsilon)$ ; taux d'écrouissage
+      $\theta = d\sigma/d\varepsilon$.
+\item Ductilité : $\Delta L/L_0 \le 1\,\%$ fragile, $> 10\,\%$ ductile ; ou $A_f/A_0$.
+\end{itemize}
+\end{important}
+
+\begin{goat}
+D'abord un ressort, puis le barreau s'étire pour de bon en durcissant, puis il s'amincit à un
+endroit et casse. Si on lâche en route, seul le \og ressort\fg{} revient.
+\end{goat}
+
 \end{multicols}
 
 \end{document}
