@@ -421,3 +421,60 @@ d'avoir un très mauvais maillon : elle casse plus tôt. Weibull donne la probab
 maillon ne lâche ; $m$ dit si tous les maillons se ressemblent (grand $m$) ou s'ils sont très
 inégaux (petit $m$).
 \end{goatbox}
+
+\section{Compression et fissuration lente}
+
+\subsection*{En compression, les céramiques sont bien plus fortes}
+
+\slide[0.55]{c02-105}{(a) En traction, le plus gros défaut se propage d'un coup ; (b) en compression, beaucoup de fissures croissent lentement, parallèlement à la compression.}
+
+Une fissure perpendiculaire à une compression ne s'ouvre pas. Les fissures croissent
+\textbf{parallèlement} à la compression, à partir des bords des défauts, et cette croissance est
+\textbf{stable} : elles avancent un peu à chaque augmentation de la charge. L'échantillon finit
+par s'émietter (\emph{crushing}), après une phase qui ressemble à de la plasticité mais est de
+l'endommagement.
+
+\begin{thmbox}[title={Résistance en compression}]
+\[ \sigma_{\text{compr.}} = C\,\frac{K_c}{Y\sqrt{\pi\bar a}}, \qquad C \approx 15 \]
+avec $\bar a$ la longueur \textbf{moyenne} des fissures (et non la plus grande, puisque la ruine
+vient de nombreuses fissures). Une céramique est donc environ \textbf{15 fois plus résistante en
+compression qu'en traction} : on l'utilise de préférence comprimée (voûtes, piliers).
+\end{thmbox}
+
+\subsection*{La fissuration lente (corrosion sous contrainte)}
+
+Les liaisons Si--O sont attaquées par l'eau, et d'autant plus qu'elles sont tendues : en pointe
+de fissure, la molécule d'eau casse la liaison et la fissure avance d'un cran, même si
+$K < K_c$.
+
+\slide[0.5]{c02-109}{La vapeur d'eau rompt les liaisons Si--O en pointe de fissure : la fissure avance lentement.}
+
+\begin{thmbox}[title={Loi de fissuration sous-critique (à connaître par c\oe ur)}]
+\[ \frac{da}{dt} = F(P_{\text{H}_2\text{O}}, K)\,e^{-Q/RT}, \qquad K = Y\sigma\sqrt{\pi a} \]
+$F$ augmente avec l'humidité et avec $K$ ; aux faibles $K$, il peut y avoir un seuil ; aux $K$
+élevés, la vitesse plafonne (limitée par l'arrivée de l'eau en pointe d'une longue fissure).
+On l'appelle \og fissuration sous-critique\fg{} ($K < K_c$) ou, improprement, \og fatigue
+statique\fg{}.
+\end{thmbox}
+
+\begin{propbox}[title=Conséquence : la résistance dépend du temps]
+Sous charge, les défauts grandissent lentement : la résistance du verre et des oxydes
+\textbf{diminue avec la durée de chargement}. On l'estime par une loi puissance :
+\[ \Big(\frac{\sigma}{\sigma_{TS}}\Big)^n = \frac{t_{\text{test}}}{t}, \qquad n \approx 10 \text{ à } 20 \]
+où $\sigma_{TS}$ est la contrainte à rupture mesurée en un temps $t_{\text{test}}$ et $\sigma$
+celle que la pièce supporte pendant $t$. Autre conséquence : une fibre de verre fraîche atteint
+14\,GPa, mais seulement $\approx 5$\,GPa à l'air ambiant.
+\end{propbox}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Un verre casse à 100\,MPa dans un essai d'une minute ($n = 15$). Pour tenir 10 ans
+($5{,}3\cdot10^6$\,min) : $\sigma = 100\times(5{,}3\cdot10^6)^{-1/15} = 100\times e^{-15{,}5/15}
+\approx 36$\,MPa. Il faut presque diviser par trois.
+\end{exbox}
+
+\begin{goatbox}
+Écrasée, une céramique tient très bien, parce que ses fissures doivent être nombreuses et
+grandir petit à petit avant qu'elle s'effrite. Tirée, une seule fissure suffit. Et l'eau de l'air
+grignote doucement le bout des fissures tendues : une vitre chargée pendant des années casse
+sous une charge qu'elle supportait sans problème le premier jour.
+\end{goatbox}
