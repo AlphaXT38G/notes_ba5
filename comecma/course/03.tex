@@ -295,3 +295,92 @@ cubique du temps). Pour une transformation, il faut à la fois en avoir envie (f
 l'équilibre) et pouvoir bouger (chaud) : c'est au milieu qu'elle va le plus vite, d'où le nez
 du diagramme TTT.
 \end{goatbox}
+
+\section{Le durcissement structural}
+
+\begin{defnbox}[title={Durcissement structural (\emph{precipitation} ou \emph{age hardening})}]
+Trois étapes :
+\begin{enumerate}
+  \item \textbf{mise en solution} (homogénéisation) dans le domaine $\alpha$ : tout le Cu est dissous ;
+  \item \textbf{trempe} : refroidissement rapide, trop rapide pour que $\theta$ se forme ; on
+        obtient une solution solide \textbf{sursaturée} (à l'ambiante, l'équilibre ne tolère que
+        $\approx 0{,}1\,\%$ Cu : Al--4\,\% Cu en contient 40 fois trop) ;
+  \item \textbf{revenu} (si la précipitation se fait à chaud) ou \textbf{vieillissement} (à
+        l'ambiante) : de très nombreux petits précipités se forment.
+\end{enumerate}
+\end{defnbox}
+
+\slide[0.55]{c03b-42}{Diagramme TTT de Al--4\,\% Cu : zones GP, $\theta''$, $\theta'$, $\theta$, et le traitement (mise en solution, trempe, revenu).}
+
+\subsection*{Pourquoi des précipités \og moins stables\fg{} d'abord}
+
+Dans Al--Cu sursaturé, il se forme successivement des \textbf{zones GP}, puis $\theta''$,
+$\theta'$, et enfin $\theta$ (Al$_2$Cu d'équilibre). Pourquoi pas directement le plus stable ?
+Parce que la \textbf{germination} dépend de l'énergie d'interface.
+
+\begin{defnbox}[title={Interfaces cohérentes, semi-cohérentes, incohérentes}]
+\begin{itemize}
+  \item \textbf{Cohérente} : les plans atomiques se continuent d'un cristal à l'autre ;
+        énergie d'interface faible, mais des \textbf{contraintes} élastiques autour (distances
+        interatomiques différentes).
+  \item \textbf{Semi-cohérente} : des dislocations d'interface soulagent ces contraintes.
+  \item \textbf{Incohérente} : les atomes ne coïncident plus ; énergie d'interface élevée.
+\end{itemize}
+\end{defnbox}
+
+Un précipité cohérent (zones GP, $\theta''$) germe beaucoup plus facilement : il apparaît
+\textbf{avant} le précipité stable, puis est absorbé par lui. Moins un précipité est stable,
+plus la température au-dessus de laquelle il ne se forme pas est basse, et plus il lui faut de
+cuivre en solution pour se former.
+
+\subsection*{Couper ou contourner : l'optimum de durcissement}
+
+Un précipité est un obstacle pour une dislocation, qui a deux façons de passer :
+\begin{itemize}
+  \item le \textbf{cisailler} (petits précipités cohérents) : la contrainte nécessaire
+        \textbf{augmente avec leur taille} ;
+  \item le \textbf{contourner} en se courbant entre deux précipités et en laissant une boucle
+        autour (mécanisme d'Orowan, gros précipités).
+\end{itemize}
+
+\begin{thmbox}[title={Contrainte de contournement (à connaître par c\oe ur)}]
+\[ \sigma = \frac{2Gb}{d} \approx \frac{Ea}{d} \]
+$d$ : distance entre précipités, $G$ : module de cisaillement, $b$ : vecteur de Burgers,
+$E$ : module d'Young, $a$ : distance interatomique. Plus les précipités sont
+\textbf{rapprochés}, plus il est difficile de passer entre eux.
+\end{thmbox}
+
+\slide[0.6]{c03b-47}{(a) cisaillement d'un précipité ; (b) contournement, avec $\sigma \approx Ea/d$.}
+
+À fraction volumique fixée (précipitation terminée), la maturation fait grossir les précipités
+et en diminue le nombre : $d$ augmente, donc la contrainte de contournement \textbf{diminue}.
+
+\slide[0.5]{c03b-48}{Le durcissement monte (cisaillement de précipités qui grossissent), passe par un optimum, puis baisse (contournement de précipités de plus en plus espacés).}
+
+\begin{propbox}[title={Il y a un temps de revenu optimal}]
+Au début, les précipités sont petits et cisaillés : le durcissement croît avec leur taille.
+Plus tard, ils sont contournés et s'écartent par maturation : le durcissement décroît
+(\textbf{sur-revenu}). L'\textbf{optimum} est à la transition ; il dépend de la température de
+revenu (plus elle est basse, plus il est long à atteindre mais plus il est élevé, tant que la
+température n'est pas trop basse pour la cinétique). Avec plusieurs précipités, la courbe peut
+avoir plusieurs bosses.
+\end{propbox}
+
+\begin{warnbox}[title=Les conditions pour qu'un alliage soit durcissable]
+\begin{itemize}
+  \item une solubilité de l'élément d'alliage qui \textbf{diminue} quand $T$ baisse ;
+  \item une cinétique (TTT) qui permet de \textbf{tremper} puis de précipiter en des temps et
+        températures praticables ;
+  \item des précipités qui \textbf{durcissent efficacement} (ce n'est pas le cas dans Al--Mg) ;
+  \item et une limite : on ne peut pas utiliser l'alliage à des températures où la maturation
+        agit (il se sur-reviendrait).
+\end{itemize}
+\end{warnbox}
+
+\begin{goatbox}
+On dissout le cuivre dans l'aluminium à chaud, on refroidit d'un coup pour l'y piéger, puis on
+le laisse ressortir en une poussière de minuscules grains. Les défauts qui permettent au métal de
+se déformer (les dislocations) se cognent contre ces grains : le métal durcit. Si on attend
+trop, les grains grossissent et s'écartent, les dislocations passent entre eux et le métal
+redevient mou. Il faut donc s'arrêter au bon moment.
+\end{goatbox}
