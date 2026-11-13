@@ -1,0 +1,177 @@
+\documentclass[a4paper,9pt]{extarticle}
+
+%=========================================================
+% PACKAGES
+%=========================================================
+
+\usepackage[
+a4paper,
+top=1.8cm,
+bottom=1.5cm,
+footskip=7mm,
+left=1cm,
+right=1cm,
+headheight=14pt,
+headsep=5mm
+]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage[sfdefault]{FiraSans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\usepackage{amsmath,amssymb}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+
+%=========================================================
+% PAGE SETTINGS
+%=========================================================
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+\setlist[itemize]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+\setlist[enumerate]{
+leftmargin=*,
+itemsep=1pt,
+topsep=1pt
+}
+
+
+%=========================================================
+% COLORS
+%=========================================================
+
+\definecolor{Blue}{HTML}{E3F0FF}
+\definecolor{Green}{HTML}{E3F7EA}
+\definecolor{Pink}{HTML}{FFE5ED}
+\definecolor{Orange}{HTML}{FFF0DC}
+\definecolor{Purple}{HTML}{EEE7FF}
+\definecolor{Yellow}{HTML}{FFFADB}
+\definecolor{Goat}{HTML}{F7EEDF}
+
+\definecolor{BlueTitle}{HTML}{285B8F}
+\definecolor{GreenTitle}{HTML}{287052}
+\definecolor{PinkTitle}{HTML}{A84063}
+\definecolor{OrangeTitle}{HTML}{A96500}
+\definecolor{PurpleTitle}{HTML}{6245A5}
+\definecolor{GoatTitle}{HTML}{8A5A1F}
+\definecolor{RecapTitle}{HTML}{5B3A8E}
+
+
+%=========================================================
+% HEADER
+%=========================================================
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{\small\textbf{Comportement mécanique des matériaux}}
+\fancyhead[C]{\small Weibull, fissuration lente, production de Al et Cu}
+\fancyhead[R]{\small Week 06 --- 12-18/10/2026}
+
+\fancyfoot[C]{\small\href{https://github.com/AlphaXT38G/notes_ba5}{github.com/AlphaXT38G/notes\_ba5}}
+\fancyfoot[R]{\small \thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+%=========================================================
+% TITLES
+%=========================================================
+
+\titleformat{\section}
+{\large\bfseries\color{BlueTitle}}
+{}{0pt}{}
+
+\titlespacing{\section}
+{0pt}{6pt}{3pt}
+
+
+%=========================================================
+% BOXES
+%=========================================================
+% Boxes are kept whole (unbreakable): inside multicols, a box split by tcolorbox
+% leaves an empty column behind it.
+
+\newtcolorbox{definition}{
+enhanced, unbreakable, colback=Blue, colframe=BlueTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Définition}, fonttitle=\bfseries
+}
+
+\newtcolorbox{important}{
+enhanced, unbreakable, colback=Pink, colframe=PinkTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Idée clé}, fonttitle=\bfseries
+}
+
+\newtcolorbox{formula}{
+enhanced, unbreakable, colback=Green, colframe=GreenTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Formules clés}, fonttitle=\bfseries
+}
+
+\newtcolorbox{warning}{
+enhanced, unbreakable, colback=Orange, colframe=OrangeTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Attention}, fonttitle=\bfseries
+}
+
+\newtcolorbox{example}{
+enhanced, unbreakable, colback=Purple, colframe=PurpleTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Exemple}, fonttitle=\bfseries
+}
+
+% GOAT - brown: the idea told as simply as possible
+\newtcolorbox{goat}{
+enhanced, unbreakable, colback=Goat, colframe=GoatTitle,
+boxrule=0.7pt, arc=0mm, title=\textbf{Expliqué à une chèvre}, fonttitle=\bfseries
+}
+
+% RECAP - violet: what to know for the exam, at the end of the week
+\newtcolorbox{recap}{
+enhanced, breakable, colback=Purple, colframe=RecapTitle,
+boxrule=1pt, arc=0mm, title=\textbf{Récap pour l'examen}, fonttitle=\bfseries
+}
+
+% Screenshot of a slide of the course: \slide{cNN-PP}
+\newcommand{\slide}[2][0.95]{%
+\begin{center}
+\includegraphics[width=#1\linewidth]{../images/course/#2}
+\end{center}}
+
+
+%=========================================================
+% DOCUMENT
+%=========================================================
+
+\begin{document}
+
+\thispagestyle{fancy}
+
+\begin{multicols}{2}
+
+\end{multicols}
+
+\end{document}
