@@ -557,3 +557,65 @@ Plier un trombone une fois ne le casse pas ; le plier vingt fois, si. À chaque 
 toute petite fissure avance d'un pas minuscule, d'autant plus grand qu'elle est déjà longue et
 que l'on plie fort. Le jour où elle est assez longue pour que $K$ atteigne $K_c$, tout casse.
 \end{goatbox}
+
+\section*{Récap du chapitre 1}
+\addcontentsline{toc}{section}{Récap du chapitre 1}
+
+\begin{recapbox}
+\textbf{Ce chapitre est la boîte à outils de tout le cours} : chaque matériau des chapitres
+suivants sera décrit avec ces essais et ces grandeurs.
+
+\textbf{Traction}
+\begin{itemize}
+  \item Une seule contrainte, uniforme : c'est pour cela qu'on l'aime.
+        $\varepsilon_{xx} = \sigma/E$, $\varepsilon_{yy} = \varepsilon_{zz} = -\nu\sigma/E$ ;
+        à volume constant (plasticité), $\nu = 1/2$.
+  \item $R = P/S_0$, $e = \Delta L/L_0$ ; $\sigma = P/S$, $\varepsilon = \ln(L/L_0)$.
+        \textbf{$\varepsilon = \ln(1+e)$, $\sigma = R(1+e)$} (volume constant).
+  \item Grandeurs : $E$, $R_e$, $R_{0,2}$ (décalage de 0,2\,\%), $R_m$ (maximum), $e_h$
+        (déformation répartie), $e_F$ (après rupture). Fragile $\le 1\,\%$, ductile $> 10\,\%$.
+  \item Décharge parallèle à la droite élastique ; énergie $= \int\sigma\,d\varepsilon$
+        (J/m$^3$) = élastique (rendue) + irréversible (chaleur, dislocations).
+  \item $\theta = d\sigma/d\varepsilon$ (taux d'écrouissage).
+\end{itemize}
+
+\textbf{Striction (Considère)} : instabilité qui démarre quand le durcissement ne compense plus
+l'amincissement : \textbf{$\sigma = d\sigma/d\varepsilon \Leftrightarrow dR/de = 0$}, donc au
+maximum de $R(e)$. Savoir refaire le raisonnement (volume constant + même force partout) et la
+démonstration de $dR/de = (L_0/L)^2(d\sigma/d\varepsilon - \sigma)$. Construction de Considère.
+
+\textbf{Autres essais}
+\begin{itemize}
+  \item Compression : flambage (barreaux trapus) contre frottement/tonneau (barreaux longs),
+        $h/d \approx 3$--$4$ ; courbe plus haute qu'en traction, pas de striction.
+  \item Dureté : $H = F/A \approx 3\sigma_y$.
+  \item Flexion : $\varepsilon_{xx} = y/R$ ; facile à faire, difficile à exploiter.
+\end{itemize}
+
+\textbf{Le temps} (à $T > \frac12 T_f$)
+\begin{itemize}
+  \item $\sigma = K\dot\varepsilon^m$ ; saut de vitesse ; relaxation (déformation fixée) ;
+        fluage (charge fixée), 3 stades.
+  \item \textbf{$\dot\varepsilon = A\sigma^N e^{-Q/RT}$}, $N \approx 1$--$10$ (5 pour les
+        dislocations), $Q \sim 10^5$\,J/mol. $m = 1/N$.
+  \item $m$ grand freine la striction ; $m = 1$ : fluide newtonien, pas de striction.
+\end{itemize}
+
+\textbf{Rupture}
+\begin{itemize}
+  \item $G = \pi F(a)\sigma^2 a/E$, rupture quand $G = G_c$ (J/m$^2$).
+  \item \textbf{$K = Y\sigma\sqrt{\pi a}$}, rupture quand $K = K_c$ (MPa$\sqrt{\text m}$),
+        donc $\sigma_r = K_c/(Y\sqrt{\pi a})$. $Y = 1$ (fissure interne, $a$ = demi-longueur,
+        plaque infinie), $Y = 1{,}12$ (fissure de bord). $G_c = AK_c^2/E$.
+  \item Rupture \textbf{catastrophique} : $K$ croît avec $a$.
+  \item Ténacité (éprouvette préfissurée), Charpy (énergie, transition ductile--fragile),
+        formabilité.
+  \item Fatigue : courbes de Wöhler (statistiques !) ; fissure : $\Delta K$,
+        $da/dN = A(\Delta K)^m$, seuil, rupture à $K_{\max} = K_c$.
+\end{itemize}
+
+\textbf{Pour la suite} : $K = Y\sigma\sqrt{\pi a}$ expliquera la fragilité des céramiques et la
+statistique de Weibull (chapitre~2) ; la loi d'Arrhenius reviendra pour la viscosité du verre
+et la cinétique des transformations (chapitres~2 à~4) ; le crochet de traction et la transition
+ductile--fragile seront expliqués pour les aciers (chapitre~4).
+\end{recapbox}
