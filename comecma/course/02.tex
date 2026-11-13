@@ -216,3 +216,102 @@ désordre, comme une photo d'une foule en mouvement. Chaud, il coule comme du mi
 moins épais quand on chauffe. Ajouter de la soude, c'est couper des liens du réseau pour qu'il
 coule à une température plus facile à atteindre.
 \end{goatbox}
+
+\section{Élaboration : argiles, frittage, verre}
+
+\subsection*{Les argiles et les poudres}
+
+Les argiles (kaolinite, montmorillonite\ldots) viennent de l'altération des roches. On les met en
+forme \textbf{humides} (formage hydroplastique : malaxeur sous vide, extrusion, calibrage au
+tour), ou en \textbf{barbotine} (suspension dans l'eau coulée dans un moule en plâtre qui boit
+l'eau), ou par \textbf{pressage de poudres}. Vient ensuite le \textbf{séchage} : la pièce
+rétrécit tant que les particules ne se touchent pas, puis le retrait s'arrête (à sécher
+lentement, sinon elle fissure). La pièce crue (\emph{green body}) est ensuite cuite.
+
+\subsection*{La capillarité, moteur du frittage}
+
+\begin{defnbox}[title={Énergie de surface}]
+Les atomes d'une surface ou d'une interface ont des liaisons moins stables : créer de la
+surface coûte une énergie $\gamma$ (J/m$^2$). Comme $1\,\text{J/m}^2 = 1\,\text{N/m}$, c'est
+aussi une \textbf{tension de surface} : pour créer 1\,m$^2$ de surface, il faut tirer sur 1\,m de
+bord avec une force $F = \gamma$.
+\end{defnbox}
+
+\slide[0.55]{c02-67}{Les trois stades du frittage : les grains se soudent, les pores s'arrondissent, rétrécissent et disparaissent.}
+
+\begin{propbox}[title={Le frittage (\emph{sintering})}]
+Une poudre compacte a énormément de surface, donc beaucoup d'énergie de surface. À chaud
+(diffusion possible), la matière se déplace pour \textbf{réduire cette surface} : les grains se
+soudent par des \og cous\fg{}, les pores rétrécissent et s'éliminent. La pièce se densifie et se
+contracte sans jamais fondre. C'est ainsi que l'on cuit les poteries et que l'on fabrique les
+céramiques techniques.
+\end{propbox}
+
+Les ciments et le plâtre, eux, durcissent par \textbf{réaction chimique} avec l'eau
+(hydratation), à froid.
+
+\subsection*{Mettre en forme le verre}
+
+Le verre chaud est un \textbf{fluide newtonien} : on a vu au chapitre~1 qu'il \textbf{ne fait
+pas de striction}. On peut donc l'\textbf{étirer} (fibres de verre), le \textbf{souffler}
+(bouteilles : pressage puis soufflage dans un moule), le laminer, ou le couler sur un bain d'étain
+liquide (verre \emph{float}, parfaitement plan) sans qu'il se rompe.
+
+\begin{goatbox}
+Une poudre, c'est plein de surface, et la surface coûte de l'énergie, comme une bulle de savon
+qui veut rapetisser. En chauffant, les grains se collent entre eux et les trous se referment
+pour diminuer la surface : la poudre devient un bloc. Le verre chaud, lui, s'étire comme du
+miel sans jamais s'amincir à un endroit : on peut le tirer en fil ou le gonfler en bouteille.
+\end{goatbox}
+
+\section{Contraintes thermiques, choc thermique et verre trempé}
+
+\slide[0.6]{c02-75}{Une couche de surface refroidie d'un coup veut se contracter ; le c\oe ur chaud l'en empêche : elle est mise en traction.}
+
+\begin{thmbox}[title={Contrainte thermique (à connaître par c\oe ur)}]
+Une fine couche de surface ramenée brutalement de $T_1$ à $T_2 < T_1$, collée à un substrat qui ne
+se déforme pas (le c\oe ur encore chaud), subit la contrainte
+\[ \sigma = \frac{E}{1-\nu}\,\alpha\,(T_1 - T_2) \]
+($\alpha$ : coefficient de dilatation). C'est une contrainte de \textbf{traction} (la surface
+veut se contracter et en est empêchée). Le $1-\nu$ apparaît parce que la contrainte agit dans
+\textbf{les deux directions} du plan de la surface (état biaxial), et non dans une seule.
+\end{thmbox}
+
+\begin{exbox}[title=Ordre de grandeur (diapositives)]
+Verre sodocalcique : $E = 74$\,GPa, $\nu \approx 0{,}25$, $\alpha = 8{,}5\cdot10^{-6}$\,K$^{-1}$,
+$\Delta T = 200$\,K :
+\[ \sigma \approx \frac{74}{0{,}75}\times8{,}5\cdot10^{-6}\times200
+   \approx 10^2 \times 1{,}7\cdot10^{-3}\ \text{GPa} = 170\,\text{MPa}. \]
+C'est plus que la résistance d'un verre ordinaire : il casse. C'est le \textbf{choc thermique}.
+\end{exbox}
+
+\begin{warnbox}[title={La \og résistance au choc thermique\fg{} n'est pas une propriété du matériau}]
+Dans les tableaux, c'est l'écart $\Delta T$ maximal qu'une pièce supporte quand on la trempe
+(par exemple dans l'eau à 0\,°C). Elle dépend des défauts, de la forme, de la taille, de la vitesse
+de trempe : sa mesure doit suivre une procédure normalisée.
+\end{warnbox}
+
+\subsection*{Retourner le problème : le verre trempé}
+
+\slide[0.55]{c02-80}{Profil des contraintes dans un verre trempé : compression en surface, traction à c\oe ur.}
+
+Si la plaque est \textbf{encore molle} quand on refroidit sa surface, le c\oe ur chaud
+s'adapte au retrait de la surface : pas de contrainte. Puis le c\oe ur refroidit et se
+contracte à son tour ; la surface, déjà rigide, ne suit pas : \textbf{la surface se retrouve en
+compression}, le c\oe ur en traction.
+
+\begin{propbox}[title=Le principe de la trempe du verre]
+Les fissures partent de la surface, et une fissure en compression ne s'ouvre pas : la
+compression de surface \textbf{protège} le verre. Mais si une fissure atteint le c\oe ur en
+traction, elle s'y propage spontanément et la pièce \textbf{s'émiette} (pare-brise latéraux,
+larmes de Batavia). On obtient le même effet par \textbf{échange d'ions} (remplacer Na$^+$ par
+le plus gros K$^+$ dans un bain de sel fondu) : compressions $> 500$\,MPa sur une très faible
+épaisseur (verre \og Gorilla\fg{} des téléphones).
+\end{propbox}
+
+\begin{goatbox}
+Si tu refroidis d'un coup la peau d'un verre chaud, la peau veut rétrécir mais l'intérieur, encore
+gros et chaud, la retient : elle est tirée et se fissure. Si au contraire l'intérieur est encore
+mou quand la peau durcit, c'est l'intérieur qui rétrécit ensuite en tirant la peau vers lui : la
+peau est serrée, et une peau serrée ne se fissure pas. C'est le verre trempé.
+\end{goatbox}
