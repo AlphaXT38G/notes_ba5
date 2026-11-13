@@ -1,3 +1,59 @@
 % =========================================================
 \chapter{Les essais mécaniques}
 % =========================================================
+
+\begin{rembox}[title=En bref]
+\textbf{De quoi parle ce chapitre ?} Avant de parler des matériaux, il faut savoir
+\textbf{comment on mesure} leur comportement mécanique. Le chapitre passe en revue les essais
+classiques : traction (le roi), compression, dureté, flexion, essais où le temps compte
+(vitesse de déformation, relaxation, fluage), puis les essais de rupture (ténacité, Charpy,
+formabilité, fatigue). \
+\textbf{Les trois idées à retenir} : la différence entre grandeurs \emph{nominales} et
+\emph{vraies} ; la \textbf{striction} comme instabilité (critère de Considère) ; la
+\textbf{mécanique de la rupture} ($K = Y\sigma\sqrt{\pi a}$), qui reviendra dans tous les
+chapitres suivants.
+\end{rembox}
+
+\section{Pourquoi l'essai de traction est le roi des essais}
+
+\slide[0.75]{c01-06}{Le barreau de traction : une section réduite (\emph{gauge section}) entre deux zones d'amarrage.}
+
+On tire sur un barreau dont le milieu est aminci. Tout l'intérêt est là : dans la section
+réduite, l'état de contrainte est le plus simple possible --- \textbf{une seule composante,
+$\sigma_{xx}$, la même partout}. Toutes les autres composantes du tenseur des contraintes sont
+nulles. On sait donc exactement ce qu'on impose au matériau, ce qui n'est vrai pour presque
+aucun autre essai. Les zones d'amarrage sont plus larges pour que ce soit la section réduite,
+et elle seule, qui se déforme et casse.
+
+La déformation, elle, a \textbf{trois} composantes : le barreau s'allonge selon $x$ mais
+rétrécit selon $y$ et $z$.
+
+\begin{thmbox}[title=Élasticité linéaire isotrope en traction]
+\[ \varepsilon_{xx} = \frac{\sigma_{xx}}{E}, \qquad
+   \varepsilon_{yy} = \varepsilon_{zz} = -\nu\,\frac{\sigma_{xx}}{E} \]
+$E$ = module d'Young (rigidité), $\nu$ = coefficient de Poisson (combien le matériau se
+rétrécit latéralement quand on l'allonge).
+\end{thmbox}
+
+\begin{propbox}[title={À volume constant, $\nu = 1/2$}]
+Le changement relatif de volume vaut, pour de petites déformations,
+$\dfrac{\Delta V}{V} \approx \varepsilon_{xx} + \varepsilon_{yy} + \varepsilon_{zz}$.
+Si le volume ne change pas (c'est \textbf{grosso modo le cas en déformation plastique}),
+cette somme est nulle, donc $\varepsilon_{yy} = \varepsilon_{zz} = -\varepsilon_{xx}/2$ :
+tout se passe comme si $\nu = 0{,}5$. En élasticité, $\nu$ est plus petit (souvent
+$\approx 0{,}3$ pour les métaux, $\approx 0{,}25$ pour le verre) : le volume augmente un peu
+quand on tire.
+\end{propbox}
+
+\begin{rembox}[title=En pratique]
+La force $P$ est mesurée par une \textbf{cellule de charge}. L'allongement $\Delta L$ se lit
+sur le déplacement de la traverse (peu précis, car toute la machine se déforme aussi), ou mieux
+avec un \textbf{extensomètre} pincé sur la section réduite, une \textbf{jauge résistive} collée
+dessus, ou par suivi optique de points à la surface.
+\end{rembox}
+
+\begin{goatbox}
+Tirer sur un barreau, c'est la seule façon simple d'être sûr de ce que l'on fait subir au
+matériau : partout au milieu du barreau, il est tiré de la même façon, dans une seule
+direction. Quand il s'allonge, il maigrit sur les côtés, comme un chewing-gum qu'on étire.
+\end{goatbox}
