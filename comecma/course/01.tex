@@ -191,3 +191,88 @@ La courbe de traction raconte la vie du barreau : d'abord il se comporte comme u
 étirer ; puis, à un moment, il commence à s'amincir à un seul endroit et casse là. Lâcher en
 cours de route, c'est récupérer seulement le \og ressort\fg{}, pas l'allongement déjà acquis.
 \end{goatbox}
+
+\section{La striction et le critère de Considère}
+
+\slide[0.65]{c01-26}{La courbe nominale $R(e)$ passe par un maximum M alors que la contrainte vraie $\sigma(\varepsilon)$ continue de monter.}
+
+Un paradoxe d'abord : après le maximum M, la courbe nominale \emph{descend}. Le métal
+s'adoucit-il ? Non : la contrainte vraie, mesurée là où il se déforme, continue de
+\textbf{monter}. Ce qui se passe, c'est que toute la déformation se concentre dans une petite
+zone qui s'amincit : la \textbf{striction} (\emph{necking}). La force totale $P$ baisse parce
+que la section y diminue plus vite que le métal ne durcit. La striction est une
+\textbf{instabilité mécanique} (comme le flambage).
+
+\subsection*{Le raisonnement de Considère, pas à pas}
+
+\begin{enumerate}
+  \item \textbf{Volume constant.} Dans une tranche du barreau,
+        $dV = d(SL) = S\,dL + L\,dS = 0$, donc un allongement local $d\varepsilon = dL/L$ fait
+        rétrécir la section : $dS = -S\,d\varepsilon$.
+  \item \textbf{Même force partout.} La force $P = \sigma S$ est la même dans toutes les
+        tranches : $dP = \sigma\,dS + S\,d\sigma = 0$. Si une tranche s'est allongée d'un petit
+        $d\varepsilon$ de plus que les autres, sa section est plus petite et la contrainte y
+        est plus grande de
+        \[ d\sigma_{\text{appliquée}} = -\sigma\,\frac{dS}{S} = \sigma\,d\varepsilon . \]
+  \item \textbf{Mais le métal y a aussi durci} : sa contrainte d'écoulement a augmenté de
+        $d\sigma_{\text{matériau}} = \theta\,d\varepsilon$ avec $\theta = d\sigma/d\varepsilon$.
+  \item \textbf{Qui gagne ?}
+  \begin{itemize}
+    \item Si $\theta > \sigma$ : le durcissement l'emporte. La tranche plus déformée est
+          devenue trop dure pour la contrainte qu'elle porte ; elle s'arrête, les autres la
+          rattrapent. La déformation est \textbf{stable} et reste homogène.
+    \item Si $\theta < \sigma$ : l'excès de contrainte l'emporte. La tranche continue de se
+          déformer, en demandant une force de plus en plus faible ; la force baisse, le reste
+          du barreau se décharge et s'arrête. \textbf{La striction démarre.}
+  \end{itemize}
+\end{enumerate}
+
+\begin{thmbox}[title={Critère de Considère (à connaître par c\oe ur)}]
+La striction s'amorce quand
+\[ \sigma = \frac{d\sigma}{d\varepsilon}
+   \qquad\Longleftrightarrow\qquad \frac{dR}{de} = 0 . \]
+Le \textbf{maximum de la courbe conventionnelle} correspond donc à l'amorçage de la
+striction : $R_m$ et $e_h$ sont lus au début de la striction.
+\end{thmbox}
+
+\begin{proofbox}[title={Pourquoi $dR/de = 0$ (démonstration manuscrite du cours)}]
+\slide[0.4]{c01-considere}{La démonstration distribuée avec le cours.}
+Avec $R = \dfrac{\sigma}{1+e}$ :
+$\dfrac{dR}{de} = \dfrac{d\sigma}{de}\,\dfrac{1}{1+e} - \dfrac{\sigma}{(1+e)^2}$.
+Or $de = \dfrac{dL}{L_0} = \dfrac{L}{L_0}\dfrac{dL}{L} = \dfrac{L}{L_0}\,d\varepsilon$, donc
+$\dfrac{d\sigma}{de} = \dfrac{L_0}{L}\dfrac{d\sigma}{d\varepsilon}$, et
+$\dfrac{1}{1+e} = \dfrac{L_0}{L}$. D'où
+\[ \frac{dR}{de} = \Big(\frac{L_0}{L}\Big)^2 \Big(\frac{d\sigma}{d\varepsilon} - \sigma\Big),
+   \]
+qui est nul exactement quand $d\sigma/d\varepsilon = \sigma$.
+\end{proofbox}
+
+\slide[0.65]{c01-33}{La construction de Considère : on cherche le point de $\sigma(\varepsilon)$ où la pente égale la valeur.}
+
+\begin{propbox}[title=La construction de Considère]
+Sur la courbe vraie $\sigma(\varepsilon)$, le point de striction est celui où la tangente a
+une pente égale à $\sigma$ : graphiquement, la tangente qui part du point
+$\varepsilon = -1$ ($-100\,\%$) de l'axe horizontal. (En traçant $\sigma$ en fonction de $e$, la
+tangente part de $e = -1$ : c'est la forme habituelle de la construction.)
+\end{propbox}
+
+\begin{exbox}[title={Exemple classique (pas dans les diapositives) : loi puissance}]
+Si $\sigma = K\varepsilon^n$ (loi d'écrouissage courante), alors
+$\theta = nK\varepsilon^{n-1}$ et $\theta = \sigma$ donne $\varepsilon_{\text{striction}} = n$.
+Un métal qui écrouit beaucoup ($n$ grand, comme le cuivre) s'allonge donc longtemps de façon
+homogène avant de faire sa striction.
+\end{exbox}
+
+\begin{rembox}[title=La traction sous-estime la ductilité]
+Comme la striction concentre tout dans une petite zone, l'essai de traction ne mesure qu'une
+petite partie de la vraie capacité de déformation d'un matériau ductile : un fil de fer tréfilé
+par étapes successives atteint des déformations vraies de plusieurs unités (diapositive 35).
+\end{rembox}
+
+\begin{goatbox}
+Imagine une corde de pâte à modeler que tu étires. Si un endroit devient un peu plus fin, il
+porte plus de force par unité de surface. Tant que la pâte \og durcit\fg{} assez vite en
+s'étirant, cet endroit résiste et le reste rattrape. Le jour où elle ne durcit plus assez vite,
+l'endroit fin devient de plus en plus fin : c'est la striction, et ça arrive juste quand la
+force que tu dois mettre est maximale.
+\end{goatbox}
