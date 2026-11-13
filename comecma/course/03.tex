@@ -211,3 +211,87 @@ le cuivre s'accumule dans le liquide qui reste, et le dernier liquide, très ric
 fines lamelles mélangées. Comme les atomes bougent très mal dans le solide, ces différences
 restent figées : c'est la microségrégation.
 \end{goatbox}
+
+\section{Maturation, homogénéisation et cinétique}
+
+\subsection*{La maturation (capillarité)}
+
+\begin{thmbox}[title={Surpression dans une sphère et instabilité des petites particules}]
+Une sphère de rayon $R$ entourée d'une interface d'énergie $\gamma$ : l'équilibre des forces sur
+une demi-sphère, $\pi R^2\Delta P = 2\pi R\gamma$, donne
+\[ \Delta P = \frac{2\gamma}{R}, \qquad \Delta G = V_m\,\Delta P = \frac{2\gamma V_m}{R} \]
+($V_m$ : volume molaire). Plus généralement $\Delta P = \gamma C$, avec $C$ la courbure. Les
+\textbf{petites} particules (forte courbure) ont une énergie libre \textbf{plus élevée} : elles
+sont moins stables.
+\end{thmbox}
+
+\slide[0.5]{c03b-18}{La surpression $\Delta P = 2\gamma/R$ dans une sphère.}
+
+\begin{exbox}[title={La question des deux ballons (diapositives)}]
+Deux ballons de caoutchouc (tension de surface constante), un petit et un gros, reliés par une
+paille : la surpression $2\gamma/R$ est plus grande dans le \textbf{petit}, qui se vide dans le
+gros. Dans un alliage, c'est pareil : les petites particules se dissolvent par diffusion au
+profit des grosses. C'est la \textbf{maturation} (ou mûrissement, \emph{coarsening}).
+\end{exbox}
+
+\begin{thmbox}[title={Loi de maturation (à connaître par c\oe ur)}]
+La dimension caractéristique $\lambda$ de la microstructure (espacement des bras de dendrites,
+taille et espacement des précipités, diamètre des bulles d'une mousse) croît comme
+\[ \lambda^3 - \lambda_0^3 = K\,t \qquad\Longrightarrow\qquad \lambda \approx (Kt)^{1/3} \]
+quand la cinétique est régie par la diffusion.
+\end{thmbox}
+
+\slide[0.6]{c03b-23}{Maturation de dendrites après 1, 3 et 5 minutes : les bras fins disparaissent, les gros grossissent.}
+
+\begin{propbox}[title=Ce qui fixe la finesse d'une pièce coulée]
+Pendant la solidification, la maturation agit pendant le \textbf{temps de solidification
+local}. Refroidir vite donne donc une structure \textbf{plus fine}. À très grande vitesse, on peut
+même obtenir des phases hors équilibre, voire un métal amorphe : les phases stables \og n'ont pas
+le temps\fg{} de se former.
+\end{propbox}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Avec $\lambda \propto t^{1/3}$, solidifier 1000 fois plus vite divise l'espacement des bras de
+dendrites par $1000^{1/3} = 10$.
+\end{exbox}
+
+\subsection*{L'homogénéisation et le danger de la brûlure}
+
+Pour effacer la microségrégation d'un Al--4,5\,\% Cu brut de coulée, on le \textbf{chauffe}
+dans le domaine monophasé $\alpha$ (vers 500--540\,°C) assez longtemps pour que la diffusion
+dissolve $\theta$ et égalise la composition : c'est l'\textbf{homogénéisation}.
+
+\begin{warnbox}[title={Rester sous la température eutectique !}]
+Au-dessus de 548\,°C, l'eutectique hors équilibre \textbf{fond}. La structure mûrit alors très
+vite, et l'on retrouve après refroidissement de gros films de $\theta$ fragile aux joints de
+grains, impossibles à homogénéiser : l'alliage est \textbf{brûlé} et fragile.
+\end{warnbox}
+
+\subsection*{La cinétique des transformations : le diagramme TTT}
+
+La thermodynamique dit \textbf{si} une transformation peut avoir lieu ($\Delta G < 0$) ; la
+cinétique dit \textbf{à quelle vitesse}. Deux effets s'opposent :
+\begin{itemize}
+  \item près de la température d'équilibre, la force motrice $\Delta G$ est faible : la
+        transformation est \textbf{lente} ;
+  \item près de 0\,K, rien ne bouge (activation thermique nulle) : elle est aussi \textbf{lente}.
+\end{itemize}
+Entre les deux, la vitesse est maximale. En maintien isotherme, la fraction transformée suit
+une courbe en \textbf{S} en fonction de $\log t$.
+
+\slide[0.55]{c03b-35}{Diagramme TTT : début et fin de la transformation en maintien isotherme ; la forme en \og nez\fg{} vient de la compétition force motrice / diffusion.}
+
+\begin{defnbox}[title={Diagramme TTT (Temps--Température--Transformation)}]
+On part d'un état donné (généralement à haute température), on \textbf{trempe infiniment vite}
+à une température $T$ et on maintient. Le diagramme donne, pour chaque $T$, le temps de début
+($f \ll 100\,\%$) et de fin de la transformation. Les courbes ont une forme de \textbf{\og C\fg{}
+ou de nez}. Attention : il ne s'applique en toute rigueur qu'aux maintiens isothermes.
+\end{defnbox}
+
+\begin{goatbox}
+Les petites gouttes coûtent plus cher en surface que les grosses : avec le temps, les grosses
+mangent les petites, et la structure grossit, de plus en plus lentement (comme la racine
+cubique du temps). Pour une transformation, il faut à la fois en avoir envie (froid, loin de
+l'équilibre) et pouvoir bouger (chaud) : c'est au milieu qu'elle va le plus vite, d'où le nez
+du diagramme TTT.
+\end{goatbox}
