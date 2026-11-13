@@ -315,3 +315,109 @@ gros et chaud, la retient : elle est tirée et se fissure. Si au contraire l'int
 mou quand la peau durcit, c'est l'intérieur qui rétrécit ensuite en tirant la peau vers lui : la
 peau est serrée, et une peau serrée ne se fissure pas. C'est le verre trempé.
 \end{goatbox}
+
+\section{Rupture fragile et résistance statistique}
+
+Une céramique ne se déforme pas plastiquement : elle casse dès qu'une fissure atteint
+$K = K_c$, de façon catastrophique. Le faciès de rupture montre souvent, depuis le défaut
+d'origine, une zone \textbf{miroir} lisse, puis une zone brumeuse, puis des \textbf{branches}
+(la fissure accélère et se divise). Les transitions ont lieu à des valeurs de $K$ assez fixes :
+utile pour l'analyse d'avaries.
+
+\slide[0.45]{c02-84}{Faciès de rupture d'un verre : origine, zone miroir, zone de branchement.}
+
+\subsection*{Pourquoi la résistance est une grandeur statistique}
+
+Tout matériau contient des défauts (microfissures, pores, inclusions, rayures). La pièce casse
+au premier endroit où $K = Y\sigma\sqrt{\pi a}$ atteint $K_c$, c'est-à-dire au \textbf{plus gros
+défaut bien orienté} : $\sigma_r = K_c/(Y\sqrt{\pi a_{\max}})$. Or la taille de ce plus gros
+défaut est \textbf{aléatoire}. Conséquences :
+\begin{itemize}
+  \item on ne peut pas parler de \og \emph{la}\fg{} résistance d'un verre : il faut une
+        \textbf{distribution} de résistances ;
+  \item \textbf{effet de volume} : une grande pièce a plus de chances de contenir un gros
+        défaut, elle est en moyenne moins résistante qu'une petite ;
+  \item \textbf{effet de la répartition des contraintes} : en flexion, seule une fine couche est
+        fortement chargée ; le plus gros défaut n'y est probablement pas. Une céramique paraît donc
+        plus résistante en flexion qu'en traction.
+\end{itemize}
+
+\slide[0.75]{c02-87}{En flexion, la contrainte maximale n'agit que près de la surface : le plus gros défaut n'y est pas forcément.}
+
+\subsection*{La statistique de Weibull : d'où elle vient}
+
+\begin{enumerate}
+  \item \textbf{Hypothèses} : le solide est homogène (chaque petit volume a la même
+        distribution de défauts, indépendante des autres), et \textbf{si un petit volume casse,
+        toute la pièce casse} (maillon le plus faible).
+  \item \textbf{Survie = produit des survies} : un volume $V_1 + V_2$ survit à $\sigma$ si $V_1$
+        \emph{et} $V_2$ survivent : $S(V_1+V_2,\sigma) = S(V_1,\sigma)\,S(V_2,\sigma)$.
+  \item La seule fonction qui transforme une \textbf{somme} de volumes en \textbf{produit} est
+        l'exponentielle : $S(V,\sigma) = e^{-V\,\Phi(\sigma)}$, avec $\Phi \ge 0$.
+  \item Weibull \textbf{propose} une loi puissance : $\Phi(\sigma) = K(\sigma - \sigma_u)^m$
+        (trois paramètres), et le plus souvent $\sigma_u = 0$ (deux paramètres : par prudence,
+        ou parce que les données s'y prêtent).
+\end{enumerate}
+
+\begin{thmbox}[title={Statistique de Weibull (à connaître par c\oe ur)}]
+Pour une contrainte uniforme $\sigma$ sur un volume $V$ (défauts de volume) :
+\[ S(\sigma,V) = \exp\!\Big[-\frac{V}{V_0}\Big(\frac{\sigma}{\sigma_0}\Big)^m\Big],
+   \qquad
+   \ln S = -\frac{V}{V_0}\Big(\frac{\sigma}{\sigma_0}\Big)^m,
+   \qquad F = 1 - S . \]
+Pour des défauts de surface, remplacer $V/V_0$ par $A/A_0$.
+\begin{itemize}
+  \item $m$ : \textbf{module de Weibull}. Grand $m$ = distribution étroite, matériau fiable
+        (métaux $\approx 100$) ; petit $m$ = grande dispersion (céramiques 5 à 20).
+  \item $V_0$ et $\sigma_0$ \textbf{vont par paire} : il n'y a en fait qu'une seule constante,
+        $K = [V_0\sigma_0^m]^{-1}$.
+  \item Pour $F \ll 1$ : $-\ln S = -\ln(1-F) \approx F$, donc
+        $F \approx \dfrac{V}{V_0}\Big(\dfrac{\sigma}{\sigma_0}\Big)^m$ (pratique en conception).
+\end{itemize}
+\end{thmbox}
+
+\slide[0.6]{c02-95}{La distribution de Weibull : plus $m$ est grand, plus la chute de la probabilité de survie est brutale.}
+
+\begin{warnbox}[title={$\sigma = \sigma_0$ n'est pas la médiane}]
+Pour $V = V_0$ et $\sigma = \sigma_0$, $S = e^{-1} \approx 0{,}37$, pas $1/2$ : $\sigma_0$ n'est
+\textbf{pas} la résistance médiane.
+\end{warnbox}
+
+\begin{propbox}[title={Contrainte non uniforme : le facteur $k_m$}]
+Chaque petit volume survit selon sa contrainte locale ; on multiplie les survies, donc on
+\textbf{intègre} dans l'exposant :
+\[ S = \exp\!\Big[-\int_V \Big(\frac{\sigma}{\sigma_0}\Big)^m\frac{dV}{V_0}\Big]
+     = \exp\!\Big[-k_m\frac{V}{V_0}\Big(\frac{\sigma_{\max}}{\sigma_0}\Big)^m\Big] \]
+$k_m \le 1$ dépend de la géométrie, du chargement et de $m$ : $k_m = 1$ en traction ;
+$1/[2(m+1)]$ en flexion pure ; $1/[2(m+1)^2]$ en flexion trois points ;
+$(mL_i + L_o)/[2L_o(m+1)^2]$ en flexion quatre points. Comme $k_m < 1$, la flexion donne des
+$\sigma_{\max}$ à rupture plus élevées : l'essai de flexion est \textbf{\og flatteur\fg{}}.
+\end{propbox}
+
+\subsection*{Mesurer $m$ : le diagramme de Weibull}
+
+On casse $N$ éprouvettes, on classe les contraintes à rupture par ordre croissant
+$\sigma_1 \le \ldots \le \sigma_N$ et on attribue à la $i$-ème la probabilité de rupture
+$F_i \approx i/N$ (pour $N$ assez grand ; la 20\up{e} sur 50 donne $F = 40\,\%$). En prenant deux
+fois le logarithme de $1/S$ :
+\[ \ln\ln\frac{1}{S} = m\ln\sigma_{\max} - m\ln\sigma_0 + \ln\Big(k_m\frac{V}{V_0}\Big) \]
+Le graphe de $\ln\ln(1/S)$ contre $\ln\sigma$ est une \textbf{droite de pente $m$} si Weibull est
+obéie.
+
+\slide[0.5]{c02-103}{Un diagramme de Weibull réel (nitrure de silicium en flexion).}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives) : l'effet de volume}]
+À même probabilité de survie, $V\sigma^m$ est constant :
+$\sigma_2 = \sigma_1 (V_1/V_2)^{1/m}$. Une pièce 1000 fois plus grosse que l'éprouvette, avec
+$m = 10$ : $\sigma_2 = \sigma_1 \times 1000^{-0{,}1} = 0{,}50\,\sigma_1$. Elle ne supporte que la
+moitié. Avec $m = 20$, $0{,}71\,\sigma_1$ : un $m$ élevé rend l'effet de taille moins
+pénalisant.
+\end{exbox}
+
+\begin{goatbox}
+Une chaîne casse à son maillon le plus faible. Une céramique est une chaîne de petits bouts de
+matière, chacun avec ses petits défauts. Plus la pièce est grande, plus elle a de chances
+d'avoir un très mauvais maillon : elle casse plus tôt. Weibull donne la probabilité qu'aucun
+maillon ne lâche ; $m$ dit si tous les maillons se ressemblent (grand $m$) ou s'ils sont très
+inégaux (petit $m$).
+\end{goatbox}
