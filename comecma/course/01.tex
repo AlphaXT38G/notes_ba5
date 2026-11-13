@@ -57,3 +57,52 @@ Tirer sur un barreau, c'est la seule façon simple d'être sûr de ce que l'on f
 matériau : partout au milieu du barreau, il est tiré de la même façon, dans une seule
 direction. Quand il s'allonge, il maigrit sur les côtés, comme un chewing-gum qu'on étire.
 \end{goatbox}
+
+\section{Nominal ou vrai : deux façons de compter}
+
+L'essai donne une force $P$ et un allongement $\Delta L$. Pour en faire une propriété du
+\emph{matériau} (indépendante de la taille du barreau), on les divise par une aire et une
+longueur. Toute la question est : \textbf{lesquelles} --- celles du début, ou celles de
+l'instant présent ?
+
+\begin{defnbox}[title={Grandeurs nominales (\emph{engineering}) et vraies (\emph{true})}]
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{l|c|c}
+ & nominale (dimensions initiales) & vraie (dimensions actuelles) \ \hline
+contrainte & $R = \dfrac{P}{S_0}$ & $\sigma = \dfrac{P}{S}$ \
+déformation & $e = \dfrac{L - L_0}{L_0}$ & $\varepsilon = \displaystyle\int_{L_0}^{L}\frac{dL}{L} = \ln\frac{L}{L_0}$ \
+\end{tabular}
+\end{center}
+\end{defnbox}
+
+\begin{thmbox}[title=Passer de l'une à l'autre (à connaître par c\oe ur)]
+\[ \varepsilon = \ln(1 + e) \qquad\qquad \sigma = R\,(1 + e) \]
+La première vient de $L/L_0 = 1 + e$. La seconde suppose le \textbf{volume constant}
+($S_0 L_0 = S L$, vrai en plasticité) : $\sigma = \dfrac{P}{S} = \dfrac{P}{S_0}\dfrac{L}{L_0} = R(1+e)$.
+\end{thmbox}
+
+Pourquoi la déformation vraie est-elle une intégrale ? Parce qu'à chaque instant le petit
+allongement $dL$ est rapporté à la longueur \emph{du moment}, $L$, et non à $L_0$. On additionne
+donc des petits $dL/L$, d'où un logarithme. Avantage : les déformations vraies
+\textbf{s'additionnent} (allonger de $L_0$ à $L_1$ puis de $L_1$ à $L_2$ donne
+$\ln\frac{L_1}{L_0} + \ln\frac{L_2}{L_1} = \ln\frac{L_2}{L_0}$), ce qui n'est pas le cas des
+déformations nominales.
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Un barreau passe de $L_0 = 50$\,mm à $L = 60$\,mm sous $P = 20$\,kN, avec $S_0 = 50\,\text{mm}^2$.
+\begin{itemize}
+  \item $e = 10/50 = 0{,}20$ et $\varepsilon = \ln 1{,}2 = 0{,}182$ : aux petites déformations
+        les deux se confondent ($\ln(1+e) \approx e$), à 20\,\% elles diffèrent déjà de 10\,\%.
+  \item $R = 20\,000/50 = 400$\,MPa et $\sigma = 400 \times 1{,}2 = 480$\,MPa : la section a
+        diminué de $50$ à $50/1{,}2 \approx 41{,}7\,\text{mm}^2$.
+\end{itemize}
+\end{exbox}
+
+\slide[0.6]{c01-13}{La courbe vraie $\sigma(\varepsilon)$ est au-dessus et à gauche de la courbe nominale $R(e)$.}
+
+\begin{goatbox}
+Nominal, c'est compter comme si le barreau n'avait pas changé depuis le début. Vrai, c'est
+regarder le barreau tel qu'il est maintenant : plus long et plus maigre. Comme il est plus
+maigre, la même force le tire plus fort : la contrainte vraie est plus grande que la nominale.
+\end{goatbox}
