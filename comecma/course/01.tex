@@ -106,3 +106,88 @@ Nominal, c'est compter comme si le barreau n'avait pas changé depuis le début.
 regarder le barreau tel qu'il est maintenant : plus long et plus maigre. Comme il est plus
 maigre, la même force le tire plus fort : la contrainte vraie est plus grande que la nominale.
 \end{goatbox}
+
+\section{Lire une courbe de traction}
+
+\slide[0.7]{c01-14}{Les grandeurs relevées sur la courbe conventionnelle $R(e)$.}
+
+\begin{defnbox}[title=Les grandeurs de la courbe conventionnelle]
+\begin{itemize}
+  \item $E$ : la pente du début, partie élastique et linéaire.
+  \item $R_e$ : limite d'élasticité \og microscopique\fg{}, premier écart à la droite. Elle
+        est \textbf{difficile à mesurer} (cela dépend de la précision de l'extensomètre).
+  \item $R_{0,2}$ : limite d'élasticité \textbf{conventionnelle à 0,2\,\%} : on trace une
+        parallèle à la droite élastique décalée de $e = 0{,}2\,\%$ et on lit où elle coupe la
+        courbe. C'est la valeur que l'on utilise en pratique, car elle est reproductible.
+  \item $R_m$ : \textbf{résistance en traction} (UTS), le maximum de la courbe $R(e)$.
+  \item $e_h$ : déformation répartie (ou homogène), celle au maximum $R_m$ : jusque-là tout
+        le barreau s'allonge de la même façon.
+  \item $e_F$ : allongement après rupture.
+\end{itemize}
+\end{defnbox}
+
+Pourquoi un décalage de 0,2\,\% ? Parce que la courbe s'écarte de la droite très
+progressivement : \og le premier écart\fg{} n'a pas de valeur nette. En décrétant
+\og la contrainte qui laisse 0,2\,\% de déformation permanente\fg{}, tout le monde mesure la même
+chose.
+
+\slide[0.75]{c01-15}{Quatre allures typiques : (a) fragile, (b) métal ductile, (c) crochet de traction (aciers doux, polymères), (d) élastomère ou alliage pseudoélastique.}
+
+À reconnaître d'un coup d'\oe il :
+\begin{itemize}
+  \item \textbf{(a) fragile} (verre, céramiques) : une droite, puis la rupture. Pas de
+        plasticité.
+  \item \textbf{(b) métal ductile} : droite, puis courbe qui monte de moins en moins
+        (écrouissage), un maximum, puis une descente (striction) jusqu'à la rupture.
+  \item \textbf{(c) crochet} : la contrainte chute juste après la limite d'élasticité
+        ($R_{eH}$ puis $R_{eL}$), avec un palier où la déformation avance par
+        \textbf{bandes de Lüders} (expliqué au chapitre~4 : ce sont les atomes de carbone qui
+        bloquent les dislocations).
+  \item \textbf{(d) caoutchouc} : déformations énormes (500 à 1000\,\%) et presque toutes
+        réversibles.
+\end{itemize}
+
+\subsection*{Décharger : qu'est-ce qui revient ?}
+
+\slide[0.6]{c01-19}{Si on relâche la charge, on redescend parallèlement à la droite élastique (b) ; le caoutchouc (d) revient presque à zéro.}
+
+\begin{propbox}[title={Décharge et énergie}]
+\begin{itemize}
+  \item En relâchant la charge depuis un point de la zone plastique, la courbe redescend
+        \textbf{selon une droite de pente $E$} : seule la part élastique revient, la
+        déformation plastique reste.
+  \item L'énergie mécanique fournie par unité de volume est l'aire sous la courbe :
+        \[ \mathcal{E} = \int_0^{\varepsilon} \sigma\,d\varepsilon \quad [\text{J/m}^3] \]
+        (c'est $\int F\,dL$ pour un mètre cube de matière).
+  \item Elle se partage en une part \textbf{réversible} (l'aire sous la droite de
+        décharge : énergie élastique, rendue) et une part \textbf{irréversible} (le reste :
+        dissipée en chaleur, ou stockée dans le métal sous forme de dislocations).
+\end{itemize}
+\end{propbox}
+
+\subsection*{Contrainte d'écoulement et taux d'écrouissage}
+
+\begin{defnbox}[title=Deux grandeurs que l'on réutilise sans cesse]
+\begin{itemize}
+  \item La \textbf{contrainte d'écoulement} (\emph{flow stress}) $\sigma(\varepsilon)$ : la
+        contrainte vraie qu'il faut pour continuer à déformer plastiquement le matériau quand
+        il est déjà déformé de $\varepsilon$.
+  \item Le \textbf{taux d'écrouissage} (\emph{work hardening rate})
+        $\theta(\varepsilon) = d\sigma/d\varepsilon$ : la pente de la courbe vraie, c'est-à-dire
+        \og combien le métal durcit\fg{} quand on le déforme un peu plus.
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title=Ductile ou fragile]
+On mesure la ductilité par l'allongement relatif à rupture $\Delta L/L_0$ :
+$\le 1\,\%$ = matériau \textbf{fragile}, $> 10\,\%$ = matériau \textbf{ductile}. On utilise
+aussi le rapport de l'aire de la surface de rupture à l'aire initiale, $A_f/A_0$ (petit pour un
+métal très ductile qui s'est aminci en pointe).
+\end{rembox}
+
+\begin{goatbox}
+La courbe de traction raconte la vie du barreau : d'abord il se comporte comme un ressort
+(si on lâche, il revient) ; ensuite il se déforme pour de bon et devient de plus en plus dur à
+étirer ; puis, à un moment, il commence à s'amincir à un seul endroit et casse là. Lâcher en
+cours de route, c'est récupérer seulement le \og ressort\fg{}, pas l'allongement déjà acquis.
+\end{goatbox}
