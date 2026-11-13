@@ -116,3 +116,67 @@ les atomes de fer et circule très vite. À chaud, dans l'austénite, il y a de 
 en refroidissant, il n'y en a plus : il doit se regrouper dans un carbure, la cémentite. Le plus
 rapide est de faire des lamelles alternées de fer presque pur et de carbure : la perlite.
 \end{goatbox}
+
+\section{La martensite}
+
+Toutes les transformations vues jusqu'ici sont \textbf{diffusives} : germination puis
+croissance, pilotées par l'activation thermique, avec une cinétique en nez (lente près de
+l'équilibre, lente à froid). La transformation \textbf{martensitique} est d'une autre nature.
+
+\slide[0.45]{c04-30}{Deux mailles CFC contiennent une maille quadratique centrée ; comprimée verticalement et élargie latéralement, elle devient CC (déformation de Bain).}
+
+\begin{defnbox}[title={Transformation martensitique (displacive)}]
+On passe de la CFC à la CC par une simple \textbf{déformation} du réseau, sans que les atomes
+changent de voisins : chaque atome bouge de moins d'une distance interatomique, tous ensemble,
+\og au pas\fg{} (transformation \og militaire\fg{}). Elle progresse par le mouvement d'une
+paroi proche d'un mur de dislocations, \textbf{à la vitesse du son}.
+\end{defnbox}
+
+\begin{propbox}[title={Pourquoi elle est athermale}]
+La force motrice $\Delta G_{\text{mart}} = G_{\text{martensite}} - G_{\text{austénite}}$ grandit
+quand $T$ baisse. Mais la martensite formée déforme l'austénite autour d'elle, ce qui stocke de
+l'énergie élastique et \textbf{freine} la suite, d'autant plus qu'on a déjà transformé. Résultat :
+\begin{itemize}
+  \item la transformation commence à $M_s$ (\emph{martensite start}) ;
+  \item à chaque température, elle avance d'un coup puis \textbf{s'arrête} : la fraction
+        transformée ne dépend que de $T$, \textbf{pas du temps} (transformation
+        \textbf{athermale}) ;
+  \item elle est complète à $M_f$ (\emph{martensite finish}).
+\end{itemize}
+Sur un diagramme TTT, elle trace donc des \textbf{droites horizontales} ($M_s$, $M_{50}$, $M_f$).
+\end{propbox}
+
+\slide[0.5]{c04-33}{Fraction de martensite en fonction de la température seulement.}
+
+\subsection*{Et le carbone ?}
+
+Il n'a pas le temps de bouger. Or les sites interstitiels, distribués au hasard dans la CFC, ne
+le sont plus dans la maille issue de la déformation : le carbone se trouve tous sur le même type
+de site et \textbf{empêche la maille de s'aplatir complètement}. La martensite est donc
+\textbf{quadratique centrée}, d'autant plus allongée qu'elle contient de carbone. Deux
+conséquences :
+
+\begin{thmbox}[title={$M_s$ baisse avec le carbone (et les autres éléments)}]
+Pour les aciers à moins de 0,6\,\% C :
+\[ M_s\,[^\circ\text{C}] = 539 - 423\,\text{C} - 30{,}4\,\text{Mn} - 17{,}7\,\text{Ni}
+   - 12{,}1\,\text{Cr} - 7{,}5\,\text{Mo} \quad (\%\text{ pds}) \]
+Le carbone pèse de loin le plus lourd.
+\end{thmbox}
+
+\begin{propbox}[title={La martensite est très dure}]
+Les atomes de carbone coincés créent de fortes contraintes locales qui gênent le mouvement des
+dislocations : la dureté de la martensite \textbf{croît fortement avec le carbone}. Elle est aussi
+\textbf{fragile}.
+\end{propbox}
+
+\begin{exbox}[title={Exemple chiffré (pas dans les diapositives)}]
+Acier 0,4\,\% C, 0,7\,\% Mn : $M_s = 539 - 169 - 21 = 349$\,°C. Un acier 0,4\,\% C avec 5\,\% Mn :
+$M_s = 539 - 169 - 152 = 218$\,°C.
+\end{exbox}
+
+\begin{goatbox}
+La martensite, c'est l'austénite qui change de forme d'un coup, comme une boîte de carton qu'on
+écrase, sans que les atomes aient le temps de se déplacer. Le carbone, coincé dans la boîte
+écrasée, l'empêche de s'aplatir complètement et la rend très tendue : c'est très dur, mais
+cassant. Et plus il fait froid, plus il y a de boîtes écrasées, mais attendre ne change rien.
+\end{goatbox}
