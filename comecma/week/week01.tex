@@ -271,6 +271,69 @@ D'abord un ressort, puis le barreau s'étire pour de bon en durcissant, puis il 
 endroit et casse. Si on lâche en route, seul le \og ressort\fg{} revient.
 \end{goat}
 
+%=========================================================
+\section{Striction : l'instabilité de Considère}
+
+\slide[0.8]{c01-26}
+
+\begin{important}
+Après le maximum M, $R$ baisse mais $\sigma$ \textbf{continue de monter} : la déformation se
+concentre dans une zone qui s'amincit. C'est une \textbf{instabilité}.
+\end{important}
+
+\textbf{Raisonnement} :
+\begin{enumerate}
+\item Volume constant : $dS = -S\,d\varepsilon$.
+\item Même force partout : $dP = \sigma dS + Sd\sigma = 0$ $\Rightarrow$ une tranche plus
+      allongée voit $d\sigma = \sigma\,d\varepsilon$ de plus.
+\item Elle a aussi durci de $\theta\,d\varepsilon$.
+\item $\theta > \sigma$ : stable (elle s'arrête, les autres rattrapent). $\theta < \sigma$ :
+      elle continue, la force baisse, le reste s'arrête : \textbf{striction}.
+\end{enumerate}
+
+\begin{formula}
+Striction quand $\displaystyle\sigma = \frac{d\sigma}{d\varepsilon} \iff \frac{dR}{de} = 0$
+\[ \frac{dR}{de} = \Big(\frac{L_0}{L}\Big)^2\Big(\frac{d\sigma}{d\varepsilon} - \sigma\Big) \]
+(avec $R = \sigma/(1+e)$, $de = (L/L_0)d\varepsilon$, $1/(1+e) = L_0/L$).
+\end{formula}
+
+\slide[0.8]{c01-33}
+
+\begin{important}
+\textbf{Construction de Considère} : sur $\sigma(\varepsilon)$, la tangente au point de striction
+recoupe l'axe une unité ($100\,\%$) plus à gauche ; sur $\sigma(e)$, elle part de $e = -1$.
+\end{important}
+
+\begin{example}
+\textit{(pas dans les diapos)} $\sigma = K\varepsilon^n$ : $nK\varepsilon^{n-1} = K\varepsilon^n$
+$\Rightarrow \varepsilon_{\text{striction}} = n$.
+\end{example}
+
+\begin{warning}
+La traction ne mesure qu'une petite partie de la ductilité réelle (tréfilage : déformations
+vraies de plusieurs unités).
+\end{warning}
+
+\begin{goat}
+Un endroit un peu plus fin porte plus de force par unité de surface. Tant que la matière durcit
+assez vite, il résiste ; quand elle ne durcit plus assez, il s'amincit de plus en plus : c'est la
+striction, pile au moment où la force est maximale.
+\end{goat}
+
+%=========================================================
+\section{Récap de la semaine}
+
+\begin{recap}
+\begin{itemize}
+\item Traction : une seule contrainte ; $\nu = 1/2$ à volume constant.
+\item $\varepsilon = \ln(1+e)$, $\sigma = R(1+e)$ (à connaître par c\oe ur).
+\item $E$, $R_{0,2}$, $R_m$, $e_h$, $e_F$ ; quatre allures de courbes ; décharge et énergie.
+\item $\theta = d\sigma/d\varepsilon$.
+\item \textbf{Considère} : $\sigma = d\sigma/d\varepsilon \iff dR/de = 0$ ; savoir le
+      démontrer et faire la construction.
+\end{itemize}
+\end{recap}
+
 \end{multicols}
 
 \end{document}
