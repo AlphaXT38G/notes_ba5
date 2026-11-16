@@ -111,3 +111,12 @@ bytes of the key}. A 128-bit key falls in $16 \times 256 = 4096$ tries instead o
 In both cases the adversary had \textbf{remote access} to functionality that the threat model did
 not foresee.
 \end{exbox}
+
+\begin{exbox}[title={Unforeseen capabilities: unilateral authentication in GSM}]
+When GSM was designed, antennas (\textbf{Base Transceiver Stations, BTS}) were difficult to
+implement and expensive to build. So operators decided that \textbf{the network did not need to
+authenticate} to the phone: only the phone authenticates to the network. Nowadays
+\textbf{commodity hardware} can fake a base station (a \textbf{fake BTS}) and perform a
+\textbf{man in the middle}: eavesdrop, impersonate, \ldots{} The threat model was right in the
+1990s and wrong today.
+\end{exbox}
