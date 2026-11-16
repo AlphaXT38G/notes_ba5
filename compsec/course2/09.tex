@@ -273,3 +273,35 @@ The clerk copies whatever the goat says onto the official page. If the goat says
 injection), or a note that tricks every visitor who reads the page into handing over their badge
 (XSS). The clerk must check that a name looks like a name before copying it.
 \end{goatbox}
+
+\subsection{CWE-352: Cross-site request forgery (CSRF)}
+
+\begin{defnbox}[title={The target: an HR payment form (hypothetical EPFL example)}]
+The HR website shows a form with three fields, sent by POST to \texttt{payStudent.php}:
+\begin{lstlisting}[language=HTML]
+<h3>EPFL HR Payment Form</h3>
+<form action="/url/payStudent.php" method="post">
+  Firstname: <input type="text" name="firstname"/><br/>
+  Lastname:  <input type="text" name="lastname"/><br/>
+  Amount:    <input type="text" name="amount">
+  <input type="submit" name="submit" value="Pay">
+</form>
+\end{lstlisting}
+\begin{lstlisting}[language=PHP]
+<?php
+session_start();                       // to validate the session cookie
+if (! session_is_registered("username")) {
+  echo "invalid session detected!";     // redirect user to login page
+  exit;
+}
+// the session is valid: process the request
+$originAccount      = findAccount($_SESSION['username']);
+$destinationAccount = findAccount($_POST['firstname'], $_POST['lastname']);
+send_money($originAccount, $destinationAccount, $_POST['amount']);
+echo "Your transfer has been successful.";
+?>
+\end{lstlisting}
+The script (1) checks that the request carries a \textbf{session cookie} of an authenticated user
+(else ``invalid session detected!''); (2) takes as \textbf{origin account} the user in the
+cookie and as \textbf{destination} the name in the form; (3) sends the amount.
+\end{defnbox}
