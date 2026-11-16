@@ -107,3 +107,17 @@ later: Morty decrypts a valid password and accepts ``Rick''. Eve never learnt th
 she logs in. (This happens if one only encrypts the password instead of using a standard channel
 protocol.)
 \end{warnbox}
+
+\begin{defnbox}[title=Challenge-response protocols (solution to replay attacks)]
+\begin{enumerate}
+  \item The principal declares its intention: ``I want to log in''.
+  \item The verifier draws a \textbf{fresh random challenge} $R$ from a \textbf{large space} (so
+        that it never repeats and cannot be predicted) and sends it.
+  \item The principal encrypts the password \textbf{together with the challenge}:
+        \texttt{(Rick, Enc(`Wubbalubba', R))}.
+  \item The verifier checks the password and $R$, then \textbf{deletes $R$}.
+\end{enumerate}
+Including $R$ ensures that (i) the password is never encrypted to the same value twice, and (ii)
+the message is \textbf{fresh}: it answers \emph{this} login request. Replaying the old message
+fails, since its $R$ has been deleted. \textbf{Do NOT design your own authentication protocol.}
+\end{defnbox}
