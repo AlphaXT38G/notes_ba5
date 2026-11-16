@@ -2258,4 +2258,15 @@ bidding less only adds cases where you miss a profitable deal.
 
 \section{First-price vs second-price auction}
 
+\begin{propbox}[title=Same expected payout conditional on winning]
+\begin{itemize}
+  \item First-price: conditional on winning, the payout is $v_i - \frac{N-1}{N} v_i$ (she
+        pays her own bid).
+  \item Second-price: conditional on winning, the expected payout is
+        $v_i - E[\max_{j \neq i} v_j]$ (she pays the second-highest value, since everybody
+        bids truthfully).
+\end{itemize}
+These are \textbf{equal}, by the order statistics below.
+\end{propbox}
+
 \end{document}
