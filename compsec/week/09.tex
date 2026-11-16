@@ -190,3 +190,11 @@ $command  = 'ls -l /home/' . $userName;
 system($command);
 \end{lstlisting}
 \end{defnbox}
+
+\begin{warnbox}[title={What happens if \texttt{\$userName = `; rm -rf'}?}]
+For Linux, \texttt{;} ends a command and starts a new one. The OS runs \texttt{ls -l /home/}
+(lists the home directories), then \textbf{whatever comes after the semicolon}: \texttt{rm -rf}
+deletes \textbf{recursively} (\texttt{-r}) \textbf{without asking} (\texttt{-f}) everything under
+\texttt{/home}. The attacker controls a piece of a command run with the \textbf{server's}
+privileges.
+\end{warnbox}
