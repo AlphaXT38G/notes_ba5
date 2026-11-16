@@ -90,3 +90,26 @@ enforces it}. A developer could build \texttt{GET /user/delete?id=123}: if a sea
 that link, it deletes a user. Very bad design, technically possible. (Standard methodologies, e.g.\
 REST, structure HTTP APIs.)
 \end{defnbox}
+
+\begin{defnbox}[title={HTML and PHP}]
+\begin{itemize}
+  \item \textbf{HTML} (HyperText Markup Language): tells the browser \textbf{how to render} a
+        document; parts of it are \textbf{marked with tags} (\texttt{<head>}, \texttt{<title>},
+        \texttt{<body>}, \texttt{<h1>}, \texttt{<p>}, \ldots). The HTTP response usually carries
+        HTML: data + the way to display it.
+  \item \textbf{PHP} (``PHP Hypertext Preprocessor''): a \textbf{server} scripting language
+        (still behind WordPress, Drupal) that builds web pages \textbf{on the fly} from inputs
+        and variables. Variables start with \texttt{\$}. Special variables read what the client
+        sent: \texttt{\$\_GET[param]} (from the URL), \texttt{\$\_POST[param]} (from the body),
+        \texttt{\$\_SESSION[param]} (from the session tied to the cookie). \texttt{echo} outputs
+        HTML.
+\end{itemize}
+\begin{lstlisting}[language=PHP]
+<?php
+$var = "class";
+echo "<h2>PHP is Fun!</h2>";
+echo "Hello $var!<br>";       // sent to the browser as: Hello class!<br>
+echo "Learning PHP<br>";
+?>
+\end{lstlisting}
+\end{defnbox}
