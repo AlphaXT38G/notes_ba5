@@ -265,3 +265,9 @@ and only then answer. \textbf{Hashing takes care of it}: the checker compares $H
 $H(\text{password})$, and a guess with more correct letters does not give a hash with more
 correct letters.
 \end{propbox}
+
+\begin{rembox}[title={Do not program your own password checker}]
+There are many authentication libraries out there. Logging in with \textbf{OAuth} (``Sign in
+with \ldots'') is very convenient, but it \textbf{leaks to a third party} which users log into your
+service and when: a privacy cost.
+\end{rembox}
