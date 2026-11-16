@@ -198,3 +198,22 @@ deletes \textbf{recursively} (\texttt{-r}) \textbf{without asking} (\texttt{-f})
 \texttt{/home}. The attacker controls a piece of a command run with the \textbf{server's}
 privileges.
 \end{warnbox}
+
+\subsection{CWE-79: Cross-site scripting (XSS)}
+
+\begin{defnbox}[title={CWE-79: Improper Neutralization of Input During Web Page Generation}]
+Same spirit, but the input is used to \textbf{generate web content} instead of a command. The form
+now sends \texttt{userName} by \textbf{GET} (in the URL, after \texttt{?}), and the server greets
+the user (``Welcome Rick''):
+\begin{lstlisting}[language=PHP]
+$username = $_GET['userName'];        // no check on $userName format!
+echo '<div class="header"> Welcome, ' . $username . '</div>';
+\end{lstlisting}
+What if I browse \texttt{http://trustedSite.com/welcome.php?userName=} followed by
+\begin{center}
+\texttt{<script>alert("You've been attacked!");</script>}\,?
+\end{center}
+The tags are pasted into the page. When the browser renders it and finds
+\texttt{<script>\ldots</script>}, it runs the content with its JavaScript engine: a popup reads
+``You've been attacked!''.
+\end{defnbox}
