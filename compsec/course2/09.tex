@@ -1,0 +1,18 @@
+% =========================================================
+\chapter{Lecture 9 : Adversarial thinking II}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Lecture 8 asked ``what can go wrong?''. This one asks
+\textbf{``what not to do?''}: the \textbf{Common Weakness Enumeration (CWE)}, MITRE's database of
+the software errors that most often lead to vulnerabilities, grouped in three classes:
+\textbf{insecure interaction between components}, \textbf{risky resource management} and
+\textbf{porous defenses}. Most examples are on the web, so the lecture starts with a short
+\textbf{web cheat sheet} (HTTP, cookies, GET and POST, HTML, PHP). We then dissect three classic
+injection-style attacks: \textbf{OS command injection}, \textbf{cross-site scripting (XSS)} and
+\textbf{cross-site request forgery (CSRF)}, with the \textbf{Same Origin Policy} and the defenses
+against CSRF. \\
+\textbf{Why is it useful?} XSS, SQL injection, CSRF and command injection sit in the top 10 of the
+most dangerous software errors year after year. They all come from one mistake, using input you do
+not control without sanitizing it, and one mental model, the confused deputy, explains CSRF.
+\end{rembox}
