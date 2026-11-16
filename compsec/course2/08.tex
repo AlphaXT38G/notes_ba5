@@ -169,3 +169,14 @@ With $2^{24} \approx 16$ million IVs drawn at random, a repetition is expected a
 $\sqrt{2^{24}} = 2^{12} = 4096$ frames, the same birthday argument as hash collisions (Lecture 6).
 A busy network sends that in seconds.
 \end{rembox}
+
+\begin{defnbox}[title={Implementation flaws: bugs, bugs and more bugs}]
+Programmers make mistakes:
+\begin{itemize}
+  \item they \textbf{forget checks}, or check the wrong things;
+  \item they \textbf{do not sanitize}, or do not sanitize correctly;
+  \item they \textbf{forget to protect} what needs to be protected;
+  \item they get confused about the \textbf{origin or reliability} of data / variables
+        (\textbf{ambient authority} and \textbf{confused deputy}, Lecture 3).
+\end{itemize}
+\end{defnbox}
