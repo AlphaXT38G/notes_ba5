@@ -2372,4 +2372,16 @@ Given both signals, $n$ is equally likely anywhere in the range compatible with 
 centred on $(s_1 + s_2)/2$; hence the average of the two signals.
 \end{proofbox}
 
+\begin{propbox}[title=More than 2 players]
+With $K$ players, for each $k \neq 1$, $E[s_k|s_1] = s_1$ but $E[s_k|s_1, s_k < s_1] = s_1 - 4$.
+Conditional on Player 1 winning, averaging all the signals:
+\[
+E[\text{number of coins} \,|\, s_1, s_k < s_1 \ \forall k \neq 1]
+= \frac{s_1 + \sum_{k \neq 1} E[s_k|s_1, s_k < s_1]}{K}
+= s_1 - 4\,\frac{K-1}{K}.
+\]
+The expected profit of bidding $s_1$ \textbf{decreases with the number of players} ($-2$ for
+2 players, $-3$ for 4, close to $-4$ for many).
+\end{propbox}
+
 \end{document}
