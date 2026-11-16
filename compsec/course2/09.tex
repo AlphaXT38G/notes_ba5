@@ -341,3 +341,23 @@ authentication, if the victim is logged in, the web client acts with her privile
 \emph{any} page that makes it send a request. A login cookie has the same effect as being logged
 in on Linux: whatever runs ``under'' the cookie runs with the user's privileges.
 \end{keybox}
+
+\begin{defnbox}[title={Same Origin Policy (SOP)}]
+A web browser security mechanism, on by default: it \textbf{restricts scripts of one origin from
+accessing data of another origin}. An \textbf{origin} is the triple \textbf{(protocol, host,
+port)}, e.g.\ \texttt{https://example.com:8000}.
+\begin{center}
+\small
+\begin{tabular}{l|l|l}
+\multicolumn{2}{l|}{\textbf{URLs}} & \textbf{Same origin?} \\ \hline
+\texttt{https://example.com/a} & \texttt{https://example.com/b} & Yes \\
+\texttt{https://example.com/a} & \texttt{http://example.com/a} & No, protocol mismatch \\
+\texttt{https://example.com/a} & \texttt{https://www.example.com/a} & No, host mismatch \\
+\texttt{https://example.com/a} & \texttt{https://example.com:5000/a} & No, port mismatch
+\end{tabular}
+\end{center}
+SOP (1) prevents scripts of origin A from \textbf{reading} data of origin B, and (2) prevents
+origin A from sending B anything but \textbf{``simple'' requests} (GET and POST, with only a few
+modifiable headers). Exceptions, granted by the other origin, are controlled by \textbf{CORS}
+policies (a special HTTP header).
+\end{defnbox}
