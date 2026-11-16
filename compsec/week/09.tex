@@ -403,3 +403,18 @@ important system resources'': the system acts on inputs that are not sanitized.
 \end{itemize}
 (The first two return in the next lecture.)
 \end{defnbox}
+
+\begin{warnbox}[title={The TCB under the control of the adversary}]
+\textbf{Once in the TCB, any property can be violated!}
+\begin{itemize}
+  \item \textbf{CWE-494 Download of code without integrity check}: never include in your TCB code
+        components you have not positively verified; at least \textbf{verify the origin through a
+        signature} (Lecture 6). Example: CVE-2008-3438, Apple Mac OS X did not properly verify
+        the authenticity of updates: a misconfigured update process puts tampered software into
+        critical parts of the system.
+  \item \textbf{CWE-829 Inclusion of functionality from an untrusted control sphere}: a dynamic
+        include under the control of the adversary, e.g.\ \textbf{JavaScript from an untrusted
+        source} on a web page (advertisers, embedded gadgets). Hence \textbf{frames}, which isolate
+        (not perfectly) parts of the page from each other.
+\end{itemize}
+\end{warnbox}
