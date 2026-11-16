@@ -113,3 +113,17 @@ echo "Learning PHP<br>";
 ?>
 \end{lstlisting}
 \end{defnbox}
+
+\begin{defnbox}[title={Lifetime of a request on a PHP server}]
+\textbf{GET}: the browser sends \texttt{GET /index.php} with headers (User-Agent, Accept, \ldots);
+the web server (Apache, Nginx) sees the \texttt{.php} extension (not a static file) and passes the
+request to the \textbf{PHP interpreter}; PHP runs the script command by command (reads the request,
+the database, checks sessions, \ldots) and \textbf{builds an HTML document as a string}; the
+complete HTML goes back to the web server and to the browser. \\
+\textbf{POST}: same path, with the form data in the body (\texttt{username=test\&pass=1234}); PHP
+fills \texttt{\$\_POST} and runs, e.g., \texttt{login.php}, typically writing to the database (the
+main goal of a POST). It then answers with a page (\texttt{200 OK}, ``Success!'') or with a
+\textbf{redirect} (\texttt{header('Location: /dashboard.php')}): the
+\textbf{Post/Redirect/Get} pattern, which avoids submitting the form twice when the user hits
+``refresh''.
+\end{defnbox}
