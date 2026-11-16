@@ -372,3 +372,23 @@ Authentication by proving \textbf{ownership of a device} that holds a secret:
         when it outputs the same number as the server.
 \end{itemize}
 \end{defnbox}
+
+\begin{defnbox}[title=Time-based tokens: how they work]
+\textbf{Step 1 -- Offline initialization}: token and server establish a common \textbf{seed} (a
+common random number) and \textbf{synchronize their clocks}. Time is cut into discrete intervals
+$1, 2, 3, \ldots, n, \ldots$ \\
+\textbf{Then, operation} (obtain a number from the seed that only the token can compute):
+\begin{enumerate}
+  \item Rick: ``I am Rick''. 2.~Server: ``Prove it''.
+  \setcounter{enumi}{2}
+  \item The token computes $n = $ interval of \emph{now} since the synchronization.
+  \item It applies a \textbf{keyed cryptographic function} $f$ (keyed with the secret shared with
+        the server) \textbf{$n$ times on the seed}: $v = f^n(\mathit{seed})$ (so $n=1$:
+        $f(\mathit{seed})$, $n=2$: $f(f(\mathit{seed}))$, \ldots).
+  \item It sends $v$ to the server.
+  \item The server computes $n$ and $v' = f^n(\mathit{seed})$ the same way.
+  \item It accepts if $v' = v$.
+\end{enumerate}
+The adversary only sees $v$: it cannot recover the seed or the key (properties of encryption),
+nor compute future values, since it does not have the key.
+\end{defnbox}
