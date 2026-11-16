@@ -536,6 +536,39 @@ b(v) = R + \frac{(v-R)^2}{2v}
 
 
 
+%=========================================================
+\section{Optimal Reserve Price}
+
+
+Second-price, 2 bidders, $U[0,1]$: compare the revenue when the reserve goes from $R$ to
+$R + \epsilon$, over all $v_l < v_h$.
+
+
+\begin{center}
+
+\includegraphics[
+width=0.9\linewidth
+]{../images/week09_03.png}
+
+\end{center}
+
+
+\begin{itemize}
+
+\item $v_l < v_h < R$: no impact.
+
+\item $R + \epsilon < v_l < v_h$: no impact.
+
+\item $v_l < R < R + \epsilon < v_h$: revenue $+\epsilon$ (prob.\ $2R(1-R)$).
+
+\item $v_l < R < v_h < R + \epsilon$: revenue $-R$ (prob.\ $2\epsilon R$).
+
+\item $R < v_l < R + \epsilon < v_h$: $+\sim\epsilon$ (prob.\ $2\epsilon(1-R)$), order
+$\epsilon^2$.
+
+\end{itemize}
+
+
 
 
 
