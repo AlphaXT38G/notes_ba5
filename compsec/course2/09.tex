@@ -259,3 +259,10 @@ BIBA} (Lecture 4): never bring information from \textbf{low} (unknown, the user)
 Subsystem A (the PHP script) must know the set of valid inputs of subsystem B (the shell, the HTML
 parser, the SQL engine), and often lacks that information.
 \end{propbox}
+
+\begin{rembox}[title={In practice (not in the slides)}]
+Sanitize \emph{for the destination}: escape HTML special characters before writing input into a
+page (\texttt{<} becomes \texttt{\&lt;}, e.g.\ PHP's \texttt{htmlspecialchars}), pass arguments to
+programs without going through a shell, use prepared statements for SQL, and prefer a whitelist
+(``a username is letters and digits'') to a blacklist (``no semicolon''): fail-safe defaults.
+\end{rembox}
