@@ -163,3 +163,11 @@ break a security principle. The 2011 classification has three classes:
 XSS, SQL injection, CSRF and OS command injection (all \emph{injections} of attacker-controlled
 input) are highlighted in the slides: four of the top 7.
 \end{exbox}
+
+\section{CWE I: Insecure interaction between components}
+
+\begin{defnbox}[title={Insecure interaction between components}]
+``Insecure ways in which data is sent and received between separate components, modules, programs,
+processes, threads, or systems.'' One subsystem feeds another subsystem data that is \textbf{not
+sanitized}; the program uses it, with unintended behaviors that the adversary exploits.
+\end{defnbox}
