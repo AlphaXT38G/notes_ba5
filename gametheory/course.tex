@@ -2170,4 +2170,23 @@ $a = 1/2$ is indeed consistent with the assumption $b_2 = a v_2$).
 winning.
 \end{defnbox}
 
+\begin{propbox}[title={$N$ bidders, values uniform on $[0,1]$}]
+Assume each other bidder $j$ bids $b_j(v_j) = a_j v_j$. The probability that $b_j < b_1$ is
+$b_1/a_j$, and these events are \textbf{independent} (values are independent), so
+\[
+P(b_j < b_1 \ \forall j \neq 1) = \prod_{j>1} \frac{b_1}{a_j}
+  = \frac{b_1^{N-1}}{\prod_{j>1} a_j}.
+\]
+Bidder 1 maximizes
+\[
+\mathcal{P}_1 = (v_1 - b_1)\,\frac{b_1^{N-1}}{\prod_{j>1} a_j}.
+\]
+Derivative (the constant $\prod a_j$ plays no role):
+$-b_1^{N-1} + (N-1)(v_1 - b_1) b_1^{N-2} = 0$, i.e.\ $b_1 = (N-1)(v_1 - b_1)$, so
+\[
+b_1 = \frac{N-1}{N}\, v_1.
+\]
+The BNE has every player bidding $b(v) = \frac{N-1}{N}\, v$.
+\end{propbox}
+
 \end{document}
