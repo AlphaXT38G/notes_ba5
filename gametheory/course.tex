@@ -12,7 +12,8 @@
 
 These notes cover the course by Elena Perazzi (EPFL, Fall 2026): how to model strategic
 interactions as games, and how to predict their outcome with solution concepts --- Nash
-equilibrium, dominance, subgame-perfect and Bayesian Nash equilibria.
+equilibrium, dominance, subgame-perfect, Bayesian Nash and perfect Bayesian equilibria --- and
+auction theory (first-, second-price and other formats, revenue equivalence, eBay).
 
 
 % =========================================================
@@ -1534,6 +1535,1324 @@ Prob(\text{sick} \,|\, +) = \frac{19}{19 + 99} = \frac{19}{118} \approx 16\%: \t
   \item \textbf{Continuum of types}: threshold strategies, $T_1^* = T_2^* = 2/3$.
   \item \textbf{Conditional probability}: $Prob(A|B) = Prob(A \& B)/Prob(B)$, the rule to
         update beliefs with new information.
+\end{itemize}
+\end{keybox}
+
+
+% =========================================================
+\chapter{Lecture 7 : Perfect Bayesian equilibrium and signaling games}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Sequential games in which a player does \emph{not} know
+everything that happened before her move (\textbf{extensive-form games of incomplete
+information}). The notion of subgame must be refined, and the SPE of Lecture 3 is no longer
+enough to guarantee sequential rationality. We introduce a new solution concept, the
+\textbf{Perfect Bayesian Equilibrium (PBE)}, apply it to \textbf{signaling games} (Spence's
+education game) and to a real-world case: the \textbf{online-dating industry}. \\
+\textbf{Why is it useful?} Whenever one side knows something the other does not (a worker's
+skill, a man's real interest, a firm's quality), the informed side can \emph{send signals}
+and the other side \emph{updates its beliefs} with Bayes rule (Lecture 5). The PBE is the tool
+to predict what happens.
+\end{rembox}
+
+\begin{rembox}[title=Where we are in the course]
+\begin{itemize}
+  \item Lecture 1--2: simultaneous games, complete information $\to$ \textbf{NE}.
+  \item Lecture 3: sequential games, perfect information $\to$ \textbf{SPE} (kills
+        non-credible threats).
+  \item Lecture 4--5: simultaneous games, incomplete information $\to$ \textbf{BNE}
+        (strategy = plan for each type), and Bayes rule.
+  \item \textbf{Lecture 7: sequential games + incomplete information $\to$ PBE}: it combines
+        the SPE idea (optimal play at every point of the tree) with the Bayesian idea
+        (beliefs about what you cannot see, updated with Bayes rule).
+\end{itemize}
+\end{rembox}
+
+
+\section{Recap: conditional probability}
+
+\begin{defnbox}[title=Bayes formula]
+The probability of an event A, conditional on an event B (if B occurs, what is the
+probability that A also occurs?):
+\[
+Prob(A|B) = \frac{Prob(A \,\&\, B)}{Prob(B)}.
+\]
+\end{defnbox}
+
+\begin{rembox}[title=In plain words]
+Once you learn that B happened, the ``world'' shrinks to B: among all the situations where B
+is true, which fraction also has A? In this lecture, B will be ``I observe this move'' and A
+``the player who made it is of this type''.
+\end{rembox}
+
+
+\section{Extensive-form games of incomplete information}
+
+\begin{exbox}[title=Example 1]
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week07_01.png}
+\end{center}
+Player 1 chooses L, M or R. R ends the game with payouts $(1,3)$. Player 2 moves only if
+Player 1 chooses L or M, and in that case \textbf{Player 2 does not know whether the choice
+was L or M}. The two nodes of Player 2 connected by a dashed line form an \textbf{information
+set}.
+\end{exbox}
+
+\begin{defnbox}[title=Information set]
+In extensive-form games, an information set is a set of decision nodes such that:
+\begin{itemize}
+  \item every node in the set belongs to \textbf{one} player;
+  \item when the game reaches the information set, the player with the move
+        \textbf{cannot differentiate} between the nodes of the set: if it contains more than
+        one node, she does not know which node of the set has been reached.
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title=In plain words]
+The dashed line means ``Player 2 sees the same thing at both nodes''. So Player 2 must choose
+\textbf{the same action} at both nodes (U at both, or D at both): she cannot play U after L
+and D after M, since she cannot tell them apart. A strategy of Player 2 is therefore a choice
+per \emph{information set}, not per node. In the perfect-information games of Lecture 3,
+every information set had one single node.
+\end{rembox}
+
+\begin{defnbox}[title=Subgame (incomplete information)]
+In an extensive-form game of incomplete information, a subgame must
+\begin{itemize}
+  \item start at a \textbf{single initial node that forms an information set by itself}, and
+        contain all its successor nodes;
+  \item if it contains one node of an information set, it must contain \textbf{all} the
+        nodes of that information set (a subgame never ``cuts'' a dashed line).
+\end{itemize}
+\end{defnbox}
+
+\begin{exbox}[title=Example 1 has no proper subgame]
+Player 2's nodes cannot start a subgame: each of them belongs to an information set with two
+nodes. So the only subgame is \textbf{the whole game}, and SPE coincide with NE: the SPE
+refinement removes nothing here.
+\end{exbox}
+
+
+\begin{propbox}[title=Example 1: Nash equilibria]
+Normal form (Player 1 chooses a row, Player 2 a column; NE underlined):
+\begin{center}
+\begin{tabular}{c|cc}
+$1 \backslash 2$ & U & D \\ \hline
+L & \underline{(2,1)} & (0,0) \\
+M & (0.5,2) & (0.5,1) \\
+R & (1,3) & \underline{(1,3)}
+\end{tabular}
+\end{center}
+Two pure-strategy NE: \textbf{(L,U)} and \textbf{(R,D)}.
+\begin{itemize}
+  \item (L,U): against U, L gives Player 1 the most (2 vs 0.5 vs 1); against L, U gives
+        Player 2 1 instead of 0.
+  \item (R,D): against D, R gives Player 1 the most (1 vs 0 vs 0.5); against R, Player 2 does
+        not move and gets 3 whatever she ``plans'', so D is a best response.
+\end{itemize}
+\end{propbox}
+
+\begin{warnbox}[title={(R,D) is not credible}]
+(R,D) relies on the \textbf{threat} ``if you play L or M, I'll play D''. But once Player 2
+actually has to move (so she knows Player 1 did not choose R), D is \textbf{dominated}: at the
+L node U gives her 1 instead of 0, at the M node 2 instead of 1. Whatever she believes about
+the node she is at, U is better. Yet the SPE cannot eliminate (R,D), because there is no
+proper subgame. We need a new equilibrium concept that imposes \textbf{sequential
+rationality} also at information sets with several nodes.
+\end{warnbox}
+
+
+\section{Perfect Bayesian equilibrium (PBE)}
+
+\begin{defnbox}[title=The four requirements of a PBE]
+\begin{enumerate}
+  \item \textbf{Beliefs.} At each information set with more than one node, the player who
+        moves has a \textbf{belief}: a probability for each node of the set (in Example 1,
+        $p$ for the L node and $1-p$ for the M node).
+  \item \textbf{Sequential rationality.} At each information set, the action of the player
+        who moves must be \textbf{optimal given her beliefs} (and given the strategies of the
+        others afterwards).
+  \item \textbf{Consistency on the path.} At information sets \textbf{on the equilibrium
+        path} of the game or of any of its subgames, beliefs are determined by the
+        \textbf{equilibrium strategies and Bayes rule}.
+  \item \textbf{Freedom off the path.} No restriction applies to the beliefs at information
+        sets that are \textbf{off the equilibrium path} in all subgames.
+\end{enumerate}
+\end{defnbox}
+
+\begin{defnbox}[title=PBE]
+A PBE is a SPE together with a \textbf{system of beliefs} at each information set with more
+than one node, such that strategies + beliefs satisfy Requirements 1--4. In short:
+\textbf{strategies are optimal given the beliefs, and beliefs are correct given the
+strategies} (whenever Bayes rule can be applied).
+\end{defnbox}
+
+\begin{rembox}[title=In plain words]
+``On the equilibrium path'' means ``reached with positive probability when everybody plays
+the equilibrium strategies''. There, a player who knows the others' strategies can compute
+exactly where she is with Bayes rule: her belief is not a free choice. ``Off the path''
+means ``reached with probability 0'': Bayes rule would divide by 0, so any belief is allowed
+(Requirement 4) --- but the action there must still be optimal given that belief
+(Requirement 2).
+\end{rembox}
+
+\begin{exbox}[title=Example 1 solved]
+\begin{itemize}
+  \item Requirement 1: Player 2 has a belief $p$ (L node) and $1-p$ (M node).
+  \item Requirement 2: expected payout of U is $p \cdot 1 + (1-p) \cdot 2 = 2 - p$, of D is
+        $p \cdot 0 + (1-p) \cdot 1 = 1 - p$. Since $2 - p > 1 - p$ for \emph{every} $p$,
+        Player 2 plays U. This \textbf{kills (R,D)}.
+  \item Player 1 anticipates U: L gives 2, M gives 0.5, R gives 1, so he plays L.
+  \item Requirement 3: Player 1 plays L, so Player 2's information set is on the path, and
+        Bayes rule gives $p = Prob(L | L \text{ or } M) = 1$.
+\end{itemize}
+\textbf{PBE: (L,U) with $p = 1$} (Player 2 believes she is at the node after L).
+\end{exbox}
+
+
+\begin{exbox}[title=Example 2]
+\begin{center}
+\includegraphics[width=0.5\linewidth]{images/week07_02.png}
+\end{center}
+Three players, payouts written (Player 1, Player 2, Player 3). Player 1 chooses A or B; B
+ends the game with $(4,1,1)$. After A, Player 2 chooses L or R; then Player 3, who does not
+observe L or R, chooses U or D (belief $p$ at the node after L).
+\end{exbox}
+
+\begin{propbox}[title=Example 2 solved]
+The game after A is a \textbf{proper subgame}: it starts at Player 2's single node and
+contains the whole information set of Player 3.
+\begin{itemize}
+  \item In this subgame, for Player 2, L strictly dominates R: $2 > 1$ against U, $3 > 1$
+        against D. So Player 2 plays L.
+  \item Requirement 3: Player 3's information set is on the equilibrium path \textbf{of the
+        subgame} (Player 2 plays L), so $p = 1$. Then D (3) beats U (1): Player 3 plays D.
+  \item The subgame gives $(3,3,3)$. Player 1 compares A (3) with B (4) and plays B.
+\end{itemize}
+\textbf{PBE: (B, L, D) with $p = 1$}, consistent with the equilibrium strategy of Player 2
+in the smallest subgame.
+\end{propbox}
+
+\begin{warnbox}[title={Why ``or of any of its subgames'' in Requirement 3 (not on the slides)}]
+Player 1 plays B, so Player 3's information set is \textbf{never reached} in the whole game.
+If we only required consistency on the path of the whole game, Player 3 could believe
+$p = 0$; then U is optimal ($2 > 1$ at the R node), Player 2 still plays L, Player 1 still
+plays B: \textbf{(B, L, U) with $p = 0$} would satisfy Requirements 1 and 2. But this belief
+is absurd: Player 2 plays L, so if the information set were reached, Player 3 should be at
+the L node. Requirement 3 applied to the subgame forces $p = 1$ and removes (B, L, U).
+\end{warnbox}
+
+
+\begin{exbox}[title={Example 3: beliefs with mixed strategies}]
+In a game shaped like Example 1, suppose that Player 1's equilibrium strategy is to play
+L, M, R with probabilities $(q_1, q_2, 1 - q_1 - q_2)$. Then Requirement 3 (Bayes rule) gives
+\[
+p = Prob(L \,|\, L \text{ or } M) = \frac{Prob(L)}{Prob(L \text{ or } M)}
+  = \frac{q_1}{q_1 + q_2}.
+\]
+E.g.\ (not on the slides) with $(q_1, q_2) = (0.2, 0.6)$: $p = 0.2/0.8 = 1/4$. If
+$q_1 + q_2 = 0$, the information set is off the path and $p$ is free.
+\end{exbox}
+
+
+\begin{algbox}[title={How to find a PBE (method, not on the slides)}]
+\begin{enumerate}
+  \item Find the proper subgames; solve the smallest ones first (backward induction).
+  \item At each information set with several nodes, write the belief ($p$, $1-p$) and the
+        \textbf{expected payout} of each action as a function of $p$.
+  \item Guess the strategies; on the path, compute the beliefs with \textbf{Bayes rule}.
+  \item Check that each action is optimal given the beliefs (Requirement 2).
+  \item Off the path, find beliefs that make the actions optimal (any belief is allowed).
+\end{enumerate}
+\end{algbox}
+
+
+\section{Signaling games}
+
+\begin{defnbox}[title=Signaling game]
+A game of incomplete information with a \textbf{sender} and a \textbf{receiver}:
+\begin{itemize}
+  \item the sender can be of two or more \textbf{types} (``strong'' or ``weak'', ``smart''
+        or ``dumb''\dots); she \textbf{knows} her type, the receiver \textbf{cannot observe}
+        it;
+  \item at least one type of sender wants the receiver to know her type, and sends
+        \textbf{signals};
+  \item the receiver observes the signal, \textbf{infers} something about the sender's type
+        (Bayes rule) and makes his choice accordingly.
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Separating and pooling equilibria]
+Two kinds of PBE in signaling games:
+\begin{itemize}
+  \item \textbf{Separating equilibrium}: the ``strong'' type wants to be identified and
+        sends a signal strong enough that the ``weak'' type \textbf{cannot (or does not want
+        to) match it}. Each type sends a different signal; the receiver observes it and
+        correctly identifies the type.
+  \item \textbf{Pooling equilibrium}: the ``weak'' type does not want to be identified, so
+        she \textbf{imitates} the signal of the strong. Everybody sends the same signal, and
+        the receiver learns nothing about the type (his belief stays the prior).
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title=In plain words]
+A signal is only informative if it is \textbf{costly}, and \textbf{more costly for the weak
+type}. If a signal is free, anybody can send it, so it says nothing (``cheap talk''). The
+cost difference between types is what makes separation possible.
+\end{rembox}
+
+
+\section{The Spence education game}
+
+\begin{defnbox}[title=Setup]
+\begin{itemize}
+  \item Two players: a \textbf{job applicant} (sender) and an \textbf{employer} (receiver).
+  \item Nature chooses the type of the applicant: ``smart'' with productivity $\theta_S$ or
+        ``dumb'' with productivity $\theta_D$, $\theta_S > \theta_D$, each with probability
+        50\%. The applicant knows his type, the employer does not.
+  \item The applicant chooses a level of education $e \in [0, e_{max}]$. Education is
+        \textbf{intrinsically useless} (it does not raise productivity), but it is harder for
+        the dumb: it costs $e/\theta_S$ to the smart and $e/\theta_D$ to the dumb.
+  \item The employer observes $e$, forms a belief about the probability that the applicant
+        is smart, and offers the salary $E[\theta|e]$, the expected productivity given the
+        belief (otherwise, with competition, the employer is out of business).
+  \item As in any PBE, the employer's beliefs must be consistent with the applicant's
+        strategy on the equilibrium path.
+\end{itemize}
+Applicant's payout: salary $-$ cost of education. Employer's payout: 0 (he pays exactly the
+expected productivity).
+\end{defnbox}
+
+\begin{exbox}[title=Game tree]
+\begin{center}
+\includegraphics[width=0.55\linewidth]{images/week07_03.png}
+\end{center}
+Each education level $e$ is an information set of the employer (dashed lines): when he sees
+$e$, he does not know whether it came from the smart or the dumb applicant. $p_1, p_2, p_3,
+\dots$ are his beliefs (probability of ``smart'') at the different education levels.
+\end{exbox}
+
+
+\begin{propbox}[title=Separating equilibrium]
+The smart type chooses an education $e^*$ so costly for the dumb that the dumb prefers zero
+education, even if $e^*$ would get him the salary of a smart type. Both types must prefer
+their own choice:
+\begin{align*}
+\theta_S - \frac{e^*}{\theta_D} &< \theta_D &&\text{(type D prefers } e = 0\text{)} \\
+\theta_S - \frac{e^*}{\theta_S} &> \theta_D &&\text{(type S prefers } e = e^*\text{)}
+\end{align*}
+i.e.\ $e^*$ is worth taking for the smart, given the salary differential he can get, but not
+for the dumb. This implies
+\[
+\theta_D(\theta_S - \theta_D) < e^* < \theta_S(\theta_S - \theta_D).
+\]
+Optimally, the smart type chooses the cheapest education that does the job:
+\[
+e^* = \theta_D(\theta_S - \theta_D) + \epsilon.
+\]
+\end{propbox}
+
+\begin{rembox}[title=Where the inequalities come from]
+In a separating equilibrium the employer recognises each type: education $e^*$ $\to$ salary
+$\theta_S$, education 0 $\to$ salary $\theta_D$. The dumb gets $\theta_D - 0 = \theta_D$ by
+choosing 0; if he imitated the smart he would get $\theta_S - e^*/\theta_D$. He must not want
+to imitate: first inequality. The smart gets $\theta_S - e^*/\theta_S$; if he chose 0 he would
+be taken for dumb and get $\theta_D$: second inequality. Solving each for $e^*$ gives the
+interval. It is not empty since $\theta_S > \theta_D$: the same education is
+\textbf{cheaper for the smart}, which is exactly what makes the signal work.
+\end{rembox}
+
+\begin{propbox}[title=Beliefs supporting the separating equilibrium]
+The employer must have a belief for \textbf{every} education level:
+\begin{itemize}
+  \item on the path: if $e = e^*$, $p(Smart) = 1$; if $e = 0$, $p(Smart) = 0$ (consistent
+        with the applicant's strategy, by Bayes rule);
+  \item off the path, beliefs are free; beliefs that support the equilibrium: if
+        $0 < e < e^*$, $p(Smart) = 0$; if $e > e^*$, $p(Smart) = 1$.
+\end{itemize}
+In summary, an applicant is believed dumb if he chooses $e < e^*$ and smart if $e \ge e^*$.
+It is too costly for the dumb to choose at least $e^*$, so he chooses 0; it is not too costly
+for the smart to choose $e^*$, so he chooses $e^*$ (any $e$ between 0 and $e^*$ would cost
+something and still be paid $\theta_D$; any $e > e^*$ would cost more for the same salary).
+\end{propbox}
+
+\begin{exbox}[title={Numbers (not on the slides): $\theta_S = 2$, $\theta_D = 1$}]
+Separation needs $1 \cdot (2-1) = 1 < e^* < 2 \cdot (2-1) = 2$; the smart takes
+$e^* = 1 + \epsilon$.
+\begin{itemize}
+  \item Dumb: $e = 0$ gives salary 1. Imitating gives $2 - (1+\epsilon)/1 = 1 - \epsilon < 1$:
+        no.
+  \item Smart: $e^*$ gives $2 - (1+\epsilon)/2 \approx 1.5$. Choosing 0 gives 1: he takes
+        $e^*$.
+\end{itemize}
+The smart ``burns'' $0.5$ of utility in useless education, only to prove he is smart.
+\end{exbox}
+
+
+\begin{propbox}[title=Pooling equilibria]
+There are also \textbf{unintuitive} PBE --- pooling equilibria --- in which both types choose
+the same education $\tilde{e}$ below $e^*$. If the prior probability of ``smart'' is 50\%,
+they require
+\[
+0 \le \tilde{e} < \frac{\theta_D(\theta_S - \theta_D)}{2}.
+\]
+Since the employer cannot infer the type, the salary is the average productivity
+$(\theta_S + \theta_D)/2$. These equilibria are supported by the beliefs
+\begin{itemize}
+  \item for $e = \tilde{e}$: $p = 0.5$ (on the path: both types choose $\tilde{e}$, so Bayes
+        rule gives back the prior);
+  \item for $e \neq \tilde{e}$: $p(Smart) = 0$ (off the path, free).
+\end{itemize}
+Given these beliefs, taking education $\tilde{e}$ is worth it for both types, to get the
+salary $(\theta_S + \theta_D)/2$ rather than $\theta_D$ (the best deviation is $e = 0$, paid
+$\theta_D$):
+\begin{align*}
+\frac{\theta_S + \theta_D}{2} - \frac{\tilde{e}}{\theta_D} &> \theta_D, \\
+\frac{\theta_S + \theta_D}{2} - \frac{\tilde{e}}{\theta_S} &> \theta_D.
+\end{align*}
+The first one gives $\tilde{e} < \theta_D(\theta_S - \theta_D)/2$; the second one is weaker
+(it gives $\tilde{e} < \theta_S(\theta_S - \theta_D)/2$).
+\end{propbox}
+
+\begin{warnbox}[title=Typo on the slides]
+The slide writes ``rather than $\theta_L$'': read $\theta_D$, the salary of an applicant
+believed to be dumb.
+\end{warnbox}
+
+\begin{defnbox}[title=Intuitive criterion]
+Off-equilibrium beliefs are unconstrained by Bayes rule, but the beliefs supporting the
+pooling equilibria are \textbf{weird}: they say that an applicant taking $e > \tilde{e}$ is
+dumb, although no dumb applicant would ever take $e > e^*$ (it is a dominated strategy for
+him). The \textbf{intuitive criterion} says that even beliefs at information sets off the
+equilibrium path \textbf{cannot assign positive probability to a dominated strategy}.
+\end{defnbox}
+
+\begin{propbox}[title=The intuitive criterion kills the pooling equilibria]
+Observing $e \ge e^*$, which the dumb type would never choose, the employer must believe
+$p(Smart) = 1$. Then the smart type deviates to $e^*$ (salary $\theta_S$), and the pooling
+equilibria collapse. Only the separating equilibrium with the cheapest signal, $e^* =
+\theta_D(\theta_S - \theta_D) + \epsilon$, survives (the other separating equilibria, with a
+larger $e^*$, are removed the same way: any $e$ just above $\theta_D(\theta_S - \theta_D)$ is
+dominated for the dumb).
+\end{propbox}
+
+
+\section{Application: the online-dating industry}
+
+\begin{rembox}[title=Artificial scarcity]
+Why do many dating sites limit the number of profiles you can like, or how many invitations
+you can send? \textbf{Artificial scarcity}: if you can like only a few profiles, a like is a
+\textbf{stronger signal} of your interest; if you can send only a few invitations, sending
+one is costly, hence it signals ``true interest''.
+\end{rembox}
+
+\begin{defnbox}[title=The online-dating game]
+\begin{itemize}
+  \item Nature chooses the man's type: \textbf{interested} (I) with probability $p$,
+        \textbf{uninterested} (U) with probability $1-p$. The man knows his type, the woman
+        does not.
+  \item The man sends a date invitation (Y) or not (N). Without artificial scarcity, sending
+        is \textbf{free}.
+  \item The woman receiving an invitation accepts (A) or refuses (R).
+  \item A date gives utility 2 to an interested man and 1 to an uninterested man. The woman
+        gets $u_I > 0$ from a date with an interested man and $u_U < 0$ from a date with an
+        uninterested man.
+\end{itemize}
+\end{defnbox}
+
+\begin{exbox}[title=Without artificial scarcity]
+\begin{center}
+\includegraphics[width=0.55\linewidth]{images/week07_04.png}
+\end{center}
+Payouts (man, woman). Assume the expected utility of a date for the woman is negative:
+\[
+E[u] = p\,u_I + (1-p)\,u_U < 0
+\]
+(the slides write $p\,u_I - (1-p)\,u_U$, with $u_U$ taken as the size of the loss).
+\end{exbox}
+
+\begin{propbox}[title=Pooling PBE: the industry does not work]
+Sending costs nothing, so all men send an invitation (they can only gain). The woman learns
+nothing from an invitation: by Bayes rule her belief is the prior, $p$. Accepting gives her
+$E[u] < 0$, refusing gives 0: \textbf{all women turn down the offers}. Pooling PBE: both types
+send, the woman refuses, belief $p$. (Since they are refused anyway, men are actually
+indifferent between Y and N; sending is weakly dominant.)
+\end{propbox}
+
+\begin{exbox}[title={With artificial scarcity: cost $c$, with $1 < c < 2$}]
+\begin{center}
+\includegraphics[width=0.55\linewidth]{images/week07_05.png}
+\end{center}
+Sending an invitation now costs $c$ to the man, whatever the answer.
+\end{exbox}
+
+\begin{propbox}[title=Separating PBE: the industry works]
+\begin{itemize}
+  \item Uninterested man: sending gives $1 - c < 0$ if accepted, $-c < 0$ if refused; not
+        sending gives 0. \textbf{He never sends} (sending is strictly dominated).
+  \item Interested man: if the woman accepts, sending gives $2 - c > 0$: \textbf{he sends}.
+  \item Woman: only interested men send, so by Bayes rule an invitation means $p = 1$;
+        accepting gives $u_I > 0$: \textbf{she accepts}.
+\end{itemize}
+Separating PBE: uninterested men do not send, interested men send, the woman believes $p = 1$
+and accepts. The cost $c$ is too high for the uninterested and low enough for the interested:
+exactly the role of education in Spence's game.
+\end{propbox}
+
+\begin{warnbox}[title={Another PBE, removed by the intuitive criterion (not on the slides)}]
+With the cost $c$, ``nobody sends'' is also a PBE: if nobody sends, an invitation is off the
+path, the woman may believe $p$ small enough to refuse, and then the interested man would
+get $-c$ by sending, so he does not. But sending is dominated for the uninterested type, so
+the intuitive criterion forces $p = 1$ after an invitation; the woman then accepts and the
+interested man sends: back to the separating PBE.
+\end{warnbox}
+
+\begin{keybox}[title=Exam recap]
+\begin{itemize}
+  \item \textbf{Information set}: nodes of one player that she cannot tell apart; same action
+        at all of them. A subgame never cuts an information set, so SPE may remove nothing.
+  \item \textbf{PBE} = strategies + beliefs: (1) a belief at each multi-node information
+        set; (2) actions optimal given beliefs; (3) on the path (of the game or of a
+        subgame), beliefs from Bayes rule; (4) off the path, beliefs free.
+  \item Bayes with mixed strategies: $p = q_1/(q_1 + q_2)$.
+  \item \textbf{Signaling}: separating (types send different signals, receiver learns the
+        type) vs pooling (same signal, receiver keeps the prior). A signal works only if it
+        is more costly for the weak type.
+  \item \textbf{Spence}: separation for
+        $\theta_D(\theta_S - \theta_D) < e^* < \theta_S(\theta_S - \theta_D)$, best
+        $e^* = \theta_D(\theta_S - \theta_D) + \epsilon$; pooling for
+        $\tilde{e} < \theta_D(\theta_S - \theta_D)/2$, salary $(\theta_S + \theta_D)/2$,
+        killed by the \textbf{intuitive criterion} (no off-path belief on a dominated
+        strategy).
+  \item \textbf{Dating}: free invitations $\to$ pooling, women refuse; costly invitations
+        ($1 < c < 2$) $\to$ separating, women accept.
+  \item Builds on Lecture 3 (SPE, sequential rationality), Lecture 4 (types) and Lecture 5
+        (Bayes rule).
+\end{itemize}
+\end{keybox}
+
+
+% =========================================================
+\chapter{Lecture 8 : Auctions, private and common values}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} The second part of the course: \textbf{auction theory}
+(W.\ Vickrey, Nobel Prize 1996; P.\ Milgrom, Nobel Prize 2020). The main auction formats, the
+difference between \textbf{private-value} and \textbf{common-value} auctions, the optimal bid
+in a \textbf{first-price} auction (bid shading), why bidding one's value is
+\textbf{dominant in a second-price} auction, and the \textbf{winner's curse}. \\
+\textbf{Why is it useful?} An auction is a Bayesian game (Lecture 4--5): each bidder knows her
+own value (her type) but not the others'. Auctions are everywhere: art, flowers, spectrum
+licences, eBay, Google ads.
+\end{rembox}
+
+
+\section{Why auctions?}
+
+\begin{defnbox}[title=Two goals of an auction]
+\begin{itemize}
+  \item \textbf{Price discovery}: for rare or unique objects (art works, historical
+        manufacts\dots), there is no market price; the price is whatever people are willing
+        to pay for the object.
+  \item \textbf{Efficiency of allocation}: especially important in auctions held by the
+        government (spectrum rights, carbon rights\dots). The business willing to pay the
+        most for the object is likely to be the most productive one, i.e.\ the one that gets
+        the biggest benefit from it.
+\end{itemize}
+\end{defnbox}
+
+
+\section{Types of auctions}
+
+\begin{defnbox}[title=Open auctions]
+\begin{itemize}
+  \item \textbf{English auction}: \textbf{ascending} price; bidders drop out until one is
+        left. Used by major auction houses such as Christie's and Sotheby's.
+  \item \textbf{Dutch auction}: \textbf{descending} price; a clock goes down and the first
+        bidder who stops it wins at the current price. Used in flower trading in Holland.
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Sealed-bid auctions]
+Each bidder submits a bid in a closed envelope, without seeing the others' bids.
+\begin{itemize}
+  \item \textbf{First-price sealed-bid}: the highest bidder gets the object and \textbf{pays
+        her own bid}.
+  \item \textbf{Second-price sealed-bid} (Vickrey auction): the highest bidder gets the object
+        and \textbf{pays the second-highest bid}.
+\end{itemize}
+\end{defnbox}
+
+\begin{propbox}[title=Equivalences]
+\begin{itemize}
+  \item \textbf{Dutch $\equiv$ first-price sealed-bid}: in a Dutch auction you decide in
+        advance at which price you stop the clock, without learning anything useful before
+        (when somebody stops it, the auction is over), and you pay that price: exactly like
+        writing that price in an envelope.
+  \item \textbf{English $\equiv$ second-price sealed-bid}, in the limit where the English
+        price rises continuously: each bidder drops out when the price rises above her
+        value; when the price goes just above the second-highest value, only the bidder with
+        the highest value remains, and she gets the object for a price equal to (or just
+        above) the second-highest value.
+\end{itemize}
+\end{propbox}
+
+
+\section{Private-value vs common-value auctions}
+
+\begin{defnbox}[title=Private vs common value]
+This distinction is not about the format of the auction but about \textbf{the object for
+sale}.
+\begin{itemize}
+  \item \textbf{Private value}: the object has a different value $v_1, v_2, \ldots, v_N$ for
+        each bidder, and there is \textbf{no uncertainty} about its characteristics
+        (quality, authenticity\dots). Example: the last seat on a flight to Paris.
+  \item \textbf{Common value}: the object has \textbf{the same value for all} bidders, but
+        this value is uncertain; each bidder has an imperfect estimate (a ``signal'') of it.
+        Example: an oil field. \textbf{Other people's estimates might change my own
+        estimate}.
+\end{itemize}
+Many (or most?) objects combine both. Example: the guitar of Elvis Presley (is it authentic?
+and even if it is, what is it worth to me?).
+\end{defnbox}
+
+\begin{rembox}[title=In plain words]
+Private value: ``I know what it is worth \emph{to me}''; learning your value does not change
+mine. Common value: ``it is worth the same to all of us, but none of us knows exactly how
+much''; if you think the oil field is poor, that is bad news for my estimate too.
+\end{rembox}
+
+
+\section{Private-value, first-price auction}
+
+\begin{defnbox}[title=Setup]
+\begin{itemize}
+  \item $N$ bidders; bidder $i$ has a \textbf{private value} $v_i$ (the utility she gets from
+        the object). She knows her own value, not the others'.
+  \item Each bidder chooses her bid as a function of her value, $b(v_i)$: a continuous action
+        set (a strategy is a plan for each type, as in any Bayesian game).
+  \item Payout: she gets $v_i - b_i$ if she wins, 0 otherwise, so her expected payout is
+        \[
+        \mathcal{P}_i = (v_i - b_i)\; P(b_i > b_j \ \forall j \neq i).
+        \]
+\end{itemize}
+\end{defnbox}
+
+\begin{rembox}[title=The trade-off]
+Bidding $b_i = v_i$ guarantees a payout of 0, so it is optimal to bid $b_i < v_i$ --- but by
+how much? Two opposite forces: a \textbf{higher} $b_i$ gives a higher chance to win, but a
+\textbf{lower ``surplus''} $v_i - b_i$ (utility in excess of the cost) when winning. We look
+for the $b_i$ that maximizes $\mathcal{P}_i$.
+\end{rembox}
+
+\begin{propbox}[title={Two bidders, values uniform on $[0,1]$}]
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week08_01.png}
+\end{center}
+Assume bidder 2 bids $b_2(v_2) = a v_2$. Given $b_1$, bidder 1 wins if $b_2 < b_1$, i.e.\
+$v_2 < b_1/a$, which has probability $b_1/a$ (uniform on $[0,1]$: the length of $[0, b_1/a]$).
+So bidder 1 maximizes
+\[
+\mathcal{P}_1 = (v_1 - b_1)\,\frac{b_1}{a}
+\quad\Longrightarrow\quad
+\frac{d\mathcal{P}_1}{db_1} = \frac{v_1 - 2b_1}{a} = 0
+\quad\Longrightarrow\quad
+b_1 = \frac{v_1}{2}.
+\]
+The same argument holds for bidder 2: the BNE is $b(v) = \frac{v}{2}$ for each player (and
+$a = 1/2$ is indeed consistent with the assumption $b_2 = a v_2$).
+\end{propbox}
+
+\begin{defnbox}[title=Bid shading]
+\textbf{Bidding less than one's valuation} of the object, to keep a positive surplus when
+winning.
+\end{defnbox}
+
+\begin{propbox}[title={$N$ bidders, values uniform on $[0,1]$}]
+Assume each other bidder $j$ bids $b_j(v_j) = a_j v_j$. The probability that $b_j < b_1$ is
+$b_1/a_j$, and these events are \textbf{independent} (values are independent), so
+\[
+P(b_j < b_1 \ \forall j \neq 1) = \prod_{j>1} \frac{b_1}{a_j}
+  = \frac{b_1^{N-1}}{\prod_{j>1} a_j}.
+\]
+Bidder 1 maximizes
+\[
+\mathcal{P}_1 = (v_1 - b_1)\,\frac{b_1^{N-1}}{\prod_{j>1} a_j}.
+\]
+Derivative (the constant $\prod a_j$ plays no role):
+$-b_1^{N-1} + (N-1)(v_1 - b_1) b_1^{N-2} = 0$, i.e.\ $b_1 = (N-1)(v_1 - b_1)$, so
+\[
+b_1 = \frac{N-1}{N}\, v_1.
+\]
+The BNE has every player bidding $b(v) = \frac{N-1}{N}\, v$.
+\end{propbox}
+
+\begin{exbox}[title={Numbers (not on the slides): value $v = 0.8$}]
+$N = 2$: bid $0.4$. $N = 5$: bid $0.64$. $N = 100$: bid $0.792$. The more competitors, the
+less you shade: with many bidders you bid almost your value.
+\end{exbox}
+
+
+\section{Private-value, second-price auction}
+
+\begin{thmbox}[title=Truthful bidding is dominant]
+In a private-value, sealed-bid, second-price auction, \textbf{bidding $b_i(v_i) = v_i$ is a
+(weakly) dominant strategy}. This auction gives the \textbf{most efficient allocation} (the
+bidder with the highest value wins), and to bid optimally a player needs \textbf{no knowledge
+about the others} (their number, the distribution of their values).
+\end{thmbox}
+
+\begin{defnbox}[title=Payout]
+Given her value $v_i$, if player $i$ bids $b_i$, her payout is
+\[
+\begin{cases}
+v_i - \max_{j \neq i} b_j & \text{if } b_i > \max_{j \neq i} b_j, \\
+0 & \text{otherwise.}
+\end{cases}
+\]
+Her bid decides \textbf{whether} she wins, but \textbf{not the price} she pays (the price is
+the others' highest bid).
+\end{defnbox}
+
+\begin{propbox}[title={Overbidding ($b_i > v_i$) never helps}]
+Green dot: $v_i$; black: $b_i$; red: $\max_{j \neq i} b_j$.
+\begin{itemize}
+  \item $\max_{j \neq i} b_j > b_i$: she loses, and she would also have lost with $b_i = v_i$
+        (payout 0 with both strategies).
+        \begin{center}\includegraphics[width=0.6\linewidth]{images/week08_02.png}\end{center}
+  \item $v_i < \max_{j \neq i} b_j < b_i$: she wins but pays more than her value:
+        \textbf{negative payout}. Bidding $v_i$ she would have lost with payout 0: truthful
+        is \textbf{strictly better}.
+        \begin{center}\includegraphics[width=0.6\linewidth]{images/week08_03.png}\end{center}
+  \item $\max_{j \neq i} b_j < v_i$: she wins, and would also have won with $b_i = v_i$,
+        paying the same price: same payout.
+        \begin{center}\includegraphics[width=0.6\linewidth]{images/week08_04.png}\end{center}
+\end{itemize}
+\end{propbox}
+
+\begin{propbox}[title={Underbidding ($b_i < v_i$) never helps}]
+\begin{itemize}
+  \item $\max_{j \neq i} b_j > v_i$: she loses, and would also have lost by bidding $v_i$:
+        same payout.
+        \begin{center}\includegraphics[width=0.6\linewidth]{images/week08_05.png}\end{center}
+  \item $b_i < \max_{j \neq i} b_j < v_i$: she loses, but bidding $v_i$ she would have won
+        with a \textbf{positive payout}: truthful is \textbf{strictly better}.
+        \begin{center}\includegraphics[width=0.6\linewidth]{images/week08_06.png}\end{center}
+  \item $\max_{j \neq i} b_j < b_i$: she wins, and would also have won by bidding $v_i$, same
+        payout.
+        \begin{center}\includegraphics[width=0.6\linewidth]{images/week08_07.png}\end{center}
+\end{itemize}
+In every case truthful bidding does at least as well, and in some cases strictly better:
+it is \textbf{weakly dominant}.
+\end{propbox}
+
+\begin{rembox}[title=In plain words]
+In a second-price auction, your bid is only a ``threshold'': ``I want the object if the price
+is below $b_i$''. The ideal threshold is your value: you want the object exactly when the
+price is below what it is worth to you. Bidding more only adds cases where you buy at a loss;
+bidding less only adds cases where you miss a profitable deal.
+\end{rembox}
+
+
+\section{First-price vs second-price auction}
+
+\begin{propbox}[title=Same expected payout conditional on winning]
+\begin{itemize}
+  \item First-price: conditional on winning, the payout is $v_i - \frac{N-1}{N} v_i$ (she
+        pays her own bid).
+  \item Second-price: conditional on winning, the expected payout is
+        $v_i - E[\max_{j \neq i} v_j]$ (she pays the second-highest value, since everybody
+        bids truthfully).
+\end{itemize}
+These are \textbf{equal}, by the order statistics below.
+\end{propbox}
+
+\begin{defnbox}[title=Order statistics]
+The \textbf{$k$-th order statistic} of a distribution: the expected value of the $k$-th
+highest of $J$ draws. For a uniform distribution on $[0, V]$, the $k$-th statistic is
+\[
+\frac{J + 1 - k}{J + 1}\, V.
+\]
+\end{defnbox}
+
+\begin{rembox}[title=In plain words]
+$J$ uniform draws cut $[0, V]$ into $J+1$ pieces of the same expected length $V/(J+1)$. The
+highest is on average at $J V/(J+1)$, the second at $(J-1)V/(J+1)$, and so on. E.g.\ 1 draw:
+$V/2$; 2 draws: highest $2V/3$, lowest $V/3$.
+\end{rembox}
+
+\begin{propbox}[title=The computation]
+Conditional on my value $v_i$ being the highest, the other $N-1$ values are uniformly
+distributed in $[0, v_i]$. The highest of them ($J = N-1$, $k = 1$, $V = v_i$) is on average
+\[
+E[\max_{j \neq i} v_j \,|\, v_i \text{ highest}] = \frac{N-1}{N}\, v_i,
+\]
+exactly the first-price bid. So the expected payment and payout conditional on winning are
+the same in both auctions. (Lecture 9 generalizes this: \textbf{revenue equivalence}.)
+\end{propbox}
+
+
+\section{Common-value auctions and the winner's curse}
+
+\begin{defnbox}[title=Common-value auction]
+The object has \textbf{the same value to everybody}, but this value is not perfectly known.
+Each player $i$ has a \textbf{signal} (or estimate) $s_i$ of it.
+\end{defnbox}
+
+\begin{defnbox}[title=Winner's curse]
+Initially my estimate of the value is based only on my signal $s_i$. But I get some surplus
+only if I \textbf{win}, and, if all bidders use the same symmetric strategy, my bid is the
+highest only if \textbf{my signal is the highest}. Conditional on my signal being the highest,
+the expected value of the object is \textbf{lower} than my initial estimate. I need to lower
+my bid to take this into account.
+
+\textbf{If I win, it is because my signal was the highest. But if my signal was the highest,
+it is likely that I overestimated the object.}
+\end{defnbox}
+
+\begin{keybox}[title=The rule]
+\textbf{Bid as if you knew you are the winner}, so that you won't regret winning.
+\end{keybox}
+
+
+\begin{exbox}[title=The jar example: setup]
+A jar is full of 1-dollar coins. How much would you bid for it in a first-price auction? If
+you estimate that it contains $s$ coins and you bid $s$, what is your expected profit if you
+win?
+\begin{itemize}
+  \item Before seeing the jar, the number of coins $n$ could be any number from 1 to $M$ with
+        the same probability.
+  \item When you see the jar, if it contains $n$ coins, your estimate can be any number
+        between $n-5$ and $n+5$ with the same probability (11 values).
+\end{itemize}
+\end{exbox}
+
+\begin{propbox}[title=One player]
+Player 1 sees the jar and estimates $s_1$ coins. The conditional distribution of the number
+of coins is
+\[
+P(\text{number of coins} = k \,|\, s_1) = \frac{1}{11} \quad \forall k \in [s_1 - 5, s_1 + 5],
+\qquad E[\text{number of coins} \,|\, s_1] = s_1.
+\]
+\begin{center}
+\includegraphics[width=0.75\linewidth]{images/week08_08.png}
+\end{center}
+Alone, the estimate is unbiased: bidding $s_1$ gives an expected profit of 0.
+\end{propbox}
+
+\begin{propbox}[title=Two players]
+A second bidder also sees the jar; her estimate $s_2$ is in $[n-5, n+5]$ with uniform
+probability. Conditional on $s_1$, $s_2$ is in the interval $[s_1 - 10, s_1 + 10]$, not
+uniformly (values close to $s_1$ are more likely).
+\begin{center}
+\includegraphics[width=0.75\linewidth]{images/week08_09.png}
+\end{center}
+We have $E[s_2|s_1] = s_1$, but \textbf{conditionally on Player 1 winning} ($s_2 < s_1$):
+\[
+E[s_2 \,|\, s_1, s_2 < s_1] = s_1 - 4,
+\]
+\[
+E[\text{number of coins} \,|\, s_1, s_2 < s_1]
+ = \frac{s_1 + E[s_2|s_1, s_2 < s_1]}{2} = s_1 - 2.
+\]
+\textbf{If Player 1 bids $s_1$ and wins, her expected payout is negative} ($-2$ coins).
+\end{propbox}
+
+\begin{proofbox}[title={Where $s_1 - 4$ comes from (not on the slides)}]
+Write $s_1 = n + e_1$ and $s_2 = n + e_2$, with $e_1, e_2$ independent and uniform on
+$\{-5, \ldots, 5\}$. Then $s_2 - s_1 = e_2 - e_1 = d$ takes the value $k \in [-10, 10]$ with
+probability $(11 - |k|)/121$ (a ``triangle''). Conditional on $d < 0$:
+\[
+E[d \,|\, d < 0] = -\frac{\sum_{k=1}^{10} k(11-k)}{\sum_{k=1}^{10} (11-k)}
+= -\frac{220}{55} = -4.
+\]
+Given both signals, $n$ is equally likely anywhere in the range compatible with both, which is
+centred on $(s_1 + s_2)/2$; hence the average of the two signals.
+\end{proofbox}
+
+\begin{propbox}[title=More than 2 players]
+With $K$ players, for each $k \neq 1$, $E[s_k|s_1] = s_1$ but $E[s_k|s_1, s_k < s_1] = s_1 - 4$.
+Conditional on Player 1 winning, averaging all the signals:
+\[
+E[\text{number of coins} \,|\, s_1, s_k < s_1 \ \forall k \neq 1]
+= \frac{s_1 + \sum_{k \neq 1} E[s_k|s_1, s_k < s_1]}{K}
+= s_1 - 4\,\frac{K-1}{K}.
+\]
+The expected profit of bidding $s_1$ \textbf{decreases with the number of players} ($-2$ for
+2 players, $-3$ for 4, close to $-4$ for many).
+\end{propbox}
+
+\begin{keybox}[title=Winner's curse]
+\textbf{Conditional on winning, a player has overvalued the object, the more so the higher
+the number of players.} So in a common-value auction you should bid \emph{less} when there
+are more competitors --- the opposite of the private-value first-price auction, where more
+competitors make you shade less.
+\end{keybox}
+
+\begin{keybox}[title=Exam recap]
+\begin{itemize}
+  \item Formats: English (ascending) $\equiv$ second-price sealed; Dutch (descending)
+        $\equiv$ first-price sealed.
+  \item Private value (my own $v_i$, no uncertainty) vs common value (same value for all,
+        uncertain, signals $s_i$).
+  \item \textbf{First-price}, $N$ bidders, uniform $[0,1]$: maximize
+        $(v - b)\,P(\text{win})$; BNE $b(v) = \frac{N-1}{N} v$ (bid shading; $v/2$ for 2).
+  \item \textbf{Second-price}: bidding $v_i$ is weakly dominant (6 cases: over/underbidding
+        never helps).
+  \item Order statistic, uniform $[0,V]$: $k$-th highest of $J$ draws $= \frac{J+1-k}{J+1}V$;
+        same expected payment in first- and second-price.
+  \item \textbf{Winner's curse}: winning means your signal was the highest, so you probably
+        overestimated; bid as if you knew you won. Jar: $s_1 - 4\frac{K-1}{K}$.
+  \item Builds on Lecture 4--5 (Bayesian games, types, conditional probabilities); prepares
+        Lecture 9 (revenue equivalence, reserve prices, eBay).
+\end{itemize}
+\end{keybox}
+
+
+% =========================================================
+\chapter{Lecture 9 : Revenue equivalence, reserve prices and eBay}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} The \textbf{revenue equivalence theorem}: under which
+conditions two auction formats give the seller the same expected revenue (first-price,
+second-price, third-price and all-pay auctions all do). Then \textbf{reserve prices}, which
+change the revenue, and the reserve price that maximizes it. Finally, \textbf{eBay}: its
+proxy-bidding format, private vs common value, last-minute bidding (sniping), secret reserve
+prices and reputation mechanisms. \\
+\textbf{Why is it useful?} The theorem is a shortcut: instead of solving a maximization
+problem for each auction format, we find the optimal bid by imposing that the expected
+payment is the same as in a format we already know.
+\end{rembox}
+
+
+\section{Recap: private-value auctions}
+
+\begin{rembox}[title=Last lecture]
+No uncertainty about the object: each bidder knows everything about it and has a
+\textbf{private, independent valuation} $v_i$.
+\begin{itemize}
+  \item \textbf{First-price}: if values are i.i.d.\ uniform on $[0,1]$, bid
+        $b_i = \frac{N-1}{N} v_i$. More information about the others' values may make me
+        change my bid.
+  \item \textbf{Second-price}: bidding $b_i = v_i$ is dominant; no information about the
+        others should make me change it.
+\end{itemize}
+\end{rembox}
+
+
+\section{The revenue equivalence theorem}
+
+\begin{thmbox}[title=Revenue equivalence theorem]
+Consider an auction with $N$ bidders, each with an \textbf{independent private valuation} of
+the item, drawn from a distribution $F$. Then any two auction mechanisms in which
+\begin{itemize}
+  \item in equilibrium, given the values $v_1, \ldots, v_N$, \textbf{the good is allocated
+        the same way} (e.g.\ always to the highest value), and
+  \item any bidder with valuation 0 has an expected utility of 0,
+\end{itemize}
+yield \textbf{the same expected revenue} for the auctioneer, and each player with value $v$
+makes \textbf{the same expected payment} $\chi(v)$.
+\end{thmbox}
+
+\begin{rembox}[title=In plain words]
+What a bidder pays \emph{on average} depends only on \textbf{who gets the object}, not on the
+rules for computing the price. If two formats always give the object to the highest value,
+then a bidder with value $v$ pays the same on average in both: in one she pays more when she
+wins but wins with the same probability, in another she pays even when she loses but less
+each time\dots\ it all averages out. We use it as a tool:
+\begin{enumerate}
+  \item compute $\chi(v)$ in an easy format (second-price);
+  \item in the new format, write the expected payment as a function of the bid;
+  \item set the two equal and solve for the bid.
+\end{enumerate}
+\end{rembox}
+
+
+\section{Second-price auctions}
+
+\begin{propbox}[title={Expected payment, values uniform on $[0,1]$}]
+Bidding one's value is dominant. With the order statistic of Lecture 8 (uniform on $[0,V]$,
+$k$-th highest of $n$ draws $\mathcal{S}_k = \frac{n+1-k}{n+1}V$): if the highest value is
+$v$, the winner pays the highest of the other $N-1$ values, uniform on $[0,v]$, i.e.\ on
+average $\frac{N-1}{N} v$.
+\[
+\text{Expected Payment}(v)
+= \underbrace{v^{N-1}}_{\text{Prob}(v \text{ is the highest})}
+  \times \underbrace{\frac{N-1}{N}\, v}_{\text{payment if winning}}.
+\]
+$v^{N-1}$: each of the $N-1$ others has a value below $v$ with probability $v$,
+independently.
+\end{propbox}
+
+
+\section{First-price auctions}
+
+\begin{propbox}[title=Optimal bid via revenue equivalence]
+If the others bid $b_j = a v_j$, a player with value $v$ solves
+$\max_b\, (v - b)\prod_{j \neq i} \left(\frac{b}{a}\right)$, i.e.\ $\max_b (v-b)(b/a)^{N-1}$,
+which gave $b = \frac{N-1}{N} v$ in Lecture 8. \\
+\textbf{Alternatively}: with the symmetric strategy the highest value wins, as in the
+second-price auction, so by revenue equivalence
+\[
+\text{Expected Payment}(v_i) = v_i^{N-1}\,\frac{N-1}{N}\, v_i.
+\]
+In a first-price auction the winner pays her bid, so the expected payment is
+(Prob.\ that $v_i$ is the highest) $\times$ (bid of player $i$) $= v_i^{N-1}\, b(v_i)$. Since
+$v_i^{N-1}$ is the probability of winning when all players use the same bidding strategy,
+\[
+b(v_i) = \frac{N-1}{N}\, v_i.
+\]
+Same result, no derivative needed.
+\end{propbox}
+
+
+\section{Third-price auctions}
+
+\begin{defnbox}[title=Third-price auction]
+The highest bidder wins and pays the \textbf{third}-highest bid.
+\end{defnbox}
+
+\begin{warnbox}[title=Truthful bidding is not dominant]
+\begin{center}
+\includegraphics[width=0.65\linewidth]{images/week09_01.png}
+\end{center}
+Player $i$ bids $b_i = v_i$, but another player wins by bidding $b^{(1)} > v_i$ and pays
+$b^{(2)} < v_i$ (now the second-highest bid). Player $i$ would have done better bidding above
+$b^{(1)}$: she would have won and paid $b^{(2)} < v_i$, a positive payout.
+\end{warnbox}
+
+\begin{propbox}[title=Optimal bid via revenue equivalence]
+Guess the symmetric strategy $b(v) = a v$: the player with the highest value wins, so the
+revenue equivalence theorem applies.
+\begin{itemize}
+  \item Conditional on $v_i$ being the highest, player $i$ pays the third-highest bid,
+        $a \times v^{(3)}$.
+  \item $v^{(3)}$, the third-highest value among all bidders, is the second-highest among the
+        $N-1$ others, uniform on $[0, v_i]$: order statistic with $n = N-1$, $k = 2$:
+        \[
+        E[v^{(3)}] = \frac{N-2}{N}\, v_i.
+        \]
+  \item Expected payment conditional on winning: $a\,\frac{N-2}{N}\, v_i$; probability of
+        winning $v_i^{N-1}$:
+        \[
+        \text{Expected Payment}(v_i) = v_i^{N-1}\; a\,\frac{N-2}{N}\, v_i.
+        \]
+\end{itemize}
+Comparing with the first- and second-price auctions ($v_i^{N-1}\frac{N-1}{N}v_i$), the
+expected payments are equal if $a = \frac{N-1}{N-2}$:
+\[
+b(v_i) = \frac{N-1}{N-2}\, v_i \quad (N \ge 3).
+\]
+The optimal bid involves \textbf{overbidding}: $b(v_i) > v_i$. (One can obtain the same
+result by solving player $i$'s maximization problem.)
+\end{propbox}
+
+\begin{rembox}[title=Why overbid?]
+When you win a third-price auction you pay much less than your bid (the third bid), so
+raising your bid above your value rarely makes you pay more than your value, and it makes you
+win more often. E.g.\ (not on the slides) $N = 3$: $b = 2v$; $N = 11$: $b = \frac{10}{9}v$.
+\end{rembox}
+
+
+\section{All-pay auctions}
+
+\begin{defnbox}[title=All-pay auction]
+Each bidder submits a sealed bid; the highest bid wins the item; \textbf{each bidder pays}
+the seller his own bid, win or lose (think of lobbying, or of the dollar auction of
+Lecture 4).
+\end{defnbox}
+
+\begin{propbox}[title=Optimal bid via revenue equivalence]
+Suppose there is an equilibrium where the highest-valuation bidder wins; use the theorem to
+find the bid, then check ex post that the highest value indeed wins. $N$ bidders, values
+independent, uniform on $[0,1]$. A bidder with value $v_i$
+\begin{itemize}
+  \item wins with probability $v_i^{N-1}$;
+  \item pays his own bid $b(v_i)$ \textbf{whether he wins or not};
+  \item his expected payment must be the same as in a first-price auction:
+        $v_i^{N-1}\frac{N-1}{N} v_i = \frac{N-1}{N} v_i^N$.
+\end{itemize}
+In the all-pay auction the payment is always the bid, so
+\[
+b(v_i) = \frac{N-1}{N}\, v_i^N.
+\]
+It increases with $v_i$, so the highest value does submit the highest bid and win: the guess
+is verified.
+\end{propbox}
+
+\begin{exbox}[title={Numbers (not on the slides): 2 bidders}]
+$b(v) = v^2/2$. With $v = 0.5$ you bid only $0.125$ (you pay it even if you lose); with
+$v = 1$ you bid $0.5$, like in a first-price auction.
+\end{exbox}
+
+\begin{propbox}[title={Seller's expected revenue (not on the slides)}]
+In all four formats, the expected revenue is $N \times E[\chi(v)]$:
+\[
+N \int_0^1 \frac{N-1}{N}\, v^N \dd v = \frac{N-1}{N+1},
+\]
+which is the expected second-highest value of $N$ draws (order statistic $k = 2$). For 2
+bidders: $1/3$.
+\end{propbox}
+
+
+\section{Auctions with a reserve price}
+
+\begin{defnbox}[title=Reserve price]
+A price $R$ below which the seller is not willing to sell the item.
+
+Example: \textbf{second-price auction with a reserve price $R$}: the highest bidder gets the
+item if his bid is $\ge R$, and then pays \textbf{the largest of the second-highest bid and
+$R$}.
+\begin{itemize}
+  \item Bids 0.3 and 0.6, $R = 0.4$: the high bidder wins and pays 0.4.
+  \item Bids 0.5 and 0.6, $R = 0.4$: the high bidder wins and pays 0.5.
+  \item Bids 0.3 and 0.36, $R = 0.4$: nobody wins, the item remains with the seller.
+\end{itemize}
+\end{defnbox}
+
+\begin{warnbox}[title=Not the same expected revenue]
+Is the expected revenue the same as without a reserve price? \textbf{No}: in the third
+example, the \textbf{allocation is different} (nobody gets the item) from a first- or
+second-price auction without reserve, so the revenue equivalence theorem does not compare
+them.
+\end{warnbox}
+
+\begin{propbox}[title=Second-price auction with reserve price]
+2 bidders, values independent, uniform on $[0,1]$. We can treat the reserve price $R$ as
+\textbf{another bidder whose bid we know}. It is a dominant strategy to bid one's own value
+when $v > R$ and not to bid when $v \le R$.
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week09_02.png}
+\end{center}
+A bidder with value $v > R$:
+\begin{itemize}
+  \item wins with probability $v$ (the other value is below $v$);
+  \item conditional on winning, the other value is below $R$ with probability $R/v$: he pays
+        $R$;
+  \item conditional on winning with the other value above $R$ (probability $1 - R/v$), the
+        other value is uniform on $[R, v]$, on average $\frac{v+R}{2}$: he pays that.
+\end{itemize}
+Expected payment conditional on winning:
+\[
+\frac{R}{v}\, R + \left(1 - \frac{R}{v}\right)\frac{v+R}{2} = R + \frac{(v-R)^2}{2v},
+\]
+so the expected payment of a bidder with value $v > R$ is
+\[
+\text{Expected Payment}(v > R) = v\left(R + \frac{(v-R)^2}{2v}\right).
+\]
+\end{propbox}
+
+\begin{proofbox}[title={Checking the algebra (not on the slides)}]
+$\frac{R^2}{v} + \frac{(v-R)(v+R)}{2v} = \frac{2R^2 + v^2 - R^2}{2v} = \frac{v^2 + R^2}{2v}$
+and $R + \frac{(v-R)^2}{2v} = \frac{2Rv + v^2 - 2Rv + R^2}{2v} = \frac{v^2 + R^2}{2v}$.
+\end{proofbox}
+
+\begin{propbox}[title=First-price auction with reserve price]
+A bidder with value $v > R$ should always bid above $R$. In equilibrium the object is
+allocated as in the second-price auction with the same reserve price (to the highest value
+$\bar{v}$ if $\bar{v} > R$, to nobody otherwise), so \textbf{revenue equivalence applies
+between these two}. Two bidders, uniform on $[0,1]$: a bidder with value $v$
+\begin{itemize}
+  \item does not bid if $v \le R$;
+  \item if $v > R$, wins with probability $v$ and pays his bid, so $v\,b(v)$ must equal the
+        expected payment above:
+        \[
+        b(v) = R + \frac{(v-R)^2}{2v}.
+        \]
+\end{itemize}
+Check: $b(R) = R$, and with $R = 0$ we get back $b(v) = v/2$.
+\end{propbox}
+
+
+\section{Optimal reserve price}
+
+\begin{propbox}[title=Which reserve price maximizes the seller's revenue?]
+Second-price auction, two bidders, independent values uniform on $[0,1]$, $v_l < v_h$ (low
+and high). Compare the revenue when the reserve price goes from $R$ to $R + \epsilon$:
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week09_03.png}
+\end{center}
+\begin{itemize}
+  \item $v_l < v_h < R$: nothing is sold either way: no impact on revenue.
+  \item $R + \epsilon < v_l < v_h$: the price is $v_l$ either way: no impact.
+  \item $v_l < R < R + \epsilon < v_h$: the price goes from $R$ to $R + \epsilon$:
+        \textbf{revenue increases by $\epsilon$} (probability $2R(1-R)$).
+  \item $v_l < R < v_h < R + \epsilon$: the item was sold at $R$, now it is not sold:
+        \textbf{revenue decreases by $R$} (probability $2\epsilon R$).
+  \item $R < v_l < R + \epsilon < v_h$: revenue increases by less than $\epsilon$
+        (probability $2\epsilon(1-R)$): a gain of order $\epsilon^2$, negligible.
+\end{itemize}
+Expected revenue change:
+\[
+\Delta\text{Revenue} = 2R(1-R)\,\epsilon - 2\epsilon R^2.
+\]
+At the optimal reserve price, a small change must not change the expected revenue:
+$2R(1-R) = 2R^2 \Rightarrow 1 - R = R$:
+\[
+R^* = \frac{1}{2}.
+\]
+\end{propbox}
+
+\begin{rembox}[title=In plain words]
+Raising the reserve price is a gamble: when one bidder is above and one below it, the seller
+earns $\epsilon$ more; but sometimes the only bidder above $R$ falls below $R+\epsilon$ and
+the seller loses the whole sale ($R$). For a low $R$ the gain dominates, for a high $R$ the
+loss does; they balance at $R^* = 1/2$, even though the item is worth 0 to the seller.
+\end{rembox}
+
+\begin{exbox}[title={Revenue with $R = 1/2$ (not on the slides)}]
+Expected revenue $= 2\int_{1/2}^{1}\left(vR + \frac{(v-R)^2}{2}\right)\dd v
+= 2\left(\frac{3}{16} + \frac{1}{48}\right) = \frac{5}{12} \approx 0.417$, more than the $1/3$
+without reserve price.
+\end{exbox}
+
+
+\section{eBay}
+
+\begin{rembox}[title=Facts]
+Founded by Pierre Omidyar in 1995; over 1 billion active listings; over 180 million active
+buyers; about 2 billion daily transactions; second online marketplace (after Amazon) by number
+of visits.
+\end{rembox}
+
+\begin{defnbox}[title=eBay listings]
+Typically contain: description and pictures of the item; ID and rating of the seller; current
+bid and total number of bids; \textbf{minimum bid} (equivalent to a reserve price) \emph{and}
+whether the seller also has a \textbf{secret reserve price}; minimum increment; time left.
+\end{defnbox}
+
+\begin{defnbox}[title=Proxy bidding]
+When a bidder submits a bid, she enters the \textbf{maximum amount} she is willing to pay;
+eBay then bids for her, automatically, just enough to keep her the high bidder. The high
+bidder ends up getting the item and paying \textbf{the second-highest proxy bid plus the
+increment}.
+\end{defnbox}
+
+\begin{exbox}[title=Proxy bidding step by step]
+Minimum bid \$10, minimum increment \$0.50.
+\begin{itemize}
+  \item Bidder A enters \$25: eBay sets the current bid at \$10, just enough to make A the
+        high bidder.
+  \item Bidder B enters a proxy bid of \$13: eBay raises A's current bid to \$13.50, so A is
+        still the high bidder.
+  \item Bidder C enters \$26: A is no longer the high bidder and is notified by email, so she
+        can enter a new bid. (Not on the slides: C's current bid becomes $25 + 0.50 =
+        \$25.50$.)
+\end{itemize}
+\end{exbox}
+
+\begin{propbox}[title=eBay's format]
+The winner pays the second-highest proxy bid plus an increment: the format is \textbf{similar
+to a second-price auction}. Compared with a sealed-bid auction, bidders observe the evolution
+of the high bid during the auction; compared with an English auction, they do not observe all
+the bids of the others, nor at which point the others ``drop out''.
+\end{propbox}
+
+\begin{propbox}[title=Private value or common value?]
+Many items are one-of-a-kind second-hand goods or collectibles: a clear private-value
+component. But a \textbf{common-value component is almost always present}: uncertainty about
+the condition of the item, often its quality and authenticity, and returning it is rarely
+possible. Do bidders take the winner's curse into account? Empirical studies say yes:
+\begin{itemize}
+  \item the average bid is lower as the number of bidders increases, as in an optimal
+        common-value strategy (\textbf{for every additional competitor, bidders lower their
+        bid by $\sim$3.2\%});
+  \item the average bid is lower as the variance of the item's value increases.
+\end{itemize}
+\end{propbox}
+
+
+\section{Last-minute bidding (sniping)}
+
+\begin{defnbox}[title=Sniping]
+Winning bids commonly arrive in the \textbf{last few seconds} of an auction that lasts as
+long as several days. Puzzling: proxy bidding is like a second-price auction, where bidding
+one's value is dominant and the timing of the bid is unimportant.
+\end{defnbox}
+
+\begin{propbox}[title=Three explanations]
+\begin{enumerate}
+  \item \textbf{Common value.} Bidding as late as possible lets you observe the evolution of
+        the high bid, which gives information on the others' valuations and may change your
+        own; and others do not have the time to incorporate \emph{your} information into
+        their bids. But sniping is also common where the common-value component is minor,
+        so this is only part of the story.
+  \item \textbf{Naive bidders.} Some bidders do not understand the optimal strategy: even in
+        a private-value second-price auction they start low and raise their bids as new bids
+        arrive. Bidding in the last seconds, it is too late for them to react and raise their
+        bids.
+  \item \textbf{Multiple simultaneous auctions} of almost identical items. Bidders who want
+        one item at the cheapest price should enter a bid just above the current bid in the
+        auction with the lowest high price, increase it slowly and switch to another auction
+        when there is a new one with a lower high bid. This involves updating one's bid
+        continuously, hence bidding until the expiration of the auction.
+\end{enumerate}
+\end{propbox}
+
+\begin{exbox}[title=Data]
+\begin{center}
+\includegraphics[width=0.5\linewidth]{images/week09_04.png}
+\end{center}
+More than 50\% of bids are submitted after 90\% of the auction time; 32\% after 97\%; the
+median winning bid is submitted around 93.8\% of the auction time.
+\end{exbox}
+
+
+\section{Reserve prices on eBay}
+
+\begin{propbox}[title=Visible and secret reserve prices]
+Sellers have two tools: a visible ``minimum bid'' and a \textbf{secret reserve price}. A
+reserve price can be optimal for the seller (as computed above), but what is the purpose of a
+\emph{secret} one? The literature has no uncontroversial answer.
+\begin{itemize}
+  \item Hypothesis: with a very high secret reserve, sellers see people's bids without
+        committing to sell, then contact the highest bidder after the auction and sell
+        without paying eBay's fees. Untestable: there is no data on what happens after the
+        auction.
+  \item Downside: bidders who do not get the item although they submitted the highest bid
+        may be upset and give the seller a negative review.
+\end{itemize}
+\end{propbox}
+
+
+\section{Reputation mechanisms}
+
+\begin{propbox}[title=Feedback on eBay]
+eBay does not require sellers to post their names or addresses, only an eBay ID: this adds to
+the \textbf{information asymmetry} (and thus to the winner's curse). To counter it, buyers can
+review sellers (positive, neutral or negative score, plus a comment), and sellers can review
+buyers. eBay posts all comments and summary statistics (total number of feedbacks, positives
+minus negatives).
+\end{propbox}
+
+\begin{warnbox}[title=Does it work?]
+Only \textbf{0.6\%} of feedbacks are neutral or negative: feedbacks are overwhelmingly
+positive, and buyers favour sellers with more total feedbacks. One theory for the rarity of
+negative feedbacks is the \textbf{fear of retaliation}: a buyer who leaves a negative feedback
+has a 40\% probability of getting a negative review in return. Overall the system does not
+seem very useful: there is too little variation in the percentage of positive scores to learn
+much from it.
+\end{warnbox}
+
+\begin{keybox}[title=Exam recap]
+\begin{itemize}
+  \item \textbf{Revenue equivalence}: independent private values, same allocation, value-0
+        bidder gets 0 $\Rightarrow$ same expected payment $\chi(v)$ and revenue.
+  \item Uniform $[0,1]$: $\chi(v) = v^{N-1}\cdot\frac{N-1}{N}v$ (P(win) $\times$ payment if
+        winning).
+  \item Method: write the expected payment of the new format, set it equal to $\chi(v)$:
+        first-price $b = \frac{N-1}{N}v$; third-price $b = \frac{N-1}{N-2}v$
+        (overbidding); all-pay $b = \frac{N-1}{N}v^N$. Revenue $\frac{N-1}{N+1}$.
+  \item \textbf{Reserve price} changes the allocation, hence the revenue. Second-price with
+        $R$, 2 bidders: pays $R + \frac{(v-R)^2}{2v}$ on average when winning; first-price
+        with $R$: $b(v) = R + \frac{(v-R)^2}{2v}$. Optimal $R^* = 1/2$.
+  \item \textbf{eBay}: proxy bidding $\approx$ second-price; bidders account for the
+        winner's curse ($-3.2\%$ per competitor); sniping (3 explanations); secret reserve
+        prices; feedback mostly positive (fear of retaliation).
+  \item Builds on Lecture 8 (first/second-price bids, order statistics, winner's curse).
 \end{itemize}
 \end{keybox}
 
