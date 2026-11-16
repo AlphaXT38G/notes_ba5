@@ -1805,4 +1805,23 @@ cost difference between types is what makes separation possible.
 
 \section{The Spence education game}
 
+\begin{defnbox}[title=Setup]
+\begin{itemize}
+  \item Two players: a \textbf{job applicant} (sender) and an \textbf{employer} (receiver).
+  \item Nature chooses the type of the applicant: ``smart'' with productivity $\theta_S$ or
+        ``dumb'' with productivity $\theta_D$, $\theta_S > \theta_D$, each with probability
+        50\%. The applicant knows his type, the employer does not.
+  \item The applicant chooses a level of education $e \in [0, e_{max}]$. Education is
+        \textbf{intrinsically useless} (it does not raise productivity), but it is harder for
+        the dumb: it costs $e/\theta_S$ to the smart and $e/\theta_D$ to the dumb.
+  \item The employer observes $e$, forms a belief about the probability that the applicant
+        is smart, and offers the salary $E[\theta|e]$, the expected productivity given the
+        belief (otherwise, with competition, the employer is out of business).
+  \item As in any PBE, the employer's beliefs must be consistent with the applicant's
+        strategy on the equilibrium path.
+\end{itemize}
+Applicant's payout: salary $-$ cost of education. Employer's payout: 0 (he pays exactly the
+expected productivity).
+\end{defnbox}
+
 \end{document}
