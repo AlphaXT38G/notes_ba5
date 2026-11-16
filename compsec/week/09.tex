@@ -45,3 +45,15 @@ Physical     & modulation and coding
 \end{center}
 This lecture focuses on the \textbf{top layers}.
 \end{defnbox}
+
+\begin{defnbox}[title={HTTP/1.1: HyperText Transfer Protocol}]
+The protocol that determines what actions web servers and browsers take in response to commands.
+\begin{itemize}
+  \item \textbf{Request-response}: (1) the client (browser) sends a \textbf{request} (for an HTML
+        file, to update a database, to send a mail, \ldots); (2) the server processes it, performs
+        the action, and sends a \textbf{response} (the content to render, or an acknowledgement).
+  \item \textbf{Stateless}: each command is executed independently, without any knowledge of the
+        previous ones. Neither browser nor server keeps state: \textbf{the state must be sent
+        inside the requests and responses}. Very important for security.
+\end{itemize}
+\end{defnbox}
