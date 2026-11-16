@@ -46,3 +46,23 @@ A user asks ``write on file \texttt{foo.txt}?''. Two steps happen before the ans
 The lecture mostly covers the authentication of \textbf{users}, and a bit of \textbf{machine}
 authentication.
 \end{defnbox}
+
+\begin{defnbox}[title=Ways to prove who you are]
+\textbf{Traditional} (the three factors):
+\begin{itemize}
+  \item \textbf{What you know} --- a secret only you know (password, secret key): proving
+        knowledge of the secret proves it is you.
+  \item \textbf{What you are} --- a trait inherent to you and to no one else (biometrics).
+  \item \textbf{What you have} --- an object only you own (smart card, secure token): proving
+        possession proves it is you.
+\end{itemize}
+\textbf{Modern} (traits that are often unique, sometimes called \textbf{soft biometrics}):
+\begin{itemize}
+  \item \textbf{Where you are} --- location, IP address: apps learn your usual places and raise an
+        alarm when you are far away;
+  \item \textbf{How you act} --- behavioural authentication: how you type, move the mouse, press
+        the keys;
+  \item \textbf{Who you know} --- social ties: your network of friends is nearly unique;
+  \item many others. Banking apps already use all of them, and more.
+\end{itemize}
+\end{defnbox}
