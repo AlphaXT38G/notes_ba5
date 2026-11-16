@@ -399,6 +399,24 @@ Same for bidder 2: \textbf{BNE $b(v) = v/2$}.
 \end{definition}
 
 
+\begin{formula}
+
+\textbf{$N$ bidders}: $b_j = a_j v_j$. The events $b_j < b_1$ are independent, so
+
+\[
+P(b_j < b_1 \ \forall j) = \frac{b_1^{N-1}}{\prod_{j>1} a_j}, \qquad
+\mathcal{P}_1 = (v_1 - b_1)\frac{b_1^{N-1}}{\prod_{j>1} a_j}
+\]
+
+Derivative: $-b_1^{N-1} + (N-1)(v_1 - b_1)b_1^{N-2} = 0$:
+
+\[
+b(v) = \frac{N-1}{N}\, v
+\]
+
+\end{formula}
+
+
 
 
 
