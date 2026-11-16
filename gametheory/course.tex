@@ -2650,4 +2650,21 @@ $\frac{R^2}{v} + \frac{(v-R)(v+R)}{2v} = \frac{2R^2 + v^2 - R^2}{2v} = \frac{v^2
 and $R + \frac{(v-R)^2}{2v} = \frac{2Rv + v^2 - 2Rv + R^2}{2v} = \frac{v^2 + R^2}{2v}$.
 \end{proofbox}
 
+\begin{propbox}[title=First-price auction with reserve price]
+A bidder with value $v > R$ should always bid above $R$. In equilibrium the object is
+allocated as in the second-price auction with the same reserve price (to the highest value
+$\bar{v}$ if $\bar{v} > R$, to nobody otherwise), so \textbf{revenue equivalence applies
+between these two}. Two bidders, uniform on $[0,1]$: a bidder with value $v$
+\begin{itemize}
+  \item does not bid if $v \le R$;
+  \item if $v > R$, wins with probability $v$ and pays his bid, so $v\,b(v)$ must equal the
+        expected payment above:
+        \[
+        b(v) = R + \frac{(v-R)^2}{2v}.
+        \]
+\end{itemize}
+Check: $b(R) = R$, and with $R = 0$ we get back $b(v) = v/2$.
+\end{propbox}
+
+
 \end{document}
