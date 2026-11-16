@@ -311,3 +311,22 @@ signature, DNA}.
         template is \textbf{compared} to the stored one.
 \end{enumerate}
 \end{defnbox}
+
+\begin{propbox}[title={Where do capture, process and store happen?}]
+\begin{center}
+\begin{tabular}{c|c|c}
+\textbf{Capture} & \textbf{Process} & \textbf{Store} \\ \hline
+Local & Local  & Local  \\
+Local & Local  & Remote \\
+Local & Remote & Remote
+\end{tabular}
+\end{center}
+\emph{Local}: on the device holding the assets the biometric protects (e.g.\ your phone).
+\emph{Remote}: on a server away from those assets.
+\begin{itemize}
+  \item Storing/processing \textbf{locally}: more \textbf{privacy-preserving}, but harder to
+        secure and difficult to update.
+  \item Storing/processing \textbf{remotely}: less privacy-friendly (the server sees the
+        biometrics), but easy to secure and update.
+\end{itemize}
+\end{propbox}
