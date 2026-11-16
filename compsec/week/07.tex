@@ -191,3 +191,18 @@ differ.
         entries becomes very expensive.
 \end{itemize}
 \end{propbox}
+
+\begin{propbox}[title=Complementary defenses]
+\begin{itemize}
+  \item Use hash functions \textbf{designed to be slow} (\textbf{bcrypt, scrypt, argon2}) and
+        \textbf{repeat} them (e.g.\ 1000 times). Not more secure in itself, but it slows the
+        attacker who must compute millions of hashes, while one login check stays virtually
+        instant.
+  \item \textbf{Require specific elements} in passwords: increase their \textbf{entropy}, so
+        they are harder to guess.
+  \item \textbf{Split the check, require a second server} (a keyed computation only it can do):
+        this \textbf{invalidates offline attacks}, the stolen file alone is not enough.
+  \item \textbf{Access control!} In UNIX, hashes moved to \texttt{/etc/shadow}, readable only by
+        root.
+\end{itemize}
+\end{propbox}
