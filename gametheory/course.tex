@@ -2445,4 +2445,16 @@ No uncertainty about the object: each bidder knows everything about it and has a
 
 \section{The revenue equivalence theorem}
 
+\begin{thmbox}[title=Revenue equivalence theorem]
+Consider an auction with $N$ bidders, each with an \textbf{independent private valuation} of
+the item, drawn from a distribution $F$. Then any two auction mechanisms in which
+\begin{itemize}
+  \item in equilibrium, given the values $v_1, \ldots, v_N$, \textbf{the good is allocated
+        the same way} (e.g.\ always to the highest value), and
+  \item any bidder with valuation 0 has an expected utility of 0,
+\end{itemize}
+yield \textbf{the same expected revenue} for the auctioneer, and each player with value $v$
+makes \textbf{the same expected payment} $\chi(v)$.
+\end{thmbox}
+
 \end{document}
