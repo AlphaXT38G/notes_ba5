@@ -228,3 +228,16 @@ The script makes the browser request the attacker's URL, with the user's \textbf
 personalization) or security-relevant information: the session token that \textbf{resumes a session
 without login and password}. (A popup could also ask for the password and send it.)
 \end{warnbox}
+
+\begin{defnbox}[title={How XSS attacks a victim}]
+\begin{enumerate}
+  \item The adversary exploits an XSS vulnerability to put a \textbf{malicious script} on a
+        website (here, one that sends the browser's cookie to \texttt{http://attacker}).
+  \item The victim requests the page with the injected code.
+  \item The page is served, \textbf{downloading the malicious script} to the victim's machine.
+  \item The victim's browser executes it, sending the victim's cookie \textbf{for that website} to
+        the attacker, who can now log in as the victim without credentials.
+\end{enumerate}
+The script runs \textbf{as if it came from the trusted site}: the browser trusts the site, the site
+trusted the input.
+\end{defnbox}
