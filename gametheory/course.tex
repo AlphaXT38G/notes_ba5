@@ -2473,4 +2473,19 @@ each time\dots\ it all averages out. We use it as a tool:
 
 \section{Second-price auctions}
 
+\begin{propbox}[title={Expected payment, values uniform on $[0,1]$}]
+Bidding one's value is dominant. With the order statistic of Lecture 8 (uniform on $[0,V]$,
+$k$-th highest of $n$ draws $\mathcal{S}_k = \frac{n+1-k}{n+1}V$): if the highest value is
+$v$, the winner pays the highest of the other $N-1$ values, uniform on $[0,v]$, i.e.\ on
+average $\frac{N-1}{N} v$.
+\[
+\text{Expected Payment}(v)
+= \underbrace{v^{N-1}}_{\text{Prob}(v \text{ is the highest})}
+  \times \underbrace{\frac{N-1}{N}\, v}_{\text{payment if winning}}.
+\]
+$v^{N-1}$: each of the $N-1$ others has a value below $v$ with probability $v$,
+independently.
+\end{propbox}
+
+
 \end{document}
