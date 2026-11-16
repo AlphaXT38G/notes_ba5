@@ -266,3 +266,18 @@ and compare, so give every goat its own pinch of random spice (the salt) in the 
 thief must redo all his work for each goat. And make the scrambling slow, so redoing it a million
 times takes forever.
 \end{goatbox}
+
+\subsection{Secure checking}
+
+\begin{warnbox}[title={Option 1: check letter by letter --- a timing channel}]
+The real password is \texttt{`Wubbalubba'}. Comparing letter by letter and \textbf{rejecting at
+the first mismatch}:
+\begin{itemize}
+  \item \texttt{`Wu8balubba'}: W=W, u=u, 8$\ne$b $\Rightarrow$ reject after 3 comparisons;
+  \item \texttt{`Wub8alubba'}: W, u, b match, 8$\ne$b $\Rightarrow$ reject after 4 comparisons;
+  \item \texttt{`Wubbalubba'}: all match $\Rightarrow$ accept.
+\end{itemize}
+The \textbf{time} taken to reject reveals \textbf{how many letters are correct}: the attacker
+guesses letter after letter, in about $94 \times 10$ tries instead of $94^{10}$. (Same for PINs.)
+A side channel, as in Lecture 5.
+\end{warnbox}
