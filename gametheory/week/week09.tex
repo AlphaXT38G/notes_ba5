@@ -421,6 +421,30 @@ verify that the highest value indeed wins.
 \end{itemize}
 
 
+\begin{formula}
+
+Uniform on $[0,1]$. A bidder with value $v_i$ wins with probability $v_i^{N-1}$ and pays
+$b(v_i)$ \textbf{whether he wins or not}. First-price expected payment:
+
+\[
+v_i^{N-1}\frac{N-1}{N} v_i = \frac{N-1}{N} v_i^N
+\]
+
+so
+
+\[
+b(v_i) = \frac{N-1}{N}\, v_i^N
+\]
+
+\end{formula}
+
+
+(Not on the slides) $b$ increases with $v$, so the highest value wins: verified. With 2
+bidders, $b = v^2/2$. Seller's expected revenue in all four formats:
+$N\int_0^1 \frac{N-1}{N}v^N dv = \frac{N-1}{N+1}$ ($1/3$ for 2 bidders).
+
+
+
 
 
 
