@@ -344,3 +344,18 @@ configuration depends on the application: a \textbf{bank} wants few false positi
 legitimate users must try again; a \textbf{gym} wants few false negatives, even if some non-members
 get in. It is a choice between keeping the assets safe and keeping the users happy.
 \end{defnbox}
+
+\begin{warnbox}[title=Problems with biometrics]
+\begin{itemize}
+  \item \textbf{Hard to keep secret}: signature on the ID card, fingerprints left on glasses and
+        door handles, photos everywhere. Hence \textbf{liveness detection}: during capture, the
+        user must act to show they are actually alive (blink, turn the head).
+  \item \textbf{Revocation is difficult (impossible?)}: ``Sorry, your iris has been compromised,
+        please create a new one\ldots''
+  \item \textbf{Identifiable and unique}: a stolen template can be used elsewhere, and allows
+        \textbf{linking} a person across systems.
+  \item \textbf{May reveal private information}: iris diseases, face identity.
+  \item \textbf{Not always universal or immutable}: fingerprints wear away, irises change with
+        lenses\ldots{} It is a lie that they do not change.
+\end{itemize}
+\end{warnbox}
