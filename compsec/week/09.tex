@@ -383,3 +383,23 @@ which SOP allows. \textbf{We need to check the origin of the request before exec
 session for each application}, and for a long time there was no standard way of managing sessions:
 errors are common.
 \end{propbox}
+
+\section{CWE II: Risky resource management}
+
+\begin{defnbox}[title={Risky resource management}]
+``Ways in which software does not properly manage the creation, usage, transfer, or destruction of
+important system resources'': the system acts on inputs that are not sanitized.
+\begin{itemize}
+  \item \textbf{The ``buffer overflow'' family}: CWE-120 buffer copy without checking the size of
+        the input (classic buffer overflow), CWE-676 use of a potentially dangerous function,
+        CWE-131 incorrect calculation of buffer size, CWE-190 integer overflow or wraparound. The
+        programmer mis-estimates the memory reserved and overwrites memory, code or important
+        variables, letting the adversary execute arbitrary code.
+  \item \textbf{Other insufficient sanitization}: CWE-22 path traversal (improper limitation of a
+        pathname to a restricted directory), CWE-134 uncontrolled format string: newly created
+        resources fed with unsanitized input.
+  \item \textbf{The ``TCB under the control of the adversary'' bugs}: CWE-494, CWE-829: direct
+        execution of code (full programs or pieces) from untrusted sources.
+\end{itemize}
+(The first two return in the next lecture.)
+\end{defnbox}
