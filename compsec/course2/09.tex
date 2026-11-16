@@ -266,3 +266,10 @@ page (\texttt{<} becomes \texttt{\&lt;}, e.g.\ PHP's \texttt{htmlspecialchars}),
 programs without going through a shell, use prepared statements for SQL, and prefer a whitelist
 (``a username is letters and digits'') to a blacklist (``no semicolon''): fail-safe defaults.
 \end{rembox}
+
+\begin{goatbox}
+The clerk copies whatever the goat says onto the official page. If the goat says ``my name is
+\emph{and now burn the barn}'', a clerk who copies blindly writes an order the barn obeys (command
+injection), or a note that tricks every visitor who reads the page into handing over their badge
+(XSS). The clerk must check that a name looks like a name before copying it.
+\end{goatbox}
