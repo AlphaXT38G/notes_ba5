@@ -194,3 +194,18 @@ $0$. \\
 \textbf{Bright side}: only exploitable under configurations where users may run \texttt{sudo} on
 potentially dangerous programs as some users except root, like the line above.
 \end{exbox}
+
+\section{Reasoning as a defender: threat modelling}
+
+\begin{defnbox}[title=Threat modelling]
+\textbf{Idea}: help security engineers reason about the threats to a system: \textbf{``What can go
+wrong?''} \\
+Threat modelling is the \textbf{process to identify potential threats and unprotected resources},
+with the goal of \textbf{prioritizing} problems in order to implement security mechanisms. A
+systematic analysis:
+\begin{itemize}
+  \item What are the most relevant threats?
+  \item What kind of problems can the threats result in?
+  \item Where should I put more effort to protect?
+\end{itemize}
+\end{defnbox}
