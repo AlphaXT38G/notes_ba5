@@ -34,3 +34,15 @@ verifies that a \emph{message}
 Here we authenticate an \textbf{entity} (a user, a machine), not a message. Message
 authentication is a \emph{tool} that authentication protocols use.
 \end{warnbox}
+
+\begin{defnbox}[title=Where does authentication fit?]
+A user asks ``write on file \texttt{foo.txt}?''. Two steps happen before the answer ``Write!'':
+\begin{enumerate}
+  \item \textbf{Authentication}: the system \textbf{binds the actor to a principal} (the abstract
+        entity that is authorized to act: users, connections, processes).
+  \item \textbf{Authorization} (access control, Lectures 3 and 4): the system decides whether
+        \emph{that principal} is authorized.
+\end{enumerate}
+The lecture mostly covers the authentication of \textbf{users}, and a bit of \textbf{machine}
+authentication.
+\end{defnbox}
