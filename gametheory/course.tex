@@ -2204,4 +2204,16 @@ bidder with the highest value wins), and to bid optimally a player needs \textbf
 about the others} (their number, the distribution of their values).
 \end{thmbox}
 
+\begin{defnbox}[title=Payout]
+Given her value $v_i$, if player $i$ bids $b_i$, her payout is
+\[
+\begin{cases}
+v_i - \max_{j \neq i} b_j & \text{if } b_i > \max_{j \neq i} b_j, \\
+0 & \text{otherwise.}
+\end{cases}
+\]
+Her bid decides \textbf{whether} she wins, but \textbf{not the price} she pays (the price is
+the others' highest bid).
+\end{defnbox}
+
 \end{document}
