@@ -220,3 +220,23 @@ differ.
         root.
 \end{itemize}
 \end{propbox}
+
+\begin{exbox}[title={Facebook's password ``onion'' (source: T.\ Ristenpart)}]
+\begin{center}
+\begin{minipage}{0.6\linewidth}
+\begin{lstlisting}[numbers=none, frame=none]
+$cur  = 'password'
+$cur  = md5($cur)
+$salt = randbytes(20)
+$cur  = hmac_sha1($cur, $salt)
+$cur  = remote_hmac_sha256($cur, $secret)
+$cur  = scrypt($cur, $salt)
+$cur  = hmac_sha256($cur, $salt)
+\end{lstlisting}
+\end{minipage}
+\end{center}
+Why this onion? \textbf{Coping with legacy!} Old entries were stored as MD5 hashes; you cannot
+rehash a password you do not know, so new layers are added \emph{on top} of the old ones. Each layer
+is a defense of the slide above: a salt, a \textbf{remote} keyed hash (second server, kills offline
+attacks), a slow function (scrypt).
+\end{exbox}
