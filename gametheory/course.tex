@@ -1634,4 +1634,23 @@ refinement removes nothing here.
 \end{exbox}
 
 
+\begin{propbox}[title=Example 1: Nash equilibria]
+Normal form (Player 1 chooses a row, Player 2 a column; NE underlined):
+\begin{center}
+\begin{tabular}{c|cc}
+$1 \backslash 2$ & U & D \\ \hline
+L & \underline{(2,1)} & (0,0) \\
+M & (0.5,2) & (0.5,1) \\
+R & (1,3) & \underline{(1,3)}
+\end{tabular}
+\end{center}
+Two pure-strategy NE: \textbf{(L,U)} and \textbf{(R,D)}.
+\begin{itemize}
+  \item (L,U): against U, L gives Player 1 the most (2 vs 0.5 vs 1); against L, U gives
+        Player 2 1 instead of 0.
+  \item (R,D): against D, R gives Player 1 the most (1 vs 0 vs 0.5); against R, Player 2 does
+        not move and gets 3 whatever she ``plans'', so D is a best response.
+\end{itemize}
+\end{propbox}
+
 \end{document}
