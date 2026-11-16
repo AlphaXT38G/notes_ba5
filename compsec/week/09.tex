@@ -16,3 +16,15 @@ against CSRF. \\
 most dangerous software errors year after year. They all come from one mistake, using input you do
 not control without sanitizing it, and one mental model, the confused deputy, explains CSRF.
 \end{rembox}
+
+\section{Web preliminaries}
+
+\begin{rembox}[title=Why this cheat sheet]
+Not a guide to web programming: only the basic concepts needed to understand the security problems
+of the lecture. Up to now the course had two scenarios: a user acting \textbf{locally} on their
+own device (local authentication, access control and execution), and a user acting
+\textbf{remotely} on a server (the device is merely a screen). On the web, \textbf{browser and
+server collaborate}: remote authentication, remote access control, and \textbf{mixed program
+execution} (code runs on both sides). Two tools: \textbf{HTTP}, the protocol between browsers and
+servers, and \textbf{PHP}, a language embedding dynamic, server-side elements in web pages.
+\end{rembox}
