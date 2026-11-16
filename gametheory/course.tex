@@ -1890,4 +1890,29 @@ The smart ``burns'' $0.5$ of utility in useless education, only to prove he is s
 \end{exbox}
 
 
+\begin{propbox}[title=Pooling equilibria]
+There are also \textbf{unintuitive} PBE --- pooling equilibria --- in which both types choose
+the same education $\tilde{e}$ below $e^*$. If the prior probability of ``smart'' is 50\%,
+they require
+\[
+0 \le \tilde{e} < \frac{\theta_D(\theta_S - \theta_D)}{2}.
+\]
+Since the employer cannot infer the type, the salary is the average productivity
+$(\theta_S + \theta_D)/2$. These equilibria are supported by the beliefs
+\begin{itemize}
+  \item for $e = \tilde{e}$: $p = 0.5$ (on the path: both types choose $\tilde{e}$, so Bayes
+        rule gives back the prior);
+  \item for $e \neq \tilde{e}$: $p(Smart) = 0$ (off the path, free).
+\end{itemize}
+Given these beliefs, taking education $\tilde{e}$ is worth it for both types, to get the
+salary $(\theta_S + \theta_D)/2$ rather than $\theta_D$ (the best deviation is $e = 0$, paid
+$\theta_D$):
+\begin{align*}
+\frac{\theta_S + \theta_D}{2} - \frac{\tilde{e}}{\theta_D} &> \theta_D, \\
+\frac{\theta_S + \theta_D}{2} - \frac{\tilde{e}}{\theta_S} &> \theta_D.
+\end{align*}
+The first one gives $\tilde{e} < \theta_D(\theta_S - \theta_D)/2$; the second one is weaker
+(it gives $\tilde{e} < \theta_S(\theta_S - \theta_D)/2$).
+\end{propbox}
+
 \end{document}
