@@ -1720,4 +1720,18 @@ ends the game with $(4,1,1)$. After A, Player 2 chooses L or R; then Player 3, w
 observe L or R, chooses U or D (belief $p$ at the node after L).
 \end{exbox}
 
+\begin{propbox}[title=Example 2 solved]
+The game after A is a \textbf{proper subgame}: it starts at Player 2's single node and
+contains the whole information set of Player 3.
+\begin{itemize}
+  \item In this subgame, for Player 2, L strictly dominates R: $2 > 1$ against U, $3 > 1$
+        against D. So Player 2 plays L.
+  \item Requirement 3: Player 3's information set is on the equilibrium path \textbf{of the
+        subgame} (Player 2 plays L), so $p = 1$. Then D (3) beats U (1): Player 3 plays D.
+  \item The subgame gives $(3,3,3)$. Player 1 compares A (3) with B (4) and plays B.
+\end{itemize}
+\textbf{PBE: (B, L, D) with $p = 1$}, consistent with the equilibrium strategy of Player 2
+in the smallest subgame.
+\end{propbox}
+
 \end{document}
