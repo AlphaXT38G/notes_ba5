@@ -2216,4 +2216,20 @@ Her bid decides \textbf{whether} she wins, but \textbf{not the price} she pays (
 the others' highest bid).
 \end{defnbox}
 
+\begin{propbox}[title={Overbidding ($b_i > v_i$) never helps}]
+Green dot: $v_i$; black: $b_i$; red: $\max_{j \neq i} b_j$.
+\begin{itemize}
+  \item $\max_{j \neq i} b_j > b_i$: she loses, and she would also have lost with $b_i = v_i$
+        (payout 0 with both strategies).
+        \begin{center}\includegraphics[width=0.6\linewidth]{images/week08_02.png}\end{center}
+  \item $v_i < \max_{j \neq i} b_j < b_i$: she wins but pays more than her value:
+        \textbf{negative payout}. Bidding $v_i$ she would have lost with payout 0: truthful
+        is \textbf{strictly better}.
+        \begin{center}\includegraphics[width=0.6\linewidth]{images/week08_03.png}\end{center}
+  \item $\max_{j \neq i} b_j < v_i$: she wins, and would also have won with $b_i = v_i$,
+        paying the same price: same payout.
+        \begin{center}\includegraphics[width=0.6\linewidth]{images/week08_04.png}\end{center}
+\end{itemize}
+\end{propbox}
+
 \end{document}
