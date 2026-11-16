@@ -71,3 +71,22 @@ A \textbf{small piece of data stored by the browser} on the user's device.
         session.
 \end{itemize}
 \end{defnbox}
+
+\begin{defnbox}[title={URL, GET and POST}]
+\begin{itemize}
+  \item \textbf{URL} (Uniform Resource Locator): a standard way to reference a resource (text,
+        page, script, image). It contains the \textbf{protocol}, the \textbf{host} (a domain, or an
+        IP and a port) and the \textbf{path} of the resource on that host, e.g.\
+        \texttt{https://www.mywebsite.com/apparel/skirt.php}.
+  \item \textbf{GET}: requests an existing resource. Its parameters are \textbf{encoded in the
+        URL} as key/value pairs, the \textbf{query string}, after \texttt{?} and separated by
+        \texttt{\&}: \texttt{\ldots/skirt.php?sku=123\&lang=en\&sect=silk} passes \texttt{sku=123},
+        \texttt{lang=en}, \texttt{sect=silk}.
+  \item \textbf{POST}: creates or updates a resource on the server. The data travels in the
+        \textbf{request body} (form fields \texttt{name1=value1\&name2=value2}, JSON, XML).
+\end{itemize}
+A GET request \textbf{should not} change any data, a POST typically does; but \textbf{nothing
+enforces it}. A developer could build \texttt{GET /user/delete?id=123}: if a search engine crawls
+that link, it deletes a user. Very bad design, technically possible. (Standard methodologies, e.g.\
+REST, structure HTTP APIs.)
+\end{defnbox}
