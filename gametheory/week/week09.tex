@@ -478,6 +478,27 @@ Second-price with reserve $R$: the highest bidder gets the item if bid $\ge R$, 
 
 
 
+%=========================================================
+\section{Second-Price with Reserve Price}
+
+
+2 bidders, uniform on $[0,1]$. Treat $R$ as \textbf{another bidder whose bid we know}.
+Dominant: bid own value if $v > R$; don't bid if $v \le R$.
+
+
+\begin{center}
+
+\includegraphics[
+width=0.9\linewidth
+]{../images/week09_02.png}
+
+\end{center}
+
+
+A bidder with $v > R$: wins with prob.\ $v$; if winning, the other is below $R$ with prob.\
+$R/v$ (pays $R$), otherwise uniform on $[R, v]$ (pays $\frac{v+R}{2}$ on average).
+
+
 
 
 
