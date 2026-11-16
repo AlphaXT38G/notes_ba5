@@ -330,3 +330,17 @@ Local & Remote & Remote
         biometrics), but easy to secure and update.
 \end{itemize}
 \end{propbox}
+
+\begin{defnbox}[title=False positives and false negatives]
+Unlike a password hash, the comparison is \textbf{not exact}: two captures always differ (dirt on
+the finger, light on the photo). A \textbf{threshold} decides what counts as a match.
+\begin{itemize}
+  \item \textbf{False positive}: a wrong authentication \textbf{accepted} (someone else's
+        biometric matches).
+  \item \textbf{False negative}: a true authentication \textbf{rejected} (the user is refused).
+\end{itemize}
+The parameters set both, and \textbf{decreasing false negatives increases false positives}! The
+configuration depends on the application: a \textbf{bank} wants few false positives, even if
+legitimate users must try again; a \textbf{gym} wants few false negatives, even if some non-members
+get in. It is a choice between keeping the assets safe and keeping the users happy.
+\end{defnbox}
