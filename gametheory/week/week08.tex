@@ -635,6 +635,18 @@ E[\text{coins} \,|\, s_1, s_2 < s_1] = \frac{s_1 + (s_1 - 4)}{2} = s_1 - 2
 \end{warning}
 
 
+\begin{example}
+
+\textbf{Where $-4$ comes from} (not on the slides): $s_2 - s_1 = e_2 - e_1 = d$, with
+$e_1, e_2$ uniform on $\{-5..5\}$; $P(d = k) = (11 - |k|)/121$.
+
+\[
+E[d \,|\, d < 0] = -\frac{\sum_{k=1}^{10} k(11-k)}{\sum_{k=1}^{10}(11-k)} = -\frac{220}{55} = -4
+\]
+
+\end{example}
+
+
 
 
 
