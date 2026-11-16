@@ -163,3 +163,9 @@ IV repeats every 5000--6000 frames}.
 \end{itemize}
 (It can also be seen as a flawed \emph{design} of the WEP protocol.)
 \end{exbox}
+
+\begin{rembox}[title={Why every 5000 frames? (the birthday paradox)}]
+With $2^{24} \approx 16$ million IVs drawn at random, a repetition is expected after about
+$\sqrt{2^{24}} = 2^{12} = 4096$ frames, the same birthday argument as hash collisions (Lecture 6).
+A busy network sends that in seconds.
+\end{rembox}
