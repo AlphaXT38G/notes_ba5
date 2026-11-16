@@ -23,3 +23,14 @@ authentication protocol'' is a rule you will need in practice.
 that entities use to verify that other entities are who they claim to be. (Rick says ``Listen
 Morty, I am the real Rick''; Morty wonders: is this the real Rick?)
 \end{defnbox}
+
+\begin{warnbox}[title=Authentication $\neq$ message authentication]
+Do not confuse it with \textbf{message authentication} (Lecture 6: MACs, signatures), which
+verifies that a \emph{message}
+\begin{itemize}
+  \item comes from the designated sender (\textbf{provenance}), and
+  \item has not been modified (\textbf{integrity}).
+\end{itemize}
+Here we authenticate an \textbf{entity} (a user, a machine), not a message. Message
+authentication is a \emph{tool} that authentication protocols use.
+\end{warnbox}
