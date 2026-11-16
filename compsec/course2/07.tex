@@ -160,3 +160,10 @@ received password and compares ($e' = e$?), or decrypts the stored one. \\
 machine} to check passwords. An adversary who can read the database can also steal the key: steal
 file + key $\Rightarrow$ every password.
 \end{defnbox}
+
+\begin{defnbox}[title={Option 2: store a hash of the password --- still not enough}]
+A hash needs no key and still allows checking: store \texttt{(Rick, h = H(`Wubbalubba'))}; on
+login, compute $h' = H(\text{received password})$ and compare $h' = h$. The property that matters
+is \textbf{pre-image resistance} (Lecture 6): given $H(m)$, it is difficult to get $m$, so whoever
+reads the file cannot recover or produce a valid password \emph{directly}.
+\end{defnbox}
