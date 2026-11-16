@@ -236,3 +236,21 @@ systematic analysis:
   \item Many more!
 \end{itemize}
 \end{defnbox}
+
+\begin{exbox}[title={An attack tree (illustration, not from the slides)}]
+\begin{center}
+\begin{forest}
+  for tree={draw, rounded corners, font=\small, align=center, s sep=4pt, l sep=10pt,
+            edge={-latex}}
+  [Log in as Rick
+    [Steal the password
+      [Phishing] [Keylogger] [Leaked\\database]]
+    [Guess the password
+      [Dictionary\\attack] [Timing\\channel]]
+    [Bypass the check
+      [Replay an old\\login message]]]
+\end{forest}
+\end{center}
+Branches are alternatives (OR); a node can also require all its children (AND). The leaves are the
+weak points to fix first.
+\end{exbox}
