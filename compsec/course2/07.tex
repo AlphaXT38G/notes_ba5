@@ -98,3 +98,11 @@ To log in, Rick sends the tuple \texttt{(Rick, `Wubbalubba')} over the Internet.
 eavesdropping on the link \textbf{reads} the tuple and can then use it to \textbf{impersonate}
 Rick at any point in time.
 \end{defnbox}
+
+\begin{propbox}[title=Encrypt the channel]
+Send \texttt{(Rick, Enc(`Wubbalubba'))}. In practice one does not just encrypt the password: one
+encrypts the whole channel with a standard protocol, \textbf{TLS} / \textbf{HTTPS}
+(HTTP-over-TLS), which roughly combines \textbf{Diffie-Hellman}, \textbf{digital signatures} and
+\textbf{hybrid encryption} (Lectures 5 and 6) in a safe way. \textbf{Do NOT build your own
+protocol.}
+\end{propbox}
