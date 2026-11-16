@@ -422,3 +422,12 @@ to authenticate parties: e.g.\ \textbf{HTTPS/TLS} authenticates the \textbf{serv
 public-key cryptography (the server signs with its secret key), and can also authenticate the
 client.
 \end{defnbox}
+
+\begin{keybox}[title={Building authentication protocols is hard!}]
+\begin{itemize}
+  \item Defending from \textbf{man in the middle} $\to$ use \textbf{signatures};
+  \item defending from \textbf{replay attacks} $\to$ use \textbf{challenges / nonces}.
+\end{itemize}
+Still difficult to get right! \textbf{Don't design your own}: use well established protocols
+(\textbf{TLS 1.3}, \textbf{ISO 9798-3}).
+\end{keybox}
