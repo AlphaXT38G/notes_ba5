@@ -480,3 +480,50 @@ between components), the farmer lets strangers fill his hay racks or fix his fen
 management), or the fence exists but has holes: no lock on one door, a key left under the mat
 (porous defenses).
 \end{goatbox}
+
+\begin{recapbox}[title={Exam-ready recap --- Lecture 9: Adversarial thinking II}]
+\textbf{Web basics}: \textbf{HTTP} is request-response and \textbf{stateless}, so state lives in
+\textbf{cookies}, which the browser attaches \textbf{automatically} to every request to their site
+(\textbf{ambient authority}). \textbf{GET}: parameters in the URL query string (\texttt{?a=1\&b=2}),
+should not change state (not enforced); \textbf{POST}: data in the body, changes state. \textbf{PHP}
+builds HTML on the server from \texttt{\$\_GET}, \texttt{\$\_POST}, \texttt{\$\_SESSION};
+\texttt{echo} outputs HTML. Post/Redirect/Get avoids double submission.
+\begin{itemize}
+  \item \textbf{CWE} (MITRE): known errors, ``what not to do'' (vs.\ STRIDE: ``what can go
+        wrong''). Top 25: XSS \#1, SQLi \#3, CSRF \#4, OS command injection \#7. Three classes:
+  \item \textbf{I. Insecure interaction between components} (unsanitized data between subsystems):
+        \begin{itemize}
+          \item \textbf{CWE-78 OS command injection}: \texttt{system('ls -l /home/' .
+                \$userName)} with \texttt{; rm -rf} $\Rightarrow$ a second command runs as the
+                server.
+          \item \textbf{CWE-79 XSS}: input echoed into a page; \texttt{<script>} runs in the
+                victim's browser as the trusted site, e.g.\ sends \texttt{document.cookie} to the
+                attacker (session hijack). Steps: inject, victim requests, page served, script runs.
+          \item Defense: \textbf{sanitize} (BIBA: nothing from low to high unsanitized); hard
+                because A must know B's valid inputs.
+          \item \textbf{CWE-352 CSRF}: a page with a hidden auto-submitted form makes the logged-in
+                victim's browser POST to the target with her cookie; the server pays from her
+                account. = \textbf{confused deputy} enabled by \textbf{ambient authority}.
+                \textbf{SOP} (origin = protocol, host, port; stops \emph{reading} cross-origin, CORS
+                for exceptions) does \textbf{not} stop it: the attack only sends a simple POST.
+                Defenses: check Referer/Origin, side-effect-free requests (GET), \textbf{anti-CSRF
+                token}, re-authentication, \textbf{SameSite} cookies (Strict/Lax/None).
+        \end{itemize}
+  \item \textbf{II. Risky resource management}: buffer overflow family (CWE-120, 676, 131, 190),
+        path traversal (22), format strings (134), and \textbf{TCB under adversary control}:
+        unsigned code download (494, Mac OS X updates), untrusted includes (829, third-party
+        JavaScript). Once in the TCB, any property can be violated.
+  \item \textbf{III. Porous defenses}: missing/incorrect authentication, authorization, encryption,
+        hard-coded credentials, unnecessary privileges, broken crypto, unlimited attempts, unsalted
+        hashes: broken \textbf{complete mediation}.
+\end{itemize}
+\textbf{How it builds on what came before}: Lecture 8 classified attacks by the step of the
+engineering process they exploit; the CWE lists the concrete mistakes behind step 3. Almost every
+weakness here breaks a principle seen before: injections violate \textbf{BIBA} and need
+\textbf{sanitization} (Lecture 4), CSRF is the \textbf{confused deputy} and \textbf{ambient
+authority} of Lecture 3 in a browser, anti-CSRF tokens are the \textbf{challenges} that stopped
+replay in Lecture 7, unsigned updates need the \textbf{signatures} of Lecture 6 and break the
+\textbf{TCB} (Lecture 2), and the porous defenses are, one by one, the authentication, access
+control, least privilege and cryptography of Lectures 2 to 7 implemented badly. Like Log4Shell in
+the introduction (Lecture 0), the root cause is always the same: trusting input you do not control.
+\end{recapbox}
