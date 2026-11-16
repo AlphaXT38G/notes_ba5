@@ -2127,4 +2127,17 @@ much''; if you think the oil field is poor, that is bad news for my estimate too
 
 \section{Private-value, first-price auction}
 
+\begin{defnbox}[title=Setup]
+\begin{itemize}
+  \item $N$ bidders; bidder $i$ has a \textbf{private value} $v_i$ (the utility she gets from
+        the object). She knows her own value, not the others'.
+  \item Each bidder chooses her bid as a function of her value, $b(v_i)$: a continuous action
+        set (a strategy is a plan for each type, as in any Bayesian game).
+  \item Payout: she gets $v_i - b_i$ if she wins, 0 otherwise, so her expected payout is
+        \[
+        \mathcal{P}_i = (v_i - b_i)\; P(b_i > b_j \ \forall j \neq i).
+        \]
+\end{itemize}
+\end{defnbox}
+
 \end{document}
