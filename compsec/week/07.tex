@@ -359,3 +359,16 @@ get in. It is a choice between keeping the assets safe and keeping the users hap
         lenses\ldots{} It is a lie that they do not change.
 \end{itemize}
 \end{warnbox}
+
+\section{What you have: tokens}
+
+\begin{defnbox}[title=Tokens]
+Authentication by proving \textbf{ownership of a device} that holds a secret:
+\begin{itemize}
+  \item a \textbf{chip running a protocol} on a secret: e.g.\ a smart card \textbf{signs a
+        challenge} sent by the ATM, to prove knowledge of its key;
+  \item a device holding a \textbf{secret shared with the server}, which outputs a number based on
+        this secret and \textbf{the time} (requires synchronization). The device is authenticated
+        when it outputs the same number as the server.
+\end{itemize}
+\end{defnbox}
