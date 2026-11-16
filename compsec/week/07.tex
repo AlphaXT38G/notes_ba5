@@ -1,0 +1,17 @@
+% =========================================================
+\chapter{Lecture 7 : Authentication}
+% =========================================================
+
+\begin{rembox}[title=In a nutshell]
+\textbf{What is this lecture about?} Access control (Lectures 3 and 4) decides what a
+\emph{principal} may do, but it assumed we already knew \emph{who} the principal is.
+\textbf{Authentication} is that missing first step: verifying a claimed identity. We see the three
+classic ways to prove who you are: \textbf{what you know} (passwords: how to transfer, store and
+check them safely), \textbf{what you are} (biometrics: enrollment, verification, false positives
+and negatives) and \textbf{what you have} (tokens, two-factor authentication), and finally how
+\textbf{machines} authenticate with keys and signatures. \\
+\textbf{Why is it useful?} If authentication fails, every permission of the victim goes to the
+attacker: the best access control in the world protects nothing. Password databases leak every
+year, replay and timing attacks are classic exam material, and ``don't design your own
+authentication protocol'' is a rule you will need in practice.
+\end{rembox}
