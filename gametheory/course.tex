@@ -2669,4 +2669,31 @@ Check: $b(R) = R$, and with $R = 0$ we get back $b(v) = v/2$.
 
 \section{Optimal reserve price}
 
+\begin{propbox}[title=Which reserve price maximizes the seller's revenue?]
+Second-price auction, two bidders, independent values uniform on $[0,1]$, $v_l < v_h$ (low
+and high). Compare the revenue when the reserve price goes from $R$ to $R + \epsilon$:
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week09_03.png}
+\end{center}
+\begin{itemize}
+  \item $v_l < v_h < R$: nothing is sold either way: no impact on revenue.
+  \item $R + \epsilon < v_l < v_h$: the price is $v_l$ either way: no impact.
+  \item $v_l < R < R + \epsilon < v_h$: the price goes from $R$ to $R + \epsilon$:
+        \textbf{revenue increases by $\epsilon$} (probability $2R(1-R)$).
+  \item $v_l < R < v_h < R + \epsilon$: the item was sold at $R$, now it is not sold:
+        \textbf{revenue decreases by $R$} (probability $2\epsilon R$).
+  \item $R < v_l < R + \epsilon < v_h$: revenue increases by less than $\epsilon$
+        (probability $2\epsilon(1-R)$): a gain of order $\epsilon^2$, negligible.
+\end{itemize}
+Expected revenue change:
+\[
+\Delta\text{Revenue} = 2R(1-R)\,\epsilon - 2\epsilon R^2.
+\]
+At the optimal reserve price, a small change must not change the expected revenue:
+$2R(1-R) = 2R^2 \Rightarrow 1 - R = R$:
+\[
+R^* = \frac{1}{2}.
+\]
+\end{propbox}
+
 \end{document}
