@@ -257,3 +257,12 @@ Read it against the options: plaintext gives everything; an unsalted fast hash g
 dictionary attack; encryption with \textbf{ECB} (Lecture 6) shows which users share a password;
 even salted bcrypt fell where a legacy MD5 copy was kept next to it.
 \end{exbox}
+
+\begin{goatbox}
+Never keep the list of secret words on the barn wall. Locking the list with a key hidden in the
+same barn is pointless: the thief takes both. Instead write, for each goat, a scrambled
+fingerprint of its word that cannot be unscrambled. A thief can still scramble every common word
+and compare, so give every goat its own pinch of random spice (the salt) in the scrambling: the
+thief must redo all his work for each goat. And make the scrambling slow, so redoing it a million
+times takes forever.
+\end{goatbox}
