@@ -57,3 +57,17 @@ The protocol that determines what actions web servers and browsers take in respo
         inside the requests and responses}. Very important for security.
 \end{itemize}
 \end{defnbox}
+
+\begin{defnbox}[title=Cookies]
+A \textbf{small piece of data stored by the browser} on the user's device.
+\begin{itemize}
+  \item \textbf{Main goal}: store state information (shopping cart, login) to create HTTP
+        \textbf{sessions} on top of a stateless protocol.
+  \item \textbf{Secondary use}: tracking users.
+  \item \textbf{Ambient authority in cookies}: if you are logged into \texttt{bank.com}, you have
+        cookies for \texttt{bank.com}, and \textbf{every} new HTTP request to \texttt{bank.com}
+        automatically includes all of them, so that you stay logged in (no login for every
+        request). Whoever makes your browser send a request to \texttt{bank.com} uses your
+        session.
+\end{itemize}
+\end{defnbox}
