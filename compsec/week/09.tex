@@ -127,3 +127,20 @@ main goal of a POST). It then answers with a page (\texttt{200 OK}, ``Success!''
 \textbf{Post/Redirect/Get} pattern, which avoids submitting the form twice when the user hits
 ``refresh''.
 \end{defnbox}
+
+\section{Common Weakness Enumeration (CWE)}
+
+\begin{defnbox}[title={Common Weakness Enumeration}]
+\textbf{Idea}: a \textbf{database of software errors leading to vulnerabilities}, to help security
+engineers avoid common pitfalls: \textbf{``what not to do''}. STRIDE (Lecture 8) reasons about what
+the adversary can do; the CWE reduces the attack surface by \textbf{not repeating known errors}.
+MITRE explains each error with its consequences; at a high level, each one makes the software
+break a security principle. The 2011 classification has three classes:
+\begin{itemize}
+  \item \textbf{Insecure interaction between components}: one subsystem feeds another subsystem
+        data that is not sanitized.
+  \item \textbf{Risky resource management}: the system acts on inputs that are not sanitized.
+  \item \textbf{Porous defenses}: defenses fail to provide full protection or complete mediation,
+        through missing checks or partial mechanisms.
+\end{itemize}
+\end{defnbox}
