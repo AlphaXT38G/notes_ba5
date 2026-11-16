@@ -2232,4 +2232,20 @@ Green dot: $v_i$; black: $b_i$; red: $\max_{j \neq i} b_j$.
 \end{itemize}
 \end{propbox}
 
+\begin{propbox}[title={Underbidding ($b_i < v_i$) never helps}]
+\begin{itemize}
+  \item $\max_{j \neq i} b_j > v_i$: she loses, and would also have lost by bidding $v_i$:
+        same payout.
+        \begin{center}\includegraphics[width=0.6\linewidth]{images/week08_05.png}\end{center}
+  \item $b_i < \max_{j \neq i} b_j < v_i$: she loses, but bidding $v_i$ she would have won
+        with a \textbf{positive payout}: truthful is \textbf{strictly better}.
+        \begin{center}\includegraphics[width=0.6\linewidth]{images/week08_06.png}\end{center}
+  \item $\max_{j \neq i} b_j < b_i$: she wins, and would also have won by bidding $v_i$, same
+        payout.
+        \begin{center}\includegraphics[width=0.6\linewidth]{images/week08_07.png}\end{center}
+\end{itemize}
+In every case truthful bidding does at least as well, and in some cases strictly better:
+it is \textbf{weakly dominant}.
+\end{propbox}
+
 \end{document}
