@@ -422,3 +422,12 @@ $1, 2, 3, \ldots, n, \ldots$ \\
 The adversary only sees $v$: it cannot recover the seed or the key (properties of encryption),
 nor compute future values, since it does not have the key.
 \end{defnbox}
+
+\begin{warnbox}[title={Why the function cannot be a hash}]
+With $v_n = h^n(\mathit{seed})$, an adversary who observes $v_n$ computes
+\[
+  v_{n+1} = h^{n+1}(\mathit{seed}) = h\big(h^n(\mathit{seed})\big) = h(v_n)
+\]
+and answers the next ``Prove it'' as Rick. \textbf{The hash does not need a key: anyone can compute
+it!} A keyed function stops this.
+\end{warnbox}
