@@ -258,3 +258,10 @@ The \textbf{time} taken to reject reveals \textbf{how many letters are correct}:
 guesses letter after letter, in about $94 \times 10$ tries instead of $94^{10}$. (Same for PINs.)
 A side channel, as in Lecture 5.
 \end{warnbox}
+
+\begin{propbox}[title={Option 2: always check everything}]
+\textbf{Require the same operations for accept and reject}: compare every letter, whatever happens,
+and only then answer. \textbf{Hashing takes care of it}: the checker compares $H(\text{guess})$ with
+$H(\text{password})$, and a guess with more correct letters does not give a hash with more
+correct letters.
+\end{propbox}
