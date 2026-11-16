@@ -125,3 +125,18 @@ authenticate} to the phone: only the phone authenticates to the network. Nowaday
         (unknown vulnerabilities), identifying vulnerable devices, automated log analysis.
 \end{itemize}
 \end{exbox}
+
+\subsection{Step 2: exploiting design weaknesses of the mechanisms}
+
+\begin{exbox}[title={Weak cryptographic primitives}]
+\begin{itemize}
+  \item \textbf{Tesla Model S}: the key fob algorithm that starts the car allows recovering the
+        key \textbf{in seconds} (with pre-computation) $\Rightarrow$ cloned key fobs.
+  \item \textbf{GSM}: the ciphers \textbf{A5/1} and \textbf{A5/2} are weak and allow
+        \textbf{ciphertext-only attacks}, which can even run in \textbf{real time} with FPGA
+        parallel computation.
+\end{itemize}
+In both cases the algorithms were \textbf{secret}, but researchers \textbf{reverse engineered}
+them; once known, vulnerabilities let them decrypt messages and even recover the key.
+\textbf{Security by obscurity is a bad idea $\Rightarrow$ open design principle} (Lecture 2).
+\end{exbox}
