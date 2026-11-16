@@ -73,3 +73,13 @@ authentication.
 A \textbf{secret shared between the user and the system}. The user has a secret password; the
 system checks it to authenticate the user.
 \end{defnbox}
+
+\begin{keybox}[title=The four problems to be solved]
+\begin{enumerate}
+  \item \textbf{Secure transfer}: the password may be eavesdropped when communicated.
+  \item \textbf{Secure check}: naive checks may leak information about the password.
+  \item \textbf{Secure storage}: if the password file is stolen, the full system is compromised!
+  \item \textbf{Secure passwords}: easy-to-remember passwords tend to be easy to guess --- and
+        if the password can be guessed, securing the three points above is useless.
+\end{enumerate}
+\end{keybox}
