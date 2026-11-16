@@ -2620,4 +2620,29 @@ second-price auction without reserve, so the revenue equivalence theorem does no
 them.
 \end{warnbox}
 
+\begin{propbox}[title=Second-price auction with reserve price]
+2 bidders, values independent, uniform on $[0,1]$. We can treat the reserve price $R$ as
+\textbf{another bidder whose bid we know}. It is a dominant strategy to bid one's own value
+when $v > R$ and not to bid when $v \le R$.
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week09_02.png}
+\end{center}
+A bidder with value $v > R$:
+\begin{itemize}
+  \item wins with probability $v$ (the other value is below $v$);
+  \item conditional on winning, the other value is below $R$ with probability $R/v$: he pays
+        $R$;
+  \item conditional on winning with the other value above $R$ (probability $1 - R/v$), the
+        other value is uniform on $[R, v]$, on average $\frac{v+R}{2}$: he pays that.
+\end{itemize}
+Expected payment conditional on winning:
+\[
+\frac{R}{v}\, R + \left(1 - \frac{R}{v}\right)\frac{v+R}{2} = R + \frac{(v-R)^2}{2v},
+\]
+so the expected payment of a bidder with value $v > R$ is
+\[
+\text{Expected Payment}(v > R) = v\left(R + \frac{(v-R)^2}{2v}\right).
+\]
+\end{propbox}
+
 \end{document}
