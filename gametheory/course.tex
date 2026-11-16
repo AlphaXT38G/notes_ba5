@@ -2600,4 +2600,17 @@ bidders: $1/3$.
 
 \section{Auctions with a reserve price}
 
+\begin{defnbox}[title=Reserve price]
+A price $R$ below which the seller is not willing to sell the item.
+
+Example: \textbf{second-price auction with a reserve price $R$}: the highest bidder gets the
+item if his bid is $\ge R$, and then pays \textbf{the largest of the second-highest bid and
+$R$}.
+\begin{itemize}
+  \item Bids 0.3 and 0.6, $R = 0.4$: the high bidder wins and pays 0.4.
+  \item Bids 0.5 and 0.6, $R = 0.4$: the high bidder wins and pays 0.5.
+  \item Bids 0.3 and 0.36, $R = 0.4$: nobody wins, the item remains with the seller.
+\end{itemize}
+\end{defnbox}
+
 \end{document}
