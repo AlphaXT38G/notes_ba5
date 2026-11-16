@@ -374,3 +374,27 @@ policies (a special HTTP header).
 A CSRF \textbf{does not read} anything from the other origin: it only \textbf{sends} a simple POST,
 which SOP allows. \textbf{We need to check the origin of the request before executing it.}
 \end{warnbox}
+
+\begin{propbox}[title={How to avoid CSRF}]
+\begin{itemize}
+  \item \textbf{Confirm the origin of authority and request}: check the HTTP \textbf{Referer} (the
+        last page visited) or \textbf{Origin} (host and port that caused the request) header
+        before executing. Widely deployed, not always reliable: browsers might strip these fields.
+  \item \textbf{Make the maximum number of requests side-effect free} (limit the attack surface):
+        if a request cannot change the server, a CSRF on it has no impact. E.g.\ make sure GET
+        requests do not.
+  \item \textbf{Include an authenticator the adversary cannot guess}: an \textbf{anti-CSRF token},
+        a fresh challenge put in the genuine form; the forged form cannot contain it (as
+        challenges stop replay attacks, Lecture 7).
+  \item \textbf{Request re-authentication for every action}: definitely stops the attack, but
+        causes usability problems.
+  \item \textbf{``Modern'' (Chrome, $>$2020): the SameSite cookie attribute}, the most effective
+        solution because it is implemented by the browser by default. An attribute on the session
+        cookie tells the browser when to send it on cross-site requests: \texttt{Strict},
+        \texttt{Lax}, \texttt{None}. It solves many CSRF cases, but not all (e.g.\ not if a GET
+        request changes state).
+\end{itemize}
+\textbf{Why is all this so hard?} HTTP is stateless, so web developers must \textbf{re-define a
+session for each application}, and for a long time there was no standard way of managing sessions:
+errors are common.
+\end{propbox}
