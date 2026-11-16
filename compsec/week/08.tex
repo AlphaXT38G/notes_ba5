@@ -140,3 +140,19 @@ In both cases the algorithms were \textbf{secret}, but researchers \textbf{rever
 them; once known, vulnerabilities let them decrypt messages and even recover the key.
 \textbf{Security by obscurity is a bad idea $\Rightarrow$ open design principle} (Lecture 2).
 \end{exbox}
+
+\subsection{Step 3: exploiting implementation and operation}
+
+\begin{exbox}[title={Bad operation decisions: WEP's use of RC4}]
+WEP (the first WiFi security) uses \textbf{RC4}, a stream cipher that is secure \emph{when the IV is
+random}. But WEP defines a \textbf{24-bit IV}, and the implementations use it so that \textbf{the
+IV repeats every 5000--6000 frames}.
+\begin{itemize}
+  \item When the IV repeats, the key stream XOR-ed with the messages repeats: effectively a
+        \textbf{repeated one-time pad} (Lecture 5), which allows recovering messages. Because of
+        particularities of RC4, one can even recover the \textbf{secret key}.
+  \item The adversary can \textbf{accelerate} the attack by spoofing MAC addresses to make the
+        access point send more frames.
+\end{itemize}
+(It can also be seen as a flawed \emph{design} of the WEP protocol.)
+\end{exbox}
