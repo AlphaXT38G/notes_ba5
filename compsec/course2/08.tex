@@ -254,3 +254,25 @@ systematic analysis:
 Branches are alternatives (OR); a node can also require all its children (AND). The leaves are the
 weak points to fix first.
 \end{exbox}
+
+\begin{defnbox}[title={STRIDE (by Microsoft)}]
+Model the target system, with its entities, assets and flows. Then reason about each threat and
+the property it threatens:
+\begin{center}
+\small
+\begin{tabularx}{\linewidth}{l|l|X}
+\textbf{Threat} & \textbf{Property threatened} & \textbf{Example} \\ \hline
+\textbf{S}poofing & Authenticity & A member of the council of Ricks convinces Morty he is the
+real Rick \\
+\textbf{T}ampering & Integrity & The bad minion modifies the plan message sent by Gru to Bob \\
+\textbf{R}epudiation & Non-repudiation & Summer denies having told Morty that Rick was waiting
+for him \\
+\textbf{I}nformation disclosure & Confidentiality & Summer learns about the secret plans of Rick
+and Morty \\
+\textbf{D}enial of Service & Availability & The minions flood Dr.\ Nefario's lab with bananas and
+he cannot receive the latest weapons \\
+\textbf{E}levation of Privilege & Authorization & Bob the minion gains access to the system with
+Gru's credentials
+\end{tabularx}
+\end{center}
+\end{defnbox}
