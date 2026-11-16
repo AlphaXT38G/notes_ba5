@@ -83,3 +83,11 @@ system checks it to authenticate the user.
         if the password can be guessed, securing the three points above is useless.
 \end{enumerate}
 \end{keybox}
+
+\subsection{Secure transfer}
+
+\begin{defnbox}[title=Sending the password in the clear]
+To log in, Rick sends the tuple \texttt{(Rick, `Wubbalubba')} over the Internet. Anyone
+eavesdropping on the link \textbf{reads} the tuple and can then use it to \textbf{impersonate}
+Rick at any point in time.
+\end{defnbox}
