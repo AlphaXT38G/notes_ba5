@@ -171,3 +171,22 @@ input) are highlighted in the slides: four of the top 7.
 processes, threads, or systems.'' One subsystem feeds another subsystem data that is \textbf{not
 sanitized}; the program uses it, with unintended behaviors that the adversary exploits.
 \end{defnbox}
+
+\subsection{CWE-78: OS command injection}
+
+\begin{defnbox}[title={CWE-78: Improper Neutralization of Special Elements used in an OS Command}]
+A program shows the user the content of their folder under \texttt{/home}. A web form with one field
+sends \texttt{userName} by POST; the server pastes it at the end of the Linux command
+\texttt{ls -l /home/} (for \texttt{ctroncoso}: \texttt{ls -l /home/ctroncoso}).
+\begin{lstlisting}[language=HTML]
+<form action="/url/myscript.php" method="post">
+  userName: <input name="userName" type="text" />
+  <input name="submit" type="submit" value="Submit">
+</form>
+\end{lstlisting}
+\begin{lstlisting}[language=PHP]
+$userName = $_POST["userName"];       // no check on $userName format!
+$command  = 'ls -l /home/' . $userName;
+system($command);
+\end{lstlisting}
+\end{defnbox}
