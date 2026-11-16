@@ -2147,4 +2147,22 @@ how much? Two opposite forces: a \textbf{higher} $b_i$ gives a higher chance to 
 for the $b_i$ that maximizes $\mathcal{P}_i$.
 \end{rembox}
 
+\begin{propbox}[title={Two bidders, values uniform on $[0,1]$}]
+\begin{center}
+\includegraphics[width=0.6\linewidth]{images/week08_01.png}
+\end{center}
+Assume bidder 2 bids $b_2(v_2) = a v_2$. Given $b_1$, bidder 1 wins if $b_2 < b_1$, i.e.\
+$v_2 < b_1/a$, which has probability $b_1/a$ (uniform on $[0,1]$: the length of $[0, b_1/a]$).
+So bidder 1 maximizes
+\[
+\mathcal{P}_1 = (v_1 - b_1)\,\frac{b_1}{a}
+\quad\Longrightarrow\quad
+\frac{d\mathcal{P}_1}{db_1} = \frac{v_1 - 2b_1}{a} = 0
+\quad\Longrightarrow\quad
+b_1 = \frac{v_1}{2}.
+\]
+The same argument holds for bidder 2: the BNE is $b(v) = \frac{v}{2}$ for each player (and
+$a = 1/2$ is indeed consistent with the assumption $b_2 = a v_2$).
+\end{propbox}
+
 \end{document}
