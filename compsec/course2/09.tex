@@ -249,3 +249,13 @@ without login and password}. (A popup could also ask for the password and send i
 The script runs \textbf{as if it came from the trusted site}: the browser trusts the site, the site
 trusted the input.
 \end{defnbox}
+
+\begin{propbox}[title={How to avoid injection?}]
+\textbf{Sanitization, sanitization, sanitization, and a little bit of sanitization.} Never
+send/execute anything that comes from an untrusted source without sanitizing it. \textbf{Remember
+BIBA} (Lecture 4): never bring information from \textbf{low} (unknown, the user) into \textbf{high}
+(the OS, the server, the page of a trusted site) without sanitization. \\
+\textbf{Why are these attacks so pervasive then?} \textbf{Cross-subsystem sanitization is hard!}
+Subsystem A (the PHP script) must know the set of valid inputs of subsystem B (the shell, the HTML
+parser, the SQL engine), and often lacks that information.
+\end{propbox}
