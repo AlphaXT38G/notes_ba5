@@ -152,3 +152,11 @@ Not every attacker needs to break in: it suffices that \textbf{one} attacker get
 and leaks the passwords of millions of people (Lecture 1: the attacker needs one way in, the
 defender must cover all).
 \end{warnbox}
+
+\begin{defnbox}[title={Option 1: store passwords encrypted --- not enough}]
+Store \texttt{(Rick, e = Enc(k, `Wubbalubba'))} with a key $k$. To check, Morty encrypts the
+received password and compares ($e' = e$?), or decrypts the stored one. \\
+\textbf{Problem}: encryption is only as secure as the key, and the key must be \textbf{on the same
+machine} to check passwords. An adversary who can read the database can also steal the key: steal
+file + key $\Rightarrow$ every password.
+\end{defnbox}
