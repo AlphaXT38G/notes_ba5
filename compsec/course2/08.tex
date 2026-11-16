@@ -298,3 +298,47 @@ denying it ate the cabbage (repudiation), the neighbour peeking at the herd book
 the gate blocked with hay (denial of service), a goat stealing the farmer's keys (elevation of
 privilege). Then he fixes the worst first.
 \end{goatbox}
+
+\begin{recapbox}[title={Exam-ready recap --- Lecture 8: Adversarial thinking I}]
+\textbf{Why study attacks}: good attackers make good defenders, mediocre ones make terrible
+defenders; pentesting is an industry (also for privacy: checking that data cannot be inferred).
+\textbf{Finding no attack does not prove security} (the attack space is never fully explored
+$\Rightarrow$ fail-safe, sanitization by whitelisting). Never hack without authorization.
+\begin{itemize}
+  \item \textbf{Attack engineering process} = the security engineering process inverted:
+        \begin{enumerate}
+          \item \textbf{Policy / threat model}: misidentified assets (\textbf{HSM PKCS\#11}: derive
+                a 1-byte key at each offset, HMAC a known input, brute force 256 values per byte
+                $\Rightarrow$ full key; the key was an asset, its bytes were not); unforeseen
+                \textbf{access} (cars: ECUs and the CAN bus reachable over GSM/WiFi; IoT and the
+                Smart Grid; \textbf{GSM} authenticates only the phone, so a cheap \textbf{fake
+                BTS} does MITM); unforeseen \textbf{computation} (ML/AI inference and vulnerability
+                discovery, also usable by defenders).
+          \item \textbf{Design}: weak secret crypto reverse engineered (\textbf{Tesla} key fob,
+                \textbf{GSM A5/1, A5/2} ciphertext-only, real time on FPGA) $\Rightarrow$
+                \textbf{open design}, no security by obscurity.
+          \item \textbf{Implementation / operation}: \textbf{WEP} uses RC4 with a 24-bit IV that
+                repeats every $\sim$5000 frames (birthday: $2^{12}$) $\Rightarrow$ two-time pad,
+                even key recovery; bugs (missing checks, missing sanitization, ambient authority,
+                confused deputy); \textbf{\texttt{sudo -u\#-1}}: $-1$ passes the ``not root''
+                check but means ``do not change UID'' to a routine running as root.
+        \end{enumerate}
+  \item \textbf{Threat modelling} (``what can go wrong?''): identify threats and unprotected
+        resources to \textbf{prioritize}. \textbf{Attack trees} (goal at the root, leaves = weak
+        resources), \textbf{STRIDE}, \textbf{P.A.S.T.A.} (business goals, risk-based),
+        \textbf{security cards}.
+  \item \textbf{STRIDE}: Spoofing $\to$ authenticity, Tampering $\to$ integrity, Repudiation
+        $\to$ non-repudiation, Information disclosure $\to$ confidentiality, Denial of service
+        $\to$ availability, Elevation of privilege $\to$ authorization.
+\end{itemize}
+\textbf{How it builds on what came before}: the attack process is Lecture 1's security engineering
+process (policy, threat model, mechanism, implementation) read by the adversary, and the
+\textbf{strategic adversary} of Lecture 1 is exactly the one who looks for the step you got wrong.
+The examples revisit every chapter: the HSM and the GSM fake antenna are failures of the
+\textbf{threat model}; A5/1 and the Tesla fob break \textbf{open design} (Lecture 2); WEP is the
+\textbf{reused one-time pad} of Lecture 5 and the \textbf{birthday bound} of Lecture 6; the
+\texttt{sudo} bug is a \textbf{UID / setuid} privilege problem (Lecture 3) and a broken
+\textbf{complete mediation}; GSM's one-way authentication is the man in the middle that
+authentication (Lecture 7) must stop. STRIDE lists, as threats, the \textbf{properties} defined in
+Lecture 1.
+\end{recapbox}
