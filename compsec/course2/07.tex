@@ -389,3 +389,16 @@ measure is never exactly the same twice, so he decides ``close enough is a match
 the right goat waits outside in the rain; too loose, and the neighbour's goat walks in. And the
 horns are visible to everybody, and a goat cannot grow new ones if a copy is made.
 \end{goatbox}
+
+\section{What you have: tokens}
+
+\begin{defnbox}[title=Tokens]
+Authentication by proving \textbf{ownership of a device} that holds a secret:
+\begin{itemize}
+  \item a \textbf{chip running a protocol} on a secret: e.g.\ a smart card \textbf{signs a
+        challenge} sent by the ATM, to prove knowledge of its key;
+  \item a device holding a \textbf{secret shared with the server}, which outputs a number based on
+        this secret and \textbf{the time} (requires synchronization). The device is authenticated
+        when it outputs the same number as the server.
+\end{itemize}
+\end{defnbox}
