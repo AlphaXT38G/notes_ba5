@@ -54,3 +54,20 @@ illegal; pentesting is done under contract, within an agreed scope.
   \item Build an \textbf{implementation} that supports / embodies the mechanisms.
 \end{enumerate}
 \end{rembox}
+
+\begin{defnbox}[title=The attack engineering process]
+The \textbf{``inverse'' approach}: it exploits the flaws of each step of the security engineering
+process.
+\begin{enumerate}
+  \item \textbf{Policy and threat model}. The adversary can exploit
+        \begin{itemize}
+          \item \textbf{misidentified principals, assets, or properties};
+          \item \textbf{capabilities beyond those considered in the threat model}: more
+                \emph{access}, or more \emph{computational/algorithmic} power.
+        \end{itemize}
+  \item \textbf{Mechanisms}. The adversary can exploit \textbf{design weaknesses/flaws} in the
+        security mechanisms.
+  \item \textbf{Implementation}. The adversary can exploit \textbf{implementation or operation
+        problems} that allow it to subvert the mechanisms.
+\end{enumerate}
+\end{defnbox}
