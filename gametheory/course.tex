@@ -2565,4 +2565,22 @@ the seller his own bid, win or lose (think of lobbying, or of the dollar auction
 Lecture 4).
 \end{defnbox}
 
+\begin{propbox}[title=Optimal bid via revenue equivalence]
+Suppose there is an equilibrium where the highest-valuation bidder wins; use the theorem to
+find the bid, then check ex post that the highest value indeed wins. $N$ bidders, values
+independent, uniform on $[0,1]$. A bidder with value $v_i$
+\begin{itemize}
+  \item wins with probability $v_i^{N-1}$;
+  \item pays his own bid $b(v_i)$ \textbf{whether he wins or not};
+  \item his expected payment must be the same as in a first-price auction:
+        $v_i^{N-1}\frac{N-1}{N} v_i = \frac{N-1}{N} v_i^N$.
+\end{itemize}
+In the all-pay auction the payment is always the bid, so
+\[
+b(v_i) = \frac{N-1}{N}\, v_i^N.
+\]
+It increases with $v_i$, so the highest value does submit the highest bid and win: the guess
+is verified.
+\end{propbox}
+
 \end{document}
