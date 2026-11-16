@@ -99,3 +99,11 @@ encrypts the whole channel with a standard protocol, \textbf{TLS} / \textbf{HTTP
 \textbf{hybrid encryption} (Lectures 5 and 6) in a safe way. \textbf{Do NOT build your own
 protocol.}
 \end{propbox}
+
+\begin{warnbox}[title=Beware of replay attacks]
+One of the most difficult aspects of authentication. Even if the password is encrypted, Eve can
+\textbf{copy} the encrypted message \texttt{(Rick, Enc(`Wubbalubba'))} and \textbf{replay} it
+later: Morty decrypts a valid password and accepts ``Rick''. Eve never learnt the password, yet
+she logs in. (This happens if one only encrypts the password instead of using a standard channel
+protocol.)
+\end{warnbox}
