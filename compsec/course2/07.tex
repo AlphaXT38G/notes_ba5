@@ -128,3 +128,10 @@ Including $R$ ensures that (i) the password is never encrypted to the same value
 the message is \textbf{fresh}: it answers \emph{this} login request. Replaying the old message
 fails, since its $R$ has been deleted. \textbf{Do NOT design your own authentication protocol.}
 \end{defnbox}
+
+\begin{goatbox}
+Shouting the secret word across the field lets the fox learn it. Whispering it in a locked box
+does not help either if the fox can steal the box and hand it over later. So the farmer first
+shouts a new random number, and the goat must put \emph{that number} in the box with the secret
+word. Tomorrow the farmer shouts a different number, and yesterday's box is worthless.
+\end{goatbox}
