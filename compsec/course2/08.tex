@@ -97,3 +97,17 @@ and \texttt{offset}, it uses \texttt{bits\_length} bits of the secret key from p
 \textbf{The flaw}: PKCS\#11 considers the \textbf{full key} an asset to protect, but \textbf{not the
 bytes of the key}. A 128-bit key falls in $16 \times 256 = 4096$ tries instead of $2^{128}$.
 \end{exbox}
+
+\begin{exbox}[title={Unforeseen access capabilities: from cable to the air, IoT}]
+\begin{itemize}
+  \item \textbf{Cars}: \textbf{Engine Control Units (ECUs)} control the vehicle over the internal
+        \textbf{CAN bus}, designed for an adversary who must be physically in the car. Once ECUs
+        are connected to \textbf{GSM/WiFi}, a \textbf{remote} adversary gets access to the CAN bus
+        and to all the (safety) functions of the vehicle (Jeep remotely stopped on the highway,
+        2015).
+  \item \textbf{IoT devices are a weak link}: weakly protected devices connected to the Internet;
+        hackers could compromise the \textbf{Smart Grid} with $\sim$100K devices.
+\end{itemize}
+In both cases the adversary had \textbf{remote access} to functionality that the threat model did
+not foresee.
+\end{exbox}
