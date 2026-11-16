@@ -2490,4 +2490,23 @@ independently.
 
 \section{First-price auctions}
 
+\begin{propbox}[title=Optimal bid via revenue equivalence]
+If the others bid $b_j = a v_j$, a player with value $v$ solves
+$\max_b\, (v - b)\prod_{j \neq i} \left(\frac{b}{a}\right)$, i.e.\ $\max_b (v-b)(b/a)^{N-1}$,
+which gave $b = \frac{N-1}{N} v$ in Lecture 8. \\
+\textbf{Alternatively}: with the symmetric strategy the highest value wins, as in the
+second-price auction, so by revenue equivalence
+\[
+\text{Expected Payment}(v_i) = v_i^{N-1}\,\frac{N-1}{N}\, v_i.
+\]
+In a first-price auction the winner pays her bid, so the expected payment is
+(Prob.\ that $v_i$ is the highest) $\times$ (bid of player $i$) $= v_i^{N-1}\, b(v_i)$. Since
+$v_i^{N-1}$ is the probability of winning when all players use the same bidding strategy,
+\[
+b(v_i) = \frac{N-1}{N}\, v_i.
+\]
+Same result, no derivative needed.
+\end{propbox}
+
+
 \end{document}
