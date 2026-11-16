@@ -1756,4 +1756,16 @@ $q_1 + q_2 = 0$, the information set is off the path and $p$ is free.
 \end{exbox}
 
 
+\begin{algbox}[title={How to find a PBE (method, not on the slides)}]
+\begin{enumerate}
+  \item Find the proper subgames; solve the smallest ones first (backward induction).
+  \item At each information set with several nodes, write the belief ($p$, $1-p$) and the
+        \textbf{expected payout} of each action as a function of $p$.
+  \item Guess the strategies; on the path, compute the beliefs with \textbf{Bayes rule}.
+  \item Check that each action is optimal given the beliefs (Requirement 2).
+  \item Off the path, find beliefs that make the actions optimal (any belief is allowed).
+\end{enumerate}
+\end{algbox}
+
+
 \end{document}
