@@ -361,3 +361,16 @@ origin A from sending B anything but \textbf{``simple'' requests} (GET and POST,
 modifiable headers). Exceptions, granted by the other origin, are controlled by \textbf{CORS}
 policies (a special HTTP header).
 \end{defnbox}
+
+\begin{warnbox}[title={Why SOP does not stop CSRF}]
+\begin{enumerate}
+  \item The victim logs into the HR site; 2.~her session cookies for the HR site are stored in the
+        browser;
+  \setcounter{enumi}{2}
+  \item she visits the malicious site, which sends a \textbf{POST} to the HR site with the
+        malicious student's data \textbf{and} the victim's stored HR cookies;
+  \item the cookies make the HR site consider the request valid, and process it.
+\end{enumerate}
+A CSRF \textbf{does not read} anything from the other origin: it only \textbf{sends} a simple POST,
+which SOP allows. \textbf{We need to check the origin of the request before executing it.}
+\end{warnbox}
