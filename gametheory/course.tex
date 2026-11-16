@@ -2588,4 +2588,14 @@ $b(v) = v^2/2$. With $v = 0.5$ you bid only $0.125$ (you pay it even if you lose
 $v = 1$ you bid $0.5$, like in a first-price auction.
 \end{exbox}
 
+\begin{propbox}[title={Seller's expected revenue (not on the slides)}]
+In all four formats, the expected revenue is $N \times E[\chi(v)]$:
+\[
+N \int_0^1 \frac{N-1}{N}\, v^N \dd v = \frac{N-1}{N+1},
+\]
+which is the expected second-highest value of $N$ draws (order statistic $k = 2$). For 2
+bidders: $1/3$.
+\end{propbox}
+
+
 \end{document}
