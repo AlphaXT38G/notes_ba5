@@ -305,3 +305,29 @@ The script (1) checks that the request carries a \textbf{session cookie} of an a
 (else ``invalid session detected!''); (2) takes as \textbf{origin account} the user in the
 cookie and as \textbf{destination} the name in the form; (3) sends the amount.
 \end{defnbox}
+
+\begin{warnbox}[title={The attack}]
+A Malicious Student builds a page full of Minions and Rick \& Morty images, containing a copy of
+the form with \textbf{hidden} fields and \textbf{hard-coded values}, submitted by JavaScript
+\textbf{as soon as the page loads}:
+\begin{lstlisting}[language=HTML]
+<script>
+function SendAttack () { form.submit(); }   // send to /url/payStudent.php
+</script>
+<body onload="javascript:SendAttack();">
+<form action="http://epflHR.ch/paystudent.php" id="form" method="post">
+  <input type="hidden" name="firstname" value="Malicious">
+  <input type="hidden" name="lastname"  value="Student">
+  <input type="hidden" name="amount"    value="1000 CHF">
+  <img src="https://i.redd.it/388eovi0ebqz.jpg">
+</form>
+\end{lstlisting}
+Only the image shows. A victim \textbf{logged in on the HR site} visits the page:
+\begin{itemize}
+  \item her browser sends the POST to \texttt{epflHR.ch} \textbf{with her HR session cookie}
+        (ambient authority), so the session check passes;
+  \item \texttt{\$\_SESSION} holds \textbf{her} username $\Rightarrow$ origin account = victim's;
+  \item \texttt{\$\_POST} holds the hidden values $\Rightarrow$ destination = Malicious Student;
+  \item 1000 CHF move from the victim to the Malicious Student.
+\end{itemize}
+\end{warnbox}
