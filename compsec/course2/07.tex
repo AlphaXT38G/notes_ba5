@@ -431,3 +431,15 @@ With $v_n = h^n(\mathit{seed})$, an adversary who observes $v_n$ computes
 and answers the next ``Prove it'' as Rick. \textbf{The hash does not need a key: anyone can compute
 it!} A keyed function stops this.
 \end{warnbox}
+
+\begin{defnbox}[title={2FA: two-factor authentication}]
+\textbf{Combine two out of the three factors} (what you know, what you have, what you are), so the
+attacker must steal two different kinds of things:
+\begin{itemize}
+  \item \textbf{bank card} (have) + \textbf{PIN} (know);
+  \item \textbf{token} (have) + \textbf{identification number} (know) (+ card);
+  \item modern approach: \textbf{mobile phone} (have). The phone cannot hold a key securely (it is
+        not a secure device), so the proof goes through an \textbf{SMS} code or a \textbf{QR
+        code}.
+\end{itemize}
+\end{defnbox}
