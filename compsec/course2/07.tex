@@ -182,3 +182,16 @@ $\Rightarrow$ the attacker computes $H(\textit{word})$ for every word of a dicti
 results up in the stolen file. The dictionary can be \textbf{reused} for every file, cracking runs
 \textbf{in parallel on GPUs}, and other tricks exist (\textbf{rainbow tables}, pre-computation).
 \end{warnbox}
+
+\begin{defnbox}[title={Option 3: hash + salt --- do this (with a library)}]
+\begin{itemize}
+  \item choose a \textbf{random salt for every password};
+  \item store the hash of the password \textbf{concatenated with its salt}, \textbf{and the salt in
+        the clear}: \texttt{(Rick, h = H(`Wubbalubba' || salt1), salt1)};
+  \item to check, take the salt of Rick's entry, compute $h' = H(\text{password} \,\|\,
+        \text{salt})$ and compare.
+\end{itemize}
+\textbf{The same password looks different}: Jerry and Beth both chose \texttt{`IhateRick'}, but
+their entries $H(\texttt{`IhateRick'}\|\text{salt3})$ and $H(\texttt{`IhateRick'}\|\text{salt4})$
+differ.
+\end{defnbox}
