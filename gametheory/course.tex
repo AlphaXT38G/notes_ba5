@@ -1697,4 +1697,18 @@ means ``reached with probability 0'': Bayes rule would divide by 0, so any belie
 (Requirement 2).
 \end{rembox}
 
+\begin{exbox}[title=Example 1 solved]
+\begin{itemize}
+  \item Requirement 1: Player 2 has a belief $p$ (L node) and $1-p$ (M node).
+  \item Requirement 2: expected payout of U is $p \cdot 1 + (1-p) \cdot 2 = 2 - p$, of D is
+        $p \cdot 0 + (1-p) \cdot 1 = 1 - p$. Since $2 - p > 1 - p$ for \emph{every} $p$,
+        Player 2 plays U. This \textbf{kills (R,D)}.
+  \item Player 1 anticipates U: L gives 2, M gives 0.5, R gives 1, so he plays L.
+  \item Requirement 3: Player 1 plays L, so Player 2's information set is on the path, and
+        Bayes rule gives $p = Prob(L | L \text{ or } M) = 1$.
+\end{itemize}
+\textbf{PBE: (L,U) with $p = 1$} (Player 2 believes she is at the node after L).
+\end{exbox}
+
+
 \end{document}
