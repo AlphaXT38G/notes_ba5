@@ -481,3 +481,54 @@ Still difficult to get right! \textbf{Don't design your own}: use well establish
   \item Machines authenticate using keys.
 \end{itemize}
 \end{keybox}
+
+\begin{recapbox}[title={Exam-ready recap --- Lecture 7: Authentication}]
+\textbf{Authentication} = verifying a claimed identity: it \textbf{binds the actor to a principal},
+\emph{before} authorization (access control) decides what the principal may do. Not to be
+confused with \textbf{message} authentication (provenance + integrity of a message).
+\begin{itemize}
+  \item \textbf{Factors}: what you know (password), what you are (biometrics), what you have
+        (token); modern: where you are, how you act, who you know.
+  \item \textbf{Passwords, four problems}: transfer, check, storage, guessability.
+        \begin{itemize}
+          \item \textbf{Transfer}: in the clear $\Rightarrow$ eavesdropped; encrypted alone
+                $\Rightarrow$ \textbf{replayed}. Fix: standard channel (TLS) +
+                \textbf{challenge-response}: verifier sends a fresh random $R$ from a large space,
+                user sends $\mathrm{Enc}(\text{pwd}, R)$, verifier deletes $R$.
+          \item \textbf{Storage}: clear (no); encrypted (key on the same machine, stolen with the
+                file); hash (pre-image resistance, but \textbf{dictionary attack}: anyone can hash,
+                $94^8 \approx 2^{52}$, users pick common passwords, GPUs, rainbow tables);
+                \textbf{hash + per-user salt}, salt stored in clear: same password looks
+                different, the dictionary must be redone per salt (a targeted attack is as cheap
+                as before). Plus: slow hashes (bcrypt, scrypt, argon2) repeated, entropy rules,
+                second server (kills offline attacks), access control (\texttt{/etc/shadow}).
+                Facebook's onion = legacy.
+          \item \textbf{Check}: letter by letter leaks through \textbf{timing}; do the same work
+                for accept and reject (hashing does it). Use libraries; OAuth leaks to a third
+                party.
+          \item Hard to remember $\Rightarrow$ written, reused; stolen by keyloggers, shoulder
+                surfing, phishing, social engineering.
+        \end{itemize}
+  \item \textbf{Biometrics}: nothing to remember, passive, hard to delegate. Enrollment (sensor
+        $\to$ template $\to$ store) then verification (compare). Local storage = privacy, remote =
+        easy to secure/update. Inexact match $\Rightarrow$ threshold: fewer false negatives =
+        more false positives (bank vs.\ gym). Problems: not secret (liveness detection), cannot be
+        revoked, link people across systems, reveal health, change over time.
+  \item \textbf{Tokens}: shared seed + synchronized clock, $v = f^n(\mathit{seed})$ with a
+        \textbf{keyed} $f$; with a hash, $v_{n+1} = h(v_n)$ is computable by anyone. Smart
+        cards sign challenges. \textbf{2FA} = two different factors (card + PIN, phone via SMS/QR).
+  \item \textbf{Machines}: signatures with secret keys (TLS). MITM $\to$ signatures, replay $\to$
+        nonces. \textbf{Don't design your own}: TLS 1.3, ISO 9798-3.
+\end{itemize}
+\textbf{How it builds on what came before}: access control (Lectures 3 and 4) always assumed a
+known principal; authentication provides it, and a failure here hands the victim's every right to
+the attacker. The tools are those of Lectures 5 and 6: TLS combines Diffie-Hellman, signatures and
+encryption; password storage needs the \textbf{pre-image resistance} of hashes; tokens need a
+\textbf{keyed} function for the same reason MACs do (anyone can compute an unkeyed hash); machines
+authenticate with \textbf{signatures} and the PKI, which is what defeats the man in the middle that
+broke plain Diffie-Hellman. The timing attack on password checks is a \textbf{side channel}
+(Lecture 5), the second server and \texttt{/etc/shadow} are \textbf{defence in depth} and
+\textbf{access control} (Lectures 1 to 3), the stolen databases show the \textbf{asymmetry}
+between attacker and defender (Lecture 1), and ``use a library'' is again \textbf{economy of
+mechanism} and \textbf{open design} (Lecture 2).
+\end{recapbox}
