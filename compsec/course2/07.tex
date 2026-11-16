@@ -240,3 +240,20 @@ rehash a password you do not know, so new layers are added \emph{on top} of the 
 is a defense of the slide above: a salt, a \textbf{remote} keyed hash (second server, kills offline
 attacks), a slow function (scrypt).
 \end{exbox}
+
+\begin{exbox}[title={Password database compromises (source: T.\ Ristenpart)}]
+\begin{center}
+\small
+\begin{tabular}{l|c|c|c|l}
+\textbf{Service} & \textbf{Year} & \textbf{\# stolen} & \textbf{\% recovered} & \textbf{Format} \\ \hline
+RockYou        & 2012 & 32.6 million & 100\% & plaintext (!) \\
+LinkedIn       & 2012 & 117 million  & 90\%  & unsalted SHA-1 \\
+Adobe          & 2013 & 36 million   & ??    & ECB encryption \\
+Yahoo          & 2014 & $\sim$500 million & ?? & bcrypt + ?? \\
+Ashley Madison & 2015 & 36 million   & 33\%  & salted bcrypt + MD5
+\end{tabular}
+\end{center}
+Read it against the options: plaintext gives everything; an unsalted fast hash gives 90\% to a
+dictionary attack; encryption with \textbf{ECB} (Lecture 6) shows which users share a password;
+even salted bcrypt fell where a legacy MD5 copy was kept next to it.
+\end{exbox}
