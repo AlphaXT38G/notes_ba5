@@ -78,3 +78,22 @@ fence, (3) builds it. The fox looks for a mistake at each step: (1) the farmer f
 also valuable, or did not think foxes could dig; (2) the fence design has a gap; (3) the builder
 left a plank loose, or someone leaves the gate open every evening.
 \end{goatbox}
+
+\subsection{Step 1: exploiting the policy and the threat model}
+
+\begin{exbox}[title={Misidentified assets: extracting keys from Hardware Security Modules (HSMs)}]
+An \textbf{HSM} is a tamper-resistant device that stores keys and performs operations with them
+without ever revealing them. HSMs implement the \textbf{PKCS\#11} standard (for interoperability),
+whose API can \textbf{create internally a new key from a secret key}: given \texttt{bits\_length}
+and \texttt{offset}, it uses \texttt{bits\_length} bits of the secret key from position
+\texttt{offset}. \emph{How would you exploit this function?}
+\begin{enumerate}
+  \item Assume a strong key exists in the HSM.
+  \item Ask the HSM to derive a new key of length \textbf{1 byte} at offset 0.
+  \item Use the new key for an operation the HSM allows, say an \textbf{HMAC on a known input}.
+  \item \textbf{Brute force} the key: input known, output known, key only 1 byte (256 tries).
+  \item Repeat with keys at the other offsets $\Rightarrow$ \textbf{full key recovery!}
+\end{enumerate}
+\textbf{The flaw}: PKCS\#11 considers the \textbf{full key} an asset to protect, but \textbf{not the
+bytes of the key}. A 128-bit key falls in $16 \times 256 = 4096$ tries instead of $2^{128}$.
+\end{exbox}
