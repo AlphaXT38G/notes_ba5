@@ -1734,4 +1734,14 @@ contains the whole information set of Player 3.
 in the smallest subgame.
 \end{propbox}
 
+\begin{warnbox}[title={Why ``or of any of its subgames'' in Requirement 3 (not on the slides)}]
+Player 1 plays B, so Player 3's information set is \textbf{never reached} in the whole game.
+If we only required consistency on the path of the whole game, Player 3 could believe
+$p = 0$; then U is optimal ($2 > 1$ at the R node), Player 2 still plays L, Player 1 still
+plays B: \textbf{(B, L, U) with $p = 0$} would satisfy Requirements 1 and 2. But this belief
+is absurd: Player 2 plays L, so if the information set were reached, Player 3 should be at
+the L node. Requirement 3 applied to the subgame forces $p = 1$ and removes (B, L, U).
+\end{warnbox}
+
+
 \end{document}
