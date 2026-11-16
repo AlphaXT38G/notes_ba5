@@ -180,3 +180,24 @@ Programmers make mistakes:
         (\textbf{ambient authority} and \textbf{confused deputy}, Lecture 3).
 \end{itemize}
 \end{defnbox}
+
+\begin{exbox}[title={The \texttt{sudo} bug (CVE-2019-14287)}]
+An administrator lets user \texttt{someone} run \texttt{vi} as \textbf{any user except root}:
+\begin{center}
+\texttt{someone ALL=(ALL, !root) /usr/bin/vi}
+\end{center}
+\begin{itemize}
+  \item \texttt{sudo -u\#1003 vi} $\to$ runs as \texttt{otheruser}: allowed.
+  \item \texttt{sudo -u\#0 vi} $\to$ ``Sorry, user someone is not allowed to execute
+        \texttt{/usr/bin/vi} as root'': refused.
+  \item \texttt{sudo -u\#-1 vi} $\to$ \textbf{root}!
+\end{itemize}
+\textbf{Why does this work?} \texttt{sudo} uses two routines, one of which changes the UID (the
+UID determines the permissions of the program, Lecture 3). That routine understands
+\textbf{``$-1$'' as ``do nothing''}. Since it is called inside \texttt{sudo}, which runs as
+\textbf{root} (setuid, UID $= 0$), the program comes out \textbf{without changing UID}: it stays
+root. The check ``is it root?'' saw $-1$ (or $4294967295$, the same 32 bits read as unsigned), not
+$0$. \\
+\textbf{Bright side}: only exploitable under configurations where users may run \texttt{sudo} on
+potentially dangerous programs as some users except root, like the line above.
+\end{exbox}
