@@ -167,3 +167,18 @@ login, compute $h' = H(\text{received password})$ and compare $h' = h$. The prop
 is \textbf{pre-image resistance} (Lecture 6): given $H(m)$, it is difficult to get $m$, so whoever
 reads the file cannot recover or produce a valid password \emph{directly}.
 \end{defnbox}
+
+\begin{warnbox}[title={Offline attacks: the dictionary attack}]
+Combine three facts:
+\begin{itemize}
+  \item \textbf{anyone can compute a hash} (no key);
+  \item passwords are \textbf{not truly random}: with 52 letters, 10 digits and 32 punctuation
+        symbols there are $94^8 \approx 2^{52}$ eight-character passwords, a space that \emph{can}
+        be explored;
+  \item users use a \textbf{limited set} of passwords: not every password is equally likely
+        (lists of the most common passwords are public).
+\end{itemize}
+$\Rightarrow$ the attacker computes $H(\textit{word})$ for every word of a dictionary and looks the
+results up in the stolen file. The dictionary can be \textbf{reused} for every file, cracking runs
+\textbf{in parallel on GPUs}, and other tricks exist (\textbf{rainbow tables}, pre-computation).
+\end{warnbox}
