@@ -135,3 +135,14 @@ does not help either if the fox can steal the box and hand it over later. So the
 shouts a new random number, and the goat must put \emph{that number} in the box with the secret
 word. Tomorrow the farmer shouts a different number, and yesterday's box is worthless.
 \end{goatbox}
+
+\subsection{Secure storage}
+
+\begin{defnbox}[title=Why storage matters]
+To check that \texttt{(Rick, \ldots)} is right, Morty needs the correspondence between users and
+passwords, stored in some database: \texttt{(Rick, `Wubbalubba')}, \texttt{(Summer,
+`IloveEthan')}, \texttt{(Jerry, `IhateRick')}, \ldots{} If it is stored \textbf{in the clear}, an
+adversary who reads it can impersonate every user. It can be read if the file is
+\textbf{world-readable} (in early UNIX the password file was readable by anyone!),
+\textbf{leaked}, \textbf{stolen}, or on a \textbf{shared} machine.
+\end{defnbox}
