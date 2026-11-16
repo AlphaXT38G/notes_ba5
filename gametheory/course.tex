@@ -2283,4 +2283,15 @@ highest is on average at $J V/(J+1)$, the second at $(J-1)V/(J+1)$, and so on. E
 $V/2$; 2 draws: highest $2V/3$, lowest $V/3$.
 \end{rembox}
 
+\begin{propbox}[title=The computation]
+Conditional on my value $v_i$ being the highest, the other $N-1$ values are uniformly
+distributed in $[0, v_i]$. The highest of them ($J = N-1$, $k = 1$, $V = v_i$) is on average
+\[
+E[\max_{j \neq i} v_j \,|\, v_i \text{ highest}] = \frac{N-1}{N}\, v_i,
+\]
+exactly the first-price bid. So the expected payment and payout conditional on winning are
+the same in both auctions. (Lecture 9 generalizes this: \textbf{revenue equivalence}.)
+\end{propbox}
+
+
 \end{document}
