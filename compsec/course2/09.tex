@@ -331,3 +331,13 @@ Only the image shows. A victim \textbf{logged in on the HR site} visits the page
   \item 1000 CHF move from the victim to the Malicious Student.
 \end{itemize}
 \end{warnbox}
+
+\begin{keybox}[title={CSRF is an instance of the confused deputy problem}]
+``Using another program to execute a function with higher privileges\ldots{} have we seen this
+before?'' Yes (Lecture 3). The victim's (HR-accredited) web client is \textbf{confused} into
+performing an action that \textbf{seems authorized by the victim}, but in fact grants the victim's
+privileges to the Malicious Student. It is enabled by \textbf{ambient authority}: with cookie-based
+authentication, if the victim is logged in, the web client acts with her privileges, for
+\emph{any} page that makes it send a request. A login cookie has the same effect as being logged
+in on Linux: whatever runs ``under'' the cookie runs with the user's privileges.
+\end{keybox}
