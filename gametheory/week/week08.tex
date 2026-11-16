@@ -438,6 +438,64 @@ allocation; no knowledge about the other players (number, distribution of values
 \end{important}
 
 
+\begin{formula}
+
+\[
+\text{payout} =
+\begin{cases}
+v_i - \max_{j \neq i} b_j & \text{if } b_i > \max_{j \neq i} b_j \\
+0 & \text{otherwise}
+\end{cases}
+\]
+
+The bid decides \emph{whether} you win, not \emph{what} you pay.
+
+\end{formula}
+
+
+\textbf{Overbidding} ($b_i > v_i$). Green: $v_i$, black: $b_i$, red: $\max_{j \neq i} b_j$.
+
+
+\begin{itemize}
+
+\item $\max b_j > b_i$: loses either way (payout 0).
+
+\includegraphics[width=0.9\linewidth]{../images/week08_02.png}
+
+\item $v_i < \max b_j < b_i$: wins with a \textbf{negative payout}; bidding $v_i$ she'd lose
+with 0. \textbf{Truthful is better.}
+
+\includegraphics[width=0.9\linewidth]{../images/week08_03.png}
+
+\item $\max b_j < v_i$: wins either way, same price.
+
+\includegraphics[width=0.9\linewidth]{../images/week08_04.png}
+
+\end{itemize}
+
+
+\textbf{Underbidding} ($b_i < v_i$):
+
+
+\begin{itemize}
+
+\item $\max b_j > v_i$: loses either way.
+
+\includegraphics[width=0.9\linewidth]{../images/week08_05.png}
+
+\item $b_i < \max b_j < v_i$: loses, but bidding $v_i$ she'd win with a \textbf{positive
+payout}. \textbf{Truthful is better.}
+
+\includegraphics[width=0.9\linewidth]{../images/week08_06.png}
+
+\item $\max b_j < b_i$: wins either way, same payout.
+
+\includegraphics[width=0.9\linewidth]{../images/week08_07.png}
+
+\end{itemize}
+
+
+
 
 
 
