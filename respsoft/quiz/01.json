@@ -1,0 +1,54 @@
+{
+  "title": "Getting started: the course and ethical debt",
+  "questions": [
+    {
+      "type": "scq",
+      "question": "What is **ethical debt** (Petrozzino, 2021)?",
+      "options": [
+        "The price paid by people and the environment for systems released with ethical flaws",
+        "The technical debt of an ethics module",
+        "The fines a company pays for breaking the law",
+        "The time engineers spend on ethics training"
+      ],
+      "answer": 0,
+      "explanation": "Like technical debt, it accumulates when issues are ignored to go faster, but it is paid by others."
+    },
+    {
+      "type": "scq",
+      "question": "What is a **\"veiled\" ethical agency**?",
+      "options": [
+        "Not seeing that a technical decision is also an ethical one",
+        "Hiding ethical problems on purpose",
+        "An ethics committee that works in secret",
+        "Letting an AI take the ethical decisions"
+      ],
+      "answer": 0,
+      "explanation": "Engineers do care about ethics, but often do not see the ethical side of their technical decisions: this is what the course is about."
+    },
+    {
+      "type": "mcq",
+      "question": "Which are causes of ethical debt seen in class?",
+      "options": [
+        "Competition and time pressure",
+        "Beliefs about tool neutrality (\"it's just a tool\")",
+        "Lack of ethical knowledge",
+        "Engineers do not care about ethics"
+      ],
+      "answer": [0, 1, 2],
+      "explanation": "Engineers *are* concerned by ethics; the causes are pressure, incentives, culture, power, \"neutral tools\", lack of knowledge and veiled agency."
+    },
+    {
+      "type": "tf",
+      "question": "In the OECD AI Incidents Monitor, an *incident* is an event that could lead to harm.",
+      "answer": false,
+      "explanation": "An incident is harm that happened; a hazard is an event that could lead to harm."
+    },
+    {
+      "type": "scq",
+      "question": "How much is the final exam worth?",
+      "options": ["70%", "25%", "5%", "100%"],
+      "answer": 0,
+      "explanation": "Mini-project 5% (with questions on it at the final), mid-term 25%, final exam 70%. One A4 sheet, both sides."
+    }
+  ]
+}
