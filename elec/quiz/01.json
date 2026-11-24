@@ -1,0 +1,51 @@
+{
+  "title": "C00 · Introduction : le monde de l'électronique",
+  "questions": [
+    {
+      "type": "flow",
+      "question": "Complète la chaîne d'un système électronique, de la mesure à l'action.",
+      "nodes": {
+        "capteurs": {"blank": ["capteurs", "capteur"]},
+        "cond": "Conditionnement",
+        "can": {"blank": ["CAN", "convertisseur analogique-numérique", "convertisseur analogique numerique"]},
+        "trait": "Traitement numérique",
+        "cna": "CNA",
+        "act": {"blank": ["actuateurs", "actuateur", "actionneurs", "actionneur"]}
+      },
+      "rows": [["capteurs", "cond"], ["trait", "can"], ["cna", "act"]],
+      "edges": [["capteurs", "cond"], ["cond", "can"], ["can", "trait"], ["trait", "cna"], ["cna", "act"]],
+      "explanation": "Capteurs → conditionnement → CAN → traitement → CNA → (conditionnement) → actuateurs, le tout alimenté."
+    },
+    {
+      "type": "order",
+      "question": "Remets dans l'ordre les trois étapes de la régulation de l'aquarium.",
+      "items": ["Mesurer et observer", "Décider", "Agir sur l'environnement"],
+      "explanation": "A : mesurer et observer, B : décider, C : agir. Un système électronique fait la même chose (A', B', C')."
+    },
+    {
+      "type": "mcq",
+      "question": "Quels sont des **avantages du numérique** ?",
+      "options": ["Grande immunité au bruit", "Transformation complexe avec peu de matériel", "Vitesse", "Amplification du signal"],
+      "answer": [0, 1],
+      "explanation": "Vitesse, respect du phénomène et amplification sont des avantages de l'analogique ; chaque avantage d'un côté est un inconvénient de l'autre."
+    },
+    {
+      "type": "tf",
+      "question": "Le numérique n'a aucune immunité au bruit.",
+      "answer": false,
+      "explanation": "C'est l'inverse : l'analogique n'a aucune immunité au bruit, le numérique en a une grande."
+    },
+    {
+      "type": "scq",
+      "question": "Pourquoi le thermostat « valeur pondérée » est-il meilleur que le « tout ou rien » ?",
+      "options": [
+        "Il consomme moins d'énergie",
+        "Il est plus rapide",
+        "Il ne fonctionne qu'en numérique",
+        "Il n'a pas besoin de consigne"
+      ],
+      "answer": 0,
+      "explanation": "La puissance dépend de l'écart à la consigne et de sa vitesse d'évolution : même résultat, moins d'énergie. Les deux se font en analogique comme en numérique."
+    }
+  ]
+}
