@@ -1,0 +1,43 @@
+{
+  "title": "La gaussienne",
+  "questions": [
+    {
+      "type": "scq",
+      "question": "Si X ~ N(μ, σ²), quelle est la loi de Y = aX + b ?",
+      "options": ["N(aμ + b, a²σ²)", "N(aμ + b, aσ²)", "N(aμ, a²σ² + b)", "Elle n'est pas gaussienne"],
+      "answer": 0,
+      "explanation": "Avec la fonction caractéristique : Φ_Y(ω) = e^{jbω} Φ_X(aω), donc Y ~ N(aμ + b, a²σ²)."
+    },
+    {
+      "type": "tf",
+      "question": "Deux variables gaussiennes non corrélées sont toujours indépendantes.",
+      "answer": false,
+      "explanation": "Contre-exemple : Y = SX avec S = ±1. Cov[X,Y] = 0 mais |Y| = |X|. Ce n'est vrai que si elles sont **conjointement** gaussiennes."
+    },
+    {
+      "type": "tf",
+      "question": "Un mélange de gaussiennes (densité p·f₁ + (1−p)·f₂) est gaussien.",
+      "answer": false,
+      "explanation": "Un mélange n'est pas une somme de v.a. : sa densité p·f₁ + (1−p)·f₂ n'est pas gaussienne."
+    },
+    {
+      "type": "mcq",
+      "question": "Quelles définitions d'un vecteur gaussien X ~ N(μ, Σ) sont équivalentes ?",
+      "options": [
+        "Sa densité jointe est la formule du cours (Σ inversible)",
+        "Sa fonction caractéristique est e^{jμᵀω − ½ωᵀΣω}",
+        "Toute combinaison linéaire aᵀX est gaussienne",
+        "Chaque composante Xᵢ est gaussienne"
+      ],
+      "answer": [0, 1, 2],
+      "explanation": "Des marginales gaussiennes ne suffisent pas : il faut que le vecteur entier soit gaussien."
+    },
+    {
+      "type": "scq",
+      "question": "Si Z ~ N(0, 1), quelle est la loi de Z² ?",
+      "options": ["χ²(1)", "N(0, 1)", "N(1, 2)", "Exponentielle de paramètre 1"],
+      "answer": 0,
+      "explanation": "f_Y(y) = e^{−y/2} / √(2πy) pour y > 0 : c'est χ²(1). Une somme de n carrés indépendants donne χ²(n)."
+    }
+  ]
+}
