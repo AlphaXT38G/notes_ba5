@@ -1,0 +1,37 @@
+{
+  "title": "Admin and floating point",
+  "questions": [
+    {
+      "type": "scq",
+      "question": "What is the value of the signed (two's complement) 8-bit integer `11000101`?",
+      "options": ["−59", "197", "−69", "59"],
+      "answer": 0,
+      "explanation": "The top bit weighs −2⁷: −128 + 64 + 4 + 1 = −59. Read as unsigned, it is 197."
+    },
+    {
+      "type": "tf",
+      "question": "A comparison against NaN is always false.",
+      "answer": true,
+      "explanation": "So `if x < 0 or x > 1: raise` lets a NaN through; `if not (x >= 0 and x <= 1): raise` does not."
+    },
+    {
+      "type": "mcq",
+      "question": "Which are special cases handled by IEEE 754?",
+      "options": ["Signed zero", "± infinity", "Denormalized numbers (gradual underflow)", "Exact storage of π"],
+      "answer": [0, 1, 2],
+      "explanation": "Too big gives infinity, too small denormalized numbers, nonsense (Inf · 0) gives NaN. π cannot be stored exactly."
+    },
+    {
+      "type": "scq",
+      "question": "What is IEEE 754's default rounding for a value that is not representable?",
+      "options": ["Round to nearest, ties to even (banker's rounding)", "Always round down", "Always round towards zero", "Round to nearest, ties away from zero"],
+      "answer": 0
+    },
+    {
+      "type": "tf",
+      "question": "The elementary operations + − * / √ are computed in infinite precision, then rounded to a representable number.",
+      "answer": true,
+      "explanation": "That is IEEE 754's accuracy guarantee. Transcendental functions (sin, exp, log) are slower and less accurate."
+    }
+  ]
+}
