@@ -1,0 +1,49 @@
+{
+  "title": "Agents, requirements and user stories",
+  "questions": [
+    {
+      "type": "flow",
+      "question": "Complete the user story template.",
+      "nodes": {
+        "role": {"text": "As a [role],"},
+        "action": {"blank": ["I want to", "i want to [action]", "I want"]},
+        "reason": {"blank": ["so that", "so that [reason]"]}
+      },
+      "rows": [["role"], ["action"], ["reason"]],
+      "edges": [["role", "action"], ["action", "reason"]],
+      "explanation": "As a [role], I want to [action], so that [reason]."
+    },
+    {
+      "type": "tf",
+      "question": "\"As a developer, I want...\" is a valid role in a user story.",
+      "answer": false,
+      "explanation": "The developer is not an end user: \"as a developer\" is not a valid role."
+    },
+    {
+      "type": "scq",
+      "question": "In **INVEST**, what does the *S* stand for?",
+      "options": ["Small: fits inside a single sprint", "Secure", "Specific: says how to implement it", "Shared by several personas"],
+      "answer": 0,
+      "explanation": "Independent, Negotiable, Valuable, Estimable, Small, Testable. A story states the problem, not the solution."
+    },
+    {
+      "type": "scq",
+      "question": "When is it fine to use an LLM for requirements?",
+      "options": [
+        "To sharpen a requirement a real person told you",
+        "To invent the personas",
+        "To replace talking to users",
+        "Never"
+      ],
+      "answer": 0,
+      "explanation": "Use an LLM to sharpen a requirement you got from a person, not to invent the person."
+    },
+    {
+      "type": "mcq",
+      "question": "Which are prioritization schemes seen in class?",
+      "options": ["P0 / P1 / P2", "MoSCoW", "INVEST", "CIA"],
+      "answer": [0, 1],
+      "explanation": "MoSCoW: must-have, should-have, could-have, won't-have. INVEST describes good stories."
+    }
+  ]
+}
