@@ -1,0 +1,43 @@
+{
+  "title": "Basics",
+  "questions": [
+    {
+      "type": "scq",
+      "question": "In the CIA triad, which property prevents the unauthorized **modification** of information?",
+      "options": ["Confidentiality", "Integrity", "Availability", "Authenticity"],
+      "answer": 1,
+      "explanation": "Confidentiality prevents unauthorized disclosure, integrity unauthorized modification, availability unauthorized denial of service."
+    },
+    {
+      "type": "tf",
+      "question": "The adversary can be one of the principals of the security policy.",
+      "answer": false,
+      "explanation": "Principals (subjects) are people, programs, services... but never the adversary."
+    },
+    {
+      "type": "scq",
+      "question": "A password shown in plaintext on the screen is...",
+      "options": ["a vulnerability", "a threat", "a harm", "a security mechanism"],
+      "answer": 0,
+      "explanation": "A vulnerability is a weakness an adversary could exploit; the threat is the adversary's goal, the harm what actually happens."
+    },
+    {
+      "type": "mcq",
+      "question": "Which statements about composing security mechanisms are true?",
+      "options": [
+        "Defence in depth (AND): secure as long as one mechanism holds",
+        "Weakest link (OR): insecure as soon as any one mechanism fails",
+        "Security grows linearly with the number of mechanisms",
+        "Humans are often the weakest link"
+      ],
+      "answer": [0, 1, 3],
+      "explanation": "Security does not increase linearly with the number of mechanisms; social engineering and weak passwords are frequently the weakest link."
+    },
+    {
+      "type": "order",
+      "question": "Put the three stages of the security engineering process in order.",
+      "items": ["High-level specification", "Security design", "Secure implementation"],
+      "explanation": "Specify (policy, threat model), design (mechanisms and the security argument), then implement and test."
+    }
+  ]
+}

@@ -28,6 +28,7 @@ requirements.txt      the engine's version (follows its main; a tag once frozen)
 subjects.json         subjects: id, display name, exam rules, optional "weeks", "week_pdfs" and "color"
 site.json             the site's settings: title, subtitle, short name, GitHub repo, kinds of documents
 <subject>/            course.tex, cheatsheet.tex, week/NN.tex (chapters), extra PDFs...
+<subject>/quiz/       optional: the course's quiz, one JSON file per chapter (see "Quizzes")
 dist/                 build output (git-ignored): PDFs, previews, index.html, search.json
 ```
 
@@ -50,13 +51,130 @@ python -m http.server 8765 --directory dist   # then open http://localhost:8765/
 - Changes to the page or the build go to the engine's repository, with its own checks; try them here by
   installing it in editable mode: `pip install -e ../notes-engine`.
 
+## Quizzes
+
+A course with a `quiz/` folder gets a **Quiz** button on its card, right under the course notes.
+It opens the quiz in the page, in the colours of the screen on show: the reader picks weeks,
+chapters and kinds of exercise, then answers question by question. How quizzes work is
+[quiz-engine](https://github.com/AlphaXT38G/quiz-engine)'s (its README and `AGENTS.md` list every
+type and key; `example/quiz/week3.json` there has one of each); the engine builds them, and this
+repository only writes the questions.
+
+### Where the files go
+
+```
+swent/quiz/
+  week1a.json         one file per chapter: its title, its week, its questions
+  week1b.json         the week is the number in the file name (week1a -> 1), or "week": 3
+  week2.json
+  img/                pictures used by the questions (planets.png...), any name
+```
+
+Name the files like the chapters (`week1a.json` for `weeks/week1a.tex`, `01.json` for
+`week/01.tex`) so the weeks line up with the notes. A file:
+
+```json
+{
+  "title": "Requirements",
+  "questions": [
+    {"type": "scq", "question": "...", "options": ["...", "..."], "answer": 0, "explanation": "..."}
+  ]
+}
+```
+
+Every question has `type`, `question` and an optional `explanation` (shown after the answer).
+Text can use `**bold**`, `*italic*`, `` `code` `` and `\n` for a new line; never HTML.
+
+### One example of each kind
+
+Single choice (`answer`: the index of the right option, from 0) and multiple answers (`answer`:
+the list of right ones; options are shuffled unless `"shuffle": false`):
+
+```json
+{"type": "scq", "question": "Which document lists what the system must do?",
+ "options": ["The requirements", "The test plan", "The changelog"], "answer": 0}
+
+{"type": "mcq", "question": "Which are **non-functional** requirements?",
+ "options": ["Response time", "Login", "Availability", "Search"], "answer": [0, 2]}
+```
+
+True or false:
+
+```json
+{"type": "tf", "question": "A user story is written from the user's point of view.", "answer": true}
+```
+
+Put in order (pictures from `quiz/img/`, or plain words), listed in the right order; the reader
+gets them shuffled and drags them:
+
+```json
+{"type": "order", "question": "Order the phases of the waterfall model",
+ "items": [{"img": "img/requirements.png", "label": "Requirements"}, "Design", "Implementation", "Testing"]}
+```
+
+A diagram, flowchart or organisation chart to complete (`flow`). Every box is a node, by id:
+a text, or `{"text": ...}` / `{"blank": ...}` (a box to fill in: the answer, or a list of accepted
+answers, compared ignoring case, accents and punctuation) with an optional `"shape"`: `box`
+(default), `round` (start / end), `diamond` (a decision). `rows` places them top to bottom, each
+row centred; `edges` are the arrows, `[from, to]` or `[from, to, "label"]`. An organisation chart:
+
+```json
+{"type": "flow", "question": "Complete the organisation chart of a start-up",
+ "nodes": {
+   "ceo": "CEO",
+   "cto": {"blank": ["CTO", "Chief Technology Officer"]},
+   "cfo": "CFO",
+   "dev": "Developers",
+   "qa":  {"blank": ["QA", "Testers", "Quality assurance"]}
+ },
+ "rows":  [["ceo"], ["cto", "cfo"], ["dev", "qa"]],
+ "edges": [["ceo", "cto"], ["ceo", "cfo"], ["cto", "dev"], ["cto", "qa"]]}
+```
+
+A flowchart, with a decision and labelled arrows:
+
+```json
+{"type": "flow", "question": "Complete the flowchart: is **n** even?",
+ "nodes": {
+   "start": {"text": "Start", "shape": "round"},
+   "test":  {"text": "n mod 2 = 0 ?", "shape": "diamond"},
+   "even":  {"blank": ["even", "n is even"]},
+   "odd":   {"blank": ["odd", "n is odd"]}
+ },
+ "rows":  [["start"], ["test"], ["even", "odd"]],
+ "edges": [["start", "test"], ["test", "even", "yes"], ["test", "odd", "no"]]}
+```
+
+Draw a curve (`plot`): the formula (`x`, numbers, `+ - * / ^`, parentheses, `2x`, `pi`, `e`,
+`sin cos tan exp ln log sqrt abs`), the ranges of the axes, and an optional `tolerance` (how far
+the drawing may stray, as a share of the y range, 0.06 by default):
+
+```json
+{"type": "plot", "question": "Draw the curve of **y = x²**", "fn": "x^2", "x": [-3, 3], "y": [-1, 9]}
+```
+
+### Check it, see it
+
+A mistake (a typo in a key, an answer out of range, a missing picture) is reported by the build
+with the file and the question, and that quiz is left out of the site. Check before pushing, and
+look at it in the page (quiz-engine is read from `../quiz-engine`, next to the engine):
+
+```bash
+python -m quiz_engine check swent/quiz        # from ../quiz-engine, or once: pip install -e ../quiz-engine
+notes-engine --index-only                     # builds the quizzes too
+python -m http.server 8765 --directory dist   # then http://localhost:8765/#quiz/swent
+```
+
+Add `?screen=halloween` (or `christmas`, `evening`, `sakura`...) before the `#` to see it on a
+screen: `http://localhost:8765/?screen=halloween#quiz/swent`.
+
 ## Workflow
 
 - **Branch** from an up-to-date `main` (`feat/...`, `fix/...`, `refactor/...`), open a PR.
 - **Commits**: [Conventional Commits](https://www.conventionalcommits.org/) in English, one
   commit per change, `type(scope): summary`. Types used here: `feat`, `fix`, `style`, `perf`,
   `refactor`, `docs`, `build`, `ci`, `chore`. Scopes: `engine` (the page and the build), `build`,
-  or a subject and document (`compsec-week05`, `respsoft-cheatsheet`).
+  or a subject and document (`compsec-week05`, `respsoft-cheatsheet`, `swent-quiz`).
 - **Before committing**: `notes-engine` (the subjects you touched) and open the PDFs; for a page
   change, see the engine's `AGENTS.md`.
 - Keep `README.md` (for readers) and this file (for contributors) up to date with what changes.

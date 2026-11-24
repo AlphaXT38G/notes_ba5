@@ -1,0 +1,51 @@
+{
+  "title": "Les essais mécaniques",
+  "questions": [
+    {
+      "type": "scq",
+      "question": "Pourquoi l'essai de traction est-il « le roi des essais » ?",
+      "options": [
+        "Dans la section réduite, la contrainte n'a qu'une composante, σxx, la même partout",
+        "C'est l'essai le moins cher",
+        "Il mesure directement la ténacité",
+        "La déformation n'y a qu'une composante"
+      ],
+      "answer": 0,
+      "explanation": "On sait exactement ce qu'on impose au matériau. La déformation, elle, a trois composantes : il s'allonge et rétrécit sur les côtés."
+    },
+    {
+      "type": "scq",
+      "question": "Quelle relation lie la déformation vraie ε à la déformation nominale e ?",
+      "options": ["ε = ln(1 + e)", "ε = e / (1 + e)", "ε = (1 + e)²", "ε = e"],
+      "answer": 0,
+      "explanation": "ε = ∫ dL / L = ln(L / L₀) et L / L₀ = 1 + e. Aux petites déformations, ln(1 + e) ≈ e."
+    },
+    {
+      "type": "tf",
+      "question": "À volume constant (déformation plastique), tout se passe comme si le coefficient de Poisson valait 0,5.",
+      "answer": true,
+      "explanation": "εxx + εyy + εzz = 0 donc εyy = εzz = −εxx / 2. En élasticité, ν est plus petit (≈ 0,3 pour les métaux)."
+    },
+    {
+      "type": "mcq",
+      "question": "Quelles affirmations sur les grandeurs vraies sont justes ?",
+      "options": [
+        "σ = R(1 + e), en supposant le volume constant",
+        "Les déformations vraies s'additionnent",
+        "Les déformations nominales s'additionnent",
+        "La contrainte vraie se calcule avec la section initiale S₀"
+      ],
+      "answer": [0, 1],
+      "explanation": "La contrainte vraie utilise la section actuelle S ; ln(L₁/L₀) + ln(L₂/L₁) = ln(L₂/L₀), ce qui ne marche pas pour e."
+    },
+    {
+      "type": "plot",
+      "question": "Trace la déformation vraie ε en fonction de la déformation nominale e, soit **ε = ln(1 + e)**, pour e de 0 à 1.",
+      "fn": "ln(1 + x)",
+      "x": [0, 1],
+      "y": [0, 1],
+      "tolerance": 0.06,
+      "explanation": "La courbe part comme la droite ε = e (pente 1), puis passe en dessous : à e = 1, ε = ln 2 ≈ 0,69."
+    }
+  ]
+}

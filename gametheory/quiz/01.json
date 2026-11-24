@@ -1,0 +1,42 @@
+{
+  "title": "Games and Nash equilibrium",
+  "questions": [
+    {
+      "type": "scq",
+      "question": "What is a **non-cooperative** game?",
+      "options": [
+        "A game with no external authority enforcing rules of cooperative behaviour",
+        "A game where players hate each other",
+        "A game with only one player",
+        "A game involving negotiation and contracts"
+      ],
+      "answer": 0,
+      "explanation": "Even a contract beneficial to both cannot be stipulated: nobody could enforce it. Negotiation and contracts belong to cooperative games."
+    },
+    {
+      "type": "tf",
+      "question": "The one assumption common to all games: all players care about is their own payout.",
+      "answer": true
+    },
+    {
+      "type": "scq",
+      "question": "In Rock-Paper-Scissors, what is 𝒫⁽¹⁾(R, P), the payout of Player 1 when 1 plays Rock and 2 plays Paper?",
+      "options": ["−1", "1", "0", "(−1, 1)"],
+      "answer": 0,
+      "explanation": "Paper beats Rock: the cell is (−1, 1), and 𝒫⁽¹⁾ is its first component, −1."
+    },
+    {
+      "type": "mcq",
+      "question": "Which vectors are valid mixed strategies for a player with 3 actions?",
+      "options": ["(1/3, 1/3, 1/3)", "(1, 0, 0)", "(0.5, 0.5, 0.5)", "(0.7, 0.4, −0.1)"],
+      "answer": [0, 1],
+      "explanation": "Each component is a probability (between 0 and 1) and they sum to 1. (1, 0, 0) is a pure strategy, a special mixed one."
+    },
+    {
+      "type": "tf",
+      "question": "An action and a strategy are the same thing.",
+      "answer": false,
+      "explanation": "An action is what a player ends up playing; a strategy is the rule (probabilities) for choosing it."
+    }
+  ]
+}
